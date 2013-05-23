@@ -56,6 +56,9 @@
    V1.6  30.05.02 Incorporated changes from Inpharmatica - now finds
                   Electron diffraction as an experimental type. Handles
                   files without REMARK 2 correctly
+   V1.7  13.12.12 Complete re-implementation of GetExptl() for remediated
+                  PDB files. Old version for old PDB files available as
+                  GetExptlOld()
 
 *************************************************************************/
 /* Includes
@@ -77,6 +80,9 @@
 /************************************************************************/
 /* Prototypes
 */
+static BOOL HasText(char *ptr, char *hasWords, char *notWords);
+static int SetStrucType(char *ptr);
+static REAL GetNumberAfterColon(char *ptr);
 static BOOL FindNextNumber(char *buffer, FILE *fp, int nlines, int nskip,
                            int ncheck, REAL *value);
 
@@ -162,6 +168,396 @@ BOOL GetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor,
    found. Resolution-not-applicable structures then have the resolution
    set to zero.
 
+   12.12.11 Original   By: ACRM
+            New implementation for remediated PDB files.
+            The old version is available as GetExptlOld() which handles
+            old format files.
+            NOTE If multiple methods specified in EXPDTA record, only the 
+            first is used
+            If multiple R-factors are provided in different sections, 
+            then the first one is returned.
+*/
+BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
+              int *StrucType)
+{
+   char *ptr,
+        buffer[MAXBUFF];
+
+   /* Set some defaults                                                 */
+   *resolution = (REAL)0.0;
+   *RFactor    = (REAL)0.0;
+   *FreeR      = (REAL)0.0;
+   *StrucType  = STRUCTURE_TYPE_UNKNOWN;
+
+   
+   /* Make sure we're at the start of the PDB file                      */
+   rewind(fp);
+   
+   /* Get lines from the PDB file                                       */
+   while(fgets(buffer,MAXBUFF,fp))
+   {
+      TERMINATE(buffer);
+      buffer[72] = '\0';
+         
+      /* Break out of the loop as soon as we hit an ATOM record         */
+      if(!strncmp(buffer,"ATOM  ",6))
+         break;
+         
+      /* See if we've found a REMARK record                             */
+      if(!strncmp(buffer,"REMARK",6))
+      {
+         char word[80];
+         int  remarkType = 0;
+         
+         /* See which REMARK type it is                                 */
+         ptr = GetWord(buffer+6, word, 80);
+         if(sscanf(word, "%d", &remarkType))
+         {
+            switch(remarkType)
+            {
+            case 2:
+               if(*resolution == 0.0)
+               {
+                  ptr = GetWord(ptr, word, 80);
+                  if(!strncmp(word, "RESOLUTION", 10))
+                  {
+                     ptr = GetWord(ptr, word, 80);
+                     if(!sscanf(word, "%lf", resolution))
+                     {
+                        *resolution = 0.0;
+                     }
+                  }
+               }
+               break;
+            case 3:
+               if(*RFactor == 0.0)
+               {
+                  if(HasText(ptr, "R VALUE WORKING", "FREE"))
+                  {
+                     *RFactor = GetNumberAfterColon(ptr);
+                  }
+               }
+
+               if(*FreeR == 0.0)
+               {
+                  if(HasText(ptr, "FREE R VALUE", "TEST ERROR"))
+                  {
+                     *FreeR = GetNumberAfterColon(ptr);
+                  }
+               }
+
+               break;
+            case 200:
+               /* If we didn't get the structure type from EXPDTA then 
+                  try here 
+               */
+               if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
+               {
+                  if(HasText(ptr, "EXPERIMENT TYPE", NULL))
+                  {
+                     char *colon;
+                     if((colon = strchr(ptr, ':'))!=NULL)
+                     {
+                        colon++;
+                        *StrucType = SetStrucType(colon);
+                     }
+                  }
+               }
+               break;
+            case 205:
+               if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
+               {
+                  *StrucType = STRUCTURE_TYPE_FIBER;
+               }
+               break;
+            case 215:
+               if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
+               {
+                  *StrucType = STRUCTURE_TYPE_NMR;
+               }
+               break;
+            case 217:
+               if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
+               {
+                  *StrucType = STRUCTURE_TYPE_SSNMR;
+               }
+               break;
+            case 230:
+               if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
+               {
+                  *StrucType = STRUCTURE_TYPE_NEUTRON;
+               }
+               break;
+            case 240:
+               if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
+               {
+                  *StrucType = STRUCTURE_TYPE_ELECTDIFF;
+               }
+               break;
+            case 245:
+               if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
+               {
+                  *StrucType = STRUCTURE_TYPE_EM;
+               }
+               break;
+            case 247:
+               if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
+               {
+                  *StrucType = STRUCTURE_TYPE_EM;
+               }
+               break;
+            case 265:
+               if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
+               {
+                  *StrucType = STRUCTURE_TYPE_SOLSCAT;
+               }
+               break;
+            }
+            
+         }
+      }  /* End of test for it being a REMARK line                      */
+      else if(!strncmp(buffer,"EXPDTA", 6))
+      {
+         char *semiColon;
+         
+         ptr = buffer+10;
+
+         /* Terminate at semi-colon                                     */
+         if((semiColon=strchr(ptr,';'))!=NULL)
+         {
+            *semiColon = '\0';
+         }
+         
+         *StrucType = SetStrucType(ptr);
+         
+      }
+      
+   }  /* End of loop through PDB file                                   */
+
+   
+
+   /* Return successfully; the output data are already stored in the
+      appropriate places
+   */
+   return ((*resolution > 0.0) || 
+           ( *StrucType != STRUCTURE_TYPE_UNKNOWN ) );
+}
+
+/************************************************************************/
+char *ReportStructureType(int StrucType)
+{
+   switch(StrucType)
+   {
+   case STRUCTURE_TYPE_UNKNOWN:
+      return("Unknown");
+      break;
+   case STRUCTURE_TYPE_XTAL:
+      return("X-ray crystal structure");
+      break;
+   case STRUCTURE_TYPE_NMR:
+      return("NMR");
+      break;
+   case STRUCTURE_TYPE_MODEL:
+      return("Model");
+      break;
+   case STRUCTURE_TYPE_ELECTDIFF:
+      return("Electron Diffraction");
+      break;
+   case STRUCTURE_TYPE_FIBER:
+      return("Fiber Diffraction");
+      break;
+   case STRUCTURE_TYPE_SSNMR:
+      return("Solid State NMR");
+      break;
+   case STRUCTURE_TYPE_NEUTRON:
+      return("Neutron Scattering");
+      break;
+   case STRUCTURE_TYPE_EM:
+      return("Electron Miscroscopy");
+      break;
+   case STRUCTURE_TYPE_SOLSCAT:
+      return("Solution Scattering");
+      break;
+   case STRUCTURE_TYPE_IR:
+      return("Infra-red Spectroscopy");
+      break;
+   case STRUCTURE_TYPE_POWDER:
+      return("Powder Diffraction");
+      break;
+   case STRUCTURE_TYPE_FRET:
+      return("Fluorescence Transfer");
+      break;
+   default:
+      return("Unknown");
+      break;
+   }
+   return("");
+}
+
+
+/************************************************************************/
+static REAL GetNumberAfterColon(char *ptr)
+{
+   char *colon;
+   REAL val = 0.0;
+   
+   if((colon = strchr(ptr, ':'))!=NULL)
+   {
+      colon++;
+      sscanf(colon, "%lf", &val);
+   }
+
+   return(val);
+}
+
+
+/************************************************************************/
+static BOOL HasText(char *ptr, char *hasWords, char *notWords)
+{
+   char *p = ptr, 
+        *h = hasWords,
+        *n = notWords,
+        word1[80],
+        word2[80];
+   int  nRequired = 0,
+        nFound    = 0;
+   
+   
+   /* Step through the words we must have                               */
+   while((h=GetWord(h, word1, 80))!=NULL)
+   {
+      nRequired++;
+      /* Step through the words in our string                           */
+      p = ptr;
+      while((p=GetWord(p, word2, 80))!=NULL)
+      {
+         if(!strcmp(word1, word2))
+         {
+            nFound++;
+            break;
+         }
+      }
+   }
+   
+   /* If we didn't find all the words return false                      */
+   if(nFound != nRequired)
+   {
+      return(FALSE);
+   }
+
+   /* We found all the words we must have. Are 
+      there any we must NOT have? 
+      Step through the words we must not have 
+   */
+   while((n=GetWord(n, word1, 80))!=NULL)
+   {
+      /* Step through the words in our string                           */
+      p = ptr;
+      while((p=GetWord(p, word2, 80))!=NULL)
+      {
+         /* Return false if we have a match                             */
+         if(!strcmp(word1, word2))
+         {
+            return(FALSE);
+         }
+      }
+   }
+
+   return(TRUE);
+}
+
+/************************************************************************/
+static int SetStrucType(char *ptr)
+{
+   if(strstr(ptr, "DIFFRACTION"))
+   {
+      if(strstr(ptr, "X-RAY"))
+      {
+         return(STRUCTURE_TYPE_XTAL);
+      }
+      else if(strstr(ptr, "FIBER"))
+      {
+         return(STRUCTURE_TYPE_FIBER);
+      }
+      else if(strstr(ptr, "NEUTRON"))
+      {
+         return(STRUCTURE_TYPE_NEUTRON);
+      }
+      else if(strstr(ptr, "POWDER"))
+      {
+         return(STRUCTURE_TYPE_POWDER);
+      }
+   }
+   else if(strstr(ptr, "ELECTRON"))
+   {
+      if(strstr(ptr, "CRYSTALLOGRAPHY"))
+      {
+         return(STRUCTURE_TYPE_ELECTDIFF);
+      }
+      else if(strstr(ptr, "MICROSCOPY"))
+      {
+         return(STRUCTURE_TYPE_EM);
+      }
+   }
+   else if(strstr(ptr, "SOLUTION"))
+   {
+      if(strstr(ptr, "NMR"))
+      {
+         return(STRUCTURE_TYPE_NMR);
+      }
+      else if(strstr(ptr, "SCATTERING"))
+      {
+         return(STRUCTURE_TYPE_SOLSCAT);
+      }
+   }
+   else if(strstr(ptr, "SOLID-STATE"))
+   {
+      if(strstr(ptr, "NMR"))
+      {
+         return(STRUCTURE_TYPE_SSNMR);
+      }
+   }
+   else if(strstr(ptr, "SPECTROSCOPY"))
+   {
+      if(strstr(ptr, "INFRARED"))
+      {
+         return(STRUCTURE_TYPE_IR);
+      }
+   }
+   else if(strstr(ptr, "FLUORESCENCE"))
+   {
+      if(strstr(ptr, "TRANSFER"))
+      {
+         return(STRUCTURE_TYPE_FRET);
+      }
+   }
+
+   return(STRUCTURE_TYPE_UNKNOWN);
+}
+
+
+/************************************************************************/
+/*>BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
+                 int *StrucType)
+   ---------------------------------------------------------------------
+   Input:   FILE *fp           PDB file pointer
+   Output:  REAL *resolution   The resolution (0.0 if not applicable)
+            REAL *RFactor      The R-factor (0.0 if not found)
+            REAL *FreeR        The Free R-factor (0.0 if not found)
+            REAL *StrucType    Structure type:
+                               STRUCTURE_TYPE_XTAL
+                               STRUCTURE_TYPE_NMR
+                               STRUCTURE_TYPE_MODEL
+                               STRUCTURE_TYPE_UNKNOWN
+   Returns: BOOL               TRUE if resolution found (even if not
+                               applicable)
+
+   This routine attempts to obtain resolution and R-factor information
+   out of a PDB file. 
+   It returns TRUE or FALSE to indicate whether valid information was
+   found. Resolution-not-applicable structures then have the resolution
+   set to zero.
+
    N.B.
    The resolution information returned by the routine is reliable; the
    R-factor information is stored in so many forms that it is 
@@ -201,8 +597,8 @@ BOOL GetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor,
    08.09.99 Now takes the first FREE R-factor followed by 17 spaces
             rather than the last
 */
-BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
-              int *StrucType)
+BOOL GetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
+                 int *StrucType)
 {
    BOOL ResNotApplic   = FALSE,  /* Found resolution not applicable     */
         HaveResol      = FALSE,  /* Found resolution data               */
@@ -666,6 +1062,7 @@ static BOOL FindNextNumber(char *buffer, FILE *fp, int nlines, int nskip,
 }
 
 
+/************************************************************************/
 #ifdef DEMO
 int main(int argc, char **argv)
 {
@@ -673,17 +1070,15 @@ int main(int argc, char **argv)
    REAL resol, RFactor, FreeR;
    int  StrucType;
    
-   fp = fopen("pdb8tim.ent","r");
+   fp = fopen(argv[1],"r");
    GetExptl(fp, &resol, &RFactor, &FreeR, &StrucType);
    
+   printf("PDB:       %s\n",argv[1]);
    printf("Resol:     %f\n",resol);
    printf("RFactor:   %f\n",RFactor);
    printf("Free R:    %f\n",FreeR);
-   printf("StrucType: %s\n",
-          ((StrucType==STRUCTURE_TYPE_XTAL)?"xtal":
-           (StrucType==STRUCTURE_TYPE_NMR)?"nmr":
-           (StrucType==STRUCTURE_TYPE_MODEL)?"model":"unknown"));
-
+   printf("StrucType: %s\n", ReportStructureType(StrucType));
+   
    return(0);
 }
 #endif

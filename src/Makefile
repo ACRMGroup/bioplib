@@ -1,10 +1,16 @@
 # makefile for building support libraries under UNIX:
 
+# Destination in which to place the library and the include files
+LIBDEST = ${HOME}/lib
+INCDEST = ${HOME}/include
+SHAREDLIBDEST = ${HOME}/lib
+
+
 # Define the C compiler here
-CC = cc
+CC = gcc
  
 # Define any options for the C compiler here
-COPT =  -ansi -Wall -pedantic -g -DGUNZIP_SUPPORT
+COPT = -fPIC -ansi -Wall -pedantic -g -DGUNZIP_SUPPORT
 
 # Define the archive/library command here
 AR = ar r
@@ -13,13 +19,18 @@ AR = ar r
 RANLIB = ranlib
 #RANLIB = echo
 
-# Destination in which to place the library and the include files
-LIBDEST = /home/bsm/martin/lib
-INCDEST = /home/bsm/martin/include
-
 ###########################################################
 #          DON'T CHANGE ANYTHING BELOW THIS POINT         #
 ###########################################################
+
+# Version numbers for shared libraries - strictly the MINOR numbers here
+# are the minor and release numbers
+# libgen
+GMAJOR = 1
+GMINOR = 0.1
+# libbiop
+BMAJOR = 1
+BMINOR = 0.1
 
 # Files for libgen.a
 OFILESG = BuffInp.o CalcExtSD.o CalcSD.o CheckExtn.o CrossProd3.o \
@@ -54,9 +65,11 @@ TranslatePDB.o TrueSeqLen.o WriteCrystPDB.o WritePDB.o WrtCSSR.o \
 align.o fit.o hbond.o rsc.o throne.o FitNCaCPDB.o FindRawAtomInRes.o \
 WriteGromosPDB.o WholePDB.o GlyCB.o BuildAtomNeighbourPDBList.o \
 FindAtomWildcardInRes.o DupeResiduePDB.o StripWatersPDB.o aalist.o \
-StructurePDB.o
+StructurePDB.o FindHetatmResidue.o FindHetatmResidueSpec.o 
 
-all : libgen.a libbiop.a
+
+# Static libraries - the default
+all : libgen.a libbiop.a 
 
 libgen.a : $(OFILESG)
 	$(AR) libgen.a $? 
@@ -65,14 +78,43 @@ libbiop.a : $(OFILESB)
 	$(AR) libbiop.a $? 
 	$(RANLIB) libbiop.a
 
+# Shared libraries
+shared : libgens.so.$(GMAJOR).$(GMINOR) libbiops.so.$(BMAJOR).$(BMINOR)
+
+libgens.so.$(GMAJOR).$(GMINOR) : $(OFILESG)
+	$(CC) -shared -fPIC -Wl,-soname,libgens.so.$(GMAJOR) -o libgens.so.$(GMAJOR).$(GMINOR) $? -lc
+libbiops.so.$(BMAJOR).$(BMINOR) : $(OFILESB)
+	$(CC) -shared -fPIC -Wl,-soname,libbiops.so.$(BMAJOR) -o libbiops.so.$(BMAJOR).$(BMINOR) $? -lc
+
+# C compilation
 .c.o :
 	$(CC) $(COPT) -o $@ -c $<
 
+# Cleanup
 clean :
-	rm -f $(OFILESB) $(OFILESG) libgen.a libbiop.a
+	rm -f $(OFILESB) $(OFILESG) libgen.a libbiop.a libgens.so.$(GMAJOR).$(GMINOR) libbiops.so.$(BMAJOR).$(BMINOR)
 
+# Installation
 install :
+	mkdir -p $(LIBDEST)
+	mkdir -p $(INCDEST)/bioplib
 	cp libgen.a $(LIBDEST)
 	cp libbiop.a $(LIBDEST)
 	cp *.h $(INCDEST)/bioplib
 
+installshared : 
+	mkdir -p $(SHAREDLIBDEST)
+	mkdir -p $(INCDEST)/bioplib
+	cp *.h $(INCDEST)/bioplib
+	cp libgens.so.$(GMAJOR).$(GMINOR) $(SHAREDLIBDEST)
+	cp libbiops.so.$(GMAJOR).$(GMINOR) $(SHAREDLIBDEST)
+	(cd $(SHAREDLIBDEST); ln -s libgens.so.$(GMAJOR).$(GMINOR) libgens.so.$(GMAJOR); ln -s libgens.so.$(GMAJOR) libgens.so)
+	(cd $(SHAREDLIBDEST); ln -s libbiops.so.$(BMAJOR).$(BMINOR) libbiops.so.$(BMAJOR); ln -s libbiops.so.$(BMAJOR) libbiops.so)
+
+# Help
+help :
+	@echo "make               : Build the static libraries"
+	@echo "make install       : Install the static libraries"
+	@echo "make shared        : Build shared libraries"
+	@echo "make installshared : Install shared libraries"
+	@echo "make clean         : Remove object and library files from compilation directory"

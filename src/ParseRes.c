@@ -3,19 +3,14 @@
    Program:    
    File:       ParseRes.c
    
-   Version:    V1.8R
-   Date:       29.09.05
+   Version:    V1.10R
+   Date:       12.10.12
    Function:   Parse a residue specification
    
-   Copyright:  (c) SciTech Software 1993-2005
+   Copyright:  (c) SciTech Software 1993-2012
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
    EMail:      andrew@bioinf.org.uk
-               martin@biochem.ucl.ac.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
@@ -56,6 +51,12 @@
    V1.8  29.09.05 Moved ParseResSpec() into DoParseResSpec() with extra
                   param and added wrappers for ParseResSpec() and 
                   ParseResSpecNoUpper()  (Changes by Tony Lewis) By: TL
+   V1.9  05.01.12 Default behaviour of ParseResSpec() is now not to
+                  upcase the chain label - there are now too many PDB
+                  entries with lower case chain names for this to be
+                  sensible.   By: ACRM
+   V1.10 12.10.12 insert is now a properly terminated string when there is
+                  no insert
 
 *************************************************************************/
 /* Includes
@@ -103,10 +104,14 @@
    cased (without affecting code that calls this function).
 
    29.09.05 Original   By: TL
+   05.01.12 Now behaves the same as ParseResSpecNoUpper(). There are now
+            too many PDB files with lower case chain names (e.g. 1gav,
+            3n9r, etc.) for the old default behaviour or up-casing 
+            everything.   By: ACRM
 */
 BOOL ParseResSpec(char *spec, char *chain, int *resnum, char *insert)
 {
-   return DoParseResSpec(spec, chain, resnum, insert, TRUE);
+   return DoParseResSpec(spec, chain, resnum, insert, FALSE);
 }
 
 /************************************************************************/
@@ -160,6 +165,8 @@ BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum,
             extra parameter to specify whether or not the residue
             specification should be upper cased (without affecting code
             that calls the old function). By: TL
+   12.10.12 insert is now a properly terminated string when there is
+            no insert
 */
 BOOL DoParseResSpec(char *spec, char *chain, int *resnum, char *insert, 
                     BOOL uppercaseresspec)
@@ -202,7 +209,9 @@ BOOL DoParseResSpec(char *spec, char *chain, int *resnum, char *insert,
    }
    
    /* Extract insert from spec                                          */
-   *insert = ' ';
+   insert[0] = ' ';
+   insert[1] = '\0';  /* Added 12.10.12                                 */
+   
    for(ptr2 = ptr; *ptr2; ptr2++)
    {
       /* 11.10.99 Now also checks that it isn't a - as the first 

@@ -3,19 +3,13 @@
    Program:    
    File:       parse.c
    
-   Version:    V1.9R
-   Date:       08.10.99
+   Version:    V1.10R
+   Date:       28.02.11
    Function:   A keyword command parser
    
-   Copyright:  (c) SciTech Software 1990-4
+   Copyright:  (c) SciTech Software 1990-2011
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@stagleys.demon.co.uk
+   EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
 
@@ -98,6 +92,7 @@
                   The line is passed as a system() call and parse()
                   acts as if the line had been a comment.
    V1.9  08.10.99 Initialised some variables
+   V1.10 28.02.11 Added # as a comment introducer
 
 *************************************************************************/
 /* Includes
@@ -138,6 +133,7 @@
    22.04.93 Tidied comments, etc. Corrected NULL to 0.
    11.03.94 Added $ line handling
    08.10.99 Initialise nlett
+   28.02.11 Added # for comments
 */
 int parse(char  *comline,
           int   nkeys,
@@ -158,9 +154,10 @@ int parse(char  *comline,
    }
    
    found = 0;
-   if((command[0]=='!') ||
-      (command[0]==LF)  ||
-      (command[0]==CR)  ||
+   if((command[0]=='!')  ||
+      (command[0]=='#')  ||
+      (command[0]==LF)   ||
+      (command[0]==CR)   ||
       (command[0]=='\0'))
       return(PARSE_COMMENT);
 

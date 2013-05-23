@@ -5,11 +5,10 @@
    
    Version:    V1.5
    Date:       27.03.95
-   Function:   
+   Function:   Calculate a torsion angle
    
    Copyright:  (c) SciTech Software 1993-5
    Author:     Dr. Andrew C. R. Martin
-   Phone:      +44 (0) 1372 275775
    EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
@@ -118,7 +117,7 @@ REAL phi(REAL xi,
    dxi = yij * zkj - zij * ykj;     /* Normal to plane 1                */
    dyi = zij * xkj - xij * zkj;
    dzi = xij * ykj - yij * xkj;
-   gxi = zkj * ykl - ykj * zkl;     /* Mormal to plane 2                */
+   gxi = zkj * ykl - ykj * zkl;     /* Normal to plane 2                */
    gyi = xkj * zkl - zkj * xkl;
    gzi = ykj * xkl - xkj * ykl;
 

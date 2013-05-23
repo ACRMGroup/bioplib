@@ -1,13 +1,13 @@
 /*************************************************************************
 
    Program:    
-   File:       
+   File:       StructurePDB.c
    
-   Version:    
-   Date:       
-   Function:   
+   Version:    V1.1
+   Date:       19.05.10
+   Function:   Build a structured PDB representation
    
-   Copyright:  (c) UCL / Dr. Andrew C. R. Martin 2009
+   Copyright:  (c) UCL / Dr. Andrew C. R. Martin 2009-10
    Author:     Dr. Andrew C. R. Martin
    Address:    Biomolecular Structure & Modelling Unit,
                Institute of Structural & Molecular Biology,
@@ -45,7 +45,8 @@
 
    Revision History:
    =================
-
+   V1.0   24.11.09  Original
+   V1.1   19.05.10  PDBRESIDUE and PDBCHAIN are doubly linked lists
 *************************************************************************/
 /* Includes
 */
@@ -77,6 +78,8 @@
    of chains, residues and atoms
 
    24.11.09  Original   By: ACRM
+   19.05.10  Correctly do doubly linked lists
+   02.06.10  Fixed some initializations!
 */
 PDBSTRUCT *AllocPDBStructure(PDB *pdb)
 {
@@ -92,6 +95,7 @@ PDBSTRUCT *AllocPDBStructure(PDB *pdb)
       return(NULL);
    pdbstruct->pdb = pdb;
    pdbstruct->chains = NULL;
+   pdbstruct->extras = NULL;             /* 02.06.10                    */
    
    /* Build the chain list                                              */
    for(pdbc=pdb; pdbc!=NULL; pdbc=nextchain)
@@ -100,12 +104,12 @@ PDBSTRUCT *AllocPDBStructure(PDB *pdb)
 
       if(pdbstruct->chains == NULL)
       {
-         INIT(pdbstruct->chains, PDBCHAIN);
+         INITPREV(pdbstruct->chains, PDBCHAIN);
          chain = pdbstruct->chains;
       }
       else
       {
-         ALLOCNEXT(chain, PDBCHAIN);
+         ALLOCNEXTPREV(chain, PDBCHAIN);
       }
       if(chain == NULL)
       {
@@ -113,8 +117,10 @@ PDBSTRUCT *AllocPDBStructure(PDB *pdb)
          return(NULL);
       }
       
-      chain->start = pdbc;
-      chain->stop = nextchain;
+      chain->start    = pdbc;
+      chain->stop     = nextchain;
+      chain->residues = NULL;              /* 02.06.10                  */
+      chain->extras   = NULL;              /* 02.06.10                  */
       strcpy(chain->chain, pdbc->chain);
    }
    
@@ -130,12 +136,12 @@ PDBSTRUCT *AllocPDBStructure(PDB *pdb)
          
          if(chain->residues == NULL)
          {
-            INIT(chain->residues, PDBRESIDUE);
+            INITPREV(chain->residues, PDBRESIDUE);
             residue = chain->residues;
          }
          else
          {
-            ALLOCNEXT(residue, PDBRESIDUE);
+            ALLOCNEXTPREV(residue, PDBRESIDUE);
          }
          if(residue == NULL)
          {
@@ -149,6 +155,7 @@ PDBSTRUCT *AllocPDBStructure(PDB *pdb)
          strcpy(residue->insert, pdbr->insert);
          strcpy(residue->resnam, pdbr->resnam);
          residue->resnum = pdbr->resnum;
+         residue->extras = NULL;            /* 02.06.10                 */
 
          /* Build a residue label                                       */
          sprintf(resid, "%s.%d%s", 

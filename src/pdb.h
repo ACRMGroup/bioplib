@@ -3,11 +3,11 @@
    Program:    
    File:       pdb.h
    
-   Version:    V1.45
-   Date:       24.11.09
+   Version:    V1.47
+   Date:       12.12.11
    Function:   Include file for pdb routines
    
-   Copyright:  (c) SciTech Software, UCL, Reading 1993-2009
+   Copyright:  (c) SciTech Software, UCL, Reading 1993-2011
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -100,6 +100,10 @@
    V1.45 24.11.09 Added PDBSTRUCT, PDBCHAIN, PDBRESIDUE
                   AllocPDBStructure(), FindNextChain(),
                   FreePDBStructure()
+   V1.46 26.10.11 Added FindHetatmResidueSpec() and FindHetatmResidue()
+   V1.47 12.12.11 Added GetExptlOld()
+                  Added ResportStructureType()
+                  Added new STRUCTURE_TYPE_* defines
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -264,6 +268,14 @@ typedef struct
 #define STRUCTURE_TYPE_NMR       2
 #define STRUCTURE_TYPE_MODEL     3
 #define STRUCTURE_TYPE_ELECTDIFF 4
+#define STRUCTURE_TYPE_FIBER     5
+#define STRUCTURE_TYPE_SSNMR     6
+#define STRUCTURE_TYPE_NEUTRON   7
+#define STRUCTURE_TYPE_EM        8
+#define STRUCTURE_TYPE_SOLSCAT   9
+#define STRUCTURE_TYPE_IR       10
+#define STRUCTURE_TYPE_POWDER   11
+#define STRUCTURE_TYPE_FRET     12
 
 /* These are the styles used by FixCterPDB()                            */
 #define CTER_STYLE_STD         0
@@ -357,6 +369,9 @@ BOOL GetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor,
                  int *StrucType);
 BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
               int *StrucType);
+BOOL GetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
+              int *StrucType);
+char *ReportStructureType(int type);
 PDB **IndexPDB(PDB *pdb, int *natom);
 DISULPHIDE *ReadDisulphidesPDB(FILE *fp, BOOL *error);
 BOOL ParseResSpec(char *spec, char *chain, int *resnum, char *insert);
@@ -372,6 +387,7 @@ int AddNTerHs(PDB **ppdb, BOOL Charmm);
 char *FNam2PDB(char *filename);
 PDB *TermPDB(PDB *pdb, int length);
 char *GetPDBChainLabels(PDB *pdb);
+PDB *FindHetatmResidueSpec(PDB *pdb, char *resspec);
 PDB *FindResidueSpec(PDB *pdb, char *resspec);
 PDB *FindNextResidue(PDB *pdb);
 PDB *DupePDB(PDB *in);
@@ -387,6 +403,7 @@ void WriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
 PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
                     char *chain2, int resnum2, char *insert2);
 PDB *FindResidue(PDB *pdb, char chain, int resnum, char insert);
+PDB *FindHetatmResidue(PDB *pdb, char chain, int resnum, char insert);
 PDB *FindAtomInRes(PDB *pdb, char *atnam);
 BOOL InPDBZone(PDB *p, char chain, int resnum1, char insert1, 
                int resnum2, char insert2);

@@ -3,13 +3,12 @@
    Program:    
    File:       MovePDB.c
    
-   Version:    V1.2
-   Date:       01.03.94
+   Version:    V1.2a
+   Date:       06.01.11
    Function:   
    
    Copyright:  (c) SciTech Software 1993-8
    Author:     Dr. Andrew C. R. Martin
-   Phone:      +44 (0) 1372 275775
    EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
@@ -37,6 +36,7 @@
    =================
    V1.1  01.03.94
    V1.2  27.02.98 Removed unreachable break from switch()
+   V1.2a 06.01.11 Corrected description
 
 *************************************************************************/
 /* Includes
@@ -66,9 +66,9 @@
             PDB    **to      Start of output linked list
    Returns: BOOL             Success?
 
-   Moves a PDB record from one linked list to another. from and ret should
-   point to the start of the 2 lists. If the ret list hasn't been started,
-   ret should be NULL. Returns TRUE if moved, FALSE otherwise.
+   Moves a PDB record from one linked list to another. from and to should
+   point to the start of the 2 lists. If the to list hasn't been started,
+   to should be NULL. Returns TRUE if moved, FALSE otherwise.
 
    13.05.92 Original
    19.06.92 Changed p=*to, etc. for crappy compilers

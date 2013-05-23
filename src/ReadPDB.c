@@ -3,11 +3,11 @@
    Program:    
    File:       ReadPDB.c
    
-   Version:    V2.21
-   Date:       17.03.09
+   Version:    V2.22
+   Date:       21.12.11
    Function:   Read coordinates from a PDB file 
    
-   Copyright:  (c) SciTech Software 1988-2009
+   Copyright:  (c) SciTech Software 1988-2011
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -150,6 +150,8 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
    V2.20 29.06.07 popen() and pclose() prototypes now skipped for MAC OSX
                   which defines them differently
    V2.21 17.03.09 popen() prototype skipped for Windows. By: CTP
+   V2.22 21.12.11 doReadPDB() modified for cases where atoms are single
+                  occupancy but occupancy is < 1.0
 
 *************************************************************************/
 /* Defines required for includes
@@ -382,6 +384,7 @@ PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
                   residues like 1zeh/B16 where a lower partial is
                   erroneously set to zero
    05.06.07 V2.19 Added support for Unix compress'd files
+   21.12.11 V2.22 Modified for cases of single occupancy < 1.0
 */
 PDB *doReadPDB(FILE *fpin,
                int  *natom,
@@ -514,8 +517,18 @@ PDB *doReadPDB(FILE *fpin,
                            if OccRank==0
                         This fixes problems where a lower (partial)
                         occupancy has erroneously been set to zero
+               21.12.11 Now only worries about partial occupancy if altpos
+                        is a space. The first line of the if() statement
+                        here would assume single occupancy if altpos was
+                        a space and occupancy was zero:
+                        if(((altpos == ' ') && (occ < (double)SMALL)) ||
+                        - it now assumes single occupancy if altpos is a
+                        space regardless of the actual occupancy. This
+                        deals with cases like 1ap2 ZN A112 and 1ces ZN
+                        A238 where these HETATMs are single occupancy
+                        but with occupancy < 1.0
             */
-            if(((altpos == ' ') && (occ < (double)SMALL)) ||
+            if((altpos == ' ') ||
                (occ > (double)0.999) || 
                (OccRank == 0))
             {

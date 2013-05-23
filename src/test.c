@@ -8,11 +8,16 @@ int main(int argc, char **argv)
    FILE *in;
    int natoms;
    
-   in=fopen("/acrm/data/pdb/pdb1yqv.ent", "r");
+   in=fopen("test.pdb", "r");
    
+   pdb = ReadPDB(in, &natoms);
+   WritePDB(stdout, pdb);
+   
+/*
    wpdb = ReadWholePDB(in);
    
    WriteWholePDB(stdout, wpdb);
+*/
 
    return(0);
 }

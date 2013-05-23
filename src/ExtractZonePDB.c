@@ -3,11 +3,11 @@
    Program:    
    File:       ExtractZonePDB.c
    
-   Version:    V1.12R
-   Date:       22.03.06
+   Version:    V1.13R
+   Date:       29.10.10
    Function:   PDB linked list manipulation
    
-   Copyright:  (c) SciTech Software 1992-2006
+   Copyright:  (c) SciTech Software 1992-2010
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -47,6 +47,7 @@
    V1.10 08.10.99 Initialised some variables
    V1.11 22.03.05 Extracted range is limited by specified residues
    V1.12 22.03.06 Modified ExtractZonePDB() to allow non-exact ranges
+   V1.13 29.10.10 Fixed bug when end of zone was last residue in a chain
 
 *************************************************************************/
 /* Includes
@@ -96,6 +97,8 @@
             will be the widest subset of the specified zone. So, if
             you specifiy 30-35Z and the PDB file only has 30-35B
             then that will be extracted.
+   29.10.10 Fixed extraction where end of zone matched last residue in
+            a chain
 */
 PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
                     char *chain2, int resnum2, char *insert2)
@@ -134,13 +137,27 @@ PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
 
    /* Find the last residue in the PDB linked list                      
       last will point to the last atom in the zone
+
+      29.10.10 Also breaks out if chain1 and chain2 are the same but
+      we've now come to a different chain. This fixes a bug where
+      the code wouldn't break out if resnum2 was the last residue in
+      a chain By: ACRM
     */
    for(p=start; p!=NULL; NEXT(p))
    {
-      if((p->chain[0] == chain2[0]) &&
-         ((p->resnum > resnum2) ||
-          ((p->resnum == resnum2) &&
+      if((p->chain[0] == chain2[0]) && /* If chain is the same and...  */
+         ((p->resnum > resnum2) ||     /* Residue number exceeded or.. */
+          ((p->resnum == resnum2) &&   /* Resnum same, insert exceeded */
            (p->insert[0] > insert2[0]))))
+      {
+         break;
+      }
+      /* Both zone ends are in the same chain so, if we got here we have 
+         found the right chain. If the current chain is now different 
+         from chain2, then we've gone off the end of the chain
+      */
+      if((chain1[0]   == chain2[0]) &&
+         (p->chain[0] != chain2[0]))
       {
          break;
       }
