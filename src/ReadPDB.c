@@ -3,18 +3,12 @@
    Program:    
    File:       ReadPDB.c
    
-   Version:    V2.14R
-   Date:       27.04.05
+   Version:    V2.15R
+   Date:       03.06.05
    Function:   Read coordinates from a PDB file 
    
    Copyright:  (c) SciTech Software 1988-2005
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
    EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
@@ -140,6 +134,10 @@ BUGS:  The multiple occupancy code assumes that all positions for a given
    V2.12 15.02.01 Added atnam_raw into PDB structure
    V2.13 30.05.02 Changed PDB field from 'junk' to 'record_type'
    V2.14 27.04.05 Fixed bug in atnam_raw for multiple occupancies
+   V2.15 03.06.05 Added altpos field to PDB structure. The massaged atom
+                  name no longer contains the alternate indicator and
+                  atnam_raw has only the atom name with altpos having the
+                  alternate indicator (as it should!)
 
 *************************************************************************/
 /* Defines required for includes
@@ -346,6 +344,7 @@ PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
    08.10.99 V2.11 Initialise CurIns and CurRes
    15.02.01 V2.12 Added atnam_raw
    27.04.05 V2.14 Added another atnam_raw for multiple occupancies
+   03.06.05 V2.15 Added altpos
 */
 PDB *doReadPDB(FILE *fpin,
                int  *natom,
@@ -363,7 +362,8 @@ PDB *doReadPDB(FILE *fpin,
             buffer[160],
             CurAtom[8],
             cmd[80],
-            CurIns = ' ';
+            CurIns = ' ',
+            altpos;
    int      atnum,
             resnum,
             CurRes = 0,
@@ -449,10 +449,18 @@ PDB *doReadPDB(FILE *fpin,
             (!strncmp(record_type,"HETATM",6) && AllAtoms))
          {
             /* Copy the raw atom name                                   */
-            strcpy(atnam_raw, atnambuff);
+            /* 03.06.05 Note: this reads the alternate atom position as 
+               well as the atom name - changes in FixAtomName() now strip
+               that
+               We now copy only the first 4 characters into atnam_raw and
+               put the 5th character into altpos
+            */
+            strncpy(atnam_raw, atnambuff, 4);
+            atnam_raw[4] = '\0';
+            altpos = atnambuff[4];
 
             /* Fix the atom name accounting for start in column 13 or 14*/
-            atnam = FixAtomName(atnambuff);
+            atnam = FixAtomName(atnambuff, occ);
             
             /* Check for full occupancy. If occupancy is 0.0 assume that 
                it is actually fully occupied; the column just hasn't been
@@ -513,6 +521,7 @@ PDB *doReadPDB(FILE *fpin,
                p->z      = (REAL)z;
                p->occ    = (REAL)occ;
                p->bval   = (REAL)bval;
+               p->altpos = altpos;    /* 03.06.05 Added this one        */
                p->next   = NULL;
                strcpy(p->record_type, record_type);
                strcpy(p->atnam,       atnam);
@@ -570,12 +579,13 @@ PDB *doReadPDB(FILE *fpin,
                   multi[NPartial].next   = NULL;
                   strcpy(multi[NPartial].record_type, record_type);
                   strcpy(multi[NPartial].atnam,       atnam);
-
                   /* 27.04.05 - added this line                         */
                   strcpy(multi[NPartial].atnam_raw,   atnam_raw);
                   strcpy(multi[NPartial].resnam,      resnam);
                   strcpy(multi[NPartial].chain,       chain);
                   strcpy(multi[NPartial].insert,      insert);
+                  /* 03.06.05 - added this line                         */
+                  multi[NPartial].altpos = altpos;
                   
                   NPartial++;
                }
@@ -624,6 +634,7 @@ PDB *doReadPDB(FILE *fpin,
    17.03.94 Original    By: ACRM
    08.10.99 Initialise IMaxOcc and MaxOcc
    27.04.05 Added atnam_raw
+   03.06.05 Added altpos
 */
 static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
                              int NPartial, PDB **ppdb, PDB **pp, 
@@ -689,6 +700,8 @@ static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
    (*pp)->occ    = MaxOcc;
    (*pp)->bval   = multi[IMaxOcc].bval;
    (*pp)->next   = NULL;
+   /* 03.06.05 Added this line                                          */
+   (*pp)->altpos = multi[IMaxOcc].altpos;
    strcpy((*pp)->record_type, multi[IMaxOcc].record_type);
    strcpy((*pp)->atnam,       multi[IMaxOcc].atnam);
    /* 27.04.05 Added this line                                          */
@@ -707,9 +720,11 @@ static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
 }
 
 /************************************************************************/
-/*>char *FixAtomName(char *name)
-   -----------------------------
+/*>char *FixAtomName(char *name, REAL occup)
+   -----------------------------------------
    Input:   char  *name     Atom name read from file
+            REAL  occup     Occupancy to allow fixing of partial occupancy
+                            atom names
    Returns: char  *         Fixed atom name (pointer into name)
 
    Fixes an atom name by removing leading spaces, or moving a leading
@@ -717,8 +732,22 @@ static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
 
    06.04.94 Original    By: ACRM
    01.03.01 No longer static
+   03.06.05 The name passed in has always contained the column which is
+            officially the alternate atom position indicator, but is 
+            used by some programs as part of the atom name. Thus the
+            properly constructed variable coming into the routine should
+            be something like '1HG1 ' or '1HG1A' for an alternate atom
+            position. However some programs use ' HG11'. Therefore we
+            now check for a character in the last position and replace
+            it with a space if there is a space in the preceeding
+            position (e.g. ' CA A' -> ' CA  ') or if there is a 
+            character in the first position (e.g. '1HG1A' -> '1HG1 ')
+            or if the occupancy is not zero/one
+
+            NOTE!!! To support this, the routine now has a second 
+            parameter: REAL occup
 */
-char *FixAtomName(char *name)
+char *FixAtomName(char *name, REAL occup)
 {
    char *newname;
    int  len;
@@ -726,13 +755,25 @@ char *FixAtomName(char *name)
    /* Default behaviour, just return the input string                   */
    newname = name;
 
-   if(name[0] == ' ')
+   if(name[0] == ' ')       /* Name starts in column 14                 */
    {
-      /* Name starts in column 14, just remove leading spaces           */
+      /* remove leading spaces                                          */
       KILLLEADSPACES(newname,name);
+      /* 03.06.05 If the last-but-one position is a space, force the last
+         position (the alternate atom indicator) to be a space
+      */
+      if(newname[2] == ' ')
+      {
+         newname[3] = ' ';
+      }
    }
-   else      /* Name starts in column 13                                */
+   else                     /* Name starts in column 13                 */
    {
+      /* 03.06.05 The last character is the alternate atom indicator, 
+         so force it to be a space
+      */
+      name[4] = ' ';
+      
       /* If the first character is a digit, move it to the end          */
       if(isdigit(name[0]))
       {

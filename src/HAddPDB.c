@@ -3,18 +3,12 @@
    Program:    
    File:       HAddPDB.c
    
-   Version:    V2.11R
-   Date:       27.03.03
+   Version:    V2.12R
+   Date:       03.06.05
    Function:   Add hydrogens to a PDB linked list
    
-   Copyright:  (c) SciTech Software 1990-2003
+   Copyright:  (c) SciTech Software 1990-2005
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
    EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
@@ -105,6 +99,7 @@
    V2.9  30.05.02 Changed PDB field from 'junk' to 'record_type'
    V2.10 05.12.02 Correctly sets the atnam_raw field
    V2.11 27.03.03 Fixed severe memory leak in AddH()
+   V2.12 03.06.05 Added altpos
 
 *************************************************************************/
 /* Includes
@@ -506,6 +501,7 @@ in residue %d\n\n",p->resnum);
    26.01.96 Now stores insert codes into hlist
    24.05.99 Fixed two memory leaks
    05.12.02 Added setting of atnam_raw
+   03.06.05 Added setting of altpos
 */
 static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta, 
                   BOOL firstres)
@@ -716,6 +712,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
       padterm(hlist->insert,4);
       strcpy(hlist->atnam,sGHName[5]);
       SetRawAtnam(hlist->atnam_raw, sGHName[5]);   /* 05.12.02          */
+      hlist->altpos = ' ';                         /* 03.06.05          */
       hlist->x=x5;
       hlist->y=y5;
       hlist->z=z5;
@@ -786,6 +783,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
          padterm(hlist->insert,4);
          strcpy(hlist->atnam,sGHName[4]);
          SetRawAtnam(hlist->atnam_raw, sGHName[4]);   /* 05.12.02       */
+         hlist->altpos = ' ';                         /* 03.06.05       */
          hlist->x=x4;
          hlist->y=y4;
          hlist->z=z4;
@@ -806,6 +804,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
          padterm(hlist->insert,4);
          strcpy(hlist->atnam,sGHName[5]);
          SetRawAtnam(hlist->atnam_raw, sGHName[5]);   /* 05.12.02       */
+         hlist->altpos = ' ';                         /* 03.06.05       */
          hlist->x=x5;
          hlist->y=y5;
          hlist->z=z5;
@@ -886,6 +885,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
             padterm(hlist->insert,4);
             strcpy(hlist->atnam,sGHName[4]);
             SetRawAtnam(hlist->atnam_raw, sGHName[4]);   /* 05.12.02    */
+            hlist->altpos = ' ';                         /* 03.06.05    */
             hlist->x=x4;
             hlist->y=y4;
             hlist->z=z4;
@@ -906,6 +906,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
             padterm(hlist->insert,4);
             strcpy(hlist->atnam,sGHName[5]);
             SetRawAtnam(hlist->atnam_raw, sGHName[5]);   /* 05.12.02    */
+            hlist->altpos = ' ';                         /* 03.06.05    */
             hlist->x=x5;
             hlist->y=y5;
             hlist->z=z5;
@@ -926,6 +927,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
             padterm(hlist->insert,4);
             strcpy(hlist->atnam,sGHName[6]);
             SetRawAtnam(hlist->atnam_raw, sGHName[6]);   /* 05.12.02    */
+            hlist->altpos = ' ';                         /* 03.06.05    */
             hlist->x=x6;
             hlist->y=y6;
             hlist->z=z6;
@@ -966,6 +968,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
             padterm(hlist->insert,4);
             strcpy(hlist->atnam,sGHName[4]);
             SetRawAtnam(hlist->atnam_raw, sGHName[4]);   /* 05.12.02    */
+            hlist->altpos = ' ';                         /* 03.06.05    */
             hlist->x=x4;
             hlist->y=y4;
             hlist->z=z4;
@@ -1022,6 +1025,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
          padterm(hlist->insert,4);
          strcpy(hlist->atnam,sGHName[4]);
          SetRawAtnam(hlist->atnam_raw, sGHName[4]);   /* 05.12.02       */
+         hlist->altpos = ' ';                         /* 03.06.05       */
          hlist->x=x4;
          hlist->y=y4;
          hlist->z=z4;
@@ -1059,6 +1063,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
    16.05.90 Original    By: ACRM
    05.12.02 Added setting of atnam_raw
    27.03.03 Fixed memory leak - free the hlist when finished
+   03.06.05 Added setting of altpos
 */
 static BOOL AddH(PDB *hlist, PDB **position, int HType)
 {
@@ -1101,6 +1106,7 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
          p->atnum = ++atomcount;
          strcpy(p->atnam,q->atnam);
          strcpy(p->atnam_raw, q->atnam_raw);      /* 05.12.02           */
+         p->altpos = q->altpos;                   /* 03.06.05           */
          strcpy(p->resnam,s->resnam);
          strcpy(p->chain,s->chain);
          p->resnum=s->resnum;
@@ -1131,6 +1137,7 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
             p->atnum = ++atomcount;
             strcpy(p->atnam,q->atnam);
             strcpy(p->atnam_raw, q->atnam_raw);    /* 05.12.02          */
+            p->altpos = q->altpos;                 /* 03.06.05          */
             strcpy(p->resnam,s->resnam);
             strcpy(p->chain,s->chain);
             p->resnum=s->resnum;
@@ -1161,6 +1168,7 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
             p->atnum = ++atomcount;
             strcpy(p->atnam,q->atnam);
             strcpy(p->atnam_raw, q->atnam_raw);    /* 05.12.02          */
+            p->altpos = q->altpos;                 /* 03.06.05          */
             strcpy(p->resnam,s->resnam);
             strcpy(p->chain,s->chain);
             p->resnum=s->resnum;

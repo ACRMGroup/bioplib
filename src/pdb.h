@@ -3,18 +3,12 @@
    Program:    
    File:       pdb.h
    
-   Version:    V1.36R
-   Date:       30.05.02
+   Version:    V1.37R
+   Date:       03.06.05
    Function:   Include file for pdb routines
    
-   Copyright:  (c) SciTech Software, UCL, Reading 1993-2002
+   Copyright:  (c) SciTech Software, UCL, Reading 1993-2005
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
    EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
@@ -91,6 +85,8 @@
    V1.35 12.12.01 Added FitNCaCPDB()
    V1.36 30.05.02 Changed PDB field from 'junk' to 'record_type'
                   Added the WholePDB routines and definition
+   V1.37 03.06.05 Added altpos to PDB.
+                  Added altpos and atnam_raw to CLEAR_PDB
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -118,6 +114,7 @@ typedef struct pdb_entry
    char resnam[8];
    char insert[8];
    char chain[8];
+   char altpos;
 }  PDB;
 
 #define SELECT(x,w) (x) = (char *)malloc(5 * sizeof(char)); \
@@ -175,11 +172,13 @@ typedef struct
 #define CLEAR_PDB(p) strcpy(p->record_type,"      "); \
                      p->atnum=0; \
                      strcpy(p->atnam,"    "); \
+                     strcpy(p->atnam_raw,"    "); \
                      strcpy(p->resnam,"    "); \
                      p->resnum=0; \
                      strcpy(p->insert," "); \
                      strcpy(p->chain," "); \
                      p->x = 0.0; p->y = 0.0; p->z = 0.0; \
+                     p->altpos = ' '; \
                      p->occ = 0.0; p->bval = 0.0; \
                      p->next = NULL
 
@@ -320,7 +319,7 @@ BOOL RepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
 void EndRepSChain(void);
 char **ReadSeqresPDB(FILE *fp, int *nchains);
 PDB *SelectCaPDB(PDB *pdb);
-char *FixAtomName(char *name);
+char *FixAtomName(char *name, REAL occup);
 
 void FreeWholePDB(WHOLEPDB *wpdb);
 void WriteWholePDB(FILE *fp, WHOLEPDB *wpdb);

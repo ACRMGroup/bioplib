@@ -3,17 +3,12 @@
    Program:    
    File:       FixCterPDB.c
    
-   Version:    V1.4R
-   Date:       06.02.03
+   Version:    V1.5R
+   Date:       03.06.05
    Function:   Routine to add C-terminal oxygens.
    
-   Copyright:  (c) SciTech Software 1994-2002
+   Copyright:  (c) SciTech Software 1994-2005
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
    EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
@@ -52,6 +47,7 @@
                   the terminal oxygen to NULL coordinates
    V1.3  13.11.96 Also checks for missing CA,C and O1 records
    V1.4  06.02.03 Handles atnam_raw
+   V1.5  03.06.05 Handles altpos
 
 *************************************************************************/
 /* Includes
@@ -100,6 +96,7 @@ static BOOL SetCterStyle(PDB *start, PDB *end, int style);
    13.11.96 Added check on finding CA,C and O1
             If no C or O1 present, OXT not added
    06.02.03 Handles atnam_raw
+   03.06.05 Handles altpos
 */
 BOOL FixCterPDB(PDB *pdb, int style)
 {
@@ -156,6 +153,7 @@ BOOL FixCterPDB(PDB *pdb, int style)
             O2->bval = 20.0;
             strcpy(O2->atnam,"OXT ");
             strcpy(O2->atnam_raw," OXT");
+            O2->altpos = ' ';         /* 03.06.05                       */
             
             if(CA==NULL || C==NULL || O1==NULL ||
                ((CA->x == (REAL)9999.0) && 
@@ -216,6 +214,7 @@ BOOL FixCterPDB(PDB *pdb, int style)
 
    24.08.94 Original    By: ACRM
    06.02.03 Handles atnam_raw
+   03.06.05 Handles altpos
 */
 static void StandardiseCTers(PDB *pdb)
 {
@@ -256,12 +255,14 @@ static void StandardiseCTers(PDB *pdb)
          {
             strcpy(O1->atnam,"O   ");
             strcpy(O1->atnam_raw," O  ");
+            O1->altpos = ' ';         /* 03.06.05                       */
          }
          
          if(O2 != NULL)
          {
             strcpy(O2->atnam,"OXT ");
             strcpy(O2->atnam_raw," OXT");
+            O2->altpos = ' ';         /* 03.06.05                       */
          }
          
       }
@@ -302,6 +303,7 @@ static void StandardiseCTers(PDB *pdb)
 
    24.08.94 Original    By: ACRM
    06.02.03 Handles atnam_raw
+   03.06.05 Handles altpos
 */
 static BOOL SetCterStyle(PDB *start, PDB *end, int style)
 {
@@ -342,11 +344,13 @@ static BOOL SetCterStyle(PDB *start, PDB *end, int style)
       {
          strcpy(O1->atnam,"O1  ");
          strcpy(O1->atnam_raw," O1 ");
+         O1->altpos = ' ';            /* 03.06.05                       */
       }
       if(O2 != NULL)
       {
          strcpy(O2->atnam,"O2  ");
          strcpy(O2->atnam_raw," O2 ");
+         O2->altpos = ' ';            /* 03.06.05                       */
       }
       
    }
@@ -357,11 +361,13 @@ static BOOL SetCterStyle(PDB *start, PDB *end, int style)
       {
          strcpy(O1->atnam,"OT1 ");
          strcpy(O1->atnam_raw," OT1");
+         O1->altpos = ' ';            /* 03.06.05                       */
       }
       if(O2 != NULL)
       {
          strcpy(O2->atnam,"OT2 ");
          strcpy(O2->atnam_raw," OT2");
+         O2->altpos = ' ';            /* 03.06.05                       */
       }
 
       /* Change the name and number for O2                              */

@@ -3,19 +3,13 @@
    Program:    
    File:       AddNTerHs.c
    
-   Version:    V1.5R
-   Date:       06.02.03
+   Version:    V1.6R
+   Date:       03.06.05
    Function:   Routines to add N-terminal hydrogens and C-terminal
                oxygens.
    
-   Copyright:  (c) SciTech Software 1994-2003
+   Copyright:  (c) SciTech Software 1994-2006
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
    EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
@@ -56,6 +50,7 @@
    V1.3  13.11.96 Also checks for missing CA,C and O1 records
    V1.4  30.05.02 Changed PDB field from 'junk' to 'record_type'
    V1.5  06.02.03 Handles atnam_raw
+   V1.6  03.06.05 Handles altpos
 
 *************************************************************************/
 /* Includes
@@ -174,6 +169,7 @@ static PDB *KillNTerH(PDB *pdb)
    24.08.94 Set B-values of Hs to 20.0
    05.10.94 Removed unused variables
    06.02.03 Handles atnam_raw
+   03.06.05 Handles altpos
 */
 static int doAddGromosNTer(PDB **ppdb, PDB *nter)
 {
@@ -213,18 +209,21 @@ static int doAddGromosNTer(PDB **ppdb, PDB *nter)
       H1->z = coor[0].z;
       strcpy(H1->atnam, "H1  ");
       strcpy(H1->atnam_raw, " H1 ");
+      H1->altpos = ' ';                   /* 03.06.05                   */
       
       H2->x = coor[1].x;
       H2->y = coor[1].y;
       H2->z = coor[1].z;
       strcpy(H2->atnam, "H2  ");
       strcpy(H2->atnam_raw, " H2 ");
+      H2->altpos = ' ';                   /* 03.06.05                   */
 
       H3->x = coor[2].x;
       H3->y = coor[2].y;
       H3->z = coor[2].z;
       strcpy(H3->atnam, "H3  ");
       strcpy(H3->atnam_raw, " H3 ");
+      H3->altpos = ' ';                   /* 03.06.05                   */
 
       /* Correctly link the new start into the whole linked list        */
       if(prev != NULL)
@@ -250,6 +249,7 @@ static int doAddGromosNTer(PDB **ppdb, PDB *nter)
    24.08.94 Set B-values of H3 to 20.0
    05.10.94 Removed unused variables
    06.02.03 Handles atnam_raw
+   03.06.05 Handles altpos
 */
 static int doAddCharmmNTer(PDB **ppdb, PDB *nter)
 {
@@ -282,6 +282,7 @@ static int doAddCharmmNTer(PDB **ppdb, PDB *nter)
       strcpy(H1->record_type, "ATOM  ");
       strcpy(H1->chain,       nter->chain);
       strcpy(H1->insert,      " ");
+      H1->altpos = ' ';                   /* 03.06.05                   */
       
       H2->atnum  = 9999;
       H2->resnum = 9999;
@@ -293,11 +294,13 @@ static int doAddCharmmNTer(PDB **ppdb, PDB *nter)
       strcpy(H2->record_type, "ATOM  ");
       strcpy(H2->chain,       nter->chain);
       strcpy(H2->insert,      " ");
+      H2->altpos = ' ';                   /* 03.06.05                   */
 
       CopyPDB(H3, nter);
       strcpy(H3->atnam,  "HT3 ");
       strcpy(H3->atnam_raw,   " HT3");
       H3->bval   = 20.0;
+      H3->altpos = ' ';                   /* 03.06.05                   */
 
       /* Link these extra records into the linked list                  */
       H3->next   = nter->next;

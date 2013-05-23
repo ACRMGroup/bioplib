@@ -3,20 +3,13 @@
    Program:    
    File:       ftostr.c
    
-   Version:    V1.2R
-   Date:       14.11.97
-   Function:   General purpose routines which require the maths library
+   Version:    V1.3R
+   Date:       03.06.05
+   Function:   Convert a REAL to a string
    
-   Copyright:  (c) SciTech Software 1991-7
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
-               
+   Copyright:  (c) SciTech Software 1991-2005
+   EMail:      andrew@bioinf.org.uk
+
 **************************************************************************
 
    This program is not in the public domain, but it may be copied
@@ -30,7 +23,7 @@
 
    Description:
    ============
-   These are generally useful C routines, mostly string handling.
+   Convert a REAL to a string
 
 **************************************************************************
 
@@ -44,6 +37,7 @@
    V1.0  22.11.95 Original - Routines from general.c
    V1.1  09.10.97 Fixed inconsistent handling of %.0f between C libs
    V1.2  14.11.97 Another fix to same
+   V1.3  03.06.05 Tidied up to stop warnings under GCC 3.2.2
 
 *************************************************************************/
 /* Includes
@@ -94,6 +88,7 @@
    09.10.97 If precision is 0 prints as an integer since C libraries
             handle "%.0f" inconsistently
    14.11.97 Oops, had forgotten to fix this in the check for e-form
+   03.06.05 Tidied up some loops to stop warnings under GCC 3.2.2
 */
 char *ftostr(char  *str,
              int   maxlen,
@@ -190,13 +185,28 @@ char *ftostr(char  *str,
    if(str[strlen(str)-1] == '.') str[strlen(str)-1] = '\0';
    
    /* Strip any leading spaces                                          */
+   /* 03.06.05 Tidied loop for gcc 3.2.2                                */
    while(str[0] == ' ')
-      for(i=0; i<strlen(str); ) str[i] = str[++i];
+   {
+      i=0;
+      while(i<strlen(str))
+      {
+         str[i] = str[++i];
+      }
+   }
+   
 
    /* Remove any leading minus sign if value is 0.0                     */
    sscanf(str,"%lf",&val);
    if(val == 0.0 && str[0] == '-')
-      for(i=0; i<strlen(str); ) str[i] = str[++i];
+   {
+      /* 03.06.05 Tidied loop for gcc 3.2.2                             */
+      i=0;
+      while(i<strlen(str))
+      {
+         str[i] = str[++i];
+      }
+   }
 
    return(str);
 }

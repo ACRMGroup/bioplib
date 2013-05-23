@@ -3,8 +3,8 @@
    Program:    
    File:       rsc.c
    
-   Version:    V1.10R
-   Date:       09.02.05
+   Version:    V1.11R
+   Date:       03.06.05
    Function:   Modify sequence of a PDB linked list
    
    Copyright:  (c) SciTech Software 1992-2005
@@ -61,6 +61,7 @@
    V1.9  30.05.02 Changed PDB field from 'junk' to 'record_type'
    V1.10 09.02.05 Fixed to handle atnam_raw and sensible defaults for
                   occ/bval
+   V1.11 03.06.05 Added altpos
 
 *************************************************************************/
 /* Defines required for includes
@@ -949,6 +950,7 @@ Cleanup:
    04.01.94 Corrected string assignments of NULL to '\0'
    09.02.05 Sets atnam_raw
             Sets default occ/bval to 1.0 and 20.0
+   03.06.05 Sets altpos
 */
 static PDB *ReadRefCoords(FILE *fp,
                           char seq)
@@ -1009,6 +1011,9 @@ static PDB *ReadRefCoords(FILE *fp,
          p->atnam_raw[0] = ' ';
          strncpy(p->atnam_raw+1,ptr,3);
          p->atnam_raw[4] = '\0';
+
+         /* 03.06.05 set alternate indicator to a blank                 */
+         p->altpos = ' ';
 
          ptr += 4;
 

@@ -3,11 +3,11 @@
    Program:    
    File:       WritePDB.c
    
-   Version:    V1.7R
-   Date:       30.05.02
+   Version:    V1.8R
+   Date:       03.06.05
    Function:   Write a PDB file from a linked list
    
-   Copyright:  (c) SciTech Software 1993-2002
+   Copyright:  (c) SciTech Software 1993-2005
    Author:     Dr. Andrew C. R. Martin
    Address:    SciTech Software
                23, Stag Leys,
@@ -57,6 +57,8 @@
    V1.6  15.02.01 Writes using atnam_raw so atom name is unchanged from
                   input
    V1.7  30.05.02 Changed PDB field from 'junk' to 'record_type'
+   V1.8  03.06.05 'atnam_raw' no longer includes the alternate indicator
+                  which is now in 'altpos'
 
 *************************************************************************/
 #include <stdio.h>
@@ -119,14 +121,16 @@ void WritePDB(FILE *fp,
    22.06.93 Changed to %lf. Ljust strings
    11.03.94 %lf back to %f (!)
    15.02.01 Modified to use atnam_raw
+   03.06.05 Modified to use altpos
 */
 void WritePDBRecord(FILE *fp,
                     PDB  *pdb)
 {
-   fprintf(fp,"%-6s%5d %-5s%-4s%1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f\n",
+   fprintf(fp,"%-6s%5d %-4s%c%-4s%1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f\n",
            pdb->record_type,
            pdb->atnum,
            pdb->atnam_raw,
+           pdb->altpos,
            pdb->resnam,
            pdb->chain,
            pdb->resnum,

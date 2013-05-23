@@ -3,18 +3,12 @@
    Program:    
    File:       FindRawAtomInRes.c
    
-   Version:    V1.11R
-   Date:       28.02.01
+   Version:    V1.12R
+   Date:       03.06.05
    Function:   PDB linked list manipulation
    
-   Copyright:  (c) SciTech Software 1992-2001
+   Copyright:  (c) SciTech Software 1992-2005
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
    EMail:      andrew@stagleys.demon.co.uk
                
 **************************************************************************
@@ -52,6 +46,7 @@
    V1.9  14.03.96 Added FindAtomInRes()
    V1.10 08.10.99 Initialised some variables
    V1.11 28.02.01 Added FindRawAtomInRes()
+   V1.12 03.06.05 Compares 4 rather than 5 characters
 
 *************************************************************************/
 /* Includes
@@ -88,6 +83,7 @@
                                 found
 
    28.02.01 Original based on FindAtomInRes()  By: ACRM
+   03.06.05 Now compares 4 characters rather than 5
 */
 PDB *FindRawAtomInRes(PDB *pdb, char *atnam_in)
 {
@@ -106,7 +102,7 @@ PDB *FindRawAtomInRes(PDB *pdb, char *atnam_in)
    /* Search for the required atom                                      */
    for(p=pdb; p!=end; NEXT(p))
    {
-      if(!strncmp(p->atnam_raw,atnam,5))
+      if(!strncmp(p->atnam_raw,atnam,4))
          return(p);
    }
    
