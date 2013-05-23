@@ -3,12 +3,12 @@
    Program:    
    File:       openorpipe.c
    
-   Version:    V1.6
-   Date:       29.06.07
+   Version:    V1.8
+   Date:       02.04.09
    Function:   Open a file for writing unless the filename starts with
                a | in which case open as a pipe
    
-   Copyright:  (c) SciTech Software 1997-2007
+   Copyright:  (c) SciTech Software 1997-2009
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -44,6 +44,8 @@
    V1.5  03.02.06 Added prototypes for popen() and pclose()
    V1.6  29.06.07 popen() and pclose() prototypes now skipped for MAC OSX
                   which defines them differently
+   V1.7  17.03.09 popen() prototype now skipped for Windows.
+   V1.8  02.04.09 Clean compile with NOPIPE defined
 
 *************************************************************************/
 /* Includes
@@ -68,8 +70,10 @@
 /************************************************************************/
 /* Prototypes
 */
-#ifndef __APPLE__
+#if !defined(__APPLE__) && !defined(MS_WINDOWS)
 FILE *popen(char *, char *);
+#endif
+#ifndef __APPLE__
 int  pclose(FILE *);
 #endif
 
@@ -124,13 +128,15 @@ FILE *OpenOrPipe(char *filename)
    26.05.97 Original   By: ACRM
    26.06.97 Added call to signal()
    28.01.05 Added NOPIPE define
+   02.04.09 Moved 'int ret' to be in the #else
 */
 int CloseOrPipe(FILE *fp)
 {
-   int ret;
 #ifdef NOPIPE
    return(fclose(fp));
 #else
+   int ret;
+
    if((ret=pclose(fp)) == (-1))
       return(fclose(fp));
 

@@ -3,20 +3,14 @@
    Program:    
    File:       FitCaPDB.c
    
-   Version:    V1.3R
-   Date:       14.03.96
+   Version:    V1.4R
+   Date:       28.01.09
    Function:   Fit two PDB linked lists. Also a weighted fit and support
                routines
    
-   Copyright:  (c) SciTech Software 1993-6
+   Copyright:  (c) SciTech Software 1993-2009
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
 
@@ -49,6 +43,8 @@
                   Changed FitPDB() and FitCaCbPDB() to use 
                   ApplyMatrixPDB() rather than RotatePDB() since the PDB
                   linked lists are already at the origin
+   V1.4  28.01.09 Initialize RetVal - this randomly worked in 32bit but
+                  broke in 64bit
 
 *************************************************************************/
 /* Includes
@@ -89,6 +85,7 @@
    matrix. This may be NULL if these data are not required.
 
    14.03.96 Original based on FitPDB()   By: ACRM
+   28.01.09 Initialize RetVal to TRUE!
 */
 BOOL FitCaPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
 {
@@ -101,7 +98,7 @@ BOOL FitCaPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
    int   NCoor       = 0,
          i, j,
          natoms;
-   BOOL  RetVal;
+   BOOL  RetVal = TRUE;
    PDB   *ref_ca_pdb = NULL,
          *fit_ca_pdb = NULL;
    char  *sel[2];

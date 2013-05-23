@@ -3,8 +3,8 @@
    Program:    
    File:       fit.c
    
-   Version:    V1.4R
-   Date:       03.06.97
+   Version:    V1.5
+   Date:       03.04.09
    Function:   Perform least squares fitting of coordinate sets
    
    Copyright:  (c) SciTech Software 1993-7
@@ -50,6 +50,7 @@
    V1.2  08.12.92 Changed abs() to ABS() using macros.h. Includes stdio.h
    V1.3  11.02.94 Changed column flag to BOOL
    V1.4  03.06.97 Corrected documentation
+   V1.5  03.04.09 Initialize clep in qikfit() By: CTP
 
 *************************************************************************/
 /* Includes
@@ -193,6 +194,7 @@ BOOL matfit(COOR    *x1,        /* First coord array    */
    04.02.91 Original based on code by Mike Sutcliffe
    01.06.92 ANSIed & doc'd
    11.03.94 column changed to BOOL
+   03.04.09 Initialize clep for fussy compliers. By: CTP
 */
 static void qikfit(REAL  umat[3][3],
                    REAL  rm[3][3],
@@ -212,7 +214,8 @@ static void qikfit(REAL  umat[3][3],
          ud,tr,ta,cs,sn,ac,
          delta,deltap,
          gfac,
-         cle,clep;
+         cle,
+         clep = 0.0;
    int   i,j,k,l,m,
          jmax,
          ncyc,

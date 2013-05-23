@@ -68,6 +68,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "SysDefs.h"
+#include "port.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -131,7 +132,7 @@ FILE *OpenFile(char *filename, char *envvar, char *mode, BOOL *noenv)
    if((fp=fopen(filename,mode)) == NULL)
    {
       /* Failed, so build alternative directory/filename                */
-#if (unix || __unix__ || msdos || __msdos__ || __unix || __MACH__ || __APPLE__)
+#if (unix || __unix__ || MS_WINDOWS || __unix || __MACH__ || __APPLE__)
       if((datadir = getenv(envvar)) != NULL)
       {
          if(datadir[strlen(datadir)-1] == '/')

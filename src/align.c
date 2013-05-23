@@ -3,11 +3,11 @@
    Program:    
    File:       align.c
    
-   Version:    V3.2
-   Date:       27.02.07
+   Version:    V3.3
+   Date:       07.04.09
    Function:   Perform Needleman & Wunsch sequence alignment
    
-   Copyright:  (c) SciTech Software 1993-2007
+   Copyright:  (c) SciTech Software 1993-2009
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -62,6 +62,8 @@
                   routine implemented. align() is now a wrapper to that.
    V3.1  06.02.03 Fixed for new version of GetWord()
    V3.2  27.02.07 Added affinealineuc() and CalcMDMScoreUC()
+   V3.3  07.04.09 Complete re-write of ReadMDM() so it can read BLAST
+                  style matrix files as well as our own
 
 *************************************************************************/
 /* Includes
@@ -89,6 +91,7 @@
 #define DATAENV "DATADIR"   /* Environment variable or assign           */
 
 #define MAXBUFF 400
+#define MAXWORD 16
 
 /* Type definition to store a X,Y coordinate pair in the matrix         */
 typedef struct
@@ -790,14 +793,19 @@ int affinealignuc(char *seq1,
             matrix
    26.07.95 Removed unused variables
    06.02.03 Fixed for new version of GetWord()
+   07.04.09 Completely re-written to allow it to read BLAST style matrix
+            files as well as the ones used previously
+            Allow comments introduced with # as well as !
+            Uses MAXWORD rather than hardcoded 16
 */
 BOOL ReadMDM(char *mdmfile)
 {
    FILE *mdm = NULL;
-   int  i, j;
+   int  i, j, k, row, tmpStoreSize;
    char buffer[MAXBUFF],
-        word[16],
-        *p;
+        word[MAXWORD],
+        *p,
+        **tmpStore;
    BOOL noenv;
 
    if((mdm=OpenFile(mdmfile, DATAENV, "r", &noenv))==NULL)
@@ -805,25 +813,44 @@ BOOL ReadMDM(char *mdmfile)
       return(FALSE);
    }
 
-   /* Read over any comment lines                                       */
+   /* First read the file to determine the dimensions                   */
    while(fgets(buffer,MAXBUFF,mdm))
    {
       TERMINATE(buffer);
       KILLLEADSPACES(p,buffer);
-      if(strlen(p) && p[0] != '!')
-         break;
+
+      /* First line which is non-blank and non-comment                  */
+      if(strlen(p) && p[0] != '!' && p[0] != '#')
+      {
+         sMDMSize = 0;
+         for(p = buffer; p!=NULL;)
+         {
+            p = GetWord(p, word, MAXWORD);
+            /* Increment counter if this is numeric                     */
+            if(isdigit(word[0]) || 
+               ((word[0] == '-')&&(isdigit(word[1]))))
+               sMDMSize++;
+         }
+         if(sMDMSize)
+            break;
+      }
    }
-
-   /* See how many fields there are in the buffer                       */
-   for(p = buffer, sMDMSize = 0; p!=NULL; sMDMSize++)
-      p = GetWord(p, word, 16);
-
 
    /* Allocate memory for the MDM and the AA List                       */
    if((sMDMScore = (int **)Array2D(sizeof(int),sMDMSize,sMDMSize))==NULL)
       return(FALSE);
    if((sMDM_AAList = (char *)malloc((sMDMSize+1)*sizeof(char)))==NULL)
    {
+      FreeArray2D((char **)sMDMScore, sMDMSize, sMDMSize);
+      return(FALSE);
+   }
+
+   /* Allocate temporary storage for a row from the matrix              */
+   tmpStoreSize = 2*sMDMSize;
+   if((tmpStore = (char **)Array2D(sizeof(char), tmpStoreSize, MAXWORD))
+      ==NULL)
+   {
+      free(sMDM_AAList);
       FreeArray2D((char **)sMDMScore, sMDMSize, sMDMSize);
       return(FALSE);
    }
@@ -836,39 +863,64 @@ BOOL ReadMDM(char *mdmfile)
          sMDMScore[i][j] = 0;
       }
    }
-   
-   /* If our first word was a valid number, assume that numbers come
-      first
-   */
-   i=0;
-   do
+
+   /* Rewind the file and read the actual data                          */
+   rewind(mdm);
+   row = 0;
+   while(fgets(buffer,MAXBUFF,mdm))
    {
+      int Numeric;
+      
       TERMINATE(buffer);
-      KILLLEADSPACES(p, buffer);
-      if(strlen(p))
+      KILLLEADSPACES(p,buffer);
+
+      /* Check line is non-blank and non-comment                        */
+      if(strlen(p) && p[0] != '!' && p[0] != '#')
       {
-         GetWord(buffer, word, 16);
-         if(sscanf(word,"%d",&j))    /* A row of numbers                */
+         Numeric = 0;
+         for(p = buffer, i = 0; p!=NULL && i<tmpStoreSize; i++)
          {
-            for(p = buffer, j = 0; p!=NULL && j<sMDMSize; j++)
+            p = GetWord(p, tmpStore[i], MAXWORD);
+            /* Incremement Numeric counter if it's a numeric field      */
+            if(isdigit(tmpStore[i][0]) || 
+               ((tmpStore[i][0] == '-')&&(isdigit(tmpStore[i][1]))))
             {
-               p = GetWord(p, word, 16);
-               sscanf(word,"%d",&(sMDMScore[i][j]));
+               Numeric++;
             }
-            i++;
          }
-         else                        /* Amino acid names                */
+
+         /* No numeric fields so it is the amino acid names             */
+         if(Numeric == 0)
          {
-            for(p = buffer, j = 0; p!=NULL && j<sMDMSize; j++)
+            for(j = 0; j<i && j<sMDMSize; j++)
             {
-               p = GetWord(p, word, 16);
-               sMDM_AAList[j] = word[0];
+               sMDM_AAList[j] = tmpStore[j][0];
             }
+         }
+         else
+         {
+            /* There were numeric fields, so copy them into the matrix,
+               skipping any non-numeric fields
+               j counts the input fields
+               k counts the fields in sMDMScore
+               row counts the row in sMDMScore
+            */
+            for(j=0, k=0; j<i && k<sMDMSize; j++)
+            {
+               if(isdigit(tmpStore[j][0]) || 
+                  ((tmpStore[j][0] == '-')&&(isdigit(tmpStore[j][1]))))
+               {
+                  sscanf(tmpStore[j],"%d",&(sMDMScore[row][k]));
+                  k++;
+               }
+            }
+            
+            row++;
          }
       }
-   }  while(fgets(buffer,MAXBUFF,mdm));
-   
+   }
    fclose(mdm);
+   FreeArray2D((char **)tmpStore, tmpStoreSize, MAXWORD);
    
    return(TRUE);
 }
@@ -1241,9 +1293,24 @@ int main(int argc, char **argv)
         align1[100],
         align2[100];
    int  score, al_len;
+   int  i, j;
    
-
    ReadMDM("pet91.mat");
+
+   for(i=0; i<sMDMSize; i++)
+   {
+      printf("  %c", sMDM_AAList[i]);
+   }
+   printf("\n");
+   
+   for(i=0; i<sMDMSize; i++)
+   {
+      for(j=0; j<sMDMSize; j++)
+      {
+         printf("%3d", sMDMScore[i][j]);
+      }
+      printf("\n");
+   }
    
    score = affinealign(seq1, strlen(seq1), seq2, strlen(seq2), 
                        TRUE, FALSE,

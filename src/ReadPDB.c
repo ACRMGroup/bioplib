@@ -3,11 +3,11 @@
    Program:    
    File:       ReadPDB.c
    
-   Version:    V2.20R
-   Date:       29.06.07
+   Version:    V2.21
+   Date:       17.03.09
    Function:   Read coordinates from a PDB file 
    
-   Copyright:  (c) SciTech Software 1988-2007
+   Copyright:  (c) SciTech Software 1988-2009
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -149,6 +149,7 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
    V2.19 05.06.07 Added support for Unix compress'd files
    V2.20 29.06.07 popen() and pclose() prototypes now skipped for MAC OSX
                   which defines them differently
+   V2.21 17.03.09 popen() prototype skipped for Windows. By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -183,8 +184,10 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
                              int NPartial, PDB **ppdb, PDB **pp, 
                              int *natom);
-#ifndef __APPLE__
+#if !defined(__APPLE__) && !defined(MS_WINDOWS)
 FILE *popen(char *, char *);
+#endif
+#ifndef __APPLE__
 int  pclose(FILE *);
 #endif
 

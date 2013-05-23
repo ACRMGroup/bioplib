@@ -3,11 +3,11 @@
    Program:    
    File:       throne.c
    
-   Version:    V1.3R
-   Date:       08.03.07
+   Version:    V1.7
+   Date:       18.02.09
    Function:   Convert between 1 and 3 letter aa codes
    
-   Copyright:  (c) SciTech Software 1993-2007
+   Copyright:  (c) SciTech Software 1993-2009
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -45,6 +45,14 @@
                   (same as PCA: pyrrolidone carboxylic acid).
                   Note that it isn't clear whether this should translate
                   to Glu or Gln
+   V1.4  21.07.08 Added CGN (5-OXO-PYRROLIDINE-2-CARBALDEHYDE) which
+                  is again the same as PCA
+   V1.5  19.12.08 Corrected NUMAAKNOWN - wasn't looking at U or X as
+                  these were > NUMAAKNOWN!
+   V1.6  04.02.09 onethr() was not properly working from end of list
+                  for nucleic acids
+   V1.7  18.02.09 Fixed for new PDB files which have "  DT" etc for DNA
+                  sequences
 
 *************************************************************************/
 /* Includes
@@ -55,7 +63,7 @@
 /************************************************************************/
 /* Defines and macros
 */
-#define NUMAAKNOWN 29
+#define NUMAAKNOWN 37
 
 /************************************************************************/
 /* Globals
@@ -65,22 +73,25 @@
    end with X/UNK.
    Also, nucleic acids must come *after* amino acids.
 */
+/* Don't forget to fix NUMAAKNOWN if adding to this table!              */
 static char sTab1[]    = {'A','C','D','E','F',
                           'G','H','I','K','L',
                           'M','N','P','Q','R',
                           'S','T','V','W','Y',
-                          'E','B','Z','E',
-                          'A','T','C','G','U',
-                          'X'
+                          'E','B','Z','E','E',
+                          'A','T','C','G','U','I',
+                          'A','T','C','G','I','X'
                          };
+/* Don't forget to fix NUMAAKNOWN if adding to this table!              */
 static char sTab3[][8] = {"ALA ","CYS ","ASP ","GLU ","PHE ",
                           "GLY ","HIS ","ILE ","LYS ","LEU ",
                           "MET ","ASN ","PRO ","GLN ","ARG ",
                           "SER ","THR ","VAL ","TRP ","TYR ",
-                          "PCA ","ASX ","GLX ","PGA ",
-                          "  A ","  T ","  C ","  G ","  U ",
-                          "UNK "
+                          "PCA ","ASX ","GLX ","PGA ","CGN ",
+                          "  A ","  T ","  C ","  G ","  U ","  I ",
+                          " DA "," DT "," DC "," DG "," DI ","UNK "
                          };
+/* Don't forget to fix NUMAAKNOWN if adding to this table!              */
 
 BOOL gBioplibSeqNucleicAcid = FALSE;
 
@@ -163,6 +174,8 @@ char thronex(char *three)
    07.06.93 Original    By: ACRM
    25.07.95 If the gBioplibSeqNucleicAcid flag is set, assumes nucleic
             acids rather than amino acids
+   03.02.09 Fixed nucleic search - j was incrementing instead of 
+            decrementing!
 */
 char *onethr(char one)
 {
@@ -170,7 +183,7 @@ char *onethr(char one)
 
    if(gBioplibSeqNucleicAcid) /* Work from end of table                 */
    {
-      for(j=NUMAAKNOWN-1;j>=0;j++)
+      for(j=NUMAAKNOWN-1;j>=0;j--)
          if(sTab1[j] == one) return(sTab3[j]);
    }
    else                       /* Work from start of table               */

@@ -3,13 +3,12 @@
    Program:    
    File:       ReadWholePDB.c
    
-   Version:    V1.0
-   Date:       30.05.02
+   Version:    V1.3
+   Date:       17.03.09
    Function:   
    
    Copyright:  (c) Dr. Andrew C. R. Martin, University of Reading, 2002
    Author:     Dr. Andrew C. R. Martin
-   Phone:      +44 (0) 1372 275775
    EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
@@ -36,10 +35,14 @@
    Revision History:
    =================
    V1.0  30.05.02 Original
+   V1.1  12.06.08 CTP Added include for port.h
+   V1.2  13.06.08 popen() and pclose() prototypes skipped for Mac OS X.
+   V1.3  17.03.09 popen() prototype skipped for Windows. By: CTP
 
 *************************************************************************/
 /* Includes
 */
+#include "port.h"    /* Required before stdio.h                         */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -63,8 +66,12 @@
 */
 static WHOLEPDB *doReadWholePDB(FILE *fpin, BOOL atomsonly);
 
+#if !defined(__APPLE__) && !defined(MS_WINDOWS)
 FILE *popen(char *, char *);
+#endif
+#ifndef __APPLE__
 int  pclose(FILE *);
+#endif
 
 /************************************************************************/
 /*>void FreeWholePDB(WHOLEPDB *wpdb)

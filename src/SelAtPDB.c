@@ -3,19 +3,13 @@
    Program:    
    File:       SelAtPDB.c
    
-   Version:    V1.7R
-   Date:       16.10.96
+   Version:    V1.8
+   Date:       03.20.09
    Function:   Select a subset of atom types from a PDB linked list
    
-   Copyright:  (c) SciTech Software 1990-6
+   Copyright:  (c) SciTech Software 1990-2009
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@stagleys.demon.co.uk
+   EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
 
@@ -75,6 +69,7 @@
    V1.5  01.11.94 Added HStripPDB()
    V1.6  26.07.95 Removed unused variables
    V1.7  16.10.96 Added SelectCaPDB()
+   V1.8  04.02.09 SelectAtomsPDB(): Initialize q for fussy compliers
 
 *************************************************************************/
 /* Includes
@@ -135,12 +130,13 @@
    09.07.93 Modified to return PDB pointer. Changed allocation 
             scheme. Changed back to sel[] variables *must* be 4
             chars.
+   04.02.09 Initialize q for fussy compliers
 */
 PDB *SelectAtomsPDB(PDB *pdbin, int nsel, char **sel, int *natom)
 {
    PDB   *pdbout  = NULL,
          *p,
-         *q;
+         *q = NULL;
    int   i;
     
    *natom = 0;

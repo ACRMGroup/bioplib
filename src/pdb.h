@@ -3,11 +3,11 @@
    Program:    
    File:       pdb.h
    
-   Version:    V1.42R
-   Date:       08.11.07
+   Version:    V1.44R
+   Date:       01.06.09
    Function:   Include file for pdb routines
    
-   Copyright:  (c) SciTech Software, UCL, Reading 1993-2007
+   Copyright:  (c) SciTech Software, UCL, Reading 1993-2009
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -96,6 +96,7 @@
                         FindAtomWildcardInRes()
                         DupeResiduePDB()
    V1.43 30.04.08 Added StripWatersPDB() and ISWATER() macro
+   V1.44 01.06.09 Added extras field to PDB structure
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -111,9 +112,34 @@
 #define MAXSTDAA    21       /* Number of standard amino acids (w/ PCA)*/
 #define MAXATINRES  14       /* Max number of atoms in a standard aa   */
 
+/* This is our main PDB structure used for the PDB linked lists.
+
+   The 'extras' field is used for flags or to attach another
+   structure or array to each PDB record. For example:
+
+   typedef struct
+   {
+      REAL angle;
+      BOOL flag;
+   }  EXTRAS;
+   PDB *p;
+
+   for(p=pdb; p!=NULL; NEXT(p))
+   {
+      if((p->extras = (APTR)malloc(sizeof(EXTRAS)))==NULL)
+         return(FALSE);
+   }
+
+   for(p=pdb; p!=NULL; NEXT(p))
+   {
+      ((EXTRAS *)p->extras)->flag = FALSE;
+      ((EXTRAS *)p->extras)->angle = (REAL)0.0;
+   }
+*/
 typedef struct pdb_entry
 {
    REAL x,y,z,occ,bval;
+   APTR extras;
    struct pdb_entry *next;
    int  atnum;
    int  resnum;
@@ -125,6 +151,7 @@ typedef struct pdb_entry
    char chain[8];
    char altpos;
 }  PDB;
+
 
 #define SELECT(x,w) (x) = (char *)malloc(5 * sizeof(char)); \
                     if((x) != NULL) strncpy((x),(w),5)

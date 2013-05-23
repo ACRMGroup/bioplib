@@ -3,18 +3,12 @@
    Program:    
    File:       OrderPDB.c
    
-   Version:    V1.2R
-   Date:       18.03.94
+   Version:    V1.3R
+   Date:       23.06.08
    Function:   Functions to modify atom order in PDB linked list
    
-   Copyright:  (c) SciTech Software 1993-4
+   Copyright:  (c) SciTech Software 1993-2008
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
    EMail:      martin@biochem.ucl.ac.uk
                
 **************************************************************************
@@ -43,6 +37,7 @@
    V1.0  22.02.04 Original
    V1.1  09.03.94 Bug fix in ShuffleResPDB(). Added PCA to sAtoms table
    V1.2  18.03.94 Bug fix in ShuffleResPDB().
+   V1.3  22.06.08 Bug fix in ShuffleBB()
 
 *************************************************************************/
 /* Includes
@@ -338,6 +333,10 @@ BOOL GetAtomTypes(char *resnam, char **AtomTypes)
    list.
 
    13.05.92 Original
+   22.06.08 Fixed to use FindNextResidue(). It was continuing to search
+            out of the current residue, so if the same residue number in
+            a different chain was of the same type, it ended up changing
+            that instead!
 */
 PDB *ShuffleBB(PDB *pdb)
 {
@@ -347,46 +346,37 @@ PDB *ShuffleBB(PDB *pdb)
          *O    = NULL,
          *CB   = NULL,
          *ret  = NULL,
-         *p;
-   int   resnum;
-   char  insert[8];
-   
-   resnum = pdb->resnum;
-   strcpy(insert,pdb->insert);
-         
-   for(p=pdb; p; NEXT(p))
+         *p,
+         *next = NULL;
+
+   next = FindNextResidue(pdb);
+          
+   for(p=pdb; p!=next; NEXT(p))
    {
-      if(!strncmp(p->atnam,"N   ",4) && p->resnum == resnum 
-                                     && !strncmp(insert,p->insert,1))
+      if(!strncmp(p->atnam,"N   ",4))
          N  = p;
-      else if(!strncmp(p->atnam,"CA  ",4) && p->resnum == resnum
-                                          && !strncmp(insert,p->insert,1)) 
+      else if(!strncmp(p->atnam,"CA  ",4))
          CA = p;
-      else if(!strncmp(p->atnam,"C   ",4) && p->resnum == resnum 
-                                          && !strncmp(insert,p->insert,1))
+      else if(!strncmp(p->atnam,"C   ",4))
          C  = p;
-      else if(!strncmp(p->atnam,"O   ",4) && p->resnum == resnum 
-                                          && !strncmp(insert,p->insert,1))
+      else if(!strncmp(p->atnam,"O   ",4))
          O  = p;
-      else if(!strncmp(p->atnam,"CB  ",4) && p->resnum == resnum 
-                                          && !strncmp(insert,p->insert,1))
+      else if(!strncmp(p->atnam,"CB  ",4))
          CB = p;
    }
-   
+    
    /* If we didn't find N, just return                                  */
    if(N==NULL) return(pdb);
-
+ 
    /* Move atoms in order from the pdb list to the ret list             */
    MovePDB(N,  &pdb, &ret);
-   MovePDB(CA, &pdb, &ret);
-   MovePDB(C,  &pdb, &ret);
-   MovePDB(O,  &pdb, &ret);
-   MovePDB(CB, &pdb, &ret);
-
+   if(CA != NULL) MovePDB(CA, &pdb, &ret);
+   if(C  != NULL) MovePDB(C,  &pdb, &ret);
+   if(O  != NULL) MovePDB(O,  &pdb, &ret);
+   if(CB != NULL) MovePDB(CB, &pdb, &ret);
+ 
    /* Append the remains of pdb onto ret                                */
    AppendPDB(ret, pdb);
-   
+    
    return(ret);
 }
-
-

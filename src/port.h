@@ -3,21 +3,14 @@
    Program:    
    File:       port.h
    
-   Version:    V1.0R
-   Date:       27.02.98
+   Version:    V1.2
+   Date:       03.04.09
    Function:   Port-specific defines to allow us to use things like 
                popen() in a clean compile
    
-   Copyright:  (c) SciTech Software 1988-1998
+   Copyright:  (c) SciTech Software 1988-2009
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
-               andrew@stagleys.demon.co.uk
+   EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
 
@@ -44,6 +37,9 @@
    Revision History:
    =================
    V1.0  27.02.98  Original
+   V1.1  17.03.09  Added Mac OS X and Windows. By: CTP
+   V1.2  03.04.09  Added check for linux whether _POSIX_SOURCE already
+                   defined and added further checks for MS_WINDOWS
 
 *************************************************************************/
 /***
@@ -78,12 +74,26 @@
 #   endif
 #endif
 
-/* SunOS - doesn't need anythging for SunOS 4.1.2                       */
+/* SunOS - doesn't need anything for SunOS 4.1.2                        */
 #if defined(sun) && defined(sparc) && !defined(__svr4)
 #endif
 
 /* Linux                                                                */
 #ifdef linux
-#   define _POSIX_SOURCE
+#   ifndef _POSIX_SOURCE
+#      define _POSIX_SOURCE
+#   endif
 #endif
 
+/* MacOS - Doesn't need anything.                                       */
+#ifdef __APPLE__
+#endif
+
+/* Windows - Does not support unix pipes.                               */
+#if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) ||   \
+    defined(__WIN64__) || defined(_WIN64) || defined(WIN64) ||   \
+    defined(__WIN95__) || defined(__NT__) || defined(__WINDOWS__) || \
+    defined(msdos)     || defined(__msdos__)
+#   define MS_WINDOWS 1
+#   define NOPIPE
+#endif
