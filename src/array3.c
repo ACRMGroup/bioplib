@@ -23,9 +23,9 @@
    CVS Tags:
    =========
  
-   Last modified by:    $Author: andrew $
+   Last modified by:    $Author: martin $
    Tag:                 $Name:  $
-   Revision:            $Revision: 1.1.1.1 $
+   Revision:            $Revision: 1.1 $
  
 **************************************************************************
 

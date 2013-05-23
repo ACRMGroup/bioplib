@@ -3,11 +3,11 @@
    Program:    
    File:       ReadPDB.c
    
-   Version:    V2.13R
-   Date:       30.05.02
+   Version:    V2.14R
+   Date:       27.04.05
    Function:   Read coordinates from a PDB file 
    
-   Copyright:  (c) SciTech Software 1988-2002
+   Copyright:  (c) SciTech Software 1988-2005
    Author:     Dr. Andrew C. R. Martin
    Address:    SciTech Software
                23, Stag Leys,
@@ -139,6 +139,7 @@ BUGS:  The multiple occupancy code assumes that all positions for a given
    V2.11 08.10.99 Initialised some variables
    V2.12 15.02.01 Added atnam_raw into PDB structure
    V2.13 30.05.02 Changed PDB field from 'junk' to 'record_type'
+   V2.14 27.04.05 Fixed bug in atnam_raw for multiple occupancies
 
 *************************************************************************/
 /* Defines required for includes
@@ -344,6 +345,7 @@ PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
    17.08.98 V2.10 Added case to popen() for SunOS
    08.10.99 V2.11 Initialise CurIns and CurRes
    15.02.01 V2.12 Added atnam_raw
+   27.04.05 V2.14 Added another atnam_raw for multiple occupancies
 */
 PDB *doReadPDB(FILE *fpin,
                int  *natom,
@@ -457,7 +459,7 @@ PDB *doReadPDB(FILE *fpin,
                filled in correctly
                
                04.10.94 Read all atoms if OccRank is 0
-               */
+            */
             if(occ > (double)0.999 || 
                occ < (double)SMALL || 
                OccRank == 0)
@@ -568,6 +570,9 @@ PDB *doReadPDB(FILE *fpin,
                   multi[NPartial].next   = NULL;
                   strcpy(multi[NPartial].record_type, record_type);
                   strcpy(multi[NPartial].atnam,       atnam);
+
+                  /* 27.04.05 - added this line                         */
+                  strcpy(multi[NPartial].atnam_raw,   atnam_raw);
                   strcpy(multi[NPartial].resnam,      resnam);
                   strcpy(multi[NPartial].chain,       chain);
                   strcpy(multi[NPartial].insert,      insert);
@@ -618,6 +623,7 @@ PDB *doReadPDB(FILE *fpin,
 
    17.03.94 Original    By: ACRM
    08.10.99 Initialise IMaxOcc and MaxOcc
+   27.04.05 Added atnam_raw
 */
 static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
                              int NPartial, PDB **ppdb, PDB **pp, 
@@ -685,6 +691,8 @@ static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
    (*pp)->next   = NULL;
    strcpy((*pp)->record_type, multi[IMaxOcc].record_type);
    strcpy((*pp)->atnam,       multi[IMaxOcc].atnam);
+   /* 27.04.05 Added this line                                          */
+   strcpy((*pp)->atnam_raw,   multi[IMaxOcc].atnam_raw);
    strcpy((*pp)->resnam,      multi[IMaxOcc].resnam);
    strcpy((*pp)->chain,       multi[IMaxOcc].chain);
    strcpy((*pp)->insert,      multi[IMaxOcc].insert);
