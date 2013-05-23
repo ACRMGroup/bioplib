@@ -34,4 +34,7 @@ V2.0.8 Added affinealignuc() and CalcMDMScoreUC() to align.c
 V2.0.9 Added support for Unix compress'd files to ReadPDB. Fixes
        to popen() and pclose() prototypes for MAX OS/X
        Added ReadWholePDBAtoms()
+V2.0.10 Changes to DupeResiduePDB.c FindAtomWildcardInRes.c
+       BuildAtomNeighbourPDBList.c
+V2.0.11 Changes to StripWatersPDB.c ReadPDB.c array3.c
 --------------------------------------------------------------------

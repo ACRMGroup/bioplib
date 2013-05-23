@@ -95,6 +95,7 @@
    V1.42 08.11.07 Added BuildAtomNeighbourPDBList()
                         FindAtomWildcardInRes()
                         DupeResiduePDB()
+   V1.43 30.04.08 Added StripWatersPDB() and ISWATER() macro
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -189,6 +190,15 @@ typedef struct
                      p->altpos = ' '; \
                      p->occ = 0.0; p->bval = 0.0; \
                      p->next = NULL
+
+#define ISWATER(z)   (!strncmp((z)->resnam,"HOH",3) || \
+                      !strncmp((z)->resnam,"OH2",3) || \
+                      !strncmp((z)->resnam,"OHH",3) || \
+                      !strncmp((z)->resnam,"DOD",3) || \
+                      !strncmp((z)->resnam,"OD2",3) || \
+                      !strncmp((z)->resnam,"ODD",3) || \
+                      !strncmp((z)->resnam,"WAT",3))
+
 
 /* These are the types returned by ResolPDB()                          */
 #define STRUCTURE_TYPE_UNKNOWN   0
@@ -346,4 +356,5 @@ PDB *RemoveAlternates(PDB *pdb);
 PDB *BuildAtomNeighbourPDBList(PDB *pdb, PDB *pRes, REAL NeighbDist);
 PDB *FindAtomWildcardInRes(PDB *pdb, char *pattern);
 PDB *DupeResiduePDB(PDB *in);
+PDB *StripWatersPDB(PDB *pdbin, int *natom);
 #endif

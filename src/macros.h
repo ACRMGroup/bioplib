@@ -3,11 +3,11 @@
    Program:    
    File:       Macros.h
    
-   Version:    V2.16
-   Date:       25.01.06
+   Version:    V2.17
+   Date:       10.04.08
    Function:   Useful macros
    
-   Copyright:  SciTech Software 1991-2006
+   Copyright:  SciTech Software 1991-2008
    Author:     Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
 
@@ -119,6 +119,8 @@
    V2.14 13.03.99 Added DELETEDOUBLE()
    V2.15 01.03.01 Added DOTIFY() DEDOTIFY() PADCHARMINTERM() SUBSCHAR()
    V2.16 25.01.06 Added FINDPREV()
+   V2.17 10.04.08 Fixed bug in DELETE() - the break was not properly
+                  stopping prev from being changed
 
 *************************************************************************/
 #ifndef _MACROS_H
@@ -194,6 +196,7 @@
    to delete N items. If (start) or (item) is NULL, does nothing
 
    16.02.95 Original    By: ACRM
+   10.04.08 Fixed position of break. By: CTP
 */
 #define DELETE(x, y, z)                                                  \
 do {                                                                     \
@@ -215,13 +218,13 @@ do {                                                                     \
                _delete_macro_temp = (x)->next;                           \
                free(x);                                                  \
                (x) = _delete_macro_temp;                                 \
-               break;                                                    \
             }                                                            \
             else                                                         \
             {                                                            \
                _delete_macro_prev->next = _delete_macro_p->next;         \
                free(_delete_macro_p);                                    \
             }                                                            \
+            break;                                                       \
          }                                                               \
          _delete_macro_prev = _delete_macro_p;                           \
       }                                                                  \
