@@ -3,20 +3,14 @@
    Program:    
    File:       PDB2Seq.c
    
-   Version:    V1.11R
-   Date:       30.05.02
+   Version:    V1.12R
+   Date:       10.06.05
    Function:   Conversion from PDB to sequence and other sequence
                related routines
    
-   Copyright:  (c) SciTech Software 1993-2002
+   Copyright:  (c) SciTech Software 1993-2005
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
 
@@ -58,6 +52,7 @@
                   old PDB2Seq() interface and similar new calls
    V1.10 02.10.00 Added NoX option
    V1.11 30.05.02 Changed PDB field from 'junk' to 'record_type'
+   V1.12 10.06.05 Fixed bug - was undercounting by 1 for CA-only chains
 
 *************************************************************************/
 /* Includes
@@ -112,6 +107,9 @@
    26.08.97 Changed to doPDB2Seq with extra parameters (DoAsxGlx & 
             ProtOnly). The old calling forms have now become macros
    02.10.00 Added NoX
+   10.06.05 Changed the initialization of rescount, resnum, etc. so
+            it correctly points to the first residue. This solves a
+            bug with CA-only chains where it was undercounting by 1
 */
 char *DoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
 {
@@ -128,10 +126,11 @@ char *DoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
 
    /* First step through the pdb linked list to see how many residues
       and chains.
+      10.06.05 Fixed bug - was undercounting by one for CA-only chains
    */
-   rescount = 0;
-   resnum   = -9999999;
-   insert   = '+';
+   rescount = 1;
+   resnum   = pdb->resnum;
+   insert   = pdb->insert[0];
    chain    = pdb->chain[0];
    
    for(p=pdb->next; p!=NULL; NEXT(p))
@@ -234,4 +233,19 @@ char *DoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
    return(sequence);
 }
 
+#ifdef TEST_MAIN
+#include <stdio.h>
+int main(int argc, char **argv)
+{
+   PDB *pdb;
+   int natoms;
+   char *seq;
+   FILE *fp;
+   fp = fopen("/acrm/data/pdb/pdb1crn.ent", "r");
+   pdb=ReadPDB(fp, &natoms);
+   
+   seq = DoPDB2Seq(pdb, FALSE, FALSE, FALSE);
+   return(0);
+}
+#endif
 
