@@ -3,19 +3,18 @@
    Program:    
    File:       rsc.c
    
-   Version:    V1.9R
-   Date:       30.05.02
+   Version:    V1.10R
+   Date:       09.02.05
    Function:   Modify sequence of a PDB linked list
    
-   Copyright:  (c) SciTech Software 1992-2002
+   Copyright:  (c) SciTech Software 1992-2005
    Author:     Dr. Andrew C. R. Martin
    Address:    SciTech Software
                23, Stag Leys,
                Ashtead,
                Surrey,
                KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
 
@@ -60,6 +59,8 @@
                   internal changes to RepSChain()
    V1.8  15.08.96 Removed unused variables from RepOneSChain()
    V1.9  30.05.02 Changed PDB field from 'junk' to 'record_type'
+   V1.10 09.02.05 Fixed to handle atnam_raw and sensible defaults for
+                  occ/bval
 
 *************************************************************************/
 /* Defines required for includes
@@ -946,6 +947,8 @@ Cleanup:
    21.06.93 Changed for new version of onethr()
    09.07.93 Corrected check on allocations
    04.01.94 Corrected string assignments of NULL to '\0'
+   09.02.05 Sets atnam_raw
+            Sets default occ/bval to 1.0 and 20.0
 */
 static PDB *ReadRefCoords(FILE *fp,
                           char seq)
@@ -1002,6 +1005,11 @@ static PDB *ReadRefCoords(FILE *fp,
          strncpy(p->atnam,ptr,4);
          p->atnam[4] = '\0';
 
+         /* 09.02.05 ...and into atnam_raw                              */
+         p->atnam_raw[0] = ' ';
+         strncpy(p->atnam_raw+1,ptr,3);
+         p->atnam_raw[4] = '\0';
+
          ptr += 4;
 
          /* Copy the next 4 characters into RESNAM                      */
@@ -1042,8 +1050,8 @@ static PDB *ReadRefCoords(FILE *fp,
          sscanf(ptr,"%lf",&(p->z));
 
          /* We don't care about occ and BVal                            */
-         p->occ  = 0.0;
-         p->bval = 0.0;
+         p->occ  = 1.0;
+         p->bval = 20.0;
          
          done = TRUE;
       }
@@ -1157,6 +1165,7 @@ static int FindChiIndex(char *resnam)
    
    13.05.92 Original
    21.06.93 Changed to use Array2D allocated chitab 
+   09.02.05 Chain name was getting set to last one in pdb
 */
 static PDB *FixTorsions(PDB *pdb,      /* Linked list to fix torsions   */
                         PDB *ResStart, /* Beginning of reference frag   */
@@ -1167,10 +1176,20 @@ static PDB *FixTorsions(PDB *pdb,      /* Linked list to fix torsions   */
          i,
          j;
    REAL  ParentChi;
+   char  chain[8];
+   PDB   *p;
+
+   strcpy(chain, ResStart->chain);
    
    /* Correct the atom order of pdb and ResStart                        */
    ResStart = ShuffleBB(ResStart);
-       
+
+   /* 09.02.05 Fix the chain name                                       */
+   for(p=ResStart; p!=NextRes; NEXT(p))
+   {
+      strcpy(p->chain, chain);
+   }
+
    i = FindChiIndex(pdb->resnam);
    j = FindChiIndex(ResStart->resnam);
 

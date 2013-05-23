@@ -14,8 +14,8 @@ RANLIB = ranlib
 #RANLIB = echo
 
 # Destination in which to place the library and the include files
-LIBDEST = /home/andrew/lib
-INCDEST = /home/andrew/include
+LIBDEST = /home/bsm/martin/lib
+INCDEST = /home/bsm/martin/include
 
 ###########################################################
 #          DON'T CHANGE ANYTHING BELOW THIS POINT         #

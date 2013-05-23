@@ -3,12 +3,12 @@
    Program:    
    File:       openorpipe.c
    
-   Version:    V1.3
-   Date:       18.08.98
+   Version:    V1.4
+   Date:       28.01.05
    Function:   Open a file for writing unless the filename starts with
                a | in which case open as a pipe
    
-   Copyright:  (c) SciTech Software 1997-8
+   Copyright:  (c) SciTech Software 1997-2005
    Author:     Dr. Andrew C. R. Martin
    Address:    SciTech Software
                23, Stag Leys,
@@ -45,11 +45,15 @@
    V1.1  26.06.97 Added calls to signal()
    V1.2  27.02.98 Uses port.h
    V1.3  18.08.98 Added cast to popen() for SunOS
+   V1.4  28.01.04 Added NOPIPE define. Allows compilation on systems
+                  which don't support unix pipes
 
 *************************************************************************/
 /* Includes
 */
+#ifndef NOPIPE
 #include "port.h"    /* Required before stdio.h                         */
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -82,12 +86,16 @@
    26.05.97 Original   By: ACRM
    26.06.97 Added call to signal()
    18.08.98 Added case to popen() for SunOS
+   28.01.05 Added NOPIPE define
 */
 FILE *OpenOrPipe(char *filename)
 {
    char *fnam;
    
    KILLLEADSPACES(fnam, filename);
+#ifdef NOPIPE
+   return(fopen(fnam, "w"));
+#else
    if(fnam[0] == '|')
    {
       signal(SIGPIPE, SIG_IGN);
@@ -99,6 +107,7 @@ FILE *OpenOrPipe(char *filename)
    {
       return(fopen(fnam, "w"));
    }
+#endif
 }
 
 /************************************************************************/
@@ -113,15 +122,19 @@ FILE *OpenOrPipe(char *filename)
 
    26.05.97 Original   By: ACRM
    26.06.97 Added call to signal()
+   28.01.05 Added NOPIPE define
 */
 int CloseOrPipe(FILE *fp)
 {
    int ret;
-   
+#ifdef NOPIPE
+   return(fclose(fp));
+#else
    if((ret=pclose(fp)) == (-1))
       return(fclose(fp));
 
    signal(SIGPIPE, SIG_DFL);
    return(ret);
+#endif
 }
 
