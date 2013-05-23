@@ -3,11 +3,11 @@
    Program:    
    File:       pdb.h
    
-   Version:    V1.41R
-   Date:       25.01.06
+   Version:    V1.42R
+   Date:       08.11.07
    Function:   Include file for pdb routines
    
-   Copyright:  (c) SciTech Software, UCL, Reading 1993-2006
+   Copyright:  (c) SciTech Software, UCL, Reading 1993-2007
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -92,6 +92,9 @@
    V1.40 04.01.06 Added AddCBtiGly(), AddCBtoAllGly(), 
                   StripGlyCB()      By: ACRM
    V1.41 25.01.06 Added RemoveAlternates()
+   V1.42 08.11.07 Added BuildAtomNeighbourPDBList()
+                        FindAtomWildcardInRes()
+                        DupeResiduePDB()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -340,5 +343,7 @@ BOOL AddCBtoGly(PDB *pdb);
 BOOL AddCBtoAllGly(PDB *pdb);
 PDB *StripGlyCB(PDB *pdb);
 PDB *RemoveAlternates(PDB *pdb);
-
+PDB *BuildAtomNeighbourPDBList(PDB *pdb, PDB *pRes, REAL NeighbDist);
+PDB *FindAtomWildcardInRes(PDB *pdb, char *pattern);
+PDB *DupeResiduePDB(PDB *in);
 #endif
