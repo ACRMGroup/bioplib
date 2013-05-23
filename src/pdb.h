@@ -3,8 +3,8 @@
    Program:    
    File:       pdb.h
    
-   Version:    V1.37R
-   Date:       03.06.05
+   Version:    V1.39R
+   Date:       29.09.05
    Function:   Include file for pdb routines
    
    Copyright:  (c) SciTech Software, UCL, Reading 1993-2005
@@ -87,6 +87,8 @@
                   Added the WholePDB routines and definition
    V1.37 03.06.05 Added altpos to PDB.
                   Added altpos and atnam_raw to CLEAR_PDB
+   V1.38 22.09.05 Added WritePDBRecordAtnam()
+   V1.39 29.09.05 Added ParseResSpecNoUpper() and DoParseResSpec()  By: TL
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -233,6 +235,7 @@ PDB *doReadPDB(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank,
                int ModelNum);
 void WritePDB(FILE *fp, PDB *pdb);
 void WritePDBRecord(FILE *fp, PDB *pdb);
+void WritePDBRecordAtnam(FILE *fp, PDB  *pdb);
 void WriteGromosPDB(FILE *fp, PDB *pdb);
 void WriteGromosPDBRecord(FILE *fp, PDB *pdb);
 void GetCofGPDB(PDB   *pdb, VEC3F *cg);
@@ -283,6 +286,9 @@ BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
 PDB **IndexPDB(PDB *pdb, int *natom);
 DISULPHIDE *ReadDisulphidesPDB(FILE *fp, BOOL *error);
 BOOL ParseResSpec(char *spec, char *chain, int *resnum, char *insert);
+BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum, char *insert);
+BOOL DoParseResSpec(char *spec, char *chain, int *resnum, char *insert, 
+                    BOOL uppercaseresspec);
 BOOL RepSChain(PDB *pdb, char *sequence, char *ChiTable, char *RefCoords);
 PDB *FindNextChainPDB(PDB *pdb);
 BOOL FixCterPDB(PDB *pdb, int style);

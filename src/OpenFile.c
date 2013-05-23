@@ -3,13 +3,12 @@
    Program:    
    File:       OpenFile.c
    
-   Version:    V1.21
-   Date:       18.06.02
+   Version:    V1.22
+   Date:       28.07.05
    Function:   
    
-   Copyright:  (c) SciTech Software 1991-2002
+   Copyright:  (c) SciTech Software 1991-2005
    Author:     Dr. Andrew C. R. Martin
-   Phone:      +44 (0) 1372 275775
    EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
@@ -60,6 +59,7 @@
    V1.19 05.02.96 OpenStdFiles() allows NULL pointers instead if filenames
    V1.20 18.09.96 Added padchar()
    V1.21 18.06.02 Added string.h
+   V1.22 28.07.05 Added conditionals for Mac OS/X
 
 *************************************************************************/
 /* Includes
@@ -114,6 +114,7 @@
             variable
    08.03.95 Corrected basename to filename in non-unix version
    09.03.95 Checks that filename is not a NULL or blank string
+   28.07.05 Added conditionals for Mac OS/X: __MACH__ and __APPLE__
 */
 FILE *OpenFile(char *filename, char *envvar, char *mode, BOOL *noenv)
 {
@@ -130,7 +131,7 @@ FILE *OpenFile(char *filename, char *envvar, char *mode, BOOL *noenv)
    if((fp=fopen(filename,mode)) == NULL)
    {
       /* Failed, so build alternative directory/filename                */
-#if (unix || __unix__ || msdos || __msdos__ || __unix)
+#if (unix || __unix__ || msdos || __msdos__ || __unix || __MACH__ || __APPLE__)
       if((datadir = getenv(envvar)) != NULL)
       {
          if(datadir[strlen(datadir)-1] == '/')

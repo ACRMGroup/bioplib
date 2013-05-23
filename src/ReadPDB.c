@@ -3,8 +3,8 @@
    Program:    
    File:       ReadPDB.c
    
-   Version:    V2.15R
-   Date:       03.06.05
+   Version:    V2.16R
+   Date:       14.10.05
    Function:   Read coordinates from a PDB file 
    
    Copyright:  (c) SciTech Software 1988-2005
@@ -138,7 +138,9 @@ BUGS:  The multiple occupancy code assumes that all positions for a given
                   name no longer contains the alternate indicator and
                   atnam_raw has only the atom name with altpos having the
                   alternate indicator (as it should!)
-
+   V2.16 14.10.05 Fixed a problem in StoreOccRankAtom() when a lower
+                  occupancy atom has (erroneously) been set to occupancy
+                  of zero and you want to pull out that atom
 *************************************************************************/
 /* Defines required for includes
 */
@@ -345,6 +347,9 @@ PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
    15.02.01 V2.12 Added atnam_raw
    27.04.05 V2.14 Added another atnam_raw for multiple occupancies
    03.06.05 V2.15 Added altpos
+   14.10.05 V2.16 Modified detection of partial occupancy. handles
+                  residues like 1zeh/B16 where a lower partial is
+                  erroneously set to zero
 */
 PDB *doReadPDB(FILE *fpin,
                int  *natom,
@@ -467,10 +472,17 @@ PDB *doReadPDB(FILE *fpin,
                filled in correctly
                
                04.10.94 Read all atoms if OccRank is 0
+
+               14.10.05 Now takes an atom as full occupancy:
+                           if occ==1.0
+                           if occ==0.0 and altpos==' '
+                           if OccRank==0
+                        This fixes problems where a lower (partial)
+                        occupancy has erroneously been set to zero
             */
-            if(occ > (double)0.999 || 
-               occ < (double)SMALL || 
-               OccRank == 0)
+            if(((altpos == ' ') && (occ < (double)SMALL)) ||
+               (occ > (double)0.999) || 
+               (OccRank == 0))
             {
                /* Trim the atom name to 4 characters                    */
                atnam[4] = '\0';
@@ -635,6 +647,10 @@ PDB *doReadPDB(FILE *fpin,
    08.10.99 Initialise IMaxOcc and MaxOcc
    27.04.05 Added atnam_raw
    03.06.05 Added altpos
+   14.10.05 Modified the flag value from 0.0 to -1.0 so that erroneous
+            lower occupancies of 0.0 are read properly and written back
+            with their occupancy (0.0) rather than the next higher
+            occupancy. Handles residues like 1zeh/B16
 */
 static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
                              int NPartial, PDB **ppdb, PDB **pp, 
@@ -661,14 +677,23 @@ static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
             IMaxOcc = j;
          }
       }
-      multi[IMaxOcc].occ = (REAL)0.0;
+      /* 14.10.05 Changed flag value to -1 so that erroneous occupancies
+         of zero are treated properly
+      */
+      multi[IMaxOcc].occ = (REAL)-1.0;
 
-      if(MaxOcc < (REAL)SMALL) break;
+      /* 14.10.05 Changed flag value to -1 so that erroneous occupancies
+         of zero are treated properly
+      */
+      if(MaxOcc < (REAL)0.0) break;
       LastOcc = MaxOcc;
    }
 
    /* If we ran out of rankings, take the last one to be found          */
-   if(MaxOcc < (REAL)SMALL)
+   /* 14.10.05 Changed flag value to -1 so that erroneous occupancies
+      of zero are treated properly
+   */
+   if(MaxOcc < (REAL)0.0)
       MaxOcc = LastOcc;
 
    /* Store this atom

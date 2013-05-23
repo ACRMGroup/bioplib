@@ -3,19 +3,13 @@
    Program:    
    File:       WritePDB.c
    
-   Version:    V1.8R
-   Date:       03.06.05
+   Version:    V1.9R
+   Date:       22.09.05
    Function:   Write a PDB file from a linked list
    
    Copyright:  (c) SciTech Software 1993-2005
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
 
@@ -59,6 +53,7 @@
    V1.7  30.05.02 Changed PDB field from 'junk' to 'record_type'
    V1.8  03.06.05 'atnam_raw' no longer includes the alternate indicator
                   which is now in 'altpos'
+   V1.9  22.09.06 Added WritePDBRecordAtnam()
 
 *************************************************************************/
 #include <stdio.h>
@@ -131,6 +126,42 @@ void WritePDBRecord(FILE *fp,
            pdb->atnum,
            pdb->atnam_raw,
            pdb->altpos,
+           pdb->resnam,
+           pdb->chain,
+           pdb->resnum,
+           pdb->insert,
+           pdb->x,
+           pdb->y,
+           pdb->z,
+           pdb->occ,
+           pdb->bval);
+}
+/************************************************************************/
+/*>void WritePDBRecordAtnam(FILE *fp, PDB *pdb)
+   --------------------------------------------
+   Input:   FILE  *fp     PDB file pointer to be written
+            PDB   *pdb    PDB linked list record to write
+
+   Write a PDB record
+
+   08.03.89 Original
+   28.03.90 Changed to match ReadPDB() V1.2 for column widths
+   01.06.92 ANSIed and autodoc'd
+   10.06.93 void type
+   22.06.93 Changed to %lf. Ljust strings
+   11.03.94 %lf back to %f (!)
+   15.02.01 Modified to use atnam_raw
+   03.06.05 Modified to use altpos
+   22.09.05 This is like the old version which used atnam rather
+            than atnam_raw
+*/
+void WritePDBRecordAtnam(FILE *fp,
+                         PDB  *pdb)
+{
+   fprintf(fp,"%-6s%5d  %-4s%-4s%1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f\n",
+           pdb->record_type,
+           pdb->atnum,
+           pdb->atnam,
            pdb->resnam,
            pdb->chain,
            pdb->resnum,

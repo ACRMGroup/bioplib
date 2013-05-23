@@ -5,19 +5,13 @@
    Program:    
    File:       hbond.c
    
-   Version:    V1.2
-   Date:       19.12.02
+   Version:    V1.3
+   Date:       18.08.05
    Function:   Report whether two residues are H-bonded using
                Baker & Hubbard criteria
    
-   Copyright:  (c) SciTech Software 1996-2002
+   Copyright:  (c) SciTech Software 1996-2005
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
    EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
@@ -50,6 +44,7 @@
    V1.0  26.01.96 Original    By: ACRM
    V1.1  09.02.96 Added #ifdef'd code to allow AE1/AE2 AD1/AD2
    V1.2  19.12.02 Fixed bug in walking over multiple H atoms
+   V1.3  18.08.05 Fixed bug relating to sidechains like GLN/ASN
 
 *************************************************************************/
 /* Includes
@@ -388,20 +383,26 @@ static BOOL FindBackboneDonor(PDB *res, PDB **AtomH, PDB **AtomD)
 
    25.01.96 Original    By: ACRM
    09.02.96 Added #ifdef'd code to allow AE1/AE2 AD1/AD2
+   18.08.05 Fixed bug relating to sidechains like GLN/ASN - when finding
+            the antecedent for the NE2 and ND2 atoms respectively, it
+            would find OE1/OD1 rather than CD/CG. (See pprev code)
 */
 static BOOL FindSidechainAcceptor(PDB *res, PDB **AtomA, PDB **AtomP)
 {
-   static PDB  *p    = NULL,
-               *prev = NULL,
+   static PDB  *p     = NULL,
+               *prev  = NULL,
+               *pprev = NULL,
                *NextRes;
    static BOOL First = TRUE;
    
    if(res == NULL)
    {
       /* Clear statics                                                  */
-      p     = NULL;
-      prev  = NULL;
-      First = TRUE;
+      p      = NULL;
+      prev   = NULL;
+      /* ACRM+++ 18.08.05 */
+      pprev  = NULL;
+      First  = TRUE;
       
       return(FALSE);
    }
@@ -425,11 +426,24 @@ static BOOL FindSidechainAcceptor(PDB *res, PDB **AtomA, PDB **AtomP)
       {
          *AtomA = p;
          *AtomP = prev;
+
+/* ACRM+++ 18.08.05 */
+         if((*AtomP) && 
+            ((*AtomP)->atnam_raw[2] == (*AtomA)->atnam_raw[2]))
+         {
+            *AtomP = pprev;
+         }
+         pprev  = prev;
+/* ACRM=== */
+
          prev   = p;
          NEXT(p);
 
          return(TRUE);
       }
+      /* ACRM+++ 18.08.05 */
+      pprev  = prev;
+
       prev = p;
    }
 

@@ -186,12 +186,14 @@ char *ftostr(char  *str,
    
    /* Strip any leading spaces                                          */
    /* 03.06.05 Tidied loop for gcc 3.2.2                                */
+   /* 30.09.05 Fixed the warning: operation on `i' may be undefined     */
    while(str[0] == ' ')
    {
       i=0;
       while(i<strlen(str))
       {
-         str[i] = str[++i];
+         str[i] = str[i+1];
+         i++;
       }
    }
    
@@ -201,10 +203,12 @@ char *ftostr(char  *str,
    if(val == 0.0 && str[0] == '-')
    {
       /* 03.06.05 Tidied loop for gcc 3.2.2                             */
+      /* 30.09.05 Fixed the warning: operation on `i' may be undefined  */
       i=0;
       while(i<strlen(str))
       {
-         str[i] = str[++i];
+         str[i] = str[i+1];
+         i++;
       }
    }
 

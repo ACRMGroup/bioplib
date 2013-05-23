@@ -3,19 +3,19 @@
    Program:    
    File:       ParseRes.c
    
-   Version:    V1.7R
-   Date:       11.10.99
+   Version:    V1.8R
+   Date:       29.09.05
    Function:   Parse a residue specification
    
-   Copyright:  (c) SciTech Software 1993-9
+   Copyright:  (c) SciTech Software 1993-2005
    Author:     Dr. Andrew C. R. Martin
    Address:    SciTech Software
                23, Stag Leys,
                Ashtead,
                Surrey,
                KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   EMail:      andrew@bioinf.org.uk
+               martin@biochem.ucl.ac.uk
                
 **************************************************************************
 
@@ -53,6 +53,9 @@
    V1.7  11.10.99 Allow a . to be used to start a number (such that the
                   default blank chain name is used). Allows negative 
                   residue numbers
+   V1.8  29.09.05 Moved ParseResSpec() into DoParseResSpec() with extra
+                  param and added wrappers for ParseResSpec() and 
+                  ParseResSpecNoUpper()  (Changes by Tony Lewis) By: TL
 
 *************************************************************************/
 /* Includes
@@ -89,14 +92,77 @@
    Splits up a residue specification of the form 
          [c][.]num[i]
    into chain, resnum and insert. Chain and insert are optional and will
-   be set to spaces if not specified.
+   be set to spaces if not specified. Converts the resiude specification
+   to upper case before processing.
+   
+   Moved the code that was here to a new function, DoParseResSpec()
+   and made this function just call that new function.  See
+   DoParseResSpec()'s comments for notes on previous changes.  This
+   move is to allow the underlying function to have an extra parameter
+   to specify whether or not the residue specification should be upper
+   cased (without affecting code that calls this function).
+
+   29.09.05 Original   By: TL
+*/
+BOOL ParseResSpec(char *spec, char *chain, int *resnum, char *insert)
+{
+   return DoParseResSpec(spec, chain, resnum, insert, TRUE);
+}
+
+/************************************************************************/
+/*>BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum, 
+                            char *insert)
+   --------------------------------------------------------------
+   Input:   char  *spec    Residue specification
+   Output:  char  *chain   Chain label
+            int   *resnum  Residue number
+            char  *insert  Insert label
+   Returns: BOOL           Success?
+
+   Splits up a residue specification of the form 
+         [c][.]num[i]
+   into chain, resnum and insert. Chain and insert are optional and will
+   be set to spaces if not specified. Does not converts the resiude
+   specification to upper case before processing.
+   
+   29.09.05 Original   By: TL
+*/
+BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum, 
+                         char *insert)
+{
+   return DoParseResSpec(spec, chain, resnum, insert, FALSE);
+}
+
+/************************************************************************/
+/*>BOOL DoParseResSpec(char *spec, char *chain, int *resnum, char *insert, 
+                       BOOL uppercaseresspec)
+   -----------------------------------------------------------------------
+   Input:   char  *spec    Residue specification
+            BOOL           uppercaseresspec
+   Output:  char  *chain   Chain label
+            int   *resnum  Residue number
+            char  *insert  Insert label
+   Returns: BOOL           Success?
+
+   Splits up a residue specification of the form 
+         [c][.]num[i]
+   into chain, resnum and insert. Chain and insert are optional and will
+   be set to spaces if not specified. If uppercaseresspec eqauls TRUE,
+   the spec is upper cased before processing
    
    21.07.93 Original    By: ACRM
    17.07.95 Added BOOL return
    18.03.98 Added option to include a . to separate chain and residue
             number so numeric chain names can be used
+   29.09.05 Moved this code to from ParseResSpec() to DoParseResSpec()
+            and made that function just call this new function.
+            This move is to allow this underlying function to have an
+            extra parameter to specify whether or not the residue
+            specification should be upper cased (without affecting code
+            that calls the old function). By: TL
 */
-BOOL ParseResSpec(char *spec, char *chain, int *resnum, char *insert)
+BOOL DoParseResSpec(char *spec, char *chain, int *resnum, char *insert, 
+                    BOOL uppercaseresspec)
 {
    char  *ptr,
          *ptr2;
@@ -106,7 +172,11 @@ BOOL ParseResSpec(char *spec, char *chain, int *resnum, char *insert)
    /* 11.10.99 Default resnum of 0                                      */
    *resnum = 0;
 
-   UPPER(spec);   
+   /* Upper case the residue specification if it has been requested     */
+   if (uppercaseresspec == TRUE)
+   {
+      UPPER(spec);   
+   }
    KILLLEADSPACES(ptr, spec);
      
    /* Extract chain from spec                                           */

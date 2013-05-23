@@ -3,8 +3,8 @@
    Program:    
    File:       HAddPDB.c
    
-   Version:    V2.12R
-   Date:       03.06.05
+   Version:    V2.13R
+   Date:       28.07.05
    Function:   Add hydrogens to a PDB linked list
    
    Copyright:  (c) SciTech Software 1990-2005
@@ -100,6 +100,7 @@
    V2.10 05.12.02 Correctly sets the atnam_raw field
    V2.11 27.03.03 Fixed severe memory leak in AddH()
    V2.12 03.06.05 Added altpos
+   V2.13 28.07.05 Added conditionals for msdos and Mac OS/X
 
 *************************************************************************/
 /* Includes
@@ -1196,6 +1197,7 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
    Returns: FILE   *              File pointer
 
    23.08.94 Original    By: ACRM
+   28.07.05 Added conditionals for msdos and Mac OS/X
 */
 FILE *OpenPGPFile(char *pgpfile, BOOL AllHyd)
 {
@@ -1220,11 +1222,13 @@ FILE *OpenPGPFile(char *pgpfile, BOOL AllHyd)
    else
       strcpy(basename,EXPLPGP);
    
+   /*** FIXME: This should be changed to use OpenFile() instead       ***/
+
    /* Try to open file in current directory                             */
    if((fp = fopen(basename,"r")) == NULL)
    {
       /* Failed so build alternative directory/filename                 */
-#if (unix || __unix__)
+#if (unix || __unix__ || msdos || __msdos__ || __unix || __MACH__ || __APPLE__)
       datadir = getenv(DATAENV);
       
       if(datadir != NULL)
