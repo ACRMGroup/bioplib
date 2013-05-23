@@ -156,6 +156,18 @@ BOOL AtomNameMatch(char *atnam, char *spec, BOOL *ErrorWarn)
             *ErrorWarn = FALSE;
          return(FALSE);
       }
+
+      /* 07.06.05 If both specifications have ended with a space of 
+         end of string then return TRUE. Fixed for if the atnam is
+         shorter (after moving the alternate atom indicator into its
+         own field)
+      */
+      if((*specp == ' ') && ((*atnamp == ' ') || (*atnamp == '\0')))
+      {
+         if(ErrorWarn != NULL)
+            *ErrorWarn = FALSE;
+         return(TRUE);
+      }
    }
 
    /* There have been no errors and we don't need the error flag again  */
@@ -219,3 +231,35 @@ BOOL AtomNameRawMatch(char *atnam, char *spec, BOOL *ErrorWarn)
    return(AtomNameMatch(atnam, spec, ErrorWarn));
 }
 
+#ifdef TEST_MAIN
+int main(int argc, char **argv)
+{
+   char spec[8], atnam[8];
+   
+   strcpy(atnam, " CA*");
+   printf("Atom name '%s':\n", atnam);
+
+   strcpy(spec,"CA");
+   printf("'%s' matches? %s\n", spec, (AtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
+   
+   strcpy(spec,"<CA");
+   printf("'%s' matches? %s\n", spec, (AtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
+   
+   strcpy(spec,"C*");
+   printf("'%s' matches? %s\n", spec, (AtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
+   
+   strcpy(spec,"CA*");
+   printf("'%s' matches? %s\n", spec, (AtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
+   
+   strcpy(spec,"CA?");
+   printf("'%s' matches? %s\n", spec, (AtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
+   
+   strcpy(spec,"C\\*");
+   printf("'%s' matches? %s\n", spec, (AtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
+   
+   strcpy(spec,"C?");
+   printf("'%s' matches? %s\n", spec, (AtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
+
+   return(0);
+}
+#endif
