@@ -53,7 +53,8 @@ SetChi.o SetResnam.o SplitSeq.o StripHPDB.o TermPDB.o TorCoor.o \
 TranslatePDB.o TrueSeqLen.o WriteCrystPDB.o WritePDB.o WrtCSSR.o \
 align.o fit.o hbond.o rsc.o throne.o FitNCaCPDB.o FindRawAtomInRes.o \
 WriteGromosPDB.o WholePDB.o GlyCB.o BuildAtomNeighbourPDBList.o \
-FindAtomWildcardInRes.o DupeResiduePDB.o StripWatersPDB.o aalist.o
+FindAtomWildcardInRes.o DupeResiduePDB.o StripWatersPDB.o aalist.o \
+StructurePDB.o
 
 all : libgen.a libbiop.a
 

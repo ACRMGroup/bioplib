@@ -38,3 +38,4 @@ V2.0.10 Changes to DupeResiduePDB.c FindAtomWildcardInRes.c
        BuildAtomNeighbourPDBList.c
 V2.0.11 Changes to StripWatersPDB.c ReadPDB.c array3.c
 --------------------------------------------------------------------
+V2.1.1  Added StructurePDB()

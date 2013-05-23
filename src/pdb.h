@@ -3,8 +3,8 @@
    Program:    
    File:       pdb.h
    
-   Version:    V1.44R
-   Date:       01.06.09
+   Version:    V1.45
+   Date:       24.11.09
    Function:   Include file for pdb routines
    
    Copyright:  (c) SciTech Software, UCL, Reading 1993-2009
@@ -97,6 +97,9 @@
                         DupeResiduePDB()
    V1.43 30.04.08 Added StripWatersPDB() and ISWATER() macro
    V1.44 01.06.09 Added extras field to PDB structure
+   V1.45 24.11.09 Added PDBSTRUCT, PDBCHAIN, PDBRESIDUE
+                  AllocPDBStructure(), FindNextChain(),
+                  FreePDBStructure()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -151,6 +154,34 @@ typedef struct pdb_entry
    char chain[8];
    char altpos;
 }  PDB;
+
+typedef struct pdbresidue
+{
+   struct pdbresidue *next,  *prev;
+   PDB               *start, *stop;
+   APTR              *extras;
+   int               resnum;
+   char              chain[8];
+   char              insert[8];
+   char              resnam[8];
+   char              resid[8];
+} PDBRESIDUE;
+
+typedef struct pdbchain
+{
+   struct pdbchain *next,  *prev;
+   PDB             *start, *stop;
+   PDBRESIDUE      *residues;
+   APTR            *extras;
+   char            chain[8];
+} PDBCHAIN;
+
+typedef struct
+{
+   PDB      *pdb;
+   PDBCHAIN *chains;
+   APTR     *extras;
+} PDBSTRUCT;
 
 
 #define SELECT(x,w) (x) = (char *)malloc(5 * sizeof(char)); \
@@ -384,4 +415,7 @@ PDB *BuildAtomNeighbourPDBList(PDB *pdb, PDB *pRes, REAL NeighbDist);
 PDB *FindAtomWildcardInRes(PDB *pdb, char *pattern);
 PDB *DupeResiduePDB(PDB *in);
 PDB *StripWatersPDB(PDB *pdbin, int *natom);
+PDBSTRUCT *AllocPDBStructure(PDB *pdb);
+PDB *FindNextChain(PDB *pdb);
+void FreePDBStructure(PDBSTRUCT *pdbstruct);
 #endif

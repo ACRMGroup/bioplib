@@ -86,7 +86,7 @@
                             (NULL if not found).
 
    Search a PDB linked list for a specified residue (given as
-   [chain]num[insert])
+   [chain][.]num[insert])
 
    08.08.95 Original    By: ACRM
    08.02.96 Now calls FindResidue() to do the actual work
