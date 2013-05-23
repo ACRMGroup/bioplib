@@ -3,20 +3,13 @@
    Program:    
    File:       align.c
    
-   Version:    V3.1
-   Date:       06.02.03
+   Version:    V3.2
+   Date:       27.02.07
    Function:   Perform Needleman & Wunsch sequence alignment
    
-   Copyright:  (c) SciTech Software 1993-2003
+   Copyright:  (c) SciTech Software 1993-2007
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@stagleys.demon.co.uk
-               andrew@bioinf.org.uk
+   EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
 
@@ -68,6 +61,7 @@
                   while the main matrix is populated. New affinealign()
                   routine implemented. align() is now a wrapper to that.
    V3.1  06.02.03 Fixed for new version of GetWord()
+   V3.2  27.02.07 Added affinealineuc() and CalcMDMScoreUC()
 
 *************************************************************************/
 /* Includes
@@ -208,6 +202,9 @@ int align(char *seq1,
             parameter. Now supports affine gap penalties with separate
             opening and extension penalties. The code now maintains
             the path as it goes.
+**************************************************************************
+******   NOTE AND CHANGES SHOULD BE PROPAGATED TO affinealignuc()   ******
+**************************************************************************
 */
 int affinealign(char *seq1, 
                 int  length1, 
@@ -431,6 +428,310 @@ int affinealign(char *seq1,
          else
          {
             matrix[i][j1] += CalcMDMScore(seq1[i],seq2[j1]);
+         }
+      }
+   } 
+   
+   score = TraceBack(matrix, dirn, length1, length2,
+                     seq1, seq2, align1, align2, align_len);
+
+   if(verbose)
+   {
+      printf("Matrix:\n-------\n");
+      for(j=0; j<length2;j++)
+      {
+         for(i=0; i<length1; i++)
+         {
+            printf("%3d ",matrix[i][j]);
+         }
+         printf("\n");
+      }
+
+      printf("Path:\n-----\n");
+      for(j=0; j<length2;j++)
+      {
+         for(i=0; i<length1; i++)
+         {
+            printf("(%3d,%3d) ",dirn[i][j].x,dirn[i][j].y);
+         }
+         printf("\n");
+      }
+   }
+    
+   FreeArray2D((char **)matrix, maxdim, maxdim);
+   FreeArray2D((char **)dirn,   maxdim, maxdim);
+    
+   return(score);
+}
+
+
+/************************************************************************/
+/*>int affinealign(char *seq1, int length1, char *seq2, int length2, 
+                   BOOL verbose, BOOL identity, int penalty, int penext, 
+                   char *align1, char *align2, int *align_len)
+   ---------------------------------------------------------------------
+   Input:   char  *seq1         First sequence
+            int   length1       First sequence length
+            char  *seq2         Second sequence
+            int   length2       Second sequence length
+            BOOL  verbose       Display N&W matrix
+            BOOL  identity      Use identity matrix
+            int   penalty       Gap insertion penalty value
+            int   penext        Extension penalty
+   Output:  char  *align1       Sequence 1 aligned
+            char  *align2       Sequence 2 aligned
+            int   *align_len    Alignment length
+   Returns: int                 Alignment score (0 on error)
+            
+   Perform simple N&W alignment of seq1 and seq2. No window is used, so
+   will be slow for long sequences.
+
+   Note that you must allocate sufficient memory for the aligned 
+   sequences.
+   The easy way to do this is to ensure that align1 and align2 are
+   of length (length1+length2).
+
+   07.10.92 Adapted from original written while at NIMR
+   08.10.92 Split into separate routines
+   09.10.92 Changed best structure to simple integers, moved 
+            SearchForBest() into TraceBack()
+   21.08.95 Was only filling in the bottom right cell at initialisation
+            rather than all the right hand column and bottom row
+   11.07.96 Changed calls to calcscore() to CalcMDMScore()
+   06.03.00 Changed name to affinealign() (the routine align() is
+            provided as a backwards compatible wrapper). Added penext 
+            parameter. Now supports affine gap penalties with separate
+            opening and extension penalties. The code now maintains
+            the path as it goes.
+   27.02.07 Exactly as affinealign() but upcases characters before
+            comparison
+
+**************************************************************************
+******    NOTE AND CHANGES SHOULD BE PROPAGATED TO affinealign()    ******
+**************************************************************************
+*/
+int affinealignuc(char *seq1, 
+                  int  length1, 
+                  char *seq2, 
+                  int  length2, 
+                  BOOL verbose, 
+                  BOOL identity, 
+                  int  penalty, 
+                  int  penext,
+                  char *align1, 
+                  char *align2,
+                  int  *align_len)
+{
+   XY    **dirn   = NULL;
+   int   **matrix = NULL,
+         maxdim,
+         i,    j,    k,    l,
+         i1,   j1,
+         dia,  right, down,
+         rcell, dcell, maxoff,
+         match = 1,
+         thisscore,
+         gapext,
+         score;
+   
+   maxdim = MAX(length1, length2);
+   
+   /* Initialise the score matrix                                       */
+   if((matrix = (int **)Array2D(sizeof(int), maxdim, maxdim))==NULL)
+      return(0);
+   if((dirn   = (XY **)Array2D(sizeof(XY), maxdim, maxdim))==NULL)
+      return(0);
+      
+   for(i=0;i<maxdim;i++)
+   {
+      for(j=0;j<maxdim;j++)
+      {
+         matrix[i][j] = 0;
+         dirn[i][j].x = -1;
+         dirn[i][j].y = -1;
+      }
+   }
+    
+   /* Fill in scores up the right hand side of the matrix               */
+   for(j=0; j<length2; j++)
+   {
+      if(identity)
+      {
+         if(seq1[length1-1] == seq2[j]) matrix[length1-1][j] = match;
+      }
+      else
+      {
+         matrix[length1-1][j] = CalcMDMScoreUC(seq1[length1-1], seq2[j]);
+      }
+   }
+
+   /* Fill in scores along the bottom row of the matrix                 */
+   for(i=0; i<length1; i++)
+   {
+      if(identity)
+      {
+         if(seq1[i] == seq2[length2-1]) matrix[i][length2-1] = match;
+      }
+      else
+      {
+         matrix[i][length2-1] = CalcMDMScoreUC(seq1[i], seq2[length2-1]);
+      }
+   }
+
+   i = length1 - 1;
+   j = length2 - 1;
+   
+   /* Move back along the diagonal                                      */
+   while(i > 0 && j > 0)
+   {
+      i--;
+      j--;
+
+      /* Fill in the scores along this row                              */
+      for(i1 = i; i1 > -1; i1--)
+      {
+         dia   = matrix[i1+1][j+1];
+
+         /* Find highest score to right of diagonal                     */
+         rcell = i1+2;
+         if(i1+2 >= length1)  right = 0;
+         else                 right = matrix[i1+2][j+1] - penalty;
+         
+         gapext = 1;
+         for(k = i1+3; k<length1; k++, gapext++)
+         {
+            thisscore = matrix[k][j+1] - (penalty + gapext*penext);
+            
+            if(thisscore > right) 
+            {
+               right = thisscore;
+               rcell = k;
+            }
+         }
+
+         /* Find highest score below diagonal                           */
+         dcell = j+2;
+         if(j+2 >= length2)  down = 0;
+         else                down   = matrix[i1+1][j+2] - penalty;
+         
+         gapext = 1;
+         for(l = j+3; l<length2; l++, gapext++)
+         {
+            thisscore = matrix[i1+1][l] - (penalty + gapext*penext);
+
+            if(thisscore > down) 
+            {
+               down = thisscore;
+               dcell = l;
+            }
+         }
+         
+         /* Set score to best of these                                  */
+         maxoff = MAX(right, down);
+         if(dia >= maxoff)
+         {
+            matrix[i1][j] = dia;
+            dirn[i1][j].x = i1+1;
+            dirn[i1][j].y = j+1;
+         }
+         else
+         {
+            if(right > down)
+            {
+               matrix[i1][j] = right;
+               dirn[i1][j].x = rcell;
+               dirn[i1][j].y = j+1;
+            }
+            else
+            {
+               matrix[i1][j] = down;
+               dirn[i1][j].x = i1+1;
+               dirn[i1][j].y = dcell;
+            }
+         }
+       
+         /* Add the score for a match                                   */
+         if(identity)
+         {
+            if(seq1[i1] == seq2[j]) matrix[i1][j] += match;
+         }
+         else
+         {
+            matrix[i1][j] += CalcMDMScoreUC(seq1[i1],seq2[j]);
+         }
+      }
+
+      /* Fill in the scores in this column                              */
+      for(j1 = j; j1 > -1; j1--)
+      {
+         dia   = matrix[i+1][j1+1];
+         
+         /* Find highest score to right of diagonal                     */
+         rcell = i+2;
+         if(i+2 >= length1)   right = 0;
+         else                 right = matrix[i+2][j1+1] - penalty;
+
+         gapext = 1;
+         for(k = i+3; k<length1; k++, gapext++)
+         {
+            thisscore = matrix[k][j1+1] - (penalty + gapext*penext);
+            
+            if(thisscore > right) 
+            {
+               right = thisscore;
+               rcell = k;
+            }
+         }
+
+         /* Find highest score below diagonal                           */
+         dcell = j1+2;
+         if(j1+2 >= length2)  down = 0;
+         else                 down = matrix[i+1][j1+2] - penalty;
+
+         gapext = 1;
+         for(l = j1+3; l<length2; l++, gapext++)
+         {
+            thisscore = matrix[i+1][l] - (penalty + gapext*penext);
+            
+            if(thisscore > down) 
+            {
+               down = thisscore;
+               dcell = l;
+            }
+         }
+
+         /* Set score to best of these                                  */
+         maxoff = MAX(right, down);
+         if(dia >= maxoff)
+         {
+            matrix[i][j1] = dia;
+            dirn[i][j1].x = i+1;
+            dirn[i][j1].y = j1+1;
+         }
+         else
+         {
+            if(right > down)
+            {
+               matrix[i][j1] = right;
+               dirn[i][j1].x = rcell;
+               dirn[i][j1].y = j1+1;
+            }
+            else
+            {
+               matrix[i][j1] = down;
+               dirn[i][j1].x = i+1;
+               dirn[i][j1].y = dcell;
+            }
+         }
+       
+         /* Add the score for a match                                   */
+         if(identity)
+         {
+            if(seq1[i] == seq2[j1]) matrix[i][j1] += match;
+         }
+         else
+         {
+            matrix[i][j1] += CalcMDMScoreUC(seq1[i],seq2[j1]);
          }
       }
    } 
@@ -789,6 +1090,66 @@ int CalcMDMScore(char resa, char resb)
    int        i,j;
    static int NWarn = 0;
    BOOL       Warned = FALSE;
+
+   for(i=0;i<sMDMSize;i++)
+   {
+      if(resa==sMDM_AAList[i]) break;
+   }
+   if(i==sMDMSize) 
+   {
+      if(NWarn < 10)
+         printf("Residue %c not found in matrix\n",resa);
+      else if(NWarn == 10)
+         printf("More residues not found in matrix...\n");
+      Warned = TRUE;
+   }
+   for(j=0;j<sMDMSize;j++)
+   {
+      if(resb==sMDM_AAList[j]) break;
+   }
+   if(j==sMDMSize) 
+   {
+      if(NWarn < 10)
+         printf("Residue %c not found in matrix\n",resb);
+      else if(NWarn == 10)
+         printf("More residues not found in matrix...\n");
+      Warned = TRUE;
+   }
+   
+   if(Warned)
+   { 
+      NWarn++;
+      return(0);
+   }
+
+   return(sMDMScore[i][j]);
+}                               
+
+/************************************************************************/
+/*>int CalcMDMScoreUC(char resa, char resb)
+   ----------------------------------------
+   Input:   char   resa      First residue
+            char   resb      Second residue
+   Returns: int              score
+
+   Calculate score from static globally stored mutation data matrix
+
+   07.10.92 Adapted from NIMR-written original
+   24.11.94 Only gives 10 warnings
+   28.02.95 Modified to use sMDMSize
+   24.08.95 If a residue was not found was doing an out-of-bounds array
+            reference causing a potential core dump
+   11.07.96 Name changed from calcscore() and now non-static
+   27.02.07 As CalcMDMScore() but upcases characters before comparison
+*/
+int CalcMDMScoreUC(char resa, char resb)
+{
+   int        i,j;
+   static int NWarn = 0;
+   BOOL       Warned = FALSE;
+
+   resa = (islower(resa)?toupper(resa):resa);
+   resb = (islower(resb)?toupper(resb):resb);
 
    for(i=0;i<sMDMSize;i++)
    {

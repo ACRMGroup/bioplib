@@ -61,6 +61,7 @@
 /************************************************************************/
 /* Prototypes
 */
+static WHOLEPDB *doReadWholePDB(FILE *fpin, BOOL atomsonly);
 
 /************************************************************************/
 /*>void FreeWholePDB(WHOLEPDB *wpdb)
@@ -160,9 +161,70 @@ void WriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
       ... Do something with p ...
    }
 
-   30.05.02  Original   By: ACRM
+   07.03.07 Made into a wrapper to doReadWholePDB()
 */
 WHOLEPDB *ReadWholePDB(FILE *fpin)
+{
+   return(doReadWholePDB(fpin, FALSE));
+}
+
+/************************************************************************/
+/*>WHOLEPDB *ReadWholePDBAtoms(FILE *fpin)
+   ---------------------------------------
+   Input:     FILE      *fpin     File pointer
+   Returns:   WHOLEPDB  *         Whole PDB structure containing linked
+                                  list to PDB coordinate data
+
+   Reads a PDB file, storing the header and trailer information as
+   well as the coordinate data. Can read gzipped files as well as
+   uncompressed files.
+
+   Coordinate data is accessed as linked list of type PDB as follows:
+   
+   WHOLEPDB *wpdb;
+   PDB      *p;
+   wpdb = ReadWholePDB(fp);
+   for(p=wpdb->pdb; p!=NULL; p=p->next)
+   {
+      ... Do something with p ...
+   }
+
+   07.03.07 Made into a wrapper to doReadWholePDB()
+*/
+WHOLEPDB *ReadWholePDBAtoms(FILE *fpin)
+{
+   return(doReadWholePDB(fpin, TRUE));
+}
+
+
+/************************************************************************/
+/*>static WHOLEPDB *ReadWholePDB(FILE *fpin)
+   -----------------------------------------
+   Input:     FILE      *fpin     File pointer
+   Returns:   WHOLEPDB  *         Whole PDB structure containing linked
+                                  list to PDB coordinate data
+
+   Reads a PDB file, storing the header and trailer information as
+   well as the coordinate data. Can read gzipped files as well as
+   uncompressed files.
+
+   Coordinate data is accessed as linked list of type PDB as follows:
+   
+   WHOLEPDB *wpdb;
+   PDB      *p;
+   wpdb = ReadWholePDB(fp);
+   for(p=wpdb->pdb; p!=NULL; p=p->next)
+   {
+      ... Do something with p ...
+   }
+
+   30.05.02  Original   By: ACRM
+   07.03.07 Made into a doXXX routine to add a atomsonly parameter
+
+   TODO FIXME!!!!! Move all this into doReadPDB so that we don't worry 
+   about rewinding any more
+*/
+static WHOLEPDB *doReadWholePDB(FILE *fpin, BOOL atomsonly)
 {
    WHOLEPDB *wpdb;
    char     buffer[MAXBUFF];
@@ -233,7 +295,14 @@ WHOLEPDB *ReadWholePDB(FILE *fpin)
    
    /* Read the coordinates                                              */
    rewind(fp);
-   wpdb->pdb = ReadPDB(fp, &(wpdb->natoms));
+   if(atomsonly)
+   {
+      wpdb->pdb = ReadPDBAtoms(fp, &(wpdb->natoms));
+   }
+   else
+   {
+      wpdb->pdb = ReadPDB(fp, &(wpdb->natoms));
+   }
 
    /* Read the trailer                                                  */
    rewind(fp);

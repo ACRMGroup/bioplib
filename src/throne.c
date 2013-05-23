@@ -3,19 +3,13 @@
    Program:    
    File:       throne.c
    
-   Version:    V1.2R
-   Date:       25.07.95
+   Version:    V1.3R
+   Date:       08.03.07
    Function:   Convert between 1 and 3 letter aa codes
    
-   Copyright:  (c) SciTech Software 1993-5
+   Copyright:  (c) SciTech Software 1993-2007
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
 
@@ -47,6 +41,10 @@
    V1.2  25.07.95 handles nucleic acids
                   Sets the gBioplibSeqNucleicAcid flag if it's a 
                   nucleic acid.
+   V1.3  08.03.07 Added PGA (Pyroglutamate) to translation table 
+                  (same as PCA: pyrrolidone carboxylic acid).
+                  Note that it isn't clear whether this should translate
+                  to Glu or Gln
 
 *************************************************************************/
 /* Includes
@@ -71,7 +69,7 @@ static char sTab1[]    = {'A','C','D','E','F',
                           'G','H','I','K','L',
                           'M','N','P','Q','R',
                           'S','T','V','W','Y',
-                          'E','B','Z',
+                          'E','B','Z','E',
                           'A','T','C','G','U',
                           'X'
                          };
@@ -79,7 +77,7 @@ static char sTab3[][8] = {"ALA ","CYS ","ASP ","GLU ","PHE ",
                           "GLY ","HIS ","ILE ","LYS ","LEU ",
                           "MET ","ASN ","PRO ","GLN ","ARG ",
                           "SER ","THR ","VAL ","TRP ","TYR ",
-                          "PCA ","ASX ","GLX ",
+                          "PCA ","ASX ","GLX ","PGA ",
                           "  A ","  T ","  C ","  G ","  U ",
                           "UNK "
                          };

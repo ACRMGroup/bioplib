@@ -335,7 +335,7 @@ void WriteWholePDB(FILE *fp, WHOLEPDB *wpdb);
 void WriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb);
 void WriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb);
 WHOLEPDB *ReadWholePDB(FILE *fpin);
-
+WHOLEPDB *ReadWholePDBAtoms(FILE *fpin);
 BOOL AddCBtoGly(PDB *pdb);
 BOOL AddCBtoAllGly(PDB *pdb);
 PDB *StripGlyCB(PDB *pdb);

@@ -3,19 +3,13 @@
    Program:    
    File:       seq.h
    
-   Version:    V2.9R
-   Date:       02.10.00
+   Version:    V2.10R
+   Date:       27.02.07
    Function:   Header file for sequence handling
    
-   Copyright:  (c) SciTech Software 1991-2000
+   Copyright:  (c) SciTech Software 1991-2007
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@stagleys.demon.co.uk, a.c.r.martin@reading.ac.uk
+   EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
 
@@ -50,6 +44,7 @@
    V2.7  26.08.97 Added macro interfaces to new DoPDB2Seq()
    V2.8  08.03.00 Added Numeric***() alignment routines
    V2.9  02.10.00 Modified DoPDB2Seq()
+   V2.10 27.02.07 Added CalcMDMScoreUC() and affinealignuc()
 
 *************************************************************************/
 #ifndef _SEQ_H
@@ -110,6 +105,10 @@ int affinealign(char *seq1, int  length1, char *seq2, int  length2,
                 BOOL verbose, BOOL identity, int  penalty, int penext,
                 char *align1, char *align2, int  *align_len);
 int CalcMDMScore(char resa, char resb);
+int affinealignuc(char *seq1, int  length1, char *seq2, int  length2, 
+                  BOOL verbose, BOOL identity, int  penalty, int penext,
+                  char *align1, char *align2, int  *align_len);
+int CalcMDMScoreUC(char resa, char resb);
 BOOL ReadMDM(char *mdmfile);
 int ZeroMDM(void);
 char DNAtoAA(char *dna);
