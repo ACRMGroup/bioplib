@@ -3,20 +3,14 @@
    Program:    
    File:       openorpipe.c
    
-   Version:    V1.5
-   Date:       03.02.06
+   Version:    V1.6
+   Date:       29.06.07
    Function:   Open a file for writing unless the filename starts with
                a | in which case open as a pipe
    
-   Copyright:  (c) SciTech Software 1997-2005
+   Copyright:  (c) SciTech Software 1997-2007
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      amartin@stagleys.demon.co.uk
+   EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
 
@@ -48,6 +42,8 @@
    V1.4  28.01.04 Added NOPIPE define. Allows compilation on systems
                   which don't support unix pipes
    V1.5  03.02.06 Added prototypes for popen() and pclose()
+   V1.6  29.06.07 popen() and pclose() prototypes now skipped for MAC OSX
+                  which defines them differently
 
 *************************************************************************/
 /* Includes
@@ -72,8 +68,10 @@
 /************************************************************************/
 /* Prototypes
 */
+#ifndef __APPLE__
 FILE *popen(char *, char *);
 int  pclose(FILE *);
+#endif
 
 /************************************************************************/
 /*>FILE *OpenOrPipe(char *filename)

@@ -3,11 +3,11 @@
    Program:    
    File:       ReadPDB.c
    
-   Version:    V2.18R
-   Date:       03.02.06
+   Version:    V2.20R
+   Date:       29.06.07
    Function:   Read coordinates from a PDB file 
    
-   Copyright:  (c) SciTech Software 1988-2006
+   Copyright:  (c) SciTech Software 1988-2007
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -146,6 +146,9 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                   of zero and you want to pull out that atom
    V2.17 25.01.06 Added calls to RemoveAlternates()
    V2.18 03.02.06 Added prototypes for popen() and pclose()
+   V2.19 05.06.07 Added support for Unix compress'd files
+   V2.20 29.06.07 popen() and pclose() prototypes now skipped for MAC OSX
+                  which defines them differently
 
 *************************************************************************/
 /* Defines required for includes
@@ -180,8 +183,10 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
                              int NPartial, PDB **ppdb, PDB **pp, 
                              int *natom);
+#ifndef __APPLE__
 FILE *popen(char *, char *);
 int  pclose(FILE *);
+#endif
 
 /************************************************************************/
 /*>PDB *ReadPDB(FILE *fp, int *natom)
@@ -373,6 +378,7 @@ PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
    14.10.05 V2.16 Modified detection of partial occupancy. handles
                   residues like 1zeh/B16 where a lower partial is
                   erroneously set to zero
+   05.06.07 V2.19 Added support for Unix compress'd files
 */
 PDB *doReadPDB(FILE *fpin,
                int  *natom,
@@ -424,9 +430,12 @@ PDB *doReadPDB(FILE *fpin,
       signature[i] = fgetc(fpin);
    for(i=2; i>=0; i--)
       ungetc(signature[i], fpin);
-   if((signature[0] == (int)0x1F) &&
-      (signature[1] == (int)0x8B) &&
-      (signature[2] == (int)0x08))
+   if(((signature[0] == (int)0x1F) &&    /* gzip                        */
+       (signature[1] == (int)0x8B) &&
+       (signature[2] == (int)0x08)) ||
+      ((signature[0] == (int)0x1F) &&    /* 05.06.07 compress           */
+       (signature[1] == (int)0x9D) &&
+       (signature[2] == (int)0x90)))
    {
       /* It is gzipped so we'll open gunzip as a pipe and send the data
          through that into a temporary file

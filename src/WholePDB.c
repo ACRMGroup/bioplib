@@ -63,6 +63,9 @@
 */
 static WHOLEPDB *doReadWholePDB(FILE *fpin, BOOL atomsonly);
 
+FILE *popen(char *, char *);
+int  pclose(FILE *);
+
 /************************************************************************/
 /*>void FreeWholePDB(WHOLEPDB *wpdb)
    ---------------------------------
@@ -218,8 +221,9 @@ WHOLEPDB *ReadWholePDBAtoms(FILE *fpin)
       ... Do something with p ...
    }
 
-   30.05.02  Original   By: ACRM
+   30.05.02 Original   By: ACRM
    07.03.07 Made into a doXXX routine to add a atomsonly parameter
+   05.06.07 Added support for Unix compress'd files
 
    TODO FIXME!!!!! Move all this into doReadPDB so that we don't worry 
    about rewinding any more
@@ -252,9 +256,12 @@ static WHOLEPDB *doReadWholePDB(FILE *fpin, BOOL atomsonly)
       signature[i] = fgetc(fpin);
    for(i=2; i>=0; i--)
       ungetc(signature[i], fpin);
-   if((signature[0] == (int)0x1F) &&
-      (signature[1] == (int)0x8B) &&
-      (signature[2] == (int)0x08))
+   if(((signature[0] == (int)0x1F) &&    /* gzip                        */
+       (signature[1] == (int)0x8B) &&
+       (signature[2] == (int)0x08)) ||
+      ((signature[0] == (int)0x1F) &&    /* 05.06.07 compress           */
+       (signature[1] == (int)0x9D) &&
+       (signature[2] == (int)0x90)))
    {
       /* It is gzipped so we'll open gunzip as a pipe and send the data
          through that into a temporary file
