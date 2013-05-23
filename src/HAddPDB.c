@@ -3,11 +3,11 @@
    Program:    
    File:       HAddPDB.c
    
-   Version:    V2.13R
-   Date:       28.07.05
+   Version:    V2.16R
+   Date:       24.01.06
    Function:   Add hydrogens to a PDB linked list
    
-   Copyright:  (c) SciTech Software 1990-2005
+   Copyright:  (c) SciTech Software 1990-2006
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -101,6 +101,9 @@
    V2.11 27.03.03 Fixed severe memory leak in AddH()
    V2.12 03.06.05 Added altpos
    V2.13 28.07.05 Added conditionals for msdos and Mac OS/X
+   V2.14 28.11.05 No longer exits if previous C is missing
+   V2.15 24.01.06 Fixed error message in GenH() which could try to print 
+                  from NULL pointer
 
 *************************************************************************/
 /* Includes
@@ -167,6 +170,7 @@ static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta,
                   BOOL firstres);
 static BOOL AddH(PDB *hlist, PDB **position, int HType);
 static void SetRawAtnam(char *out, char *in);
+static PDB  *StripDummyH(PDB *pdb, int *nhyd);
 
 /************************************************************************/
 /*>int HAddPDB(FILE *fp, PDB  *pdb)
@@ -187,6 +191,8 @@ static void SetRawAtnam(char *out, char *in);
    16.05.90 Original    By: ACRM
    04.01.94 Changed check on return=NULL to 0
    08.03.94 Only reads PGP on first call. err_flag changed to BOOL.
+   28.11.05 Removes any dummy hydrogens added because there were
+            missing atoms
 */
 int HAddPDB(FILE *fp, PDB  *pdb)
 {
@@ -207,6 +213,11 @@ int HAddPDB(FILE *fp, PDB  *pdb)
    /* Generate the hydrogens                                            */
    if((nhydrogens=GenH(pdb,&err_flag))==0)
       return(0);
+
+/* ACRM+++ 28.11.05                                                     */
+   /* Remove dummy hydrogens (where atoms are missing)                  */
+   pdb = StripDummyH(pdb, &nhydrogens);
+/* ACRM=== 28.11.05                                                     */
    
    /* Renumber atoms in PDB linked list                                 */
    for(p=pdb;p;NEXT(p)) p->atnum=atomcount++;
@@ -284,6 +295,10 @@ int ReadPGP(FILE *fp)
    01.03.94 Changed static variable names
    08.03.94 Changed err_flag to BOOL
    26.01.96 Added check on insert code as well as resnum
+   28.11.05 Modified such that a missing preceeding C no longer causes
+            the routine to exit
+   24.01.06 Fixed error message which could try to print from NULL 
+            pointer
 */
 static int GenH(PDB *pdb, BOOL *err_flag)
 {
@@ -446,15 +461,37 @@ static int GenH(PDB *pdb, BOOL *err_flag)
 in residue %d\n\n",p->resnum);
             screen(buffer);
 #endif
+/* ACRM--- 25.11.05
             *err_flag=TRUE;
             return(0);
+*/
+/* ACRM+++ 28.11.05                                                     */
+/* ACRM 24.01.06                                                        */
+            if(p!=NULL)
+            {
+               fprintf(stderr,"Warning=> genh() found no carbonyl carbon \
+preceeding residue %c%d%c\n", p->chain[0], p->resnum, p->insert[0]);
+            }
+            else
+            {
+               fprintf(stderr,"Warning=> genh() found no carbonyl carbon \
+preceeding the last residue\n");
+            }
+            sGX[1]=9999.0;
+            sGY[1]=9999.0;
+            sGZ[1]=9999.0;
+            
+/* ACRM=== 28.11.05                                                     */
+         }
+         else
+         {
+            sGX[1]=sGX[j];
+            sGY[1]=sGY[j];
+            sGZ[1]=sGZ[j];
          }
          strcpy(sGNat[1],co);
-         sGX[1]=sGX[j];
-         sGY[1]=sGY[j];
-         sGZ[1]=sGZ[j];
          q=position[j];
-
+            
          for(k=0;k<16;position[k++]=NULL);
          position[1]=q;
       }
@@ -1072,13 +1109,13 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
    int atomcount=0,
        k;
 
-   q=hlist;
-
    /* Step through each atom in position list until we find the
       one corresponding to this PGP
    */
    for(k=1;k<16;k++)
    {
+      q=hlist;
+
       if(!position[k]) continue;
       p = position[k];
 
@@ -1291,3 +1328,37 @@ static void SetRawAtnam(char *out, char *in)
    }
    out[4] = '\0';
 }
+
+/************************************************************************/
+/*>static PDB *StripDummyH(PDB *pdb, int *nhyd)
+   --------------------------------------------
+   Input:   PDB    *pdb      Start of PDB linked list
+   I/O:     int    *nhyd     Number of hydrogens
+   Returns: PDB    *         New PDB linked list
+
+   Strips any dummy hydrogens
+
+   28.11.05 Original   By: ACRM
+*/
+static PDB *StripDummyH(PDB *pdb, int *nhyd)
+{
+   PDB *p;
+
+   for(p=pdb; p!=NULL;)
+   {
+      if((p->atnam[0] == 'H') && 
+         (p->x > 9998.0)      &&
+         (p->y > 9998.0)      &&
+         (p->z > 9998.0))
+      {
+         DELETE(pdb, p, PDB);
+         (*nhyd)--;
+      }
+      else
+      {
+         NEXT(p);
+      }
+   }
+   return(pdb);
+}
+

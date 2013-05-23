@@ -3,8 +3,8 @@
    Program:    
    File:       openorpipe.c
    
-   Version:    V1.4
-   Date:       28.01.05
+   Version:    V1.5
+   Date:       03.02.06
    Function:   Open a file for writing unless the filename starts with
                a | in which case open as a pipe
    
@@ -47,6 +47,7 @@
    V1.3  18.08.98 Added cast to popen() for SunOS
    V1.4  28.01.04 Added NOPIPE define. Allows compilation on systems
                   which don't support unix pipes
+   V1.5  03.02.06 Added prototypes for popen() and pclose()
 
 *************************************************************************/
 /* Includes
@@ -71,6 +72,8 @@
 /************************************************************************/
 /* Prototypes
 */
+FILE *popen(char *, char *);
+int  pclose(FILE *);
 
 /************************************************************************/
 /*>FILE *OpenOrPipe(char *filename)

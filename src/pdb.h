@@ -3,11 +3,11 @@
    Program:    
    File:       pdb.h
    
-   Version:    V1.39R
-   Date:       29.09.05
+   Version:    V1.41R
+   Date:       25.01.06
    Function:   Include file for pdb routines
    
-   Copyright:  (c) SciTech Software, UCL, Reading 1993-2005
+   Copyright:  (c) SciTech Software, UCL, Reading 1993-2006
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -89,6 +89,9 @@
                   Added altpos and atnam_raw to CLEAR_PDB
    V1.38 22.09.05 Added WritePDBRecordAtnam()
    V1.39 29.09.05 Added ParseResSpecNoUpper() and DoParseResSpec()  By: TL
+   V1.40 04.01.06 Added AddCBtiGly(), AddCBtoAllGly(), 
+                  StripGlyCB()      By: ACRM
+   V1.41 25.01.06 Added RemoveAlternates()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -332,5 +335,10 @@ void WriteWholePDB(FILE *fp, WHOLEPDB *wpdb);
 void WriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb);
 void WriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb);
 WHOLEPDB *ReadWholePDB(FILE *fpin);
+
+BOOL AddCBtoGly(PDB *pdb);
+BOOL AddCBtoAllGly(PDB *pdb);
+PDB *StripGlyCB(PDB *pdb);
+PDB *RemoveAlternates(PDB *pdb);
 
 #endif

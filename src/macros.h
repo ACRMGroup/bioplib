@@ -3,19 +3,13 @@
    Program:    
    File:       Macros.h
    
-   Version:    V2.13R
-   Date:       13.03.99
+   Version:    V2.16
+   Date:       25.01.06
    Function:   Useful macros
    
-   Copyright:  SciTech Software 1991-9
+   Copyright:  SciTech Software 1991-2006
    Author:     Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@stagleys.demon.co.uk
+   EMail:      andrew@bioinf.org.uk
 
 **************************************************************************
 
@@ -81,6 +75,7 @@
                         character only if it is shorter
    DOTIFY(str)          Replace ' ' with '.' in string
    DEDOTIFY(str)        Replace '.' with ' ' in string
+   FINDPREV(p, start, q) Set p to item in linked list start before q
    
 **************************************************************************
 
@@ -123,6 +118,7 @@
    V2.13 19.09.96 Include ctype for UPPER() etc
    V2.14 13.03.99 Added DELETEDOUBLE()
    V2.15 01.03.01 Added DOTIFY() DEDOTIFY() PADCHARMINTERM() SUBSCHAR()
+   V2.16 25.01.06 Added FINDPREV()
 
 *************************************************************************/
 #ifndef _MACROS_H
@@ -245,7 +241,7 @@ do {                                                                     \
    13.03.99 Original    By: ACRM
 */
 #define DELETEDOUBLE(s, x, y)                                            \
-        do { y *_deleteandnext_macro_temp;                           \
+        do { y *_deleteandnext_macro_temp;                               \
              if(((s)!=NULL) && ((x)!=NULL))                              \
              {  if((x)==(s)) (s) = (x)->next;                            \
                 _deleteandnext_macro_temp = (x)->next;                   \
@@ -254,6 +250,26 @@ do {                                                                     \
                 free(x);                                                 \
                 (x) = _deleteandnext_macro_temp;                         \
         }  } while(0)
+
+/*>FINDPREV(ptr, start, item)
+   --------------------------
+   Searches a linked list beginning at (start) to find the item which
+   preceeds (item). Its address is put into (ptr). If (item) is the
+   same as (start) or (item) is not found, then the routine returns
+   NULL in (ptr)
+   This is used when wanting to look at the previous item in a singly
+   linked list.
+
+   26.01.06 Original    By: ACRM
+*/
+#define FINDPREV(p, s, l)                                                \
+        do { p = (s);                                                    \
+             if((s)==(l))                                                \
+             { p = NULL; } else                                          \
+             {                                                           \
+               while((p != NULL) && (p->next != (l)))                    \
+               {  p = p->next;                                           \
+           } } } while(0)
 
 
 /***************************** Misc. macros *****************************/

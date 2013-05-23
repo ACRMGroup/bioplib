@@ -3,21 +3,14 @@
    Program:    
    File:       safemem.c
    
-   Version:    V1.1
-   Date:       27.02.98
+   Version:    V1.2
+   Date:       03.07.06
    Function:   Safe malloc()/free() routines which check for array 
                overflow on free.
    
-   Copyright:  (c) SciTech Software 1995-8
+   Copyright:  (c) SciTech Software 1995-2006
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   Fax:        +44 (0) 1372 813069
-   EMail:      martin@biochem.ucl.ac.uk
+   EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
 
@@ -67,6 +60,7 @@
    =================
    V1.0  23.06.95 Original
    V1.1  27.02.98 Added cast to ptr
+   V1.2  03.07.06 Added 'ok' to the MEMLIST and added safeleaks()
 
 *************************************************************************/
 /* Includes - Note we must *not* include safemem.h since we require the
@@ -90,6 +84,7 @@ typedef struct _memlist
    struct _memlist *next,
                    *prev;
    int             length;
+   BOOL            ok;
 }  MEMLIST;
 
 /************************************************************************/
@@ -188,6 +183,7 @@ shortened to the LSB.\n");
    }
    p->start  = start+sCheckSize;
    p->length = nbytes;
+   p->ok     = TRUE;
    
    /* Blank the protection buffer space                                 */
    for(i=0; i<sCheckSize; i++)
@@ -228,6 +224,7 @@ BOOL safefree(void *ptr)
             {
                fprintf(stderr,"safefree(): Array underflow at \
 %lu by %d bytes\n", (ULONG)ptr,i);
+               p->ok = FALSE;
                return(TRUE);
             }
          }
@@ -238,6 +235,7 @@ BOOL safefree(void *ptr)
             {
                fprintf(stderr,"safefree(): Array overflow at \
 %lu by %d bytes\n", (ULONG)ptr,i+1);
+               p->ok = FALSE;
                return(TRUE);
             }
          }
@@ -270,4 +268,25 @@ BOOL safefree(void *ptr)
    fprintf(stderr,"            %d items in memory list\n",count);
    
    return(TRUE);
+}
+
+/************************************************************************/
+/*>void safeleaks(void)
+   --------------------
+   Prints a list of any safemalloc()'d memory which was not freed
+
+   03.07.06  Original   By: ACRM
+*/
+void safeleaks(void)
+{
+   MEMLIST *p;
+   for(p=sSafeMemList; p!=NULL; NEXT(p))
+   {
+      if(p->ok)
+      {
+         fprintf(stderr,"safeleaks(): Leaked memory at: %lu of size: \
+%lu\n",
+                 (long unsigned)p->start, (long unsigned)p->length);
+      }
+   }
 }

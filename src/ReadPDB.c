@@ -3,11 +3,11 @@
    Program:    
    File:       ReadPDB.c
    
-   Version:    V2.16R
-   Date:       14.10.05
+   Version:    V2.18R
+   Date:       03.02.06
    Function:   Read coordinates from a PDB file 
    
-   Copyright:  (c) SciTech Software 1988-2005
+   Copyright:  (c) SciTech Software 1988-2006
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -54,6 +54,9 @@ BUGS:  The subroutine cannot read files with VAX Fortran carriage control!
 
 BUGS:  The multiple occupancy code assumes that all positions for a given
        atom in consecutive records of the file
+
+BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
+       3pga where atoms have occupancies of zero and one
 
 **************************************************************************
 
@@ -141,6 +144,9 @@ BUGS:  The multiple occupancy code assumes that all positions for a given
    V2.16 14.10.05 Fixed a problem in StoreOccRankAtom() when a lower
                   occupancy atom has (erroneously) been set to occupancy
                   of zero and you want to pull out that atom
+   V2.17 25.01.06 Added calls to RemoveAlternates()
+   V2.18 03.02.06 Added prototypes for popen() and pclose()
+
 *************************************************************************/
 /* Defines required for includes
 */
@@ -174,6 +180,8 @@ BUGS:  The multiple occupancy code assumes that all positions for a given
 static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
                              int NPartial, PDB **ppdb, PDB **pp, 
                              int *natom);
+FILE *popen(char *, char *);
+int  pclose(FILE *);
 
 /************************************************************************/
 /*>PDB *ReadPDB(FILE *fp, int *natom)
@@ -190,11 +198,20 @@ static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
    09.07.93 Modified to return pointer to PDB
    17.03.94 Modified to handle OccRank
    06.03.95 Added value for NMR model to read (1 = first)
+   25.01.06 Added call to RemoveAlternates() - this deals with odd
+            cases where alternate atom positions don't appear where
+            they should!
+   25.01.06 Added call to RemoveAlternates(). This deals with odd uses
+            of multiple occupancies like 3pga and the instance where
+            the alternates are all grouped at the end of the file.
 */
 PDB *ReadPDB(FILE *fp,
              int  *natom)
 {
-   return(doReadPDB(fp, natom, TRUE, 1, 1));
+   PDB *pdb;
+   pdb = doReadPDB(fp, natom, TRUE, 1, 1);
+   pdb = RemoveAlternates(pdb);
+   return(pdb);
 }
 
 /************************************************************************/
@@ -233,11 +250,17 @@ PDB *ReadPDBAll(FILE *fp,
    09.07.93 Modified to return pointer to PDB
    17.03.94 Modified to handle OccRank
    06.03.95 Added value for NMR model to read (1 = first)
+   25.01.06 Added call to RemoveAlternates(). This deals with odd uses
+            of multiple occupancies like 3pga and the instance where
+            the alternates are all grouped at the end of the file.
 */
 PDB *ReadPDBAtoms(FILE *fp,
                   int  *natom)
 {
-   return(doReadPDB(fp, natom, FALSE, 1, 1));
+   PDB *pdb;
+   pdb = doReadPDB(fp, natom, FALSE, 1, 1);
+   pdb = RemoveAlternates(pdb);
+   return(pdb);
 }
 
 /************************************************************************/
@@ -824,3 +847,216 @@ char *FixAtomName(char *name, REAL occup)
    }
    return(newname);
 }
+
+/************************************************************************/
+/*>PDB *RemoveAlternates(PDB *pdb)
+   -------------------------------
+   I/O:       PDB     *pdb       PDB 
+   Returns:   PDB *              Ammended linked list (in case start has
+                                 changed)
+
+   Remove alternate atoms - we keep only the highest occupancy or the 
+   first if there are more than one the same.
+
+   25.01.05 Original based on code written for Inpharmatica   By: ACRM
+*/
+PDB *RemoveAlternates(PDB *pdb)
+{
+   PDB   *p, 
+         *q, 
+         *r, 
+         *s, 
+         *s_prev,
+         *r_prev,
+         *a_prev,
+         *next,
+         *alts[MAXPARTIAL];
+   int   i, 
+         altCount, 
+         highest;
+   
+   
+   /* Step through residues                                             */
+   r_prev=NULL;
+   for(p=pdb; p!=NULL; p=q)
+   {
+      q=FindNextResidue(p);
+      
+      /* Step through atoms                                             */
+      for(r=p; r!=q; NEXT(r))
+      {
+         if(r->altpos != ' ')
+         {
+#ifdef DEBUG
+            fprintf(stderr,"\n\nAlt pos found for record:\n");
+            WritePDBRecord(stderr, r);
+#endif
+            /* We have an alternate, store it and search for the other 
+               ones  
+            */
+            altCount=0;
+            alts[altCount++] = r;
+            /* Search through this residue for the alternates.
+               This will work for 99.9% of files where the alternates are
+               with the main atoms
+            */
+            for(s=r->next; s!=q; NEXT(s))
+            {
+               if(!strcmp(s->atnam_raw, alts[0]->atnam_raw))
+               {
+                  if(altCount < MAXPARTIAL)
+                  {
+                     alts[altCount++] = s;
+#ifdef DEBUG
+                     fprintf(stderr,"Partner atom found in res:\n");
+                     WritePDBRecord(stderr, s);
+#endif
+                  }
+                  else
+                  {
+                     fprintf(stderr,"Warning==> More than %d alternative \
+conformations in\n", MAXPARTIAL);
+                     fprintf(stderr,"           residue %c%d%c atom %s. \
+Increase MAXPARTIAL in ReadPDB.c\n", s->chain[0],
+                                     s->resnum,
+                                     s->insert[0],
+                                     s->atnam);
+                  }
+               }
+            }
+            /* If we didn't find the alternates within the residue, then
+               we search the rest of the records.
+               This covers the known entry where the alternates are shoved
+               on the end instead! 
+            */
+            if(altCount<2)
+            {
+#ifdef DEBUG
+               fprintf(stderr,"No partner found in residue\n");
+#endif
+
+               s_prev = NULL;
+               for(s=q; s!=NULL; NEXT(s))
+               {
+                  if((s->resnum    == alts[0]->resnum) &&
+                     (s->insert[0] == alts[0]->insert[0]) &&
+                     (s->chain[0]  == alts[0]->chain[0]) &&
+                     !strcmp(s->atnam_raw, alts[0]->atnam_raw))
+                  {
+                     if(altCount < MAXPARTIAL)
+                     {
+                        alts[altCount++] = s;
+#ifdef DEBUG
+                        fprintf(stderr,"Partner found outside \
+residue:\n");
+                        WritePDBRecord(stderr, s);
+#endif
+                     }
+                     else
+                     {
+                        fprintf(stderr,"Warning==> More than %d \
+alternative conformations in\n", MAXPARTIAL);
+                        fprintf(stderr,"           residue %c%d%c atom \
+%s. Increase MAXPARTIAL in ReadPDB.c\n", s->chain[0],
+                                         s->resnum,
+                                         s->insert[0],
+                                         s->atnam);
+
+                        /* Move this record to the correct position in the
+                           linked list
+
+                           First unlink s from its old position
+                        */
+                        if(s_prev != NULL)
+                           s_prev->next = s->next;
+                     
+                        /* Now link it back in where it should be       */
+                        next = r->next;
+                        r->next = s;
+                        s->next = next;
+                     }
+                  }
+                  s_prev = s;
+               }
+            }
+
+            if(altCount < 2)
+            {
+#ifdef DEBUG
+               fprintf(stderr,"No alternates found. Resetting ALT \
+flag\n\n");
+#endif
+               alts[0]->altpos = ' ';
+               
+            }
+            else
+            {
+               /* Find the highest occupancy, defaulting to the first   */
+               highest = 0;
+               for(i=0; i<altCount; i++)
+               {
+                  if(alts[i]->occ > alts[highest]->occ)
+                     highest = i;
+               }
+               
+               /* Delete the unwanted alternates                        */
+               for(i=0; i<altCount; i++)
+               {
+                  if(i==highest) /* For the highest remove the ALT flag */
+                  {
+#ifdef DEBUG
+                     fprintf(stderr,"Highest occupancy selected:\n");
+                     WritePDBRecord(stderr, alts[i]);
+#endif
+                     alts[i]->altpos = ' ';
+                  }
+                  else
+                  {
+                     /* If we are deleting the current record pointer, 
+                        then we need to update it
+                     */
+                     if(alts[i] == r)
+                     {
+#ifdef DEBUG
+                        fprintf(stderr,"Deleting current record \
+pointer\n");
+#endif
+                        
+                        if(r_prev == NULL)
+                        {
+                           r_prev = r;
+                           NEXT(r);
+                           /* We are deleting the head of the list so we 
+                              must update the main list pointer
+                           */
+                           pdb = r;
+                        }
+                        else
+                        {
+                           r = r_prev;
+                           FINDPREV(r_prev, pdb, r);
+                        }
+                     }
+                     
+                     /* Delete the alternate we don't need              */
+#ifdef DEBUG
+                     fprintf(stderr,"Deleting Alt pos record:\n");
+                     WritePDBRecord(stderr, alts[i]);
+#endif
+                     
+                     FINDPREV(a_prev, pdb, alts[i]);
+                     if(a_prev != NULL)
+                        a_prev->next = alts[i]->next;
+                     free(alts[i]);
+                     
+                  }  /* Not the highest, so we delete it                */
+               }  /* Stepping through the alternates                    */
+            }
+            
+         }  /* We have an alternate                                     */
+         r_prev = r;
+      }  /* Stepping through the atoms of this residue                  */
+   }  /* Stepping through the residues                                  */
+   return(pdb);
+}
+

@@ -1,16 +1,15 @@
 /* #define ALLOW_AXN */
-
 /*************************************************************************
 
    Program:    
    File:       hbond.c
    
-   Version:    V1.3
-   Date:       18.08.05
+   Version:    V1.5
+   Date:       17.01.06
    Function:   Report whether two residues are H-bonded using
                Baker & Hubbard criteria
    
-   Copyright:  (c) SciTech Software 1996-2005
+   Copyright:  (c) SciTech Software 1996-2006
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -45,6 +44,10 @@
    V1.1  09.02.96 Added #ifdef'd code to allow AE1/AE2 AD1/AD2
    V1.2  19.12.02 Fixed bug in walking over multiple H atoms
    V1.3  18.08.05 Fixed bug relating to sidechains like GLN/ASN
+   V1.4  03.01.06 Proline backbone nitrogen cannot act as donor!
+                  Also incorporated fix in ValidHBond() from 02.06.99
+                  Inpharmatica version to handle NULL antecedent atoms
+   V1.5  17.01.06 Added IsMCDonorHBonded() and IsMCAcceptorHBonded()
 
 *************************************************************************/
 /* Includes
@@ -239,18 +242,30 @@ int IsHBonded(PDB *res1, PDB *res2, int type)
    Baker and Hubbard criteria
 
    25.01.96 Original    By: ACRM
+   02.06.99 Added NULL antecedent handling to allow calculation of
+            HBonds with missing antecedents. Previously AtomP==NULL
+            was handled as an invalid HBond.
 */
 BOOL ValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP)
 {
    REAL ang1, ang2;
    
-   if(AtomD==NULL || AtomA==NULL || AtomP==NULL)
+   if(AtomD==NULL || AtomA==NULL)
    {
       return(FALSE);
    }
    
    if(AtomH==NULL)
    {
+      /* If antecedent not defined then just check the distance         */
+      if(AtomP==NULL)
+      {
+         if(DISTSQ(AtomD, AtomA) < DADISTSQ)
+            return(TRUE);
+         else
+            return(FALSE);
+      }
+
       ang1 = angle(AtomP->x, AtomP->y, AtomP->z,
                    AtomA->x, AtomA->y, AtomA->z,
                    AtomD->x, AtomD->y, AtomD->z);
@@ -262,12 +277,23 @@ BOOL ValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP)
    }
    else
    {
-      ang1 = angle(AtomP->x, AtomP->y, AtomP->z,
-                   AtomA->x, AtomA->y, AtomA->z,
-                   AtomH->x, AtomH->y, AtomH->z);
       ang2 = angle(AtomD->x, AtomD->y, AtomD->z,
                    AtomH->x, AtomH->y, AtomH->z,
                    AtomA->x, AtomA->y, AtomA->z);
+
+      /* If the antecedent isn't defined then just set ang1 to within
+         the allowed range
+      */
+      if(AtomP==NULL)
+      {
+         ang1 = 3.0*PI/4.0;
+      }
+      else
+      {
+         ang1 = angle(AtomP->x, AtomP->y, AtomP->z,
+                      AtomA->x, AtomA->y, AtomA->z,
+                      AtomH->x, AtomH->y, AtomH->z);
+      }
 
       if((DISTSQ(AtomH, AtomA) < HADISTSQ) &&
          ang1 >= PI/2.0                    &&
@@ -300,7 +326,6 @@ static BOOL FindBackboneAcceptor(PDB *res, PDB **AtomA, PDB **AtomP)
 
    if(res == NULL)
    {
-      /* Clear statics                                                  */
       return(FALSE);
    }
 
@@ -337,15 +362,15 @@ static BOOL FindBackboneAcceptor(PDB *res, PDB **AtomA, PDB **AtomP)
    Finds pointers to backbone donor atoms
 
    25.01.96 Original    By: ACRM
+   03.01.06 Returns FALSE if this is a proline
 */
 static BOOL FindBackboneDonor(PDB *res, PDB **AtomH, PDB **AtomD)
 {
    PDB *p,
        *NextRes;
 
-   if(res == NULL)
+   if((res == NULL) || (!strncmp(res->resnam, "PRO", 3)))
    {
-      /* Clear statics                                                  */
       return(FALSE);
    }
 
@@ -541,6 +566,116 @@ static BOOL FindSidechainDonor(PDB *res, PDB **AtomH, PDB **AtomD)
 
    return(FALSE);
 }
+
+/************************************************************************/
+/*>int IsMCDonorHBonded(PDB *res1, PDB *res2, int type)
+   ----------------------------------------------------
+   Input:   PDB  *res1     First residue
+            PDB  *res2     Second residue
+            int  type      HBond type to search for
+   Returns: int            HBond type found or 0 if none
+
+   Determines whether 2 residues are H-bonded using the crude criteria
+   of Baker & Hubbard, 1984 (Prog. Biophys. & Mol. Biol, 44, 97-179)
+
+   N.B. Explicit hydrogens must be added to the PDB linked list before
+   calling this routine!
+
+   Searches for HBonds, in which the first residue is a mainchain donor
+   and the second residue is an acceptor. Type should be
+   HBOND_BACK2 or HBOND_SIDE2 depending whether the second residue
+   (the acceptor) is backbond or sidechain
+
+   17.01.06 Original modified from IsHbonded()    By: ACRM
+*/
+int IsMCDonorHBonded(PDB *res1, PDB *res2, int type)
+{
+   PDB *AtomH,              /* The hydrogen                             */
+       *AtomD,              /* The hydrogen donor                       */
+       *AtomA,              /* The acceptor                             */
+       *AtomP;              /* The acceptor's antecedent                */
+
+   /* Find H-bonds involving the backbone of res1                       */
+   if(FindBackboneDonor(res1, &AtomH, &AtomD))
+   {
+      if(ISSET(type, HBOND_BACK2))
+      {
+         if(FindBackboneAcceptor(res2, &AtomA, &AtomP))
+         {
+            if(ValidHBond(AtomH, AtomD, AtomA, AtomP))
+               return(HBOND_BACK2);
+         }
+      }
+      if(ISSET(type, HBOND_SIDE2))
+      {
+         /* Clear internal flags                                     */
+         FindSidechainAcceptor(NULL, NULL, NULL);
+         while(FindSidechainAcceptor(res2, &AtomA, &AtomP))
+         {
+            if(ValidHBond(AtomH, AtomD, AtomA, AtomP))
+               return(HBOND_SIDE2);
+         }
+      }
+   }
+
+   return(0);
+}
+
+/************************************************************************/
+/*>int IsMCAcceptorHBonded(PDB *res1, PDB *res2, int type)
+   -------------------------------------------------------
+   Input:   PDB  *res1     First residue
+            PDB  *res2     Second residue
+            int  type      HBond type to search for
+   Returns: int            HBond type found or 0 if none
+
+   Determines whether 2 residues are H-bonded using the crude criteria
+   of Baker & Hubbard, 1984 (Prog. Biophys. & Mol. Biol, 44, 97-179)
+
+   N.B. Explicit hydrogens must be added to the PDB linked list before
+   calling this routine!
+
+   Searches for HBonds, in which the first residue is a mainchain donor
+   and the second residue is an acceptor. Type should be
+   HBOND_BACK2 or HBOND_SIDE2 depending whether the second residue
+   (the acceptor) is backbond or sidechain
+
+   17.01.06 Original    By: ACRM
+*/
+int IsMCAcceptorHBonded(PDB *res1, PDB *res2, int type)
+{
+   PDB *AtomH,              /* The hydrogen                             */
+       *AtomD,              /* The hydrogen donor                       */
+       *AtomA,              /* The acceptor                             */
+       *AtomP;              /* The acceptor's antecedent                */
+
+   /* Find H-bonds involving the backbone of res1                       */
+   if(FindBackboneAcceptor(res1, &AtomA, &AtomP))
+   {
+      if(ISSET(type, HBOND_BACK2))
+      {
+         if(FindBackboneDonor(res2, &AtomH, &AtomD))
+         {
+            if(ValidHBond(AtomH, AtomD, AtomA, AtomP))
+               return(HBOND_BACK2);
+         }
+      }
+      if(ISSET(type, HBOND_SIDE2))
+      {
+         /* Clear internal flags                                     */
+         FindSidechainDonor(NULL, NULL, NULL);
+         while(FindSidechainDonor(res2, &AtomH, &AtomD))
+         {
+            if(ValidHBond(AtomH, AtomD, AtomA, AtomP))
+               return(HBOND_BACK1|HBOND_SIDE2);
+         }
+      }
+   }
+
+   return(0);
+}
+
+
 
 
 

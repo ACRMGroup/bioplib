@@ -3,19 +3,13 @@
    Program:    
    File:       ExtractZonePDB.c
    
-   Version:    V1.10R
-   Date:       08.10.99
+   Version:    V1.12R
+   Date:       22.03.06
    Function:   PDB linked list manipulation
    
-   Copyright:  (c) SciTech Software 1992-6
+   Copyright:  (c) SciTech Software 1992-2006
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@stagleys.demon.co.uk
+   EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
 
@@ -51,6 +45,8 @@
    V1.8  10.01.96 Added ExtractZonePDB()
    V1.9  14.03.96 Added FindAtomInRes()
    V1.10 08.10.99 Initialised some variables
+   V1.11 22.03.05 Extracted range is limited by specified residues
+   V1.12 22.03.06 Modified ExtractZonePDB() to allow non-exact ranges
 
 *************************************************************************/
 /* Includes
@@ -96,6 +92,10 @@
    records in the new PDB linked list are freed.
 
    10.01.96 Original   By: ACRM
+   22.03.06 Modified to allow non-exact zones. i.e. the extracted zone
+            will be the widest subset of the specified zone. So, if
+            you specifiy 30-35Z and the PDB file only has 30-35B
+            then that will be extracted.
 */
 PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
                     char *chain2, int resnum2, char *insert2)
@@ -109,12 +109,16 @@ PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
    if((pdb = DupePDB(inpdb))==NULL)
       return(NULL);
 
-   /* Find the first residue in the PDB linked list                     */
+   /* Find the first residue in the PDB linked list                     
+      prev will point to the last atom before the first atom in the zone
+      start will point to the first atom in the zone
+    */
    for(p=pdb; p!=NULL; NEXT(p))
    {
-      if((p->resnum    == resnum1)   &&
-         (p->chain[0]  == chain1[0]) &&
-         (p->insert[0] == insert1[0]))
+      if((p->chain[0] == chain1[0]) &&
+         ((p->resnum > resnum1) ||
+          ((p->resnum == resnum1) &&
+           (p->insert[0] >= insert1[0]))))
       {
          start = p;
          break;
@@ -128,33 +132,25 @@ PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
       return(NULL);
    }
 
-   /* Find the last residue in the PDB linked list                      */
-   for(p=pdb; p!=NULL; NEXT(p))
+   /* Find the last residue in the PDB linked list                      
+      last will point to the last atom in the zone
+    */
+   for(p=start; p!=NULL; NEXT(p))
    {
-      if((p->resnum    == resnum2)   &&
-         (p->chain[0]  == chain2[0]) &&
-         (p->insert[0] == insert2[0]))
+      if((p->chain[0] == chain2[0]) &&
+         ((p->resnum > resnum2) ||
+          ((p->resnum == resnum2) &&
+           (p->insert[0] > insert2[0]))))
       {
-         last = p;
          break;
       }
+      last = p;
    }
 
    if(last==NULL)
    {
       FREELIST(pdb, PDB);
       return(NULL);
-   }
-
-   /* Step last onto the final atom in that residue                     */
-   for(; last->next!=NULL; NEXT(last))
-   {
-      if((last->next->resnum    != resnum2)   ||
-         (last->next->chain[0]  != chain2[0]) ||
-         (last->next->insert[0] != insert2[0]))
-      {
-         break;
-      }
    }
 
    /* Free linked list after 'last'                                     */

@@ -44,6 +44,7 @@
    Revision History:
    =================
    V1.0  23.06.95 Original
+   V1.1  03.07.06 Added safeleaks() prototype
 
 *************************************************************************/
 #ifndef _SAFEMEM_H
@@ -55,6 +56,7 @@
 /* Prototypes                                                           */
 void *safemalloc(int nbytes);
 BOOL safefree(void *ptr);
+void safeleaks(void);
 
 /* Undefine memory macros defined by macros.h                           */
 #ifdef _MACROS_H

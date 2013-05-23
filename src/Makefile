@@ -52,7 +52,7 @@ RenumAtomsPDB.o ResolPDB.o RotPDB.o SelAtPDB.o SelectCaPDB.o \
 SetChi.o SetResnam.o SplitSeq.o StripHPDB.o TermPDB.o TorCoor.o \
 TranslatePDB.o TrueSeqLen.o WriteCrystPDB.o WritePDB.o WrtCSSR.o \
 align.o fit.o hbond.o rsc.o throne.o FitNCaCPDB.o FindRawAtomInRes.o \
-WriteGromosPDB.o WholePDB.o
+WriteGromosPDB.o WholePDB.o GlyCB.o
 
 
 all : libgen.a libbiop.a
