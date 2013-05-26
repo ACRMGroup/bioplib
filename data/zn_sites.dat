@@ -1,0 +1,40 @@
+1) 1TON.  Resolution. 1.8A.  Zinc site C-ALPHA pattern.
+ATOM    291  CA  HIS    57     -24.311  17.834  38.545
+ATOM    715  CA  HIS    97     -22.799   7.564  37.029
+ATOM    733  CA  HIS    99     -18.409  12.519  34.843
+2) 1TON.  Resolution. 1.8A.  Zinc site C-BETA pattern.
+ATOM    294  CB  HIS    57     -22.862  17.860  39.161
+ATOM    718  CB  HIS    97     -23.041   8.209  38.450
+ATOM    736  CB  HIS    99     -17.333  13.066  35.736
+3) 2CAB.  Resolution. 2.0A.  Zinc-site C-ALPHA pattern.
+ATOM    745  CA  HIS    94      40.144  10.830 -14.590
+ATOM    766  CA  HIS    96      43.024  16.682 -11.944
+ATOM    945  CA  HIS   119      36.225  12.580 -11.196
+4) 2CAB.  Resolution. 2.0A.  Zinc-site C-BETA pattern.
+ATOM    748  CB  HIS    94      40.043  11.734 -15.864
+ATOM    769  CB  HIS    96      41.929  17.777 -11.835
+ATOM    948  CB  HIS   119      36.193  13.654 -12.315
+5) 3TLN.  Resolution. 1.6A.  Zinc-site C-ALPHA pattern.
+ATOM   1102  CA  HIS   142      55.776  25.156  -3.351
+ATOM   1136  CA  HIS   146      53.533  26.555  -9.421
+ATOM   1286  CA  GLU   166      58.729  20.437  -9.448
+6) 3TLN.  Resolution. 1.6A.  Zinc-site C-BETA pattern.
+ATOM   1105  CB  HIS   142      55.972  23.715  -2.865
+ATOM   1139  CB  HIS   146      52.611  25.373  -9.211
+ATOM   1289  CB  GLU   166      58.656  18.887  -9.356
+7) 5CPA.  Resolution. 1.54A.  Zinc-site C-ALPHA pattern.
+ATOM    551  CA  HIS    69      -1.370  22.254  -4.088
+ATOM    578  CA  GLU    72      -5.924  23.402   -.457
+ATOM   1552  CA  HIS   196      -7.354  25.538  -6.408
+8) 5CPA.  Resolution. 1.54A.  Zinc-site C-BETA pattern.
+ATOM    554  CB  HIS    69      -1.567  23.787  -4.043
+ATOM    581  CB  GLU    72      -5.744  23.955  -1.908
+ATOM   1555  CB  HIS   196      -6.360  26.567  -6.998
+9) 7ADH.  Resolution. 3.2A.  Zinc-site C-ALPHA pattern.
+ATOM    402  CA  CYS    46       7.376  10.584  20.281
+ATOM    550  CA  HIS    67       1.079  14.366  17.340
+ATOM   1402  CA  CYS   174       5.450  16.942  23.432
+10) 7ADH.  Resolution. 3.2A.  Zinc-site C-BETA pattern.
+ATOM    405  CB  CYS    46       6.249  11.577  20.560
+ATOM    553  CB  HIS    67        .394  13.946  18.658
+ATOM   1405  CB  CYS   174       5.191  15.602  22.731

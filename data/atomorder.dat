@@ -1,0 +1,203 @@
+WFVG AORDER.DAT MODIFIED FOR CHARMM
+AIB 
+ 7
+N    H    CA   CB1  CB2  C    O    
+ALA                                                                             
+ 6
+N    H    CA   CB   C    O                                                  
+ARG                                                                             
+17
+N    H    CA   CB   CG   CD   NE   HE   CZ   NH1  HH11 HH12 NH2  HH21 HH22 C   
+O                                                                           
+ASN                                                                             
+11
+N    H    CA   CB   CG   OD1  ND2  HD21 HD22 C    O                         
+ASP                                                                             
+ 9
+N    H    CA   CB   CG   OD1  OD2  C    O                                   
+CYS                                                                             
+ 7
+N    H    CA   CB   SG   C    O                                        
+CYSH                                                                            
+ 8
+N    H    CA   CB   SG   HG   C    O                                        
+CYS1                                                                            
+ 7
+N    H    CA   CB   SG   C    O                                             
+CYS2                                                                            
+ 7
+N    H    CA   CB   SG   C    O                                             
+GLN                                                                             
+12
+N    H    CA   CB   CG   CD   OE1  NE2  HE21 HE22 C    O                    
+GLU                                                                             
+10
+N    H    CA   CB   CG   CD   OE1  OE2  C    O                              
+GLY                                                                             
+ 5
+N    H    CA   C    O                                                       
+HIS                                                  
+12
+N    H    CA   CB   CG   ND1  HD1  CD2  CE1  NE2  C    O                    
+HISB                                                                            
+12
+N    H    CA   CB   CG   ND1  CD2  CE1  NE2  HE2  C    O                    
+HISH                                                                            
+13
+N    H    CA   CB   CG   ND1  HD1  CD2  CE1  NE2  HE2  C    O               
+HYP                                                                             
+ 9
+N    CA   CB   CG   OD1  HD1  CD2  C    O                                   
+ILE                                                                             
+ 9
+N    H    CA   CB   CG1  CG2  CD   C    O                                   
+LEU                                                                             
+ 9
+N    H    CA   CB   CG   CD1  CD2  C    O                                   
+LYS                                                                             
+13
+N    H    CA   CB   CG   CD   CE   NZ   HZ1  HZ2  HZ3  C    O               
+MET                                                                             
+ 9
+N    H    CA   CB   CG   SD   CE   C    O                                   
+PHE                                                                             
+12
+N    H    CA   CB   CG   CD1  CD2  CE1  CE2  CZ   C    O                    
+PRO                                                                             
+ 7
+N    CA   CB   CG   CD   C    O                                             
+SER                                                                             
+ 8
+N    H    CA   CB   OG   HG   C    O                                        
+THR                                                                             
+ 9
+N    H    CA   CB   OG1  HG1  CG2  C    O                                   
+TRP                                                                             
+16
+N    H    CA   CB   CG   CD1  CD2  NE1  HE1  CE2  CE3  CZ2  CZ3  CH2  C    O    
+TYR                                                                             
+14
+N    H    CA   CB   CG   CD1  CD2  CE1  CE2  CZ   OH   HH   C    O          
+VAL                                                                             
+ 8
+N    H    CA   CB   CG1  CG2  C    O                                        
+HIS1                                                                            
+12
+N    H    CA   CB   CG   ND1  HD1  CD2  CE1  NE2  C    O                    
+ASN1                                                                            
+11
+N    H    CA   CB   CG   OD1  ND2  HD21 HD22 C    O                         
+DADE                                                                            
+23
+P    O1P  O2P  O5*  C5*  C4*  O4*  C1*  N9   C4   N3   C2   N1   C6   N6   H61
+H62  C5   N7   C8   C2*  C3*  O3*                                             
+DGUA                                                                            
+25
+P    O1P  O2P  O5*  C5*  C4*  O4*  C1   N9   C4   N3   C2   N2   H21  H22  N1
+H1   C6   O6   C5   N7   C8   C2*  C3*  O3*                                   
+DCYT                                                                            
+21
+P    O1P  O2P  O5*  C5*  C4*  O4*  C1*  N1   C6   C2   O2   N3   C4   N4   H41
+H42  C5   C2*  C3*  O3*                                                       
+DTHY                                                                            
+21
+P    O1P  O2P  O5*  C5*  C4*  O4*  C1*  N1   C6   C2   O2   N3   H3   C4   O4
+C5   C5M  C2*  C3*  O3*                                                       
+HEME                                                                            
+43
+FE   NA   NB   NC   ND   CHA  C1A  C2A  C3A  C4A  CMA  CAA  CBA  CGA  O1A  O2A
+CHB  C1B  C2B  C3B  C4B  CMB  CAB  CBB  CHC  C1C  C2C  C3C  C4C  CMC  CAC  CBC
+CHD  C1D  C2D  C3D  C4D  CMD  CAD  CBD  CGD  O1D  O2D                         
+FMNO                                                                            
+36
+FC9A FN10 FC10AFN1  FC2  FO2  FN3  FH3  FC4  FO4  FC4A FN5  FC5A FC6  FC7  FCM7
+FC8  FCM8 FC9  FCA  FCB  FOB  FHB  FCG  FOG  FHG  FCD  FOD  FHD  FCE  FOZ  FPH
+FOH  FHH  FOT1 FOT2                                                            
+FMNS                                                                            
+37
+FC9A FN10 FC10AFN1  FC2  FO2  FN3  FH3  FC4  FO4  FC4A FN5  FH5  FC5A FC6  FC7
+FCM7 FC8  FCM8 FC9  FCA  FCB  FOB  FHB  FCG  FOG  FHG  FCD  FOD  FHD  FCE  FOZ
+FPH  FOH  FHH  FOT1 FOT2                                                       
+FMNR                                                                            
+38
+FC9A FN10 FC10AFN1  FH1  FC2  FO2  FN3  FH3  FC4  FO4  FC4A FN5  FH5  FC5A FC6
+FC7  FCM7 FC8  FCM8 FC9  FCA  FCB  FOB  FHB  FCG  FOG  FHG  FCD  FOD  FHD  FCE
+FOZ  FPH  FOH  FHH  FOT1 FOT2                                                  
+NADP                                                                            
+52
+AP   AO1P AO2P AO5* O3P  NP   NO1P NO2P NO5* AC5* AC4* AO4* AC1* AN9  AC4  AN3
+AC2  AN1  AC6  AN6  AH61 AH62 AC5  AN7  AC8  AC2* AO2* AH2* AC3* AO3* AH3* NC5*
+NC4* NO4* NC1* NN1  NC6  NC2  NC3  NC4  NC5  NC7  NO7  NN7  NH71 NH72 NC2* NO2*
+NH2* NC3* NO3* NH3*                                                            
+NADH                                                                            
+52
+AP   AO1P AO2P AO5* O3P  NP   NO1P NO2P NO5* AC5* AC4* AO4* AC1* AN9  AC4  AN3
+AC2  AN1  AC6  AN6  AH61 AH62 AC5  AN7  AC8  AC2* AO2* AH2* AC3* AO3* AH3* NC5*
+NC4* NO4* NC1* NN1  NC6  NC2  NC3  NC4  NC5  NC7  NO7  NN7  NH71 NH72 NC2* NO2*
+NH2* NC3* NO3* NH3*                                                            
+NDPH                                                                            
+56
+AP   AO1P AO2P AO5* O3P  NP   NO1P NO2P NO5* AC5* AC4* AO4* AC1* AN9  AC4  AN3
+AC2  AN1  AC6  AN6  AH61 AH62 AC5  AN7  AC8  AC2* AO2* AP2* AO6* AO7* AO8* AH8*
+AC3* AO3* AH3* NC5* NC4* NO4* NC1* NN1  NC6  NC2  NC3  NC4  NC5  NC7  NO7  NN7
+NH71 NH72 NC2* NO2* NH2* NC3* NO3* NH3*                                        
+NDPP                                                                            
+56
+AP   AO1P AO2P AO5* O3P  NP   NO1P NO2P NO5* AC5* AC4* AO4* AC1* AN9  AC4  AN3
+AC2  AN1  AC6  AN6  AH61 AH62 AC5  AN7  AC8  AC2* AO2* AP2* AO6* AO7* AO8* AH8*
+AC3* AO3* AH3* NC5* NC4* NO4* NC1* NN1  NC6  NC2  NC3  NC4  NC5  NC7  NO7  NN7
+NH71 NH72 NC2* NO2* NH2* NC3* NO3* NH3*                                        
+CYT*                                                                            
+35
+C4*  O4*  C1*  N1   C6   C2   O2   N3   C4   N4   H41  H42  C5   C2*  O2*  H2*
+C3*  O3*  SI1  OSI  SI2  O5*  C5*  C11  C111 C112  C12 C121 C122 C21  C211 C212
+C22  C221 C222                                                                 
+MTXH                                                                            
+39
+N1   HA1  C2   NA2  HA21 HA22 N3   C4   NA4  HA41 HA42 C4A  N5   C6   C7   N8
+C8A  C9   N10  CM10 C14  C13  C15  C12  C16  C11  C    O    N    H    CA   CB
+CG   CD   OE1  OE2  CT   O1   O2                                             
+FOL                                                                             
+37
+N1   C2   NA2  HA21 HA22 N3   HA3  C4   OA4  C4A  N5   C6   C7   N8   C8A  C9
+N10  H10  C14  C13  C15  C12  C16  C11  C    O    N    H    CA   CB   CG   CD
+OE1  OE2  CT   O1   O2                                                       
+DHF                                                                             
+38
+N1   C2   NA2  HA21 HA22 N3   HA3  C4   OA4  C4A  N5   C6   C7   N8   HA8  C8A
+C9   N10  H10  C14  C13  C15  C12  C16  C11  C    O    N    H    CA   CB   CG
+CD   OE1  OE2  CT   O1   O2                                                  
+THF                                                                             
+39
+N1   C2   NA2  HA21 HA22 N3   HA3  C4   OA4  C4A  N5   HA5  C6   C7   N8   HA8
+C8A  C9   N10  H10  C14  C13  C15  C12  C16  C11  C    O    N    H    CA   CB
+CG   CD   OE1  OE2  CT   O1   O2                                             
+PDG                                                                             
+13
+P    O1P  O2P  O3P  H3P  O4P  C1   C2   O2   H2   C3   OT1  OT2               
+ATP                                                                             
+36
+AN9  AC4  AN3  AC2  AN1  AC6  AN6  AH61 AH62 AC5  AN7  AC8  AC1* AO4* AC4* AC2*
+AO2* AH2* AC3* AO3* AH3* AC5* AO5* APA  AO1PAAO2PAAO3PAAPB  AO1PBAO2PBAO3PBAPG
+AO1PGAO2PGAO3PGAH3PG                                                            
+DMSO                                                                            
+ 4
+DS   DO   DC1  DC2                                                            
+ETH                                                                             
+ 3
+EO   EC1  EC2                                                                 
+ETHH                                                                            
+ 4
+EH   EO   EC1  EC2                                                            
+PMB                                                                             
+ 9
+PC8  PC5  PC4  PC6  PC3  PC7  PC2  PC1   PO                                   
+PMBH                                                                            
+10
+PC8  PC5  PC4  PC6  PC3  PC7  PC2  PC1   PO   PH                              
+CTER
+ 2
+OT1  OT2  
+LYSH                                                                            
+13
+N    H    CA   CB   CG   CD   CE   NZ   HZ1  HZ2  HZ3  C    O               

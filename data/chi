@@ -1,0 +1,59 @@
+Definition of chi angles for side-chain  replacement
+CHI angles from M.J.MacGregor et.al. J.Mol.Biol. 198, 295-310,1987.
+V1.0	J.T.P LMB		22.02.90
+*
+ARG  X1    N     CA    CB    CG   209
+     X2    CA    CB    CG    CD   168
+     X3    CB    CG    CD    NE   197
+     X4    CG    CD    NE    CZ   172
+*                                 
+ASN  X1    N     CA    CB    CG   294
+     X2    CA    CB    CG    OD1  298
+*                                 
+ASP  X1    N     CA    CB    CG   292
+     X2    CA    CB    CG    OD1  108
+*                                 
+CYS  X1    N     CA    CB    SG   295
+*                                 
+GLN  X1    N     CA    CB    CG   295
+     X2    CA    CB    CG    CD   288
+     X3    CB    CG    CD    OE1  ???
+*                                 
+GLU  X1    N     CA    CB    CG   295
+     X2    CA    CB    CG    CD   288
+     X3    CB    CG    CD    OE   ???
+*                                 
+HIS  X1    N     CA    CB    CG   304
+     X2    CA    CB    CG    ND1  270
+*                                 
+ILE  X1    N     CA    CB    CG   311
+     X2    CA    CB    CG    CD1  289
+*                                 
+LEU  X1    N     CA    CB    CG   302
+     X2    CA    CB    CG    CD1  177
+*                                 
+LYS  X1    N     CA    CB    CG   192
+     X2    CA    CB    CG    CD   176
+     X3    CB    CG    CD    CE   179
+     X4    CG    CD    CE    NZ   181
+*                                 
+MET  X1    N     CA    CB    CG   180
+     X2    CA    CB    CG    SD   178
+     X3    CB    CG    SD    CE   169
+*                                 
+PHE  X1    N     CA    CB    CG   296
+     X2    CA    CB    CG    CD    89
+*                                 
+PRO  ------ USE TEMPLATE ------------
+*                                 
+SER  X1    N     CA    CB    OG   301
+*                                 
+THR  X1    N     CA    CB    OG1  301
+*                                 
+TRP  X1    N     CA    CB    CG   291
+     X2    CA    CB    CG    CD    83
+*                                 
+TYR  X1    N     CA    CB    CG   296
+     X2    CA    CB    CG    CD    89
+*                                 
+VAL  X1    N     CA    CB    CG   178

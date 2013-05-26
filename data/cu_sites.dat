@@ -1,0 +1,32 @@
+1) 1AZU.  Resolution 2.7A.  Copper-site C-ALPHA pattern.
+ATOM    341  CA  HIS    46      18.850  25.160   3.400
+ATOM    851  CA  CYS   112      18.050  29.960    .870
+ATOM    886  CA  HIS   117      14.380  32.130   5.240
+2) 1AZU.  Resolution 2.7A.  Copper-site C-BETA pattern.
+ATOM    344  CB  HIS    46      19.910  25.520   4.430
+ATOM    854  CB  CYS   112      18.370  29.560   2.270
+ATOM    889  CB  HIS   117      14.870  30.750   5.510
+3) 1PAZ.  Resolution 1.55A.  Copper-site C-ALPHA pattern.
+ATOM    296  CA  HIS    40      28.463  18.497  48.745
+ATOM    597  CA  CYS    78      27.259  13.464  51.515
+ATOM    617  CA  HIS    81      26.571  16.584  55.854
+4) 1PAZ.  Resolution 1.55A.  Copper-site C-BETA pattern.
+ATOM    299  CB  HIS    40      27.023  18.537  48.212
+ATOM    600  CB  CYS    78      26.428  14.724  51.566
+ATOM    620  CB  HIS    81      25.699  17.357  54.845
+5) 2AZA.  Resolution 1.8A.  Copper-site C-ALPHA pattern.
+ATOM    351  CA  HIS A  46       -.225  14.185  13.901
+ATOM    846  CA  CYS A 112       1.360  13.746   8.217
+ATOM    880  CA  HIS A 117       4.880   9.466   9.492
+6) 2AZA.  Resolution 1.8A.  Copper-site C-BETA pattern.
+ATOM    354  CB  HIS A  46      -1.354  13.244  13.484
+ATOM    849  CB  CYS A 112        .862  12.757   9.235
+ATOM    883  CB  HIS A 117       3.862  10.319  10.326
+7) 5PCY.  Resolution 1.8A.  Copper-site C-ALPHA pattern.
+ATOM    267  CA  HIS    37       4.857  33.420  16.337
+ATOM    631  CA  CYS    84      10.069  31.423  18.829
+ATOM    650  CA  HIS    87      11.264  36.715  19.212
+8) 5PCY.  Resolution 1.8A.  Copper-site C-BETA pattern.
+ATOM    270  CB  HIS    37       4.139  33.149  17.636
+ATOM    634  CB  CYS    84       9.036  32.438  19.416
+ATOM    653  CB  HIS    87       9.850  36.707  19.912

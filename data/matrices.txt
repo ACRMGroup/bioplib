@@ -1,0 +1,6 @@
+Genetic Code Matrix, Proteins (GC)
+Mutation Data Matrix, Proteins (MD)
+Structure Genetic Matrix, Proteins (SG)
+Structural Superposition Matrix, Proteins (SS)
+Unitary Matrix, Proteins (UP)
+Residue identity scores 10 (ID)

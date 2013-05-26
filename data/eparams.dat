@@ -1,0 +1,350 @@
+# Atom type parameters for non-bonded interactions
+#       Type   N  Mass        Pol      NEff      VdWR
+NONBOND C      0  12.01100    1.6500   5.0       1.8000
+NONBOND CH1E   1  13.01900    1.3500   6.0       1.8500
+NONBOND CH2E   2  14.02700    1.7700   7.0       1.9000
+NONBOND CH3E   3  15.03500    2.1700   8.0       1.9500
+NONBOND CM     4  12.01100    1.6500   5.0       1.8000
+NONBOND CR1E   5  13.01900    2.0700   6.0       1.9000
+NONBOND CT     6  12.01100    0.9800   5.0       1.8000
+NONBOND FE     7  55.84700    0.0100   0.0001    0.6500
+NONBOND H      8   1.00800    0.0440   1.0       0.8000
+NONBOND HA     9   1.00800    0.1000   1.0       1.4680
+NONBOND HC    10   1.00800    0.0440   1.0       0.8000
+NONBOND N     11  14.00670    1.1000   6.0       1.6000
+NONBOND NC2   12  14.00670    1.1000   6.0       1.6000
+NONBOND NC2E  13  16.02270    1.7000   8.0       1.7000
+NONBOND NH1   14  14.00670    1.1000   6.0       1.6000
+NONBOND NH1E  15  15.01470    1.4000   7.0       1.6500
+NONBOND NH2   16  14.00670    1.1000   6.0       1.6000
+NONBOND NH2E  17  16.02270    1.7000   8.0       1.7000
+NONBOND NH3   18  14.00670    1.1000   6.0       1.6000
+NONBOND NH3E  19  17.03070    2.1300   9.0       1.7500
+NONBOND NP    20  14.00670    1.1000   6.0       1.6000
+NONBOND NR    21  14.00670    1.1000   6.0       1.6000
+NONBOND O     22  15.99940    0.8400   6.0       1.6000
+NONBOND OC    23  15.99940    2.1400   6.0       1.6000
+NONBOND OH1   24  15.99940    0.8400   6.0       1.6000
+NONBOND OH1E  25  17.00740    1.2000   7.0       1.6500
+NONBOND OH2   26  15.99940    0.8400   6.0       1.6000
+NONBOND OH2E  27  18.01540    1.2000   7.0       1.7000
+NONBOND OM    28  15.99940    0.8400   6.0       1.6000
+NONBOND S     29  32.06000    0.3400  16.0       1.9000
+NONBOND SH1E  30  33.06800    0.3400  16.0       1.9500
+
+# Parameters for torsion angles
+#        At1  At2  At3  At4     Force      Period  Optimal
+TORPARAM CH1E C    N    CH1E    10.0       2       180.0
+TORPARAM CH2E C    N    CH1E    10.0       2       180.0
+TORPARAM CR1E C    C    CR1E     5.0       2       180.0
+TORPARAM CR1E C    C    C        2.5       2       180.0
+TORPARAM CR1E C    C    NH1      2.5       2       180.0
+TORPARAM CR1E C    C    NH1E     2.5       2       180.0
+TORPARAM X    C    CH1E X        0.0       3         0.0
+TORPARAM X    C    CH2E X        0.0       3         0.0
+TORPARAM X    C    CR1E X       10.0       2       180.0
+TORPARAM X    C    CT   X        0.0       3         0.0
+TORPARAM X    C    N    X        8.2       2       180.0
+TORPARAM X    C    NC2  X        8.2       2       180.0
+TORPARAM X    C    NH1  X        8.2       2       180.0
+TORPARAM X    C    NH1E X        8.2       2       180.0
+TORPARAM X    C    NH2  X        8.2       2       180.0
+TORPARAM X    C    OH1  X        1.8       2       180.0
+TORPARAM X    CH1E CH1E X        1.6       3         0.0
+TORPARAM X    CH1E CH2E X        1.6       3         0.0
+TORPARAM X    CH1E N    X        0.3       3         0.0
+TORPARAM X    CH1E NH1  X        0.3       3         0.0
+TORPARAM X    CH1E NH1E X        0.3       3         0.0
+TORPARAM X    CH1E NH2  X        1.8       3         0.0
+TORPARAM X    CH1E NH3  X        0.6       3         0.0
+TORPARAM X    CH1E OH1  X        0.5       3         0.0
+TORPARAM X    CH2E CH2E X        1.6       3         0.0
+TORPARAM X    CH2E N    X        0.3       3         0.0
+TORPARAM X    CH2E NH1  X        0.3       3         0.0
+TORPARAM X    CH2E NH1E X        0.3       3         0.0
+TORPARAM X    CH2E NH2  X        0.6       3         0.0
+TORPARAM X    CH2E NH3  X        0.6       3         0.0
+TORPARAM X    CH2E OH1  X        0.5       3         0.0
+TORPARAM X    CH2E S    X        1.2       2         0.0
+TORPARAM X    CT   CT   X        1.6       3         0.0
+TORPARAM X    CT   N    X        0.3       3         0.0
+TORPARAM X    CT   NC2  X        0.3       3         0.0
+TORPARAM X    CT   NH1  X        0.3       3         0.0
+TORPARAM X    CT   NH2  X        0.6       3         0.0
+TORPARAM X    CT   NH3  X        0.6       3         0.0
+TORPARAM X    CT   OH1  X        0.5       3         0.0
+TORPARAM X    CT   S    X        1.2       2         0.0
+TORPARAM X    FE   NR   X        0.05      4         0.0
+TORPARAM X    FE   CM   X        0.05      4         0.0
+TORPARAM X    FE   OM   X        0.00      4         0.0
+TORPARAM X    S    S    X        4.0       2         0.0
+
+# Residue topologies
+RESIDUE ALA     0.00000
+ATOM N    NH1    -0.20000     "H    CA   CB   C   "
+ATOM H    H       0.12000     "CA  "
+ATOM CA   CH1E    0.07500     "CB   C    O    +N  "
+ATOM CB   CH3E    0.02000     "C   "
+ATOM C    C       0.35000     "O    +N   +H   +CA "
+ATOM O    O      -0.36500     "+N  "
+
+RESIDUE ARG     1.00000
+ATOM N    NH1    -0.20000     "H    CA   CB   C   "
+ATOM H    H       0.12000     "CA  "
+ATOM CA   CH1E    0.07500     "CB   CG   C    O    +N  "
+ATOM CB   CH2E    0.03900     "CG   CD   C   "
+ATOM CG   CH2E    0.04400     "CD   NE  "
+ATOM CD   CH2E    0.11500     "NE   HE   CZ  "
+ATOM NE   NH1    -0.20000     "HE   CZ   NH1  NH2 "
+ATOM HE   H       0.17100     "CZ  "
+ATOM CZ   C       0.46000     "NH1  HH11 HH12 NH2  HH21 HH22"
+ATOM NH1  NC2    -0.20000     "HH11 HH12 NH2 "
+ATOM HH11 HC      0.19800     "HH12"
+ATOM HH12 HC      0.19400     "    "
+ATOM NH2  NC2    -0.20000     "HH21 HH22"
+ATOM HH21 HC      0.19400     "HH22"
+ATOM HH22 HC      0.19800     "    "
+ATOM C    C       0.35200     "O    +N   +H   +CA "
+ATOM O    O      -0.36000     "+N  "
+
+RESIDUE ASN     0.00000
+ATOM N    NH1    -0.19500     "H    CA   CB   C   "
+ATOM H    H       0.12000     "CA  "
+ATOM CA   CH1E    0.09200     "CB   CG   C    O    +N  "
+ATOM CB   CH2E   -0.01500     "CG   OD1  ND2  C   "
+ATOM CG   C       0.35500     "OD1  ND2  HD21 HD22"
+ATOM OD1  O      -0.36500     "ND2 "
+ATOM ND2  NH2    -0.24500     "HD21 HD22"
+ATOM HD21 H       0.14000     "HD22"
+ATOM HD22 H       0.12000     "    "
+ATOM C    C       0.35000     "O    +N   +H   +CA "
+ATOM O    O      -0.35700     "+N  "
+
+RESIDUE ASP    -1.00000
+ATOM N    NH1    -0.21000     "H    CA   CB   C   "
+ATOM H    H       0.10000     "CA  "
+ATOM CA   CH1E    0.07000     "CB   CG   C    O    +N  "
+ATOM CB   CH2E   -0.15000     "CG   OD1  OD2  C   "
+ATOM CG   C       0.36500     "OD1  OD2 "
+ATOM OD1  OC     -0.57500     "OD2 "
+ATOM OD2  OC     -0.57500     "    "
+ATOM C    C       0.35500     "O    +N   +H   +CA "
+ATOM O    O      -0.38000     "+N  "
+
+RESIDUE CYS     0.00000
+ATOM N    NH1    -0.19500     "H    CA   CB   C   "
+ATOM H    H       0.12000     "CA  "
+ATOM CA   CH1E    0.09200     "CB   SG   C    O    +N  "
+ATOM CB   CH2E    0.04000     "SG   C   "
+ATOM SG   SH1E   -0.05000     "    "
+ATOM C    C       0.35000     "O    +N   +H   +CA "
+ATOM O    O      -0.35700     "+N  "
+
+RESIDUE GLN     0.00000
+ATOM N    NH1    -0.20000     "H    CA   CB   C   "
+ATOM H    H       0.12000     "CA  "
+ATOM CA   CH1E    0.06500     "CB   CG   C    O    +N  "
+ATOM CB   CH2E    0.04200     "CG   CD   C   "
+ATOM CG   CH2E   -0.01600     "CD   OE1  NE2 "
+ATOM CD   C       0.36100     "OE1  NE2  HE21 HE22"
+ATOM OE1  O      -0.37000     "NE2 "
+ATOM NE2  NH2    -0.24400     "HE21 HE22"
+ATOM HE21 H       0.13600     "HE22"
+ATOM HE22 H       0.11800     "    "
+ATOM C    C       0.35000     "O    +N   +H   +CA "
+ATOM O    O      -0.36200     "+N  "
+
+RESIDUE GLU    -1.00000
+ATOM N    NH1    -0.20000     "H    CA   CB   C   "
+ATOM H    H       0.10500     "CA  "
+ATOM CA   CH1E    0.05000     "CB   CG   C    O    +N  "
+ATOM CB   CH2E    0.01000     "CG   CD   C   "
+ATOM CG   CH2E   -0.15500     "CD   OE1  OE2 "
+ATOM CD   C       0.36500     "OE1  OE2 "
+ATOM OE1  OC     -0.57500     "OE2 "
+ATOM OE2  OC     -0.57500     "    "
+ATOM C    C       0.35500     "O    +N   +H   +CA "
+ATOM O    O      -0.38000     "+N  "
+
+RESIDUE GLY     0.00000
+ATOM N    NH1    -0.20000     "H    CA   C   "
+ATOM H    H       0.12000     "CA  "
+ATOM CA   CH2E    0.09000     "C    O    +N  "
+ATOM C    C       0.34500     "O    +N   +H   +CA "
+ATOM O    O      -0.35500     "+N  "
+
+RESIDUE HIS     0.00000
+ATOM N    NH1    -0.20000     "H    CA   CB   C   "
+ATOM H    H       0.12000     "CA  "
+ATOM CA   CH1E    0.07500     "CB   CG   C    O    +N  "
+ATOM CB   CH2E    0.01000     "CG   ND1  CD2  C   "
+ATOM CG   C       0.05000     "ND1  HD1  CD2  CE1  NE2 "
+ATOM ND1  NH1    -0.07800     "HD1  CD2  CE1  NE2 "
+ATOM HD1  H       0.09500     "CE1 "
+ATOM CD2  CR1E   -0.01500     "CE1  NE2 "
+ATOM CE1  CR1E    0.14500     "NE2 "
+ATOM NE2  NR     -0.19000     "    "
+ATOM C    C       0.34800     "O    +N   +H   +CA "
+ATOM O    O      -0.36000     "+N  "
+
+RESIDUE ILE     0.00000
+ATOM N    NH1    -0.20000     "H    CA   CB   C   "
+ATOM H    H       0.12000     "CA  "
+ATOM CA   CH1E    0.07500     "CB   CG1  CG2  C    O    +N  "
+ATOM CB   CH1E    0.02800     "CG1  CG2  CD1  C   "
+ATOM CG1  CH2E    0.01200     "CG2  CD1 "
+ATOM CG2  CH3E   -0.01200     "    "
+ATOM CD1  CH3E   -0.00800     "    "
+ATOM C    C       0.35000     "O    +N   +H   +CA "
+ATOM O    O      -0.36500     "+N  "
+
+RESIDUE LEU     0.00000
+ATOM N    NH1    -0.20000     "H    CA   CB   C   "
+ATOM H    H       0.12000     "CA  "
+ATOM CA   CH1E    0.07500     "CB   CG   C    O    +N  "
+ATOM CB   CH2E    0.01800     "CG   CD1  CD2  C   "
+ATOM CG   CH1E    0.03000     "CD1  CD2 "
+ATOM CD1  CH3E   -0.01400     "CD2 "
+ATOM CD2  CH3E   -0.01400     "    "
+ATOM C    C       0.35000     "O    +N   +H   +CA "
+ATOM O    O      -0.36500     "+N  "
+
+RESIDUE LYS     1.00000
+ATOM N    NH1    -0.19300     "H    CA   CB   C   "
+ATOM H    H       0.10300     "CA  "
+ATOM CA   CH1E    0.08000     "CB   CG   C    O    +N  "
+ATOM CB   CH2E    0.04000     "CG   CD   C   "
+ATOM CG   CH2E    0.05400     "CD   CE  "
+ATOM CD   CH2E    0.06300     "CE   NZ  "
+ATOM CE   CH2E    0.20500     "NZ   HZ1  HZ2  HZ3 "
+ATOM NZ   NH3    -0.06800     "HZ1  HZ2  HZ3 "
+ATOM HZ1  HC      0.23200     "HZ2  HZ3 "
+ATOM HZ2  HC      0.26400     "HZ3 "
+ATOM HZ3  HC      0.23200     "    "
+ATOM C    C       0.34800     "O    +N   +H   +CA "
+ATOM O    O      -0.36000     "+N  "
+
+RESIDUE MET     0.00000
+ATOM N    NH1    -0.20000     "H    CA   CB   C   "
+ATOM H    H       0.12000     "CA  "
+ATOM CA   CH1E    0.07500     "CB   CG   C    O    +N  "
+ATOM CB   CH2E    0.04000     "CG   SD   C   "
+ATOM CG   CH2E    0.00400     "SD   CE  "
+ATOM SD   S      -0.17000     "CE  "
+ATOM CE   CH3E    0.14600     "    "
+ATOM C    C       0.35000     "O    +N   +H   +CA "
+ATOM O    O      -0.36500     "+N  "
+
+RESIDUE PHE     0.00000
+ATOM N    NH1    -0.20000     "H    CA   CB   C   "
+ATOM H    H       0.12000     "CA  "
+ATOM CA   CH1E    0.07500     "CB   CG   C    O    +N  "
+ATOM CB   CH2E    0.00500     "CG   CD1  CD2  C   "
+ATOM CG   C       0.03900     "CD1  CD2  CE1  CE2  CZ  "
+ATOM CD1  CR1E   -0.01900     "CD2  CE1  CE2  CZ  "
+ATOM CD2  CR1E   -0.01900     "CE1  CE2  CZ  "
+ATOM CE1  CR1E    0.01000     "CE2  CZ  "
+ATOM CE2  CR1E    0.01000     "CZ  "
+ATOM CZ   CR1E   -0.00600     "    "
+ATOM C    C       0.35000     "O    +N   +H   +CA "
+ATOM O    O      -0.36500     "+N  "
+
+RESIDUE PRO     0.00000
+ATOM N    N      -0.17600     "CA   CB   CG   CD   C   "
+ATOM CA   CH1E    0.07500     "CB   CG   CD   C    O    +N  "
+ATOM CB   CH2E    0.02900     "CG   CD   C   "
+ATOM CG   CH2E    0.00800     "CD  "
+ATOM CD   CH2E    0.07900     "-C  "
+ATOM C    C       0.35000     "O    +N   +H   +CA "
+ATOM O    O      -0.36500     "+N  "
+
+RESIDUE SER     0.00000
+ATOM N    NH1    -0.20000     "H    CA   CB   C   "
+ATOM H    H       0.12000     "CA  "
+ATOM CA   CH1E    0.06000     "CB   OG   C    O    +N  "
+ATOM CB   CH2E    0.13000     "OG   HG   C   "
+ATOM OG   OH1    -0.24200     "HG  "
+ATOM HG   H       0.13500     "    "
+ATOM C    C       0.36000     "O    +N   +H   +CA "
+ATOM O    O      -0.36300     "+N  "
+
+RESIDUE THR     0.00000
+ATOM N    NH1    -0.20000     "H    CA   CB   C   "
+ATOM H    H       0.12000     "CA  "
+ATOM CA   CH1E    0.06000     "CB   OG1  CG2  C    O    +N  "
+ATOM CB   CH1E    0.14000     "OG1  HG1  CG2  C   "
+ATOM OG1  OH1    -0.26000     "HG1  CG2 "
+ATOM HG1  H       0.13000     "    "
+ATOM CG2  CH3E    0.01300     "    "
+ATOM C    C       0.36000     "O    +N   +H   +CA "
+ATOM O    O      -0.36300     "+N  "
+
+RESIDUE TRP     0.00000
+ATOM N    NH1    -0.20000     "H    CA   CB   C   "
+ATOM H    H       0.12000     "CA  "
+ATOM CA   CH1E    0.07500     "CB   CG   C    O    +N  "
+ATOM CB   CH2E    0.01000     "CG   CD1  CD2  C   "
+ATOM CG   C      -0.01800     "CD1  CD2  NE1  CE2  CE3  CZ2  CZ3  CH2 "
+ATOM CD1  CR1E    0.02100     "CD2  NE1  HE1  CE2  CE3  CZ2  CZ3  CH2 "
+ATOM CD2  C      -0.02300     "NE1  CE2  CE3  CZ2  CZ3  CH2 "
+ATOM NE1  NH1    -0.12500     "HE1  CE2  CE3  CZ2  CZ3  CH2 "
+ATOM HE1  H       0.10900     "CE2 "
+ATOM CE2  C       0.14000     "CE3  CZ2  CZ3  CH2 "
+ATOM CE3  CR1E   -0.00300     "CZ2  CZ3  CH2 "
+ATOM CZ2  CR1E   -0.07200     "CZ3  CH2 "
+ATOM CZ3  CR1E   -0.03500     "CH2 "
+ATOM CH2  CR1E    0.01600     "    "
+ATOM C    C       0.35000     "O    +N   +H   +CA "
+ATOM O    O      -0.36500     "+N  "
+
+RESIDUE TYR     0.00000
+ATOM N    NH1    -0.20500     "H    CA   CB   C   "
+ATOM H    H       0.12000     "CA  "
+ATOM CA   CH1E    0.07500     "CB   CG   C    O    +N  "
+ATOM CB   CH2E    0.00600     "CG   CD1  CD2  C   "
+ATOM CG   C       0.02400     "CD1  CD2  CE1  CE2  CZ  "
+ATOM CD1  CR1E    0.00200     "CD2  CE1  CE2  CZ  "
+ATOM CD2  CR1E    0.00200     "CE1  CE2  CZ  "
+ATOM CE1  CR1E   -0.02500     "CE2  CZ   OH  "
+ATOM CE2  CR1E   -0.02500     "CZ   OH  "
+ATOM CZ   C       0.16200     "OH   HH  "
+ATOM OH   OH1    -0.26000     "HH  "
+ATOM HH   H       0.14000     "    "
+ATOM C    C       0.35200     "O    +N   +H   +CA "
+ATOM O    O      -0.36800     "+N  "
+
+RESIDUE VAL     0.00000
+ATOM N    NH1    -0.20000     "H    CA   CB   C   "
+ATOM H    H       0.12000     "CA  "
+ATOM CA   CH1E    0.07500     "CB   CG1  CG2  C    O    +N  "
+ATOM CB   CH1E    0.06200     "CG1  CG2  C   "
+ATOM CG1  CH3E   -0.02100     "CG2 "
+ATOM CG2  CH3E   -0.02100     "    "
+ATOM C    C       0.35000     "O    +N   +H   +CA "
+ATOM O    O      -0.36500     "+N  "
+
+RESIDUE NTER    0.44900
+ATOM HT1  HC      0.22450     "HT2  +N   +HT3 +CA "
+ATOM HT2  HC      0.22450     "+N   +HT3 +CA "
+
+RESIDUE CTER   -0.56000
+ATOM OT2  OC     -0.56000    "-C   -OT1 "
+
+RESIDUE HSD     0.00000
+ATOM N    NH1    -0.20000     "H    CA   CB   C   "
+ATOM H    H       0.12000     "CA  "
+ATOM CA   CH1E    0.07500     "CB   CG   C    O    +N  "
+ATOM CB   CH2E    0.01000     "CG   ND1  CD2  C   "
+ATOM CG   C       0.05900     "ND1  CD2  CE1  NE2 "
+ATOM ND1  NR     -0.23200     "CD2  CE1  NE2 "
+ATOM CD2  CR1E   -0.01500     "CE1  NE2  HE2 "
+ATOM CE1  CR1E    0.14500     "NE2  HE2 "
+ATOM NE2  NH1    -0.15000     "HE2 "
+ATOM HE2  H       0.20000     "    "
+ATOM C    C       0.34800     "O    +N   +H   +CA "
+ATOM O    O      -0.36000     "+N  "
+
+
+
+
+
