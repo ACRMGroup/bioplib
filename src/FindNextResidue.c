@@ -9,13 +9,7 @@
    
    Copyright:  (c) SciTech Software 1992-6
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@stagleys.demon.co.uk
+   EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
 

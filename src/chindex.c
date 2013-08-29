@@ -9,7 +9,6 @@
    
    Copyright:  (c) Dr. Andrew C. R. Martin, University of Reading, 2002
    Author:     Dr. Andrew C. R. Martin
-   Phone:      +44 (0) 1372 275775
    EMail:      andrew@bioinf.org.uk
                
 **************************************************************************

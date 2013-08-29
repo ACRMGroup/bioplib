@@ -3,11 +3,11 @@
    Program:    
    File:       ParseRes.c
    
-   Version:    V1.10R
-   Date:       12.10.12
+   Version:    V1.11
+   Date:       28.08.13
    Function:   Parse a residue specification
    
-   Copyright:  (c) SciTech Software 1993-2012
+   Copyright:  (c) SciTech Software 1993-2013
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                andrew.martin@ucl.ac.uk
@@ -57,6 +57,7 @@
                   sensible.   By: ACRM
    V1.10 12.10.12 insert is now a properly terminated string when there is
                   no insert
+   V1.11 28.08.13 chain is now a properly terminated string
 
 *************************************************************************/
 /* Includes
@@ -89,6 +90,9 @@
             int   *resnum  Residue number
             char  *insert  Insert label
    Returns: BOOL           Success?
+
+   Note that chain and insert must be arrays of at least 2 characters,
+   not character pointers
 
    Splits up a residue specification of the form 
          [c][.]num[i]
@@ -124,6 +128,9 @@ BOOL ParseResSpec(char *spec, char *chain, int *resnum, char *insert)
             char  *insert  Insert label
    Returns: BOOL           Success?
 
+   Note that chain and insert must be arrays of at least 2 characters,
+   not character pointers
+
    Splits up a residue specification of the form 
          [c][.]num[i]
    into chain, resnum and insert. Chain and insert are optional and will
@@ -149,10 +156,13 @@ BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum,
             char  *insert  Insert label
    Returns: BOOL           Success?
 
+   Note that chain and insert must be arrays of at least 2 characters,
+   not character pointers
+
    Splits up a residue specification of the form 
          [c][.]num[i]
    into chain, resnum and insert. Chain and insert are optional and will
-   be set to spaces if not specified. If uppercaseresspec eqauls TRUE,
+   be set to spaces if not specified. If uppercaseresspec equals TRUE,
    the spec is upper cased before processing
    
    21.07.93 Original    By: ACRM
@@ -167,14 +177,22 @@ BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum,
             that calls the old function). By: TL
    12.10.12 insert is now a properly terminated string when there is
             no insert
+   28.08.12 chain  is now a properly terminated string
+            The input specification is now copied so that actual strings
+            can be passed into the routine as opposed to string delimited
+            variables. This also removes the need for restoring the 
+            string which has now been removed
 */
-BOOL DoParseResSpec(char *spec, char *chain, int *resnum, char *insert, 
+BOOL DoParseResSpec(char *inSpec, char *chain, int *resnum, char *insert, 
                     BOOL uppercaseresspec)
 {
    char  *ptr,
-         *ptr2;
-   BOOL  DoRestore = FALSE,
+         *ptr2,
+         spec[64];
+   BOOL  /* DoRestore = FALSE, */
          retval    = TRUE;
+
+   strncpy(spec, inSpec, 64);
 
    /* 11.10.99 Default resnum of 0                                      */
    *resnum = 0;
@@ -189,13 +207,15 @@ BOOL DoParseResSpec(char *spec, char *chain, int *resnum, char *insert,
    /* Extract chain from spec                                           */
    if(*ptr == '.')
    {
-      *chain = ' ';
+      chain[0] = ' ';
+      chain[1] = '\0';
       ptr++;
    }
    else if((*(ptr+1) == '.') || (!isdigit(*ptr) && (*ptr != '-')))
    {
       /* Chain was specified                                            */
-      *chain = *ptr;
+      chain[0] = *ptr;
+      chain[1] = '\0';
       ptr++;
       if(*ptr == '.')
       {
@@ -205,7 +225,8 @@ BOOL DoParseResSpec(char *spec, char *chain, int *resnum, char *insert,
    else
    {
       /* Spec started with a digit, so no chain specified               */
-      *chain = ' ';
+      chain[0] = ' ';
+      chain[1] = '\0';
    }
    
    /* Extract insert from spec                                          */
@@ -219,9 +240,10 @@ BOOL DoParseResSpec(char *spec, char *chain, int *resnum, char *insert,
       */
       if(!isdigit(*ptr2) && ((ptr2!=ptr)||(*ptr2 != '-')))
       {
-         *insert = *ptr2;
+         insert[0] = *ptr2;
+         insert[1] = '\0';
          *ptr2   = '\0';
-         DoRestore = TRUE;
+/*         DoRestore = TRUE; */
          break;
       }
    }
@@ -230,11 +252,11 @@ BOOL DoParseResSpec(char *spec, char *chain, int *resnum, char *insert,
    if(sscanf(ptr,"%d",resnum) == 0)
       retval = FALSE;
 
-   if(DoRestore)
-   {
+/*   if(DoRestore) */
+/*   { */
       /* V1.1: Restore the original string                              */
-      *ptr2 = *insert;
-   }
+/*      *ptr2 = *insert; */
+/*   } */
 
    return(retval);
 }

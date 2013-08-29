@@ -3,19 +3,13 @@
    Program:    
    File:       ParseResidueSpec.c
    
-   Version:    V1.7R
-   Date:       11.10.99
+   Version:    V1.8
+   Date:       15.08.13
    Function:   Parse a residue specification
    
-   Copyright:  (c) SciTech Software 1993-9
+   Copyright:  (c) SciTech Software 1993-2013
    Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
 
@@ -53,6 +47,8 @@
    V1.7  11.10.99 Allow a . to be used to start a number (such that the
                   default blank chain name is used). Allows negative 
                   residue numbers
+   V1.8  15.08.13 FindResidueSpec() modified as chain and insert now need
+                  to be arrays
 
 *************************************************************************/
 /* Includes
@@ -90,15 +86,17 @@
 
    08.08.95 Original    By: ACRM
    08.02.96 Now calls FindResidue() to do the actual work
+   15.08.13 chain[] and insert[] are now arrays because of changes to
+            ParseResSpec()
 */
 PDB *FindResidueSpec(PDB *pdb, char *resspec)
 {
-   char chain,
-        insert;
+   char chain[8],
+        insert[8];
    int  resnum;
 
-   if(ParseResSpec(resspec, &chain, &resnum, &insert))
-      return(FindResidue(pdb, chain, resnum, insert));
+   if(ParseResSpec(resspec, chain, &resnum, insert))
+      return(FindResidue(pdb, chain[0], resnum, insert[0]));
    
    return(NULL);
 }
