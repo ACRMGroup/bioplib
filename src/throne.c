@@ -54,7 +54,7 @@
    V1.7  18.02.09 Fixed for new PDB files which have "  DT" etc for DNA
                   sequences
    V1.8  30.01.14 Added pyrrolysine and selenocysteine to translation 
-                  table.
+                  table. By: CTP
                   PYL translates to O, SEC translates to U.
 
 *************************************************************************/
