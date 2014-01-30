@@ -3,11 +3,11 @@
    Program:    
    File:       throne.c
    
-   Version:    V1.7
-   Date:       18.02.09
+   Version:    V1.8
+   Date:       30.01.14
    Function:   Convert between 1 and 3 letter aa codes
    
-   Copyright:  (c) SciTech Software 1993-2009
+   Copyright:  (c) SciTech Software 1993-2014
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -53,6 +53,9 @@
                   for nucleic acids
    V1.7  18.02.09 Fixed for new PDB files which have "  DT" etc for DNA
                   sequences
+   V1.8  30.01.14 Added pyrrolysine and selenocysteine to translation 
+                  table.
+                  PYL translates to O, SEC translates to U.
 
 *************************************************************************/
 /* Includes
@@ -63,7 +66,7 @@
 /************************************************************************/
 /* Defines and macros
 */
-#define NUMAAKNOWN 37
+#define NUMAAKNOWN 39
 
 /************************************************************************/
 /* Globals
@@ -79,6 +82,7 @@ static char sTab1[]    = {'A','C','D','E','F',
                           'M','N','P','Q','R',
                           'S','T','V','W','Y',
                           'E','B','Z','E','E',
+                          'O','U',
                           'A','T','C','G','U','I',
                           'A','T','C','G','I','X'
                          };
@@ -88,6 +92,7 @@ static char sTab3[][8] = {"ALA ","CYS ","ASP ","GLU ","PHE ",
                           "MET ","ASN ","PRO ","GLN ","ARG ",
                           "SER ","THR ","VAL ","TRP ","TYR ",
                           "PCA ","ASX ","GLX ","PGA ","CGN ",
+                          "PYL ","SEC ",
                           "  A ","  T ","  C ","  G ","  U ","  I ",
                           " DA "," DT "," DC "," DG "," DI ","UNK "
                          };
