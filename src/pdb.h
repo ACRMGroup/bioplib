@@ -3,11 +3,11 @@
    Program:    
    File:       pdb.h
    
-   Version:    V1.47
-   Date:       12.12.11
+   Version:    V1.48
+   Date:       04.02.14
    Function:   Include file for pdb routines
    
-   Copyright:  (c) SciTech Software, UCL, Reading 1993-2011
+   Copyright:  (c) SciTech Software, UCL, Reading 1993-2014
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -104,6 +104,7 @@
    V1.47 12.12.11 Added GetExptlOld()
                   Added ResportStructureType()
                   Added new STRUCTURE_TYPE_* defines
+   V1.48 04.02.14 Added CHAINMATCH macro. By: CTP
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -260,6 +261,8 @@ typedef struct
                       !strncmp((z)->resnam,"OD2",3) || \
                       !strncmp((z)->resnam,"ODD",3) || \
                       !strncmp((z)->resnam,"WAT",3))
+
+#define CHAINMATCH(chain1,chain2) !strcmp(chain1,chain2)
 
 
 /* These are the types returned by ResolPDB()                          */
