@@ -3,11 +3,11 @@
    Program:    
    File:       FindNextChainPDB.c
    
-   Version:    V1.10R
-   Date:       08.10.99
+   Version:    V1.11
+   Date:       04.02.14
    Function:   PDB linked list manipulation
    
-   Copyright:  (c) SciTech Software 1992-6
+   Copyright:  (c) SciTech Software 1992-2014
    Author:     Dr. Andrew C. R. Martin
    Address:    SciTech Software
                23, Stag Leys,
@@ -51,6 +51,7 @@
    V1.8  10.01.96 Added ExtractZonePDB()
    V1.9  14.03.96 Added FindAtomInRes()
    V1.10 08.10.99 Initialised some variables
+   V1.11 04.02.14 Use CHAINMATCH By: CTP
 
 *************************************************************************/
 /* Includes
@@ -86,17 +87,15 @@
    returns a pointer to the start of the next chain.
 
    23.05.94 Original    By: ACRM
+   04.02.14 Use CHAINMATCH By: CTP
 */
 PDB *FindNextChainPDB(PDB *pdb)
 {
    PDB  *p, *ret = NULL;
-   char chain;
-   
-   chain = pdb->chain[0];
    
    for(p=pdb; p!=NULL; NEXT(p))
    {
-      if((p->next == NULL) || (p->next->chain[0] != chain))
+      if((p->next == NULL) || !CHAINMATCH(p->next->chain,pdb->chain))
       {
          ret = p->next;
          p->next = NULL;

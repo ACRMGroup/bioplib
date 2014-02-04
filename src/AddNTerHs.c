@@ -3,12 +3,12 @@
    Program:    
    File:       AddNTerHs.c
    
-   Version:    V1.6R
-   Date:       03.06.05
+   Version:    V1.7
+   Date:       04.02.14
    Function:   Routines to add N-terminal hydrogens and C-terminal
                oxygens.
    
-   Copyright:  (c) SciTech Software 1994-2006
+   Copyright:  (c) SciTech Software 1994-2014
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -51,6 +51,7 @@
    V1.4  30.05.02 Changed PDB field from 'junk' to 'record_type'
    V1.5  06.02.03 Handles atnam_raw
    V1.6  03.06.05 Handles altpos
+   V1.7  04.02.14 Use CHAINMATCH By: CTP
 
 *************************************************************************/
 /* Includes
@@ -93,14 +94,14 @@ static int doAddCharmmNTer(PDB **ppdb, PDB *nter);
 int AddNTerHs(PDB **ppdb, BOOL Charmm)
 {
    PDB  *p;
-   char chain = '-';
+   char chain[8] = "-";
    int  nhyd  = 0;
    
    for(p = *ppdb; p!=NULL; NEXT(p))
    {
-      if(p->chain[0] != chain)
+      if(!CHAINMATCH(p->chain,chain))
       {
-         chain = p->chain[0];
+         strcpy(chain,p->chain);
 
          /* Kill the H if there is one. Makes the (safe...) assumption 
             that the H won't be the first atom (i.e. ignore the return)

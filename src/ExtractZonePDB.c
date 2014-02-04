@@ -3,11 +3,11 @@
    Program:    
    File:       ExtractZonePDB.c
    
-   Version:    V1.13R
-   Date:       29.10.10
+   Version:    V1.14
+   Date:       04.02.14
    Function:   PDB linked list manipulation
    
-   Copyright:  (c) SciTech Software 1992-2010
+   Copyright:  (c) SciTech Software 1992-2014
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -48,6 +48,7 @@
    V1.11 22.03.05 Extracted range is limited by specified residues
    V1.12 22.03.06 Modified ExtractZonePDB() to allow non-exact ranges
    V1.13 29.10.10 Fixed bug when end of zone was last residue in a chain
+   V1.14 04.02.14 Use CHAINMATCH By: CTP
 
 *************************************************************************/
 /* Includes
@@ -99,6 +100,7 @@
             then that will be extracted.
    29.10.10 Fixed extraction where end of zone matched last residue in
             a chain
+   04.02.14 Use CHAINMATCH By: CTP
 */
 PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
                     char *chain2, int resnum2, char *insert2)
@@ -118,7 +120,7 @@ PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
     */
    for(p=pdb; p!=NULL; NEXT(p))
    {
-      if((p->chain[0] == chain1[0]) &&
+      if(CHAINMATCH(p->chain,chain1) &&
          ((p->resnum > resnum1) ||
           ((p->resnum == resnum1) &&
            (p->insert[0] >= insert1[0]))))
@@ -145,7 +147,7 @@ PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
     */
    for(p=start; p!=NULL; NEXT(p))
    {
-      if((p->chain[0] == chain2[0]) && /* If chain is the same and...  */
+      if(CHAINMATCH(p->chain,chain2) && /* If chain is the same and...  */
          ((p->resnum > resnum2) ||     /* Residue number exceeded or.. */
           ((p->resnum == resnum2) &&   /* Resnum same, insert exceeded */
            (p->insert[0] > insert2[0]))))
@@ -156,8 +158,8 @@ PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
          found the right chain. If the current chain is now different 
          from chain2, then we've gone off the end of the chain
       */
-      if((chain1[0]   == chain2[0]) &&
-         (p->chain[0] != chain2[0]))
+      if( CHAINMATCH(chain1,chain2) &&
+         !CHAINMATCH(p->chain,chain2))
       {
          break;
       }

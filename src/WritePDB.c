@@ -3,11 +3,11 @@
    Program:    
    File:       WritePDB.c
    
-   Version:    V1.9R
-   Date:       22.09.05
+   Version:    V1.10
+   Date:       04.02.14
    Function:   Write a PDB file from a linked list
    
-   Copyright:  (c) SciTech Software 1993-2005
+   Copyright:  (c) SciTech Software 1993-2014
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -54,6 +54,7 @@
    V1.8  03.06.05 'atnam_raw' no longer includes the alternate indicator
                   which is now in 'altpos'
    V1.9  22.09.06 Added WritePDBRecordAtnam()
+   V1.10 04.02.14 Use CHAINMATCH macro. By: CTP
 
 *************************************************************************/
 #include <stdio.h>
@@ -78,6 +79,7 @@
    10.06.93 Uses NEXT macro; void type
    08.07.93 Added insertion of TER cards
    22.02.94 And a TER card at the end of the file
+   04.02.14 Use CHAINMATCH macro. By: CTP
 */
 void WritePDB(FILE *fp,
               PDB  *pdb)
@@ -89,7 +91,7 @@ void WritePDB(FILE *fp,
 
    for(p = pdb ; p ; NEXT(p))
    {
-      if(strncmp(PrevChain,p->chain,1))
+      if(!CHAINMATCH(PrevChain,p->chain))
       {
          /* Chain change, insert TER card                               */
          fprintf(fp,"TER   \n");

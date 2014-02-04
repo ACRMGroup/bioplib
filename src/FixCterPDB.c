@@ -3,11 +3,11 @@
    Program:    
    File:       FixCterPDB.c
    
-   Version:    V1.5R
-   Date:       03.06.05
+   Version:    V1.6
+   Date:       04.02.14
    Function:   Routine to add C-terminal oxygens.
    
-   Copyright:  (c) SciTech Software 1994-2005
+   Copyright:  (c) SciTech Software 1994-2014
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -48,6 +48,7 @@
    V1.3  13.11.96 Also checks for missing CA,C and O1 records
    V1.4  06.02.03 Handles atnam_raw
    V1.5  03.06.05 Handles altpos
+   V1.6  04.02.14 Use CHAINMATCH By: CTP
 
 *************************************************************************/
 /* Includes
@@ -97,6 +98,7 @@ static BOOL SetCterStyle(PDB *start, PDB *end, int style);
             If no C or O1 present, OXT not added
    06.02.03 Handles atnam_raw
    03.06.05 Handles altpos
+   04.02.14 Use CHAINMATCH By: CTP
 */
 BOOL FixCterPDB(PDB *pdb, int style)
 {
@@ -117,7 +119,7 @@ BOOL FixCterPDB(PDB *pdb, int style)
    {
       end = FindEndPDB(start);
       
-      if(end==NULL || end->chain[0] != start->chain[0])
+      if(end==NULL || !CHAINMATCH(end->chain,start->chain))
       {
          /* We're in a c-ter residue; find the atoms                    */
          CA = C = O1 = O2 = NULL;
@@ -215,6 +217,7 @@ BOOL FixCterPDB(PDB *pdb, int style)
    24.08.94 Original    By: ACRM
    06.02.03 Handles atnam_raw
    03.06.05 Handles altpos
+   04.02.14 Use CHAINMATCH By: CTP
 */
 static void StandardiseCTers(PDB *pdb)
 {
@@ -233,8 +236,8 @@ static void StandardiseCTers(PDB *pdb)
       /* If it's a c-terminal residue or the one before CTER,
          fix the names of the oxygens
       */
-      if(end==NULL                        || 
-         end->chain[0] != start->chain[0] ||
+      if(end==NULL                            || 
+         !CHAINMATCH(end->chain,start->chain) ||
          !strncmp(end->resnam,"CTER",4))
       {
          O1 = O2 = NULL;

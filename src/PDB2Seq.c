@@ -3,12 +3,12 @@
    Program:    
    File:       PDB2Seq.c
    
-   Version:    V1.12R
-   Date:       10.06.05
+   Version:    V1.13
+   Date:       04.02.14
    Function:   Conversion from PDB to sequence and other sequence
                related routines
    
-   Copyright:  (c) SciTech Software 1993-2005
+   Copyright:  (c) SciTech Software 1993-2014
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -53,6 +53,7 @@
    V1.10 02.10.00 Added NoX option
    V1.11 30.05.02 Changed PDB field from 'junk' to 'record_type'
    V1.12 10.06.05 Fixed bug - was undercounting by 1 for CA-only chains
+   V1.13 04.02.14 Use CHAINMATCH By: CTP
 
 *************************************************************************/
 /* Includes
@@ -110,6 +111,7 @@
    10.06.05 Changed the initialization of rescount, resnum, etc. so
             it correctly points to the first residue. This solves a
             bug with CA-only chains where it was undercounting by 1
+   04.02.14 Use CHAINMATCH By: CTP
 */
 char *DoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
 {
@@ -117,7 +119,7 @@ char *DoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
          rescount,
          NBreak    = 0;
    char  insert,
-         chain,
+         chain[8],
          *sequence = NULL;
    PDB   *p        = NULL;
    
@@ -131,7 +133,7 @@ char *DoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
    rescount = 1;
    resnum   = pdb->resnum;
    insert   = pdb->insert[0];
-   chain    = pdb->chain[0];
+   strcpy(chain,pdb->chain);
    
    for(p=pdb->next; p!=NULL; NEXT(p))
    {
@@ -146,10 +148,10 @@ char *DoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
          insert = p->insert[0];
          
          /* Check for chain change                                      */
-         if(chain != p->chain[0])
+         if(!CHAINMATCH(chain,p->chain))
          {
             NBreak++;
-            chain = p->chain[0];
+            strcpy(chain,p->chain);
          }
       }
    }
@@ -189,7 +191,7 @@ char *DoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
    
    resnum      = p->resnum;
    insert      = p->insert[0];
-   chain       = p->chain[0];
+   strcpy(chain,p->chain);
 
    for(p=p->next; p!=NULL; NEXT(p))
    {
@@ -198,10 +200,10 @@ char *DoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
          if(p->resnum != resnum || p->insert[0] != insert)
          {
             /* Check for chain change                                   */
-            if(chain != p->chain[0])
+            if(!CHAINMATCH(chain,p->chain))
             {
                sequence[rescount++] = '*';
-               chain = p->chain[0];
+               strcpy(chain,p->chain);
             }
             
             /* 06.02.03 Fixed bug - was incrementing recount even when

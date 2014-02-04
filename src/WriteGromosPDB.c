@@ -3,11 +3,11 @@
    Program:    
    File:       WriteGromosPDB.c
    
-   Version:    V1.6R
-   Date:       30.05.02
+   Version:    V1.7
+   Date:       04.02.14
    Function:   Write a PDB file from a linked list
    
-   Copyright:  (c) SciTech Software 1993-2002
+   Copyright:  (c) SciTech Software 1993-2014
    Author:     Dr. Andrew C. R. Martin
    Address:    SciTech Software
                23, Stag Leys,
@@ -55,6 +55,7 @@
    V1.4  10.06.93 Changed to use NEXT() macro. void types
    V1.5  22.02.94 Added TER card at end of file
    V1.6  30.05.02 Changed PDB field from 'junk' to 'record_type'
+   V1.7  04.02.14 Use CHAINMATCH macro. By: CTP
 
 *************************************************************************/
 #include <stdio.h>
@@ -80,6 +81,7 @@
    08.07.93 Added insertion of TER cards
    22.02.94 And a TER card at the end of the file
    15.02.01 This is the old WritePDB()
+   04.02.14 Use CHAINMATCH macro. By: CTP
 */
 void WriteGromosPDB(FILE *fp,
                     PDB  *pdb)
@@ -91,7 +93,7 @@ void WriteGromosPDB(FILE *fp,
 
    for(p = pdb ; p ; NEXT(p))
    {
-      if(strncmp(PrevChain,p->chain,1))
+      if(!CHAINMATCH(PrevChain,p->chain))
       {
          /* Chain change, insert TER card                               */
          fprintf(fp,"TER   \n");

@@ -3,11 +3,11 @@
    Program:    
    File:       TermPDB.c
    
-   Version:    V1.10
-   Date:       08.10.99
+   Version:    V1.11
+   Date:       04.02.14
    Function:   
    
-   Copyright:  (c) SciTech Software 1992-6
+   Copyright:  (c) SciTech Software 1992-2014
    Author:     Dr. Andrew C. R. Martin
    Phone:      +44 (0) 1372 275775
    EMail:      andrew@bioinf.org.uk
@@ -46,6 +46,7 @@
    V1.8  10.01.96 Added ExtractZonePDB()
    V1.9  14.03.96 Added FindAtomInRes()
    V1.10 08.10.99 Initialised some variables
+   V1.11 04.02.14 Use CHAINMATCH macro. By: CTP
 
 *************************************************************************/
 /* Includes
@@ -82,24 +83,25 @@
 
    06.07.95 Original    By: ACRM
    26.09.95 Corrected update of resnum etc to use p-> not pdb-> (!!)
+   04.02.14 Use CHAINMATCH macro. By: CTP
 */
 PDB *TermPDB(PDB *pdb, int length)
 {
    int  resnum,
         count;
    char insert,
-        chain;
+        chain[8];
    PDB  *p,
         *prev = NULL;
    
    resnum = pdb->resnum;
    insert = pdb->insert[0];
-   chain  = pdb->chain[0];
+   strcpy(chain,pdb->chain);
 
    for(p=pdb, count=1; p!=NULL; NEXT(p))
    {
       if((p->resnum    != resnum) ||
-         (p->chain[0]  != chain)  ||
+         !CHAINMATCH(p->chain,chain) ||
          (p->insert[0] != insert))
       {
          if(++count > length)
@@ -110,7 +112,7 @@ PDB *TermPDB(PDB *pdb, int length)
 
          resnum = p->resnum;
          insert = p->insert[0];
-         chain  = p->chain[0];
+         strcpy(chain,p->chain);
       }
       prev = p;
    }

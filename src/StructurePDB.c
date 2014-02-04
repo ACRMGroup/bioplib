@@ -3,11 +3,11 @@
    Program:    
    File:       StructurePDB.c
    
-   Version:    V1.1
-   Date:       19.05.10
+   Version:    V1.2
+   Date:       04.02.14
    Function:   Build a structured PDB representation
    
-   Copyright:  (c) UCL / Dr. Andrew C. R. Martin 2009-10
+   Copyright:  (c) UCL / Dr. Andrew C. R. Martin 2009-14
    Author:     Dr. Andrew C. R. Martin
    Address:    Biomolecular Structure & Modelling Unit,
                Institute of Structural & Molecular Biology,
@@ -47,6 +47,7 @@
    =================
    V1.0   24.11.09  Original
    V1.1   19.05.10  PDBRESIDUE and PDBCHAIN are doubly linked lists
+   V1.2   04.02.14  Use CHAINMATCH By: CTP
 *************************************************************************/
 /* Includes
 */
@@ -216,17 +217,15 @@ void FreePDBStructure(PDBSTRUCT *pdbstruct)
    but this routines doesn't terminate.
 
    24.11.09  Original   By: ACRM
+   04.02.14 Use CHAINMATCH By: CTP
 */
 PDB *FindNextChain(PDB *pdb)
 {
    PDB  *p, *ret = NULL;
-   char chain;
-   
-   chain = pdb->chain[0];
    
    for(p=pdb; p!=NULL; NEXT(p))
    {
-      if((p->next == NULL) || (p->next->chain[0] != chain))
+      if((p->next == NULL) || !CHAINMATCH(p->next->chain,pdb->chain))
       {
          ret = p->next;
          break;

@@ -3,11 +3,11 @@
    Program:    
    File:       ReadPDB.c
    
-   Version:    V2.22
-   Date:       21.12.11
+   Version:    V2.23
+   Date:       04.02.14
    Function:   Read coordinates from a PDB file 
    
-   Copyright:  (c) SciTech Software 1988-2011
+   Copyright:  (c) SciTech Software 1988-2014
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -152,6 +152,7 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
    V2.21 17.03.09 popen() prototype skipped for Windows. By: CTP
    V2.22 21.12.11 doReadPDB() modified for cases where atoms are single
                   occupancy but occupancy is < 1.0
+   V2.23 04.02.14 Use CHAINMATCH macro. By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -884,6 +885,7 @@ char *FixAtomName(char *name, REAL occup)
    first if there are more than one the same.
 
    25.01.05 Original based on code written for Inpharmatica   By: ACRM
+   04.02.14 Use CHAINMATCH macro. By: CTP
 */
 PDB *RemoveAlternates(PDB *pdb)
 {
@@ -965,7 +967,7 @@ Increase MAXPARTIAL in ReadPDB.c\n", s->chain[0],
                {
                   if((s->resnum    == alts[0]->resnum) &&
                      (s->insert[0] == alts[0]->insert[0]) &&
-                     (s->chain[0]  == alts[0]->chain[0]) &&
+                     CHAINMATCH(s->chain,alts[0]->chain) &&
                      !strcmp(s->atnam_raw, alts[0]->atnam_raw))
                   {
                      if(altCount < MAXPARTIAL)
