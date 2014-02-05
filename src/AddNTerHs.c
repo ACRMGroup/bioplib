@@ -90,6 +90,7 @@ static int doAddCharmmNTer(PDB **ppdb, PDB *nter);
    Adds hydrogens onto the N-termini
 
    23.08.94 Original    By: ACRM
+   04.02.14 Use CHAINMATCH By: CTP
 */
 int AddNTerHs(PDB **ppdb, BOOL Charmm)
 {
