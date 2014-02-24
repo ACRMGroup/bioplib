@@ -3,8 +3,8 @@
    Program:    
    File:       FindHetatmResidueSpec.c
    
-   Version:    V1.0
-   Date:       26.10.11
+   Version:    V1.1
+   Date:       28.08.13
    Function:   Parse a residue specification
    
    Copyright:  (c) 
@@ -35,6 +35,7 @@
    Revision History:
    =================
    V1.0  26.10.11 Original based on FindResidueSpec.c
+   V1.1  28.08.13 Mofified for new ParseResSpec that terminates strings
 
 *************************************************************************/
 /* Includes
@@ -72,15 +73,16 @@
    [chain]num[insert]) but limits search to HETATM residues
 
    26.10.11 Original    By: ACRM
+   28.08.13 Mofified for new ParseResSpec that terminates strings
 */
 PDB *FindHetatmResidueSpec(PDB *pdb, char *resspec)
 {
-   char chain,
-        insert;
+   char chain[8],
+        insert[8];
    int  resnum;
 
-   if(ParseResSpec(resspec, &chain, &resnum, &insert))    
-      return(FindHetatmResidue(pdb, chain, resnum, insert));
+   if(ParseResSpec(resspec, chain, &resnum, insert))    
+      return(FindHetatmResidue(pdb, chain[0], resnum, insert[0]));
    
    return(NULL);
 }
