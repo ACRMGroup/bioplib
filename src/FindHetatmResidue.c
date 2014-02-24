@@ -3,11 +3,11 @@
    Program:    
    File:       FindHetatmResidue.c
    
-   Version:    V1.0
-   Date:       26.10.11
+   Version:    V1.1
+   Date:       24.02.14
    Function:   Parse a residue specification
    
-   Copyright:  
+   Copyright:  2011-2014
    Author:     Dr. Andrew C. R. Martin
    EMail:      martin@biochem.ucl.ac.uk
                
@@ -35,6 +35,7 @@
    Revision History:
    =================
    V1.0  26.10.11 Original based on FindResidue.c
+   V1.1  24.02.14 Added BiopFindHetatmResidue() By: CTP
 
 *************************************************************************/
 /* Includes
@@ -65,11 +66,33 @@
 /*>PDB *FindHetatmResidue(PDB *pdb, char chain, int resnum, char insert)
   ----------------------------------------------------------------------
   Finds a pointer to the start of a residue in a PDB linked list, but
-  requires the residue is a HETATM record
+  requires the residue is a HETATM record.
+  Uses char for chain and insert.
 
   26.10.11 Original   By: ACRM
+  24.02.14 Converted into wrapper for BiopFindHetatmResidue(). By: CTP
 */
 PDB *FindHetatmResidue(PDB *pdb, char chain, int resnum, char insert)
+{
+   char chain_a[2]  = " ",
+        insert_a[2] = " ";
+   
+   chain_a[0]  = chain;
+   insert_a[0] = insert;
+   
+   return(BiopFindHetatmResidue(pdb, chain_a, resnum, insert_a));
+}
+
+/************************************************************************/
+/*>PDB *BiopFindHetatmResidue(PDB *pdb, char chain, int resnum, char insert)
+  ------------------------------------------------------------------------
+  Finds a pointer to the start of a residue in a PDB linked list, but
+  requires the residue is a HETATM record
+  Uses string for chain and insert.
+
+  24.02.14 Original. By: CTP
+*/
+PDB *BiopFindHetatmResidue(PDB *pdb, char *chain, int resnum, char *insert)
 {
    PDB *p;
 
@@ -77,13 +100,12 @@ PDB *FindHetatmResidue(PDB *pdb, char chain, int resnum, char insert)
    {
       if((!strncmp(p->record_type,"HETATM",6)) &&
       	 (p->resnum    == resnum) &&
-         (p->insert[0] == insert) &&
-         (p->chain[0]  == chain))
+         !strncmp(p->insert,insert,1) &&
+         CHAINMATCH(p->chain,chain))
 	 {
            return(p);
 	 }
    }
    return(NULL);
 }
-
 

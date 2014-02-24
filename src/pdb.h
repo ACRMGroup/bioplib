@@ -3,8 +3,8 @@
    Program:    
    File:       pdb.h
    
-   Version:    V1.48
-   Date:       04.02.14
+   Version:    V1.49
+   Date:       24.02.14
    Function:   Include file for pdb routines
    
    Copyright:  (c) SciTech Software, UCL, Reading 1993-2014
@@ -105,6 +105,8 @@
                   Added ResportStructureType()
                   Added new STRUCTURE_TYPE_* defines
    V1.48 04.02.14 Added CHAINMATCH macro. By: CTP
+   V1.49 24.02.14 Added BiopFindResidue(), BiopFindHetatmResidue() and 
+                        BiopInPDBZone(). By: CTP
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -406,10 +408,14 @@ void WriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
 PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
                     char *chain2, int resnum2, char *insert2);
 PDB *FindResidue(PDB *pdb, char chain, int resnum, char insert);
+PDB *BiopFindResidue(PDB *pdb, char *chain, int resnum, char *insert);
 PDB *FindHetatmResidue(PDB *pdb, char chain, int resnum, char insert);
+PDB *BiopFindHetatmResidue(PDB *pdb, char *chain, int resnum, char *insert);
 PDB *FindAtomInRes(PDB *pdb, char *atnam);
 BOOL InPDBZone(PDB *p, char chain, int resnum1, char insert1, 
                int resnum2, char insert2);
+BOOL BiopInPDBZone(PDB *p, char *chain, int resnum1, char *insert1, 
+                 int resnum2, char *insert2);
 BOOL InPDBZoneSpec(PDB *p, char *resspec1, char *resspec2);
 BOOL AtomNameMatch(char *atnam, char *spec, BOOL *ErrorWarn);
 BOOL AtomNameRawMatch(char *atnam, char *spec, BOOL *ErrorWarn);

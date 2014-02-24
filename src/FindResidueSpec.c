@@ -3,11 +3,11 @@
    Program:    
    File:       ParseResidueSpec.c
    
-   Version:    V1.8
-   Date:       15.08.13
+   Version:    V1.9
+   Date:       24.02.14
    Function:   Parse a residue specification
    
-   Copyright:  (c) SciTech Software 1993-2013
+   Copyright:  (c) SciTech Software 1993-2014
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -49,6 +49,7 @@
                   residue numbers
    V1.8  15.08.13 FindResidueSpec() modified as chain and insert now need
                   to be arrays
+   V1.9  24.02.14 Now calls BiopFindResidue() By: CTP
 
 *************************************************************************/
 /* Includes
@@ -88,6 +89,7 @@
    08.02.96 Now calls FindResidue() to do the actual work
    15.08.13 chain[] and insert[] are now arrays because of changes to
             ParseResSpec()
+   24.02.14 Now calls BiopFindResidue() By: CTP
 */
 PDB *FindResidueSpec(PDB *pdb, char *resspec)
 {
@@ -96,7 +98,7 @@ PDB *FindResidueSpec(PDB *pdb, char *resspec)
    int  resnum;
 
    if(ParseResSpec(resspec, chain, &resnum, insert))
-      return(FindResidue(pdb, chain[0], resnum, insert[0]));
+      return(BiopFindResidue(pdb, chain, resnum, insert));
    
    return(NULL);
 }

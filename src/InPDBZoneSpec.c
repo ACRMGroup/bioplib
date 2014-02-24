@@ -3,8 +3,8 @@
    Program:    
    File:       InPDBZoneSpec.c
    
-   Version:    V1.3
-   Date:       19.09.96
+   Version:    V1.4
+   Date:       24.02.14
    Function:   
    
    Copyright:  (c) SciTech Software 1993-6
@@ -39,6 +39,7 @@
    V1.1  16.06.93 Tidied for book. Mode now a char.
    V1.2  18.06.96 Added InPDBZone() from QTree program
    V1.3  19.09.96 Added InPDBZoneSpec()
+   V1.4  24.02.14 InPDBZoneSpec() handles multi-letter chain id. By: CTP
 
 *************************************************************************/
 /* Includes
@@ -78,32 +79,47 @@
    Calls InPDBZone() to do the actual work
 
    19.09.96 Original  By: ACRM
+   24.02.14 Uses string for chain and insert instead of char.
+            Wildcard match for multi-letter chain id. 
+            Now calls BiopInPDBZone(). By: CTP
+
 */
 BOOL InPDBZoneSpec(PDB *p, char *resspec1, char *resspec2)
 {
-   char chain1,  chain2,
-        insert1, insert2;
-   int  res1,    res2;
+   char chain1[8],  chain2[8],
+        insert1[8], insert2[8];
+   int  res1, res2, i;
 
    /* Check for wildcard specification of whole chain                   */
-   if(resspec1[1] == '*')
+   for(i=0; i < strlen(resspec1) && i < 8; i++)
    {
-      UPPER(resspec1);
-      if(p->chain[0] == resspec1[0])
+      if(resspec1[i] == '*') 
       {
-         return(TRUE);
-      }
-      else
-      {
-         return(FALSE);
+         /*                                           wildcard found    */
+         if(i == 0)
+         {
+            /*                                        resspec1 == "*"   */
+            return(CHAINMATCH(p->chain," ")); 
+         }
+         else if(i > 0 && resspec1[i-1] == '.')
+         {
+            /*                                        resspec1 == "c.*" */
+            return(!strncmp(p->chain,resspec1,i-1));
+         }
+         else
+         {
+            /*                                        resspec1 == "c*"  */
+            return(!strncmp(p->chain,resspec1,i));
+         }
       }
    }
    
-   ParseResSpec(resspec1, &chain1, &res1, &insert1);
-   ParseResSpec(resspec2, &chain2, &res2, &insert2);
-
-   if(chain1 != chain2)
-      return(FALSE);
    
-   return(InPDBZone(p, chain1, res1, insert1, res2, insert2));
+   ParseResSpec(resspec1, chain1, &res1, insert1);
+   ParseResSpec(resspec2, chain2, &res2, insert2);
+
+   if(!CHAINMATCH(chain1,chain2))
+      return(FALSE);
+
+   return(BiopInPDBZone(p, chain1, res1, insert1, res2, insert2));
 }

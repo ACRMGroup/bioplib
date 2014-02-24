@@ -3,11 +3,11 @@
    Program:    
    File:       FindHetatmResidueSpec.c
    
-   Version:    V1.1
-   Date:       28.08.13
+   Version:    V1.2
+   Date:       24.02.14
    Function:   Parse a residue specification
    
-   Copyright:  (c) 
+   Copyright:  (c) 2011-2014
    Author:     Dr. Andrew C. R. Martin
    EMail:      martin@biochem.ucl.ac.uk
                
@@ -36,6 +36,7 @@
    =================
    V1.0  26.10.11 Original based on FindResidueSpec.c
    V1.1  28.08.13 Mofified for new ParseResSpec that terminates strings
+   V1.2  24.02.14 Now calls BiopFindResidue(). By: CTP
 
 *************************************************************************/
 /* Includes
@@ -74,6 +75,7 @@
 
    26.10.11 Original    By: ACRM
    28.08.13 Mofified for new ParseResSpec that terminates strings
+   24.02.14 Now calls BiopFindResidue(). By: CTP
 */
 PDB *FindHetatmResidueSpec(PDB *pdb, char *resspec)
 {
@@ -82,7 +84,7 @@ PDB *FindHetatmResidueSpec(PDB *pdb, char *resspec)
    int  resnum;
 
    if(ParseResSpec(resspec, chain, &resnum, insert))    
-      return(FindHetatmResidue(pdb, chain[0], resnum, insert[0]));
+      return(BiopFindHetatmResidue(pdb, chain, resnum, insert));
    
    return(NULL);
 }

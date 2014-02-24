@@ -3,11 +3,11 @@
    Program:    
    File:       FindResidue.c
    
-   Version:    V1.7R
-   Date:       11.10.99
+   Version:    V1.8
+   Date:       24.02.14
    Function:   Parse a residue specification
    
-   Copyright:  (c) SciTech Software 1993-9
+   Copyright:  (c) SciTech Software 1993-2014
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -47,6 +47,7 @@
    V1.7  11.10.99 Allow a . to be used to start a number (such that the
                   default blank chain name is used). Allows negative 
                   residue numbers
+   V1.8  24.02.14 Added BiopFindResidue(). By: CTP
 
 *************************************************************************/
 /* Includes
@@ -74,23 +75,42 @@
 /************************************************************************/
 /*>PDB *FindResidue(PDB *pdb, char chain, int resnum, char insert)
   ----------------------------------------------------------------
-  Finds a pointer to the start of a residue in a PDB linked list
+  Finds a pointer to the start of a residue in a PDB linked list.
+  Uses char for string and insert.
 
   06.02.96 Original   By: ACRM
+  24.02.14 Converted into wrapper for BiopFindResidue(). By: CTP
 */
 PDB *FindResidue(PDB *pdb, char chain, int resnum, char insert)
+{
+   char chain_a[2]  = " ",
+        insert_a[2] = " ";
+   
+   chain_a[0]  = chain;
+   insert_a[0] = insert;
+   
+   return(BiopFindResidue(pdb, chain_a, resnum, insert_a));
+}
+
+/************************************************************************/
+/*>PDB *BiopFindResidue(PDB *pdb, char *chain, int resnum, char *insert)
+  --------------------------------------------------------------------
+  Finds a pointer to the start of a residue in a PDB linked list.
+  Uses string for chain and insert.
+
+  24.02.14 Original   By: CTP
+*/
+PDB *BiopFindResidue(PDB *pdb, char *chain, int resnum, char *insert)
 {
    PDB *p;
 
    for(p=pdb; p!=NULL; NEXT(p))
    {
-      if((p->resnum    == resnum) &&
-         (p->insert[0] == insert) &&
-         (p->chain[0]  == chain))
+      if((p->resnum == resnum) &&
+         !strcmp(p->insert,insert) &&
+         CHAINMATCH(p->chain,chain))
          return(p);
-      
    }
+
    return(NULL);
 }
-
-
