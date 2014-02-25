@@ -3,8 +3,8 @@
    Program:    
    File:       InPDBZone.c
    
-   Version:    V1.4
-   Date:       24.02.14
+   Version:    V1.5
+   Date:       25.02.14
    Function:   
    
    Copyright:  (c) SciTech Software 1993-2014
@@ -40,6 +40,7 @@
    V1.2  18.06.96 Added InPDBZone() from QTree program
    V1.3  19.09.96 Added InPDBZoneSpec()
    V1.4  24.02.14 Added BiopInPDBZone() By: CTP
+   V1.5  25.02.14 Added error message for InPDBZone(). By: CTP
 
 *************************************************************************/
 /* Includes
@@ -81,6 +82,7 @@
    08.02.96 Insert residues inside a zone were not handled correctly!
    18.06.96 Added to bioplib from QTree (was called InZone())
    24.02.14 Converted into wrapper for BiopInPDBZone() By: CTP
+   25.02.14 Added error message. By: CTP
 */
 BOOL InPDBZone(PDB *p, char chain, int resnum1, char insert1, 
                int resnum2, char insert2)
@@ -89,6 +91,11 @@ BOOL InPDBZone(PDB *p, char chain, int resnum1, char insert1,
         insert1_a[2] = " ",
         insert2_a[2] = " ";
         
+#ifdef BIOPLIB_CHECK
+   fprintf(stderr, 
+           "This code uses InPDBZone() which is now deprecated!\n");
+#endif
+
    chain_a[0]   = chain;
    insert1_a[0] = insert1;
    insert2_a[0] = insert2;

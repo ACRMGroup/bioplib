@@ -3,8 +3,8 @@
    Program:    
    File:       FindResidue.c
    
-   Version:    V1.8
-   Date:       24.02.14
+   Version:    V1.9
+   Date:       25.02.14
    Function:   Parse a residue specification
    
    Copyright:  (c) SciTech Software 1993-2014
@@ -48,6 +48,7 @@
                   default blank chain name is used). Allows negative 
                   residue numbers
    V1.8  24.02.14 Added BiopFindResidue(). By: CTP
+   V1.9  25.02.14 Added error message for FindResidue(). By: CTP
 
 *************************************************************************/
 /* Includes
@@ -80,12 +81,18 @@
 
   06.02.96 Original   By: ACRM
   24.02.14 Converted into wrapper for BiopFindResidue(). By: CTP
+  25.02.14 Added error message. By: CTP
 */
 PDB *FindResidue(PDB *pdb, char chain, int resnum, char insert)
 {
    char chain_a[2]  = " ",
         insert_a[2] = " ";
    
+#ifdef BIOPLIB_CHECK
+   fprintf(stderr, 
+           "This code uses FindResidue() which is now deprecated!\n");
+#endif
+
    chain_a[0]  = chain;
    insert_a[0] = insert;
    

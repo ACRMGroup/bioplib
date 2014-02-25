@@ -12,6 +12,9 @@ CC = gcc
 # Define any options for the C compiler here
 COPT = -fPIC -ansi -Wall -pedantic -g -DGUNZIP_SUPPORT
 
+# Generate error messages for deprecated functions.
+COPT := $(COPT) -DBIOPLIB_CHECK
+
 # Define the archive/library command here
 AR = ar r
 

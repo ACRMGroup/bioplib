@@ -3,8 +3,8 @@
    Program:    
    File:       FindHetatmResidue.c
    
-   Version:    V1.1
-   Date:       24.02.14
+   Version:    V1.2
+   Date:       25.02.14
    Function:   Parse a residue specification
    
    Copyright:  2011-2014
@@ -36,6 +36,7 @@
    =================
    V1.0  26.10.11 Original based on FindResidue.c
    V1.1  24.02.14 Added BiopFindHetatmResidue() By: CTP
+   V1.2  25.02.14 Added error message for FindHetatmResidue(). By: CTP
 
 *************************************************************************/
 /* Includes
@@ -71,12 +72,18 @@
 
   26.10.11 Original   By: ACRM
   24.02.14 Converted into wrapper for BiopFindHetatmResidue(). By: CTP
+  25.02.14 Added error message. By: CTP
 */
 PDB *FindHetatmResidue(PDB *pdb, char chain, int resnum, char insert)
 {
    char chain_a[2]  = " ",
         insert_a[2] = " ";
    
+#ifdef BIOPLIB_CHECK
+   fprintf(stderr, 
+         "This code uses FindHetatmResidue() which is now deprecated!\n");
+#endif
+
    chain_a[0]  = chain;
    insert_a[0] = insert;
    
