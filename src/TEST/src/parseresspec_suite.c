@@ -177,6 +177,34 @@ START_TEST(test_std_06)
 }
 END_TEST
 
+START_TEST(test_std_07)
+{
+   char spec[] = "A-123A";
+   char chain[8], insert[8];
+   int  resnum;
+   
+   ck_assert(ParseResSpec(spec, chain, &resnum, insert));
+   
+   ck_assert_str_eq(chain,    "A");
+   ck_assert_int_eq(resnum, -123 );
+   ck_assert_str_eq(insert,   "A");
+}
+END_TEST
+
+START_TEST(test_std_08)
+{
+   char spec[] = "-123A";
+   char chain[8], insert[8];
+   int  resnum;
+   
+   ck_assert(ParseResSpec(spec, chain, &resnum, insert));
+   
+   ck_assert_str_eq(chain,    " ");
+   ck_assert_int_eq(resnum, -123 );
+   ck_assert_str_eq(insert,   "A");
+}
+END_TEST
+
 
 /* Dot format "A.123A" */
 START_TEST(test_dot_01)
@@ -235,6 +263,33 @@ START_TEST(test_dot_04)
 }
 END_TEST
 
+START_TEST(test_dot_05)
+{
+   char spec[] = "A.-123A";
+   char chain[8], insert[8];
+   int  resnum;
+   
+   ck_assert(ParseResSpec(spec, chain, &resnum, insert));
+   
+   ck_assert_str_eq(chain,    "A");
+   ck_assert_int_eq(resnum, -123 );
+   ck_assert_str_eq(insert,   "A");
+}
+END_TEST
+
+START_TEST(test_dot_06)
+{
+   char spec[] = ".-123A";
+   char chain[8], insert[8];
+   int  resnum;
+   
+   ck_assert(ParseResSpec(spec, chain, &resnum, insert));
+   
+   ck_assert_str_eq(chain,    " ");
+   ck_assert_int_eq(resnum, -123 );
+   ck_assert_str_eq(insert,   "A");
+}
+END_TEST
 
 /* Multi-letter chain "Abc.123Y"*/
 START_TEST(test_multi_01)
@@ -279,6 +334,20 @@ START_TEST(test_multi_03)
 }
 END_TEST
 
+START_TEST(test_multi_04)
+{
+   char spec[] = "Abc";
+   char chain[8], insert[8];
+   int  resnum;
+   
+   ck_assert(ParseResSpec(spec, chain, &resnum, insert));
+   
+   ck_assert_str_eq(chain, "Abc");
+   ck_assert_int_eq(resnum,   0 );
+   ck_assert_str_eq(insert,  " ");
+}
+END_TEST
+
 
 /* Limits */
 START_TEST(test_limits_01)
@@ -298,6 +367,20 @@ END_TEST
 START_TEST(test_limits_02)
 {
    char spec[] = " ";
+   char chain[8], insert[8];
+   int  resnum;
+   
+   ck_assert(ParseResSpec(spec, chain, &resnum, insert));
+   
+   ck_assert_str_eq(chain,  " ");
+   ck_assert_int_eq(resnum,  0 );
+   ck_assert_str_eq(insert, " ");
+}
+END_TEST
+
+START_TEST(test_limits_03)
+{
+   char spec[] = ".";
    char chain[8], insert[8];
    int  resnum;
    
@@ -334,6 +417,8 @@ Suite *parseresspec_suite(void)
    tcase_add_test(tc_std, test_std_04);
    tcase_add_test(tc_std, test_std_05);
    tcase_add_test(tc_std, test_std_06);
+   tcase_add_test(tc_std, test_std_07);
+   tcase_add_test(tc_std, test_std_08);
    suite_add_tcase(s, tc_std);
    
    /* Dot format test case */
@@ -342,6 +427,8 @@ Suite *parseresspec_suite(void)
    tcase_add_test(tc_dot, test_dot_02);
    tcase_add_test(tc_dot, test_dot_03);
    tcase_add_test(tc_dot, test_dot_04);
+   tcase_add_test(tc_dot, test_dot_05);
+   tcase_add_test(tc_dot, test_dot_06);
    suite_add_tcase(s, tc_dot);
 
    /* Multi-letter chain test case */
@@ -349,12 +436,14 @@ Suite *parseresspec_suite(void)
    tcase_add_test(tc_multi, test_multi_01);
    tcase_add_test(tc_multi, test_multi_02);
    tcase_add_test(tc_multi, test_multi_03);
+   tcase_add_test(tc_multi, test_multi_04);
    suite_add_tcase(s, tc_multi);
 
    /* Limits test case */
    TCase *tc_limits = tcase_create("Limits");
    tcase_add_test(tc_limits, test_limits_01);
    tcase_add_test(tc_limits, test_limits_02);
+   tcase_add_test(tc_limits, test_limits_03);
    suite_add_tcase(s, tc_limits);
 
    return s;

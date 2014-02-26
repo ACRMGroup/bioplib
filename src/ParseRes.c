@@ -3,8 +3,8 @@
    Program:    
    File:       ParseRes.c
    
-   Version:    V1.11
-   Date:       28.08.13
+   Version:    V1.12
+   Date:       26.02.14
    Function:   Parse a residue specification
    
    Copyright:  (c) SciTech Software 1993-2013
@@ -58,6 +58,7 @@
    V1.10 12.10.12 insert is now a properly terminated string when there is
                   no insert
    V1.11 28.08.13 chain is now a properly terminated string
+   V1.12 26.02.14 Parsing handles multi-letter chains. By: CTP
 
 *************************************************************************/
 /* Includes
@@ -165,6 +166,10 @@ BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum,
    be set to spaces if not specified. If uppercaseresspec equals TRUE,
    the spec is upper cased before processing
    
+   Multi-letter chain IDs can be parsed. Additionally, chain IDs with 
+   numerical characters can be parsed if a period is used to separate the 
+   chain from the residue number.
+   
    21.07.93 Original    By: ACRM
    17.07.95 Added BOOL return
    18.03.98 Added option to include a . to separate chain and residue
@@ -182,6 +187,11 @@ BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum,
             can be passed into the routine as opposed to string delimited
             variables. This also removes the need for restoring the 
             string which has now been removed
+   26.02.14 Parsing handles multi-letter chains and numerical chain IDs.
+            The "Extract chain from spec" section was re-written.
+            If the period separator between the chain id and the residue
+            number is absent then the chain id is set from any non-numeric
+            lead characters. By: CTP
 */
 BOOL DoParseResSpec(char *inSpec, char *chain, int *resnum, char *insert, 
                     BOOL uppercaseresspec)
@@ -190,7 +200,9 @@ BOOL DoParseResSpec(char *inSpec, char *chain, int *resnum, char *insert,
          *ptr2,
          spec[64];
    BOOL  /* DoRestore = FALSE, */
-         retval    = TRUE;
+         retval    = TRUE,
+         chain_found = FALSE;
+   int   i;
 
    strncpy(spec, inSpec, 64);
 
@@ -204,30 +216,55 @@ BOOL DoParseResSpec(char *inSpec, char *chain, int *resnum, char *insert,
    }
    KILLLEADSPACES(ptr, spec);
      
-   /* Extract chain from spec                                           */
-   if(*ptr == '.')
+   /* Extract chain from spec.                   Added 26.02.14 By: CTP */
+
+   /* Extract chain from spec (dot format)                              */
+   for(ptr2=ptr,i=0;*ptr2;ptr2++,i++)
    {
-      chain[0] = ' ';
-      chain[1] = '\0';
-      ptr++;
-   }
-   else if((*(ptr+1) == '.') || (!isdigit(*ptr) && (*ptr != '-')))
-   {
-      /* Chain was specified                                            */
-      chain[0] = *ptr;
-      chain[1] = '\0';
-      ptr++;
-      if(*ptr == '.')
+      if(*ptr2 == '.')
       {
-         ptr++;
+         /* set chain */
+         if(i > 0)
+         {
+            strncpy(chain,ptr,i);
+            chain[i] = '\0';
+         }
+         else 
+         {
+            strcpy(chain," ");
+         }
+         
+         chain_found = TRUE;
+         ptr = ptr2 + 1; /* update start point */
+         break;
       }
    }
-   else
+   
+   /* Extract chain from spec (non-numeric lead characters)             */
+   if(chain_found == FALSE)
    {
-      /* Spec started with a digit, so no chain specified               */
-      chain[0] = ' ';
-      chain[1] = '\0';
+      for(ptr2=ptr,i=0;*ptr2;ptr2++,i++)
+      {
+         if(!isdigit(*ptr2) && (*ptr2 != '-'))
+         {
+            chain[i]    = *ptr2;
+            chain[i+1]  = '\0';
+            chain_found = TRUE;
+            ptr = ptr2 + 1; /* update start point */
+         }
+         else
+         {
+            break;
+         }
+      }
    }
+   
+   /* Extract chain from spec (set chain to space)                      */
+   if(chain_found == FALSE)
+   {
+      strcpy(chain," ");
+   }
+
    
    /* Extract insert from spec                                          */
    insert[0] = ' ';
