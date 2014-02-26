@@ -1,0 +1,21 @@
+Unit tests for Bioplib
+
+Tests require the Check unit testing framework for C.
+http://check.sourceforge.net/index.html
+
+Compile bioplib library from the bioplib/src directory with make:
+
+ cd bioplib/src
+ make
+ 
+Compile tests from the bioplib/src/TEST directory with make to generate
+executable file, run_tests.
+
+ cd TEST
+ make
+ ./run_tests
+
+For verbose output use the -v option:
+
+ ./run_tests -v
+ 
