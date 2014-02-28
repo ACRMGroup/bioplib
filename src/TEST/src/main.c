@@ -6,6 +6,7 @@
 
 /* Test Suites */
 #include "parseresspec_suite.h"
+#include "inpdbzone_suite.h"
 
 int main(int argc, char **argv)
 {
@@ -21,8 +22,7 @@ int main(int argc, char **argv)
    
    /* Add test Suites */
    srunner_add_suite(sr, parseresspec_suite());
-   srunner_add_suite(sr, parseresspec_suite());
-   srunner_add_suite(sr, parseresspec_suite()); /* add suites here... */
+   srunner_add_suite(sr, inpdbzone_suite()); /* add suites here... */
 
 
    /* Run tests */
