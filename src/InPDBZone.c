@@ -3,8 +3,8 @@
    Program:    
    File:       InPDBZone.c
    
-   Version:    V1.5
-   Date:       25.02.14
+   Version:    V1.6
+   Date:       02.03.14
    Function:   
    
    Copyright:  (c) SciTech Software 1993-2014
@@ -41,6 +41,8 @@
    V1.3  19.09.96 Added InPDBZoneSpec()
    V1.4  24.02.14 Added BiopInPDBZone() By: CTP
    V1.5  25.02.14 Added error message for InPDBZone(). By: CTP
+   V1.6  02.03.14 Use strcmp to compare inserts.
+                  Bugfix for insert residues. By: CTP
 
 *************************************************************************/
 /* Includes
@@ -122,6 +124,9 @@ BOOL InPDBZone(PDB *p, char chain, int resnum1, char insert1,
 
    24.02.14 Based on InPDBZone() but takes chain and inserts as stings 
             instead of chars. By: CTP
+   02.03.14 Use strcmp to compare inserts.
+            Fixed bug handling insert residues where start and finish of 
+            zone have same residue number. By: CTP
    
 */
 BOOL BiopInPDBZone(PDB *p, char *chain, int resnum1, char *insert1, 
@@ -132,22 +137,26 @@ BOOL BiopInPDBZone(PDB *p, char *chain, int resnum1, char *insert1,
       
       /* If residue number is *within* the range, return TRUE           */
       if((p->resnum > resnum1) && (p->resnum < resnum2))
+      {
          return(TRUE);
+      }
       
       /* If the range has a single residue number, check both inserts   */
-      if((p->resnum == resnum1) && (p->resnum == resnum2))
+      else if((p->resnum == resnum1) && (p->resnum == resnum2))
       {
-         if(((int)p->insert[0] >= (int)insert1[0]) &&
-            ((int)p->insert[0] <= (int)insert2[0]))
+         if((strcmp(p->insert, insert1) >= 0) &&
+            (strcmp(p->insert, insert2) <= 0))
             return(TRUE);
       }
       
       /* If residue number matches ends of range check insert           */
-      if(((p->resnum == resnum1) &&
-          ((int)p->insert[0] >= (int)insert1[0])) ||
-         ((p->resnum == resnum2) &&
-          ((int)p->insert[0] <= (int)insert2[0])))
+      else if(((p->resnum == resnum1) && 
+               (strcmp(p->insert, insert1) >= 0)) ||
+              ((p->resnum == resnum2) &&
+               (strcmp(p->insert, insert2) <= 0)))
+      {
          return(TRUE);
+      }
    }
    
    return(FALSE);

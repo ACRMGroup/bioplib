@@ -309,6 +309,183 @@ START_TEST(test_12)
 }
 END_TEST
 
+/* range == single resnum */
+START_TEST(test_single_resnum_01)
+{
+   /* range */
+   strcpy(chain,      "A");
+   resnum1 =           10 ;
+   strcpy(insert1,    " ");
+   resnum2 =           10 ;
+   strcpy(insert2,    " ");
+
+   /* pdb */
+   strcpy(pdb->chain, "A");
+   pdb->resnum =       10 ;
+   strcpy(pdb->insert," ");
+   
+   /* expected output */
+   expected_output =  TRUE;
+   
+   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   ck_assert( output == expected_output );
+}
+END_TEST
+
+START_TEST(test_single_resnum_02)
+{
+   /* range */
+   strcpy(chain,      "A");
+   resnum1 =           10 ;
+   strcpy(insert1,    " ");
+   resnum2 =           10 ;
+   strcpy(insert2,    " ");
+
+   /* pdb */
+   strcpy(pdb->chain, "A");
+   pdb->resnum =       10 ;
+   strcpy(pdb->insert,"A");
+   
+   /* expected output */
+   expected_output = FALSE;
+   
+   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   ck_assert( output == expected_output );
+}
+END_TEST
+
+START_TEST(test_single_resnum_03)
+{
+   /* range */
+   strcpy(chain,      "A");
+   resnum1 =           10 ;
+   strcpy(insert1,    " ");
+   resnum2 =           10 ;
+   strcpy(insert2,    "A");
+
+   /* pdb */
+   strcpy(pdb->chain, "A");
+   pdb->resnum =       10 ;
+   strcpy(pdb->insert," ");
+   
+   /* expected output */
+   expected_output =  TRUE;
+   
+   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   ck_assert( output == expected_output );
+}
+END_TEST
+
+START_TEST(test_single_resnum_04)
+{
+   /* range */
+   strcpy(chain,      "A");
+   resnum1 =           10 ;
+   strcpy(insert1,    " ");
+   resnum2 =           10 ;
+   strcpy(insert2,    "A");
+
+   /* pdb */
+   strcpy(pdb->chain, "A");
+   pdb->resnum =       10 ;
+   strcpy(pdb->insert,"A");
+   
+   /* expected output */
+   expected_output =  TRUE;
+   
+   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   ck_assert( output == expected_output );
+}
+END_TEST
+
+START_TEST(test_single_resnum_05)
+{
+   /* range */
+   strcpy(chain,      "A");
+   resnum1 =           10 ;
+   strcpy(insert1,    "A");
+   resnum2 =           10 ;
+   strcpy(insert2,    "A");
+
+   /* pdb */
+   strcpy(pdb->chain, "A");
+   pdb->resnum =       10 ;
+   strcpy(pdb->insert," ");
+   
+   /* expected output */
+   expected_output = FALSE;
+   
+   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   ck_assert( output == expected_output );
+}
+END_TEST
+
+START_TEST(test_single_resnum_06)
+{
+   /* range */
+   strcpy(chain,      "A");
+   resnum1 =           10 ;
+   strcpy(insert1,    "A");
+   resnum2 =           10 ;
+   strcpy(insert2,    "A");
+
+   /* pdb */
+   strcpy(pdb->chain, "A");
+   pdb->resnum =       10 ;
+   strcpy(pdb->insert,"A");
+   
+   /* expected output */
+   expected_output =  TRUE;
+   
+   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   ck_assert( output == expected_output );
+}
+END_TEST
+
+START_TEST(test_single_resnum_07)
+{
+   /* range */
+   strcpy(chain,      "A");
+   resnum1 =           10 ;
+   strcpy(insert1,    "A");
+   resnum2 =           10 ;
+   strcpy(insert2,    "A");
+
+   /* pdb */
+   strcpy(pdb->chain, "A");
+   pdb->resnum =       10 ;
+   strcpy(pdb->insert,"B");
+   
+   /* expected output */
+   expected_output = FALSE;
+   
+   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   ck_assert( output == expected_output );
+}
+END_TEST
+
+START_TEST(test_single_resnum_08)
+{
+   /* range */
+   strcpy(chain,      "A");
+   resnum1 =           10 ;
+   strcpy(insert1,    "B");
+   resnum2 =           10 ;
+   strcpy(insert2,    "B");
+
+   /* pdb */
+   strcpy(pdb->chain, "A");
+   pdb->resnum =       10 ;
+   strcpy(pdb->insert,"A");
+   
+   /* expected output */
+   expected_output = FALSE;
+   
+   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   ck_assert( output == expected_output );
+}
+END_TEST
+
 /* Wrapper functions */
 
 /* InPDBZoneSpec() */
@@ -619,6 +796,19 @@ Suite *inpdbzone_suite(void)
    tcase_add_test(tc_core, test_11);
    tcase_add_test(tc_core, test_12);
    suite_add_tcase(s, tc_core);
+
+   TCase *tc_single_resnum = tcase_create("Single_Resnum");
+   tcase_add_checked_fixture(tc_single_resnum, inpdbzone_setup, 
+                             inpdbzone_teardown);
+   tcase_add_test(tc_single_resnum, test_single_resnum_01);
+   tcase_add_test(tc_single_resnum, test_single_resnum_02);
+   tcase_add_test(tc_single_resnum, test_single_resnum_03);
+   tcase_add_test(tc_single_resnum, test_single_resnum_04);
+   tcase_add_test(tc_single_resnum, test_single_resnum_05);
+   tcase_add_test(tc_single_resnum, test_single_resnum_06);
+   tcase_add_test(tc_single_resnum, test_single_resnum_07);
+   tcase_add_test(tc_single_resnum, test_single_resnum_08);
+   suite_add_tcase(s, tc_single_resnum);
 
    /* InPDBZone() */
    TCase *tc_wrap_a = tcase_create("Wrapper_A");
