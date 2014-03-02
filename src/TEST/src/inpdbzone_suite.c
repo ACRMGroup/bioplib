@@ -323,7 +323,7 @@ START_TEST(test_wrapper_a_01)
    resnum1               =  10;
    single_letter_insert1 = ' ';
    resnum2               =  20;
-   single_letter_insert1 = ' ';
+   single_letter_insert2 = ' ';
 
    /* pdb */
    strcpy(pdb->chain, "A");
@@ -351,7 +351,7 @@ START_TEST(test_wrapper_a_02)
    resnum1               =  10;
    single_letter_insert1 = 'A';
    resnum2               =  20;
-   single_letter_insert1 = ' ';
+   single_letter_insert2 = ' ';
 
    /* pdb */
    strcpy(pdb->chain, "A");
@@ -379,7 +379,7 @@ START_TEST(test_wrapper_a_03)
    resnum1               =  10;
    single_letter_insert1 = 'A';
    resnum2               =  20;
-   single_letter_insert1 = ' ';
+   single_letter_insert2 = ' ';
 
    /* pdb */
    strcpy(pdb->chain, "A");
@@ -407,7 +407,7 @@ START_TEST(test_wrapper_a_04)
    resnum1               =  10;
    single_letter_insert1 = ' ';
    resnum2               =  20;
-   single_letter_insert1 = ' ';
+   single_letter_insert2 = ' ';
 
    /* pdb */
    strcpy(pdb->chain, "A");
@@ -435,7 +435,7 @@ START_TEST(test_wrapper_a_05)
    resnum1               =  10;
    single_letter_insert1 = ' ';
    resnum2               =  20;
-   single_letter_insert1 = 'A';
+   single_letter_insert2 = 'A';
 
    /* pdb */
    strcpy(pdb->chain, "A");
@@ -463,7 +463,7 @@ START_TEST(test_wrapper_a_06)
    resnum1               =  10;
    single_letter_insert1 = ' ';
    resnum2               =  20;
-   single_letter_insert1 = ' ';
+   single_letter_insert2 = ' ';
 
    /* pdb */
    strcpy(pdb->chain, "B");
