@@ -4,7 +4,11 @@
 PDB  *pdb;
 char chain[8],
      insert1[8], insert2[8],
-     resspec1[8], resspec2[8];
+     resspec1[8], resspec2[8],
+     single_letter_chain,
+     single_letter_insert1,
+     single_letter_insert2;
+
 int  resnum1, resnum2;
 BOOL output, expected_output;
 
@@ -491,10 +495,6 @@ END_TEST
 /* InPDBZoneSpec() */
 START_TEST(test_wrapper_a_01)
 {
-   char single_letter_chain,
-        single_letter_insert1,
-        single_letter_insert2;
-        
    /* range */
    single_letter_chain   = 'A';
    resnum1               =  10;
@@ -519,10 +519,6 @@ END_TEST
 
 START_TEST(test_wrapper_a_02)
 {
-   char single_letter_chain,
-        single_letter_insert1,
-        single_letter_insert2;
-        
    /* range */
    single_letter_chain   = 'A';
    resnum1               =  10;
@@ -547,10 +543,6 @@ END_TEST
 
 START_TEST(test_wrapper_a_03)
 {
-   char single_letter_chain,
-        single_letter_insert1,
-        single_letter_insert2;
-        
    /* range */
    single_letter_chain   = 'A';
    resnum1               =  10;
@@ -575,10 +567,6 @@ END_TEST
 
 START_TEST(test_wrapper_a_04)
 {
-   char single_letter_chain,
-        single_letter_insert1,
-        single_letter_insert2;
-        
    /* range */
    single_letter_chain   = 'A';
    resnum1               =  10;
@@ -603,10 +591,6 @@ END_TEST
 
 START_TEST(test_wrapper_a_05)
 {
-   char single_letter_chain,
-        single_letter_insert1,
-        single_letter_insert2;
-        
    /* range */
    single_letter_chain   = 'A';
    resnum1               =  10;
@@ -631,10 +615,6 @@ END_TEST
 
 START_TEST(test_wrapper_a_06)
 {
-   char single_letter_chain,
-        single_letter_insert1,
-        single_letter_insert2;
-        
    /* range */
    single_letter_chain   = 'A';
    resnum1               =  10;
