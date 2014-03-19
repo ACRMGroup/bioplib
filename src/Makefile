@@ -60,7 +60,7 @@ GetCGPDB.o GetCofGPDBRange.o GetCofGPDBSCRange.o GetCrystPDB.o \
 GetPDBByN.o GetPDBChainLabels.o GetPDBCoor.o HAddPDB.o InPDBZone.o \
 InPDBZoneSpec.o IndexPDB.o KillPDB.o KillSidechain.o KnownSeqLen.o \
 LegalAtomSpec.o MovePDB.o NumericAlign.o OrderPDB.o OriginPDB.o \
-PDB2Seq.o PackPDB.o ParseRes.o RdSSPDB.o RdSecPDB.o RdSeqPDB.o \
+PDB2Seq.o ParseRes.o RdSSPDB.o RdSecPDB.o RdSeqPDB.o \
 ReadCSSR.o ReadPDB.o ReadPIR.o ReadRawPIR.o ReadSimplePIR.o \
 RenumAtomsPDB.o ResolPDB.o RotPDB.o SelAtPDB.o SelectCaPDB.o \
 SetChi.o SetResnam.o SplitSeq.o StripHPDB.o TermPDB.o TorCoor.o \
