@@ -4,12 +4,12 @@
    Program:    
    File:       hbond.c
    
-   Version:    V1.5
-   Date:       17.01.06
+   Version:    V1.6
+   Date:       20.03.14
    Function:   Report whether two residues are H-bonded using
                Baker & Hubbard criteria
    
-   Copyright:  (c) SciTech Software 1996-2006
+   Copyright:  (c) SciTech Software 1996-2014
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -48,6 +48,7 @@
                   Also incorporated fix in ValidHBond() from 02.06.99
                   Inpharmatica version to handle NULL antecedent atoms
    V1.5  17.01.06 Added IsMCDonorHBonded() and IsMCAcceptorHBonded()
+   V1.6  20.03.14 Updated message in Demo code. By: CTP
 
 *************************************************************************/
 /* Includes
@@ -728,9 +729,9 @@ int main(int argc, char **argv)
                   {
                      /* Print message if there is any HBond             */
                      if(IsHBonded(p, q, HBOND_ANY))
-                        printf("%c%d%c HBonded to %c%d%c\n",
-                               p->chain[0], p->resnum, p->insert[0],
-                               q->chain[0], q->resnum, q->insert[0]);
+                        printf("%s%d%s HBonded to %s%d%s\n",
+                               p->chain, p->resnum, p->insert,
+                               q->chain, q->resnum, q->insert);
                   }
                }
             }

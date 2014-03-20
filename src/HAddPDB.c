@@ -3,11 +3,11 @@
    Program:    
    File:       HAddPDB.c
    
-   Version:    V2.16R
-   Date:       24.01.06
+   Version:    V2.16
+   Date:       20.03.14
    Function:   Add hydrogens to a PDB linked list
    
-   Copyright:  (c) SciTech Software 1990-2006
+   Copyright:  (c) SciTech Software 1990-2014
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -104,6 +104,7 @@
    V2.14 28.11.05 No longer exits if previous C is missing
    V2.15 24.01.06 Fixed error message in GenH() which could try to print 
                   from NULL pointer
+   V2.16 20.03.14 Updated error message in GenH(). By: CTP
 
 *************************************************************************/
 /* Includes
@@ -299,6 +300,7 @@ int ReadPGP(FILE *fp)
             the routine to exit
    24.01.06 Fixed error message which could try to print from NULL 
             pointer
+   20.03.14 Updated error message. By: CTP
 */
 static int GenH(PDB *pdb, BOOL *err_flag)
 {
@@ -470,7 +472,7 @@ in residue %d\n\n",p->resnum);
             if(p!=NULL)
             {
                fprintf(stderr,"Warning=> genh() found no carbonyl carbon \
-preceeding residue %c%d%c\n", p->chain[0], p->resnum, p->insert[0]);
+preceeding residue %s%d%s\n", p->chain, p->resnum, p->insert);
             }
             else
             {

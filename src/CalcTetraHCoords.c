@@ -3,8 +3,8 @@
    Program:    
    File:       CalcTertaHCoords.c
    
-   Version:    V1.3R
-   Date:       13.11.96
+   Version:    V1.4
+   Date:       20.03.14
    Function:   Routines to add N-terminal hydrogens and C-terminal
                oxygens.
    
@@ -53,6 +53,7 @@
    V1.2  12.11.96 If any of the antecedant coordinates are undefined, set
                   the terminal oxygen to NULL coordinates
    V1.3  13.11.96 Also checks for missing CA,C and O1 records
+   V1.4  20.03.14 Updated error message for CalcTetraHCoords(). By: CTP
 
 *************************************************************************/
 /* Includes
@@ -90,6 +91,7 @@
    Calculates coordinates for the extra hydrogens.
 
    23.08.94 Original    By: ACRM
+   20.03.14 Updated error message. By: CTP
 */
 int CalcTetraHCoords(PDB *nter, COOR *coor)
 {
@@ -130,8 +132,8 @@ int CalcTetraHCoords(PDB *nter, COOR *coor)
    /* Check all were found                                              */
    if(N==NULL || CA==NULL || C==NULL)
    {
-      fprintf(stderr,"Atom N,CA or C missing from residue: %s %c%d%c\n",
-              p->resnam, p->chain[0], p->resnum, p->insert[0]);
+      fprintf(stderr,"Atom N,CA or C missing from residue: %s %s%d%s\n",
+              p->resnam, p->chain, p->resnum, p->insert);
       return(0);
    }
 
