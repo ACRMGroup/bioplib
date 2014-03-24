@@ -3,8 +3,8 @@
    Program:    
    File:       pdb.h
    
-   Version:    V1.49
-   Date:       24.02.14
+   Version:    V1.50
+   Date:       20.03.14
    Function:   Include file for pdb routines
    
    Copyright:  (c) SciTech Software, UCL, Reading 1993-2014
@@ -107,6 +107,7 @@
    V1.48 04.02.14 Added CHAINMATCH macro. By: CTP
    V1.49 24.02.14 Added BiopFindResidue(), BiopFindHetatmResidue() and 
                         BiopInPDBZone(). By: CTP
+   V1.50 20.03.14 Added blFindZonePDB(). By: CTP
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -343,6 +344,9 @@ REAL CalcRMSPDB(PDB *pdb1, PDB *pdb2);
 int GetPDBCoor(PDB *pdb, COOR **coor);
 BOOL FindZonePDB(PDB *pdb, int start, char startinsert, int stop, char stopinsert,
                  char chain, int mode, PDB **pdb_start, PDB **pdb_stop);
+BOOL blFindZonePDB(PDB *pdb, int start, char *startinsert, int stop, 
+                   char *stopinsert, char *chain, int mode, 
+                   PDB **pdb_start, PDB **pdb_stop);
 int HAddPDB(FILE *fp, PDB *pdb);
 int ReadPGP(FILE *fp);
 FILE *OpenPGPFile(char *pgpfile, BOOL AllHyd);

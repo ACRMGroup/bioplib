@@ -3,11 +3,11 @@
    Program:    
    File:       FindZonePDB.c
    
-   Version:    V1.4R
-   Date:       20.02.01
+   Version:    V1.5
+   Date:       20.03.14
    Function:   Routines for handling zones in PDB linked lists
    
-   Copyright:  (c) SciTech Software 1993-6
+   Copyright:  (c) SciTech Software 1993-2014
    Author:     Dr. Andrew C. R. Martin
    Address:    SciTech Software
                23, Stag Leys,
@@ -44,6 +44,7 @@
    V1.1  16.06.93 Tidied for book. Mode now a char.
    V1.2  18.06.96 Added InPDBZone() from QTree program
    V1.3  19.09.96 Added InPDBZoneSpec()
+   V1.5  20.03.14 Added blFindZonePDB() and deprecated InPDBZone() By: CTP
 
 *************************************************************************/
 
@@ -83,6 +84,8 @@
    18.08.95 Now handles inserts
    31.07.95 Fixed bug when zone end==chain end
    20.02.01 Changed to -999/-999 for beginning/end of chain rather than -1/-1
+   20.03.14 Function deprecated. Converted to wrapper for blFindZonePDB() 
+            By: CTP
 */
 BOOL FindZonePDB(PDB   *pdb,
                  int   start,
@@ -94,11 +97,73 @@ BOOL FindZonePDB(PDB   *pdb,
                  PDB   **pdb_start,
                  PDB   **pdb_stop)
 {
+   char startinsert_a[2] = " ",
+        stopinsert_a[2]  = " ",
+        chain_a[2]       = " ";
+
+#ifdef BIOPLIB_CHECK
+   fprintf(stderr, 
+           "This code uses InPDBZone() which is now deprecated!\n");
+#endif
+
+   strncpy(startinsert_a,&startinsert,1);
+   strncpy(stopinsert_a ,&stopinsert ,1);
+   strncpy(chain_a      ,&chain      ,1);
+   
+   return(blFindZonePDB(pdb,
+                        start,
+                        startinsert_a,
+                        stop,
+                        stopinsert_a,
+                        chain_a,
+                        mode,
+                        pdb_start,
+                        pdb_stop));
+}
+
+/************************************************************************/
+/*>BOOL blFindZonePDB(PDB *pdb, int start, char *startinsert, int stop, 
+                      char *stopinsert, char *chain, int mode, 
+                      PDB **pdb_start, PDB **pdb_stop)
+   -------------------------------------------------------------
+   Input:   PDB   *pdb         PDB linked list
+            int   start        Resnum of start of zone
+            char  *startinsert Insert code for start of zone
+            int   stop         Resnum of end of zone
+            char  *stopinsert  Insert code for end of zone
+            char  *chain       Chain name
+            int   mode         ZONE_MODE_RESNUM:     Use PDB residue 
+                                                     numbers/chain
+                               ZONE_MODE_SEQUENTIAL: Use sequential 
+                                                     numbering
+   Output:  PDB   **pdb_start  Start of zone
+            PDB   **pdb_stop   End of zone
+   Returns: BOOL               OK?
+
+   Finds pointers to the start and end of a zone in a PDB linked list. The
+   end is the atom *after* the specified zone
+
+   20.03.14 Function based on FindZonePDB() but takes string for chain 
+            label and insert instead of single char. 
+            Function finds end of chain properly if stop set to -999.
+            By: CTP
+*/
+BOOL blFindZonePDB(PDB   *pdb,
+                   int   start,
+                   char  *startinsert,
+                   int   stop,
+                   char  *stopinsert,
+                   char  *chain,
+                   int   mode,
+                   PDB   **pdb_start,
+                   PDB   **pdb_stop)
+{
    PDB   *p;
    int   rescount,
-         resnum,
-         InStop = FALSE;
-   char  insert;
+         resnum;
+   BOOL  InStop     = FALSE,
+         FoundChain = FALSE;
+   char  insert[8];
    
    /* To start, we don't know where either are                          */
    *pdb_start = NULL;
@@ -109,7 +174,7 @@ BOOL FindZonePDB(PDB   *pdb,
    */
    if((start == (-999)) && (stop == (-999)))
    {
-      if(chain == ' ')                    /* Whole structure            */
+      if(CHAINMATCH(chain," "))           /* Whole structure            */
       {
          *pdb_start = pdb;
          *pdb_stop  = NULL;
@@ -119,7 +184,7 @@ BOOL FindZonePDB(PDB   *pdb,
       {
          for(p=pdb; p!=NULL; NEXT(p))
          {
-            if(p->chain[0] == chain)
+            if(CHAINMATCH(p->chain,chain))
             {
                if(*pdb_start == NULL)
                {
@@ -149,21 +214,23 @@ BOOL FindZonePDB(PDB   *pdb,
       /* Search reference structure for start and end of zone           */
       rescount = 1;
       resnum   = pdb->resnum;
-      insert   = pdb->insert[0];
+      strcpy(insert,pdb->insert);
       InStop   = FALSE;
+      FoundChain = FALSE;
    
       for(p=pdb; p!=NULL; NEXT(p))
       {
          if(mode == ZONE_MODE_RESNUM)
          {
-            if(chain == ' ' || chain == p->chain[0])
+            if(CHAINMATCH(chain," ") || CHAINMATCH(chain,p->chain))
             {  /* We are in the correct chain                           */
+               FoundChain = TRUE;
 
                /* If start undefined, see if residue matches            */
                if(*pdb_start == NULL)
                {
                   if((p->resnum == start) && 
-                     (p->insert[0] == startinsert))
+                     !strcmp(p->insert,startinsert))
                      *pdb_start = p;
                }
                
@@ -174,7 +241,7 @@ BOOL FindZonePDB(PDB   *pdb,
                      If so, set the stop position and return
                   */
                   if(InStop && 
-                     (p->resnum != stop || p->insert[0] != stopinsert))
+                     (p->resnum != stop || strcmp(p->insert,stopinsert)))
                   {
                      *pdb_stop = p;
                      return((*pdb_start==NULL)?FALSE:TRUE);
@@ -184,7 +251,7 @@ BOOL FindZonePDB(PDB   *pdb,
                      last residue of the zone.
                   */
                   if((p->resnum == stop) &&
-                     (p->insert[0] == stopinsert))
+                     !strcmp(p->insert,stopinsert))
                      InStop = TRUE;
                }
                if(*pdb_start != NULL && *pdb_stop != NULL)  /*Found both*/
@@ -202,15 +269,22 @@ BOOL FindZonePDB(PDB   *pdb,
                *pdb_stop = p;
                return((*pdb_start==NULL)?FALSE:TRUE);
             }
+            else if(stop == -999 && FoundChain == TRUE)
+            {
+               /* We get here if stop is set for the end of a chain and
+                  a the start of new chain has been found.      By: CTP */
+               *pdb_stop = p;
+               return((*pdb_start==NULL)?FALSE:TRUE);               
+            }
          }  /* End of ZONE_MODE_RESNUM                                  */
          else if(mode == ZONE_MODE_SEQUENTIAL)
          {
             /* Correct the residue count                                */
-            if(p->resnum != resnum || p->insert[0] != insert)
+            if(p->resnum != resnum || strcmp(p->insert,insert))
             {
                rescount++;
                resnum = p->resnum;
-               insert = p->insert[0];
+               strcpy(insert,p->insert);
             }
             
             if(*pdb_start == NULL)           /* Identify zone start     */

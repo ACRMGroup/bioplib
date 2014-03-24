@@ -1,0 +1,474 @@
+#include "findzone_suite.h"
+
+/* Defines */
+#define TEST_PDB_FILE "./data/test-deca-ala-01.pdb"
+
+/* Globals */
+PDB *pdb_in    = NULL,
+    *pdb_start = NULL,
+    *pdb_stop  = NULL;
+
+int  start;
+char startinsert[8];
+int  stop;
+char stopinsert[8];
+char chain[8];
+int  mode;
+
+BOOL output, expected_output;
+int expected_start_atom, expected_stop_atom;
+
+/* Setup And Teardown */
+void findzone_setup(void)
+{
+   FILE *fp;
+   int natom = 0;
+   
+   fp = fopen(TEST_PDB_FILE,"r");
+   if(fp == NULL)
+   {
+      fprintf(stderr, "Failed to open test pdb file!\n");
+      return;
+   }
+   
+   pdb_in = ReadPDB(fp,&natom);
+   fclose(fp);
+   
+   if(pdb_in == NULL)
+   {
+      fprintf(stderr, "Failed to read test pdb file!\n");
+   }
+}
+
+void findzone_teardown(void)
+{
+   /* Free PDB */
+   FREELIST(pdb_in,PDB);
+}
+
+/* PDB Data Read Test */
+START_TEST(test_read_01)
+{
+   ck_assert_msg(pdb_in != NULL, "No data read from test file.");
+}
+END_TEST
+
+
+/* Core tests */
+START_TEST(test_01)
+{
+   /* Input */
+   start               =  2  ;
+   strcpy(startinsert,   " ");
+   stop                =  5  ;
+   strcpy(stopinsert,    " ");
+   strcpy(chain,         "A");
+   mode =    ZONE_MODE_RESNUM;
+   
+   /* Expected Output */
+   expected_output     = TRUE;
+   expected_start_atom =    6;
+   expected_stop_atom  =   26;
+   
+   /* Run Test */
+   ck_assert_msg(pdb_in != NULL,"No pdb data found.");
+   output =  blFindZonePDB(pdb_in, start, startinsert, stop, stopinsert, 
+                           chain, mode, &pdb_start, &pdb_stop);
+                           
+   ck_assert(output           == expected_output     );
+   ck_assert(pdb_start        != NULL                );
+   ck_assert(pdb_stop         != NULL                );
+   ck_assert(pdb_start->atnum == expected_start_atom );
+   ck_assert(pdb_stop->atnum  == expected_stop_atom  );
+}
+END_TEST
+
+START_TEST(test_02)
+{
+   /* Input */
+   start               =  2  ;
+   strcpy(startinsert,   " ");
+   stop                =  3  ;
+   strcpy(stopinsert,    " ");
+   strcpy(chain,         "B");
+   mode =    ZONE_MODE_RESNUM;
+   
+   /* Expected Output */
+   expected_output     = TRUE;
+   expected_start_atom =   36;
+   expected_stop_atom  =   46;
+   
+   /* Run Test */
+   ck_assert_msg(pdb_in != NULL,"No pdb data found.");
+   output =  blFindZonePDB(pdb_in, start, startinsert, stop, stopinsert, 
+                           chain, mode, &pdb_start, &pdb_stop);
+                           
+   ck_assert(output           == expected_output     );
+   ck_assert(pdb_start        != NULL                );
+   ck_assert(pdb_stop         != NULL                );
+   ck_assert(pdb_start->atnum == expected_start_atom );
+   ck_assert(pdb_stop->atnum  == expected_stop_atom  );
+}
+END_TEST
+
+START_TEST(test_03)
+{
+   /* Input */
+   start                =  2  ;
+   strcpy(startinsert,    " ");
+   stop                 =  5  ;
+   strcpy(stopinsert,     " ");
+   strcpy(chain,          " ");
+   mode = ZONE_MODE_SEQUENTIAL;
+   
+   /* Expected Output */
+   expected_output     = TRUE;
+   expected_start_atom =    6;
+   expected_stop_atom  =   26;
+   
+   /* Run Test */
+   ck_assert_msg(pdb_in != NULL,"No pdb data found.");
+   output =  blFindZonePDB(pdb_in, start, startinsert, stop, stopinsert, 
+                           chain, mode, &pdb_start, &pdb_stop);
+                           
+   ck_assert(output           == expected_output     );
+   ck_assert(pdb_start        != NULL                );
+   ck_assert(pdb_stop         != NULL                );
+   ck_assert(pdb_start->atnum == expected_start_atom );
+   ck_assert(pdb_stop->atnum  == expected_stop_atom  );
+}
+END_TEST
+
+START_TEST(test_04)
+{
+   /* Input */
+   start                =  2  ;
+   strcpy(startinsert,    " ");
+   stop                 =  9  ;
+   strcpy(stopinsert,     " ");
+   strcpy(chain,          " ");
+   mode = ZONE_MODE_SEQUENTIAL;
+   
+   /* Expected Output */
+   expected_output     = TRUE;
+   expected_start_atom =    6;
+   expected_stop_atom  =   46;
+   
+   /* Run Test */
+   ck_assert_msg(pdb_in != NULL,"No pdb data found.");
+   output =  blFindZonePDB(pdb_in, start, startinsert, stop, stopinsert, 
+                           chain, mode, &pdb_start, &pdb_stop);
+                           
+   ck_assert(output           == expected_output     );
+   ck_assert(pdb_start        != NULL                );
+   ck_assert(pdb_stop         != NULL                );
+   ck_assert(pdb_start->atnum == expected_start_atom );
+   ck_assert(pdb_stop->atnum  == expected_stop_atom  );
+}
+END_TEST
+
+/* limits tests */
+START_TEST(test_limit_01)
+{
+   /* Input */
+   start               = -999  ;
+   strcpy(startinsert,   " ");
+   stop                = -999  ;
+   strcpy(stopinsert,    " ");
+   strcpy(chain,         " ");
+   mode =    ZONE_MODE_RESNUM;
+   
+   /* Expected Output */
+   expected_output     = TRUE;
+   expected_start_atom =    1;
+   
+   /* Run Test */
+   ck_assert_msg(pdb_in != NULL,"No pdb data found.");
+   output =  blFindZonePDB(pdb_in, start, startinsert, stop, stopinsert, 
+                           chain, mode, &pdb_start, &pdb_stop);
+                           
+   ck_assert(output           == expected_output     );
+   ck_assert(pdb_start        != NULL                );
+   ck_assert(pdb_stop         == NULL                );
+   ck_assert(pdb_start->atnum == expected_start_atom );
+
+}
+END_TEST
+
+START_TEST(test_limit_02)
+{
+   /* Input */
+   start               = -999  ;
+   strcpy(startinsert,   " ");
+   stop                = -999  ;
+   strcpy(stopinsert,    " ");
+   strcpy(chain,         "A");
+   mode =    ZONE_MODE_RESNUM;
+   
+   /* Expected Output */
+   expected_output     = TRUE;
+   expected_start_atom =    1;
+   expected_stop_atom  =   31;
+   
+   /* Run Test */
+   ck_assert_msg(pdb_in != NULL,"No pdb data found.");
+   output =  blFindZonePDB(pdb_in, start, startinsert, stop, stopinsert, 
+                           chain, mode, &pdb_start, &pdb_stop);
+                           
+   ck_assert(output           == expected_output     );
+   ck_assert(pdb_start        != NULL                );
+   ck_assert(pdb_stop         != NULL                );
+   ck_assert(pdb_start->atnum == expected_start_atom );
+   ck_assert(pdb_stop->atnum  == expected_stop_atom  );
+}
+END_TEST
+
+START_TEST(test_limit_03)
+{
+   /* Input */
+   start             = -999  ;
+   strcpy(startinsert,   " ");
+   stop              = -999  ;
+   strcpy(stopinsert,    " ");
+   strcpy(chain,         "B");
+   mode =    ZONE_MODE_RESNUM;
+   
+   /* Expected Output */
+   expected_output     = TRUE;
+   expected_start_atom =   31;
+   
+   /* Run Test */
+   ck_assert_msg(pdb_in != NULL,"No pdb data found.");
+   output =  blFindZonePDB(pdb_in, start, startinsert, stop, stopinsert, 
+                           chain, mode, &pdb_start, &pdb_stop);
+                           
+   ck_assert(output           == expected_output     );
+   ck_assert(pdb_start        != NULL                );
+   ck_assert(pdb_stop         == NULL                );
+   ck_assert(pdb_start->atnum == expected_start_atom );
+
+}
+END_TEST
+
+START_TEST(test_limit_04)
+{
+   /* Input */
+   start             = -999  ;
+   strcpy(startinsert,   " ");
+   stop              = -999  ;
+   strcpy(stopinsert,    " ");
+   strcpy(chain,   "nochain");
+   mode =    ZONE_MODE_RESNUM;
+   
+   /* Expected Output */
+   expected_output     = FALSE;
+   
+   /* Run Test */
+   ck_assert_msg(pdb_in != NULL,"No pdb data found.");
+   output =  blFindZonePDB(pdb_in, start, startinsert, stop, stopinsert, 
+                           chain, mode, &pdb_start, &pdb_stop);
+                           
+   ck_assert(output           == expected_output     );
+   ck_assert(pdb_start        == NULL                );
+   ck_assert(pdb_stop         == NULL                );
+}
+END_TEST
+
+START_TEST(test_limit_05)
+{
+   /* Input */
+   start             = -999  ;
+   strcpy(startinsert,   " ");
+   stop              =    5  ;
+   strcpy(stopinsert,    " ");
+   strcpy(chain,         "A");
+   mode =    ZONE_MODE_RESNUM;
+   
+   /* Expected Output */
+   expected_output     = TRUE;
+   expected_start_atom =    1;
+   expected_stop_atom  =   26;
+   
+
+   
+   /* Run Test */
+   ck_assert_msg(pdb_in != NULL,"No pdb data found.");
+   output =  blFindZonePDB(pdb_in, start, startinsert, stop, stopinsert, 
+                           chain, mode, &pdb_start, &pdb_stop);
+                           
+   ck_assert(output           == expected_output     );
+   ck_assert(pdb_start        != NULL                );
+   ck_assert(pdb_stop         != NULL                );
+   ck_assert(pdb_start->atnum == expected_start_atom );
+   ck_assert(pdb_stop->atnum  == expected_stop_atom  );
+   
+}
+END_TEST
+
+START_TEST(test_limit_06)
+{
+   /* Input */
+   start             =    1  ;
+   strcpy(startinsert,   " ");
+   stop              =  -999 ;
+   strcpy(stopinsert,    " ");
+   strcpy(chain,         "A");
+   mode =    ZONE_MODE_RESNUM;
+   
+   /* Expected Output */
+   expected_output     = TRUE;
+   expected_start_atom =    1;
+   expected_stop_atom  =   31;
+   
+
+   
+   /* Run Test */
+   ck_assert_msg(pdb_in != NULL,"No pdb data found.");
+   output =  blFindZonePDB(pdb_in, start, startinsert, stop, stopinsert, 
+                           chain, mode, &pdb_start, &pdb_stop);
+                           
+   ck_assert(output           == expected_output     );
+   ck_assert(pdb_start        != NULL                );
+   ck_assert(pdb_stop         != NULL                );
+   ck_assert(pdb_start->atnum == expected_start_atom );
+   ck_assert(pdb_stop->atnum  == expected_stop_atom  );
+   
+}
+END_TEST
+
+START_TEST(test_limit_07)
+{
+   /* Input */
+   start             = -999  ;
+   strcpy(startinsert,   " ");
+   stop              =    3  ;
+   strcpy(stopinsert,    " ");
+   strcpy(chain,         "B");
+   mode =    ZONE_MODE_RESNUM;
+   
+   /* Expected Output */
+   expected_output     = TRUE;
+   expected_start_atom =    1;
+   expected_stop_atom  =   46;
+   
+
+   
+   /* Run Test */
+   ck_assert_msg(pdb_in != NULL,"No pdb data found.");
+   output =  blFindZonePDB(pdb_in, start, startinsert, stop, stopinsert, 
+                           chain, mode, &pdb_start, &pdb_stop);
+                           
+   ck_assert(output           == expected_output     );
+   ck_assert(pdb_start        != NULL                );
+   ck_assert(pdb_stop         != NULL                );
+   ck_assert(pdb_start->atnum == expected_start_atom );
+   ck_assert(pdb_stop->atnum  == expected_stop_atom  );
+   
+}
+END_TEST
+
+START_TEST(test_limit_08)
+{
+   /* Input */
+   start             =    1  ;
+   strcpy(startinsert,   " ");
+   stop              =  -999 ;
+   strcpy(stopinsert,    " ");
+   strcpy(chain,         "B");
+   mode =    ZONE_MODE_RESNUM;
+   
+   /* Expected Output */
+   expected_output     = TRUE;
+   expected_start_atom =   31;
+//   expected_stop_atom  =   31;
+   
+
+   
+   /* Run Test */
+   ck_assert_msg(pdb_in != NULL,"No pdb data found.");
+   output =  blFindZonePDB(pdb_in, start, startinsert, stop, stopinsert, 
+                           chain, mode, &pdb_start, &pdb_stop);
+                           
+   ck_assert(output           == expected_output     );
+   ck_assert(pdb_start        != NULL                );
+   ck_assert(pdb_stop         == NULL                );
+   ck_assert(pdb_start->atnum == expected_start_atom );
+//   ck_assert(pdb_stop->atnum  == expected_stop_atom  );
+   
+}
+END_TEST
+
+
+/* wrapper test */
+START_TEST(test_wrapper_01)
+{
+   char startinsert_char,
+        stopinsert_char,
+        chain_char;
+   
+   /* Input */
+   start             =  1 ;
+   startinsert_char  = ' ';
+   stop              =  5 ;
+   stopinsert_char   = ' ';
+   chain_char        = 'A';
+   mode = ZONE_MODE_RESNUM;
+   
+   /* Expected Output */
+   expected_output     = TRUE;
+   expected_start_atom =    1;
+   expected_stop_atom  =   26;
+   
+   /* Run Test */
+   ck_assert_msg(pdb_in != NULL,"No pdb data found.");
+   output =  FindZonePDB(pdb_in, start, startinsert_char, stop, stopinsert_char, 
+                           chain_char, mode, &pdb_start, &pdb_stop);
+                           
+   ck_assert(output           == expected_output     );
+   ck_assert(pdb_start        != NULL                );
+   ck_assert(pdb_stop         != NULL                );
+   ck_assert(pdb_start->atnum == expected_start_atom );
+   ck_assert(pdb_stop->atnum  == expected_stop_atom  );   
+}
+END_TEST
+
+
+/* Create Suite */
+Suite *findzone_suite(void)
+{
+   Suite *s = suite_create("FindZonePDB");
+   
+   /* blFindZonePDB() */
+   TCase *tc_read = tcase_create("Read");
+   tcase_add_checked_fixture(tc_read, findzone_setup, findzone_teardown);
+   tcase_add_test(tc_read, test_read_01);
+   suite_add_tcase(s, tc_read);   
+   
+   TCase *tc_core = tcase_create("Core");
+   tcase_add_checked_fixture(tc_core, findzone_setup, findzone_teardown);
+   tcase_add_test(tc_core, test_01);
+   tcase_add_test(tc_core, test_02);
+   tcase_add_test(tc_core, test_03);
+   tcase_add_test(tc_core, test_04);
+   suite_add_tcase(s, tc_core);
+
+   TCase *tc_limit = tcase_create("Limits");
+   tcase_add_checked_fixture(tc_limit, findzone_setup, findzone_teardown);
+   tcase_add_test(tc_limit, test_limit_01);
+   tcase_add_test(tc_limit, test_limit_02);
+   tcase_add_test(tc_limit, test_limit_03);
+   tcase_add_test(tc_limit, test_limit_04);
+   tcase_add_test(tc_limit, test_limit_05);
+   tcase_add_test(tc_limit, test_limit_06);
+   tcase_add_test(tc_limit, test_limit_07);
+   tcase_add_test(tc_limit, test_limit_08);
+   suite_add_tcase(s, tc_limit);
+
+   TCase *tc_wrap = tcase_create("Wrapper");
+   tcase_add_checked_fixture(tc_wrap, findzone_setup, findzone_teardown);
+   tcase_add_test(tc_wrap, test_wrapper_01);
+   suite_add_tcase(s, tc_wrap);
+
+
+   return(s);
+}
