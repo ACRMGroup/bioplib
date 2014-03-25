@@ -3,11 +3,11 @@
    Program:    
    File:       RdSeqPDB.c
    
-   Version:    V1.0
-   Date:       14.10.96
+   Version:    V1.1
+   Date:       25.03.14
    Function:   Read sequence from SEQRES records in a PDB file
    
-   Copyright:  (c) SciTech Software 1996
+   Copyright:  (c) SciTech Software 1996-2014
    Author:     Dr. Andrew C. R. Martin
    Address:    SciTech Software
                23, Stag Leys,
@@ -40,6 +40,8 @@
 
    Revision History:
    =================
+   V1.0  14.10.96 Original   By: ACRM
+   V1.1  25.03.14 Added CHAINMATCH. By: CTP
 
 *************************************************************************/
 /* Includes
@@ -83,13 +85,14 @@ static STRINGLIST *RdSeqRes(FILE *fp);
    sequence described by the ATOM records.
 
    14.10.96 Original   By: ACRM
+   25.03.14 Added CHAINMATCH. Chain IDs handled as strings. By: CTP
 */
 char **ReadSeqresPDB(FILE *fp, int *nchains)
 {
    STRINGLIST *seqres = NULL, 
               *s;
-   char       currchain,
-              chain,
+   char       currchain[2] = " ",
+              chain[2]     = " ",
               **seqs,
               res[13][8];
    int        chainnum = 0,
@@ -103,14 +106,14 @@ char **ReadSeqresPDB(FILE *fp, int *nchains)
       return(NULL);
 
    /* FIRST PASS: See how many chains there are                         */
-   currchain = seqres->string[11];
+   strncpy(currchain,&(seqres->string[11]),1);
    *nchains  = 1;
    for(s=seqres; s!=NULL; NEXT(s))
    {
-      chain = s->string[11];
-      if(chain != currchain)
+      strncpy(chain,&(s->string[11]),1);
+      if(!CHAINMATCH(chain,currchain))
       {
-         currchain = chain;
+         strncpy(currchain,chain,1);
          (*nchains)++;
       }
    }
@@ -126,13 +129,13 @@ char **ReadSeqresPDB(FILE *fp, int *nchains)
 
    /* SECOND PASS: Allocate space to store each chain                   */
    chainnum  = 0;
-   currchain = '\0';
+   strcpy(currchain,"");
    for(s=seqres; s!=NULL; NEXT(s))
    {
-      fsscanf(s->string,"%11x%c%5d",&chain,&nres);
-      if(chain != currchain)
+      fsscanf(s->string,"%11x%1s%5d",chain,&nres);
+      if(!CHAINMATCH(chain,currchain))
       {
-         currchain = chain;
+         strcpy(currchain,chain);
          if((seqs[chainnum]=(char *)malloc((nres+1)*sizeof(char))) 
             == NULL)
          {
@@ -146,17 +149,17 @@ char **ReadSeqresPDB(FILE *fp, int *nchains)
    /* THIRD PASS: Store the sequence                                    */
    chainnum  = 0;
    nres      = 0;
-   currchain = seqres->string[11];
+   strncpy(currchain,&(seqres->string[11]),1);
    for(s=seqres; s!=NULL; NEXT(s))
    {
-      fsscanf(s->string,"%11x%c%7x%4s%4s%4s%4s%4s%4s%4s%4s%4s%4s%4s%4s%4s",
-              &chain,res[0],res[1],res[2],res[3],res[4],res[5],res[6],
+      fsscanf(s->string,"%11x%1s%7x%4s%4s%4s%4s%4s%4s%4s%4s%4s%4s%4s%4s%4s",
+              chain,res[0],res[1],res[2],res[3],res[4],res[5],res[6],
               res[7],res[8],res[9],res[10],res[11],res[12]);
-      if(chain != currchain)
+      if(!CHAINMATCH(chain,currchain))
       {
          /* Start of new chain, terminate last one                      */
          seqs[chainnum][nres] = '\0';
-         currchain = chain;
+         strcpy(currchain,chain);
          nres      = 0;
          chainnum++;
       }
