@@ -8,6 +8,7 @@
 #include "parseresspec_suite.h"
 #include "inpdbzone_suite.h"
 #include "findzone_suite.h"
+#include "getpdbchainlabels_suite.h"
 
 int main(int argc, char **argv)
 {
@@ -25,6 +26,7 @@ int main(int argc, char **argv)
    srunner_add_suite(sr, parseresspec_suite());
    srunner_add_suite(sr, inpdbzone_suite());
    srunner_add_suite(sr, findzone_suite());
+   srunner_add_suite(sr, getpdbchainlabels_suite());
                                                   /* add suites here... */
 
 

@@ -108,6 +108,7 @@
    V1.49 24.02.14 Added BiopFindResidue(), BiopFindHetatmResidue() and 
                         BiopInPDBZone(). By: CTP
    V1.50 20.03.14 Added blFindZonePDB(). By: CTP
+   V1.51 25.03.14 Added blGetPDBChainLabels(). By: CTP
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -392,6 +393,7 @@ int AddNTerHs(PDB **ppdb, BOOL Charmm);
 char *FNam2PDB(char *filename);
 PDB *TermPDB(PDB *pdb, int length);
 char *GetPDBChainLabels(PDB *pdb);
+char **blGetPDBChainLabels(PDB *pdb, int *nchains);
 PDB *FindHetatmResidueSpec(PDB *pdb, char *resspec);
 PDB *FindResidueSpec(PDB *pdb, char *resspec);
 PDB *FindNextResidue(PDB *pdb);
