@@ -1,7 +1,7 @@
 #include "getpdbchainlabels_suite.h"
 
 /* Globals */
-static char chainlabels[6][8] = {"A","B","B","C","C","D"};
+static char chainlabels[6][8] = {"Aa","Bb","Bb","Cc","Cc","Dd"};
 PDB *pdb, *p;
 int i, nchains;
 char **chains;
@@ -31,10 +31,10 @@ START_TEST(test_01)
    chains = blGetPDBChainLabels(pdb,&nchains);
    
    ck_assert(nchains == 4);
-   ck_assert(CHAINMATCH(chains[0],"A"));
-   ck_assert(CHAINMATCH(chains[1],"B"));
-   ck_assert(CHAINMATCH(chains[2],"C"));
-   ck_assert(CHAINMATCH(chains[3],"D"));
+   ck_assert(CHAINMATCH(chains[0],"Aa"));
+   ck_assert(CHAINMATCH(chains[1],"Bb"));
+   ck_assert(CHAINMATCH(chains[2],"Cc"));
+   ck_assert(CHAINMATCH(chains[3],"Dd"));
 }
 END_TEST
 
