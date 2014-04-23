@@ -1,16 +1,22 @@
 /*************************************************************************
 
    Program:    
-   File:       ReadWholePDB.c
+   File:       WholePDB.c
    
-   Version:    V1.3
-   Date:       17.03.09
+   Version:    V1.4
+   Date:       22.04.14
    Function:   
    
-   Copyright:  (c) Dr. Andrew C. R. Martin, University of Reading, 2002
+   Copyright:  (c) UCL / Dr. Andrew C. R. Martin 2014
    Author:     Dr. Andrew C. R. Martin
+   Address:    Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
    EMail:      andrew@bioinf.org.uk
-               
+               andrew.martin@ucl.ac.uk
+
 **************************************************************************
 
    This program is not in the public domain, but it may be copied
@@ -38,6 +44,7 @@
    V1.1  12.06.08 CTP Added include for port.h
    V1.2  13.06.08 popen() and pclose() prototypes skipped for Mac OS X.
    V1.3  17.03.09 popen() prototype skipped for Windows. By: CTP
+   V1.4  22.04.14 Added handling of PDBML files. By CTP
 
 *************************************************************************/
 /* Includes
@@ -49,13 +56,16 @@
 #include "macros.h"
 #include "general.h"
 #include "pdb.h"
+#include <libxml/parser.h>
+#include <libxml/tree.h>
+#include <time.h>
 
 
 /************************************************************************/
 /* Defines and macros
 */
-#define MAXBUFF 160
-
+#define MAXBUFF      160
+#define XML_BUFFER  1024
 
 /************************************************************************/
 /* Globals
@@ -65,6 +75,7 @@
 /* Prototypes
 */
 static WHOLEPDB *doReadWholePDB(FILE *fpin, BOOL atomsonly);
+static STRINGLIST *ParseHeaderPDBML(FILE *fpin);
 
 #if !defined(__APPLE__) && !defined(MS_WINDOWS)
 FILE *popen(char *, char *);
@@ -231,6 +242,7 @@ WHOLEPDB *ReadWholePDBAtoms(FILE *fpin)
    30.05.02 Original   By: ACRM
    07.03.07 Made into a doXXX routine to add a atomsonly parameter
    05.06.07 Added support for Unix compress'd files
+   22.04.14 Handles PDBML format. By: CTP
 
    TODO FIXME!!!!! Move all this into doReadPDB so that we don't worry 
    about rewinding any more
@@ -240,6 +252,7 @@ static WHOLEPDB *doReadWholePDB(FILE *fpin, BOOL atomsonly)
    WHOLEPDB *wpdb;
    char     buffer[MAXBUFF];
    FILE     *fp = fpin;
+   BOOL     pdbml_format = FALSE;
    
 #ifdef GUNZIP_SUPPORT
    int      signature[3],
@@ -294,17 +307,28 @@ static WHOLEPDB *doReadWholePDB(FILE *fpin, BOOL atomsonly)
    }
 #endif   
 
+
+   /* Check file format */
+   pdbml_format = CheckFileFormatPDBML(fp);
+
    /* Read the header from the PDB file                                 */
-   while(fgets(buffer,MAXBUFF,fp))
+   if(!pdbml_format)
    {
-      if(!strncmp(buffer, "ATOM  ", 6) ||
-         !strncmp(buffer, "HETATM", 6) ||
-         !strncmp(buffer, "MODEL ", 6))
+      while(fgets(buffer,MAXBUFF,fp))
+      {
+         if(!strncmp(buffer, "ATOM  ", 6) ||
+            !strncmp(buffer, "HETATM", 6) ||
+            !strncmp(buffer, "MODEL ", 6))
       {
          break;
       }
       if((wpdb->header = StoreString(wpdb->header, buffer))==NULL)
          return(NULL);
+      }
+   }
+   else
+   {
+      wpdb->header = ParseHeaderPDBML(fp);
    }
    
    /* Read the coordinates                                              */
@@ -320,16 +344,202 @@ static WHOLEPDB *doReadWholePDB(FILE *fpin, BOOL atomsonly)
 
    /* Read the trailer                                                  */
    rewind(fp);
-   while(fgets(buffer,MAXBUFF,fp))
+   if(!pdbml_format)
    {
-      if(!strncmp(buffer, "CONECT", 6) ||
-         !strncmp(buffer, "MASTER", 6) ||
-         !strncmp(buffer, "END   ", 6))
+      while(fgets(buffer,MAXBUFF,fp))
       {
-         wpdb->trailer = StoreString(wpdb->trailer, buffer);
+         if(!strncmp(buffer, "CONECT", 6) ||
+            !strncmp(buffer, "MASTER", 6) ||
+            !strncmp(buffer, "END   ", 6))
+         {
+            wpdb->trailer = StoreString(wpdb->trailer, buffer);
+         }
       }
+   }
+   else
+   {
+      wpdb->trailer = StoreString(wpdb->trailer, "END   \n");
    }
    
    return(wpdb);
 }
 
+/************************************************************************/
+/*>static STRINGLIST *ParseHeaderPDBML(FILE *fpin)
+   -----------------------------------------------
+   Input:   FILE        *fpin   File pointer
+   Returns: STRINGLIST  *       STRINGLIST with basic header information.
+
+   Parses a PDBML file and creates HEADER and TITLE lines.
+
+   22.04.14 Original. By: CTP
+
+*/
+static STRINGLIST *ParseHeaderPDBML(FILE *fpin)
+{
+   xmlParserCtxtPtr ctxt;
+   xmlDoc  *document;
+   xmlNode *root_node = NULL, 
+           *node      = NULL,
+           *subnode   = NULL,
+           *n         = NULL;
+   int     size_t;
+   char    xml_buffer[XML_BUFFER];
+   xmlChar *content, *attribute;
+   
+   STRINGLIST *wpdb_header = NULL,
+              *title_lines = NULL;
+
+   char header_line[82]  = "",
+        title_line[82]   = "",
+        header_field[41] = "",
+        pdb_field[5]     = "",
+        date_field[10]   = "",
+        title_field[71]  = "";
+        
+   int cut_from = 0, 
+       cut_to   = 0,
+       nlines   = 0,
+       i        = 0;
+
+   struct tm date = {0};
+
+   
+   /* Generate Document From Filehandle                                 */
+   size_t = fread(xml_buffer, 1, XML_BUFFER, fpin);
+   ctxt = xmlCreatePushParserCtxt(NULL, NULL, xml_buffer, size_t, "file");
+   while ((size_t = fread(xml_buffer, 1, XML_BUFFER, fpin)) > 0) 
+   {
+      xmlParseChunk(ctxt, xml_buffer, size_t, 0);
+   }
+   xmlParseChunk(ctxt, xml_buffer, 0, 1);
+   document = ctxt->myDoc;
+   xmlFreeParserCtxt(ctxt);
+
+   if(document == NULL){ return(NULL); } /*        failed to parse file */
+
+
+   /* Parse Document Tree */
+   root_node = xmlDocGetRootElement(document);
+   for(node = root_node->children; node; node = node->next)
+   {
+      if(node->type != XML_ELEMENT_NODE){ continue; }
+
+      /* get header                                                     */
+      if(!strcmp("struct_keywordsCategory",(char *)node->name))
+      {
+         for(subnode = node->children; subnode; subnode = subnode->next)
+         {
+            for(n=subnode->children; n; n = n->next)
+            {
+               if(strcmp("pdbx_keywords",(char *) n->name)){ continue; }
+               content = xmlNodeGetContent(n);
+               strncpy(header_field,(char *) content,40);
+               xmlFree(content);
+            }
+         }
+      }
+
+      /* get date                                                       */
+      if(!strcmp("database_PDB_revCategory",(char *)node->name))
+      {
+         for(subnode = node->children; subnode; subnode = subnode->next)
+         {
+            for(n=subnode->children; n; n = n->next)
+            {
+               if(strcmp("date_original",(char *) n->name)){ continue; }
+               content = xmlNodeGetContent(n);
+               
+               /* convert date format */
+               strptime((char *) content,"%Y-%m-%d",&date);
+               strftime(date_field, sizeof(date_field), "%d-%b-%y", &date);
+               UPPER(date_field);
+               
+               xmlFree(content);
+            }
+         }
+      }
+
+      /* get pdb code                                                   */
+      if(!strcmp("entryCategory",(char *)node->name))
+      {
+         for(subnode = node->children; subnode; subnode = subnode->next)
+         {
+            if(strcmp("entry",(char *) subnode->name)){ continue; }
+            attribute = xmlGetProp(subnode,(xmlChar *) "id");
+            strncpy(pdb_field,(char *)attribute,4);
+            pdb_field[4] = '\0';
+            xmlFree(attribute);
+         }
+      }
+
+      /* get title                                                      */
+      if(!strcmp("structCategory",(char *)node->name))
+      {
+         for(subnode = node->children; subnode; subnode = subnode->next)
+         {
+            for(n=subnode->children; n; n = n->next)
+            {
+               if(strcmp("title",(char *) n->name)){ continue; }
+               content = xmlNodeGetContent(n);
+
+               /* Get title lines as STRINGLIST                         */
+               for(i=0; i<strlen((char *) content); i++)
+               {
+                  if(content[i] == ' ' ) cut_to = i;
+                  if(i == strlen((char *) content) - 1) cut_to = i+1;
+
+                  /* split and store title line                         */
+                  if( (i && !((i - cut_from)%70)) || 
+                      i == strlen((char *) content)-1 )
+                  {
+                     nlines++;
+                     cut_to = (cut_from == cut_to) ? i : cut_to;
+                     strncpy(title_field,
+                             (char *) &content[cut_from],
+                             cut_to - cut_from);
+                     title_field[cut_to - cut_from] = '\0';
+                     PADMINTERM(title_field,70);
+                     cut_from = cut_to;
+                     i        = cut_to;
+
+                     if(nlines == 1)
+                     {
+                        sprintf(title_line, "TITLE     %s\n",
+                                title_field);
+                        title_lines = StoreString(NULL,title_line);
+                     }
+                     else
+                     {
+                        sprintf(title_line, "TITLE   %2d%s\n", nlines,
+                                title_field);
+                        StoreString(title_lines,title_line);
+                     }
+                  }
+               }
+               xmlFree(content);
+            }
+         }
+      }
+   }
+
+   /* Free document */
+   xmlFreeDoc(document);
+
+   /* Cleanup xml parser                                                */
+   xmlCleanupParser();
+
+   /* Create Header Line                                                */
+   if(!strlen(header_field))
+   {
+      strcpy(header_field,"Converted from PDBML");
+   }
+   sprintf(header_line, "HEADER    %-40s%9s   %4s\n",
+           header_field, date_field, pdb_field);
+   
+   /* Make Stringlist                                                   */
+   wpdb_header = StoreString(wpdb_header, header_line);
+   wpdb_header->next = title_lines;
+   
+   return(wpdb_header);
+}

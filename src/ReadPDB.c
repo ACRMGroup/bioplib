@@ -3,8 +3,8 @@
    Program:    
    File:       ReadPDB.c
    
-   Version:    V2.23
-   Date:       04.02.14
+   Version:    V2.24
+   Date:       22.04.14
    Function:   Read coordinates from a PDB file 
    
    Copyright:  (c) SciTech Software 1988-2014
@@ -153,6 +153,8 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
    V2.22 21.12.11 doReadPDB() modified for cases where atoms are single
                   occupancy but occupancy is < 1.0
    V2.23 04.02.14 Use CHAINMATCH macro. By: CTP
+   V2,24 22.04.14 Added PDBML parsing with doReadPDBML() and 
+                  CheckFileFormatPDBML(). By CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -170,6 +172,8 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 #include <stdlib.h>
 #include <ctype.h>
 #include <unistd.h>
+#include <libxml/parser.h>
+#include <libxml/tree.h>
 
 #include "SysDefs.h"
 #include "MathType.h"
@@ -180,6 +184,7 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 
 #define MAXPARTIAL 8
 #define SMALL      0.000001
+#define XML_BUFFER 1024
 
 /************************************************************************/
 /* Prototypes
@@ -386,6 +391,7 @@ PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
                   erroneously set to zero
    05.06.07 V2.19 Added support for Unix compress'd files
    21.12.11 V2.22 Modified for cases of single occupancy < 1.0
+   22.04.14 V2.24 Call doReadPDBML() for PDBML-formatted PDB file. By: CTP
 */
 PDB *doReadPDB(FILE *fpin,
                int  *natom,
@@ -466,6 +472,18 @@ PDB *doReadPDB(FILE *fpin,
       }
    }
 #endif   
+
+
+   /* Check file format */
+   if(CheckFileFormatPDBML(fp))
+   {
+      /* Parse PDBML-formatted PDB file */
+      pdb = doReadPDBML(fp,natom,AllAtoms,OccRank,ModelNum);
+      xmlCleanupParser();     /* free globals set by parser */
+      if(cmd[0]) unlink(cmd); /* delete tmp file            */
+      return( pdb );          /* return PDB list            */
+   }
+
 
    while(fgets(buffer,159,fp))
    {
@@ -1087,3 +1105,380 @@ pointer\n");
    return(pdb);
 }
 
+
+
+/************************************************************************/
+/*>PDB *doReadPDBML(FILE *fp, int *natom, BOOL AllAtoms, int OccRank,
+                     int ModelNum)
+   ------------------------------------------------------------------
+   Input:   FILE     *fp      A pointer to type FILE in which the
+                              .PDB file is stored.
+            BOOL     AllAtoms TRUE:  ATOM & HETATM records
+                              FALSE: ATOM records only
+            int      OccRank  Occupancy ranking
+            int      ModelNum NMR Model number (0 = all)
+   Output:  int      *natom   Number of atoms read. -1 if error.
+   Returns: PDB      *pdb     A pointer to the first allocated item of
+                              the PDB linked list
+
+   Reads a PDBML-formatted PDB file into a PDB linked list.
+   
+   The OccRank value indicates occupancy ranking  to read for partial 
+   occupancy atoms. If any partial occupancy atoms are read the global 
+   flag gPDBPartialOcc is set to TRUE.
+   
+   The global multiple-models flag is set to true if more than one model 
+   is found.
+
+   22.04.14 Original By: CTP
+
+*/
+PDB *doReadPDBML(FILE *fpin,
+                 int  *natom,
+                 BOOL AllAtoms,
+                 int  OccRank,
+                 int  ModelNum)
+{
+   xmlParserCtxtPtr ctxt;
+   xmlDoc  *document;
+   xmlNode *root_node  = NULL, 
+           *sites_node = NULL, 
+           *atom_node  = NULL, 
+           *n          = NULL;
+   int     size_t;
+   char    xml_buffer[XML_BUFFER];
+   xmlChar *content;
+   double  content_lf;
+
+   PDB     *pdb      = NULL,
+           *curr_pdb = NULL,
+           *end_pdb  = NULL,
+           multi[MAXPARTIAL];
+
+   int     NPartial       =  0,
+           model_number   =  0;
+   char    store_atnam[8] = "";
+       
+
+   /* Zero natoms and reset flags */
+   gPDBPartialOcc = FALSE; /* global partial occupancy flag */
+   gPDBMultiNMR   = FALSE; /* global multiple models flag   */
+   *natom = 0;             /* atoms stored                  */
+
+
+   /* Generate Document From Filehandle */
+   size_t = fread(xml_buffer, 1, XML_BUFFER, fpin);
+   ctxt = xmlCreatePushParserCtxt(NULL, NULL, xml_buffer, size_t, "file");
+   while ((size_t = fread(xml_buffer, 1, XML_BUFFER, fpin)) > 0) 
+   {
+      xmlParseChunk(ctxt, xml_buffer, size_t, 0);
+   }
+   xmlParseChunk(ctxt, xml_buffer, 0, 1);
+   document = ctxt->myDoc;
+   xmlFreeParserCtxt(ctxt);
+   
+   if(document == NULL)
+   {
+      /* Error: Failed to parse file */
+      *natom = -1;
+      return(NULL);
+   }
+   
+
+   /* Parse Document Tree */
+   root_node = xmlDocGetRootElement(document);   
+   for(n = root_node->children; n; n = n->next)
+   {
+      /* Find Atom Sites Node */
+      if(!strcmp("atom_siteCategory",(char *) n->name))
+      {
+         /* Found Atom Sites */
+         sites_node = n;
+         break;
+      }
+   }
+   
+   if(sites_node == NULL)
+   {
+      /* Error: Failed to find atom sites */
+      xmlFreeDoc(document);
+      *natom = -1;
+      return(NULL);
+   }
+
+
+   /* Scan through atom nodes and populate PDB list. */
+   for(atom_node = sites_node->children; atom_node; 
+       atom_node = atom_node->next)
+   {
+      if(!strcmp("atom_site",(char *) atom_node->name))
+      {
+         /* Current PDB */
+         INIT(curr_pdb,PDB);
+         
+         if(curr_pdb == NULL)
+         {
+            /* Error: Failed to store atom in pdb list */
+            xmlFreeDoc(document);
+            if(pdb != NULL) FREELIST(pdb,PDB);
+            *natom = -1;
+            return(NULL);
+         }
+
+         /* Scan atom node children */
+         for(n = atom_node->children; n; n = n->next)
+         {
+            if(n->type != XML_ELEMENT_NODE){ continue; }
+            content = xmlNodeGetContent(n);
+
+            /* Set PDB values*/
+            if(!strcmp((char *) n->name,"B_iso_or_equiv"))
+            {
+               sscanf((char *) content,"%lf",&content_lf);
+               curr_pdb->bval = (REAL) content_lf;
+            }
+            else if(!strcmp((char *) n->name,"Cartn_x"))
+            {
+               sscanf((char *) content,"%lf",&content_lf);
+               curr_pdb->x = (REAL) content_lf;
+            }
+            else if(!strcmp((char *) n->name,"Cartn_y"))
+            {
+               sscanf((char *) content,"%lf",&content_lf);
+               curr_pdb->y = (REAL) content_lf;
+            }
+            else if(!strcmp((char *) n->name,"Cartn_z"))
+            {
+               sscanf((char *) content,"%lf",&content_lf);
+               curr_pdb->z = (REAL) content_lf;
+            }
+            else if(!strcmp((char *) n->name,"auth_asym_id"))
+            {
+               strcpy(curr_pdb->chain, (char *) content);
+            }
+            else if(!strcmp((char *) n->name,"auth_atom_id"))
+            {
+               strcpy(curr_pdb->atnam, (char *) content);
+               PADMINTERM(curr_pdb->atnam, 4);
+
+               strcpy( curr_pdb->atnam_raw,   " ");
+               strcpy((curr_pdb->atnam_raw)+1,(char *) content);
+               PADMINTERM(curr_pdb->atnam_raw, 4);
+            }
+            else if(!strcmp((char *) n->name,"auth_comp_id"))
+            {
+               strcpy(curr_pdb->resnam, (char *) content);
+            }
+            else if(!strcmp((char *) n->name,"auth_seq_id"))
+            {
+               sscanf((char *) content,"%lf",&content_lf);
+               curr_pdb->resnum = (REAL) content_lf;
+               /* set insertion code to default for now */
+               strcpy(curr_pdb->insert, " ");
+            }
+            else if(!strcmp((char *) n->name,"pdbx_PDB_ins_code"))
+            {
+               /* set insertion code */
+               strcpy(curr_pdb->insert, (char *) content);
+            }
+            else if(!strcmp((char *) n->name,"group_PDB"))
+            {
+              strcpy(curr_pdb->record_type, (char *) content);
+            }
+            else if(!strcmp((char *) n->name,"occupancy"))
+            {
+               sscanf((char *) content,"%lf",&content_lf);
+               curr_pdb->occ = (REAL) content_lf;
+            }
+            else if(!strcmp((char *) n->name,"label_alt_id"))
+            {
+               /* Use strlen as test for alt position */
+               curr_pdb->altpos = strlen((char *)content) ? content[0]:' ';
+            }
+            else if(!strcmp((char *) n->name,"pdbx_PDB_model_num"))
+            {
+               sscanf((char *) content,"%lf",&content_lf);
+               model_number = (int) content_lf;
+            }
+
+            xmlFree(content);
+         }
+         
+
+         /* Set multi-model flag */
+         if(model_number > 1)
+         {
+            gPDBMultiNMR = TRUE;
+         }
+
+         /* Filter: Model Number */
+         if(model_number != ModelNum)
+         {
+            /* Free curr_pdb */
+            FREELIST(curr_pdb,PDB);
+            curr_pdb = NULL;
+            
+            if(model_number > ModelNum)
+            {
+               break; /* skip rest of tree */
+            }
+            else
+            {
+               continue; /* filter */
+            }
+         }
+
+
+         /* Filter: All Atoms */
+         if(!AllAtoms && strcmp(curr_pdb->record_type, "ATOM"))
+         {
+            /* Free curr_pdb and skip atom */
+            FREELIST(curr_pdb,PDB);
+            curr_pdb = NULL;
+            continue; /* filter */
+         }
+
+
+         /* Add partial occ atom from temp storage to output PDB list */
+         if(NPartial != 0 && strcmp(curr_pdb->atnam,store_atnam))
+         {
+            /* Store atom */
+            if( StoreOccRankAtom(OccRank,multi,NPartial,&pdb,&end_pdb,
+                                 natom) )
+            {
+               LAST(end_pdb);
+               NPartial = 0;
+            }
+            else
+            {
+               /* Error: Failed to store partial occ atom */
+               xmlFreeDoc(document);
+               if(curr_pdb != NULL) FREELIST(curr_pdb,PDB);
+               if(pdb      != NULL) FREELIST(pdb,     PDB);
+               *natom = -1;
+               return(NULL);
+            }
+         }
+
+
+         /* Set atom number */
+         /* Note: Cannot use atom site id for atom number so base atnum on
+                  number of atoms stored */
+         curr_pdb->atnum = *natom + 1;
+         
+         
+         /* Add partial occupancy atom to temp storage */
+         if(curr_pdb->altpos != ' ' && NPartial < MAXPARTIAL)
+         {
+            /* Copy the partial atom data to storage */
+            multi[NPartial].atnum  = curr_pdb->atnum;
+            multi[NPartial].resnum = curr_pdb->resnum;
+            multi[NPartial].x      = curr_pdb->x;
+            multi[NPartial].y      = curr_pdb->y;
+            multi[NPartial].z      = curr_pdb->z;
+            multi[NPartial].occ    = curr_pdb->occ;
+            multi[NPartial].bval   = curr_pdb->bval;
+            multi[NPartial].next   = NULL;
+            strcpy(multi[NPartial].record_type, curr_pdb->record_type);
+            strcpy(multi[NPartial].atnam,       curr_pdb->atnam);
+            strcpy(multi[NPartial].atnam_raw,   curr_pdb->atnam_raw);
+            strcpy(multi[NPartial].resnam,      curr_pdb->resnam);
+            strcpy(multi[NPartial].chain,       curr_pdb->chain);
+            strcpy(multi[NPartial].insert,      curr_pdb->insert);
+            multi[NPartial].altpos = curr_pdb->altpos; /* fix */
+
+            /* Set global partial occupancy flag */
+            gPDBPartialOcc = TRUE;
+            
+            /* Store current atom name */
+            strcpy(store_atnam,curr_pdb->atnam);
+            NPartial++;
+
+            /* Free curr_pdb and continue */
+            FREELIST(curr_pdb,PDB);
+            curr_pdb = NULL;
+            continue;
+         }
+
+         
+         /* Store Atom */
+         if(pdb == NULL)
+         {
+            pdb      = curr_pdb;
+            end_pdb  = curr_pdb;
+            curr_pdb = NULL;
+            *natom   = 1;
+         }
+         else
+         {
+            end_pdb->next = curr_pdb;
+            end_pdb       = curr_pdb;
+            curr_pdb      = NULL;
+            (*natom)++;
+         }
+      }
+   }
+      
+   /* Free document */
+   xmlFreeDoc(document);
+
+   /* Store final atom (if partial occupancy) */   
+   if(NPartial != 0)
+   {
+      if(!StoreOccRankAtom(OccRank,multi,NPartial,&pdb,&end_pdb,natom))
+      {
+         /* Error: Failed to store atom in pdb list */
+         if(pdb != NULL) FREELIST(pdb,PDB);
+         *natom = -1;
+         return(NULL);
+      }
+      
+   }
+   
+   /* Check atoms have been stored */
+   if(pdb == NULL || *natom == 0)
+   {
+      /* Error: pdb list empty or no atoms stored */
+      if(pdb != NULL) FREELIST(pdb,PDB);
+      *natom = -1;
+   }
+    
+   /* Return PDB linked list */
+   return(pdb);
+}
+
+
+/************************************************************************/
+/*>static BOOL CheckFileFormatPDBML(FILE *fp)
+   ------------------------------------------
+   Input:   FILE     *fp      A pointer to type FILE in which the
+                              .PDB file is stored.
+   Returns: BOOL              File is in PDBML format;
+
+   Simple test to detect PDBML-formatted pdb file.
+   
+   Todo: Consider replacement with general function to detect file format
+         for uncompressed file returning file type (eg pdb/pdbml/unknown).
+   
+   
+   22.04.14 Original By: CTP
+   
+*/
+BOOL CheckFileFormatPDBML(FILE *fp)
+{
+   char buffer[80];
+   int  i;
+   BOOL found_xml  = FALSE,
+        found_pdbx = FALSE;
+   
+   rewind(fp);
+   for(i=0; i < 6; i++)
+   {
+      fgets(buffer,80,fp);
+      if(!strncmp(buffer,"<?xml ",6))            found_xml  = TRUE;
+      if(!strncmp(buffer,"<PDBx:datablock ",16)) found_pdbx = TRUE;
+   }
+
+   rewind(fp);
+   return found_xml && found_pdbx ? TRUE : FALSE ;
+}

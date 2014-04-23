@@ -3,8 +3,8 @@
    Program:    
    File:       pdb.h
    
-   Version:    V1.50
-   Date:       20.03.14
+   Version:    V1.52
+   Date:       22.04.14
    Function:   Include file for pdb routines
    
    Copyright:  (c) SciTech Software, UCL, Reading 1993-2014
@@ -109,6 +109,8 @@
                         BiopInPDBZone(). By: CTP
    V1.50 20.03.14 Added blFindZonePDB(). By: CTP
    V1.51 25.03.14 Added blGetPDBChainLabels(). By: CTP
+   V1.52 22.04.14 Added CheckFileFormatPDBML(FILE *fp). By: CTP
+
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -326,6 +328,9 @@ PDB *ReadPDBOccRank(FILE *fp, int *natom, int OccRank);
 PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank);
 PDB *doReadPDB(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank, 
                int ModelNum);
+PDB *doReadPDBML(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank, 
+                 int ModelNum);
+BOOL CheckFileFormatPDBML(FILE *fp);
 void WritePDB(FILE *fp, PDB *pdb);
 void WritePDBRecord(FILE *fp, PDB *pdb);
 void WritePDBRecordAtnam(FILE *fp, PDB  *pdb);
