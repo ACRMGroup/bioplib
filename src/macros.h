@@ -3,8 +3,8 @@
    Program:    
    File:       Macros.h
    
-   Version:    V2.17
-   Date:       10.04.08
+   Version:    V2.18
+   Date:       29.04.14
    Function:   Useful macros
    
    Copyright:  SciTech Software 1991-2008
@@ -76,6 +76,8 @@
    DOTIFY(str)          Replace ' ' with '.' in string
    DEDOTIFY(str)        Replace '.' with ' ' in string
    FINDPREV(p, start, q) Set p to item in linked list start before q
+   DEPRECATED(s, t)     Display warning message for deprecated function s 
+                        giving replacement function t.
    
 **************************************************************************
 
@@ -121,6 +123,7 @@
    V2.16 25.01.06 Added FINDPREV()
    V2.17 10.04.08 Fixed bug in DELETE() - the break was not properly
                   stopping prev from being changed
+   V2.18 29.04.14 Added DEPRECATED()   By: CTP
 
 *************************************************************************/
 #ifndef _MACROS_H
@@ -435,6 +438,44 @@ do {  char *_subschar_macro_ch = (s);                                    \
       {  if(*_subschar_macro_ch == (x)) *_subschar_macro_ch = (y);       \
          _subschar_macro_ch++;                                           \
    }  }  while(0)
+
+
+/************************************************************************/
+/*>DEPRECATED(s, t)
+   ----------------
+   The DEPRECATED macro gives a warning message if a function is 
+   deprecated and indicates the replacement function.
+   
+   The default option is to give a warning message unless an environment 
+   variable, BIOPLIB_DEPRECATED_QUIET, is set.
+   
+   Alternatively the compile options: -D BIOPLIB_DEPRECATED_CHECK or 
+   -D BIOPLIB_DEPRECATED_QUIET will set the DEPRECATED macro to ignore the
+   BIOPLIB_DEPRECATED_QUIET environment variable. 
+   
+   -D BIOPLIB_DEPRECATED_CHECK will display the warning message. 
+   -D BIOPLIB_DEPRECATED_QUIET will always silence the warning message.
+   
+   29.04.14 Original    By: CTP
+*/
+#if(defined BIOPLIB_DEPRECATED_CHECK || defined BIOPLIB_DEPRECATED_QUIET)
+#  ifndef BIOPLIB_DEPRECATED_QUIET
+#     define DEPRECATED(s, t)                                            \
+               fprintf(stderr,                                           \
+                       "This code uses %s which is now deprecated!\n"    \
+                       "   Use %s instead\n", (s), (t))
+#  else
+#      define DEPRECATED(s, t)
+#  endif
+#else
+#  define DEPRECATED(s, t)                                               \
+   {                                                                     \
+      if(!getenv("BIOPLIB_DEPRECATED_QUIET"))                            \
+         fprintf(stderr,                                                 \
+                 "This code uses %s which is now deprecated!\n"          \
+                 "   Use %s instead\n", (s), (t));                       \
+   }
+#endif
 
 
 
