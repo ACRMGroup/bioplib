@@ -3,8 +3,8 @@
    Program:    
    File:       FindZonePDB.c
    
-   Version:    V1.5
-   Date:       20.03.14
+   Version:    V1.6
+   Date:       07.05.14
    Function:   Routines for handling zones in PDB linked lists
    
    Copyright:  (c) SciTech Software 1993-2014
@@ -45,6 +45,7 @@
    V1.2  18.06.96 Added InPDBZone() from QTree program
    V1.3  19.09.96 Added InPDBZoneSpec()
    V1.5  20.03.14 Added blFindZonePDB() and deprecated InPDBZone() By: CTP
+   V1.6  07.05.14 Moved FindZonePDB() to deprecated.h By: CTP
 
 *************************************************************************/
 
@@ -56,70 +57,6 @@
 #include "pdb.h"
 #include "macros.h"
 
-/************************************************************************/
-/*>BOOL FindZonePDB(PDB *pdb, int start, char startinsert, int stop, 
-                    char stopinsert, char chain, int mode, 
-                    PDB **pdb_start, PDB **pdb_stop)
-   -------------------------------------------------------------
-   Input:   PDB   *pdb        PDB linked list
-            int   start       Resnum of start of zone
-            char  startinsert Insert code for start of zone
-            int   stop        Resnum of end of zone
-            char  stopinsert  Insert code for end of zone
-            char  chain       Chain name
-            int   mode        ZONE_MODE_RESNUM:     Use PDB residue 
-                                                    numbers/chain
-                              ZONE_MODE_SEQUENTIAL: Use sequential 
-                                                    numbering
-   Output:  PDB   **pdb_start Start of zone
-            PDB   **pdb_stop  End of zone
-   Returns: BOOL              OK?
-
-   Finds pointers to the start and end of a zone in a PDB linked list. The
-   end is the atom *after* the specified zone
-
-   30.09.92 Original
-   17.07.95 Chain name was being ignored in specs like L* (for whole
-            of light chain)
-   18.08.95 Now handles inserts
-   31.07.95 Fixed bug when zone end==chain end
-   20.02.01 Changed to -999/-999 for beginning/end of chain rather than -1/-1
-   20.03.14 Function deprecated. Converted to wrapper for blFindZonePDB() 
-            By: CTP
-*/
-BOOL FindZonePDB(PDB   *pdb,
-                 int   start,
-                 char  startinsert,
-                 int   stop,
-                 char  stopinsert,
-                 char  chain,
-                 int   mode,
-                 PDB   **pdb_start,
-                 PDB   **pdb_stop)
-{
-   char startinsert_a[2] = " ",
-        stopinsert_a[2]  = " ",
-        chain_a[2]       = " ";
-
-#ifdef BIOPLIB_CHECK
-   fprintf(stderr, 
-           "This code uses InPDBZone() which is now deprecated!\n");
-#endif
-
-   strncpy(startinsert_a,&startinsert,1);
-   strncpy(stopinsert_a ,&stopinsert ,1);
-   strncpy(chain_a      ,&chain      ,1);
-   
-   return(blFindZonePDB(pdb,
-                        start,
-                        startinsert_a,
-                        stop,
-                        stopinsert_a,
-                        chain_a,
-                        mode,
-                        pdb_start,
-                        pdb_stop));
-}
 
 /************************************************************************/
 /*>BOOL blFindZonePDB(PDB *pdb, int start, char *startinsert, int stop, 

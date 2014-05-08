@@ -3,8 +3,8 @@
    Program:    
    File:       pdb.h
    
-   Version:    V1.52
-   Date:       22.04.14
+   Version:    V1.53
+   Date:       07.05.14
    Function:   Include file for pdb routines
    
    Copyright:  (c) SciTech Software, UCL, Reading 1993-2014
@@ -110,6 +110,9 @@
    V1.50 20.03.14 Added blFindZonePDB(). By: CTP
    V1.51 25.03.14 Added blGetPDBChainLabels(). By: CTP
    V1.52 22.04.14 Added CheckFileFormatPDBML(FILE *fp). By: CTP
+   V1.52 07.05.14 Added deprecated.h and removed definitions for 
+                  deprecated funtions: FindHetatmResidue(), FindResidue(),
+                  InPDBZone() and FindZonePDB(). By: CTP
 
 
 *************************************************************************/
@@ -122,6 +125,7 @@
 #include "MathType.h"
 #include "SysDefs.h"
 #include "general.h"
+#include "deprecated.h"
 
 #define MAXSTDAA    21       /* Number of standard amino acids (w/ PCA)*/
 #define MAXATINRES  14       /* Max number of atoms in a standard aa   */
@@ -348,8 +352,6 @@ BOOL FitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3]);
 BOOL FitCaCbPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3]);
 REAL CalcRMSPDB(PDB *pdb1, PDB *pdb2);
 int GetPDBCoor(PDB *pdb, COOR **coor);
-BOOL FindZonePDB(PDB *pdb, int start, char startinsert, int stop, char stopinsert,
-                 char chain, int mode, PDB **pdb_start, PDB **pdb_stop);
 BOOL blFindZonePDB(PDB *pdb, int start, char *startinsert, int stop, 
                    char *stopinsert, char *chain, int mode, 
                    PDB **pdb_start, PDB **pdb_stop);
@@ -414,13 +416,9 @@ void WriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
                    REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4]);
 PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
                     char *chain2, int resnum2, char *insert2);
-PDB *FindResidue(PDB *pdb, char chain, int resnum, char insert);
 PDB *BiopFindResidue(PDB *pdb, char *chain, int resnum, char *insert);
-PDB *FindHetatmResidue(PDB *pdb, char chain, int resnum, char insert);
 PDB *BiopFindHetatmResidue(PDB *pdb, char *chain, int resnum, char *insert);
 PDB *FindAtomInRes(PDB *pdb, char *atnam);
-BOOL InPDBZone(PDB *p, char chain, int resnum1, char insert1, 
-               int resnum2, char insert2);
 BOOL BiopInPDBZone(PDB *p, char *chain, int resnum1, char *insert1, 
                  int resnum2, char *insert2);
 BOOL InPDBZoneSpec(PDB *p, char *resspec1, char *resspec2);

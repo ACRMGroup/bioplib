@@ -12,6 +12,6 @@ BIOP_OBJ = ../*.o
 
 # Compile tests            
 tests : 
-	$(CC) -o run_tests $(TEST_SRC) $(BIOP_OBJ) -lcheck
+	$(CC) -o run_tests $(TEST_SRC) $(BIOP_OBJ) -lcheck -lxml2
 #clean : 
 #	rm -f run_tests $(TEST_OBJ)

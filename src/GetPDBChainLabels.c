@@ -84,6 +84,7 @@
 
    25.07.95 Original    By: ACRM
    25.03.14 Added deprecated message. By: CTP
+   07.05.14 Use DEPRECATED() macro. By: CTP
 */
 char *GetPDBChainLabels(PDB *pdb)
 {
@@ -92,10 +93,7 @@ char *GetPDBChainLabels(PDB *pdb)
         maxchains = 16;
    PDB  *p;
 
-#ifdef BIOPLIB_CHECK
-   fprintf(stderr, 
-           "This code uses GetPDBChainLabels() which is now deprecated!\n");
-#endif
+   DEPRECATED("GetPDBChainLabels()","blGetPDBChainLabels()");
    
    /* Just return if linked list is NULL                                */
    if(pdb==NULL)

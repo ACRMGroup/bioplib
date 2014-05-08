@@ -37,6 +37,7 @@
    V1.0  26.10.11 Original based on FindResidue.c
    V1.1  24.02.14 Added BiopFindHetatmResidue() By: CTP
    V1.2  25.02.14 Added error message for FindHetatmResidue(). By: CTP
+   V1.3  07.05.14 Moved FindHetatmResidue() to deprecated.h By: CTP
 
 *************************************************************************/
 /* Includes
@@ -63,32 +64,6 @@
 /* Prototypes
 */
 
-/************************************************************************/
-/*>PDB *FindHetatmResidue(PDB *pdb, char chain, int resnum, char insert)
-  ----------------------------------------------------------------------
-  Finds a pointer to the start of a residue in a PDB linked list, but
-  requires the residue is a HETATM record.
-  Uses char for chain and insert.
-
-  26.10.11 Original   By: ACRM
-  24.02.14 Converted into wrapper for BiopFindHetatmResidue(). By: CTP
-  25.02.14 Added error message. By: CTP
-*/
-PDB *FindHetatmResidue(PDB *pdb, char chain, int resnum, char insert)
-{
-   char chain_a[2]  = " ",
-        insert_a[2] = " ";
-   
-#ifdef BIOPLIB_CHECK
-   fprintf(stderr, 
-         "This code uses FindHetatmResidue() which is now deprecated!\n");
-#endif
-
-   chain_a[0]  = chain;
-   insert_a[0] = insert;
-   
-   return(BiopFindHetatmResidue(pdb, chain_a, resnum, insert_a));
-}
 
 /************************************************************************/
 /*>PDB *BiopFindHetatmResidue(PDB *pdb, char chain, int resnum, char insert)

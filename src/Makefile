@@ -13,7 +13,12 @@ CC = gcc
 COPT = -fPIC -ansi -Wall -pedantic -g -DGUNZIP_SUPPORT
 
 # Generate error messages for deprecated functions.
-COPT := $(COPT) -DBIOPLIB_CHECK
+# Default is to display deprecated error message unless environment 
+# variable BIOPLIB_DEPRECATED_QUIET is set.
+# Uncomment compile options below to ignore the environment and either 
+# always display the error message or silence the error message:
+#COPT := $(COPT) -D BIOPLIB_DEPRECATED_CHECK
+#COPT := $(COPT) -D BIOPLIB_DEPRECATED_QUIET
 
 # Include libxml2
 # Note: xml2-config is installed with libxml2

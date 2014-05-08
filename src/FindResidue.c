@@ -3,8 +3,8 @@
    Program:    
    File:       FindResidue.c
    
-   Version:    V1.9
-   Date:       25.02.14
+   Version:    V1.10
+   Date:       07.05.14
    Function:   Parse a residue specification
    
    Copyright:  (c) SciTech Software 1993-2014
@@ -49,6 +49,7 @@
                   residue numbers
    V1.8  24.02.14 Added BiopFindResidue(). By: CTP
    V1.9  25.02.14 Added error message for FindResidue(). By: CTP
+   V1.10 07.05.14 Moved FindResidue() to deprecated.h. By: CTP
 
 *************************************************************************/
 /* Includes
@@ -73,31 +74,6 @@
 /* Prototypes
 */
 
-/************************************************************************/
-/*>PDB *FindResidue(PDB *pdb, char chain, int resnum, char insert)
-  ----------------------------------------------------------------
-  Finds a pointer to the start of a residue in a PDB linked list.
-  Uses char for string and insert.
-
-  06.02.96 Original   By: ACRM
-  24.02.14 Converted into wrapper for BiopFindResidue(). By: CTP
-  25.02.14 Added error message. By: CTP
-*/
-PDB *FindResidue(PDB *pdb, char chain, int resnum, char insert)
-{
-   char chain_a[2]  = " ",
-        insert_a[2] = " ";
-   
-#ifdef BIOPLIB_CHECK
-   fprintf(stderr, 
-           "This code uses FindResidue() which is now deprecated!\n");
-#endif
-
-   chain_a[0]  = chain;
-   insert_a[0] = insert;
-   
-   return(BiopFindResidue(pdb, chain_a, resnum, insert_a));
-}
 
 /************************************************************************/
 /*>PDB *BiopFindResidue(PDB *pdb, char *chain, int resnum, char *insert)
