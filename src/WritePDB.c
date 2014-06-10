@@ -3,8 +3,8 @@
    Program:    
    File:       WritePDB.c
    
-   Version:    V1.10
-   Date:       04.02.14
+   Version:    V1.11
+   Date:       02.06.14
    Function:   Write a PDB file from a linked list
    
    Copyright:  (c) SciTech Software 1993-2014
@@ -55,12 +55,15 @@
                   which is now in 'altpos'
    V1.9  22.09.06 Added WritePDBRecordAtnam()
    V1.10 04.02.14 Use CHAINMATCH macro. By: CTP
+   V1.11 01.06.14 Added WritePDBML() By: CTP
 
 *************************************************************************/
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+#include <libxml/tree.h>
+#include <ctype.h>
 
 #include "MathType.h"
 #include "pdb.h"
@@ -173,4 +176,211 @@ void WritePDBRecordAtnam(FILE *fp,
            pdb->z,
            pdb->occ,
            pdb->bval);
+}
+
+
+/************************************************************************/
+/*>void WritePDBML(FILE *fp, PDB *pdb)
+   -----------------------------------
+   Input:   FILE *fp   PDB file pointer to be written
+            PDB  *pdb  PDB linked list to write
+
+   Write a PDB linked list in PDBML format.
+
+   02.06.14 Original. By: CTP
+
+*/
+void WritePDBML(FILE *fp, PDB  *pdb)
+{
+   PDB         *p;
+   xmlDocPtr   doc         = NULL;
+   xmlNodePtr  root_node   = NULL, 
+               sites_node  = NULL, 
+               atom_node   = NULL, 
+               node        = NULL;
+   xmlNsPtr    pdbx        = NULL,
+               xsi         = NULL;
+   char        buffer[16], 
+               *buffer_ptr;
+   
+   /* Create doc */
+   doc = xmlNewDoc((xmlChar *) "1.0");
+   doc->encoding = xmlStrdup((xmlChar *) "UTF-8");
+   
+   /* Root node */
+   root_node = xmlNewNode(NULL, (xmlChar *) "datablock");
+   xmlDocSetRootElement(doc, root_node);
+   pdbx = xmlNewNs(root_node, (xmlChar *) "null", (xmlChar *) "PDBx");
+   xsi  = xmlNewNs(root_node, (xmlChar *) "null", (xmlChar *) "xsi");
+   xmlSetNs(root_node,pdbx);
+   
+   
+   /* Atom_sites node */
+   sites_node = xmlNewChild(root_node, NULL,
+                            (xmlChar *) "atom_siteCategory", NULL);
+   
+   /* Atom nodes */
+   for(p = pdb ; p ; NEXT(p))
+   {
+      /* skip TER */
+      if(!strncmp("TER",p->resnam,3))
+      {
+         continue;
+      }
+
+      /* Add atom node */
+      atom_node = xmlNewChild(sites_node, NULL,
+                              (xmlChar *) "atom_site", NULL);
+      sprintf(buffer, "%d", p->atnum);
+      xmlNewProp(atom_node, (xmlChar *) "id", (xmlChar *) buffer);
+      
+      /* Add atom data nodes */
+      /* B value */
+      sprintf(buffer,"%.2f", p->bval);
+      node = xmlNewChild(atom_node, NULL, 
+                         (xmlChar *) "B_iso_or_equiv",
+                         (xmlChar *) buffer);
+
+      /* coordinates */
+      sprintf(buffer,"%.3f", p->x);
+      node = xmlNewChild(atom_node, NULL, (xmlChar *) "Cartn_x",
+                         (xmlChar *) buffer);
+
+      sprintf(buffer,"%.3f", p->y);
+      node = xmlNewChild(atom_node, NULL, (xmlChar *) "Cartn_y",
+                         (xmlChar *) buffer);
+
+      sprintf(buffer,"%.3f", p->z);
+      node = xmlNewChild(atom_node, NULL, (xmlChar *) "Cartn_z",
+                         (xmlChar *) buffer);
+
+      /* author atom site labels */
+      node = xmlNewChild(atom_node, NULL, (xmlChar *) "auth_asym_id",
+                         (xmlChar *) p->chain);
+
+      strcpy(buffer,p->atnam);
+      KILLTRAILSPACES(buffer);
+      node = xmlNewChild(atom_node, NULL, (xmlChar *) "auth_atom_id",
+                         (xmlChar *) buffer);
+
+      strcpy(buffer,p->resnam);
+      KILLTRAILSPACES(buffer);
+      KILLLEADSPACES(buffer_ptr,buffer);
+      node = xmlNewChild(atom_node, NULL, (xmlChar *) "auth_comp_id",
+                         (xmlChar *) buffer_ptr);
+      
+      sprintf(buffer,"%d", p->resnum);
+      node = xmlNewChild(atom_node, NULL, (xmlChar *) "auth_seq_id",
+                         (xmlChar *) buffer);
+
+      /* record type atom/hetatm */
+      strcpy(buffer,p->record_type);
+      KILLTRAILSPACES(buffer);
+      node = xmlNewChild(atom_node, NULL, (xmlChar *) "group_PDB",
+                         (xmlChar *) buffer);
+
+      /* atom site labels */
+      node = xmlNewChild(atom_node, NULL, (xmlChar *) "label_alt_id",
+                         NULL);
+      if(p->altpos == ' ')
+      {
+         xmlNewNsProp(node, xsi, (xmlChar *) "nil", (xmlChar *) "true");
+      }
+      else
+      {
+         buffer[0] = p->altpos;
+         buffer[1] = '\0';
+         xmlNodeSetContent(node, (xmlChar *) buffer);
+      }
+      
+      node = xmlNewChild(atom_node, NULL, 
+                         (xmlChar *) "label_asym_id",
+                         (xmlChar *) p->chain);
+
+      strcpy(buffer,p->atnam);
+      KILLTRAILSPACES(buffer);
+      node = xmlNewChild(atom_node, NULL, 
+                         (xmlChar *) "label_atom_id",
+                         (xmlChar *) buffer);
+
+      strcpy(buffer,p->resnam);
+      KILLTRAILSPACES(buffer);
+      KILLLEADSPACES(buffer_ptr,buffer);
+      node = xmlNewChild(atom_node, NULL, 
+                         (xmlChar *) "label_comp_id",
+                         (xmlChar *) buffer_ptr);
+
+      /* Note: Entity ID is not stored in PDB data structure. 
+               Value set to 1 */
+      node = xmlNewChild(atom_node, NULL,
+                         (xmlChar *) "label_entity_id",
+                         (xmlChar *) "1");
+      
+      sprintf(buffer,"%d", p->resnum);
+      node = xmlNewChild(atom_node, NULL, (xmlChar *) "label_seq_id",
+                         (xmlChar *) buffer);
+
+      /* occupancy */
+      sprintf(buffer,"%.2f", p->occ);
+      node = xmlNewChild(atom_node, NULL, (xmlChar *) "occupancy",
+                         (xmlChar *) buffer);
+                         
+      /* insertion code */
+      /* Note: Insertion code node only included for residues with 
+               insertion codes */
+      if(strcmp(p->insert," "))
+      {
+         sprintf(buffer,"%s", p->insert);
+         node = xmlNewChild(atom_node, NULL, 
+                            (xmlChar *) "pdbx_PDB_ins_code",
+                            (xmlChar *) buffer);
+      }
+
+      /* model number */
+      /* Note: Model number is not stored in PDB data structure.
+               Value set to 1 */
+      node = xmlNewChild(atom_node, NULL,
+                         (xmlChar *) "pdbx_PDB_model_num",
+                         (xmlChar *) "1");
+
+      /* atom symbol */
+      /* Note: Atomic symbol is not stored in PDB data structure.
+               Value set is based on columns 13-14 of pdb-formated text 
+               file.  */
+      strncpy(buffer,p->atnam_raw,2);
+      buffer[2] = '\0';
+      KILLLEADSPACES(buffer_ptr,buffer);
+      
+      /* remove digits */
+      if(strlen(buffer_ptr) == 2 && isdigit(buffer[1]))
+      {
+         buffer[1] = '\0';
+      }
+      else if(strlen(buffer_ptr) == 2 && !isalpha(buffer[0]))
+      {
+         buffer_ptr += 1;
+      }
+
+      /* fix hydrogens */
+      if(strlen(buffer_ptr) == 2 && p->atnam_raw[0] == 'H' && 
+         p->atnam_raw[3] != ' ')
+      {
+            if(!isalpha(p->atnam_raw[2]) || !isalpha(p->atnam_raw[3]))
+            {
+               buffer[1] = '\0';
+            }
+      }
+
+      node = xmlNewChild(atom_node, NULL, (xmlChar *) "type_symbol",
+                         (xmlChar *) buffer_ptr);
+   }
+
+   /* Write to doc file pointer */
+   xmlDocFormatDump(fp,doc,1);
+
+   /* Free Memory */
+    xmlFreeDoc(doc);
+    xmlCleanupParser();
+
+   return;
 }

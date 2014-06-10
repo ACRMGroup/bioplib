@@ -3,8 +3,8 @@
    Program:    
    File:       pdb.h
    
-   Version:    V1.53
-   Date:       07.05.14
+   Version:    V1.55
+   Date:       09.06.14
    Function:   Include file for pdb routines
    
    Copyright:  (c) SciTech Software, UCL, Reading 1993-2014
@@ -110,10 +110,11 @@
    V1.50 20.03.14 Added blFindZonePDB(). By: CTP
    V1.51 25.03.14 Added blGetPDBChainLabels(). By: CTP
    V1.52 22.04.14 Added CheckFileFormatPDBML(FILE *fp). By: CTP
-   V1.52 07.05.14 Added deprecated.h and removed definitions for 
+   V1.53 07.05.14 Added deprecated.h and removed definitions for 
                   deprecated funtions: FindHetatmResidue(), FindResidue(),
                   InPDBZone() and FindZonePDB(). By: CTP
-
+   V1.54 02.06.14 Added WritePDBML() By: CTP
+   V1.55 09.06.14 Added gPDBXML flag By: CTP
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -317,9 +318,11 @@ typedef struct
 #ifdef READPDB_MAIN
    BOOL gPDBPartialOcc;
    BOOL gPDBMultiNMR;
+   BOOL gPDBXML;
 #else
    extern BOOL gPDBPartialOcc;
    extern BOOL gPDBMultiNMR;
+   extern BOOL gPDBXML;
 #endif
 
 /************************************************************************/
@@ -338,6 +341,7 @@ BOOL CheckFileFormatPDBML(FILE *fp);
 void WritePDB(FILE *fp, PDB *pdb);
 void WritePDBRecord(FILE *fp, PDB *pdb);
 void WritePDBRecordAtnam(FILE *fp, PDB  *pdb);
+void WritePDBML(FILE *fp, PDB *pdb);
 void WriteGromosPDB(FILE *fp, PDB *pdb);
 void WriteGromosPDBRecord(FILE *fp, PDB *pdb);
 void GetCofGPDB(PDB   *pdb, VEC3F *cg);

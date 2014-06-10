@@ -3,8 +3,8 @@
    Program:    
    File:       ReadPDB.c
    
-   Version:    V2.24
-   Date:       22.04.14
+   Version:    V2.26
+   Date:       09.06.14
    Function:   Read coordinates from a PDB file 
    
    Copyright:  (c) SciTech Software 1988-2014
@@ -155,6 +155,8 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
    V2.23 04.02.14 Use CHAINMATCH macro. By: CTP
    V2,24 22.04.14 Added PDBML parsing with doReadPDBML() and 
                   CheckFileFormatPDBML(). By CTP
+   V2,25 02.06.14 Updated doReadPDBML(). By: CTP
+   V2,26 09.06.14 Set gPDBXML flag. By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -392,6 +394,8 @@ PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
    05.06.07 V2.19 Added support for Unix compress'd files
    21.12.11 V2.22 Modified for cases of single occupancy < 1.0
    22.04.14 V2.24 Call doReadPDBML() for PDBML-formatted PDB file. By: CTP
+   02.06.14 V2.25 Updated doReadPDBML(). By: CTP
+   09.06.14 V2.26 Set gPDBXML flag. By: CTP
 */
 PDB *doReadPDB(FILE *fpin,
                int  *natom,
@@ -436,6 +440,7 @@ PDB *doReadPDB(FILE *fpin,
    gPDBPartialOcc = FALSE;
    gPDBMultiNMR   = FALSE;
    cmd[0]         = '\0';
+   gPDBXML        = FALSE;
 
 #ifdef GUNZIP_SUPPORT
    /* See whether this is a gzipped file                                */
@@ -1131,6 +1136,10 @@ pointer\n");
    is found.
 
    22.04.14 Original By: CTP
+   02.06.14 Updated setting atnam_raw and parsing data from PDB atom site 
+            labels (label_seq_id, etc.) if author-defined labels are 
+            omitted. By: CTP
+   09.06.14 Set gPDBXML flag. By: CTP
 
 */
 PDB *doReadPDBML(FILE *fpin,
@@ -1157,10 +1166,13 @@ PDB *doReadPDBML(FILE *fpin,
 
    int     NPartial       =  0,
            model_number   =  0;
-   char    store_atnam[8] = "";
+   char    store_atnam[8] = "",
+           atom_symbol[8] = "",
+           pad_resnam[8]  = "";
        
 
    /* Zero natoms and reset flags */
+   gPDBXML        = TRUE;  /* global PDBML-fornmat flag     */
    gPDBPartialOcc = FALSE; /* global partial occupancy flag */
    gPDBMultiNMR   = FALSE; /* global multiple models flag   */
    *natom = 0;             /* atoms stored                  */
@@ -1225,6 +1237,14 @@ PDB *doReadPDBML(FILE *fpin,
             return(NULL);
          }
 
+         /* Set default values */
+         curr_pdb->resnum = 0;
+         strcpy(curr_pdb->chain,   "");
+         strcpy(curr_pdb->atnam,   "");
+         strcpy(curr_pdb->resnam,  "");
+         strcpy(curr_pdb->insert, " ");
+         strcpy(atom_symbol,       "");
+
          /* Scan atom node children */
          for(n = atom_node->children; n; n = n->next)
          {
@@ -1259,11 +1279,6 @@ PDB *doReadPDBML(FILE *fpin,
             else if(!strcmp((char *) n->name,"auth_atom_id"))
             {
                strcpy(curr_pdb->atnam, (char *) content);
-               PADMINTERM(curr_pdb->atnam, 4);
-
-               strcpy( curr_pdb->atnam_raw,   " ");
-               strcpy((curr_pdb->atnam_raw)+1,(char *) content);
-               PADMINTERM(curr_pdb->atnam_raw, 4);
             }
             else if(!strcmp((char *) n->name,"auth_comp_id"))
             {
@@ -1273,8 +1288,6 @@ PDB *doReadPDBML(FILE *fpin,
             {
                sscanf((char *) content,"%lf",&content_lf);
                curr_pdb->resnum = (REAL) content_lf;
-               /* set insertion code to default for now */
-               strcpy(curr_pdb->insert, " ");
             }
             else if(!strcmp((char *) n->name,"pdbx_PDB_ins_code"))
             {
@@ -1300,10 +1313,91 @@ PDB *doReadPDBML(FILE *fpin,
                sscanf((char *) content,"%lf",&content_lf);
                model_number = (int) content_lf;
             }
-
-            xmlFree(content);
+            else if(!strcmp((char *) n->name,"type_symbol"))
+            {
+               strcpy(atom_symbol, (char *) content);
+            }
+            else if(!strcmp((char *) n->name,"label_asym_id"))
+            {
+               if(strlen(curr_pdb->chain) == 0)
+               {
+                  strcpy(curr_pdb->chain, (char *) content);
+               }
+            }
+            else if(!strcmp((char *) n->name,"label_atom_id"))
+            {
+               if(strlen(curr_pdb->atnam) == 0)
+               {
+                  strcpy(curr_pdb->atnam, (char *) content);
+               }
+            }
+            else if(!strcmp((char *) n->name,"label_comp_id"))
+            {
+               if(strlen(curr_pdb->resnam) == 0)
+               {
+                  strcpy(curr_pdb->resnam, (char *) content);
+               }
+            }
+            else if(!strcmp((char *) n->name,"label_seq_id"))
+            {
+               if(curr_pdb->resnum == 0 && strlen((char *) content) > 0)
+               {
+                  sscanf((char *) content,"%lf",&content_lf);
+                  curr_pdb->resnum = (REAL) content_lf;
+               }
+            }
+ 
+            xmlFree(content);           
          }
          
+         /* Set raw atom name */
+         /* Note: The text pdb format uses columns 13-16 to store the atom
+                  name. By convention, columns 13-14 contain the 
+                  right-justified element symbol for the atom.
+                  
+                  The raw atom name is equivalent to colums 13-16 of a
+                  pdb-formatted text file .                             */
+
+         if(strlen(curr_pdb->atnam) == 1)
+         {
+            /* copy 1-letter name atnam_raw */
+            strcpy((curr_pdb->atnam_raw),               " ");
+            strcpy((curr_pdb->atnam_raw)+1, curr_pdb->atnam);
+         }
+         if(strlen(curr_pdb->atnam) == 4)
+         {
+            /* copy 4-letter name atnam_raw */
+            strcpy(curr_pdb->atnam_raw, curr_pdb->atnam);
+         }
+         else if(strlen(atom_symbol) == 1)
+         {
+            strcpy((curr_pdb->atnam_raw),               " ");
+            strcpy((curr_pdb->atnam_raw)+1, curr_pdb->atnam);
+         }
+         else
+         {
+            strcpy(curr_pdb->atnam_raw, curr_pdb->atnam);
+         }
+         
+         /* Pad atom names to 4 characters */
+         PADMINTERM(curr_pdb->atnam,     4);
+         PADMINTERM(curr_pdb->atnam_raw, 4);
+         
+         /* Pad Residue Name */
+         /* Note: The text pdb format uses columns 18-20 to store the 
+                  residue name (right-justified).
+                  
+                  curr_pdb->resnam is is equivalent to colums 18-21 of a
+                  pdb-formatted text file.                              */
+         sprintf(pad_resnam,"%3s",curr_pdb->resnam);
+         PADMINTERM(pad_resnam, 4);
+         strcpy(curr_pdb->resnam, pad_resnam);         
+         
+         /* Set chain to " " if not already set */
+         if(strlen(curr_pdb->chain) == 0)
+         {
+            strcpy(curr_pdb->chain, " ");
+         }
 
          /* Set multi-model flag */
          if(model_number > 1)
