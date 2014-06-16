@@ -512,6 +512,36 @@ START_TEST(test_write_pdbml_data_10)
 }
 END_TEST
 
+START_TEST(test_write_pdbml_data_11)
+{
+   /* set message and example file */
+   char test_error_msg[] = "Write hydrogen 06";
+   char filename[]       = "test_H_1ZK.xml";
+
+   /* Update PDB */
+   strcpy(pdb_out->record_type, "HETATM");
+   strcpy(pdb_out->atnam,         "CD21");
+   strcpy(pdb_out->atnam_raw,     "CD21");
+   strcpy(pdb_out->resnam,        "1ZK ");
+
+
+   /* write test file */
+   fp = fopen(test_output_filename,"w");
+   WritePDBML(fp, pdb_out);
+   fclose(fp);
+
+   /* compare to example file */
+   strcat(test_example_filename, filename);
+   files_identical = compare_files(test_example_filename, 
+                                   test_output_filename);
+
+   /* remove output file */
+   remove(test_output_filename);
+  
+   /* return test result */
+   ck_assert_msg(files_identical, test_error_msg);
+}
+END_TEST
 
 /* Create Suite */
 Suite *writepdbml_suite(void)
@@ -548,6 +578,7 @@ Suite *writepdbml_suite(void)
    tcase_add_test(tc_pdbml, test_write_pdbml_data_08);
    tcase_add_test(tc_pdbml, test_write_pdbml_data_09);
    tcase_add_test(tc_pdbml, test_write_pdbml_data_10);
+   tcase_add_test(tc_pdbml, test_write_pdbml_data_11);
    suite_add_tcase(s, tc_pdbml);
 
    return s;

@@ -361,9 +361,9 @@ void WritePDBML(FILE *fp, PDB  *pdb)
          buffer_ptr += 1;
       }
 
-      /* fix hydrogens */
-      if(strlen(buffer_ptr) == 2 && p->atnam_raw[0] == 'H' && 
-         p->atnam_raw[3] != ' ')
+      /* fix hydrogens and carbons */
+      if(strlen(buffer_ptr) == 2 && p->atnam_raw[3] != ' ' &&
+         (p->atnam_raw[0] == 'H' || p->atnam_raw[0] == 'C' ))
       {
             if(!isalpha(p->atnam_raw[2]) || !isalpha(p->atnam_raw[3]))
             {
