@@ -11,6 +11,7 @@
 #include "getpdbchainlabels_suite.h"
 #include "readpdbml_suite.h"
 #include "writepdbml_suite.h"
+#include "wholepdb_suite.h"
 
 
 int main(int argc, char **argv)
@@ -32,6 +33,7 @@ int main(int argc, char **argv)
    srunner_add_suite(sr, getpdbchainlabels_suite());
    srunner_add_suite(sr, readpdbml_suite());
    srunner_add_suite(sr, writepdbml_suite());
+   srunner_add_suite(sr, wholepdb_suite());
                                                   /* add suites here... */
 
 

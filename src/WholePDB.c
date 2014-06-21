@@ -3,8 +3,8 @@
    Program:    
    File:       WholePDB.c
    
-   Version:    V1.4
-   Date:       22.04.14
+   Version:    V1.5
+   Date:       21.06.14
    Function:   
    
    Copyright:  (c) UCL / Dr. Andrew C. R. Martin 2014
@@ -45,6 +45,7 @@
    V1.2  13.06.08 popen() and pclose() prototypes skipped for Mac OS X.
    V1.3  17.03.09 popen() prototype skipped for Windows. By: CTP
    V1.4  22.04.14 Added handling of PDBML files. By CTP
+   V1.5  21.06.14 Updated writing of PDBML files. By: CTP
 
 *************************************************************************/
 /* Includes
@@ -102,6 +103,44 @@ void FreeWholePDB(WHOLEPDB *wpdb)
 }
 
 /************************************************************************/
+/*>BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
+   ----------------------------------------------
+   Input:     FILE       *fp        File pointer
+              WHOLEPDB   *wpdb      Whole PDB structure pointer
+
+   Writes a PDB file including header and trailer information.
+   Output in PDBML-format if flags set.
+
+   21.06.14  Original   By: CTP
+*/
+BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
+{
+   if((gPDBXMLForce == FORCEXML_XML) ||
+      (gPDBXMLForce == FORCEXML_NOFORCE && gPDBXML == TRUE))
+   {
+      /* Write PDBML file (omitting header and footer data) */
+      blWriteAsPDBML(fp, wpdb->pdb);
+   }
+   else
+   {
+      /* Check format */
+      if(blFormatCheckWritePDB(wpdb->pdb) == FALSE)
+      {
+         return FALSE;
+      }
+
+      /* Write whole PDB File */
+      blWriteWholePDBHeader(fp, wpdb);
+      blWriteAsPDB(fp, wpdb->pdb);
+      blWriteWholePDBTrailer(fp, wpdb);
+   }
+   
+   return TRUE;
+}
+
+
+
+/************************************************************************/
 /*>void WriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
    --------------------------------------------
    Input:     FILE       *fp        File pointer
@@ -110,9 +149,12 @@ void FreeWholePDB(WHOLEPDB *wpdb)
    Writes a PDB file including header and trailer information
 
    30.05.02  Original   By: ACRM
+   21.06.14  Deprecated function. By CTP.
 */
 void WriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
 {
+   DEPRECATED("WriteWholePDB","blWriteWholePDB()");
+
    WriteWholePDBHeader(fp, wpdb);
    WritePDB(fp, wpdb->pdb);
    WriteWholePDBTrailer(fp, wpdb);
@@ -128,15 +170,12 @@ void WriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
    Writes the header of a PDB file 
 
    30.05.02  Original   By: ACRM
+   21.06.14  Deprecated By: CTP
 */
 void WriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
 {
-   STRINGLIST *s;
-   
-   for(s=wpdb->header; s!=NULL; NEXT(s))
-   {
-      fputs(s->string, fp);
-   }
+   DEPRECATED("WriteWholePDBHeader()","blWriteWholePDBHeader()");
+   blWriteWholePDBHeader(fp, wpdb);
 }
 
 
@@ -149,8 +188,48 @@ void WriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
    Writes the trailer of a PDB file 
 
    30.05.02  Original   By: ACRM
+   21.06.14  Deprecated By: CTP
 */
 void WriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
+{
+   DEPRECATED("WriteWholePDBTrailer()","blWriteWholePDBTrailer()");
+   blWriteWholePDBTrailer(fp, wpdb);
+}
+
+/************************************************************************/
+/*>void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
+   ----------------------------------------------------
+   Input:     FILE       *fp        File pointer
+              WHOLEPDB   *wpdb      Whole PDB structure pointer
+
+   Writes the header of a PDB file 
+
+   30.05.02  Original   By: ACRM
+   21.06.14  Renamed to blWriteWholePDBHeader() By: CTP
+*/
+void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
+{
+   STRINGLIST *s;
+   
+   for(s=wpdb->header; s!=NULL; NEXT(s))
+   {
+      fputs(s->string, fp);
+   }
+}
+
+
+/************************************************************************/
+/*>void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
+   -----------------------------------------------------
+   Input:     FILE       *fp        File pointer
+              WHOLEPDB   *wpdb      Whole PDB structure pointer
+
+   Writes the trailer of a PDB file 
+
+   30.05.02  Original   By: ACRM
+   21.06.14  Renamed to blWriteWholePDBTrailer() By: CTP
+*/
+void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
 {
    STRINGLIST *s;
    

@@ -3,8 +3,8 @@
    Program:    
    File:       pdb.h
    
-   Version:    V1.55
-   Date:       09.06.14
+   Version:    V1.56
+   Date:       21.06.14
    Function:   Include file for pdb routines
    
    Copyright:  (c) SciTech Software, UCL, Reading 1993-2014
@@ -115,6 +115,11 @@
                   InPDBZone() and FindZonePDB(). By: CTP
    V1.54 02.06.14 Added WritePDBML() By: CTP
    V1.55 09.06.14 Added gPDBXML flag By: CTP
+   V1.56 21.06.14 Added gPDBXMLForce flag and updated functions:
+                  blWritePDB(), blWriteAsPDB(), blWriteAsPDBML(), 
+                  blFormatCheckWritePDB(), blWriteWholePDB(), 
+                  blWriteWholePDBHeader() and blWriteWholePDBTrailer().
+                  By: CTP
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -305,6 +310,13 @@ typedef struct
 #define ZONE_MODE_RESNUM       0
 #define ZONE_MODE_SEQUENTIAL   1
 
+/* Modes and macros for gPDBXMLForce                                    */
+#define FORCEXML_NOFORCE       0
+#define FORCEXML_PDB           1
+#define FORCEXML_XML           2
+
+#define FORCEPDB gPDBXMLForce = FORCEXML_PDB
+#define FORCEXML gPDBXMLForce = FORCEXML_XML
 
 /************************************************************************/
 /* Globals
@@ -318,16 +330,23 @@ typedef struct
 #ifdef READPDB_MAIN
    BOOL gPDBPartialOcc;
    BOOL gPDBMultiNMR;
-   BOOL gPDBXML;
+   BOOL gPDBXML = FALSE;
 #else
    extern BOOL gPDBPartialOcc;
    extern BOOL gPDBMultiNMR;
    extern BOOL gPDBXML;
 #endif
 
+#ifdef WRITEPDB_MAIN
+   int gPDBXMLForce = FORCEXML_NOFORCE;
+#else
+   extern int gPDBXMLForce;
+#endif
+
 /************************************************************************/
 /* Prototypes
 */
+
 PDB *ReadPDB(FILE *fp, int *natom);
 PDB *ReadPDBAll(FILE *fp, int *natom);
 PDB *ReadPDBAtoms(FILE *fp, int *natom);
@@ -338,6 +357,15 @@ PDB *doReadPDB(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank,
 PDB *doReadPDBML(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank, 
                  int ModelNum);
 BOOL CheckFileFormatPDBML(FILE *fp);
+
+BOOL blWritePDB(FILE *fp, PDB  *pdb);
+void blWriteAsPDB(FILE *fp, PDB  *pdb);
+void blWriteAsPDBML(FILE *fp, PDB  *pdb);
+BOOL blFormatCheckWritePDB(PDB *pdb);
+BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb);
+void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb);
+void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb);
+
 void WritePDB(FILE *fp, PDB *pdb);
 void WritePDBRecord(FILE *fp, PDB *pdb);
 void WritePDBRecordAtnam(FILE *fp, PDB  *pdb);

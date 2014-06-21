@@ -4,14 +4,16 @@
 static char test_output_filename[]     = "/tmp/test-XXXXX",
             test_example_filename[160] = "data/writepdbml_suite/";
 
-static FILE *fp             =  NULL;
-static PDB  *pdb_out        =  NULL,
-            *pdb_in         =  NULL;
-static BOOL files_identical = FALSE;
+static FILE *fp               =             NULL;
+static PDB  *pdb_out          =             NULL,
+            *pdb_in           =             NULL;
+static BOOL files_identical   =            FALSE,
+            read_pdbml_flag   =            FALSE;
+static int  force_pdbml_flag  = FORCEXML_NOFORCE;
 
 
 /* Compare file function */
-static BOOL compare_files(char *filename_a, char *filename_b)
+static BOOL writepdbml_compare_files(char *filename_a, char *filename_b)
 {
    char command[120];
    
@@ -22,9 +24,8 @@ static BOOL compare_files(char *filename_a, char *filename_b)
    return system(command) == 0 ? TRUE:FALSE;
 }
 
-
-/* Setup And Teardown */
-void writepdbml_setup(void)
+/* Set test data function */
+static void writepdbml_set_test_data(void)
 {
    /* Output PDB */
    pdb_out = (PDB *) malloc(sizeof(PDB));
@@ -43,6 +44,46 @@ void writepdbml_setup(void)
    pdb_out->altpos =               ' ' ;
    pdb_out->bval =               20.00 ;
    pdb_out->next =                NULL ;
+}
+
+/* Setup And Teardown */
+void writepdbml_setup_default(void)
+{
+   /* Set PDB/PDBML flags to default */
+   force_pdbml_flag = gPDBXMLForce;
+   read_pdbml_flag  = gPDBXML;
+   gPDBXMLForce     = FORCEXML_NOFORCE;
+   
+   /* Set test data */
+   writepdbml_set_test_data();
+
+   /* Set temp file name */
+   mkstemp(test_output_filename);
+}
+
+void writepdbml_setup_pdb(void)
+{
+   /* Set PDB/PDBML flags to force PDB */
+   force_pdbml_flag = gPDBXMLForce;
+   read_pdbml_flag  = gPDBXML;
+   gPDBXMLForce     = FORCEXML_PDB;
+   
+   /* Set test data */
+   writepdbml_set_test_data();
+
+   /* Set temp file name */
+   mkstemp(test_output_filename);
+}
+
+void writepdbml_setup_pdbml(void)
+{
+   /* Set PDB/PDBML flags to force PDBML */
+   force_pdbml_flag = gPDBXMLForce;
+   read_pdbml_flag  = gPDBXML;
+   gPDBXMLForce     = FORCEXML_XML;
+   
+   /* Set test data */
+   writepdbml_set_test_data();
 
    /* Set temp file name */
    mkstemp(test_output_filename);
@@ -50,6 +91,10 @@ void writepdbml_setup(void)
 
 void writepdbml_teardown(void)
 {
+   /* Reset PDB/PDBML flags */
+   gPDBXML      = read_pdbml_flag;
+   gPDBXMLForce = force_pdbml_flag;
+
    /* Free PDB */
    FREELIST(pdb_out,PDB);
    FREELIST(pdb_in ,PDB);
@@ -58,53 +103,222 @@ void writepdbml_teardown(void)
 /* Core tests */
 START_TEST(test_write_pdb)
 {
-   int natoms = 0;
+   int natoms        =     0;
+   BOOL pdbml_format = FALSE;
 
+   /* set format */
+   FORCEPDB;
+   
   /* write test file */
    fp = fopen(test_output_filename,"w");
-   WritePDB(fp, pdb_out);
+   blWritePDB(fp, pdb_out);
    fclose(fp);
    
    /* open test file */
    fp = fopen(test_output_filename,"r");
-   ck_assert_msg(fp != NULL,         "Failed to open file.");
+   ck_assert_msg(fp != NULL,                "Failed to open file.");
 
    /* read test file */
    pdb_in = ReadPDB(fp, &natoms);
+   
+   /* check test file format */
+   pdbml_format = CheckFileFormatPDBML(fp);
    fclose(fp);
 
    /* remove output file */
    remove(test_output_filename);
 
    /* tests */
-   ck_assert_msg(pdb_in != NULL,     "Failed to read file.");
-   ck_assert_msg(natoms ==  1,   "No atoms read from file.");
+   ck_assert_msg(pdb_in       !=  NULL,     "Failed to read file.");
+   ck_assert_msg(natoms       ==     1, "No atoms read from file.");
+   ck_assert_msg(pdbml_format == FALSE,   "File is not pdb format");
 }
 END_TEST
 
 START_TEST(test_write_pdbml)
 {
-   int natoms = 0;
+   int natoms        =     0;
+   BOOL pdbml_format = FALSE;
 
+   /* set format */
+   FORCEXML;
+   
    /* write test file */
    fp = fopen(test_output_filename,"w");
-   WritePDBML(fp, pdb_out);
+   blWritePDB(fp, pdb_out);
    fclose(fp);
    
    /* open test file */
    fp = fopen(test_output_filename,"r");
-   ck_assert_msg(fp != NULL,         "Failed to open file.");
+   ck_assert_msg(fp != NULL,                "Failed to open file.");
 
    /* read test file */
    pdb_in = ReadPDB(fp, &natoms);
+   
+   /* check test file format */
+   pdbml_format = CheckFileFormatPDBML(fp);
    fclose(fp);
 
    /* remove output file */
    remove(test_output_filename);
 
    /* tests */
-   ck_assert_msg(pdb_in != NULL,     "Failed to read file.");
-   ck_assert_msg(natoms ==  1,   "No atoms read from file.");
+   ck_assert_msg(pdb_in       !=  NULL,     "Failed to read file.");
+   ck_assert_msg(natoms       ==     1, "No atoms read from file.");
+   ck_assert_msg(pdbml_format ==  TRUE, "File is not pdbml format");
+}
+END_TEST
+
+
+START_TEST(test_write_default_pdb_in)
+{
+   int natoms        =     0;
+   BOOL pdbml_format = FALSE;
+
+   /* set format */
+   gPDBXML      = FALSE;
+   gPDBXMLForce = FORCEXML_NOFORCE;
+   
+   /* write test file */
+   fp = fopen(test_output_filename,"w");
+   blWritePDB(fp, pdb_out);
+   fclose(fp);
+   
+   /* open test file */
+   fp = fopen(test_output_filename,"r");
+   ck_assert_msg(fp != NULL,                "Failed to open file.");
+
+   /* read test file */
+   pdb_in = ReadPDB(fp, &natoms);
+   
+   /* check test file format */
+   pdbml_format = CheckFileFormatPDBML(fp);
+   fclose(fp);
+
+   /* remove output file */
+   remove(test_output_filename);
+
+   /* tests */
+   ck_assert_msg(pdb_in       !=  NULL,     "Failed to read file.");
+   ck_assert_msg(natoms       ==     1, "No atoms read from file.");
+   ck_assert_msg(pdbml_format == FALSE,   "File is not pdb format");
+}
+END_TEST
+
+START_TEST(test_write_default_pdbml_in)
+{
+   int natoms        =     0;
+   BOOL pdbml_format = FALSE;
+
+   /* set format */
+   gPDBXML      = TRUE; /* pdb input file */
+   gPDBXMLForce = FORCEXML_NOFORCE;
+   
+   /* write test file */
+   fp = fopen(test_output_filename,"w");
+   blWritePDB(fp, pdb_out);
+   fclose(fp);
+   
+   /* open test file */
+   fp = fopen(test_output_filename,"r");
+   ck_assert_msg(fp != NULL,                "Failed to open file.");
+
+   /* read test file */
+   pdb_in = ReadPDB(fp, &natoms);
+   
+   /* check test file format */
+   pdbml_format = CheckFileFormatPDBML(fp);
+   fclose(fp);
+
+   /* remove output file */
+   remove(test_output_filename);
+
+   /* tests */
+   ck_assert_msg(pdb_in       !=  NULL,     "Failed to read file.");
+   ck_assert_msg(natoms       ==     1, "No atoms read from file.");
+   ck_assert_msg(pdbml_format ==  TRUE, "File is not pdbml format");
+}
+END_TEST
+
+
+/* Format Check */
+START_TEST(test_pdb_format_check_valid)
+{
+   /* Set format */
+   FORCEPDB;
+
+   /* Update PDB */
+   strcpy(pdb_out->chain, "X"); /* Single-letter chain ID */
+
+   /* remove unused output file */
+   remove(test_output_filename);
+
+   /* Test */
+   ck_assert_msg(blFormatCheckWritePDB(pdb_out) == TRUE,
+                 "Format check for single-letter chain id.");
+}
+END_TEST
+
+START_TEST(test_pdb_format_check_invalid)
+{
+   /* Set format */
+   FORCEPDB;
+
+   /* Update PDB */
+   strcpy(pdb_out->chain, "XXX"); /* Multi-letter chain ID */
+
+   /* remove unused output file */
+   remove(test_output_filename);
+
+   /* Test */
+   ck_assert_msg(blFormatCheckWritePDB(pdb_out) == FALSE,
+                 "Format check for multi-letter chain id.");
+}
+END_TEST
+
+START_TEST(test_pdb_format_error_valid)
+{
+   BOOL return_value;
+
+   /* Set format */
+   FORCEPDB;
+
+   /* Update PDB */
+   strcpy(pdb_out->chain, "X"); /* Multi-letter chain ID */
+
+   /* Attempt to write test file */
+   fp = fopen(test_output_filename,"w");
+   return_value = blWritePDB(fp, pdb_out);
+   fclose(fp);
+
+   /* remove output file */
+   remove(test_output_filename);
+
+   /* Test */
+   ck_assert(return_value == TRUE);
+}
+END_TEST
+
+START_TEST(test_pdb_format_error_invalid)
+{
+   BOOL return_value;
+
+   /* Set format */
+   FORCEPDB;
+
+   /* Update PDB */
+   strcpy(pdb_out->chain, "XXX"); /* Multi-letter chain ID */
+
+   /* Attempt to write test file */
+   fp = fopen(test_output_filename,"w");
+   return_value = blWritePDB(fp, pdb_out);
+   fclose(fp);
+
+   /* remove output file */
+   remove(test_output_filename);
+
+   /* Test */
+   ck_assert(return_value == FALSE);
 }
 END_TEST
 
@@ -118,13 +332,13 @@ START_TEST(test_write_pdb_data_01)
 
    /* write test file */
    fp = fopen(test_output_filename,"w");
-   WritePDB(fp, pdb_out);
+   blWritePDB(fp, pdb_out);
    fclose(fp);
 
    /* compare to example file */
    strcat(test_example_filename, filename);
-   files_identical = compare_files(test_example_filename, 
-                                   test_output_filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
 
    /* remove output file */
    remove(test_output_filename);
@@ -145,13 +359,13 @@ START_TEST(test_write_pdb_data_02)
 
    /* write test file */
    fp = fopen(test_output_filename,"w");
-   WritePDB(fp, pdb_out);
+   blWritePDB(fp, pdb_out);
    fclose(fp);
 
    /* compare to example file */
    strcat(test_example_filename, filename);
-   files_identical = compare_files(test_example_filename, 
-                                   test_output_filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
 
    /* remove output file */
    remove(test_output_filename);
@@ -172,13 +386,13 @@ START_TEST(test_write_pdb_data_03)
 
    /* write test file */
    fp = fopen(test_output_filename,"w");
-   WritePDB(fp, pdb_out);
+   blWritePDB(fp, pdb_out);
    fclose(fp);
 
    /* compare to example file */
    strcat(test_example_filename, filename);
-   files_identical = compare_files(test_example_filename, 
-                                   test_output_filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
 
    /* remove output file */
    remove(test_output_filename);
@@ -202,13 +416,13 @@ START_TEST(test_write_pdb_data_04)
 
    /* write test file */
    fp = fopen(test_output_filename,"w");
-   WritePDB(fp, pdb_out);
+   blWritePDB(fp, pdb_out);
    fclose(fp);
 
    /* compare to example file */
    strcat(test_example_filename, filename);
-   files_identical = compare_files(test_example_filename, 
-                                   test_output_filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
 
    /* remove output file */
    remove(test_output_filename);
@@ -228,13 +442,13 @@ START_TEST(test_write_pdbml_data_01)
 
    /* write test file */
    fp = fopen(test_output_filename,"w");
-   WritePDBML(fp, pdb_out);
+   blWritePDB(fp, pdb_out);
    fclose(fp);
 
    /* compare to example file */
    strcat(test_example_filename, filename);
-   files_identical = compare_files(test_example_filename, 
-                                   test_output_filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
 
    /* remove output file */
    remove(test_output_filename);
@@ -255,13 +469,13 @@ START_TEST(test_write_pdbml_data_02)
 
    /* write test file */
    fp = fopen(test_output_filename,"w");
-   WritePDBML(fp, pdb_out);
+   blWritePDB(fp, pdb_out);
    fclose(fp);
 
    /* compare to example file */
    strcat(test_example_filename, filename);
-   files_identical = compare_files(test_example_filename, 
-                                   test_output_filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
 
    /* remove output file */
    remove(test_output_filename);
@@ -282,13 +496,13 @@ START_TEST(test_write_pdbml_data_03)
 
    /* write test file */
    fp = fopen(test_output_filename,"w");
-   WritePDBML(fp, pdb_out);
+   blWritePDB(fp, pdb_out);
    fclose(fp);
 
    /* compare to example file */
    strcat(test_example_filename, filename);
-   files_identical = compare_files(test_example_filename, 
-                                   test_output_filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
 
    /* remove output file */
    remove(test_output_filename);
@@ -312,13 +526,13 @@ START_TEST(test_write_pdbml_data_04)
 
    /* write test file */
    fp = fopen(test_output_filename,"w");
-   WritePDBML(fp, pdb_out);
+   blWritePDB(fp, pdb_out);
    fclose(fp);
 
    /* compare to example file */
    strcat(test_example_filename, filename);
-   files_identical = compare_files(test_example_filename, 
-                                   test_output_filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
 
    /* remove output file */
    remove(test_output_filename);
@@ -341,13 +555,13 @@ START_TEST(test_write_pdbml_data_05)
 
    /* write test file */
    fp = fopen(test_output_filename,"w");
-   WritePDBML(fp, pdb_out);
+   blWritePDB(fp, pdb_out);
    fclose(fp);
 
    /* compare to example file */
    strcat(test_example_filename, filename);
-   files_identical = compare_files(test_example_filename, 
-                                   test_output_filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
 
    /* remove output file */
    remove(test_output_filename);
@@ -372,13 +586,13 @@ START_TEST(test_write_pdbml_data_06)
 
    /* write test file */
    fp = fopen(test_output_filename,"w");
-   WritePDBML(fp, pdb_out);
+   blWritePDB(fp, pdb_out);
    fclose(fp);
 
    /* compare to example file */
    strcat(test_example_filename, filename);
-   files_identical = compare_files(test_example_filename, 
-                                   test_output_filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
 
    /* remove output file */
    remove(test_output_filename);
@@ -402,13 +616,13 @@ START_TEST(test_write_pdbml_data_07)
    
    /* write test file */
    fp = fopen(test_output_filename,"w");
-   WritePDBML(fp, pdb_out);
+   blWritePDB(fp, pdb_out);
    fclose(fp);
 
    /* compare to example file */
    strcat(test_example_filename, filename);
-   files_identical = compare_files(test_example_filename, 
-                                   test_output_filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
 
    /* remove output file */
    remove(test_output_filename);
@@ -434,13 +648,13 @@ START_TEST(test_write_pdbml_data_08)
    
    /* write test file */
    fp = fopen(test_output_filename,"w");
-   WritePDBML(fp, pdb_out);
+   blWritePDB(fp, pdb_out);
    fclose(fp);
 
    /* compare to example file */
    strcat(test_example_filename, filename);
-   files_identical = compare_files(test_example_filename, 
-                                   test_output_filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
 
    /* remove output file */
    remove(test_output_filename);
@@ -465,13 +679,13 @@ START_TEST(test_write_pdbml_data_09)
 
    /* write test file */
    fp = fopen(test_output_filename,"w");
-   WritePDBML(fp, pdb_out);
+   blWritePDB(fp, pdb_out);
    fclose(fp);
 
    /* compare to example file */
    strcat(test_example_filename, filename);
-   files_identical = compare_files(test_example_filename, 
-                                   test_output_filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
 
    /* remove output file */
    remove(test_output_filename);
@@ -496,13 +710,13 @@ START_TEST(test_write_pdbml_data_10)
 
    /* write test file */
    fp = fopen(test_output_filename,"w");
-   WritePDBML(fp, pdb_out);
+   blWritePDB(fp, pdb_out);
    fclose(fp);
 
    /* compare to example file */
    strcat(test_example_filename, filename);
-   files_identical = compare_files(test_example_filename, 
-                                   test_output_filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
 
    /* remove output file */
    remove(test_output_filename);
@@ -527,13 +741,13 @@ START_TEST(test_write_pdbml_data_11)
 
    /* write test file */
    fp = fopen(test_output_filename,"w");
-   WritePDBML(fp, pdb_out);
+   blWritePDB(fp, pdb_out);
    fclose(fp);
 
    /* compare to example file */
    strcat(test_example_filename, filename);
-   files_identical = compare_files(test_example_filename, 
-                                   test_output_filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
 
    /* remove output file */
    remove(test_output_filename);
@@ -550,14 +764,27 @@ Suite *writepdbml_suite(void)
 
    /* Core test case */
    TCase *tc_core = tcase_create("Core");
-   tcase_add_checked_fixture(tc_core, writepdbml_setup, 
+   tcase_add_checked_fixture(tc_core, 
+                             writepdbml_setup_default, 
                              writepdbml_teardown);
    tcase_add_test(tc_core, test_write_pdb);
    tcase_add_test(tc_core, test_write_pdbml);
+   tcase_add_test(tc_core, test_write_default_pdb_in);
+   tcase_add_test(tc_core, test_write_default_pdbml_in);
    suite_add_tcase(s, tc_core);
 
+   TCase *tc_format = tcase_create("Format");
+   tcase_add_checked_fixture(tc_format, 
+                             writepdbml_setup_default, 
+                             writepdbml_teardown);
+   tcase_add_test(tc_format, test_pdb_format_check_valid);
+   tcase_add_test(tc_format, test_pdb_format_check_invalid);
+   tcase_add_test(tc_format, test_pdb_format_error_valid);
+   tcase_add_test(tc_format, test_pdb_format_error_invalid);
+   suite_add_tcase(s, tc_format);
+
    TCase *tc_pdb = tcase_create("PDB");
-   tcase_add_checked_fixture(tc_pdb, writepdbml_setup, 
+   tcase_add_checked_fixture(tc_pdb, writepdbml_setup_pdb, 
                              writepdbml_teardown);
    tcase_add_test(tc_pdb, test_write_pdb_data_01);
    tcase_add_test(tc_pdb, test_write_pdb_data_02);
@@ -566,7 +793,7 @@ Suite *writepdbml_suite(void)
    suite_add_tcase(s, tc_pdb);
    
    TCase *tc_pdbml = tcase_create("PDBML");
-   tcase_add_checked_fixture(tc_pdbml, writepdbml_setup, 
+   tcase_add_checked_fixture(tc_pdbml, writepdbml_setup_pdbml, 
                              writepdbml_teardown);
    tcase_add_test(tc_pdbml, test_write_pdbml_data_01);
    tcase_add_test(tc_pdbml, test_write_pdbml_data_02);

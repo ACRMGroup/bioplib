@@ -3,8 +3,8 @@
    Program:    
    File:       WritePDB.c
    
-   Version:    V1.11
-   Date:       02.06.14
+   Version:    V1.12
+   Date:       21.06.14
    Function:   Write a PDB file from a linked list
    
    Copyright:  (c) SciTech Software 1993-2014
@@ -56,8 +56,17 @@
    V1.9  22.09.06 Added WritePDBRecordAtnam()
    V1.10 04.02.14 Use CHAINMATCH macro. By: CTP
    V1.11 01.06.14 Added WritePDBML() By: CTP
+   V1.12 21.06.14 Added blWritePDB(), blFormatCheckWritePDB() and 
+                  blWriteAsPDB(). Renamed WritePDBML() to blWriteAsPDBML()
+                  and deprecated WritePDB(). Defined WRITEPDB_MAIN.
+                  By: CTP
 
 *************************************************************************/
+/* Defines required for includes
+*/
+#define WRITEPDB_MAIN
+
+/************************************************************************/
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -68,6 +77,63 @@
 #include "MathType.h"
 #include "pdb.h"
 #include "macros.h"
+
+/************************************************************************/
+/*>BOOL blWritePDB(FILE *fp, PDB *pdb)
+   -----------------------------------
+   Input:   FILE *fp   PDB file pointer to be written
+            PDB  *pdb  PDB linked list to write
+
+   Write a PDB linked list...
+
+   21.06.14 Original By: CTP
+*/
+BOOL blWritePDB(FILE *fp,
+                PDB  *pdb)
+{
+   if((gPDBXMLForce == FORCEXML_XML) ||
+      (gPDBXMLForce == FORCEXML_NOFORCE && gPDBXML == TRUE))
+   {
+      /* Write PDBML file */
+      blWriteAsPDBML(fp, pdb);
+   }
+   else
+   {
+      /* Check format */
+      if(blFormatCheckWritePDB(pdb) == FALSE)
+      {
+         return FALSE;
+      }
+
+      /* Write whole PDB File */
+      blWriteAsPDB(fp, pdb);
+   }
+   
+   return TRUE;
+}
+
+/************************************************************************/
+/*>BOOL blFormatCheckWritePDB(PDB *pdb)
+   ------------------------------------
+   Input:   PDB  *pdb  PDB linked list to write
+
+   Checks PDB linked list is compatible with PDB-formatted text file.
+
+   21.06.14 Original By: CTP
+*/
+BOOL blFormatCheckWritePDB(PDB *pdb)
+{
+   PDB *p;
+   for(p = pdb ; p ; NEXT(p))
+   {
+      /* Check chain id is single letter */
+      if(strlen(p->chain) > 1)
+      {
+         return FALSE;
+      }
+   }
+   return TRUE;
+}
 
 /************************************************************************/
 /*>void WritePDB(FILE *fp, PDB *pdb)
@@ -83,9 +149,34 @@
    08.07.93 Added insertion of TER cards
    22.02.94 And a TER card at the end of the file
    04.02.14 Use CHAINMATCH macro. By: CTP
+   21.06.14 Function deprecated. Converted to wrapper for blWriteAsPDB().
+            By: CTP
 */
 void WritePDB(FILE *fp,
               PDB  *pdb)
+{
+   DEPRECATED("WritePDB","blWritePDB()");
+   blWriteAsPDB(fp, pdb);
+}
+
+/************************************************************************/
+/*>void blWriteAsPDB(FILE *fp, PDB *pdb)
+   -------------------------------------
+   Input:   FILE *fp   PDB file pointer to be written
+            PDB  *pdb  PDB linked list to write
+
+   Write a PDB linked list by calls to WritePDBRecord()
+
+   08.03.89 Original
+   01.06.92 ANSIed and autodoc'd
+   10.06.93 Uses NEXT macro; void type
+   08.07.93 Added insertion of TER cards
+   22.02.94 And a TER card at the end of the file
+   04.02.14 Use CHAINMATCH macro. By: CTP
+   17.06.14 Renamed to blWriteAsPDB() By: CTP
+*/
+void blWriteAsPDB(FILE *fp,
+                  PDB  *pdb)
 {
    PDB   *p;
    char  PrevChain[8];
@@ -104,7 +195,6 @@ void WritePDB(FILE *fp,
    }
    fprintf(fp,"TER   \n");
 }
-
 
 /************************************************************************/
 /*>void WritePDBRecord(FILE *fp, PDB *pdb)
@@ -180,17 +270,18 @@ void WritePDBRecordAtnam(FILE *fp,
 
 
 /************************************************************************/
-/*>void WritePDBML(FILE *fp, PDB *pdb)
-   -----------------------------------
+/*>void blWriteAsPDBML(FILE *fp, PDB *pdb)
+   ---------------------------------------
    Input:   FILE *fp   PDB file pointer to be written
             PDB  *pdb  PDB linked list to write
 
    Write a PDB linked list in PDBML format.
 
    02.06.14 Original. By: CTP
+   21.06.14 Renamed blWriteAsPDBML() and updated symbol handling. By: CTP
 
 */
-void WritePDBML(FILE *fp, PDB  *pdb)
+void blWriteAsPDBML(FILE *fp, PDB  *pdb)
 {
    PDB         *p;
    xmlDocPtr   doc         = NULL;
@@ -363,7 +454,9 @@ void WritePDBML(FILE *fp, PDB  *pdb)
 
       /* fix hydrogens and carbons */
       if(strlen(buffer_ptr) == 2 && p->atnam_raw[3] != ' ' &&
-         (p->atnam_raw[0] == 'H' || p->atnam_raw[0] == 'C' ))
+         (p->atnam_raw[0] == 'H' || p->atnam_raw[0] == 'C' ||
+          p->atnam_raw[0] == 'N' || p->atnam_raw[0] == 'O' ||
+          p->atnam_raw[0] == 'P'))
       {
             if(!isalpha(p->atnam_raw[2]) || !isalpha(p->atnam_raw[3]))
             {
