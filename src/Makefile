@@ -107,6 +107,10 @@ libbiops.so.$(BMAJOR).$(BMINOR) : $(OFILESB)
 clean :
 	rm -f $(OFILESB) $(OFILESG) libgen.a libbiop.a libgens.so.$(GMAJOR).$(GMINOR) libbiops.so.$(BMAJOR).$(BMINOR)
 
+# Documentation
+doxygen :
+	(cd ../doc/doxygen; doxygen)
+
 # Installation
 install :
 	mkdir -p $(LIBDEST)
@@ -131,3 +135,4 @@ help :
 	@echo "make shared        : Build shared libraries"
 	@echo "make installshared : Install shared libraries"
 	@echo "make clean         : Remove object and library files from compilation directory"
+	@echo "make doxygen       : Generate doxygen documentation"
