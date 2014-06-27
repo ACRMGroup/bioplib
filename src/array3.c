@@ -1,40 +1,41 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       array3.c
+   \file       array3.c
    
-   Version:    V1.0R
-   Date:       30.50.02
-   Function:   Allocate and free 3D arrays
+   \version    V1.0R
+   \date       30.50.02
+   \brief      Allocate and free 3D arrays
    
-   Copyright:  (c) Dr. Andrew C. R. Martin, University of Reading, 2002
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-               +44 (0) 7973 431635
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
- 
-   CVS Tags:
-   =========
- 
-   Last modified by:    $Author: martin $
-   Tag:                 $Name:  $
-   Revision:            $Revision: 1.1 $
- 
-**************************************************************************
 
-   This code is copyright solely of Dr. Andrew C. R. Martin.
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
+   according to the conditions laid out in the accompanying file
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
+
+   The code may not be sold commercially or included as part of a 
+   commercial product except as described in the file COPYING.DOC.
 
 **************************************************************************
 
    Description:
    ============
+
    Creates a 3D array where the first dimension is a set of pointers. This
    is better for passing into subroutines than the conventional C method
    of simply declaring:
@@ -61,7 +62,7 @@
 
    Revision History:
    =================
-   V1.0  30.05.02 Original
+-  V1.0  30.05.02 Original
 
 *************************************************************************/
 /* Includes

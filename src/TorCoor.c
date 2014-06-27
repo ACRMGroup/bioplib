@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       TorCoor.c
+   \file       TorCoor.c
    
-   Version:    V1.0
-   Date:       08.07.96
-   Function:   Calculate cartesian coordinates from torsion angle
+   \version    V1.0
+   \date       08.07.96
+   \brief      Calculate cartesian coordinates from torsion angle
    
-   Copyright:  (c) SciTech Software 1989-96
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1989-96
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 

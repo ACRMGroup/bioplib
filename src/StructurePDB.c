@@ -1,32 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       StructurePDB.c
+   \file       StructurePDB.c
    
-   Version:    V1.2
-   Date:       04.02.14
-   Function:   Build a structured PDB representation
+   \version    V1.2
+   \date       04.02.14
+   \brief      Build a structured PDB representation
    
-   Copyright:  (c) UCL / Dr. Andrew C. R. Martin 2009-14
-   Author:     Dr. Andrew C. R. Martin
-   Address:    Biomolecular Structure & Modelling Unit,
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 2009-14
+   \author     Dr. Andrew C. R. Martin
+   \par
                Institute of Structural & Molecular Biology,
-               University College,
+               University College London,
                Gower Street,
                London.
                WC1E 6BT.
-   EMail:      andrew@bioinf.org.uk
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
 
    The code may be modified as required, but any modifications must be
-   documented so that the person responsible can be identified. If someone
-   else breaks this code, I don't want to be blamed for code that does not
-   work! 
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -35,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -45,9 +46,9 @@
 
    Revision History:
    =================
-   V1.0   24.11.09  Original
-   V1.1   19.05.10  PDBRESIDUE and PDBCHAIN are doubly linked lists
-   V1.2   04.02.14  Use CHAINMATCH By: CTP
+-  V1.0   24.11.09  Original
+-  V1.1   19.05.10  PDBRESIDUE and PDBCHAIN are doubly linked lists
+-  V1.2   04.02.14  Use CHAINMATCH By: CTP
 *************************************************************************/
 /* Includes
 */

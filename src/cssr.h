@@ -1,35 +1,41 @@
-/***************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       cssr.h
+   \file       cssr.h
    
-   Version:    V1.0R
-   Date:       09.09.91
-   Function:   Defines for CSSR handling
+   \version    V1.0R
+   \date       09.09.91
+   \brief      Defines for CSSR handling
    
-   Copyright:  SciTech Software 1991
-   Author:     Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  SciTech Software 1991
+   \author     Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
+               
+**************************************************************************
 
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
+   according to the conditions laid out in the accompanying file
+   COPYING.DOC.
 
-****************************************************************************
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
-   This program is not in the public domain, but it may be freely copied
-   and distributed for no charge providing this header is included.
+   The code may not be sold commercially or included as part of a 
+   commercial product except as described in the file COPYING.DOC.
 
-   providing it is made clear that this program is free and that the source
-   code is provided with the program.
-
-****************************************************************************
+**************************************************************************
 
    Description:
    ============
+
    Structure definitions for ReadCSSR()
 
 ****************************************************************************

@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       ReadCSSR.c
+   \file       ReadCSSR.c
    
-   Version:    V1.5R
-   Date:       30.05.02
-   Function:   Read a CSSR file
+   \version    V1.5R
+   \date       30.05.02
+   \brief      Read a CSSR file
    
-   Copyright:  (c) SciTech Software 1991-2002
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2002
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,6 +35,7 @@
 
    Description:
    ============
+
    ReadCSSR(fp,cssr,natom,name,title)
    ----------------------------------
    This subroutine will read a CSSR file of any size and form a linked list
@@ -119,12 +125,12 @@
 
    Revision History:
    =================
-   V1.0  06.09.91 Original
-   V1.1  24.01.92 Fixed for reading files with blank link numbers.
-   V1.2  01.06.92 Documented and added FPU check
-   V1.3  10.06.93 Tidied for book
-   V1.4  27.07.93 Changed I/O to double precision
-   V1.5  30.05.02 Changed PDB field from 'junk' to 'record_type'
+-  V1.0  06.09.91 Original
+-  V1.1  24.01.92 Fixed for reading files with blank link numbers.
+-  V1.2  01.06.92 Documented and added FPU check
+-  V1.3  10.06.93 Tidied for book
+-  V1.4  27.07.93 Changed I/O to double precision
+-  V1.5  30.05.02 Changed PDB field from 'junk' to 'record_type'
 
 *************************************************************************/
 /* Includes

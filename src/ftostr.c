@@ -1,13 +1,13 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       ftostr.c
+   \file       ftostr.c
    
-   Version:    V1.3R
-   Date:       03.06.05
-   Function:   Convert a REAL to a string
+   \version    V1.3R
+   \date       03.06.05
+   \brief      Convert a REAL to a string
    
-   Copyright:  (c) SciTech Software 1991-2005
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2005
    EMail:      andrew@bioinf.org.uk
 
 **************************************************************************
@@ -21,8 +21,33 @@
 
 **************************************************************************
 
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
+               
+**************************************************************************
+
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
+   according to the conditions laid out in the accompanying file
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
+
+   The code may not be sold commercially or included as part of a 
+   commercial product except as described in the file COPYING.DOC.
+
+**************************************************************************
+
    Description:
    ============
+
    Convert a REAL to a string
 
 **************************************************************************
@@ -34,10 +59,10 @@
 
    Revision History:
    =================
-   V1.0  22.11.95 Original - Routines from general.c
-   V1.1  09.10.97 Fixed inconsistent handling of %.0f between C libs
-   V1.2  14.11.97 Another fix to same
-   V1.3  03.06.05 Tidied up to stop warnings under GCC 3.2.2
+-  V1.0  22.11.95 Original - Routines from general.c
+-  V1.1  09.10.97 Fixed inconsistent handling of %.0f between C libs
+-  V1.2  14.11.97 Another fix to same
+-  V1.3  03.06.05 Tidied up to stop warnings under GCC 3.2.2
 
 *************************************************************************/
 /* Includes

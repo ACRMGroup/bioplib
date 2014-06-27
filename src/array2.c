@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       array.c
+   \file       array2.c
    
-   Version:    V1.4R
-   Date:       18.03.94
-   Function:   Allocate and free 2D arrays
+   \version    V1.4R
+   \date       18.03.94
+   \brief      Allocate and free 2D arrays
    
-   Copyright:  (c) SciTech Software 1993-4
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-4
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,6 +35,7 @@
 
    Description:
    ============
+
    Creates a 2D array where the first dimension is a set of pointers. This
    is better for passing into subroutines than the conventional C method
    of simply declaring:
@@ -56,11 +62,11 @@
 
    Revision History:
    =================
-   V1.0  07.10.92 Original
-   V1.1  29.01.93 Added includes of sysdefs.h & malloc.h for MS-DOS
-   V1.2  16.06.93 Includes stdlib.h rather than malloc.h
-   V1.3  01.03.94 Corrected other include file usage
-   V1.4  18.03.94 Added NULL definition for systems which don't define
+-  V1.0  07.10.92 Original
+-  V1.1  29.01.93 Added includes of sysdefs.h & malloc.h for MS-DOS
+-  V1.2  16.06.93 Includes stdlib.h rather than malloc.h
+-  V1.3  01.03.94 Corrected other include file usage
+-  V1.4  18.03.94 Added NULL definition for systems which don't define
                   it in stdlib.h
 
 *************************************************************************/

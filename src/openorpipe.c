@@ -1,22 +1,33 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       openorpipe.c
+   \file       openorpipe.c
    
-   Version:    V1.8
-   Date:       02.04.09
-   Function:   Open a file for writing unless the filename starts with
+   \version    V1.8
+   \date       02.04.09
+   \brief      Open a file for writing unless the filename starts with
                a | in which case open as a pipe
    
-   Copyright:  (c) SciTech Software 1997-2009
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1997-2009
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -25,6 +36,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -35,17 +47,17 @@
 
    Revision History:
    =================
-   V1.0  26.05.97 Original   By: ACRM
-   V1.1  26.06.97 Added calls to signal()
-   V1.2  27.02.98 Uses port.h
-   V1.3  18.08.98 Added cast to popen() for SunOS
-   V1.4  28.01.04 Added NOPIPE define. Allows compilation on systems
+-  V1.0  26.05.97 Original   By: ACRM
+-  V1.1  26.06.97 Added calls to signal()
+-  V1.2  27.02.98 Uses port.h
+-  V1.3  18.08.98 Added cast to popen() for SunOS
+-  V1.4  28.01.04 Added NOPIPE define. Allows compilation on systems
                   which don't support unix pipes
-   V1.5  03.02.06 Added prototypes for popen() and pclose()
-   V1.6  29.06.07 popen() and pclose() prototypes now skipped for MAC OSX
+-  V1.5  03.02.06 Added prototypes for popen() and pclose()
+-  V1.6  29.06.07 popen() and pclose() prototypes now skipped for MAC OSX
                   which defines them differently
-   V1.7  17.03.09 popen() prototype now skipped for Windows.
-   V1.8  02.04.09 Clean compile with NOPIPE defined
+-  V1.7  17.03.09 popen() prototype now skipped for Windows.
+-  V1.8  02.04.09 Clean compile with NOPIPE defined
 
 *************************************************************************/
 /* Includes

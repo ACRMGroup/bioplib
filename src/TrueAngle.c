@@ -1,22 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       TrueAngle.c
+   \file       TrueAngle.c
    
-   Version:    V1.5
-   Date:       27.03.95
-   Function:   
+   \version    V1.5
+   \date       27.03.95
+   \brief      
    
-   Copyright:  (c) SciTech Software 1993-5
-   Author:     Dr. Andrew C. R. Martin
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-5
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -25,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -42,12 +53,12 @@
 
    Revision History:
    =================
-   V1.0  07.02.91 Original
-   V1.1  17.02.91 Corrected comments to new standard and added phi()
-   V1.2  04.03.91 angle() and phi() now return _correct_ values!
-   V1.3  01.06.92 ANSIed
-   V1.4  08.12.92 Changed abs() to ABS() from macros.h
-   V1.5  27.03.95 Added TrueAngle()
+-  V1.0  07.02.91 Original
+-  V1.1  17.02.91 Corrected comments to new standard and added phi()
+-  V1.2  04.03.91 angle() and phi() now return _correct_ values!
+-  V1.3  01.06.92 ANSIed
+-  V1.4  08.12.92 Changed abs() to ABS() from macros.h
+-  V1.5  27.03.95 Added TrueAngle()
 
 *************************************************************************/
 /* Includes

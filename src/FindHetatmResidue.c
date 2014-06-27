@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       FindHetatmResidue.c
+   \file       FindHetatmResidue.c
    
-   Version:    V1.2
-   Date:       25.02.14
-   Function:   Parse a residue specification
+   \version    V1.2
+   \date       25.02.14
+   \brief      Parse a residue specification
    
-   Copyright:  2011-2014
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  2011-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -34,10 +46,10 @@
 
    Revision History:
    =================
-   V1.0  26.10.11 Original based on FindResidue.c
-   V1.1  24.02.14 Added BiopFindHetatmResidue() By: CTP
-   V1.2  25.02.14 Added error message for FindHetatmResidue(). By: CTP
-   V1.3  07.05.14 Moved FindHetatmResidue() to deprecated.h By: CTP
+-  V1.0  26.10.11 Original based on FindResidue.c
+-  V1.1  24.02.14 Added BiopFindHetatmResidue() By: CTP
+-  V1.2  25.02.14 Added error message for FindHetatmResidue(). By: CTP
+-  V1.3  07.05.14 Moved FindHetatmResidue() to deprecated.h By: CTP
 
 *************************************************************************/
 /* Includes

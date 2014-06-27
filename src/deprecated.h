@@ -1,20 +1,22 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       deprecated.h
+   \file       deprecated.h
    
-   Version:    v1.0
-   Date:       07.05.14
-   Function:   Redirect calls to deprecated functions.
+   \version    v1.0
+   \date       07.05.14
+   \brief      Redirect calls to deprecated functions.
    
-   Copyright:  (c) UCL / Dr. Andrew C. R. Martin 2014
-   Author:     Dr. Andrew C. R. Martin
-   Address:    Institute of Structural & Molecular Biology,
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
                University College London,
                Gower Street,
                London.
                WC1E 6BT.
-   EMail:      andrew@bioinf.org.uk
+   \par
+               andrew@bioinf.org.uk
                andrew.martin@ucl.ac.uk
                
 **************************************************************************
@@ -33,6 +35,7 @@
 
    Description:
    ============
+
 
    Deprecated functions for BiopLib.
 
@@ -55,7 +58,7 @@
    Revision History:
    =================
    
-   V1.0  07.05.14 Original By: CTP
+-  V1.0  07.05.14 Original By: CTP
 
 *************************************************************************/
 #ifndef _DEPRECATED_H

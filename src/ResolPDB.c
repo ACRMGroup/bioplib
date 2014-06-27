@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       ResolPDB.c
+   \file       ResolPDB.c
    
-   Version:    V1.6R
-   Date:       30.05.02
-   Function:   Get resolution and R-factor information out of a PDB file
+   \version    V1.6R
+   \date       30.05.02
+   \brief      Get resolution and R-factor information out of a PDB file
    
-   Copyright:  (c) UCL / Dr. Andrew C.R. Martin, 1994-2002
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C.R. Martin, 1994-2002
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -41,22 +47,22 @@
 
    Revision History:
    =================
-   V1.0  28.02.94 Original
-   V1.1  18.03.94 Removed extraneous printf() statement
-   V1.2  17.07.96 Added check for EXPERIMENT TYPE : THEORETICAL MODEL
+-  V1.0  28.02.94 Original
+-  V1.1  18.03.94 Removed extraneous printf() statement
+-  V1.2  17.07.96 Added check for EXPERIMENT TYPE : THEORETICAL MODEL
                   Fixed bug in searching for MODEL or NMR info
-   V1.3  27.06.97 Added handing of RESOLUTION records which point you
+-  V1.3  27.06.97 Added handing of RESOLUTION records which point you
                   to another record for the experiment type.
                   Fixed EXPERIMENT TYPE to look for NMR as well
                   Looks for EXPDTA NMR record
-   V1.4  23.03.98 Added check that RESOLUTION record is in a REMARK 2
-   V1.5  08.02.99 GetResolPDB() now a wrapper to GetExptl() which
+-  V1.4  23.03.98 Added check that RESOLUTION record is in a REMARK 2
+-  V1.5  08.02.99 GetResolPDB() now a wrapper to GetExptl() which
                   now parses structured REMARK3 blocks and also returns
                   the Free R. Initialise some variables to 0.0
-   V1.6  30.05.02 Incorporated changes from Inpharmatica - now finds
+-  V1.6  30.05.02 Incorporated changes from Inpharmatica - now finds
                   Electron diffraction as an experimental type. Handles
                   files without REMARK 2 correctly
-   V1.7  13.12.12 Complete re-implementation of GetExptl() for remediated
+-  V1.7  13.12.12 Complete re-implementation of GetExptl() for remediated
                   PDB files. Old version for old PDB files available as
                   GetExptlOld()
 

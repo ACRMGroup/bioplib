@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       FixCterPDB.c
+   \file       FixCterPDB.c
    
-   Version:    V1.6
-   Date:       04.02.14
-   Function:   Routine to add C-terminal oxygens.
+   \version    V1.6
+   \date       04.02.14
+   \brief      Routine to add C-terminal oxygens.
    
-   Copyright:  (c) SciTech Software 1994-2014
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -41,14 +53,14 @@
 
    Revision History:
    =================
-   V1.0  24.08.94 Original    By: ACRM
-   V1.1  05.10.94 Removed unused variables
-   V1.2  12.11.96 If any of the antecedant coordinates are undefined, set
+-  V1.0  24.08.94 Original    By: ACRM
+-  V1.1  05.10.94 Removed unused variables
+-  V1.2  12.11.96 If any of the antecedant coordinates are undefined, set
                   the terminal oxygen to NULL coordinates
-   V1.3  13.11.96 Also checks for missing CA,C and O1 records
-   V1.4  06.02.03 Handles atnam_raw
-   V1.5  03.06.05 Handles altpos
-   V1.6  04.02.14 Use CHAINMATCH By: CTP
+-  V1.3  13.11.96 Also checks for missing CA,C and O1 records
+-  V1.4  06.02.03 Handles atnam_raw
+-  V1.5  03.06.05 Handles altpos
+-  V1.6  04.02.14 Use CHAINMATCH By: CTP
 
 *************************************************************************/
 /* Includes

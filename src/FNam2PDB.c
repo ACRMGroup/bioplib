@@ -1,34 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       FNam2PDB.c
+   \file       FNam2PDB.c
    
-   Version:    V1.1
-   Date:       26.07.95
-   Function:   Extract a PDB code from a filename
+   \version    V1.1
+   \date       26.07.95
+   \brief      Extract a PDB code from a filename
    
-   Copyright:  (c) Dr. Andrew C. R. Martin 1995
-   Author:     Dr. Andrew C. R. Martin
-   Address:    Biomolecular Structure & Modelling Unit,
-               Department of Biochemistry & Molecular Biology,
-               University College,
+   \copyright  (c) Dr. Andrew C. R. Martin 1995
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
                Gower Street,
                London.
                WC1E 6BT.
-   Phone:      (Home) +44 (0)1372 275775
-               (Work) +44 (0)171 387 7050 X 3284
-   EMail:      INTERNET: martin@biochem.ucl.ac.uk
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
 
    The code may be modified as required, but any modifications must be
-   documented so that the person responsible can be identified. If someone
-   else breaks this code, I don't want to be blamed for code that does not
-   work! 
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -37,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -47,8 +46,8 @@
 
    Revision History:
    =================
-   V1.0  24.07.95 Original
-   V1.1  26.07.95 Fixed a NULL to '\0'
+-  V1.0  24.07.95 Original
+-  V1.1  26.07.95 Fixed a NULL to '\0'
 
 *************************************************************************/
 /* Includes

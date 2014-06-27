@@ -1,26 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       rsc.c
+   \file       rsc.c
    
-   Version:    V1.11R
-   Date:       03.06.05
-   Function:   Modify sequence of a PDB linked list
+   \version    V1.11R
+   \date       03.06.05
+   \brief      Modify sequence of a PDB linked list
    
-   Copyright:  (c) SciTech Software 1992-2005
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2005
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -29,6 +35,7 @@
 
    Description:
    ============
+
    Takes a PDB linked list and replaces sidechains
 
 **************************************************************************
@@ -43,25 +50,25 @@
 
    Revision History:
    =================
-   V1.0  12.05.92 Original
-   V1.1  09.07.93 Simplified and improved memory allocation checking
-   V1.2  11.03.94 RepSChain() now returns BOOL
-   V1.3  14.03.94 RepSChain() now returns TRUE for success and FALSE for
+-  V1.0  12.05.92 Original
+-  V1.1  09.07.93 Simplified and improved memory allocation checking
+-  V1.2  11.03.94 RepSChain() now returns BOOL
+-  V1.3  14.03.94 RepSChain() now returns TRUE for success and FALSE for
                   failure. THIS IS INCOMPATIBLE WITH PREVIOUS VERSIONS
                   which returned 0 for success.
                   Error messages are now placed in gRSCError rather than
                   being printed.
-   V1.4  19.05.94 Fixed bug resulting from change in RotatePDB(); now
+-  V1.4  19.05.94 Fixed bug resulting from change in RotatePDB(); now
                   calls ApplyMatrixPDB() instead
-   V1.5  05.10.94 Modified for KillSidechain() returning BOOL
-   V1.6  09.11.94 Modified to use OpenFile() fo open the data files
-   V1.7  12.08.96 Added RepOneSChain() and EndRepSChain() and a few
+-  V1.5  05.10.94 Modified for KillSidechain() returning BOOL
+-  V1.6  09.11.94 Modified to use OpenFile() fo open the data files
+-  V1.7  12.08.96 Added RepOneSChain() and EndRepSChain() and a few
                   internal changes to RepSChain()
-   V1.8  15.08.96 Removed unused variables from RepOneSChain()
-   V1.9  30.05.02 Changed PDB field from 'junk' to 'record_type'
-   V1.10 09.02.05 Fixed to handle atnam_raw and sensible defaults for
+-  V1.8  15.08.96 Removed unused variables from RepOneSChain()
+-  V1.9  30.05.02 Changed PDB field from 'junk' to 'record_type'
+-  V1.10 09.02.05 Fixed to handle atnam_raw and sensible defaults for
                   occ/bval
-   V1.11 03.06.05 Added altpos
+-  V1.11 03.06.05 Added altpos
 
 *************************************************************************/
 /* Defines required for includes

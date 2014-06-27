@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       WholePDB.c
+   \file       WholePDB.c
    
-   Version:    V1.5
-   Date:       21.06.14
-   Function:   
+   \version    V1.5
+   \date       21.06.14
+   \brief      
    
-   Copyright:  (c) UCL / Dr. Andrew C. R. Martin 2014
-   Author:     Dr. Andrew C. R. Martin
-   Address:    Institute of Structural & Molecular Biology,
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
                University College London,
                Gower Street,
                London.
                WC1E 6BT.
-   EMail:      andrew@bioinf.org.uk
+   \par
+               andrew@bioinf.org.uk
                andrew.martin@ucl.ac.uk
-
+               
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -40,12 +46,12 @@
 
    Revision History:
    =================
-   V1.0  30.05.02 Original
-   V1.1  12.06.08 CTP Added include for port.h
-   V1.2  13.06.08 popen() and pclose() prototypes skipped for Mac OS X.
-   V1.3  17.03.09 popen() prototype skipped for Windows. By: CTP
-   V1.4  22.04.14 Added handling of PDBML files. By CTP
-   V1.5  21.06.14 Updated writing of PDBML files. By: CTP
+-  V1.0  30.05.02 Original
+-  V1.1  12.06.08 CTP Added include for port.h
+-  V1.2  13.06.08 popen() and pclose() prototypes skipped for Mac OS X.
+-  V1.3  17.03.09 popen() prototype skipped for Windows. By: CTP
+-  V1.4  22.04.14 Added handling of PDBML files. By CTP
+-  V1.5  21.06.14 Updated writing of PDBML files. By: CTP
 
 *************************************************************************/
 /* Includes

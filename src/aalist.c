@@ -1,26 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       aalist.c
+   \file       aalist.c
    
-   Version:    V3.0
-   Date:       18.02.09
-   Function:   Amino acid linked lists.
+   \version    V3.0
+   \date       18.02.09
+   \brief      Amino acid linked lists.
    
-   Copyright:  (c) UCL / Dr. Andrew C.R. Martin 2006-2009
-   Author:     Dr. Andrew C.R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C.R. Martin 2006-2009
+   \author     Dr. Andrew C.R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
 
    The code may be modified as required, but any modifications must be
-   documented so that the person responsible can be identified. If someone
-   else breaks this code, I don't want to be blamed for code that does not
-   work! 
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -29,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -41,9 +48,9 @@
 
    Revision History:
    =================
-   V1.0  21.08.06 Original   By: ACRM
-   V3.0  06.11.08 Incorporated into ProFit V3 By: CTP
-   V3.0  18.02.09 Moved to bioplib. By: CTP
+-  V1.0  21.08.06 Original   By: ACRM
+-  V3.0  06.11.08 Incorporated into ProFit V3 By: CTP
+-  V3.0  18.02.09 Moved to bioplib. By: CTP
 
 *************************************************************************/
 /* Includes

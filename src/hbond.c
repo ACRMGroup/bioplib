@@ -1,23 +1,34 @@
 /* #define ALLOW_AXN */
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       hbond.c
+   \file       hbond.c
    
-   Version:    V1.6
-   Date:       20.03.14
-   Function:   Report whether two residues are H-bonded using
+   \version    V1.6
+   \date       20.03.14
+   \brief      Report whether two residues are H-bonded using
                Baker & Hubbard criteria
    
-   Copyright:  (c) SciTech Software 1996-2014
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -26,6 +37,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -40,15 +52,15 @@
 
    Revision History:
    =================
-   V1.0  26.01.96 Original    By: ACRM
-   V1.1  09.02.96 Added #ifdef'd code to allow AE1/AE2 AD1/AD2
-   V1.2  19.12.02 Fixed bug in walking over multiple H atoms
-   V1.3  18.08.05 Fixed bug relating to sidechains like GLN/ASN
-   V1.4  03.01.06 Proline backbone nitrogen cannot act as donor!
+-  V1.0  26.01.96 Original    By: ACRM
+-  V1.1  09.02.96 Added #ifdef'd code to allow AE1/AE2 AD1/AD2
+-  V1.2  19.12.02 Fixed bug in walking over multiple H atoms
+-  V1.3  18.08.05 Fixed bug relating to sidechains like GLN/ASN
+-  V1.4  03.01.06 Proline backbone nitrogen cannot act as donor!
                   Also incorporated fix in ValidHBond() from 02.06.99
                   Inpharmatica version to handle NULL antecedent atoms
-   V1.5  17.01.06 Added IsMCDonorHBonded() and IsMCAcceptorHBonded()
-   V1.6  20.03.14 Updated message in Demo code. By: CTP
+-  V1.5  17.01.06 Added IsMCDonorHBonded() and IsMCAcceptorHBonded()
+-  V1.6  20.03.14 Updated message in Demo code. By: CTP
 
 *************************************************************************/
 /* Includes

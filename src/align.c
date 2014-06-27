@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       align.c
+   \file       align.c
    
-   Version:    V3.3
-   Date:       07.04.09
-   Function:   Perform Needleman & Wunsch sequence alignment
+   \version    V3.3
+   \date       07.04.09
+   \brief      Perform Needleman & Wunsch sequence alignment
    
-   Copyright:  (c) SciTech Software 1993-2009
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2009
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
    A simple Needleman & Wunsch Dynamic Programming alignment of 2 
    sequences.  
    A window is not used so the routine may be a bit slow on long 
@@ -40,29 +52,29 @@
 
    Revision History:
    =================
-   V1.0  19.06.90 Original used in NW program
-   V2.0  07.10.92 Original extracted from old NW program
-   V2.1  16.06.93 Tidied for book
-   V2.2  01.03.94 Changed static variable names
-   V2.3  18.03.94 getc() -> fgetc()
-   V2.4  24.11.94 ReadMDM() now looks after searching DATADIR
-   V2.5  28.02.95 ReadMDM() and other code improved to cope with MDMs of
+-  V1.0  19.06.90 Original used in NW program
+-  V2.0  07.10.92 Original extracted from old NW program
+-  V2.1  16.06.93 Tidied for book
+-  V2.2  01.03.94 Changed static variable names
+-  V2.3  18.03.94 getc() -> fgetc()
+-  V2.4  24.11.94 ReadMDM() now looks after searching DATADIR
+-  V2.5  28.02.95 ReadMDM() and other code improved to cope with MDMs of
                   any size
-   V2.6  26.07.95 Removed unused variables
-   V2.7  21.08.95 Initialisation of matrix was incorrect leading to errors
+-  V2.6  26.07.95 Removed unused variables
+-  V2.7  21.08.95 Initialisation of matrix was incorrect leading to errors
                   at the end of the alignment.
-   V2.8  24.08.95 calcscore() was doing an out-of-bounds array reference
+-  V2.8  24.08.95 calcscore() was doing an out-of-bounds array reference
                   if a character wasn't found
-   V2.9  11.07.96 calcscore() changed to CalcMDMScore() and made 
+-  V2.9  11.07.96 calcscore() changed to CalcMDMScore() and made 
                   non-static
-   V2.10 09.09.96 Improved comments for ReadMDM()
-   V2.11 17.09.96 Added ZeroMDM()
-   V3.0  06.03.00 Traceback code rewritten to use a trace matrix created
+-  V2.10 09.09.96 Improved comments for ReadMDM()
+-  V2.11 17.09.96 Added ZeroMDM()
+-  V3.0  06.03.00 Traceback code rewritten to use a trace matrix created
                   while the main matrix is populated. New affinealign()
                   routine implemented. align() is now a wrapper to that.
-   V3.1  06.02.03 Fixed for new version of GetWord()
-   V3.2  27.02.07 Added affinealineuc() and CalcMDMScoreUC()
-   V3.3  07.04.09 Complete re-write of ReadMDM() so it can read BLAST
+-  V3.1  06.02.03 Fixed for new version of GetWord()
+-  V3.2  27.02.07 Added affinealineuc() and CalcMDMScoreUC()
+-  V3.3  07.04.09 Complete re-write of ReadMDM() so it can read BLAST
                   style matrix files as well as our own
 
 *************************************************************************/

@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       ReadPDB.c
+   \file       ReadPDB.c
    
-   Version:    V2.26
-   Date:       09.06.14
-   Function:   Read coordinates from a PDB file 
+   \version    V2.26
+   \date       09.06.14
+   \brief      Read coordinates from a PDB file 
    
-   Copyright:  (c) SciTech Software 1988-2014
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
    pdb = ReadPDB(fp,natom) - This subroutine will read a .PDB file
    of any size and form a linked list of the protein structure.
    This list is contained in a linked set of structures of type
@@ -74,10 +86,10 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 
    Revision History:
    =================
-   V1.0  04.11.88 Original
-   V1.1  07.02.89 Now ignores any records from the .PDB file which 
+-  V1.0  04.11.88 Original
+-  V1.1  07.02.89 Now ignores any records from the .PDB file which 
                   don't start with ATOM or HETATM.
-   V1.2  28.03.90 Some fields altered to match the exact specifications 
+-  V1.2  28.03.90 Some fields altered to match the exact specifications 
                   of the PDB. The only differences from the standard 
                   are:
                   1. The residue name is 4 characters rather than 3 
@@ -87,23 +99,23 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                      standard's `alternate' field. These two 
                      differences from the standard reflect the common
                      usage.
-   V1.2a 28.06.90 Buffer size increased to 85 chars.
-   V1.2b 15.02.91 Simply changed comment header to match new standard.
-   V1.3  07.01.92 Corrected small bug in while() loop. Now ignores 
+-  V1.2a 28.06.90 Buffer size increased to 85 chars.
+-  V1.2b 15.02.91 Simply changed comment header to match new standard.
+-  V1.3  07.01.92 Corrected small bug in while() loop. Now ignores 
                   blank lines properly
-   V1.4  11.05.92 Added check on EOF in while() loop and memset() of 
+-  V1.4  11.05.92 Added check on EOF in while() loop and memset() of 
                   buffer. ANSIfied.
-   V1.5  01.06.92 Documented for autodoc
-   V1.7  01.10.92 Changed to use fgets()
-   V1.6  19.06.92 Corrected use of stdlib
-   V1.8  08.12.92 SAS/C V6 now defines atof() in stdlib
-   V1.9  10.06.93 Returns TRUE or FALSE rather than exiting on failure
-   V2.0  17.06.93 Rewritten to use fsscanf()
-   V2.1  08.07.93 Modified to give ReadPDB() and ReadPDBAtoms()
-   V2.2  09.07.93 Modified to return the PDB pointer rather than a BOOL.
+-  V1.5  01.06.92 Documented for autodoc
+-  V1.7  01.10.92 Changed to use fgets()
+-  V1.6  19.06.92 Corrected use of stdlib
+-  V1.8  08.12.92 SAS/C V6 now defines atof() in stdlib
+-  V1.9  10.06.93 Returns TRUE or FALSE rather than exiting on failure
+-  V2.0  17.06.93 Rewritten to use fsscanf()
+-  V2.1  08.07.93 Modified to give ReadPDB() and ReadPDBAtoms()
+-  V2.2  09.07.93 Modified to return the PDB pointer rather than a BOOL.
                   There is now no need to initialise the structure first.
                   Rewrote allocation scheme.
-   V2.3  17.03.94 Handles partial occupancies. If occupancies are not
+-  V2.3  17.03.94 Handles partial occupancies. If occupancies are not
                   1.0 or 0.0, the normal routine now reads only the 
                   highest occupancy atoms and corrects the atoms names 
                   to remove alternative labels. This behaviour can be 
@@ -116,43 +128,43 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                   very rare.
                   Added ReadPDBOccRank() & ReadPDBAtomsOccRank()
                   Sets gPDBPartialOcc flag.
-   V2.4  06.04.94 With atom names which start in column 13, now checks
+-  V2.4  06.04.94 With atom names which start in column 13, now checks
                   if the first character is a digit. If so, moves it
                   to the end of the atom name. Thus, 1HH1 becomes HH11
                   and 2HH1 becomes HH12.
-   V2.5  04.10.94 Fixed partial occ when resnum changes as well as atom
+-  V2.5  04.10.94 Fixed partial occ when resnum changes as well as atom
                   name. Fixed bug when MAXPARTIAL exceeded.
-   V2.6  03.11.94 Simply Corrected description. No code changes
-   V2.7  06.03.95 Now reads just the first NMR model by default
+-  V2.6  03.11.94 Simply Corrected description. No code changes
+-  V2.7  06.03.95 Now reads just the first NMR model by default
                   doReadPDB() no longer static
                   Sets gPDBMultiNMR if ENDMDL records found.
-   V2.8  13.01.97 Added check on return from fsscanf. Blank lines used
+-  V2.8  13.01.97 Added check on return from fsscanf. Blank lines used
                   to result in duplication of the previous line since
                   fsscanf() does not reset the variables on receiving
                   a blank line. Also fixed in fsscanf().
-   V2.9  25.02.98 Added transparent reading of gzipped PDB files if
+-  V2.9  25.02.98 Added transparent reading of gzipped PDB files if
                   GUNZIP_SUPPORT is defined
-   V2.10 18.08.98 Added cast to popen() for SunOS
-   V2.11 08.10.99 Initialised some variables
-   V2.12 15.02.01 Added atnam_raw into PDB structure
-   V2.13 30.05.02 Changed PDB field from 'junk' to 'record_type'
-   V2.14 27.04.05 Fixed bug in atnam_raw for multiple occupancies
-   V2.15 03.06.05 Added altpos field to PDB structure. The massaged atom
+-  V2.10 18.08.98 Added cast to popen() for SunOS
+-  V2.11 08.10.99 Initialised some variables
+-  V2.12 15.02.01 Added atnam_raw into PDB structure
+-  V2.13 30.05.02 Changed PDB field from 'junk' to 'record_type'
+-  V2.14 27.04.05 Fixed bug in atnam_raw for multiple occupancies
+-  V2.15 03.06.05 Added altpos field to PDB structure. The massaged atom
                   name no longer contains the alternate indicator and
                   atnam_raw has only the atom name with altpos having the
                   alternate indicator (as it should!)
-   V2.16 14.10.05 Fixed a problem in StoreOccRankAtom() when a lower
+-  V2.16 14.10.05 Fixed a problem in StoreOccRankAtom() when a lower
                   occupancy atom has (erroneously) been set to occupancy
                   of zero and you want to pull out that atom
-   V2.17 25.01.06 Added calls to RemoveAlternates()
-   V2.18 03.02.06 Added prototypes for popen() and pclose()
-   V2.19 05.06.07 Added support for Unix compress'd files
-   V2.20 29.06.07 popen() and pclose() prototypes now skipped for MAC OSX
+-  V2.17 25.01.06 Added calls to RemoveAlternates()
+-  V2.18 03.02.06 Added prototypes for popen() and pclose()
+-  V2.19 05.06.07 Added support for Unix compress'd files
+-  V2.20 29.06.07 popen() and pclose() prototypes now skipped for MAC OSX
                   which defines them differently
-   V2.21 17.03.09 popen() prototype skipped for Windows. By: CTP
-   V2.22 21.12.11 doReadPDB() modified for cases where atoms are single
+-  V2.21 17.03.09 popen() prototype skipped for Windows. By: CTP
+-  V2.22 21.12.11 doReadPDB() modified for cases where atoms are single
                   occupancy but occupancy is < 1.0
-   V2.23 04.02.14 Use CHAINMATCH macro. By: CTP
+-  V2.23 04.02.14 Use CHAINMATCH macro. By: CTP
    V2,24 22.04.14 Added PDBML parsing with doReadPDBML() and 
                   CheckFileFormatPDBML(). By CTP
    V2,25 02.06.14 Updated doReadPDBML(). By: CTP

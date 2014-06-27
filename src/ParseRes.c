@@ -1,22 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       ParseRes.c
+   \file       ParseRes.c
    
-   Version:    V1.12
-   Date:       26.02.14
-   Function:   Parse a residue specification
+   \version    V1.12
+   \date       26.02.14
+   \brief      Parse a residue specification
    
-   Copyright:  (c) SciTech Software 1993-2013
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2013
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
                andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -25,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -35,30 +46,30 @@
 
    Revision History:
    =================
-   V1.0  01.03.94 Original
-   V1.1  07.07.95 Now non-destructive
-   V1.2  17.07.95 Now checks that a number was specified as part of the
+-  V1.0  01.03.94 Original
+-  V1.1  07.07.95 Now non-destructive
+-  V1.2  17.07.95 Now checks that a number was specified as part of the
                   spec. and returns a BOOL
-   V1.3  23.10.95 Moved FindResidueSpec() from PDBList.c
-   V1.4  08.02.96 Added FindResidue() and changed FindResidueSpec() to
+-  V1.3  23.10.95 Moved FindResidueSpec() from PDBList.c
+-  V1.4  08.02.96 Added FindResidue() and changed FindResidueSpec() to
                   use it
-   V1.5  23.07.96 Added AtomNameMatch() and LegalAtomSpec()
-   V1.6  18.03.98 Added option to include a . to separate chain and 
+-  V1.5  23.07.96 Added AtomNameMatch() and LegalAtomSpec()
+-  V1.6  18.03.98 Added option to include a . to separate chain and 
                   residue number so numeric chain names can be used
-   V1.7  11.10.99 Allow a . to be used to start a number (such that the
+-  V1.7  11.10.99 Allow a . to be used to start a number (such that the
                   default blank chain name is used). Allows negative 
                   residue numbers
-   V1.8  29.09.05 Moved ParseResSpec() into DoParseResSpec() with extra
+-  V1.8  29.09.05 Moved ParseResSpec() into DoParseResSpec() with extra
                   param and added wrappers for ParseResSpec() and 
                   ParseResSpecNoUpper()  (Changes by Tony Lewis) By: TL
-   V1.9  05.01.12 Default behaviour of ParseResSpec() is now not to
+-  V1.9  05.01.12 Default behaviour of ParseResSpec() is now not to
                   upcase the chain label - there are now too many PDB
                   entries with lower case chain names for this to be
                   sensible.   By: ACRM
-   V1.10 12.10.12 insert is now a properly terminated string when there is
+-  V1.10 12.10.12 insert is now a properly terminated string when there is
                   no insert
-   V1.11 28.08.13 chain is now a properly terminated string
-   V1.12 26.02.14 Parsing handles multi-letter chains. By: CTP
+-  V1.11 28.08.13 chain is now a properly terminated string
+-  V1.12 26.02.14 Parsing handles multi-letter chains. By: CTP
 
 *************************************************************************/
 /* Includes

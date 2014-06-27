@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       pdb.h
+   \file       pdb.h
    
-   Version:    V1.56
-   Date:       21.06.14
-   Function:   Include file for pdb routines
+   \version    V1.56
+   \date       21.06.14
+   \brief      Include file for pdb routines
    
-   Copyright:  (c) SciTech Software, UCL, Reading 1993-2014
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -34,88 +46,88 @@
 
    Revision History:
    =================
-   V1.0  04.11.88 Original
-   V1.1  22.03.90 Added Secondary structure routines
-   V1.2  28.03.90 Corrected field widths for V1.2 of ReadPDB
-   V1.3  04.05.90 Added clear_pdb()
-   V1.4  19.06.90 Changed SEC structure to correct chain and ins widths
-   V1.5  19.07.90 Added INITINDEX macro
-   V1.6  09.09.91 Added define so won't screw up if included twice
-   V1.7  22.09.91 Altered character sizes for alignment
-   V1.8  10.06.93 Changed to use REAL rather than float. Changed 
+-  V1.0  04.11.88 Original
+-  V1.1  22.03.90 Added Secondary structure routines
+-  V1.2  28.03.90 Corrected field widths for V1.2 of ReadPDB
+-  V1.3  04.05.90 Added clear_pdb()
+-  V1.4  19.06.90 Changed SEC structure to correct chain and ins widths
+-  V1.5  19.07.90 Added INITINDEX macro
+-  V1.6  09.09.91 Added define so won't screw up if included twice
+-  V1.7  22.09.91 Altered character sizes for alignment
+-  V1.8  10.06.93 Changed to use REAL rather than float. Changed 
                   order within structure
-   V1.9  22.02.94 Added MAXSTDAA and MAXATINRES definitions
-   V1.10 01.03.94 Added stuff for ResolPDB. Removed INIT_INDEX().
+-  V1.9  22.02.94 Added MAXSTDAA and MAXATINRES definitions
+-  V1.10 01.03.94 Added stuff for ResolPDB. Removed INIT_INDEX().
                   Added DISULPHIDE definition.
                   Added HADDINFO definition.
-   V1.11 18.03.94 Added prototypes for ReadPDBOccRank() and
+-  V1.11 18.03.94 Added prototypes for ReadPDBOccRank() and
                   ReadPDBAtomsOccRank()
                   Added gPDBPartialOcc
-   V1.12 23.05.94 Added FindNextChainPDB() prototype
-   V1.13 24.08.94 Added OpenPGPFile() prototype. Added prototypes for
+-  V1.12 23.05.94 Added FindNextChainPDB() prototype
+-  V1.13 24.08.94 Added OpenPGPFile() prototype. Added prototypes for
                   new version of FixPDB(). Added CTER styles
-   V1.14 03.10.94 Added FindCofGPDBRange(), FindCofGPDBSCRange(),
+-  V1.14 03.10.94 Added FindCofGPDBRange(), FindCofGPDBSCRange(),
                   ReadPDBALL()
-   V1.15 05.10.94 Changed KillSidechain()
-   V1.16 11.01.94 Added StripHPDB()
-   V1.17 06.03.95 doReadPDB() is now defined here rather than static
-   V1.18 17.07.95 ParseResSpec() is now a BOOL
-   V1.19 24.07.95 Added FNam2PDB(), TermPDB()
-   V1.20 25.07.95 Added GetPDBChainLabels()
-   V1.21 08.08.95 Added FindResidueSpec() and FindNextResidue()
-   V1.22 12.10.95 Added DupePDB(), CopyPDBCoords(), CalcCellTrans(),
+-  V1.15 05.10.94 Changed KillSidechain()
+-  V1.16 11.01.94 Added StripHPDB()
+-  V1.17 06.03.95 doReadPDB() is now defined here rather than static
+-  V1.18 17.07.95 ParseResSpec() is now a BOOL
+-  V1.19 24.07.95 Added FNam2PDB(), TermPDB()
+-  V1.20 25.07.95 Added GetPDBChainLabels()
+-  V1.21 08.08.95 Added FindResidueSpec() and FindNextResidue()
+-  V1.22 12.10.95 Added DupePDB(), CopyPDBCoords(), CalcCellTrans(),
                   GetCrystPDB(), WriteCrystPDB()
-   V1.23 10.01.96 Added ExtractZonePDB()
-   V1.24 08.02.96 Added FindResidue()
-   V1.25 14.03.96 Added FitCaPDB(), FindAtomInRes()
-   V1.26 18.06.96 Added InPDBZone() and ZONE_MODE_*. Modified prototype
+-  V1.23 10.01.96 Added ExtractZonePDB()
+-  V1.24 08.02.96 Added FindResidue()
+-  V1.25 14.03.96 Added FitCaPDB(), FindAtomInRes()
+-  V1.26 18.06.96 Added InPDBZone() and ZONE_MODE_*. Modified prototype
                   for FindZonePDB()
-   V1.27 23.07.96 Added AtomNameMatch() and LegalAtomSpec()
-   V1.28 12.08.96 Added RepOneSChain() and EndRepSChain()
-   V1.29 19.09.96 Added InPDBZoneSpec()
-   V1.30 14.10.96 Added ReadSeqresPDB();
-   V1.31 16.10.96 Added SelectCaPDB()
-   V1.32 18.08.98 Changed SEC to SECSTRUC 'cos of conflict in SunOS
+-  V1.27 23.07.96 Added AtomNameMatch() and LegalAtomSpec()
+-  V1.28 12.08.96 Added RepOneSChain() and EndRepSChain()
+-  V1.29 19.09.96 Added InPDBZoneSpec()
+-  V1.30 14.10.96 Added ReadSeqresPDB();
+-  V1.31 16.10.96 Added SelectCaPDB()
+-  V1.32 18.08.98 Changed SEC to SECSTRUC 'cos of conflict in SunOS
                   Also defines SEC macro if not defined to warn you to
                   change your code!
-   V1.33 28.04.99 Added GetExptl()
-   V1.34 15.02.01 Added atnam_raw[] to PDB
+-  V1.33 28.04.99 Added GetExptl()
+-  V1.34 15.02.01 Added atnam_raw[] to PDB
                   Added WriteGromosPDB(), WriteGromosPDBRecord(),
                         AtomNameRawMatch()
-   V1.35 12.12.01 Added FitNCaCPDB()
-   V1.36 30.05.02 Changed PDB field from 'junk' to 'record_type'
+-  V1.35 12.12.01 Added FitNCaCPDB()
+-  V1.36 30.05.02 Changed PDB field from 'junk' to 'record_type'
                   Added the WholePDB routines and definition
-   V1.37 03.06.05 Added altpos to PDB.
+-  V1.37 03.06.05 Added altpos to PDB.
                   Added altpos and atnam_raw to CLEAR_PDB
-   V1.38 22.09.05 Added WritePDBRecordAtnam()
-   V1.39 29.09.05 Added ParseResSpecNoUpper() and DoParseResSpec()  By: TL
-   V1.40 04.01.06 Added AddCBtiGly(), AddCBtoAllGly(), 
+-  V1.38 22.09.05 Added WritePDBRecordAtnam()
+-  V1.39 29.09.05 Added ParseResSpecNoUpper() and DoParseResSpec()  By: TL
+-  V1.40 04.01.06 Added AddCBtiGly(), AddCBtoAllGly(), 
                   StripGlyCB()      By: ACRM
-   V1.41 25.01.06 Added RemoveAlternates()
-   V1.42 08.11.07 Added BuildAtomNeighbourPDBList()
+-  V1.41 25.01.06 Added RemoveAlternates()
+-  V1.42 08.11.07 Added BuildAtomNeighbourPDBList()
                         FindAtomWildcardInRes()
                         DupeResiduePDB()
-   V1.43 30.04.08 Added StripWatersPDB() and ISWATER() macro
-   V1.44 01.06.09 Added extras field to PDB structure
-   V1.45 24.11.09 Added PDBSTRUCT, PDBCHAIN, PDBRESIDUE
+-  V1.43 30.04.08 Added StripWatersPDB() and ISWATER() macro
+-  V1.44 01.06.09 Added extras field to PDB structure
+-  V1.45 24.11.09 Added PDBSTRUCT, PDBCHAIN, PDBRESIDUE
                   AllocPDBStructure(), FindNextChain(),
                   FreePDBStructure()
-   V1.46 26.10.11 Added FindHetatmResidueSpec() and FindHetatmResidue()
-   V1.47 12.12.11 Added GetExptlOld()
+-  V1.46 26.10.11 Added FindHetatmResidueSpec() and FindHetatmResidue()
+-  V1.47 12.12.11 Added GetExptlOld()
                   Added ResportStructureType()
                   Added new STRUCTURE_TYPE_* defines
-   V1.48 04.02.14 Added CHAINMATCH macro. By: CTP
-   V1.49 24.02.14 Added BiopFindResidue(), BiopFindHetatmResidue() and 
+-  V1.48 04.02.14 Added CHAINMATCH macro. By: CTP
+-  V1.49 24.02.14 Added BiopFindResidue(), BiopFindHetatmResidue() and 
                         BiopInPDBZone(). By: CTP
-   V1.50 20.03.14 Added blFindZonePDB(). By: CTP
-   V1.51 25.03.14 Added blGetPDBChainLabels(). By: CTP
-   V1.52 22.04.14 Added CheckFileFormatPDBML(FILE *fp). By: CTP
-   V1.53 07.05.14 Added deprecated.h and removed definitions for 
+-  V1.50 20.03.14 Added blFindZonePDB(). By: CTP
+-  V1.51 25.03.14 Added blGetPDBChainLabels(). By: CTP
+-  V1.52 22.04.14 Added CheckFileFormatPDBML(FILE *fp). By: CTP
+-  V1.53 07.05.14 Added deprecated.h and removed definitions for 
                   deprecated funtions: FindHetatmResidue(), FindResidue(),
                   InPDBZone() and FindZonePDB(). By: CTP
-   V1.54 02.06.14 Added WritePDBML() By: CTP
-   V1.55 09.06.14 Added gPDBXML flag By: CTP
-   V1.56 21.06.14 Added gPDBXMLForce flag and updated functions:
+-  V1.54 02.06.14 Added WritePDBML() By: CTP
+-  V1.55 09.06.14 Added gPDBXML flag By: CTP
+-  V1.56 21.06.14 Added gPDBXMLForce flag and updated functions:
                   blWritePDB(), blWriteAsPDB(), blWriteAsPDBML(), 
                   blFormatCheckWritePDB(), blWriteWholePDB(), 
                   blWriteWholePDBHeader() and blWriteWholePDBTrailer().

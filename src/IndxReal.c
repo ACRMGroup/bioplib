@@ -1,29 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       IndxReal.c
+   \file       IndxReal.c
    
-   Version:    V1.3
-   Date:       08.07.96
-   Function:   Index heapsort a REAL array
+   \version    V1.3
+   \date       08.07.96
+   \brief      Index heapsort a REAL array
    
-   Copyright:  (c) SciTech Software 1991-1996
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
-
-   Originally written while at:
-               Laboratory of Mathematical Biology,
-               National Institue for Medical Research,
-               The Ridgeway,
-               Mill Hill,
-               London,
-               NW7 1AA
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-1996
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -32,6 +35,7 @@
 
    Description:
    ============
+
    This routine uses a heapsort to index a floating point array
    such that arrin[indx[j]] is in ascending order with j.
    It is modified from the FORTRAN version in 'Numerical Recipes'
@@ -51,10 +55,10 @@
 
    Revision History:
    =================
-   V1.0  23.06.90 Original
-   V1.1  01.06.92 ANSIed and autodoc'd
-   V1.2  19.07.93 Corrected bug (said j=l+1 rather than j=l+l). Oops!
-   V1.3  08.07.96 Changed from double to REAL and tidied.
+-  V1.0  23.06.90 Original
+-  V1.1  01.06.92 ANSIed and autodoc'd
+-  V1.2  19.07.93 Corrected bug (said j=l+1 rather than j=l+l). Oops!
+-  V1.3  08.07.96 Changed from double to REAL and tidied.
 
 *************************************************************************/
 /* Includes

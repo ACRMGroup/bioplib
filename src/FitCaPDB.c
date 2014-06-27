@@ -1,22 +1,33 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       FitCaPDB.c
+   \file       FitCaPDB.c
    
-   Version:    V1.4R
-   Date:       28.01.09
-   Function:   Fit two PDB linked lists. Also a weighted fit and support
+   \version    V1.4R
+   \date       28.01.09
+   \brief      Fit two PDB linked lists. Also a weighted fit and support
                routines
    
-   Copyright:  (c) SciTech Software 1993-2009
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2009
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -25,6 +36,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -35,15 +47,15 @@
 
    Revision History:
    =================
-   V1.0  01.03.94 Original release
-   V1.1  11.03.94 Fixed bug in calls to matfit(). Had not been changed 
+-  V1.0  01.03.94 Original release
+-  V1.1  11.03.94 Fixed bug in calls to matfit(). Had not been changed 
                   to reflect modification in MatMult3_33().
-   V1.2  14.03.94 Fixed FitPDB(); wasn't filling in the output matrix
-   V1.3  14.03.96 Added FitCaPDB()
+-  V1.2  14.03.94 Fixed FitPDB(); wasn't filling in the output matrix
+-  V1.3  14.03.96 Added FitCaPDB()
                   Changed FitPDB() and FitCaCbPDB() to use 
                   ApplyMatrixPDB() rather than RotatePDB() since the PDB
                   linked lists are already at the origin
-   V1.4  28.01.09 Initialize RetVal - this randomly worked in 32bit but
+-  V1.4  28.01.09 Initialize RetVal - this randomly worked in 32bit but
                   broke in 64bit
 
 *************************************************************************/

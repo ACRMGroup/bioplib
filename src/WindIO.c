@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       WindIO.c
+   \file       WindIO.c
    
-   Version:    V1.4R
-   Date:       01.02.01
-   Function:   Windowing I/O for various systems
+   \version    V1.4R
+   \date       01.02.01
+   \brief      Windowing I/O for various systems
    
-   Copyright:  (c) SciTech Software 1992-2001
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@andrew-martin.org
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2001
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -40,13 +46,13 @@
 
    Revision History:
    =================
-   V0.4  25.09.92 Original test version
-   V1.0  11.03.94 Various tidying up for release 
+-  V0.4  25.09.92 Original test version
+-  V1.0  11.03.94 Various tidying up for release 
                   Added RePrompt() and WindowMode()
-   V1.1  15.03.94 Added sInteractive and modified logic with sWindowMode
-   V1.2  18.03.94 Bug fix in WindowInteractive(). Includes SysDefs.h
-   V1.3  18.10.95 Moved Yorn() here from general.c
-   V1.4  01.02.01 Changed gets() to fgets()
+-  V1.1  15.03.94 Added sInteractive and modified logic with sWindowMode
+-  V1.2  18.03.94 Bug fix in WindowInteractive(). Includes SysDefs.h
+-  V1.3  18.10.95 Moved Yorn() here from general.c
+-  V1.4  01.02.01 Changed gets() to fgets()
 
 *************************************************************************/
 /* Definition of windowing type. If nothing defined, simple screen I/O

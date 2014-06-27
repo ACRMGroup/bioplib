@@ -1,28 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       fit.c
+   \file       fit.c
    
-   Version:    V1.5
-   Date:       03.04.09
-   Function:   Perform least squares fitting of coordinate sets
+   \version    V1.5
+   \date       03.04.09
+   \brief      Perform least squares fitting of coordinate sets
    
-   Copyright:  (c) SciTech Software 1993-7
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      amartin@stagleys.demon.co.uk
-               martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-7
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -31,6 +35,7 @@
 
    Description:
    ============
+
    This code performs least squares fitting of two coordinate set using
    the method of McLachlan as modified by Sutcliffe.
 
@@ -45,12 +50,12 @@
 
    Revision History:
    =================
-   V1.0  04.02.91 Original
-   V1.1  01.06.92 ANSIed and static'd
-   V1.2  08.12.92 Changed abs() to ABS() using macros.h. Includes stdio.h
-   V1.3  11.02.94 Changed column flag to BOOL
-   V1.4  03.06.97 Corrected documentation
-   V1.5  03.04.09 Initialize clep in qikfit() By: CTP
+-  V1.0  04.02.91 Original
+-  V1.1  01.06.92 ANSIed and static'd
+-  V1.2  08.12.92 Changed abs() to ABS() using macros.h. Includes stdio.h
+-  V1.3  11.02.94 Changed column flag to BOOL
+-  V1.4  03.06.97 Corrected documentation
+-  V1.5  03.04.09 Initialize clep in qikfit() By: CTP
 
 *************************************************************************/
 /* Includes

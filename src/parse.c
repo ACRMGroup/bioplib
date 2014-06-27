@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       parse.c
+   \file       parse.c
    
-   Version:    V1.10R
-   Date:       28.02.11
-   Function:   A keyword command parser
+   \version    V1.10R
+   \date       28.02.11
+   \brief      A keyword command parser
    
-   Copyright:  (c) SciTech Software 1990-2011
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2011
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
    parse() is a command line parser which will accept upper or
    lower case commands and abbreviations. Comment lines may be
    indicated using a !. The keyword structure array and returned
@@ -75,24 +87,24 @@
 
    Revision History:
    =================
-   V1.0  11.07.90 Original
-   V1.1  29.10.90 match() now frees the memory it allocates and calls
+-  V1.0  11.07.90 Original
+-  V1.1  29.10.90 match() now frees the memory it allocates and calls
                   terminate()
                   parse() now calls terminate() on the keyword string
-   V1.2  25.09.91 Messages will only appear from parse() if NOISY is
+-  V1.2  25.09.91 Messages will only appear from parse() if NOISY is
                   #defined.
                   Added FPU support.
-   V1.3  28.05.92 ANSIed and autodoc'd
-   V1.4  08.12.92 Includes stdlib.h
-   V1.5  22.04.93 Various tidying to exact ANSI standard and of function
+-  V1.3  28.05.92 ANSIed and autodoc'd
+-  V1.4  08.12.92 Includes stdlib.h
+-  V1.5  22.04.93 Various tidying to exact ANSI standard and of function
                   headers. Corrected some calls to free()
-   V1.6  16.06.93 Tidied for book
-   V1.7  01.03.94 Added mparse()
-   V1.8  11.03.94 Added internal support for lines starting with a $.
+-  V1.6  16.06.93 Tidied for book
+-  V1.7  01.03.94 Added mparse()
+-  V1.8  11.03.94 Added internal support for lines starting with a $.
                   The line is passed as a system() call and parse()
                   acts as if the line had been a comment.
-   V1.9  08.10.99 Initialised some variables
-   V1.10 28.02.11 Added # as a comment introducer
+-  V1.9  08.10.99 Initialised some variables
+-  V1.10 28.02.11 Added # as a comment introducer
 
 *************************************************************************/
 /* Includes

@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       DupeResiduePDB.c
+   \file       DupeResiduePDB.c
    
-   Version:    V1.1
-   Date:       08.11.07
-   Function:   Create a new PDB linked list with a copy of a residue
+   \version    V1.1
+   \date       08.11.07
+   \brief      Create a new PDB linked list with a copy of a residue
    
-   Copyright:  (c) Dr. Andrew C. R. Martin, UCL, 1996-2007
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 1996-2007
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -34,8 +46,8 @@
 
    Revision History:
    =================
-   V1.0 27.08.96 Original from mutmodel  By: ACRM
-   V1.1 08.11.07 Initialize p and q; Moved into bioplib
+-  V1.0 27.08.96 Original from mutmodel  By: ACRM
+-  V1.1 08.11.07 Initialize p and q; Moved into bioplib
 
 *************************************************************************/
 /* Includes

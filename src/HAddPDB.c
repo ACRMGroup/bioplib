@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       HAddPDB.c
+   \file       HAddPDB.c
    
-   Version:    V2.16
-   Date:       20.03.14
-   Function:   Add hydrogens to a PDB linked list
+   \version    V2.16
+   \date       20.03.14
+   \brief      Add hydrogens to a PDB linked list
    
-   Copyright:  (c) SciTech Software 1990-2014
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
    Routine to add hydrogens to a protein linked list of type PDB.
    The routine allocates space for the new atoms and inserts them
    into the list at the appropriate positions within the residues.
@@ -62,17 +74,17 @@
 
    Revision History:
    =================
-   V2.0  16.05.90 AddH is changed to insert each set of atoms for each 
+-  V2.0  16.05.90 AddH is changed to insert each set of atoms for each 
                   PGP, on the fly, rather than building a complete list 
                   of hydrogens and then merging the two lists. This allows
                   us to get round the problem of missing atoms, since 
                   there will be no merging error.
 
-   V2.1  24.05.90 Returns the number fo hydrogens added. Also fixes bug 
+-  V2.1  24.05.90 Returns the number fo hydrogens added. Also fixes bug 
                   relating to number of type 2 and type 3 H's added.
                   Doesn't work under UNIX!
 
-   V2.2  15.07.91 A few bits of tidying up:
+-  V2.2  15.07.91 A few bits of tidying up:
                   >  Now uses macros.h rather than defining macros itself. 
                   >  Arrays now changed so should fix alignment problems 
                      under UNIX. 
@@ -87,24 +99,24 @@
                   >  Bug fix for type 3's
                   Currently untested under UNIX.
 
-   V2.3  27.07.93 Changed to use fsscanf() and I/O precision is double
-   V2.4  08.03.94 Changed static variable names and added casts on
+-  V2.3  27.07.93 Changed to use fsscanf() and I/O precision is double
+-  V2.4  08.03.94 Changed static variable names and added casts on
                   maths functions. Added Dummy atom handling in makeh().
                   A few other bits of tidying.
-   V2.5  23.08.94 Added OpenPGPFile() routine
-   V2.6  01.09.94 Fixed bug in some compilers in ReadPGP()
-   V2.7  26.01.96 Wasn't handling insert codes in PDB.
-   V2.8  24.05.99 Fixed two memory leaks in makeh()
+-  V2.5  23.08.94 Added OpenPGPFile() routine
+-  V2.6  01.09.94 Fixed bug in some compilers in ReadPGP()
+-  V2.7  26.01.96 Wasn't handling insert codes in PDB.
+-  V2.8  24.05.99 Fixed two memory leaks in makeh()
                   Also skips HETATMs in GenH()
-   V2.9  30.05.02 Changed PDB field from 'junk' to 'record_type'
-   V2.10 05.12.02 Correctly sets the atnam_raw field
-   V2.11 27.03.03 Fixed severe memory leak in AddH()
-   V2.12 03.06.05 Added altpos
-   V2.13 28.07.05 Added conditionals for msdos and Mac OS/X
-   V2.14 28.11.05 No longer exits if previous C is missing
-   V2.15 24.01.06 Fixed error message in GenH() which could try to print 
+-  V2.9  30.05.02 Changed PDB field from 'junk' to 'record_type'
+-  V2.10 05.12.02 Correctly sets the atnam_raw field
+-  V2.11 27.03.03 Fixed severe memory leak in AddH()
+-  V2.12 03.06.05 Added altpos
+-  V2.13 28.07.05 Added conditionals for msdos and Mac OS/X
+-  V2.14 28.11.05 No longer exits if previous C is missing
+-  V2.15 24.01.06 Fixed error message in GenH() which could try to print 
                   from NULL pointer
-   V2.16 20.03.14 Updated error message in GenH(). By: CTP
+-  V2.16 20.03.14 Updated error message in GenH(). By: CTP
 
 *************************************************************************/
 /* Includes

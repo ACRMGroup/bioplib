@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       ReadPIR.c
+   \file       ReadPIR.c
    
-   Version:    V2.7R
-   Date:       06.02.96
-   Function:   Read a PIR sequence file
+   \version    V2.7R
+   \date       06.02.96
+   \brief      Read a PIR sequence file
    
-   Copyright:  (c) SciTech Software 1991-6
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-6
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -53,17 +59,17 @@
 
    Revision History:
    =================
-   V1.0  01.06.92 Original
-   V2.0  08.03.94 Changed name of ReadPIR() to ReadSimplePIR()
+-  V1.0  01.06.92 Original
+-  V2.0  08.03.94 Changed name of ReadPIR() to ReadSimplePIR()
                   Added new ReadPIR().
-   V2.1  18.03.94 getc() -> fgetc()
-   V2.2  11.05.94 Changes to ReadPIR() for better compatibility with
+-  V2.1  18.03.94 getc() -> fgetc()
+-  V2.2  11.05.94 Changes to ReadPIR() for better compatibility with
                   PIR V38.0 and V39.0
-   V2.3  28.02.95 Added ReadRawPIR()
-   V2.4  13.03.95 Fixed bug in reading text lines in ReadRawPIR()
-   V2.5  26.07.95 Removed unused variables
-   V2.6  30.10.95 Cosmetic
-   V2.7  06.02.96 Removes trailing spaces from comment line
+-  V2.3  28.02.95 Added ReadRawPIR()
+-  V2.4  13.03.95 Fixed bug in reading text lines in ReadRawPIR()
+-  V2.5  26.07.95 Removed unused variables
+-  V2.6  30.10.95 Cosmetic
+-  V2.7  06.02.96 Removes trailing spaces from comment line
 
 *************************************************************************/
 /* Includes

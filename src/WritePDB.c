@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       WritePDB.c
+   \file       WritePDB.c
    
-   Version:    V1.12
-   Date:       21.06.14
-   Function:   Write a PDB file from a linked list
+   \version    V1.12
+   \date       21.06.14
+   \brief      Write a PDB file from a linked list
    
-   Copyright:  (c) SciTech Software 1993-2014
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
    This routine will write a .PDB file of any size from a linked list of 
    the protein structure. This list is contained in a linked set of 
    structures of type pdb_entry. The strucure is set up by including the 
@@ -41,22 +53,22 @@
 
    Revision History:
    =================
-   V1.0  08.03.89 Original
-   V1.2  28.03.90 Modified to match the correct column definition of 
+-  V1.0  08.03.89 Original
+-  V1.2  28.03.90 Modified to match the correct column definition of 
                   ReadPDB V1.2   (N.B. There was no V1.1)
-   V1.3  01.06.92 Corrected header, to match standard. Autodoc'd, 
+-  V1.3  01.06.92 Corrected header, to match standard. Autodoc'd, 
                   ANSIed. Added FPU check.
-   V1.4  10.06.93 Changed to use NEXT() macro. void types
-   V1.5  22.02.94 Added TER card at end of file
-   V1.6  15.02.01 Writes using atnam_raw so atom name is unchanged from
+-  V1.4  10.06.93 Changed to use NEXT() macro. void types
+-  V1.5  22.02.94 Added TER card at end of file
+-  V1.6  15.02.01 Writes using atnam_raw so atom name is unchanged from
                   input
-   V1.7  30.05.02 Changed PDB field from 'junk' to 'record_type'
-   V1.8  03.06.05 'atnam_raw' no longer includes the alternate indicator
+-  V1.7  30.05.02 Changed PDB field from 'junk' to 'record_type'
+-  V1.8  03.06.05 'atnam_raw' no longer includes the alternate indicator
                   which is now in 'altpos'
-   V1.9  22.09.06 Added WritePDBRecordAtnam()
-   V1.10 04.02.14 Use CHAINMATCH macro. By: CTP
-   V1.11 01.06.14 Added WritePDBML() By: CTP
-   V1.12 21.06.14 Added blWritePDB(), blFormatCheckWritePDB() and 
+-  V1.9  22.09.06 Added WritePDBRecordAtnam()
+-  V1.10 04.02.14 Use CHAINMATCH macro. By: CTP
+-  V1.11 01.06.14 Added WritePDBML() By: CTP
+-  V1.12 21.06.14 Added blWritePDB(), blFormatCheckWritePDB() and 
                   blWriteAsPDB(). Renamed WritePDBML() to blWriteAsPDBML()
                   and deprecated WritePDB(). Defined WRITEPDB_MAIN.
                   By: CTP

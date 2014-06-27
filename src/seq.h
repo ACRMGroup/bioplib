@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       seq.h
+   \file       seq.h
    
-   Version:    V2.10R
-   Date:       27.02.07
-   Function:   Header file for sequence handling
+   \version    V2.10R
+   \date       27.02.07
+   \brief      Header file for sequence handling
    
-   Copyright:  (c) SciTech Software 1991-2007
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2007
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -34,17 +46,17 @@
 
    Revision History:
    =================
-   V2.0  11.03.94 Original V2 release
-   V2.1  11.05.94 Added DNAtoAA() & TrueSeqLen() prototypes
-   V2.2  13.05.93 Added KnownSeqLen() prototype
-   V2.3  28.02.95 Added ReadRawPIR()
-   V2.4  25.07.95 Added the gBioplibSeqNucleicAcid external for throne()
-   V2.5  11.07.96 Added CalcMDMScore()
-   V2.6  17.09.95 Added ZeroMDM()
-   V2.7  26.08.97 Added macro interfaces to new DoPDB2Seq()
-   V2.8  08.03.00 Added Numeric***() alignment routines
-   V2.9  02.10.00 Modified DoPDB2Seq()
-   V2.10 27.02.07 Added CalcMDMScoreUC() and affinealignuc()
+-  V2.0  11.03.94 Original V2 release
+-  V2.1  11.05.94 Added DNAtoAA() & TrueSeqLen() prototypes
+-  V2.2  13.05.93 Added KnownSeqLen() prototype
+-  V2.3  28.02.95 Added ReadRawPIR()
+-  V2.4  25.07.95 Added the gBioplibSeqNucleicAcid external for throne()
+-  V2.5  11.07.96 Added CalcMDMScore()
+-  V2.6  17.09.95 Added ZeroMDM()
+-  V2.7  26.08.97 Added macro interfaces to new DoPDB2Seq()
+-  V2.8  08.03.00 Added Numeric***() alignment routines
+-  V2.9  02.10.00 Modified DoPDB2Seq()
+-  V2.10 27.02.07 Added CalcMDMScoreUC() and affinealignuc()
 
 *************************************************************************/
 #ifndef _SEQ_H

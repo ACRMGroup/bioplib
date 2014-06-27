@@ -1,29 +1,34 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       BuffInp.c
+   \file       BuffInp.c
    
-   Version:    V1.1R
-   Date:       11.03.94
-   Function:   Read from a file a line at a time, allowing one to probe
+   \version    V1.1R
+   \date       11.03.94
+   \brief      Read from a file a line at a time, allowing one to probe
                ahead and look at the contants of the next line without
                removing it from the input stream.
    
-   Copyright:  (c) SciTech Software 1994
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -32,6 +37,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -42,8 +48,8 @@
 
    Revision History:
    =================
-   V1.0  08.03.94 Original
-   V1.1  11.03.94 Changes to ReadBufferedFile() and ProbeBufferedFile()
+-  V1.0  08.03.94 Original
+-  V1.1  11.03.94 Changes to ReadBufferedFile() and ProbeBufferedFile()
                   to RePrompt() if reading from stdin when we get a 
                   blank line
 

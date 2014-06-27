@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       fsscanf.c
+   \file       fsscanf.c
    
-   Version:    V1.3R
-   Date:       13.01.97
-   Function:   Read from a string using FORTRAN-like rigid formatting
+   \version    V1.3R
+   \date       13.01.97
+   \brief      Read from a string using FORTRAN-like rigid formatting
    
-   Copyright:  (c) SciTech Software 1993-7
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-7
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
    Hard formatted version of sscanf(). Implements FORTRAN-like file 
    reading.
  
@@ -64,14 +76,14 @@
 
    Revision History:
    =================
-   V1.0  17.06.93 Original    By: ACRM
-   V1.1  12.07.93 Added %u and %lu. Corrected %s and %c to blank rather 
+-  V1.0  17.06.93 Original    By: ACRM
+-  V1.1  12.07.93 Added %u and %lu. Corrected %s and %c to blank rather 
                   than NULL strings if buffer runs out. Pads string if 
                   buffer ran out in the middle. Takes \n in buffer as end 
                   of string.
-   V1.2  24.11.95 `value' was a fixed 40 character buffer. Now changed to
+-  V1.2  24.11.95 `value' was a fixed 40 character buffer. Now changed to
                   allocate a suitable number of characters as required.
-   V1.3  13.01.97 Now does the EOF return at the end of the routine
+-  V1.3  13.01.97 Now does the EOF return at the end of the routine
                   rather than at the beginning so that all the variable
                   get set to blank or zero first.
 

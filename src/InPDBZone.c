@@ -1,22 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       InPDBZone.c
+   \file       InPDBZone.c
    
-   Version:    V1.7
-   Date:       07.05.14
-   Function:   
+   \version    V1.7
+   \date       07.05.14
+   \brief      
    
-   Copyright:  (c) SciTech Software 1993-2014
-   Author:     Dr. Andrew C. R. Martin
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -25,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -35,15 +46,15 @@
 
    Revision History:
    =================
-   V1.0  30.09.92 Original
-   V1.1  16.06.93 Tidied for book. Mode now a char.
-   V1.2  18.06.96 Added InPDBZone() from QTree program
-   V1.3  19.09.96 Added InPDBZoneSpec()
-   V1.4  24.02.14 Added BiopInPDBZone() By: CTP
-   V1.5  25.02.14 Added error message for InPDBZone(). By: CTP
-   V1.6  02.03.14 Use strcmp to compare inserts.
+-  V1.0  30.09.92 Original
+-  V1.1  16.06.93 Tidied for book. Mode now a char.
+-  V1.2  18.06.96 Added InPDBZone() from QTree program
+-  V1.3  19.09.96 Added InPDBZoneSpec()
+-  V1.4  24.02.14 Added BiopInPDBZone() By: CTP
+-  V1.5  25.02.14 Added error message for InPDBZone(). By: CTP
+-  V1.6  02.03.14 Use strcmp to compare inserts.
                   Bugfix for insert residues. By: CTP
-   V1.7  07.05.14 Moved InPDBZone() to deprecated.h By: CTP
+-  V1.7  07.05.14 Moved InPDBZone() to deprecated.h By: CTP
 
 *************************************************************************/
 /* Includes

@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       FindAtomWildcardInRes.c
+   \file       FindAtomWildcardInRes.c
    
-   Version:    V1.0
-   Date:       27.08.96
-   Function:   Find an atom within a residue allowing wild cards
+   \version    V1.0
+   \date       27.08.96
+   \brief      Find an atom within a residue allowing wild cards
    
-   Copyright:  (c) Dr. Andrew C. R. Martin, UCL, 1996
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 1996
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -34,7 +46,7 @@
 
    Revision History:
    =================
-   V1.0  27.08.96 Original moved from mutmodel  By: ACRM
+-  V1.0  27.08.96 Original moved from mutmodel  By: ACRM
 
 *************************************************************************/
 /* Includes

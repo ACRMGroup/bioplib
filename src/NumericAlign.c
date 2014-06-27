@@ -1,23 +1,37 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       NumericAlign.c
+   \file       NumericAlign.c
    
-   Version:    V1.2
-   Date:       06.02.03
-   Function:   Perform Needleman & Wunsch sequence alignment on two
+   \version    V1.2
+   \date       06.02.03
+   \brief      Perform Needleman & Wunsch sequence alignment on two
                sequences encoded as numeric symbols.
    
-   Copyright:  (c) SciTech Software / University of Reading 1993-2003
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@stagleys.demon.co.uk, a.c.r.martin@reading.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin / University of Reading 1993-2003
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
+**************************************************************************
+
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
+   according to the conditions laid out in the accompanying file
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
+
+   The code may not be sold commercially or included as part of a 
+   commercial product except as described in the file COPYING.DOC.
+
 **************************************************************************
 
    Note, the code herein is very heavily based on code written by Dr. 
@@ -27,17 +41,9 @@
    than as character arrays was modified from the original version(s)
    while employed at Reading University.
 
-   This program is not in the public domain, but it may be copied
-   according to the conditions laid out in the accompanying file
-   COPYING.DOC
-
-   The code may not be sold commercially or included as part of a 
-   commercial product except as described in the file COPYING.DOC.
-
-**************************************************************************
-
    Description:
    ============
+
    A simple Needleman & Wunsch Dynamic Programming alignment of 2 
    sequences encoded as numeric symbols.  
    A window is not used so the routine may be a bit slow on long 
@@ -54,11 +60,11 @@
 
    Revision History:
    =================
-   V1.0  08.03.00 A modified version of align.c V2.12 written by ACRM
+-  V1.0  08.03.00 A modified version of align.c V2.12 written by ACRM
                   from 19.06.90 to 06.03.00
-   V1.1  28.09.00 Fixed bug at end of alignment if one sequence finishes
+-  V1.1  28.09.00 Fixed bug at end of alignment if one sequence finishes
                   first
-   V1.2  06.02.03 Fixed for new version of GetWord()
+-  V1.2  06.02.03 Fixed for new version of GetWord()
 
 
 *************************************************************************/

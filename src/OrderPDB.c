@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       OrderPDB.c
+   \file       OrderPDB.c
    
-   Version:    V1.3R
-   Date:       23.06.08
-   Function:   Functions to modify atom order in PDB linked list
+   \version    V1.3R
+   \date       23.06.08
+   \brief      Functions to modify atom order in PDB linked list
    
-   Copyright:  (c) SciTech Software 1993-2008
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2008
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -34,10 +46,10 @@
 
    Revision History:
    =================
-   V1.0  22.02.04 Original
-   V1.1  09.03.94 Bug fix in ShuffleResPDB(). Added PCA to sAtoms table
-   V1.2  18.03.94 Bug fix in ShuffleResPDB().
-   V1.3  22.06.08 Bug fix in ShuffleBB()
+-  V1.0  22.02.04 Original
+-  V1.1  09.03.94 Bug fix in ShuffleResPDB(). Added PCA to sAtoms table
+-  V1.2  18.03.94 Bug fix in ShuffleResPDB().
+-  V1.3  22.06.08 Bug fix in ShuffleBB()
 
 *************************************************************************/
 /* Includes

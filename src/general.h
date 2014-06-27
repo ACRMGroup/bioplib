@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       general.h
+   \file       general.h
    
-   Version:    V1.12R
-   Date:       30.05.02
-   Function:   Header file for general purpose routines
+   \version    V1.12R
+   \date       30.05.02
+   \brief      Header file for general purpose routines
    
-   Copyright:  (c) SciTech Software 1994-2002
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2002
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -34,18 +46,18 @@
 
    Revision History:
    =================
-   V1.0  11.05.94 Original    By: ACRM
-   V1.1  24.08.94 Added OpenStdFiles()
-   V1.2  22.09.94 Added OpenFile()
-   V1.3  17.07.95 Added countchar()
-   V1.4  11.09.95 Added fgetsany()
-   V1.5  18.10.95 Moved YorN() to WindIO.h
-   V1.6  06.11.95 Added StoreString(), InStringList() and FreeStringList()
-   V1.7  15.12.95 Added QueryStrStr()
-   V1.8  09.07.96 Added IndxReal()
-   V1.9  18.09.96 Added padchar()
-   V1.11 13.06.00 Added strcatalloc()
-   V1.12 30.05.02 Added WrapString(), WrapPrint(), RightJustify(), 
+-  V1.0  11.05.94 Original    By: ACRM
+-  V1.1  24.08.94 Added OpenStdFiles()
+-  V1.2  22.09.94 Added OpenFile()
+-  V1.3  17.07.95 Added countchar()
+-  V1.4  11.09.95 Added fgetsany()
+-  V1.5  18.10.95 Moved YorN() to WindIO.h
+-  V1.6  06.11.95 Added StoreString(), InStringList() and FreeStringList()
+-  V1.7  15.12.95 Added QueryStrStr()
+-  V1.8  09.07.96 Added IndxReal()
+-  V1.9  18.09.96 Added padchar()
+-  V1.11 13.06.00 Added strcatalloc()
+-  V1.12 30.05.02 Added WrapString(), WrapPrint(), RightJustify(), 
                   GetWordNC() and getfield()
 
 *************************************************************************/

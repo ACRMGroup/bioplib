@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       plotting.c
+   \file       plotting.c
    
-   Version:    V1.2R
-   Date:       27.02.98
-   Function:   Top level HPGL/PS plotting routines
+   \version    V1.2R
+   \date       27.02.98
+   \brief      Top level HPGL/PS plotting routines
    
-   Copyright:  (c) SciTech Software 1992-8
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-8
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,6 +35,7 @@
 
    Description:
    ============
+
    These functions provide a common interface to either PostScript or
    HPGL output.
    They simplified from a set written for the Amiga which also supports
@@ -44,9 +50,9 @@
 
    Revision History:
    =================
-   V1.0  06.04.92 Original    By: ACRM
-   V1.1  01.03.94 First release
-   V1.2  27.02.98 Removed unreachable breaks from switch() statement
+-  V1.0  06.04.92 Original    By: ACRM
+-  V1.1  01.03.94 First release
+-  V1.2  27.02.98 Removed unreachable breaks from switch() statement
 
 *************************************************************************/
 /* Includes

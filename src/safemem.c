@@ -1,22 +1,33 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       safemem.c
+   \file       safemem.c
    
-   Version:    V1.2
-   Date:       03.07.06
-   Function:   Safe malloc()/free() routines which check for array 
+   \version    V1.2
+   \date       03.07.06
+   \brief      Safe malloc()/free() routines which check for array 
                overflow on free.
    
-   Copyright:  (c) SciTech Software 1995-2006
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1995-2006
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -25,6 +36,7 @@
 
    Description:
    ============
+
    safemalloc() and safefree() are provided as temporary debugging
    replacements for malloc() and free(). They maintain their own
    linked list of malloc()'d memory and allocate a `protection buffer'
@@ -58,9 +70,9 @@
 
    Revision History:
    =================
-   V1.0  23.06.95 Original
-   V1.1  27.02.98 Added cast to ptr
-   V1.2  03.07.06 Added 'ok' to the MEMLIST and added safeleaks()
+-  V1.0  23.06.95 Original
+-  V1.1  27.02.98 Added cast to ptr
+-  V1.2  03.07.06 Added 'ok' to the MEMLIST and added safeleaks()
 
 *************************************************************************/
 /* Includes - Note we must *not* include safemem.h since we require the

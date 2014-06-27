@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       Macros.h
+   \file       Macros.h
    
-   Version:    V2.19
-   Date:       07.05.14
-   Function:   Useful macros
+   \version    V2.19
+   \date       07.05.14
+   \brief      Useful macros
    
-   Copyright:  SciTech Software 1991-2014
-   Author:     Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
-
+   \copyright  SciTech Software 1991-2014
+   \author     Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
+               
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
    If not Amiga defines abs().
    Defines max(), min() and PI if not done.
    Defines list handling macros.
@@ -81,48 +93,48 @@
 
    Revision History:
    =================
-   V1.0  06.02.91 Original
-   V1.1  15.02.91 Moved PI definition to non-Amiga's only
-   V1.2  21.03.91 Added RANGECHECK
-   V1.3  06.09.91 Added DIST, DISTSQ and Vec3f
-   V1.4  09.09.91 Fixed multi-command macros with {}
-   V1.5  24.01.92 Fixed for 32 bit addresses and added malloc checks.
-   V1.6  03.04.92 Small change to ALLOCNEXT and ALLOCNEXTPREV, so
+-  V1.0  06.02.91 Original
+-  V1.1  15.02.91 Moved PI definition to non-Amiga's only
+-  V1.2  21.03.91 Added RANGECHECK
+-  V1.3  06.09.91 Added DIST, DISTSQ and Vec3f
+-  V1.4  09.09.91 Fixed multi-command macros with {}
+-  V1.5  24.01.92 Fixed for 32 bit addresses and added malloc checks.
+-  V1.6  03.04.92 Small change to ALLOCNEXT and ALLOCNEXTPREV, so
                   will do a NEXT() even if malloc() fails.
-   V1.7  06.05.92 Added TERMINATE()
-   V1.8  06.07.92 Added MAX(), MIN() and ABS()
-   V1.9  22.07.92 Fixed ABS()
-   V1.10 28.09.92 Added TRUE & FALSE and UPPER()
-   V1.11 03.11.92 Changed TOGGLE and newline is now upper case.   
-   V1.12 16.11.92 Added KILLLEADSPACES()
-   V1.13 18.11.92 Fixed UPPER() for MicrosoftC which returns strlen()
+-  V1.7  06.05.92 Added TERMINATE()
+-  V1.8  06.07.92 Added MAX(), MIN() and ABS()
+-  V1.9  22.07.92 Fixed ABS()
+-  V1.10 28.09.92 Added TRUE & FALSE and UPPER()
+-  V1.11 03.11.92 Changed TOGGLE and newline is now upper case.   
+-  V1.12 16.11.92 Added KILLLEADSPACES()
+-  V1.13 18.11.92 Fixed UPPER() for MicrosoftC which returns strlen()
                   as unsigned
-   V1.14 20.11.92 ABS() now uses 0 rather than 0.0, so we don't
+-  V1.14 20.11.92 ABS() now uses 0 rather than 0.0, so we don't
                   try to use floats with ints...
-   V2.0  24.11.92 Removed all small letter macros
-   V2.1  12.07.93 Added double include check, moved math definitions
+-  V2.0  24.11.92 Removed all small letter macros
+-  V2.1  12.07.93 Added double include check, moved math definitions
                   to MathType.h and added LOWER()
-   V2.2  07.10.93 UPPER() and LOWER() check case first for ESV
+-  V2.2  07.10.93 UPPER() and LOWER() check case first for ESV
                   compatibility
-   V2.3  23.05.94 Added D(BUG)
-   V2.4  14.07.94 Added do{}while(0) bracketing of all multi-line macros
-   V2.5  21.11.94 ABS, MAX and MIN check that they're not already defined
-   V2.6  16.02.95 Added DELETE()
-   V2.7  21.02.95 Updated some internal variable names
-   V2.8  02.08.95 Added TESTINARRAY(), FINDINARRAY(), 
+-  V2.3  23.05.94 Added D(BUG)
+-  V2.4  14.07.94 Added do{}while(0) bracketing of all multi-line macros
+-  V2.5  21.11.94 ABS, MAX and MIN check that they're not already defined
+-  V2.6  16.02.95 Added DELETE()
+-  V2.7  21.02.95 Updated some internal variable names
+-  V2.8  02.08.95 Added TESTINARRAY(), FINDINARRAY(), 
                   SET(), UNSET() and ISSET()
-   V2.9  20.11.95 Added TERMAT()
-   V2.10 06.02.96 Added KILLTRAILSPACES()
-   V2.11 14.06.96 Added PROMPT()
-   V2.12 23.07.96 Added PADMINTERM()
-   V2.13 19.09.96 Include ctype for UPPER() etc
-   V2.14 13.03.99 Added DELETEDOUBLE()
-   V2.15 01.03.01 Added DOTIFY() DEDOTIFY() PADCHARMINTERM() SUBSCHAR()
-   V2.16 25.01.06 Added FINDPREV()
-   V2.17 10.04.08 Fixed bug in DELETE() - the break was not properly
+-  V2.9  20.11.95 Added TERMAT()
+-  V2.10 06.02.96 Added KILLTRAILSPACES()
+-  V2.11 14.06.96 Added PROMPT()
+-  V2.12 23.07.96 Added PADMINTERM()
+-  V2.13 19.09.96 Include ctype for UPPER() etc
+-  V2.14 13.03.99 Added DELETEDOUBLE()
+-  V2.15 01.03.01 Added DOTIFY() DEDOTIFY() PADCHARMINTERM() SUBSCHAR()
+-  V2.16 25.01.06 Added FINDPREV()
+-  V2.17 10.04.08 Fixed bug in DELETE() - the break was not properly
                   stopping prev from being changed
-   V2.18 29.04.14 Added DEPRECATED()   By: CTP
-   V2.19 07.05.14 Moved DEPRECATED() to deprecated.h  By: CTP
+-  V2.18 29.04.14 Added DEPRECATED()   By: CTP
+-  V2.19 07.05.14 Moved DEPRECATED() to deprecated.h  By: CTP
 
 *************************************************************************/
 #ifndef _MACROS_H
