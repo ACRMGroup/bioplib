@@ -74,9 +74,11 @@
 /************************************************************************/
 /*>REAL CalcChi(PDB *pdb, int type)
    --------------------------------
-   Input:   PDB   *pdb     PDB linked list
-            int   type     Torsion type (see below)
-   Returns: REAL           Torsion angle
+*//**
+
+   \param[in]     *pdb     PDB linked list
+   \param[in]     type     Torsion type (see below)
+   \return                   Torsion angle
 
    Calculates a sidechain torsion angle from a pdb linked list. The atoms
    to be included in the calculation are specified by type.
@@ -88,8 +90,8 @@
          2        CB, XG, XD, XE    (4 - 5 - 6 - 7)
          3        XG, XD, XE, XZ    (5 - 6 - 7 - 8)
    
-   13.05.92 Original
-   27.02.98 Removed unreachable break from switch()
+-  13.05.92 Original
+-  27.02.98 Removed unreachable break from switch()
 */
 REAL CalcChi(PDB *pdb,
              int type)

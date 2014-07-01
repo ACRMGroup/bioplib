@@ -89,17 +89,19 @@ void FreeArray3D(char ***array, int dim1, int dim2, int dim3);
 /************************************************************************/
 /*>char ***Array3D(int size, int dim1, int dim2, int dim3)
    -------------------------------------------------------
-   Input:   int   size    Size of an array element
-            int   dim1    First dimension (number of rows)
-            int   dim2    Second dimension (number of columns)
-            int   dim3    Third dimension (number of planes)
-   Returns: char  ***     Array of pointers. Must be cast to required 
+*//**
+
+   \param[in]     size    Size of an array element
+   \param[in]     dim1    First dimension (number of rows)
+   \param[in]     dim2    Second dimension (number of columns)
+   \param[in]     dim3    Third dimension (number of planes)
+   \return                Array of pointers. Must be cast to required 
                           type
 
    Create a 3D array of elements of size `size' with dimensions `dim1' 
    rows by `dim2' columns by `dim3' planes
 
-   30.05.02 Original
+-  30.05.02 Original
 */
 char ***Array3D(int size, int dim1, int dim2, int dim3)
 {
@@ -143,15 +145,17 @@ badexit:
 /************************************************************************/
 /*>void FreeArray3D(char ***array, int dim1, int dim2, int dim3)
    -------------------------------------------------------------
-   Input:   char  ***   Array of pointers to be freed
-            int   dim1  First dimension (number of rows)
-            int   dim2  Second dimension (number of columns)
-            int   dim3  Third dimension (number of planes)
+*//**
+
+   \param[in]     array Array of pointers to be freed
+   \param[in]     dim1  First dimension (number of rows)
+   \param[in]     dim2  Second dimension (number of columns)
+   \param[in]     dim3  Third dimension (number of planes)
 
    Frees a 3D array with dimensions `dim1' rows by `dim2' columns by
    `dim3' planes.
 
-   30.05.02 Original
+-  30.05.02 Original
 */
 void FreeArray3D(char ***array, int dim1, int dim2, int dim3)
 {

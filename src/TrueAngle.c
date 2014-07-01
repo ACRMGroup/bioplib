@@ -42,9 +42,9 @@
    Usage:
    ======
    REAL TrueAngle(REAL opp, REAL adj)
-   Input:   REAL     opp         Length of opposite side
-            REAL     adj         Length of adjacent side
-   Returns: REAL                 The angle from 0 to 2PI
+   \param[in]     opp         Length of opposite side
+   \param[in]     adj         Length of adjacent side
+   \return                         The angle from 0 to 2PI
 
    Returns the true positive angle between 0 and 2PI given the opp and
    adj lengths
@@ -82,13 +82,15 @@
 /************************************************************************/
 /*>REAL TrueAngle(REAL opp, REAL adj)
    ----------------------------------
-   Input:   REAL     opp     Opposite length
-            REAL     adj     Adjacent length
-   Returns: REAL             Angle between 0 and 2PI
+*//**
+
+   \param[in]     opp     Opposite length
+   \param[in]     adj     Adjacent length
+   \return                     Angle between 0 and 2PI
 
    Return the +ve angle between 0 and 2PI given the opp and adj values.
 
-   25.07.94 Original    By: ACRM
+-  25.07.94 Original    By: ACRM
 */
 REAL TrueAngle(REAL opp, REAL adj)
 {

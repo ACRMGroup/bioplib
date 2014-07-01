@@ -110,9 +110,11 @@
 /************************************************************************/
 /*>void Help(char *string, char *HelpFile)
    ---------------------------------------
-   Input:   char  *string     Topic on which to provide help. If "help" or
+*//**
+
+   \param[in]     *string     Topic on which to provide help. If "help" or
                               "?" then list all topics
-            char  *HelpFile   Name of help file, or "CLOSE" to close the
+   \param[in]     *HelpFile   Name of help file, or "CLOSE" to close the
                               help file
 
    Generates help from a help file on the topic named by string. If 
@@ -130,14 +132,14 @@
    specified by the #define HELPENV (normally HELPDIR) will be searched 
    for the help file if not found in the local directory.
    
-   25.09.92 Original
-   28.09.92 Added HELP
-   29.09.92 Changed to file-based version
-   07.10.92 Added paging support
-   12.08.93 Correctly returns if help file not found
-   05.01.94 Handles getenv() call for Unix
-   11.03.94 Resets FirstCall to TRUE when file is closed
-   18.01.95 Calls OpenFile() rather than handling alternative directory
+-  25.09.92 Original
+-  28.09.92 Added HELP
+-  29.09.92 Changed to file-based version
+-  07.10.92 Added paging support
+-  12.08.93 Correctly returns if help file not found
+-  05.01.94 Handles getenv() call for Unix
+-  11.03.94 Resets FirstCall to TRUE when file is closed
+-  18.01.95 Calls OpenFile() rather than handling alternative directory
             internally. Consequently assign or envvar is called HELPDIR.
 */
 void Help(char *string,
@@ -258,10 +260,12 @@ or assign has not been set.\n",HELPENV);
 /************************************************************************/
 /*>void DoHelp(char *string, char *HelpFile)
    -----------------------------------------
-   Input:   char  *string   String on which to give help, must include
+*//**
+
+   \param[in]     *string   String on which to give help, must include
                             the word "help". If given on its own, sits
                             in a loop prompting for help.
-            char  *HelpFile The help file to search
+   \param[in]     *HelpFile The help file to search
 
    Handles help facility.
    This is the normal entry point and should be supplied with the 
@@ -275,10 +279,10 @@ or assign has not been set.\n",HELPENV);
    help followed by a keyword is given, help only on that topic will be 
    supplied.
    
-   25.09.92 Original
-   28.09.92 Changed to call Help("Help")
-   02.10.92 Added GetKybdString() rather than gets() 
-   04.01.94 Changed to fix problem with compilers which
+-  25.09.92 Original
+-  28.09.92 Changed to call Help("Help")
+-  02.10.92 Added GetKybdString() rather than gets() 
+-  04.01.94 Changed to fix problem with compilers which
             don't let you write to strings defined in double 
             inverted commas and never assigned to a variable
 */

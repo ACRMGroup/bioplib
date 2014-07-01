@@ -75,10 +75,12 @@
 /************************************************************************/
 /*>BOOL InPDBZoneSpec(PDB *p, char *resspec1, char *resspec2)
    ----------------------------------------------------------
-   Input:   PDB    *p         Pointer to a PDB record
-            char   *resspec1  Res spec for first residue
-            char   *resspec2  Res spec for last residue
-   Returns: BOOL              Is p in the range specified?
+*//**
+
+   \param[in]     *p         Pointer to a PDB record
+   \param[in]     *resspec1  Res spec for first residue
+   \param[in]     *resspec2  Res spec for last residue
+   \return                      Is p in the range specified?
 
    Determines whether a PDB pointer is within a residue range specified
    using standard format: [c]nnn[i]
@@ -89,8 +91,8 @@
 
    Calls InPDBZone() to do the actual work
 
-   19.09.96 Original  By: ACRM
-   24.02.14 Uses string for chain and insert instead of char.
+-  19.09.96 Original  By: ACRM
+-  24.02.14 Uses string for chain and insert instead of char.
             Wildcard match for multi-letter chain id. 
             Now calls BiopInPDBZone(). By: CTP
 

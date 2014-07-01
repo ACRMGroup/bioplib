@@ -79,6 +79,8 @@
 /************************************************************************/
 /*>DEPRECATED(s, t)
    ----------------
+*//**
+
    The DEPRECATED macro gives a warning message if a function is 
    deprecated and indicates the replacement function.
    
@@ -92,7 +94,7 @@
    -D BIOPLIB_DEPRECATED_CHECK will display the warning message. 
    -D BIOPLIB_DEPRECATED_QUIET will always silence the warning message.
    
-   29.04.14 Original    By: CTP
+-  29.04.14 Original    By: CTP
 */
 #if(defined BIOPLIB_DEPRECATED_CHECK || defined BIOPLIB_DEPRECATED_QUIET)
 #  ifndef BIOPLIB_DEPRECATED_QUIET
@@ -172,32 +174,34 @@
                     char stopinsert, char chain, int mode, 
                     PDB **pdb_start, PDB **pdb_stop)
    -------------------------------------------------------------
-   Input:   PDB   *pdb        PDB linked list
-            int   start       Resnum of start of zone
-            char  startinsert Insert code for start of zone
-            int   stop        Resnum of end of zone
-            char  stopinsert  Insert code for end of zone
-            char  chain       Chain name
-            int   mode        ZONE_MODE_RESNUM:     Use PDB residue 
+*//**
+
+   \param[in]     *pdb        PDB linked list
+   \param[in]     start       Resnum of start of zone
+   \param[in]     startinsert Insert code for start of zone
+   \param[in]     stop        Resnum of end of zone
+   \param[in]     stopinsert  Insert code for end of zone
+   \param[in]     chain       Chain name
+   \param[in]     mode        ZONE_MODE_RESNUM:     Use PDB residue 
                                                     numbers/chain
                               ZONE_MODE_SEQUENTIAL: Use sequential 
                                                     numbering
-   Output:  PDB   **pdb_start Start of zone
-            PDB   **pdb_stop  End of zone
-   Returns: BOOL              OK?
+   \param[out]    **pdb_start Start of zone
+   \param[out]    **pdb_stop  End of zone
+   \return                      OK?
 
    Finds pointers to the start and end of a zone in a PDB linked list. The
    end is the atom *after* the specified zone
 
-   30.09.92 Original
-   17.07.95 Chain name was being ignored in specs like L* (for whole
+-  30.09.92 Original
+-  17.07.95 Chain name was being ignored in specs like L* (for whole
             of light chain)
-   18.08.95 Now handles inserts
-   31.07.95 Fixed bug when zone end==chain end
-   20.02.01 Changed to -999/-999 for beginning/end of chain rather than -1/-1
-   20.03.14 Function deprecated. Converted to wrapper for blFindZonePDB() 
+-  18.08.95 Now handles inserts
+-  31.07.95 Fixed bug when zone end==chain end
+-  20.02.01 Changed to -999/-999 for beginning/end of chain rather than -1/-1
+-  20.03.14 Function deprecated. Converted to wrapper for blFindZonePDB() 
             By: CTP
-   07.05.14 Converted to macro. By: CTP
+-  07.05.14 Converted to macro. By: CTP
 */
 #define FindZonePDB(pdb, start, startinsert, stop, stopinsert, chain,    \
                     mode, pdb_start, pdb_stop)                           \
@@ -228,25 +232,27 @@
 /*>BOOL InPDBZone(PDB *p, char chain, int resnum1, char insert1, 
                   int resnum2, char insert2)
    ----------------------------------------------------------
-   Input:   PDB    *p         Pointer to a PDB record
-            char   chain      Chain name
-            int    resnum1    First residue
-            char   insert1    First insert code
-            int    resnum2    Second residue
-            char   insert2    Second insert code
-   Returns: BOOL              Is p in the range specified?
+*//**
+
+   \param[in]     *p         Pointer to a PDB record
+   \param[in]     chain      Chain name
+   \param[in]     resnum1    First residue
+   \param[in]     insert1    First insert code
+   \param[in]     resnum2    Second residue
+   \param[in]     insert2    Second insert code
+   \return                      Is p in the range specified?
 
    Checks that atom stored in PDB pointer p is within the specified 
    residue range.
 
    N.B. This assumes ASCII coding.
 
-   29.03.95 Original    By: ACRM
-   08.02.96 Insert residues inside a zone were not handled correctly!
-   18.06.96 Added to bioplib from QTree (was called InZone())
-   24.02.14 Converted into wrapper for BiopInPDBZone() By: CTP
-   25.02.14 Added error message. By: CTP
-   07.05.14 Converted to macro. By: CTP
+-  29.03.95 Original    By: ACRM
+-  08.02.96 Insert residues inside a zone were not handled correctly!
+-  18.06.96 Added to bioplib from QTree (was called InZone())
+-  24.02.14 Converted into wrapper for BiopInPDBZone() By: CTP
+-  25.02.14 Added error message. By: CTP
+-  07.05.14 Converted to macro. By: CTP
 */
 #define InPDBZone(p, chain, resnum1, insert1, resnum2, insert2)          \
 ({                                                                       \

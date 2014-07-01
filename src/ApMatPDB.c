@@ -71,12 +71,14 @@
 /************************************************************************/
 /*>void ApplyMatrixPDB(PDB *pdb, REAL matrix[3][3])
    ------------------------------------------------
-   I/O:   PDB  *pdb          PDB linked list
-   Input: REAL matrix[3][3]  Matrix to apply
+*//**
+
+   \param[in,out] *pdb          PDB linked list
+   \param[in]     matrix        Matrix to apply
 
    Apply a rotation matrix to a PDB linked list.
 
-   22.07.93 Original (old RotatePDB())   By: ACRM
+-  22.07.93 Original (old RotatePDB())   By: ACRM
 */
 void ApplyMatrixPDB(PDB  *pdb,
                     REAL matrix[3][3])

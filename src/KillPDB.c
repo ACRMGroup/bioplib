@@ -82,16 +82,18 @@
 /************************************************************************/
 /*>PDB *KillPDB(PDB *pdb, PDB *prev)
    ---------------------------------
-   Input:   PDB  *pdb    Pointer to item in PDB linked list to be removed
-            PDB  *prev   Pointer to previous item in linked list
-   Returns: PDB  *       Next item in PDB linked list
+*//**
+
+   \param[in]     *pdb    Pointer to item in PDB linked list to be removed
+   \param[in]     *prev   Pointer to previous item in linked list
+   \return                Next item in PDB linked list
 
    Kill an item in the PDB linked list and re-link correctly. Returns the
    next item in the list, so will be NULL when the last item in the list
    is killed.
 
-   12.05.92 Original
-   11.03.94 Now handles prev==NULL to delete first item in a list
+-  12.05.92 Original
+-  11.03.94 Now handles prev==NULL to delete first item in a list
 */
 PDB *KillPDB(PDB *pdb,              /* Pointer to record to kill        */
              PDB *prev)             /* Pointer to previous record       */

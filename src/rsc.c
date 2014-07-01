@@ -130,25 +130,27 @@ static PDB *FixTorsions(PDB *pdb, PDB *ResStart, PDB *NextRes,
 /*>BOOL RepSChain(PDB *pdb, char *sequence, char *ChiTable,
                   char *RefCoords)
    --------------------------------------------------------
-   I/O:     PDB   *pdb        PDB linked list to modify
-   Input:   char  *sequence   The 1-letter code required for the structure
-            char  *ChiTable   The equivalent Chi table
-            char  *RefCoords  The reference coordinates file
-   Returns: BOOL              Success?
+*//**
+
+   \param[in,out] *pdb        PDB linked list to modify
+   \param[in]     *sequence   The 1-letter code required for the structure
+   \param[in]     *ChiTable   The equivalent Chi table
+   \param[in]     *RefCoords  The reference coordinates file
+   \return                      Success?
 
    Replace sidechains. Takes a PDB linked list and a 1-letter code 
    sequence and replaces the sidechains. Also requires filenames of the 
    two datafiles. DEL residues in the pdb linked list will be skipped 
    as will -'s in the sequence
    
-   12.05.92 Original
-   14.05.92 Corrected handling of matching DEL and -
-   21.06.93 Changed to allocate chitab using Array2D
-   14.03.94 Changed logic of return value. Now places error messages in
+-  12.05.92 Original
+-  14.05.92 Corrected handling of matching DEL and -
+-  21.06.93 Changed to allocate chitab using Array2D
+-  14.03.94 Changed logic of return value. Now places error messages in
             gRSCError.
-   09.11.94 Uses OpenFile() to look in $(DATADIR) is the file wasn't
+-  09.11.94 Uses OpenFile() to look in $(DATADIR) is the file wasn't
             found as specified.
-   12.08.96 Made static variables external to this routine as they are
+-  12.08.96 Made static variables external to this routine as they are
             shared by RepOneSChain(). sChiTab was being allocated on every
             call instead of just the first one.
 */
@@ -256,13 +258,15 @@ BOOL RepSChain(PDB  *pdb,           /* PDB linked list                  */
 /*>BOOL RepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
                      char *RefCoords)
    -------------------------------------------------------------------
-   I/O:     PDB   *pdb        PDB linked list to modify
-   Input:   char  *resspec    Residue spec for residue to replace in the
+*//**
+
+   \param[in,out] *pdb        PDB linked list to modify
+   \param[in]     *ResSpec    Residue spec for residue to replace in the
                               format [c]nnn[i]
-            char  aa          The 1-letter code for the new sidechain
-            char  *ChiTable   The equivalent Chi table
-            char  *RefCoords  The reference coordinates file
-   Returns: BOOL              Success?
+   \param[in]     aa          The 1-letter code for the new sidechain
+   \param[in]     *ChiTable   The equivalent Chi table
+   \param[in]     *RefCoords  The reference coordinates file
+   \return                      Success?
 
    Replace a single sidechain. Takes a PDB linked list, a residues
    specfication (in the form [c]nnn[i] where [c] is an optional chain
@@ -271,8 +275,8 @@ BOOL RepSChain(PDB  *pdb,           /* PDB linked list                  */
    maximum overlap replacement of the sidechain. Also requires filenames 
    of the two datafiles.
    
-   12.08.96 Original based on RepSChain()
-   15.08.96 Removed unused variables
+-  12.08.96 Original based on RepSChain()
+-  15.08.96 Removed unused variables
 */
 BOOL RepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
                   char *RefCoords)
@@ -356,10 +360,12 @@ BOOL RepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
 /************************************************************************/
 /*>void EndRepSChain(void)
    -----------------------
+*//**
+
    Cleans up open files and memory used by the sidechain replacement
    routines.
 
-   12.08.96 Original   By: ACRM
+-  12.08.96 Original   By: ACRM
 */
 void EndRepSChain(void)
 {
@@ -386,18 +392,20 @@ void EndRepSChain(void)
 /*>static PDB *DoReplace(PDB  *ResStart, PDB  *NextRes, char seq, 
                   int  **chitab, FILE *fp_RefCoords)
    --------------------------------------------------------------
-   I/O:     PDB  *ResStart        Pointer to start of residue
-   Input:   PDB  *NextRes         Pointer to start of next res
-            char seq              1-letter code for this aa
-            int  **chitab         Equivalent chis
-            FILE *fp_RefCoords    Reference coordinate file
-   Returns: PDB  *                If OK, Pointer to end of replaced 
+*//**
+
+   \param[in,out] *ResStart        Pointer to start of residue
+   \param[in]     *NextRes         Pointer to start of next res
+   \param[in]     seq              1-letter code for this aa
+   \param[in]     **chitab         Equivalent chis
+   \param[in]     *fp_RefCoords    Reference coordinate file
+   \return                           If OK, Pointer to end of replaced 
                                   residue; NULL if error.
    
    Main dispatch routine for replacing one residue with another.
 
-   12.05.92 Original
-   21.06.93 Changed to use Array2D allocated chitab 
+-  12.05.92 Original
+-  21.06.93 Changed to use Array2D allocated chitab 
 */
 static PDB *DoReplace(PDB  *ResStart,  /* Pointer to start of residue   */
                       PDB  *NextRes,   /* Pointer to start of next res  */
@@ -432,15 +440,17 @@ static PDB *DoReplace(PDB  *ResStart,  /* Pointer to start of residue   */
 /************************************************************************/
 /*>static int ReplaceWithGly(PDB *ResStart, PDB *NextRes)
    ------------------------------------------------------
-   I/O:     PDB  *ResStart   Start of residue to be modified
-   Input:   PDB  *NextRes    Pointer to start of next residue
-   Returns: int              0: OK, 1: error
+*//**
+
+   \param[in,out] *ResStart   Start of residue to be modified
+   \param[in]     *NextRes    Pointer to start of next residue
+   \return                      0: OK, 1: error
 
    Replace residue X with Gly. This is simply a case of trimming the 
    sidechain and changing the residue name.
    
-   12.05.92 Original
-   05.10.94 Changed for BOOL return from KillSidechain()
+-  12.05.92 Original
+-  05.10.94 Changed for BOOL return from KillSidechain()
 */
 static int ReplaceWithGly(PDB *ResStart,  /* Start of res               */
                           PDB *NextRes)   /* Start of next res          */
@@ -461,15 +471,17 @@ static int ReplaceWithGly(PDB *ResStart,  /* Start of res               */
 /************************************************************************/
 /*>static int ReplaceWithAla(PDB *ResStart, PDB *NextRes)
    ------------------------------------------------------
-   I/O:     PDB  *ResStart   Start of residue to be modified
-   Input:   PDB  *NextRes    Pointer to start of next residue
-   Returns: int              0: OK, 1: error
+*//**
+
+   \param[in,out] *ResStart   Start of residue to be modified
+   \param[in]     *NextRes    Pointer to start of next residue
+   \return                      0: OK, 1: error
 
    Replace residue X with Ala. This is simply a case of trimming the 
    sidechain and changing the residue name.
    
-   12.05.92 Original
-   05.10.94 Changed for BOOL return from KillSidechain()
+-  12.05.92 Original
+-  05.10.94 Changed for BOOL return from KillSidechain()
 */
 static int ReplaceWithAla(PDB *ResStart,  /* Start of residue           */
                           PDB *NextRes)   /* Start of next residue      */
@@ -491,17 +503,19 @@ static int ReplaceWithAla(PDB *ResStart,  /* Start of residue           */
 /*>static int ReplaceGly(PDB *ResStart, PDB *NextRes, char seq,
                          FILE *fp_RefCoords)
    ------------------------------------------------------------
-   I/O:     PDB  *ResStart     Start of residue to be modified
-   Input:   PDB  *NextRes      Pointer to start of next residue
-            char seq           1-letter code for replacement residue
-            FILE *fp_RefCoords Reference coordinate file pointer
-   Returns: int                0: OK, 1: error
+*//**
+
+   \param[in,out] *ResStart     Start of residue to be modified
+   \param[in]     *NextRes      Pointer to start of next residue
+   \param[in]     seq           1-letter code for replacement residue
+   \param[in]     *fp_RefCoords Reference coordinate file pointer
+   \return                        0: OK, 1: error
 
    Replace a Gly with another residue type.
    
-   12.05.92 Original
-   21.06.93 Changed for new version of onethr(). Removed unused param.
-   09.07.93 Simplified allocation checking
+-  12.05.92 Original
+-  21.06.93 Changed for new version of onethr(). Removed unused param.
+-  09.07.93 Simplified allocation checking
 */
 static int ReplaceGly(PDB  *ResStart,
                       PDB  *NextRes,
@@ -631,9 +645,11 @@ Cleanup:
 /************************************************************************/
 /*>static int FitByFragment(PDB *destination, PDB *fragment, PDB *mobile)
    ----------------------------------------------------------------------
-   Input:   PDB *destination       Fragment we're fitting to
-            PDB *fragment          Part of mobile to fit
-   I/O:     PDB *mobile            Whole section to move
+*//**
+
+   \param[in]     *destination       Fragment we're fitting to
+   \param[in]     *fragment          Part of mobile to fit
+   \param[in,out] *mobile            Whole section to move
    Returns  int                    0:OK, 1:Error
 
    Calculate the best fit for moving fragment onto destination. Then move
@@ -641,8 +657,8 @@ Cleanup:
    onto another (destination) then move the whole amino acid (mobile) to 
    overlap the mainchains.
    
-   12.05.92 Original
-   19.05.94 Calls ApplyMatrixPDB() rather than RotatePDB()
+-  12.05.92 Original
+-  19.05.94 Calls ApplyMatrixPDB() rather than RotatePDB()
 */
 static int FitByFragment(PDB *destination, /* Fragment we're fitting to */
                          PDB *fragment,    /* Part of mobile to fit     */
@@ -691,19 +707,21 @@ static int FitByFragment(PDB *destination, /* Fragment we're fitting to */
 /*>static int InsertSC(PDB *insert, PDB *ResStart, PDB *NextRes, 
                        BOOL doCB)
    -------------------------------------------------------------
-   Input:   PDB   *insert    PDB linked list to insert
-            PDB   *ResStart  Start of residue
-            PDB   *NextRes   Start of next residue
-            BOOL  doCB       TRUE: CB will be inserted
+*//**
+
+   \param[in]     *insert    PDB linked list to insert
+   \param[in]     *ResStart  Start of residue
+   \param[in]     *NextRes   Start of next residue
+   \param[in]     doCB       TRUE: CB will be inserted
                              FALSE: CB not inserted
-   Returns: int              0 if OK, 1 if error.
+   \return                      0 if OK, 1 if error.
 
    Inserts the sidechain from insert into the PDB linked list just before
    NextRes. Fresh allocations are made for the copy.
    
-   12.05.92 Original
-   19.06.92 Added num char param to strncmp()!
-   11.03.94 Changed doCB to BOOL
+-  12.05.92 Original
+-  19.06.92 Added num char param to strncmp()!
+-  11.03.94 Changed doCB to BOOL
 */
 static int InsertSC(PDB  *insert, 
                     PDB  *ResStart,
@@ -770,20 +788,22 @@ static int InsertSC(PDB  *insert,
 /*>static int Replace(PDB *ResStart, PDB *NextRes, char seq,
                       int **chitab, FILE *fp_RefCoords)
    ---------------------------------------------------------
-   I/O:     PDB  *ResStart     Start of residue to be modified
-   Input:   PDB  *NextRes      Pointer to start of next residue
-            char seq           1-letter code for replacement residue
-            int  **chitab      Equivalent chi table
-            FILE *fp_RefCoords Reference coordinate file pointer
-   Returns: int                0: OK, 1: error
+*//**
+
+   \param[in,out] *ResStart     Start of residue to be modified
+   \param[in]     *NextRes      Pointer to start of next residue
+   \param[in]     seq           1-letter code for replacement residue
+   \param[in]     **chitab      Equivalent chi table
+   \param[in]     *fp_RefCoords Reference coordinate file pointer
+   \return                        0: OK, 1: error
 
    Replace a non-Gly with another residue type.
    
-   12.05.92 Original
-   21.06.93 Changed for new version of onethr()
-   21.06.93 Changed to use Array2D allocated chitab 
-   09.07.93 Simplified allocation checking
-   05.10.94 Changed for BOOL return from KillSidechain()
+-  12.05.92 Original
+-  21.06.93 Changed for new version of onethr()
+-  21.06.93 Changed to use Array2D allocated chitab 
+-  09.07.93 Simplified allocation checking
+-  05.10.94 Changed for BOOL return from KillSidechain()
 */
 static int Replace(PDB  *ResStart,
                    PDB  *NextRes,
@@ -942,22 +962,24 @@ Cleanup:
 /************************************************************************/
 /*>static PDB *ReadRefCoords(FILE *fp, char seq)
    ---------------------------------------------
-   Input:   FILE  *fp     Reference PDB file pointer
-            char  seq     Residue for which to search
-   Returns: PDB   *       PDB linked list containing residue information
+*//**
+
+   \param[in]     *fp     Reference PDB file pointer
+   \param[in]     seq     Residue for which to search
+   \return                   PDB linked list containing residue information
 
    Reads the sidechain reference file (fp) to find residue type seq, then
    reads in the data for that sidechain into a PDB linked list which is 
    then returned.
    Returns NULL if there is a problem;
 
-   12.05.92 Original
-   21.06.93 Changed for new version of onethr()
-   09.07.93 Corrected check on allocations
-   04.01.94 Corrected string assignments of NULL to '\0'
-   09.02.05 Sets atnam_raw
+-  12.05.92 Original
+-  21.06.93 Changed for new version of onethr()
+-  09.07.93 Corrected check on allocations
+-  04.01.94 Corrected string assignments of NULL to '\0'
+-  09.02.05 Sets atnam_raw
             Sets default occ/bval to 1.0 and 20.0
-   03.06.05 Sets altpos
+-  03.06.05 Sets altpos
 */
 static PDB *ReadRefCoords(FILE *fp,
                           char seq)
@@ -1083,13 +1105,15 @@ static PDB *ReadRefCoords(FILE *fp,
 /************************************************************************/
 /*>static void ReadChiTable(FILE *fp, int **chitab)
    ------------------------------------------------
-   Input:   FILE  *fp        Equivalent Chi table file pointer
-   Output:  int   **chitab   Equivalent chi table.
+*//**
+
+   \param[in]     *fp        Equivalent Chi table file pointer
+   \param[out]    **chitab   Equivalent chi table.
 
    Read the chi table and creates the chitab array.
    
-   13.05.92 Original
-   21.06.93 Changed to use Array2D allocated chitab 
+-  13.05.92 Original
+-  21.06.93 Changed to use Array2D allocated chitab 
 */
 static void ReadChiTable(FILE *fp,
                          int  **chitab)
@@ -1125,11 +1149,13 @@ static void ReadChiTable(FILE *fp,
 /************************************************************************/
 /*>static int FindChiIndex(char *resnam)
    -------------------------------------
-   Input:   char  *resnam     Residue name
-   Returns: int               Pointer into Chi table
+*//**
+
+   \param[in]     *resnam     Residue name
+   \return                       Pointer into Chi table
 
    Find the index into the Chi table for a residue name
-   13.05.92 Original
+-  13.05.92 Original
 */
 static int FindChiIndex(char *resnam)
 {
@@ -1164,20 +1190,22 @@ static int FindChiIndex(char *resnam)
 /*>static PDB *FixTorsions(PDB *pdb, PDB *ResStart, PDB *NextRes, 
                            int **chitab)
    --------------------------------------------------------------
-   I/O:     PDB  *pdb         Linked list to fix torsions
-   Input:   PDB  *ResStart    Beginning of reference frag
-            PDB  *NextRes     Start of next residue
-            int  **chitab     Equivalent chis table
-   Returns: PDB  *            Start of residue. Normally same as input
+*//**
+
+   \param[in,out] *pdb         Linked list to fix torsions
+   \param[in]     *ResStart    Beginning of reference frag
+   \param[in]     *NextRes     Start of next residue
+   \param[in]     **chitab     Equivalent chis table
+   \return                       Start of residue. Normally same as input
                               ResStart, but may differ as backbone
                               order will be corrected.
    
    Take the equivalent torsion angle between ResStart and NextRes and 
    apply them to pdb.
    
-   13.05.92 Original
-   21.06.93 Changed to use Array2D allocated chitab 
-   09.02.05 Chain name was getting set to last one in pdb
+-  13.05.92 Original
+-  21.06.93 Changed to use Array2D allocated chitab 
+-  09.02.05 Chain name was getting set to last one in pdb
 */
 static PDB *FixTorsions(PDB *pdb,      /* Linked list to fix torsions   */
                         PDB *ResStart, /* Beginning of reference frag   */

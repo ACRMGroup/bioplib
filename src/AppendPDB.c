@@ -85,14 +85,16 @@
 /************************************************************************/
 /*>PDB *AppendPDB(PDB *first, PDB *second)
    ---------------------------------------
-   Input:   PDB   *first    First linked list (may be NULL)
-            PDB   *second   Second linked list
-   Returns: PDB   *         Start of list 
+*//**
+
+   \param[in]     *first    First linked list (may be NULL)
+   \param[in]     *second   Second linked list
+   \return                  Start of list 
    
    Appends list second onto first. Returns start of new list (useful if 
    first was NULL).
-   13.05.92 Original
-   09.07.93 Changed to use LAST()
+-  13.05.92 Original
+-  09.07.93 Changed to use LAST()
 */
 PDB *AppendPDB(PDB *first,
                PDB *second)

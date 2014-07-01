@@ -40,6 +40,8 @@
    reading.
  
    The only parsing characters recognised are:
+
+
       %<n>f    A single precision floating point number of width <n>
       %<n>lf   A double precision floating point number of width <n>
       %<n>d    An integer of width <n>
@@ -49,6 +51,7 @@
       %<n>s    A string of width <n>
       %c       A character (of width 1)
       %<n>x    <n> spaces (like FORTRAN).
+
    With the exception of the %c parser, the column width, <n>,
    *must* be specified.
 
@@ -63,6 +66,7 @@
    ======
    For example:
 
+\code
    double   DoubVar;
    int      IntVar;
    char     CharVar,
@@ -70,7 +74,7 @@
 
    fsscanf(buffer,"%8lf%5x%3d%c%3x%8s",
            &DoubVar,&IntVar,&CharVar,StringVar);
-
+\endcode
 
 **************************************************************************
 
@@ -115,17 +119,21 @@
 /************************************************************************/
 /*>int fsscanf(char *buffer, char *format, ...)
    --------------------------------------------
-   Input:   char  *buffer    Buffer from which to read information
-            char  *format    Format string (like scanf() et al., but see
+*//**
+
+   \param[in]     *buffer    Buffer from which to read information
+   \param[in]     *format    Format string (like scanf() et al., but see
                              restrictions below)
-   Output:  ...              Scanned output variables
-   Returns: int              Number of values read (EOF if end of file or
+   \param[out]    ...        Scanned output variables
+   \return                   Number of values read (EOF if end of file or
                              no specifiers found in format string)
 
    Hard formatted version of sscanf(). Implements FORTRAN-like rigid
    column reading out of a string.
  
    The only parsing characters recognised are:
+
+
       %<n>f    A single precision floating point number of width <n>
       %<n>lf   A double precision floating point number of width <n>
       %<n>d    An integer of width <n>
@@ -135,19 +143,20 @@
       %<n>s    A string of width <n>
       %c       A character (of width 1)
       %<n>x    <n> spaces (like FORTRAN).
+
    With the exception of the %c parser, the column width, <n>,
    *must* be specified.
 
    Blank fields read as numbers are given a value of zero.
 
 
-   17.06.93 Original    By: ACRM
-   12.07.93 Added %u and %lu. Corrected %s and %c to blank rather than
+-  17.06.93 Original    By: ACRM
+-  12.07.93 Added %u and %lu. Corrected %s and %c to blank rather than
             NULL strings if buffer runs out. Pads string if buffer ran
             out in the middle. Takes \n in buffer as end of string.
-   24.11.95 `value' was a fixed 40 character buffer. Now changed to
+-  24.11.95 `value' was a fixed 40 character buffer. Now changed to
             allocate a suitable number of characters as required.
-   13.01.97 Previously if reading from a blank line the output variables
+-  13.01.97 Previously if reading from a blank line the output variables
             were unmodified since an EOF return was done immediately.
             Now the immediate EOF return only happens if the input
             buffer is a NULL variable and the EOF on blank string is

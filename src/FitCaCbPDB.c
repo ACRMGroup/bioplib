@@ -84,10 +84,12 @@
 /************************************************************************/
 /*>BOOL FitCaCbPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
    ----------------------------------------------------------
-   Input:   PDB  *ref_pdb   Reference PDB linked list
-   I/O:     PDB  *fit_pdb   PDB linked list to be fitted
-   Output:  REAL rm[3][3]   Rotation matrix
-   Returns: BOOL            Success
+*//**
+
+   \param[in]     *ref_pdb   Reference PDB linked list
+   \param[in,out] *fit_pdb   PDB linked list to be fitted
+   \param[out]    rm         Rotation matrix
+   \return                   Success
 
    Does a weigthed fitting of 2 PDB linked lists. The CA and CB are given
    a weight of 1.0 while the other atoms are given a weight of 1.0/natom
@@ -95,12 +97,12 @@
    Thus for N,CA,C,CB backbone only, this will be N and C with weights 
    of 0.25
 
-   21.06.93 Original    By: ACRM
-   22.06.93 Added i increment (!). Corrected return of rm
-   11.03.94 Changed call to matfit(). Corrected to normal matrix.
-   15.03.94 Defines the rotation matrix locally and only copies for
+-  21.06.93 Original    By: ACRM
+-  22.06.93 Added i increment (!). Corrected return of rm
+-  11.03.94 Changed call to matfit(). Corrected to normal matrix.
+-  15.03.94 Defines the rotation matrix locally and only copies for
             output if rm is not NULL
-   14.03.96 Changed to use ApplyMatrixPDB() rather than RotatePDB() since
+-  14.03.96 Changed to use ApplyMatrixPDB() rather than RotatePDB() since
             we are already at the origin
 */
 BOOL FitCaCbPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])

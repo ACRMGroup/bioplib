@@ -78,15 +78,17 @@
 /************************************************************************/
 /*>INBUFFER OpenBufferedFile(char *filename, int maxstr)
    -----------------------------------------------------
-   Input:   char     *filename   File name
-            int      maxstr      Max string length in file for buffering
-   Returns: INBUFFER *           Pointer to a buffered file
+*//**
+
+   \param[in]     *filename   File name
+   \param[in]     maxstr      Max string length in file for buffering
+   \return                    Pointer to a buffered file
 
    Open a file for buffered input. This allows probe-ahead to look at the
    contents of the next line without removing it from the input stream.
 
-   28.02.94 Original    By: ACRM
-   03.03.94 If filename is NULL, make file stdin
+-  28.02.94 Original    By: ACRM
+-  03.03.94 If filename is NULL, make file stdin
 */
 INBUFFER *OpenBufferedFile(char *filename, int maxstr)
 {
@@ -117,18 +119,20 @@ INBUFFER *OpenBufferedFile(char *filename, int maxstr)
 /************************************************************************/
 /*>BOOL ReadBufferedFile(INBUFFER *bfp, char *string, int length)
    --------------------------------------------------------------
-   Input:   INBUFFER *bfp      Pointer to a buffered file structure
-            int      length    Size of output string
-   Output:  char     *string   Output string read from file
-   Returns: BOOL               TRUE: Successful read
+*//**
+
+   \param[in]     *bfp      Pointer to a buffered file structure
+   \param[in]     length    Size of output string
+   \param[out]    *string   Output string read from file
+   \return                       TRUE: Successful read
                                FALSE: End of file (or error)
 
    Reads a line from a buffered file (like fgets()).
    Blank lines in the file will be skipped.
 
-   28.02.94 Original    By: ACRM
-   07.03.94 Added code to skip blank lines
-   10.03.94 Added call to RePrompt() if we're reading from stdin and
+-  28.02.94 Original    By: ACRM
+-  07.03.94 Added code to skip blank lines
+-  10.03.94 Added call to RePrompt() if we're reading from stdin and
             we get a blank line
 */
 BOOL ReadBufferedFile(INBUFFER *bfp, char *string, int length)
@@ -168,10 +172,12 @@ BOOL ReadBufferedFile(INBUFFER *bfp, char *string, int length)
 /************************************************************************/
 /*>BOOL ProbeBufferedFile(INBUFFER *bfp, char *string, int length)
    ---------------------------------------------------------------
-   Input:   INBUFFER *bfp      Pointer to a buffered file structure
-            int      length    Size of output string
-   Output:  char     *string   Output string read from file
-   Returns: BOOL               TRUE: Successful read
+*//**
+
+   \param[in]     *bfp      Pointer to a buffered file structure
+   \param[in]     length    Size of output string
+   \param[out]    *string   Output string read from file
+   \return                       TRUE: Successful read
                                FALSE: End of file (or error)
 
    Read the next line from a buffered file without removing it from
@@ -180,9 +186,9 @@ BOOL ReadBufferedFile(INBUFFER *bfp, char *string, int length)
    but will remove the line from the input stream.
    Blank lines in the file will be skipped.
 
-   28.02.94 Original    By: ACRM
-   07.03.94 Added code to skip blank lines
-   10.03.94 Added call to RePrompt() after blank line
+-  28.02.94 Original    By: ACRM
+-  07.03.94 Added code to skip blank lines
+-  10.03.94 Added call to RePrompt() after blank line
 */
 BOOL ProbeBufferedFile(INBUFFER *bfp, char *string, int length)
 {

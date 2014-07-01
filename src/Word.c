@@ -94,16 +94,18 @@
 /************************************************************************/
 /*>void Word(char *string1, char *string2)
    ---------------------------------------
-   Input:      char  *string1       A string
-   Output:     char  *string2       A new string
+*//**
+
+   \param[in]     *string1       A string
+   \param[out]    *string2       A new string
 
    Removes leading spaces and extracts a space/tab delimited word. string2
    must have the same amount of space as string1.
 
-   20.03.91 Original
-   28.05.92 ANSIed
-   22.06.92 Added tab check.
-   29.03.01 Changed to use KILLLEADSPACES macro
+-  20.03.91 Original
+-  28.05.92 ANSIed
+-  22.06.92 Added tab check.
+-  29.03.01 Changed to use KILLLEADSPACES macro
 */
 void Word(char  *string1,
           char  *string2)

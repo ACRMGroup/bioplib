@@ -77,9 +77,11 @@
 /************************************************************************/
 /*>DISULPHIDE *ReadDisulphidesPDB(FILE *fp, BOOL *error)
    -----------------------------------------------------
-   Input:   FILE        *fp     PDB file pointer
-   Output:  BOOL        *error  Success
-   Returns: DISULPHIDE  *       Linked list of disulphide information.
+*//**
+
+   \param[in]     *fp     PDB file pointer
+   \param[out]    *error  Success
+   \return                  Linked list of disulphide information.
                                 NULL if none found or error (Check flag)
 
    Searches a PDB file for SSBOND records and constructs a linked list
@@ -88,7 +90,7 @@
    fails, the DISULPHIDE linked list formed thus far is returned and 
    the error flag is set to TRUE
 
-   14.10.93 Original   By: ACRM
+-  14.10.93 Original   By: ACRM
 */
 DISULPHIDE *ReadDisulphidesPDB(FILE *fp, BOOL *error)
 {

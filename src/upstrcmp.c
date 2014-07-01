@@ -92,14 +92,16 @@
 /************************************************************************/
 /*>int upstrcmp(char *word1, char *word2)
    --------------------------------------
-   Input:   char *word1     First word
-            char *word2     Second word
-   Returns: int             0 if strings match or offset of first 
+*//**
+
+   \param[in]     *word1     First word
+   \param[in]     *word2     Second word
+   \return                     0 if strings match or offset of first 
                             mismatched character
 
    Like strcmp(), but upcases each character before comparison
 
-   20.04.94 Original   By: ACRM
+-  20.04.94 Original   By: ACRM
 */
 int upstrcmp(char *word1, char *word2)
 {

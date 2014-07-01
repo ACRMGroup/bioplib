@@ -72,25 +72,31 @@
 /************************************************************************/
 /*>char *FNam2PDB(char *filename)
    ------------------------------
-   Input:   char *filename     A PDB filename containing a PDB code
-   Returns: char *             The PDB code (lower case)
+*//**
+
+   \param[in]     *filename    A PDB filename containing a PDB code
+   \return                     The PDB code (lower case)
                                NULL if memory allocation fails
                                XXXX if filename blank or NULL or if
                                unable to find PDB code
+                               
    This routine attempts to convert a filename stem to a PDB code.
 
    All the following inputs should produce the same output
    of 1fbj:
-   $A:[PDB]PDB1FBJ.ENT
-   C:\P1FBJ.PDB
-   /pdb/p1fbj.pdb
-   /pdb/pdb1fbj.pdb
-   1fbj.pdb
-   1fbjL
-   
+
+
+      $A:[PDB]PDB1FBJ.ENT
+      C:\P1FBJ.PDB
+      /pdb/p1fbj.pdb
+      /pdb/pdb1fbj.pdb
+      1fbj.pdb
+      1fbjL
+
    The routine first removes characters from the start of the filename up
    to the last : ] / or \. It then searches for the following possible
    patterns (where N is a digit and X is an alphanumeric)
+
 
       pdbNXXX
       pNXXX
@@ -101,8 +107,8 @@
    This should cover just about any filename which includes a legal PDB
    code.
 
-   24.07.95 Original    By: ACRM
-   26.07.95 Corrected a NULL to '\0'
+-  24.07.95 Original    By: ACRM
+-  26.07.95 Corrected a NULL to '\0'
 */
 char *FNam2PDB(char *filename)
 {

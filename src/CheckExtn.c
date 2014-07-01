@@ -96,13 +96,15 @@
 /************************************************************************/
 /*>BOOL CheckExtn(char *string, char *ext)
    ---------------------------------------
-   Input:   char *string    String to be checked for given extension
-            char *extn      Extension to check for
-   Returns: BOOL            Found?
+*//**
+
+   \param[in]     *string    String to be checked for given extension
+   \param[in]     *ext       Extension to check for
+   \return                   Found?
 
    Check the extension of a filename. For use on machines like VAXes,
    MS-DOS and Amigas, everything is converted to upper case first.
-   18.06.93 Original    By: ACRM
+-  18.06.93 Original    By: ACRM
 */
 BOOL CheckExtn(char  *string,
                char  *ext)

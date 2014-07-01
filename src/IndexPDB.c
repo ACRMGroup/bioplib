@@ -76,18 +76,20 @@
 /************************************************************************/
 /*>PDB **IndexPDB(PDB *pdb, int *natom)
    ------------------------------------
-   Input:    PDB   *pdb        Pointer to the start of a PDB linked list.
-   Output:   int   *natom      Number of atoms in the PDB linked list.
-   Returns:  PDB   **indx      An array of pointers to the PDB records.
-                               NULL if unable to allocate memory.
+*//**
+
+   \param[in]     *pdb        Pointer to the start of a PDB linked list.
+   \param[out]    *natom      Number of atoms in the PDB linked list.
+   \return                    An array of pointers to the PDB records.
+                              NULL if unable to allocate memory.
 
    Creates an array of pointers to PDB from a linked list. This is used
    to allow array style access to items in the linked list:
    e.g. (indx[23])->x will give the x coordinate of the 23rd item
 
-   19.07.90 Original
-   01.06.92 ANSIed and documented.
-   24.02.94 Re-written. Now allocates and returns the index.
+-  19.07.90 Original
+-  01.06.92 ANSIed and documented.
+-  24.02.94 Re-written. Now allocates and returns the index.
 */
 PDB **IndexPDB(PDB *pdb, int *natom)
 {

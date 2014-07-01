@@ -82,17 +82,19 @@
 /************************************************************************/
 /*>PDB *StripHPDB(PDB *pdbin, int *natom)
    --------------------------------------
-   Input:   pdbin    *PDB      Input list
-   Output:  natom    *int      Number of atoms kept
-   Returns:          *PDB      Output list
+*//**
+
+   \param[in]     *pdbin      Input list
+   \param[out]    *natom      Number of atoms kept
+   \return                    Output list
 
    Take a PDB linked list and returns the PDB list minus hydrogens
 
    N.B. The routine is non-destructive; i.e. the original PDB linked 
         list is intact after the selection process
 
-   01.11.94 Original based on SelAtomsPDB()   By: ACRM
-   26.07.95 Removed unused variables
+-  01.11.94 Original based on SelAtomsPDB()   By: ACRM
+-  26.07.95 Removed unused variables
 */
 PDB *StripHPDB(PDB *pdbin, int *natom)
 {

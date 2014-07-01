@@ -86,9 +86,11 @@
 /************************************************************************/
 /*>BOOL AtomNameMatch(char *atnam, char *spec, BOOL *ErrorWarn)
    ------------------------------------------------------------
-   Input:   char   *atnam      The atom name to test
-            char   *spec       The atom specification
-   I/O:     BOOL   *ErrorWarn  On input, if TRUE, this routine will
+*//**
+
+   \param[in]     *atnam      The atom name to test
+   \param[in]     *spec       The atom specification
+   \param[in,out] *ErrorWarn  On input, if TRUE, this routine will
                                indicate errors.
                                On output, indicates whether there
                                was an error.
@@ -109,7 +111,7 @@
                 O5\* matches an atom called O5*
                 ?B* matches all beta atoms
 
-   23.07.96 Original   By: ACRM
+-  23.07.96 Original   By: ACRM
 */
 BOOL AtomNameMatch(char *atnam, char *spec, BOOL *ErrorWarn)
 {
@@ -194,9 +196,11 @@ BOOL AtomNameMatch(char *atnam, char *spec, BOOL *ErrorWarn)
 /************************************************************************/
 /*>BOOL AtomNameRawMatch(char *atnam, char *spec, BOOL *ErrorWarn)
    ---------------------------------------------------------------
-   Input:   char   *atnam      The atom name to check
-            char   *spec       The atom specification
-   I/O:     BOOL   *ErrorWarn  On input, if TRUE, this routine will
+*//**
+
+   \param[in]     *atnam      The atom name to check
+   \param[in]     *spec       The atom specification
+   \param[in,out] *ErrorWarn  On input, if TRUE, this routine will
                                indicate errors.
                                On output, indicates whether there
                                was an error.
@@ -217,7 +221,7 @@ BOOL AtomNameMatch(char *atnam, char *spec, BOOL *ErrorWarn)
 
    Written as a wrapper to AtomNameMatch()
 
-   15.02.01 Original   By: ACRM
+-  15.02.01 Original   By: ACRM
 */
 BOOL AtomNameRawMatch(char *atnam, char *spec, BOOL *ErrorWarn)
 {

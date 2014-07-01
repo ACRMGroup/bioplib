@@ -95,14 +95,16 @@ static int doAddCharmmNTer(PDB **ppdb, PDB *nter);
 /************************************************************************/
 /*>int AddNTerHs(PDB **ppdb, BOOL Charmm)
    --------------------------------------
-   I/O:     PDB   **pdb      Pointer to pointer to PDB linked list
-   Input:   BOOL  Charmm     Do Charmm style Nter
-   Returns: int              Number of hydrogens added
+*//**
+
+   \param[in,out] **ppdb      Pointer to pointer to PDB linked list
+   \param[in]     Charmm      Do Charmm style Nter
+   \return                    Number of hydrogens added
 
    Adds hydrogens onto the N-termini
 
-   23.08.94 Original    By: ACRM
-   04.02.14 Use CHAINMATCH By: CTP
+-  23.08.94 Original    By: ACRM
+-  04.02.14 Use CHAINMATCH By: CTP
 */
 int AddNTerHs(PDB **ppdb, BOOL Charmm)
 {
@@ -134,12 +136,14 @@ int AddNTerHs(PDB **ppdb, BOOL Charmm)
 /************************************************************************/
 /*>static PDB *KillNTerH(PDB *pdb)
    -------------------------------
-   I/O:     PDB    *pdb      PDB linked list
-   Returns: PDB    *         New start of linked list
+*//**
+
+   \param[in,out] *pdb      PDB linked list
+   \return                  New start of linked list
 
    Remove the backbone hydrogen from Nter residue
 
-   23.08.94 Original    By: ACRM
+-  23.08.94 Original    By: ACRM
 */
 static PDB *KillNTerH(PDB *pdb)
 {
@@ -173,17 +177,19 @@ static PDB *KillNTerH(PDB *pdb)
 /************************************************************************/
 /*>static int doAddGromosNTer(PDB **ppdb, PDB *nter)
    -------------------------------------------------
-   I/O:     PDB   **pdb      Pointer to pointer to PDB linked list
-   Input:   PDB   *nter      Pointer to an N-terminus
-   Returns: int              Number of Hs added (0 if error)
+*//**
+
+   \param[in,out] **ppdb     Pointer to pointer to PDB linked list
+   \param[in]     *nter      Pointer to an N-terminus
+   \return                   Number of Hs added (0 if error)
 
    Does the actual work of adding the hydrogens onto an N terminus
 
-   23.08.94 Original    By: ACRM
-   24.08.94 Set B-values of Hs to 20.0
-   05.10.94 Removed unused variables
-   06.02.03 Handles atnam_raw
-   03.06.05 Handles altpos
+-  23.08.94 Original    By: ACRM
+-  24.08.94 Set B-values of Hs to 20.0
+-  05.10.94 Removed unused variables
+-  06.02.03 Handles atnam_raw
+-  03.06.05 Handles altpos
 */
 static int doAddGromosNTer(PDB **ppdb, PDB *nter)
 {
@@ -253,17 +259,19 @@ static int doAddGromosNTer(PDB **ppdb, PDB *nter)
 /************************************************************************/
 /*>static int doAddCharmmNTer(PDB **ppdb, PDB *nter)
    -------------------------------------------------
-   I/O:     PDB   **pdb      Pointer to pointer to PDB linked list
-   Input:   PDB   *nter      Pointer to an N-terminus
-   Returns: int              Number of Hs added (0 if error)
+*//**
+
+   \param[in,out] **ppdb     Pointer to pointer to PDB linked list
+   \param[in]     *nter      Pointer to an N-terminus
+   \return                   Number of Hs added (0 if error)
 
    Does the actual work of adding the hydrogens onto an N terminus
 
-   23.08.94 Original    By: ACRM
-   24.08.94 Set B-values of H3 to 20.0
-   05.10.94 Removed unused variables
-   06.02.03 Handles atnam_raw
-   03.06.05 Handles altpos
+-  23.08.94 Original    By: ACRM
+-  24.08.94 Set B-values of H3 to 20.0
+-  05.10.94 Removed unused variables
+-  06.02.03 Handles atnam_raw
+-  03.06.05 Handles altpos
 */
 static int doAddCharmmNTer(PDB **ppdb, PDB *nter)
 {

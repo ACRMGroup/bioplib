@@ -50,14 +50,14 @@
                   int *NValues, REAL *mean, REAL *SD)
    ----------------------------------------------------------
    Input:   val     int       The value to be sampled
-            action  short     0: Sample the value
+   Input:   action  short     0: Sample the value
                               1: Calculate & return mean and SD
                               2: Clear the sample lists
    Output:  mean    *REAL     The returned mean
-            SD      *REAL     The returned standard deviation
+   Output:  SD      *REAL     The returned standard deviation
    I/O:     Sx      *REAL     Sum of values
-            SxSq    *REAL     Sum of values squared
-            NValues *int      Number of values
+   I/O:     SxSq    *REAL     Sum of values squared
+   I/O:     NValues *int      Number of values
 
    The output values are only set when action==1
 
@@ -97,14 +97,14 @@
    required is specified:
 
    Input:   val     int       The value to be sampled
-            action  short     0: Sample the value
+   Input:   action  short     0: Sample the value
                               1: Calculate & return mean and SD
                               2: Clear the sample lists
    Output:  mean    *REAL     The returned mean
-            SD      *REAL     The returned standard deviation
+   Output:  SD      *REAL     The returned standard deviation
    I/O:     Sx      *REAL     Sum of values
-            SxSq    *REAL     Sum of values squared
-            NValues *int      Number of values
+   I/O:     SxSq    *REAL     Sum of values squared
+   I/O:     NValues *int      Number of values
 
    The output values are only set when action==1
 

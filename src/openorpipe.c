@@ -92,18 +92,20 @@ int  pclose(FILE *);
 /************************************************************************/
 /*>FILE *OpenOrPipe(char *filename)
    --------------------------------
-   Input:   char  *filename     A file or pipe to be opened
-   Returns: FILE  *             A file pointer
+*//**
+
+   \param[in]     *filename     A file or pipe to be opened
+   \return                        A file pointer
 
    Opens a file for writing unless the filename begins with a | in which
    case it is opened as a pipe.
 
    Broken pipe signals are ignored.
 
-   26.05.97 Original   By: ACRM
-   26.06.97 Added call to signal()
-   18.08.98 Added case to popen() for SunOS
-   28.01.05 Added NOPIPE define
+-  26.05.97 Original   By: ACRM
+-  26.06.97 Added call to signal()
+-  18.08.98 Added case to popen() for SunOS
+-  28.01.05 Added NOPIPE define
 */
 FILE *OpenOrPipe(char *filename)
 {
@@ -130,17 +132,19 @@ FILE *OpenOrPipe(char *filename)
 /************************************************************************/
 /*>int CloseOrPipe(FILE *fp)
    -------------------------
-   Input:   FILE  *fp        File pointer to be closed
-   Returns: int              Error code (as for fclose())
+*//**
+
+   \param[in]     *fp        File pointer to be closed
+   \return                      Error code (as for fclose())
 
    Attempts to close a file pointer as a pipe. If it isn't associated 
    with a pipe (i.e. popen returns (-1)), tries again to close it as
    a normal file.
 
-   26.05.97 Original   By: ACRM
-   26.06.97 Added call to signal()
-   28.01.05 Added NOPIPE define
-   02.04.09 Moved 'int ret' to be in the #else
+-  26.05.97 Original   By: ACRM
+-  26.06.97 Added call to signal()
+-  28.01.05 Added NOPIPE define
+-  02.04.09 Moved 'int ret' to be in the #else
 */
 int CloseOrPipe(FILE *fp)
 {

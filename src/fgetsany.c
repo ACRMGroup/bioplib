@@ -109,9 +109,11 @@ extern int errno;
 /************************************************************************/
 /*>char *fgetsany(FILE *fp)
    ------------------------
-   Input:   FILE    *fp           File pointer open for reading
-   Returns: char    *             Allocated string or NULL on EOF and
-                                  no memory (errno==ENOMEM)
+*//**
+
+   \param[in]     *fp           File pointer open for reading
+   \return                      Allocated string or NULL on EOF and
+                                no memory (errno==ENOMEM)
 
    fgetsany() provides a routine like fgets() for reading strings from
    a file, but does not require you to impose a limit on the length of
@@ -123,7 +125,7 @@ extern int errno;
    failed. It uses the global `errno' variable to indicate a memory
    allocation failure (errno==ENOMEM). 
 
-   11.09.95 Original    By: ACRM
+-  11.09.95 Original    By: ACRM
 */
 char *fgetsany(FILE *fp)
 {

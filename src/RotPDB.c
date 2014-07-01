@@ -74,16 +74,18 @@
 /************************************************************************/
 /*>void RotatePDB(PDB *pdb, REAL matrix[3][3])
    -------------------------------------------
-   I/O:    PDB   *pdb          PDB linked list to rotate
-   Input:  REAL  matrix[3][3]  Rotation matrix
+*//**
+
+   \param[in,out] *pdb          PDB linked list to rotate
+   \param[in]     matrix        Rotation matrix
 
    Rotates a PDB linked list using ApplyMatrixPDB() which ignores 
    coordinates of 9999.0. The structure is moved to the origin, the 
    matrix is applied and the structure is moved back.
 
-   30.09.92 Original
-   01.10.92 Added check on NULL coordinates
-   22.07.93 Moves to origin first; calls ApplyMatrixPDB() to do the work
+-  30.09.92 Original
+-  01.10.92 Added check on NULL coordinates
+-  22.07.93 Moves to origin first; calls ApplyMatrixPDB() to do the work
 */
 void RotatePDB(PDB *pdb, REAL matrix[3][3])
 {

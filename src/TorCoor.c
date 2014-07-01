@@ -74,20 +74,22 @@
                   REAL bond, REAL theta, REAL torsion,
                   VEC3F *coords)
    ---------------------------------------------------
-   Input:   VEC3F     ant1      First antecedent atom coordinates
-            VEC3F     ant2      Second antecedent atom coordinates
-            VEC3F     ant3      Third antecedent atom coordinates
-            REAL      bond      Bond length from ant3 to new atom
-            REAL      theta     Bond angle ant2-ant3-new
-            REAL      torsion   Torsion angle ant1-ant2-ant3-new
-   Output:  VEC3F     *coords   Coordinates of new atom
-   Returns: BOOL                TRUE if distance between atoms 2 and 3
+*//**
+
+   \param[in]     ant1      First antecedent atom coordinates
+   \param[in]     ant2      Second antecedent atom coordinates
+   \param[in]     ant3      Third antecedent atom coordinates
+   \param[in]     bond      Bond length from ant3 to new atom
+   \param[in]     theta     Bond angle ant2-ant3-new
+   \param[in]     torsion   Torsion angle ant1-ant2-ant3-new
+   \param[out]    *coords   Coordinates of new atom
+   \return                        TRUE if distance between atoms 2 and 3
                                 is < ETA (1.07e-7)
 
    Calculates cartesian coordinates for an atom given the coordinates of
    three antecedant atoms and the bond length, angle and torsion angle
 
-   08.07.96 Original By: ACRM based on FORTRAN code adapted from Bob
+-  08.07.96 Original By: ACRM based on FORTRAN code adapted from Bob
             Bruccoleri's code from CONGEN.
 */
 BOOL TorToCoor(VEC3F ant1, VEC3F ant2, VEC3F ant3, 

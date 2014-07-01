@@ -84,20 +84,22 @@
 /************************************************************************/
 /*>BOOL FitPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
    ------------------------------------------------------
-   Input:   PDB  *ref_pdb     Reference PDB linked list
-   I/O:     PDB  *fit_pdb     Mobile PDB linked list
-   Output:  REAL rm[3][3]     Rotation matrix (May be input as NULL).
-   Returns: BOOL              Success
+*//**
+
+   \param[in]     *ref_pdb     Reference PDB linked list
+   \param[in,out] *fit_pdb     Mobile PDB linked list
+   \param[out]    rm           Rotation matrix (May be input as NULL).
+   \return                     Success
 
    Fits two PDB linked lists. Actually fits fit_pdb onto ref_pdb and also
    returns the rotation matrix. This may be NULL if these data are not
    required.
 
-   17.06.93 Original based on code from ProFit  By: ACRM
-   11.03.94 Changed call to matfit(). Corrected to normal matrix.
-   14.03.94 Actually fills in the rotation matrix (!). Restores original
+-  17.06.93 Original based on code from ProFit  By: ACRM
+-  11.03.94 Changed call to matfit(). Corrected to normal matrix.
+-  14.03.94 Actually fills in the rotation matrix (!). Restores original
             data if fitting failed.
-   14.03.96 Changed to use ApplyMatrixPDB() rather than RotatePDB() since
+-  14.03.96 Changed to use ApplyMatrixPDB() rather than RotatePDB() since
             we are already at the origin
 */
 BOOL FitPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])

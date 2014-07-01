@@ -85,15 +85,17 @@
 /************************************************************************/
 /*>PDB *DupePDB(PDB *in)
    ---------------------
-   Input:   PDB    *in     Input PDB linked list
-   Returns: PDB    *       Duplicated PDB linked list
-                           (NULL on allocation failure)
+*//**
+
+   \param[in]     *in     Input PDB linked list
+   \return                Duplicated PDB linked list
+                          (NULL on allocation failure)
 
    Duplicates a PDB linked list. Allocates new linked list with identical
    data.
 
-   11.10.95 Original   By: ACRM
-   08.10.99 Initialise q to NULL
+-  11.10.95 Original   By: ACRM
+-  08.10.99 Initialise q to NULL
 */
 PDB *DupePDB(PDB *in)
 {

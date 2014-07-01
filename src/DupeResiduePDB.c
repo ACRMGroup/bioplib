@@ -71,15 +71,17 @@
 /************************************************************************/
 /*>PDB *DupeResiduePDB(PDB *in)
    ----------------------------
-   Input:   PDB  *in     PDB linked list pointing to residue to duplicate
-   Returns: PDB  *       Duplicate linked list of residue at `in'
-                         (NULL if allocation fails)
+*//**
+
+   \param[in]     *in     PDB linked list pointing to residue to duplicate
+   \return                Duplicate linked list of residue at `in'
+                          (NULL if allocation fails)
 
    Makes a duplicate PDB linked list of just the residue pointed to by
    `in'
 
-   27.08.96 Original   By: ACRM
-   08.11.07 Initialize p and q
+-  27.08.96 Original   By: ACRM
+-  08.11.07 Initialize p and q
             Moved into bioplib
 */
 PDB *DupeResiduePDB(PDB *in)

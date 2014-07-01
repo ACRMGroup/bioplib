@@ -84,15 +84,17 @@
 /************************************************************************/
 /*>REAL CalcRMSPDB(PDB *pdb1, PDB *pdb2)
    -------------------------------------
-   Input:   PDB  *pdb1   First PDB linked list
-            PDB  *pdb2   Second PDB linked list
-   Returns: REAL         RMS deviation
+*//**
+
+   \param[in]     *pdb1   First PDB linked list
+   \param[in]     *pdb2   Second PDB linked list
+   \return                 RMS deviation
 
    Calculate the RMS deviation between two fitted PDB linked lists. The
    two lists must contain equivalent structures (same atom types in same
    order). No checks are made on this.
 
-   11.03.94 Original    By: ACRM
+-  11.03.94 Original    By: ACRM
 */
 REAL CalcRMSPDB(PDB *pdb1, PDB *pdb2)
 {

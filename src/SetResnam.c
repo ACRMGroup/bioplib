@@ -74,16 +74,18 @@
 /*>void SetResnam(PDB *ResStart, PDB *NextRes, char *resnam, int resnum,
                   char *insert, char *chain)
    ---------------------------------------------------------------------
-   I/O:    PDB  *ResStart   Pointer to start of residue (linked list)
-   Input:  PDB  *NextRes    Pointer to start of next residue
-           char *resnam     Residue name to set
-           int  resnum      Residue number to set
-           char *insert     Insert label to set
-           char *chain      Chain label to set
+*//**
+
+   \param[in,out] *ResStart   Pointer to start of residue (linked list)
+   \param[in]     *NextRes    Pointer to start of next residue
+   \param[in]     *resnam     Residue name to set
+   \param[in]     resnum      Residue number to set
+   \param[in]     *insert     Insert label to set
+   \param[in]     *chain      Chain label to set
 
    Change the residue name, number, insert and chain for an amino acid.
 
-   12.05.92 Original
+-  12.05.92 Original
 */
 void SetResnam(PDB  *ResStart,
                PDB  *NextRes,

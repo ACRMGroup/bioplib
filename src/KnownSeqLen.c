@@ -83,13 +83,15 @@
 /************************************************************************/
 /*>int KnownSeqLen(char *sequence)
    -------------------------------
-   Input:   char  *sequence    A sequence containing deletions
-   Returns: int                Length without deletions
+*//**
+
+   \param[in]     *sequence    A sequence containing deletions
+   \return                        Length without deletions
 
    Scans a 1-letter code sequence and calculate the length without
    `-', ` ' or '?' residues
 
-   13.05.94 Original    By: ACRM
+-  13.05.94 Original    By: ACRM
 */
 int KnownSeqLen(char *sequence)
 {

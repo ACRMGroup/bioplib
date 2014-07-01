@@ -94,11 +94,13 @@ int  pclose(FILE *);
 /************************************************************************/
 /*>void FreeWholePDB(WHOLEPDB *wpdb)
    ---------------------------------
-   Input:     WHOLEPDB    *wpdb    WHOLEPDB structure to be freed
+*//**
+
+   \param[in]     *wpdb    WHOLEPDB structure to be freed
 
    Frees the header, trailer and atom content from a WHOLEPDB structure
 
-   30.05.02  Original   By: ACRM
+-  30.05.02  Original   By: ACRM
 */
 void FreeWholePDB(WHOLEPDB *wpdb)
 {
@@ -111,13 +113,15 @@ void FreeWholePDB(WHOLEPDB *wpdb)
 /************************************************************************/
 /*>BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
    ----------------------------------------------
-   Input:     FILE       *fp        File pointer
-              WHOLEPDB   *wpdb      Whole PDB structure pointer
+*//**
+
+   \param[in]     *fp        File pointer
+   \param[in]     *wpdb      Whole PDB structure pointer
 
    Writes a PDB file including header and trailer information.
    Output in PDBML-format if flags set.
 
-   21.06.14  Original   By: CTP
+-  21.06.14  Original   By: CTP
 */
 BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
 {
@@ -149,13 +153,15 @@ BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
 /************************************************************************/
 /*>void WriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
    --------------------------------------------
-   Input:     FILE       *fp        File pointer
-              WHOLEPDB   *wpdb      Whole PDB structure pointer
+*//**
+
+   \param[in]     *fp        File pointer
+   \param[in]     *wpdb      Whole PDB structure pointer
 
    Writes a PDB file including header and trailer information
 
-   30.05.02  Original   By: ACRM
-   21.06.14  Deprecated function. By CTP.
+-  30.05.02  Original   By: ACRM
+-  21.06.14  Deprecated function. By CTP.
 */
 void WriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
 {
@@ -170,13 +176,15 @@ void WriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
 /************************************************************************/
 /*>void WriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
    --------------------------------------------------
-   Input:     FILE       *fp        File pointer
-              WHOLEPDB   *wpdb      Whole PDB structure pointer
+*//**
+
+   \param[in]     *fp        File pointer
+   \param[in]     *wpdb      Whole PDB structure pointer
 
    Writes the header of a PDB file 
 
-   30.05.02  Original   By: ACRM
-   21.06.14  Deprecated By: CTP
+-  30.05.02  Original   By: ACRM
+-  21.06.14  Deprecated By: CTP
 */
 void WriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
 {
@@ -188,13 +196,15 @@ void WriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
 /************************************************************************/
 /*>void WriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
    ---------------------------------------------------
-   Input:     FILE       *fp        File pointer
-              WHOLEPDB   *wpdb      Whole PDB structure pointer
+*//**
+
+   \param[in]     *fp        File pointer
+   \param[in]     *wpdb      Whole PDB structure pointer
 
    Writes the trailer of a PDB file 
 
-   30.05.02  Original   By: ACRM
-   21.06.14  Deprecated By: CTP
+-  30.05.02  Original   By: ACRM
+-  21.06.14  Deprecated By: CTP
 */
 void WriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
 {
@@ -205,13 +215,15 @@ void WriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
 /************************************************************************/
 /*>void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
    ----------------------------------------------------
-   Input:     FILE       *fp        File pointer
-              WHOLEPDB   *wpdb      Whole PDB structure pointer
+*//**
+
+   \param[in]     *fp        File pointer
+   \param[in]     *wpdb      Whole PDB structure pointer
 
    Writes the header of a PDB file 
 
-   30.05.02  Original   By: ACRM
-   21.06.14  Renamed to blWriteWholePDBHeader() By: CTP
+-  30.05.02  Original   By: ACRM
+-  21.06.14  Renamed to blWriteWholePDBHeader() By: CTP
 */
 void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
 {
@@ -227,13 +239,15 @@ void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
 /************************************************************************/
 /*>void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
    -----------------------------------------------------
-   Input:     FILE       *fp        File pointer
-              WHOLEPDB   *wpdb      Whole PDB structure pointer
+*//**
+
+   \param[in]     *fp        File pointer
+   \param[in]     *wpdb      Whole PDB structure pointer
 
    Writes the trailer of a PDB file 
 
-   30.05.02  Original   By: ACRM
-   21.06.14  Renamed to blWriteWholePDBTrailer() By: CTP
+-  30.05.02  Original   By: ACRM
+-  21.06.14  Renamed to blWriteWholePDBTrailer() By: CTP
 */
 void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
 {
@@ -249,9 +263,11 @@ void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
 /************************************************************************/
 /*>WHOLEPDB *ReadWholePDB(FILE *fpin)
    ----------------------------------
-   Input:     FILE      *fpin     File pointer
-   Returns:   WHOLEPDB  *         Whole PDB structure containing linked
-                                  list to PDB coordinate data
+*//**
+
+   \param[in]     *fpin     File pointer
+   \return                  Whole PDB structure containing linked
+                            list to PDB coordinate data
 
    Reads a PDB file, storing the header and trailer information as
    well as the coordinate data. Can read gzipped files as well as
@@ -267,7 +283,7 @@ void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
       ... Do something with p ...
    }
 
-   07.03.07 Made into a wrapper to doReadWholePDB()
+-  07.03.07 Made into a wrapper to doReadWholePDB()
 */
 WHOLEPDB *ReadWholePDB(FILE *fpin)
 {
@@ -277,9 +293,11 @@ WHOLEPDB *ReadWholePDB(FILE *fpin)
 /************************************************************************/
 /*>WHOLEPDB *ReadWholePDBAtoms(FILE *fpin)
    ---------------------------------------
-   Input:     FILE      *fpin     File pointer
-   Returns:   WHOLEPDB  *         Whole PDB structure containing linked
-                                  list to PDB coordinate data
+*//**
+
+   \param[in]     *fpin     File pointer
+   \return                  Whole PDB structure containing linked
+                            list to PDB coordinate data
 
    Reads a PDB file, storing the header and trailer information as
    well as the coordinate data. Can read gzipped files as well as
@@ -295,7 +313,7 @@ WHOLEPDB *ReadWholePDB(FILE *fpin)
       ... Do something with p ...
    }
 
-   07.03.07 Made into a wrapper to doReadWholePDB()
+-  07.03.07 Made into a wrapper to doReadWholePDB()
 */
 WHOLEPDB *ReadWholePDBAtoms(FILE *fpin)
 {
@@ -304,11 +322,15 @@ WHOLEPDB *ReadWholePDBAtoms(FILE *fpin)
 
 
 /************************************************************************/
-/*>static WHOLEPDB *ReadWholePDB(FILE *fpin)
-   -----------------------------------------
-   Input:     FILE      *fpin     File pointer
-   Returns:   WHOLEPDB  *         Whole PDB structure containing linked
-                                  list to PDB coordinate data
+/*>static WHOLEPDB *ReadWholePDB(FILE *fpin, BOOL atomsonly)
+   ---------------------------------------------------------
+*//**
+
+   \param[in]     *fpin       File pointer
+   \param[in]     atomsonly   TRUE:  Read ATOM records only
+                              FALSE: Read ATOM & HETATM records
+   \return                    Whole PDB structure containing linked
+                              list to PDB coordinate data
 
    Reads a PDB file, storing the header and trailer information as
    well as the coordinate data. Can read gzipped files as well as
@@ -324,10 +346,10 @@ WHOLEPDB *ReadWholePDBAtoms(FILE *fpin)
       ... Do something with p ...
    }
 
-   30.05.02 Original   By: ACRM
-   07.03.07 Made into a doXXX routine to add a atomsonly parameter
-   05.06.07 Added support for Unix compress'd files
-   22.04.14 Handles PDBML format. By: CTP
+-  30.05.02 Original   By: ACRM
+-  07.03.07 Made into a doXXX routine to add a atomsonly parameter
+-  05.06.07 Added support for Unix compress'd files
+-  22.04.14 Handles PDBML format. By: CTP
 
    TODO FIXME!!!!! Move all this into doReadPDB so that we don't worry 
    about rewinding any more
@@ -452,12 +474,14 @@ static WHOLEPDB *doReadWholePDB(FILE *fpin, BOOL atomsonly)
 /************************************************************************/
 /*>static STRINGLIST *ParseHeaderPDBML(FILE *fpin)
    -----------------------------------------------
-   Input:   FILE        *fpin   File pointer
-   Returns: STRINGLIST  *       STRINGLIST with basic header information.
+*//**
+
+   \param[in]     *fpin   File pointer
+   \return                STRINGLIST with basic header information.
 
    Parses a PDBML file and creates HEADER and TITLE lines.
 
-   22.04.14 Original. By: CTP
+-  22.04.14 Original. By: CTP
 
 */
 static STRINGLIST *ParseHeaderPDBML(FILE *fpin)

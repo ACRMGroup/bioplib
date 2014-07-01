@@ -84,8 +84,10 @@
 /************************************************************************/
 /*>char *GetPDBChainLabels(PDB *pdb)
    ---------------------------------
-   Input:   PDB    *pdb      PDB linked list
-   Returns: char   *         Allocated string containing chain labels
+*//**
+
+   \param[in]     *pdb      PDB linked list
+   \return                     Allocated string containing chain labels
                              NULL if unable to allocate memory
 
    Scans a PDB linked list for chain names. Allocates memory for a 
@@ -93,9 +95,9 @@
 
    N.B. You must free the allocated memory when you've finished with it!
 
-   25.07.95 Original    By: ACRM
-   25.03.14 Added deprecated message. By: CTP
-   07.05.14 Use DEPRECATED() macro. By: CTP
+-  25.07.95 Original    By: ACRM
+-  25.03.14 Added deprecated message. By: CTP
+-  07.05.14 Use DEPRECATED() macro. By: CTP
 */
 char *GetPDBChainLabels(PDB *pdb)
 {
@@ -153,10 +155,12 @@ char *GetPDBChainLabels(PDB *pdb)
 /************************************************************************/
 /*>char **blGetPDBChainLabels(PDB *pdb, int *nchains)
    --------------------------------------------------
-   Input:   PDB    *pdb      PDB linked list
-   Returns: int    *nchains  Number of chains found.
-            char   **        Allocated array of strings containing chain
-                             labels. NULL if unable to allocate memory.
+*//**
+
+   \param[in]     *pdb        PDB linked list
+   \param[out]    nchains     Number of chains found.
+   \return                    Allocated array of strings containing chain
+                              labels. NULL if unable to allocate memory.
 
    Scans a PDB linked list for chain names. Allocates memory for an 
    array of strings containing these labels which is returned together 
@@ -165,7 +169,7 @@ char *GetPDBChainLabels(PDB *pdb)
    N.B. You must free the allocated memory for both the array of chains 
         and for each individual chain label when you've finished with it!
 
-   25.03.14 Original based on GetPDBChainLabels(). By: CTP
+-  25.03.14 Original based on GetPDBChainLabels(). By: CTP
    
 */
 char **blGetPDBChainLabels(PDB *pdb, int *nchains)

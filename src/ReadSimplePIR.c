@@ -89,18 +89,21 @@
 /************************************************************************/
 /*>int ReadSimplePIR(FILE *fp, int maxres, char **seqs)
    ----------------------------------------------------
-   Input:   FILE *fp       File pointer
-   Output:  char **seqs    Array of pointers to sequences
-   Returns: int            Number of chains. 0 if error
+*//**
+
+   \param[in]     *fp       File pointer
+   \param[in]     maxres    Max number of residues in chain.
+   \param[out]    **seqs    Array of pointers to sequences
+   \return                    Number of chains. 0 if error
 
    Read a PIR file containing multiple chains of up to maxres amino acids.
    Each chain is returned in seqs[].
    The number of chains is returned by the routine.
    0 is returned if a memory allocation failed
    
-   01.06.91 Original
-   03.03.94 Added check on case before toupper(). Changed name.
-   18.03.94 Changed getc() to fgetc()
+-  01.06.91 Original
+-  03.03.94 Added check on case before toupper(). Changed name.
+-  18.03.94 Changed getc() to fgetc()
 */
 int ReadSimplePIR(FILE *fp,
                   int  maxres,

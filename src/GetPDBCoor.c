@@ -79,15 +79,17 @@
 /************************************************************************/
 /*>int GetPDBCoor(PDB *pdb, COOR **coor)
    -------------------------------------
-   Input:   PDB  *pdb    PDB linked list
-   Output:  COOR **coor  Array of coordinate structure pointers
-   Returns: int          Number of coordinates copied
+*//**
+
+   \param[in]     *pdb    PDB linked list
+   \param[out]    **coor  Array of coordinate structure pointers
+   \return                  Number of coordinates copied
 
    Get the coordinates out of a PDB linked list into an array of type COOR
    The COOR array is allocated for you
 
-   17.06.93 Original    By: ACRM
-   22.06.93 Corrected return value
+-  17.06.93 Original    By: ACRM
+-  22.06.93 Corrected return value
 */
 int GetPDBCoor(PDB *pdb, COOR **coor)
 {

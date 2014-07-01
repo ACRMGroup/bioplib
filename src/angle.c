@@ -50,16 +50,16 @@
    ======
    REAL angle(xi,yi,zi,xj,yj,zj,xk,yk,zk)
    Input:   REAL     xi,yi,zi    Input coordinates
-                     xj,yj,zj
-                     xk,yk,zk
+   Input:            xj,yj,zj
+   Input:            xk,yk,zk
    Returns: REAL                 The angle between the 3 atoms
 
 
    REAL phi(xi,yi,zi,xj,yj,zj,xk,yk,zk,xl,yl,zl)
    Input:   REAL     xi,yi,zi    Input coordinates
-                     xj,yj,zj
-                     xk,yk,zk
-                     xl,yl,zl
+   Input:            xj,yj,zj
+   Input:            xk,yk,zk
+   Input:            xl,yl,zl
    Returns: REAL                 The torsion angle between the 4 atoms
 
 
@@ -72,7 +72,7 @@
 
    REAL TrueAngle(REAL opp, REAL adj)
    Input:   REAL     opp         Length of opposite side
-            REAL     adj         Length of adjacent side
+   Input:   REAL     adj         Length of adjacent side
    Returns: REAL                 The angle from 0 to 2PI
 
    Returns the true positive angle between 0 and 2PI given the opp and
@@ -113,16 +113,17 @@
 /*>REAL angle(REAL xi,REAL yi,REAL zi,REAL xj,REAL yj,
               REAL zj,REAL xk,REAL yk,REAL zk)
    ---------------------------------------------------
+*//**
    Input:   REAL    xi,yi,zi    Input coordinates
-                    xj,yj,zj
-                    xk,yk,zk
+   Input:           xj,yj,zj
+   Input:           xk,yk,zk
    Returns: REAL                The angle between the 3 atoms
 
    Calculates the angle between three sets of coordinates
 
-   07.02.89 Original    By: ACRM
-   04.03.91 Fixed return value
-   16.06.93 Changed float to REAL
+-  07.02.89 Original    By: ACRM
+-  04.03.91 Fixed return value
+-  16.06.93 Changed float to REAL
 */
 REAL angle(REAL xi,
            REAL yi,

@@ -72,15 +72,17 @@
 /************************************************************************/
 /*>REAL DistPtVect(VEC3F Point, VEC3F End1, VEC3F End2)
    ----------------------------------------------------
-   Input:   VEC3F   Point     The coordinates of a point
-            VEC3F   End1      Coordinates of one end of vector
-            VEC3F   End2      Coordinates of other end of vector
-   Returns: REAL              The distance from pt to line
+*//**
+
+   \param[in]     Point     The coordinates of a point
+   \param[in]     End1      Coordinates of one end of vector
+   \param[in]     End2      Coordinates of other end of vector
+   \return                  The distance from pt to line
 
    Calculate the distance from a point to a vector described by two
    end points
 
-   18.06.96 Original   By: ACRM
+-  18.06.96 Original   By: ACRM
 */
 REAL DistPtVect(VEC3F Point, VEC3F End1, VEC3F End2)
 {

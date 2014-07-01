@@ -49,11 +49,11 @@
    CalcSD(val,action,mean,SD)
    --------------------------
    Input:   val     int       The value to be sampled
-            action  short     0: Sample the value
+   Input:   action  short     0: Sample the value
                               1: Calculate & return mean and SD
                               2: Clear the sample lists
    Output:  mean    *REAL     The returned mean
-            SD      *REAL     The returned standard deviation
+   Output:  SD      *REAL     The returned standard deviation
 
    The output values are only set when action=1
 
@@ -93,11 +93,11 @@
    required is specified:
 
    Input:   val     int       The value to be sampled
-            action  short     0: Sample the value
+   Input:   action  short     0: Sample the value
                               1: Calculate & return mean and SD
                               2: Clear the sample lists
    Output:  mean    *REAL     The returned mean
-            SD      *REAL     The returned standard deviation
+   Output:  SD      *REAL     The returned standard deviation
 
    The output values are only set when action=1
    30.03.90 Original    By: ACRM

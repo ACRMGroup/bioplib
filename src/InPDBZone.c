@@ -79,22 +79,24 @@
 /*>BOOL BiopInPDBZone(PDB *p, char *chain, int resnum1, char *insert1, 
                     int resnum2, char *insert2)
    ---------------------------------------------------------------
-   Input:   PDB    *p         Pointer to a PDB record
-            char   *chain     Chain name
-            int    resnum1    First residue
-            char   *insert1   First insert code
-            int    resnum2    Second residue
-            char   *insert2   Second insert code
-   Returns: BOOL              Is p in the range specified?
+*//**
+
+   \param[in]     *p         Pointer to a PDB record
+   \param[in]     *chain     Chain name
+   \param[in]     resnum1    First residue
+   \param[in]     *insert1   First insert code
+   \param[in]     resnum2    Second residue
+   \param[in]     *insert2   Second insert code
+   \return                      Is p in the range specified?
 
    Checks that atom stored in PDB pointer p is within the specified 
    residue range.
 
    N.B. This assumes ASCII coding.
 
-   24.02.14 Based on InPDBZone() but takes chain and inserts as stings 
+-  24.02.14 Based on InPDBZone() but takes chain and inserts as stings 
             instead of chars. By: CTP
-   02.03.14 Use strcmp to compare inserts.
+-  02.03.14 Use strcmp to compare inserts.
             Fixed bug handling insert residues where start and finish of 
             zone have same residue number. By: CTP
    

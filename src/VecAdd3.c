@@ -71,12 +71,14 @@
 /************************************************************************/
 /*>void VecAdd3(VEC3F *Out, VEC3F In1, VEC3F In2)
    ----------------------------------------------
-   Input:   VEC3F   In1       First vector
-            VEC3F   In2       Second vector
-   Output:  VEC3F   Out       Output vector
+*//**
+
+   \param[in]     In1       First vector
+   \param[in]     In2       Second vector
+   \param[out]    Out       Output vector
 
    Add 2 vectors
-   06.10.98 Original   By: ACRM
+-  06.10.98 Original   By: ACRM
 */
 void VecAdd3(VEC3F *Out, VEC3F In1, VEC3F In2)
 {

@@ -97,11 +97,13 @@
 /************************************************************************/
 /*>BOOL ParseResSpec(char *spec, char *chain, int *resnum, char *insert)
    ---------------------------------------------------------------------
-   Input:   char  *spec    Residue specification
-   Output:  char  *chain   Chain label
-            int   *resnum  Residue number
-            char  *insert  Insert label
-   Returns: BOOL           Success?
+*//**
+
+   \param[in]     *spec    Residue specification
+   \param[out]    *chain   Chain label
+   \param[out]    *resnum  Residue number
+   \param[out]    *insert  Insert label
+   \return                   Success?
 
    Note that chain and insert must be arrays of at least 2 characters,
    not character pointers
@@ -119,8 +121,8 @@
    to specify whether or not the residue specification should be upper
    cased (without affecting code that calls this function).
 
-   29.09.05 Original   By: TL
-   05.01.12 Now behaves the same as ParseResSpecNoUpper(). There are now
+-  29.09.05 Original   By: TL
+-  05.01.12 Now behaves the same as ParseResSpecNoUpper(). There are now
             too many PDB files with lower case chain names (e.g. 1gav,
             3n9r, etc.) for the old default behaviour or up-casing 
             everything.   By: ACRM
@@ -134,11 +136,13 @@ BOOL ParseResSpec(char *spec, char *chain, int *resnum, char *insert)
 /*>BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum, 
                             char *insert)
    --------------------------------------------------------------
-   Input:   char  *spec    Residue specification
-   Output:  char  *chain   Chain label
-            int   *resnum  Residue number
-            char  *insert  Insert label
-   Returns: BOOL           Success?
+*//**
+
+   \param[in]     *spec    Residue specification
+   \param[out]    *chain   Chain label
+   \param[out]    *resnum  Residue number
+   \param[out]    *insert  Insert label
+   \return                   Success?
 
    Note that chain and insert must be arrays of at least 2 characters,
    not character pointers
@@ -149,7 +153,7 @@ BOOL ParseResSpec(char *spec, char *chain, int *resnum, char *insert)
    be set to spaces if not specified. Does not converts the resiude
    specification to upper case before processing.
    
-   29.09.05 Original   By: TL
+-  29.09.05 Original   By: TL
 */
 BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum, 
                          char *insert)
@@ -158,15 +162,17 @@ BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum,
 }
 
 /************************************************************************/
-/*>BOOL DoParseResSpec(char *spec, char *chain, int *resnum, char *insert, 
-                       BOOL uppercaseresspec)
-   -----------------------------------------------------------------------
-   Input:   char  *spec    Residue specification
-            BOOL           uppercaseresspec
-   Output:  char  *chain   Chain label
-            int   *resnum  Residue number
-            char  *insert  Insert label
-   Returns: BOOL           Success?
+/*>BOOL DoParseResSpec(char *inSpec, char *chain, int *resnum, 
+                       char *insert, BOOL uppercaseresspec)
+   -----------------------------------------------------------
+*//**
+
+   \param[in]     *inSpec              Residue specification
+   \param[out]    *chain               Chain label
+   \param[out]    *resnum              Residue number
+   \param[out]    *insert              Insert label
+   \param[in]     uppercaseresspec     Convert spec to upper case.
+   \return                             Success?
 
    Note that chain and insert must be arrays of at least 2 characters,
    not character pointers
@@ -181,24 +187,24 @@ BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum,
    numerical characters can be parsed if a period is used to separate the 
    chain from the residue number.
    
-   21.07.93 Original    By: ACRM
-   17.07.95 Added BOOL return
-   18.03.98 Added option to include a . to separate chain and residue
+-  21.07.93 Original    By: ACRM
+-  17.07.95 Added BOOL return
+-  18.03.98 Added option to include a . to separate chain and residue
             number so numeric chain names can be used
-   29.09.05 Moved this code to from ParseResSpec() to DoParseResSpec()
+-  29.09.05 Moved this code to from ParseResSpec() to DoParseResSpec()
             and made that function just call this new function.
             This move is to allow this underlying function to have an
             extra parameter to specify whether or not the residue
             specification should be upper cased (without affecting code
             that calls the old function). By: TL
-   12.10.12 insert is now a properly terminated string when there is
+-  12.10.12 insert is now a properly terminated string when there is
             no insert
-   28.08.12 chain  is now a properly terminated string
+-  28.08.12 chain  is now a properly terminated string
             The input specification is now copied so that actual strings
             can be passed into the routine as opposed to string delimited
             variables. This also removes the need for restoring the 
             string which has now been removed
-   26.02.14 Parsing handles multi-letter chains and numerical chain IDs.
+-  26.02.14 Parsing handles multi-letter chains and numerical chain IDs.
             The "Extract chain from spec" section was re-written.
             If the period separator between the chain id and the residue
             number is absent then the chain id is set from any non-numeric

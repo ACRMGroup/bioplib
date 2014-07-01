@@ -120,15 +120,17 @@ BOOL gBioplibSeqNucleicAcid = FALSE;
 /************************************************************************/
 /*>char throne(char *three)
    ------------------------
-   Input:   char  *three    Three letter code
-   Returns: char            One letter code
+*//**
+
+   \param[in]     *three    Three letter code
+   \return                    One letter code
 
    Converts 3-letter code to 1-letter code.
    Handles ASX and GLX as X
    
-   29.09.92 Original    By: ACRM
-   11.03.94 Modified to handle ASX and GLX in the tables
-   25.07.95 Added handling of gBioplibSeqNucleicAcid
+-  29.09.92 Original    By: ACRM
+-  11.03.94 Modified to handle ASX and GLX in the tables
+-  25.07.95 Added handling of gBioplibSeqNucleicAcid
 */
 char throne(char *three)
 {
@@ -153,14 +155,16 @@ char throne(char *three)
 /************************************************************************/
 /*>char thronex(char *three)
    -------------------------
-   Input:   char  *three    Three letter code
-   Returns: char            One letter code
+*//**
+
+   \param[in]     *three    Three letter code
+   \return                    One letter code
 
    Converts 3-letter code to 1-letter code.
    Handles ASX and GLX as B and Z.
    
-   29.09.92 Original    By: ACRM
-   25.07.95 Added handling of gBioplibSeqNucleicAcid
+-  29.09.92 Original    By: ACRM
+-  25.07.95 Added handling of gBioplibSeqNucleicAcid
 */
 char thronex(char *three)
 {
@@ -182,16 +186,18 @@ char thronex(char *three)
 /************************************************************************/
 /*>char *onethr(char one)
    ----------------------
-   Input:   char  one     One letter code
-   Returns: char  *       Three letter code (padded to 4 chars with a 
+*//**
+
+   \param[in]     one     One letter code
+   \return                  Three letter code (padded to 4 chars with a 
                           space)
 
    Converts 1-letter code to 3-letter code (actually as 4 chars).
 
-   07.06.93 Original    By: ACRM
-   25.07.95 If the gBioplibSeqNucleicAcid flag is set, assumes nucleic
+-  07.06.93 Original    By: ACRM
+-  25.07.95 If the gBioplibSeqNucleicAcid flag is set, assumes nucleic
             acids rather than amino acids
-   03.02.09 Fixed nucleic search - j was incrementing instead of 
+-  03.02.09 Fixed nucleic search - j was incrementing instead of 
             decrementing!
 */
 char *onethr(char one)

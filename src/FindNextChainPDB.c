@@ -86,14 +86,16 @@
 /************************************************************************/
 /*>PDB *FindNextChainPDB(PDB *pdb)
    -------------------------------
-   I/O:     PDB   *pdb      PDB linked list
-   Returns: PDB   *         Pointer to start of next chain in linked list
+*//**
+
+   \param[in,out] *pdb      PDB linked list
+   \return                  Pointer to start of next chain in linked list
 
    Terminates the linked list at the end of the current chain and 
    returns a pointer to the start of the next chain.
 
-   23.05.94 Original    By: ACRM
-   04.02.14 Use CHAINMATCH By: CTP
+-  23.05.94 Original    By: ACRM
+-  04.02.14 Use CHAINMATCH By: CTP
 */
 PDB *FindNextChainPDB(PDB *pdb)
 {

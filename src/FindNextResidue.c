@@ -86,14 +86,16 @@
 /************************************************************************/
 /*>PDB *FindEndPDB(PDB *start)
    ---------------------------
-   Input:   PDB   *start    PDB linked list
-   Returns: PDB   *         pointer to next residue
+*//**
+
+   \param[in]     *start    PDB linked list
+   \return                     pointer to next residue
 
    Step along a PDB linked list from start until we find a different
    residue. Return a pointer to this PDB item.
    
-   08.07.93 Original    By: ACRM
-   09.08.95 Now simply calls FindNextResidue() which is a rather more
+-  08.07.93 Original    By: ACRM
+-  09.08.95 Now simply calls FindNextResidue() which is a rather more
             sensible name. Retained for backwards compatibility
 */
 PDB *FindEndPDB(PDB *start)
@@ -104,14 +106,16 @@ PDB *FindEndPDB(PDB *start)
 /************************************************************************/
 /*>PDB *FindNextResidue(PDB *pdb)
    ------------------------------
-   Input:   PDB   *pdb      PDB linked list
-   Returns: PDB   *         Next residue in PDB linked list or NULL if
+*//**
+
+   \param[in]     *pdb      PDB linked list
+   \return                     Next residue in PDB linked list or NULL if
                             there is none.
 
    Finds the next residue in a PDB linked list.
 
-   08.08.95 Original    By: ACRM
-   04.02.14 Use CHAINMATCH By: CTP
+-  08.08.95 Original    By: ACRM
+-  04.02.14 Use CHAINMATCH By: CTP
 */
 PDB *FindNextResidue(PDB *pdb)
 {

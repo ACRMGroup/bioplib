@@ -85,19 +85,21 @@
 /************************************************************************/
 /*>int SplitSeq(char *LinearSeq, char **seqs)
    ------------------------------------------
-   Input:   char  *LinearSeq   Array containing sequence with chains
+*//**
+
+   \param[in]     *LinearSeq   Array containing sequence with chains
                                terminated by *'s
-   Output:  char  **seqs       Allocated set of character arrays 
+   \param[out]    **seqs       Allocated set of character arrays 
                                containing one chain per array
-   Returns: int                Number of chains found
+   \return                        Number of chains found
 
    Splits a sequence stored as a linear array with each chain separated
    by a * into an array of sequences. Returns the number of chains
    found.
    
-   18.06.93 Original    By: ACRM
-   09.07.93 Cleans up properly of allocation failed
-   07.09.94 Sequence space was being allocated one too small
+-  18.06.93 Original    By: ACRM
+-  09.07.93 Cleans up properly of allocation failed
+-  07.09.94 Sequence space was being allocated one too small
 */
 int SplitSeq(char *LinearSeq, char **seqs)
 {

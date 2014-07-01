@@ -75,6 +75,7 @@
 
    Usage:
    ======
+\verbatim
    ReadCSSR(fp,cssr,natom,name,title)
    Input:   FILE     *fp      A pointer to type FILE in which the
                               CSSR file is stored.
@@ -120,7 +121,7 @@
                               3: c || xo,          b* || zo
                               4: hex a & b || xo,  c* || zo
                               5: a* || xo,         c  || zo
-
+\endverbatim
 **************************************************************************
 
    Revision History:
@@ -163,23 +164,24 @@
 /************************************************************************/
 /*>CSSR *ReadCSSR(FILE *fp, int *natom, char *name, char *title)
    -------------------------------------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
-                              CSSR file is stored.
-            CSSR     *cssr    A pointer to the first allocated item of
-                              the CSSR linked list
-   Output:  int      *natom   Number of atoms read.
-            char     *name    The molecule's name.
-            char     *title   Title on the molecule.
+*//**
+
+   \param[in]     *fp      A pointer to type FILE in which the
+                           CSSR file is stored.
+   \param[out]    *natom   Number of atoms read.
+   \param[out]    *name    The molecule's name.
+   \param[out]    *title   Title on the molecule.
+
    Read a CSSR file into a CSSR linked list
 
-   06.09.91 Original
-   24.01.92 Fixed for blank link columns (V1.1)
-   01.06.92 Documented
-   10.06.93 Returns TRUE or FALSE to indicate success
-   09.07.93 Changed allocation scheme. Now returns pointer to start of
+-  06.09.91 Original
+-  24.01.92 Fixed for blank link columns (V1.1)
+-  01.06.92 Documented
+-  10.06.93 Returns TRUE or FALSE to indicate success
+-  09.07.93 Changed allocation scheme. Now returns pointer to start of
             list. No need to call init_cssr
-   13.07.93 Returns NULL if allocation failed
-   27.07.93 Changed I/O to double precision
+-  13.07.93 Returns NULL if allocation failed
+-  27.07.93 Changed I/O to double precision
 */
 CSSR *ReadCSSR(FILE  *fp,
                int   *natom,
@@ -305,20 +307,23 @@ CSSR *ReadCSSR(FILE  *fp,
 /************************************************************************/
 /*>PDB *ReadCSSRasPDB(FILE *fp, int *natom)
    ----------------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
-                              CSSR file is stored.
-   Output:  int      *natom   Number of atoms read.
-   Returns: PDB      *pdb     A pointer to the first allocated item of
-                              the PDB linked list
+*//**
+
+   \param[in]     *fp      A pointer to type FILE in which the
+                           CSSR file is stored.
+   \param[out]    *natom   Number of atoms read.
+   \return                 A pointer to the first allocated item of
+                           the PDB linked list
+
    Read a CSSR file into a PDB linked list
 
-   06.09.91 Original
-   01.06.92 Documented
-   10.06.93 Returns TRUE or FALSE to indicate success
-   09.07.93 Changed allocation scheme. Now returns pointer to start of
+-  06.09.91 Original
+-  01.06.92 Documented
+-  10.06.93 Returns TRUE or FALSE to indicate success
+-  09.07.93 Changed allocation scheme. Now returns pointer to start of
             list. No need to call init_pdb
-   13.07.93 Returns NULL if allocation failed
-   27.07.93 Changed I/O to double precision
+-  13.07.93 Returns NULL if allocation failed
+-  27.07.93 Changed I/O to double precision
 */
 PDB *ReadCSSRasPDB(FILE  *fp,
                    int   *natom)
@@ -447,16 +452,19 @@ PDB *ReadCSSRasPDB(FILE  *fp,
 /*>void NormaliseCSSR(CSSR *cssr, REAL cell[3], REAL alpha, 
                       REAL beta, REAL gamma)
    --------------------------------------------------------
-   I/O:     CSSR     *cssr    Pointer to CSSR linked list
-   Input:   REAL     cell[3]  Unit cell dimensions
-                     alpha    Unit cell angles
-                     beta
-                     gamma
+*//**
+
+   \param[in,out] *cssr    Pointer to CSSR linked list
+   \param[in]     cell     Unit cell dimensions
+   \param[in]     alpha    Unit cell angles
+   \param[in]     beta
+   \param[in]     gamma
+
    Convert a CSSR linked list in fractional coordinates to orthonormal
 
-   06.09.91 Original
-   01.06.92 Documented
-   10.06.93 void return
+-  06.09.91 Original
+-  01.06.92 Documented
+-  10.06.93 void return
 */
 void NormaliseCSSR(CSSR *cssr,
                    REAL cell[3],
@@ -504,16 +512,19 @@ void NormaliseCSSR(CSSR *cssr,
 /*>void NormalisePDB(PDB *pdb, REAL cell[3], REAL alpha,
                      REAL beta, REAL gamma)
    -----------------------------------------------------
-   I/O:     PDB      *pdb     Pointer to PDB linked list
-   Input:   REAL     cell[3]  Unit cell dimensions
-                     alpha    Unit cell angles
-                     beta
-                     gamma
+*//**
+
+   \param[in,out] *pdb     Pointer to PDB linked list
+   \param[in]     cell     Unit cell dimensions
+   \param[in]     alpha    Unit cell angles
+   \param[in]     beta
+   \param[in]     gamma
+
    Convert a PDB linked list in fractional cooridinates to orthonormal
 
-   06.09.91 Original
-   01.06.92 Documented
-   10.06.93 void return
+-  06.09.91 Original
+-  01.06.92 Documented
+-  10.06.93 void return
 */
 void NormalisePDB(PDB   *pdb,
                   REAL  cell[3],
@@ -553,18 +564,25 @@ void NormalisePDB(PDB   *pdb,
 /*>void ortho(REAL cell[3], REAL alpha, REAL beta, REAL gamma,
               REAL amatrx[3][3], int isw, int ncode)
    -----------------------------------------------------------
-   Input:   REAL     cell[3]  Unit cell dimensions
-                     alpha    Unit cell angles
-                     beta
-                     gamma
-   Output:  REAL     amatrx[3][3]   Returned conversion matrix
-   Input:   int      isw      0: Frac-->Ortho,  1: Ortho-->Frac
-            int      ncode    Orientation of reciprocal axes wrt true axes.
+*//**
+
+   \param[in]     cell     Unit cell dimensions
+   \param[in]     alpha    Unit cell angles
+   \param[in]     beta
+   \param[in]     gamma
+   \param[out]    amatrx   Returned conversion matrix
+   \param[in]     isw      0: Frac-->Ortho,  1: Ortho-->Frac
+   \param[in]     ncode    Orientation of reciprocal axes wrt true axes.
+   
+\verbatim   
+   ncode    Orientation of reciprocal axes wrt true axes.
+
                               1: a || xo,          c* || zo
                               2: b || xo,          a* || zo
                               3: c || xo,          b* || zo
                               4: hex a & b || xo,  c* || zo
                               5: a* || xo,         c  || zo
+\endverbatim
 
    Function to calculate a matrix which will convert between fractional and
    orthonormal coordinates given unit cell dimensions and angles.
@@ -572,9 +590,9 @@ void NormalisePDB(PDB   *pdb,
    
    See Rollett `Computing Methods in Crystallography' p.23
 
-   06.09.91 Original
-   01.06.92 Documented
-   10.06.93 void return
+-  06.09.91 Original
+-  01.06.92 Documented
+-  10.06.93 void return
 */
 void ortho(REAL  cell[3],        /* Cell dimensions                     */
            REAL  alpha,          /* Cell angles                         */

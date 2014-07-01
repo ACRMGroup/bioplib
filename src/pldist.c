@@ -78,33 +78,34 @@
                           REAL *Rx, REAL *Ry, REAL *Rz,
                           REAL *frac)
    ----------------------------------------------------
-   Input:    REAL   Px          Point x coordinate
-             REAL   Py          Point y coordinate
-             REAL   Pz          Point z coordinate
-             REAL   P1x         Line start x coordinate
-             REAL   P1y         Line start y coordinate
-             REAL   P1z         Line start z coordinate
-             REAL   P2x         Line end x coordinate
-             REAL   P2y         Line end y coordinate
-             REAL   P2z         Line end z coordinate
-    Output:  REAL   *Rx         Nearest point on line x coordinate
-             REAL   *Ry         Nearest point on line y coordinate
-             REAL   *Rz         Nearest point on line z coordinate
-             REAL   *frac       Fraction along P1-P2 of R
-    Returns: REAL               Distance from P to R
+*//**
+   \param[in]     Px          Point x coordinate
+   \param[in]     Py          Point y coordinate
+   \param[in]     Pz          Point z coordinate
+   \param[in]     P1x         Line start x coordinate
+   \param[in]     P1y         Line start y coordinate
+   \param[in]     P1z         Line start z coordinate
+   \param[in]     P2x         Line end x coordinate
+   \param[in]     P2y         Line end y coordinate
+   \param[in]     P2z         Line end z coordinate
+   \param[out]    *Rx         Nearest point on line x coordinate
+   \param[out]    *Ry         Nearest point on line y coordinate
+   \param[out]    *Rz         Nearest point on line z coordinate
+   \param[out]    *frac       Fraction along P1-P2 of R
+   \return                       Distance from P to R
 
-    Calculates the shortest distance from a point P to a line between
-    points P1 and P2. This value is returned.
+   Calculates the shortest distance from a point P to a line between
+   points P1 and P2. This value is returned.
 
-    If the Rx,Ry,Rz pointers are all non-NULL, then the point on the
-    line nearest to P is output.
+   If the Rx,Ry,Rz pointers are all non-NULL, then the point on the
+   line nearest to P is output.
 
-    If the frac pointer is non-NULL then the fraction of R along the
-    P1-P2 vector is output. Thus:
-          R==P1 ==> frac=0
-          R==P2 ==> frac=1
-    Thus if (0<=frac<=1) then the point R is within the line segment
-    P1-P2
+   If the frac pointer is non-NULL then the fraction of R along the
+   P1-P2 vector is output. Thus:
+         R==P1 ==> frac=0
+         R==P2 ==> frac=1
+   Thus if (0<=frac<=1) then the point R is within the line segment
+   P1-P2
 
     16.11.99 Original   By: ACRM
 */

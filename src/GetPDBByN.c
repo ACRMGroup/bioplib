@@ -80,15 +80,17 @@
 /************************************************************************/
 /*>PDB *GetPDBByN(PDB *pdb, int n)
    -------------------------------
-   Input:   PDB   *pdb    PDB linked list
-            int   n       Offset into linked list
-   Returns: PDB   *       Pointer to n'th item in linked list
+*//**
+
+   \param[in]     *pdb    PDB linked list
+   \param[in]     n       Offset into linked list
+   \return                   Pointer to n'th item in linked list
 
    Gets a pointer to a pdb item by taking a PDB linked list and an 
    integer.
    The pointer returned is the n'th item in the list
    
-   13.05.92 Original
+-  13.05.92 Original
 */
 PDB *GetPDBByN(PDB *pdb,
                int n)

@@ -70,16 +70,18 @@
 /* Variables global to this file only
 */
 
-/***************************************************************************/
+/************************************************************************/
 /*>void OriginPDB(PDB *pdb)
    ------------------------
-   I/O:   PDB  *pdb    PDB linked list to move
+*//**
+
+   \param[in,out] *pdb    PDB linked list to move
 
    Moves a PDB linked list to the origin, ignoring NULL coordinates.
 
-   01.10.92 Original
-   22.02.94 Changed NULL check to any coordinate not 9999.0
-   11.03.94 Changed NULL check to >9998.0 Added cast to REAL
+-  01.10.92 Original
+-  22.02.94 Changed NULL check to any coordinate not 9999.0
+-  11.03.94 Changed NULL check to >9998.0 Added cast to REAL
 */
 void OriginPDB(PDB *pdb)
 {

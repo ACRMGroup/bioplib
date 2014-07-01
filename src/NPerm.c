@@ -70,10 +70,12 @@
 /************************************************************************/
 /*>ULONG NPerm(int n, int r)
    -------------------------
+*//**
+
    Calculates number of permutations of n items in r groups
    Returns 0 if a numeric overflow occurs.
 
-   09.09.96 Original   By: ACRM
+-  09.09.96 Original   By: ACRM
 */
 ULONG NPerm(int n, int r)
 {

@@ -77,15 +77,17 @@
 /************************************************************************/
 /*>void invert33(REAL s[3][3], REAL ss[3][3])
    ------------------------------------------
-   Input:   REAL    s[3][3]  Input matrix
-   Output:  REAL    ss[3][3] Ouput inverted matrix
+*//**
+
+   \param[in]     s        Input matrix
+   \param[out]    ss       Ouput inverted matrix
 
    Invert a 3x3 matrix
 
-   06.09.91 Original
-   01.06.92 Documented
-   10.06.93 void return
-   12.09.02 Fixed SERIOUS bug! Was basically rubbish before!
+-  06.09.91 Original
+-  01.06.92 Documented
+-  10.06.93 void return
+-  12.09.02 Fixed SERIOUS bug! Was basically rubbish before!
 */
 void invert33(REAL s[3][3],
               REAL ss[3][3])

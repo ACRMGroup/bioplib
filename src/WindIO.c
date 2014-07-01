@@ -93,18 +93,20 @@ static BOOL sDoPaging    = FALSE,
 /************************************************************************/
 /*>screen(char *string)
    --------------------
-   Input: char *string    String to write on window
+*//**
+
+   \param[in]     *string    String to write on window
 
    Writes information to the screen. Handles any windows as appropriate.
-   25.09.92 Original
-   02.10.92 Added CURSES support
-   05.10.92 Added AMIGA_WINDOWS support
-   07.10.92 Added paging support
-   11.03.94 Added check on sWindowMode
-   14.03.94 Changed this to check on sInteractive
+-  25.09.92 Original
+-  02.10.92 Added CURSES support
+-  05.10.92 Added AMIGA_WINDOWS support
+-  07.10.92 Added paging support
+-  11.03.94 Added check on sWindowMode
+-  14.03.94 Changed this to check on sInteractive
             Changed check on WINDOWING to sWindowMode
-   01.02.01 Added maxlen parameter
-   15.02.01 oops! removed maxlen parameter, value of 80 should have gone
+-  01.02.01 Added maxlen parameter
+-  15.02.01 oops! removed maxlen parameter, value of 80 should have gone
             into GetKybdString()
 */
 void screen(char *string)
@@ -152,7 +154,9 @@ void screen(char *string)
 /************************************************************************/
 /*>prompt(char *string)
    --------------------
-   Input: char *string   Prompt string
+*//**
+
+   \param[in]     *string   Prompt string
 
    Sets a prompt for input. If windowing is on, this simply sets the 
    prompt variable (the actual prompt is issued by the GetKybdString()
@@ -160,11 +164,11 @@ void screen(char *string)
    If the prompt ends with a . it is simply printed; if not, a > is 
    appended.
 
-   25.09.92 Original
-   02.10.92 Added CURSES support
-   05.10.92 Added AMIGA_WINDOWS support
-   11.03.94 Modified to save prompt string even if not windowing
-   15.03.94 Now sets up string and just calls RePrompt()
+-  25.09.92 Original
+-  02.10.92 Added CURSES support
+-  05.10.92 Added AMIGA_WINDOWS support
+-  11.03.94 Modified to save prompt string even if not windowing
+-  15.03.94 Now sets up string and just calls RePrompt()
 */
 void prompt(char *string)
 {
@@ -179,12 +183,14 @@ void prompt(char *string)
 /************************************************************************/
 /*>void RePrompt(void)
    -------------------
+*//**
+
    Reissue the current prompt. Only has any effect when windowing is not
    in use. Normally only used by ReadBufferedFile() and 
    ProbeBufferedFile() to re-issue prompts while eating blank lines.
 
-   10.03.94 Original   By: ACRM
-   15.03.94 Changed to work whenever we're not windowing and are 
+-  10.03.94 Original   By: ACRM
+-  15.03.94 Changed to work whenever we're not windowing and are 
             interactive
 */
 void RePrompt(void)
@@ -199,11 +205,13 @@ void RePrompt(void)
 /************************************************************************/
 /*>void GetKybdString(char *string, int maxlen)
    --------------------------------------------
+*//**
+
    Reads a string from the keyboard
-   02.10.92 Original
-   05.10.92 Added AMIGA_WINDOWS support
-   15.03.94 Added check on sWindowMode
-   01.02.01 Added maxlen parameter and changed gets() to fgets()
+-  02.10.92 Original
+-  05.10.92 Added AMIGA_WINDOWS support
+-  15.03.94 Added check on sWindowMode
+-  01.02.01 Added maxlen parameter and changed gets() to fgets()
 */
 void GetKybdString(char *string, int maxlen)
 {
@@ -230,8 +238,10 @@ void GetKybdString(char *string, int maxlen)
 /************************************************************************/
 /*>void PagingOn(void)
    -------------------
+*//**
+
    Switches on screen paging.
-   07.10.92 Original
+-  07.10.92 Original
 */
 void PagingOn(void)
 {
@@ -242,8 +252,10 @@ void PagingOn(void)
 /************************************************************************/
 /*>void PagingOff(void)
    --------------------
+*//**
+
    Switches off screen paging.
-   07.10.92 Original
+-  07.10.92 Original
 */
 void PagingOff(void)
 {
@@ -253,12 +265,14 @@ void PagingOff(void)
 /************************************************************************/
 /*>void WindowMode(BOOL mode)
    --------------------------
-   Input:   BOOL  mode    TRUE:  Use windowing
+*//**
+
+   \param[in]     mode    TRUE:  Use windowing
                           FALSE: Output normally (default)
 
    Switch window mode on or off.
-   11.03.94 Original    By: ACRM
-   15.03.94 Added check on WINDOWING
+-  11.03.94 Original    By: ACRM
+-  15.03.94 Added check on WINDOWING
 */
 void WindowMode(BOOL mode)
 {
@@ -272,14 +286,16 @@ void WindowMode(BOOL mode)
 /************************************************************************/
 /*>void WindowInteractive(BOOL mode)
    ---------------------------------
-   Input:   BOOL  mode    TRUE:  Is interactive (default)
+*//**
+
+   \param[in]     mode    TRUE:  Is interactive (default)
                           FALSE: Not interactive
 
    Switch interactive mode on or off.
    If switched off, calls WindowMode(FALSE) to switch off windowing
 
-   15.03.94 Original    By: ACRM
-   17.03.94 Set sInteractive not sWindowMode!
+-  15.03.94 Original    By: ACRM
+-  17.03.94 Set sInteractive not sWindowMode!
 */
 void WindowInteractive(BOOL mode)
 {
@@ -292,10 +308,12 @@ void WindowInteractive(BOOL mode)
 /************************************************************************/
 /*>int YorN(char deflt)
    --------------------
-   Input:   char  *deflt   Default response ('y' or 'n') if return is 
+*//**
+
+   \param[in]     *deflt   Default response ('y' or 'n') if return is 
                            pressed without a letter or an invalid letter
                            is given
-   Returns: int            0 if the user responds with N or n
+   \return                    0 if the user responds with N or n
                            1 if the user responds with Y or y 
                            2 if the user responds with A or a
                            3 if the user responds with Q or q
@@ -309,8 +327,8 @@ void WindowInteractive(BOOL mode)
    The routine will work correctly with any response which starts with 
    the right letter (e.g. Yes, Yeah, yellow(!), no, Never, etc.)
 
-   18.06.93 Original    By: ACRM
-   01.02.01 Added maxlen parameter to GetKybdString()
+-  18.06.93 Original    By: ACRM
+-  01.02.01 Added maxlen parameter to GetKybdString()
 */
 int YorN(char deflt)
 {

@@ -70,14 +70,16 @@
 /************************************************************************/
 /*>REAL simpleangle(REAL ang)
    --------------------------
-   Input:   REAL    ang         An angle
-   Returns: REAL                Simplified angle
+*//**
+
+   \param[in]     ang         An angle
+   \return                        Simplified angle
    
    Simplifies a signed angle to an unsigned angle <=2*PI
 
-   07.02.89 Original    By: ACRM
-   04.03.91 Fixed return value
-   16.06.93 Changed float to REAL
+-  07.02.89 Original    By: ACRM
+-  04.03.91 Fixed return value
+-  16.06.93 Changed float to REAL
 */
 REAL simpleangle(REAL ang)
 {

@@ -91,8 +91,10 @@
 /************************************************************************/
 /*>char *KillLeadSpaces(char *string)
    ----------------------------------
-   Input:      char  *string        A character string
-   Returns:   *char                 A pointer to the string with the 
+*//**
+
+   \param[in]     *string        A character string
+   \return                         A pointer to the string with the 
                                     leading spaces removed
 
    This routine strips leading spaces and tabs from a string returning
@@ -100,9 +102,9 @@
 
    N.B. THE MACRO KILLLEADSPACES() MAY NOW BE USED INSTEAD
    
-   06.02.91 Original
-   28.05.92 ANSIed
-   06.07.93 Added tab skipping
+-  06.02.91 Original
+-  28.05.92 ANSIed
+-  06.07.93 Added tab skipping
 */
 char *KillLeadSpaces(char *string)
 {

@@ -216,22 +216,24 @@ int  pclose(FILE *);
 /************************************************************************/
 /*>PDB *ReadPDB(FILE *fp, int *natom)
    ----------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
-                              .PDB file is stored.
-   Output:  int      *natom   Number of atoms read. -1 if error.
-   Returns: PDB      *pdb     A pointer to the first allocated item of
-                              the PDB linked list
+*//**
+
+   \param[in]     *fp      A pointer to type FILE in which the
+                           .PDB file is stored.
+   \param[out]    *natom   Number of atoms read. -1 if error.
+   \return                 A pointer to the first allocated item of
+                           the PDB linked list
 
    Reads a PDB file into a PDB linked list
 
-   08.07.93 Written as entry for doReadPDB()
-   09.07.93 Modified to return pointer to PDB
-   17.03.94 Modified to handle OccRank
-   06.03.95 Added value for NMR model to read (1 = first)
-   25.01.06 Added call to RemoveAlternates() - this deals with odd
+-  08.07.93 Written as entry for doReadPDB()
+-  09.07.93 Modified to return pointer to PDB
+-  17.03.94 Modified to handle OccRank
+-  06.03.95 Added value for NMR model to read (1 = first)
+-  25.01.06 Added call to RemoveAlternates() - this deals with odd
             cases where alternate atom positions don't appear where
             they should!
-   25.01.06 Added call to RemoveAlternates(). This deals with odd uses
+-  25.01.06 Added call to RemoveAlternates(). This deals with odd uses
             of multiple occupancies like 3pga and the instance where
             the alternates are all grouped at the end of the file.
 */
@@ -247,17 +249,19 @@ PDB *ReadPDB(FILE *fp,
 /************************************************************************/
 /*>PDB *ReadPDBAll(FILE *fp, int *natom)
    -------------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
-                              .PDB file is stored.
-   Output:  int      *natom   Number of atoms read. -1 if error.
-   Returns: PDB      *pdb     A pointer to the first allocated item of
-                              the PDB linked list
+*//**
+
+   \param[in]     *fp      A pointer to type FILE in which the
+                           .PDB file is stored.
+   \param[out]    *natom   Number of atoms read. -1 if error.
+   \return                 A pointer to the first allocated item of
+                           the PDB linked list
 
    Reads a PDB file into a PDB linked list. Reads all partial occupancy
    atoms. Reads both ATOM and HETATM records.
 
-   04.10.94 Original    By: ACRM
-   06.03.95 Added value for NMR model to read (0 = all)   
+-  04.10.94 Original    By: ACRM
+-  06.03.95 Added value for NMR model to read (0 = all)   
 */
 PDB *ReadPDBAll(FILE *fp,
              int  *natom)
@@ -268,19 +272,21 @@ PDB *ReadPDBAll(FILE *fp,
 /************************************************************************/
 /*>PDB *ReadPDBAtoms(FILE *fp, int *natom)
    ---------------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
-                              .PDB file is stored.
-   Output:  int      *natom   Number of atoms read. -1 if error.
-   Returns: PDB      *pdb     A pointer to the first allocated item of
-                              the PDB linked list
+*//**
+
+   \param[in]     *fp      A pointer to type FILE in which the
+                           .PDB file is stored.
+   \param[out]    *natom   Number of atoms read. -1 if error.
+   \return                 A pointer to the first allocated item of
+                           the PDB linked list
 
    Reads a PDB file into a PDB linked list. Atoms only (no HETATM cards).
 
-   08.07.93 Written as entry for doReadPDB()
-   09.07.93 Modified to return pointer to PDB
-   17.03.94 Modified to handle OccRank
-   06.03.95 Added value for NMR model to read (1 = first)
-   25.01.06 Added call to RemoveAlternates(). This deals with odd uses
+-  08.07.93 Written as entry for doReadPDB()
+-  09.07.93 Modified to return pointer to PDB
+-  17.03.94 Modified to handle OccRank
+-  06.03.95 Added value for NMR model to read (1 = first)
+-  25.01.06 Added call to RemoveAlternates(). This deals with odd uses
             of multiple occupancies like 3pga and the instance where
             the alternates are all grouped at the end of the file.
 */
@@ -296,18 +302,20 @@ PDB *ReadPDBAtoms(FILE *fp,
 /************************************************************************/
 /*>PDB *ReadPDBOccRank(FILE *fp, int *natom, int OccRank)
    ------------------------------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
-                              .PDB file is stored.
-            int      OccRank  Occupancy ranking (>=1)
-   Output:  int      *natom   Number of atoms read. -1 if error.
-   Returns: PDB      *pdb     A pointer to the first allocated item of
-                              the PDB linked list
+*//**
+
+   \param[in]     *fp      A pointer to type FILE in which the
+                           .PDB file is stored.
+   \param[in]     OccRank  Occupancy ranking (>=1)
+   \param[out]    *natom   Number of atoms read. -1 if error.
+   \return                 A pointer to the first allocated item of
+                           the PDB linked list
 
    Reads a PDB file into a PDB linked list selecting the OccRank'th
    highest occupancy atoms
 
-   17.03.94 Original    By: ACRM
-   06.03.95 Added value for NMR model to read (1 = first)
+-  17.03.94 Original    By: ACRM
+-  06.03.95 Added value for NMR model to read (1 = first)
 */
 PDB *ReadPDBOccRank(FILE *fp, int *natom, int OccRank)
 {
@@ -317,18 +325,20 @@ PDB *ReadPDBOccRank(FILE *fp, int *natom, int OccRank)
 /************************************************************************/
 /*>PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
    -----------------------------------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
-                              .PDB file is stored.
-            int      OccRank  Occupancy ranking (>=1)
-   Output:  int      *natom   Number of atoms read. -1 if error.
-   Returns: PDB      *pdb     A pointer to the first allocated item of
-                              the PDB linked list
+*//**
+
+   \param[in]     *fp      A pointer to type FILE in which the
+                           .PDB file is stored.
+   \param[in]     OccRank  Occupancy ranking (>=1)
+   \param[out]    *natom   Number of atoms read. -1 if error.
+   \return                 A pointer to the first allocated item of
+                           the PDB linked list
 
    Reads a PDB file into a PDB linked list ignoring HETATM records
    and selecting the OccRank'th highest occupancy atoms
 
-   17.03.94 Original    By: ACRM
-   06.03.95 Added value for NMR model to read (1 = first)
+-  17.03.94 Original    By: ACRM
+-  06.03.95 Added value for NMR model to read (1 = first)
 */
 PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
 {
@@ -336,78 +346,80 @@ PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
 }
 
 /************************************************************************/
-/*>PDB *doReadPDB(FILE *fp, int *natom, BOOL AllAtoms, int OccRank,
+/*>PDB *doReadPDB(FILE *fpin, int *natom, BOOL AllAtoms, int OccRank,
                   int ModelNum)
-   ----------------------------------------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
-                              .PDB file is stored.
-            BOOL     AllAtoms TRUE:  ATOM & HETATM records
-                              FALSE: ATOM records only
-            int      OccRank  Occupancy ranking
-            int      ModelNum NMR Model number (0 = all)
-   Output:  int      *natom   Number of atoms read. -1 if error.
-   Returns: PDB      *pdb     A pointer to the first allocated item of
-                              the PDB linked list
+   ------------------------------------------------------------------
+*//**
+
+   \param[in]     *fpin    A pointer to type FILE in which the
+                           .PDB file is stored.
+   \param[in]     AllAtoms TRUE:  ATOM & HETATM records
+                           FALSE: ATOM records only
+   \param[in]     OccRank  Occupancy ranking
+   \param[in]     ModelNum NMR Model number (0 = all)
+   \param[out]    *natom   Number of atoms read. -1 if error.
+   \return                 A pointer to the first allocated item of
+                           the PDB linked list
 
    Reads a PDB file into a PDB linked list. The OccRank value indicates
    occupancy ranking to read for partial occupancy atoms.
    If any partial occupancy atoms are read the global flag 
    gPDBPartialOcc is set to TRUE.
 
-   04.11.88 V1.0  Original
-   07.02.89 V1.1  Ignore records which aren't ATOM or HETATM
-   28.03.90 V1.2  Altered field widths to match PDB standard better
+-  04.11.88 V1.0  Original
+-  07.02.89 V1.1  Ignore records which aren't ATOM or HETATM
+-  28.03.90 V1.2  Altered field widths to match PDB standard better
                   See notes above for deviations
-   28.06.90 V1.2a Buffer size increased to 85 chars.
-   15.02.91 V1.2b Changed comment header to match new standard.
-   07.01.92 V1.3  Ignores blank lines properly
-   11.05.92 V1.4  Check on EOF in while() loop, memset() buffer. 
+-  28.06.90 V1.2a Buffer size increased to 85 chars.
+-  15.02.91 V1.2b Changed comment header to match new standard.
+-  07.01.92 V1.3  Ignores blank lines properly
+-  11.05.92 V1.4  Check on EOF in while() loop, memset() buffer. 
                   ANSIed.
-   01.06.92 V1.5  Documented for autodoc
-   19.06.92 V1.6  Corrected use of stdlib
-   01.10.92 V1.7  Changed to use fgets()
-   10.06.93 V1.9  Returns 0 on failure rather than exiting
+-  01.06.92 V1.5  Documented for autodoc
+-  19.06.92 V1.6  Corrected use of stdlib
+-  01.10.92 V1.7  Changed to use fgets()
+-  10.06.93 V1.9  Returns 0 on failure rather than exiting
                   Replaced SIZE with sizeof(PDB) directly
-   17.06.93 V2.0  Rewritten to use fsscanf()
-   08.07.93 V2.1  Split from ReadPDB()
-   09.07.93 V2.2  Modified to return pointer to PDB. Rewrote allocation
+-  17.06.93 V2.0  Rewritten to use fsscanf()
+-  08.07.93 V2.1  Split from ReadPDB()
+-  09.07.93 V2.2  Modified to return pointer to PDB. Rewrote allocation
                   scheme.
-   17.03.94 V2.3  Handles partial occupancies
+-  17.03.94 V2.3  Handles partial occupancies
                   Sets natom to -1 if there was an error to distinguish 
                   from no atoms.
                   Handles atom names which start in column 13 rather
                   than column 14. This is allowed in the standard, but
                   very rare.
                   Sets flag for partials.
-   06.04.94 V2.4  Atom names starting in column 13 have their first
+-  06.04.94 V2.4  Atom names starting in column 13 have their first
                   character moved to the end if it is a digit.
-   03.10.94 V2.5  Check residue number as well as atom name when running
+-  03.10.94 V2.5  Check residue number as well as atom name when running
                   through alternative atoms for partial occupancy
                   Moved increment of NPartial, so only done if there
                   is space in the array. If OccRank is 0, all atoms are
                   read regardless of occupancy.
-   06.03.95 V2.7  Added value for NMR model to read (0 = all)
+-  06.03.95 V2.7  Added value for NMR model to read (0 = all)
                   No longer static. Sets gPDBMultiNMR if ENDMDL records
                   found.
-   13.01.97 V2.8  Added check on return from fsscanf. Blank lines used
+-  13.01.97 V2.8  Added check on return from fsscanf. Blank lines used
                   to result in duplication of the previous line since
                   fsscanf() does not reset the variables on receiving
                   a blank line. Also fixed in fsscanf().
-   25.02.98 V2.9  Added code to read gzipped PDB files transparently
+-  25.02.98 V2.9  Added code to read gzipped PDB files transparently
                   when GUNZIP_SUPPORT is defined
-   17.08.98 V2.10 Added case to popen() for SunOS
-   08.10.99 V2.11 Initialise CurIns and CurRes
-   15.02.01 V2.12 Added atnam_raw
-   27.04.05 V2.14 Added another atnam_raw for multiple occupancies
-   03.06.05 V2.15 Added altpos
-   14.10.05 V2.16 Modified detection of partial occupancy. handles
+-  17.08.98 V2.10 Added case to popen() for SunOS
+-  08.10.99 V2.11 Initialise CurIns and CurRes
+-  15.02.01 V2.12 Added atnam_raw
+-  27.04.05 V2.14 Added another atnam_raw for multiple occupancies
+-  03.06.05 V2.15 Added altpos
+-  14.10.05 V2.16 Modified detection of partial occupancy. handles
                   residues like 1zeh/B16 where a lower partial is
                   erroneously set to zero
-   05.06.07 V2.19 Added support for Unix compress'd files
-   21.12.11 V2.22 Modified for cases of single occupancy < 1.0
-   22.04.14 V2.24 Call doReadPDBML() for PDBML-formatted PDB file. By: CTP
-   02.06.14 V2.25 Updated doReadPDBML(). By: CTP
-   09.06.14 V2.26 Set gPDBXML flag. By: CTP
+-  05.06.07 V2.19 Added support for Unix compress'd files
+-  21.12.11 V2.22 Modified for cases of single occupancy < 1.0
+-  22.04.14 V2.24 Call doReadPDBML() for PDBML-formatted PDB file. By: CTP
+-  02.06.14 V2.25 Updated doReadPDBML(). By: CTP
+-  09.06.14 V2.26 Set gPDBXML flag. By: CTP
 */
 PDB *doReadPDB(FILE *fpin,
                int  *natom,
@@ -712,14 +724,16 @@ PDB *doReadPDB(FILE *fpin,
                                 int NPartial, PDB **ppdb, PDB **pp, 
                                 int *natom)
    ----------------------------------------------------------------
-   Input:   int  OccRank     Occupancy ranking required (>=1)
-            PDB  multi[]     Array of PDB records for alternative atom
+*//**
+
+   \param[in]     OccRank     Occupancy ranking required (>=1)
+   \param[in]     multi[]     Array of PDB records for alternative atom
                              positions
-            int  NPartial    Number of items in multi array
-   I/O:     PDB  **ppdb      Start of PDB linked list (or NULL)
-            PDB  **pp        Current position in PDB linked list (or NULL)
-            int  *natom      Number of atoms read
-   Returns: BOOL             Memory allocation success
+   \param[in]     NPartial    Number of items in multi array
+   \param[in,out] **ppdb      Start of PDB linked list (or NULL)
+   \param[in,out] **pp        Current position in PDB linked list (or NULL)
+   \param[in,out] *natom      Number of atoms read
+   \return                     Memory allocation success
 
    Takes an array of PDB records which represent alternative atom 
    positions for an atom. Select the OccRank'th highest occupancy and
@@ -727,11 +741,11 @@ PDB *doReadPDB(FILE *fpin,
 
    To be called by doReadPDB().
 
-   17.03.94 Original    By: ACRM
-   08.10.99 Initialise IMaxOcc and MaxOcc
-   27.04.05 Added atnam_raw
-   03.06.05 Added altpos
-   14.10.05 Modified the flag value from 0.0 to -1.0 so that erroneous
+-  17.03.94 Original    By: ACRM
+-  08.10.99 Initialise IMaxOcc and MaxOcc
+-  27.04.05 Added atnam_raw
+-  03.06.05 Added altpos
+-  14.10.05 Modified the flag value from 0.0 to -1.0 so that erroneous
             lower occupancies of 0.0 are read properly and written back
             with their occupancy (0.0) rather than the next higher
             occupancy. Handles residues like 1zeh/B16
@@ -831,17 +845,19 @@ static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
 /************************************************************************/
 /*>char *FixAtomName(char *name, REAL occup)
    -----------------------------------------
-   Input:   char  *name     Atom name read from file
-            REAL  occup     Occupancy to allow fixing of partial occupancy
+*//**
+
+   \param[in]     *name     Atom name read from file
+   \param[in]     occup     Occupancy to allow fixing of partial occupancy
                             atom names
-   Returns: char  *         Fixed atom name (pointer into name)
+   \return                  Fixed atom name (pointer into name)
 
    Fixes an atom name by removing leading spaces, or moving a leading
    digit to the end of the string. Used by doReadPDB()
 
-   06.04.94 Original    By: ACRM
-   01.03.01 No longer static
-   03.06.05 The name passed in has always contained the column which is
+-  06.04.94 Original    By: ACRM
+-  01.03.01 No longer static
+-  03.06.05 The name passed in has always contained the column which is
             officially the alternate atom position indicator, but is 
             used by some programs as part of the atom name. Thus the
             properly constructed variable coming into the routine should
@@ -912,15 +928,17 @@ char *FixAtomName(char *name, REAL occup)
 /************************************************************************/
 /*>PDB *RemoveAlternates(PDB *pdb)
    -------------------------------
-   I/O:       PDB     *pdb       PDB 
-   Returns:   PDB *              Ammended linked list (in case start has
-                                 changed)
+*//**
+
+   \param[in,out] *pdb       PDB 
+   \return                   Ammended linked list (in case start has
+                             changed)
 
    Remove alternate atoms - we keep only the highest occupancy or the 
    first if there are more than one the same.
 
-   25.01.05 Original based on code written for Inpharmatica   By: ACRM
-   04.02.14 Use CHAINMATCH macro. By: CTP
+-  25.01.05 Original based on code written for Inpharmatica   By: ACRM
+-  04.02.14 Use CHAINMATCH macro. By: CTP
 */
 PDB *RemoveAlternates(PDB *pdb)
 {
@@ -1128,15 +1146,17 @@ pointer\n");
 /*>PDB *doReadPDBML(FILE *fp, int *natom, BOOL AllAtoms, int OccRank,
                      int ModelNum)
    ------------------------------------------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
-                              .PDB file is stored.
-            BOOL     AllAtoms TRUE:  ATOM & HETATM records
-                              FALSE: ATOM records only
-            int      OccRank  Occupancy ranking
-            int      ModelNum NMR Model number (0 = all)
-   Output:  int      *natom   Number of atoms read. -1 if error.
-   Returns: PDB      *pdb     A pointer to the first allocated item of
-                              the PDB linked list
+*//**
+
+   \param[in]     *fpin    A pointer to type FILE in which the
+                           .PDB file is stored.
+   \param[in]     AllAtoms TRUE:  ATOM & HETATM records
+                           FALSE: ATOM records only
+   \param[in]     OccRank  Occupancy ranking
+   \param[in]     ModelNum NMR Model number (0 = all)
+   \param[out]    *natom   Number of atoms read. -1 if error.
+   \return                 A pointer to the first allocated item of
+                           the PDB linked list
 
    Reads a PDBML-formatted PDB file into a PDB linked list.
    
@@ -1147,11 +1167,11 @@ pointer\n");
    The global multiple-models flag is set to true if more than one model 
    is found.
 
-   22.04.14 Original By: CTP
-   02.06.14 Updated setting atnam_raw and parsing data from PDB atom site 
+-  22.04.14 Original By: CTP
+-  02.06.14 Updated setting atnam_raw and parsing data from PDB atom site 
             labels (label_seq_id, etc.) if author-defined labels are 
             omitted. By: CTP
-   09.06.14 Set gPDBXML flag. By: CTP
+-  09.06.14 Set gPDBXML flag. By: CTP
 
 */
 PDB *doReadPDBML(FILE *fpin,
@@ -1557,9 +1577,11 @@ PDB *doReadPDBML(FILE *fpin,
 /************************************************************************/
 /*>static BOOL CheckFileFormatPDBML(FILE *fp)
    ------------------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
+*//**
+
+   \param[in]     *fp      A pointer to type FILE in which the
                               .PDB file is stored.
-   Returns: BOOL              File is in PDBML format;
+   \return                      File is in PDBML format;
 
    Simple test to detect PDBML-formatted pdb file.
    
@@ -1567,7 +1589,7 @@ PDB *doReadPDBML(FILE *fpin,
          for uncompressed file returning file type (eg pdb/pdbml/unknown).
    
    
-   22.04.14 Original By: CTP
+-  22.04.14 Original By: CTP
    
 */
 BOOL CheckFileFormatPDBML(FILE *fp)

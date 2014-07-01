@@ -107,12 +107,14 @@ static void PrintAnError(char *error);
 /************************************************************************/
 /*>void StoreError(char *routine, char *error)
    -------------------------------------------
-   Input:   char *routine        Name of the routine generating the error
-            char *error          Description of the error
+*//**
+
+   \param[in]     *routine        Name of the routine generating the error
+   \param[in]     *error          Description of the error
 
    Stores an error on the error stack.
 
-   31.08.94 Original    By: ACRM
+-  31.08.94 Original    By: ACRM
 */
 void StoreError(char *routine, char *error)
 {
@@ -146,14 +148,16 @@ void StoreError(char *routine, char *error)
 /************************************************************************/
 /*>void ShowErrors(void *PrintRoutine(char *), BOOL Trace)
    -------------------------------------------------------
-   Input:   void  *PrintRoutine(char *)   The print routine or NULL
-            BOOL  Trace                   Flag to print routine names
+*//**
+
+   \param[in]     *PrintRoutine           The print routine or NULL
+   \param[in]     Trace                   Flag to print routine names
 
    Display the error stack using the supplied print routine or the
    simple default one if NULL is given.
 
-   31.08.94 Original    By: ACRM
-   06.09.94 No longer tries to set PrintRoutine if was NULL (strict ANSI
+-  31.08.94 Original    By: ACRM
+-  06.09.94 No longer tries to set PrintRoutine if was NULL (strict ANSI
             compliance)
 */
 void ShowErrors(void *PrintRoutine(char *), BOOL Trace)
@@ -178,12 +182,14 @@ void ShowErrors(void *PrintRoutine(char *), BOOL Trace)
 /************************************************************************/
 /*>static void PrintAnError(char *string)
    ---------------------------------------
-   Input:   char  *string        A string to be printed
+*//**
+
+   \param[in]     *string        A string to be printed
 
    A simple error printing routine used if NULL given as a parameter
    to ShowErrors()
 
-   31.08.94 Original    By: ACRM
+-  31.08.94 Original    By: ACRM
 */
 static void PrintAnError(char *string)
 {

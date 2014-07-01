@@ -84,8 +84,10 @@
 /************************************************************************/
 /*>PDB *SelectCaPDB(PDB *pdb)
    --------------------------
-   Input:   PDB  *pdb     A PDB linked list
-   Output:  PDB  *        The linked list reduced to CA atoms only
+*//**
+
+   \param[in]     *pdb     A PDB linked list
+   \param[out]    *        The linked list reduced to CA atoms only
 
    Reduce a PDB linked list to CA atoms only. Returns the reduced PDB
    linked list. Note that the input linked list is modified (storage for
@@ -106,8 +108,8 @@
         the original PDB linked list is NOT intact after the 
         selection process.
 
-   15.10.96 Original   By: ACRM
-   11.01.02 Added check on pdb!=NULL in case there are no CAs (DNA etc)
+-  15.10.96 Original   By: ACRM
+-  11.01.02 Added check on pdb!=NULL in case there are no CAs (DNA etc)
 */
 PDB *SelectCaPDB(PDB *pdb)
 {

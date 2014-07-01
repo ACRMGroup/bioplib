@@ -46,8 +46,8 @@
    Usage:
    ======
    WritePDB(fp, pdb)
-   Input:   FILE  *fp      A pointer to the file to write
-            PDB   *pdb     The start of the PDB linked list.
+   \param[in]     *fp      A pointer to the file to write
+   \param[in]     *pdb     The start of the PDB linked list.
 
 **************************************************************************
 
@@ -93,12 +93,14 @@
 /************************************************************************/
 /*>BOOL blWritePDB(FILE *fp, PDB *pdb)
    -----------------------------------
-   Input:   FILE *fp   PDB file pointer to be written
-            PDB  *pdb  PDB linked list to write
+*//**
+
+   \param[in]     *fp   PDB file pointer to be written
+   \param[in]     *pdb  PDB linked list to write
 
    Write a PDB linked list...
 
-   21.06.14 Original By: CTP
+-  21.06.14 Original By: CTP
 */
 BOOL blWritePDB(FILE *fp,
                 PDB  *pdb)
@@ -127,11 +129,13 @@ BOOL blWritePDB(FILE *fp,
 /************************************************************************/
 /*>BOOL blFormatCheckWritePDB(PDB *pdb)
    ------------------------------------
-   Input:   PDB  *pdb  PDB linked list to write
+*//**
+
+   \param[in]     *pdb  PDB linked list to write
 
    Checks PDB linked list is compatible with PDB-formatted text file.
 
-   21.06.14 Original By: CTP
+-  21.06.14 Original By: CTP
 */
 BOOL blFormatCheckWritePDB(PDB *pdb)
 {
@@ -150,18 +154,20 @@ BOOL blFormatCheckWritePDB(PDB *pdb)
 /************************************************************************/
 /*>void WritePDB(FILE *fp, PDB *pdb)
    ---------------------------------
-   Input:   FILE *fp   PDB file pointer to be written
-            PDB  *pdb  PDB linked list to write
+*//**
+
+   \param[in]     *fp   PDB file pointer to be written
+   \param[in]     *pdb  PDB linked list to write
 
    Write a PDB linked list by calls to WritePDBRecord()
 
-   08.03.89 Original
-   01.06.92 ANSIed and autodoc'd
-   10.06.93 Uses NEXT macro; void type
-   08.07.93 Added insertion of TER cards
-   22.02.94 And a TER card at the end of the file
-   04.02.14 Use CHAINMATCH macro. By: CTP
-   21.06.14 Function deprecated. Converted to wrapper for blWriteAsPDB().
+-  08.03.89 Original
+-  01.06.92 ANSIed and autodoc'd
+-  10.06.93 Uses NEXT macro; void type
+-  08.07.93 Added insertion of TER cards
+-  22.02.94 And a TER card at the end of the file
+-  04.02.14 Use CHAINMATCH macro. By: CTP
+-  21.06.14 Function deprecated. Converted to wrapper for blWriteAsPDB().
             By: CTP
 */
 void WritePDB(FILE *fp,
@@ -174,18 +180,20 @@ void WritePDB(FILE *fp,
 /************************************************************************/
 /*>void blWriteAsPDB(FILE *fp, PDB *pdb)
    -------------------------------------
-   Input:   FILE *fp   PDB file pointer to be written
-            PDB  *pdb  PDB linked list to write
+*//**
+
+   \param[in]     *fp   PDB file pointer to be written
+   \param[in]     *pdb  PDB linked list to write
 
    Write a PDB linked list by calls to WritePDBRecord()
 
-   08.03.89 Original
-   01.06.92 ANSIed and autodoc'd
-   10.06.93 Uses NEXT macro; void type
-   08.07.93 Added insertion of TER cards
-   22.02.94 And a TER card at the end of the file
-   04.02.14 Use CHAINMATCH macro. By: CTP
-   17.06.14 Renamed to blWriteAsPDB() By: CTP
+-  08.03.89 Original
+-  01.06.92 ANSIed and autodoc'd
+-  10.06.93 Uses NEXT macro; void type
+-  08.07.93 Added insertion of TER cards
+-  22.02.94 And a TER card at the end of the file
+-  04.02.14 Use CHAINMATCH macro. By: CTP
+-  17.06.14 Renamed to blWriteAsPDB() By: CTP
 */
 void blWriteAsPDB(FILE *fp,
                   PDB  *pdb)
@@ -211,19 +219,21 @@ void blWriteAsPDB(FILE *fp,
 /************************************************************************/
 /*>void WritePDBRecord(FILE *fp, PDB *pdb)
    ---------------------------------------
-   Input:   FILE  *fp     PDB file pointer to be written
-            PDB   *pdb    PDB linked list record to write
+*//**
+
+   \param[in]     *fp     PDB file pointer to be written
+   \param[in]     *pdb    PDB linked list record to write
 
    Write a PDB record
 
-   08.03.89 Original
-   28.03.90 Changed to match ReadPDB() V1.2 for column widths
-   01.06.92 ANSIed and autodoc'd
-   10.06.93 void type
-   22.06.93 Changed to %lf. Ljust strings
-   11.03.94 %lf back to %f (!)
-   15.02.01 Modified to use atnam_raw
-   03.06.05 Modified to use altpos
+-  08.03.89 Original
+-  28.03.90 Changed to match ReadPDB() V1.2 for column widths
+-  01.06.92 ANSIed and autodoc'd
+-  10.06.93 void type
+-  22.06.93 Changed to %lf. Ljust strings
+-  11.03.94 %lf back to %f (!)
+-  15.02.01 Modified to use atnam_raw
+-  03.06.05 Modified to use altpos
 */
 void WritePDBRecord(FILE *fp,
                     PDB  *pdb)
@@ -246,20 +256,22 @@ void WritePDBRecord(FILE *fp,
 /************************************************************************/
 /*>void WritePDBRecordAtnam(FILE *fp, PDB *pdb)
    --------------------------------------------
-   Input:   FILE  *fp     PDB file pointer to be written
-            PDB   *pdb    PDB linked list record to write
+*//**
+
+   \param[in]     *fp     PDB file pointer to be written
+   \param[in]     *pdb    PDB linked list record to write
 
    Write a PDB record
 
-   08.03.89 Original
-   28.03.90 Changed to match ReadPDB() V1.2 for column widths
-   01.06.92 ANSIed and autodoc'd
-   10.06.93 void type
-   22.06.93 Changed to %lf. Ljust strings
-   11.03.94 %lf back to %f (!)
-   15.02.01 Modified to use atnam_raw
-   03.06.05 Modified to use altpos
-   22.09.05 This is like the old version which used atnam rather
+-  08.03.89 Original
+-  28.03.90 Changed to match ReadPDB() V1.2 for column widths
+-  01.06.92 ANSIed and autodoc'd
+-  10.06.93 void type
+-  22.06.93 Changed to %lf. Ljust strings
+-  11.03.94 %lf back to %f (!)
+-  15.02.01 Modified to use atnam_raw
+-  03.06.05 Modified to use altpos
+-  22.09.05 This is like the old version which used atnam rather
             than atnam_raw
 */
 void WritePDBRecordAtnam(FILE *fp,
@@ -284,13 +296,15 @@ void WritePDBRecordAtnam(FILE *fp,
 /************************************************************************/
 /*>void blWriteAsPDBML(FILE *fp, PDB *pdb)
    ---------------------------------------
-   Input:   FILE *fp   PDB file pointer to be written
-            PDB  *pdb  PDB linked list to write
+*//**
+
+   \param[in]     *fp   PDB file pointer to be written
+   \param[in]     *pdb  PDB linked list to write
 
    Write a PDB linked list in PDBML format.
 
-   02.06.14 Original. By: CTP
-   21.06.14 Renamed blWriteAsPDBML() and updated symbol handling. By: CTP
+-  02.06.14 Original. By: CTP
+-  21.06.14 Renamed blWriteAsPDBML() and updated symbol handling. By: CTP
 
 */
 void blWriteAsPDBML(FILE *fp, PDB  *pdb)

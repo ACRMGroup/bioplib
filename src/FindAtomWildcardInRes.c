@@ -69,9 +69,11 @@
 /************************************************************************/
 /*>PDB *FindAtomWildcardInRes(PDB *pdb, char *pattern)
    ---------------------------------------------------
-   Input:   PDB   *pdb      Pointer to start of a residue
-            char  *pattern  Atom name pattern to find
-   Returns: PDB   *         Pointer to requested atom or NULL if not
+*//**
+
+   \param[in]     *pdb      Pointer to start of a residue
+   \param[in]     *pattern  Atom name pattern to find
+   \return                  Pointer to requested atom or NULL if not
                             found.
 
    Finds an atom within the residue given as a PDB pointer. Allows 
@@ -80,7 +82,7 @@
 
    Returns the first atom which matches
 
-   27.08.96 Original   By: ACRM
+-  27.08.96 Original   By: ACRM
 */
 PDB *FindAtomWildcardInRes(PDB *pdb, char *pattern)
 {

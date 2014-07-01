@@ -75,28 +75,32 @@
 /************************************************************************/
 /*>void SetChi(PDB *pdb, PDB *next, REAL chi, int type)
    ----------------------------------------------------
-   I/O:    PDB  *pdb    PDB linked list to change
-   Input:  PDB  *next   If NULL, move all atoms in the linked list from
-                        the last atom in the torsion. Otherwise move
-                        atoms up to (but not including) next. Normally
-                        this would be the start of the next residue.
-           REAL chi     Sidechain chi angle to set
-           int  type    Torsion angle to set (as defined below)
+*//**
+
+   \param[in,out] *pdb    PDB linked list to change
+   \param[in]     *next   If NULL, move all atoms in the linked list from
+                          the last atom in the torsion. Otherwise move
+                          atoms up to (but not including) next. Normally
+                          this would be the start of the next residue.
+   \param[in]     chi     Sidechain chi angle to set
+   \param[in]     type    Torsion angle to set (as defined below)
 
    Sets a sidechain torsion angle in a pdb linked list. The routine 
    assumes standard atom ordering: N,CA,C,O,s/c with standard order in
    the s/c.
-   The type input parameter is defined as follows:
    
+   The type input parameter is defined as follows:
+
+
          type     Atom names        Sequential atom numbers
          --------------------------------------------------
          0        N,  CA, CB, XG    (0 - 1 - 4 - 5)
          1        CA, CB, XG, XD    (1 - 4 - 5 - 6)
          2        CB, XG, XD, XE    (4 - 5 - 6 - 7)
          3        XG, XD, XE, XZ    (5 - 6 - 7 - 8)
-   
-   13.05.92 Original
-   27.02.98 Removed unreachable break from switch()
+
+-  13.05.92 Original
+-  27.02.98 Removed unreachable break from switch()
 */
 void SetChi(PDB   *pdb,
             PDB   *next, 

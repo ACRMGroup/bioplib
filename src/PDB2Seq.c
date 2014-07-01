@@ -93,12 +93,14 @@
 /************************************************************************/
 /*>char *DoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
    -----------------------------------------------------------------
-   Input:   PDB  *pdb     PDB linked list
-            BOOL DoAsxGlx Handle Asx and Glx as B and Z rather than X
-            BOOL ProtOnly Don't do DNA/RNA; these simply don't get
+*//**
+
+   \param[in]     *pdb     PDB linked list
+   \param[in]     DoAsxGlx Handle Asx and Glx as B and Z rather than X
+   \param[in]     ProtOnly Don't do DNA/RNA; these simply don't get
                           done rather than being handled as X
-            BOOL NoX      Skip amino acids which would be assigned as X
-   Returns: char *        Allocated character array containing sequence
+   \param[in]     NoX      Skip amino acids which would be assigned as X
+   \return                  Allocated character array containing sequence
 
    malloc()'s an array containing the 1-letter sequence corresponding to
    an input PDB linked list. Returns NULL if given a NULL parameter or
@@ -109,21 +111,21 @@
    Those with Prot in their names handle protein only; those with
    X handle Asx/Glx as B/Z rather than as X
    
-   29.09.92 Original    By: ACRM
-   07.06.93 Corrected allocation.
-   18.06.93 Handles multi-chains and skips NTER and CTER residues
-   13.05.94 Check for chain change *before* copy residue (!)
+-  29.09.92 Original    By: ACRM
+-  07.06.93 Corrected allocation.
+-  18.06.93 Handles multi-chains and skips NTER and CTER residues
+-  13.05.94 Check for chain change *before* copy residue (!)
             (Bug reported by Bob MacCullum)
-   19.07.95 Added check for ATOM records
-   24.01.96 Returns blank string (rather than core dumping!) if the
+-  19.07.95 Added check for ATOM records
+-  24.01.96 Returns blank string (rather than core dumping!) if the
             linked list contained no ATOM records
-   26.08.97 Changed to doPDB2Seq with extra parameters (DoAsxGlx & 
+-  26.08.97 Changed to doPDB2Seq with extra parameters (DoAsxGlx & 
             ProtOnly). The old calling forms have now become macros
-   02.10.00 Added NoX
-   10.06.05 Changed the initialization of rescount, resnum, etc. so
+-  02.10.00 Added NoX
+-  10.06.05 Changed the initialization of rescount, resnum, etc. so
             it correctly points to the first residue. This solves a
             bug with CA-only chains where it was undercounting by 1
-   04.02.14 Use CHAINMATCH By: CTP
+-  04.02.14 Use CHAINMATCH By: CTP
 */
 char *DoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
 {

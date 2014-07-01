@@ -48,7 +48,7 @@
 
    Revision History:
    =================
-   04.01.06 V1.0   Original  By: ACRM
+-  04.01.06 V1.0   Original  By: ACRM
 
 *************************************************************************/
 /* Includes
@@ -80,13 +80,15 @@
 /************************************************************************/
 /*>BOOL AddCBtoGly(PDB *pdb)
    -------------------------
-   I/O:      PDB   *pdb     The PDB linked list for a Glycine
-   Returns:  BOOL           Success?
+*//**
+
+   \param[in,out] *pdb     The PDB linked list for a Glycine
+   \return                   Success?
 
    Adds a CB atom to a glycine. This is used when one needs to orientate
    a residue in a common frame of reference which makes use of the CB.
 
-   04.01.06 Original   By: ACRM
+-  04.01.06 Original   By: ACRM
 */
 BOOL AddCBtoGly(PDB *pdb)
 {
@@ -203,14 +205,16 @@ BOOL AddCBtoGly(PDB *pdb)
 /************************************************************************/
 /*>BOOL AddCBtoAllGly(PDB *pdb)
    ----------------------------
-   I/O:      PDB   *pdb     The PDB linked list
-   Returns:  BOOL           Success?
+*//**
+
+   \param[in,out] *pdb     The PDB linked list
+   \return                   Success?
 
    Adds a CB atom to all glycines in a PDB linked list. This is used 
    when one needs to orientate a residue in a common frame of reference 
    which makes use of the CB.
 
-   04.01.06 Original   By: ACRM
+-  04.01.06 Original   By: ACRM
 */
 BOOL AddCBtoAllGly(PDB *pdb)
 {
@@ -231,15 +235,17 @@ BOOL AddCBtoAllGly(PDB *pdb)
 /************************************************************************/
 /*>PDB *StripGlyCB(PDB *pdb)
    -------------------------
-   I/O:      PDB   *pdb     The PDB linked list
-   Returns:  PDB   *        The modified linked list
+*//**
+
+   \param[in,out] *pdb     The PDB linked list
+   \return                    The modified linked list
 
    Removes all Glycine CB pseudo-atoms added by AddGlyCB()
    The linked list is modified in-place, but the return value
    should be used in case the very first item in the linked list
    is a Gly-CB which will be removed by the code.
 
-   04.01.06 Original   By: ACRM
+-  04.01.06 Original   By: ACRM
 */
 PDB *StripGlyCB(PDB *pdb)
 {

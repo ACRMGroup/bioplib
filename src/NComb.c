@@ -70,10 +70,12 @@
 /************************************************************************/
 /*>ULONG NComb(int n, int r)
    -------------------------
+*//**
+
    Calculates number of combinations of n items in r groups
    Returns 0 if a numeric overflow occurs.
    
-   09.09.96 Original   By: ACRM
+-  09.09.96 Original   By: ACRM
 */
 ULONG NComb(int n, int r)
 {

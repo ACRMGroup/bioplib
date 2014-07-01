@@ -77,17 +77,19 @@
 /************************************************************************/
 /*>PDB *FindHetatmResidueSpec(PDB *pdb, char *resspec)
    ---------------------------------------------------
-   Input:   PDB   *pdb      PDB linked list
-            char  *resspec  Residue specification
-   Returns: PDB   *         Pointer to first atom of specified residue
+*//**
+
+   \param[in]     *pdb      PDB linked list
+   \param[in]     *resspec  Residue specification
+   \return                  Pointer to first atom of specified residue
                             (NULL if not found).
 
    Search a PDB linked list for a specified residue (given as
    [chain]num[insert]) but limits search to HETATM residues
 
-   26.10.11 Original    By: ACRM
-   28.08.13 Mofified for new ParseResSpec that terminates strings
-   24.02.14 Now calls BiopFindResidue(). By: CTP
+-  26.10.11 Original    By: ACRM
+-  28.08.13 Mofified for new ParseResSpec that terminates strings
+-  24.02.14 Now calls BiopFindResidue(). By: CTP
 */
 PDB *FindHetatmResidueSpec(PDB *pdb, char *resspec)
 {

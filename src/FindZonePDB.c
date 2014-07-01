@@ -69,24 +69,26 @@
                       char *stopinsert, char *chain, int mode, 
                       PDB **pdb_start, PDB **pdb_stop)
    -------------------------------------------------------------
-   Input:   PDB   *pdb         PDB linked list
-            int   start        Resnum of start of zone
-            char  *startinsert Insert code for start of zone
-            int   stop         Resnum of end of zone
-            char  *stopinsert  Insert code for end of zone
-            char  *chain       Chain name
-            int   mode         ZONE_MODE_RESNUM:     Use PDB residue 
+*//**
+
+   \param[in]     *pdb         PDB linked list
+   \param[in]     start        Resnum of start of zone
+   \param[in]     *startinsert Insert code for start of zone
+   \param[in]     stop         Resnum of end of zone
+   \param[in]     *stopinsert  Insert code for end of zone
+   \param[in]     *chain       Chain name
+   \param[in]     mode         ZONE_MODE_RESNUM:     Use PDB residue 
                                                      numbers/chain
                                ZONE_MODE_SEQUENTIAL: Use sequential 
                                                      numbering
-   Output:  PDB   **pdb_start  Start of zone
-            PDB   **pdb_stop   End of zone
-   Returns: BOOL               OK?
+   \param[out]    **pdb_start  Start of zone
+   \param[out]    **pdb_stop   End of zone
+   \return                       OK?
 
    Finds pointers to the start and end of a zone in a PDB linked list. The
    end is the atom *after* the specified zone
 
-   20.03.14 Function based on FindZonePDB() but takes string for chain 
+-  20.03.14 Function based on FindZonePDB() but takes string for chain 
             label and insert instead of single char. 
             Function finds end of chain properly if stop set to -999.
             By: CTP

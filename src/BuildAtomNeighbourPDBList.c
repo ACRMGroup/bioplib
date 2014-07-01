@@ -74,21 +74,23 @@
 /************************************************************************/
 /*>PDB *BuildAtomNeighbourPDBList(PDB *pdb, PDB *pRes, REAL NeighbDist)
    --------------------------------------------------------------------
-   Input:   PDB   *pdb        PDB linked list of whole structure
-            PDB   *pRes       Pointer to start of residue of interest (may
+*//**
+
+   \param[in]     *pdb        PDB linked list of whole structure
+   \param[in]     *pRes       Pointer to start of residue of interest (may
                               be in a separate linked list providing it's
                               in the same coordinate frame)
-            REAL  NeighbDist  Cutoff neighbour distance
-   Returns: PDB   *           PDB linked list of atoms within cutoff
+   \param[in]     NeighbDist  Cutoff neighbour distance
+   \return                    PDB linked list of atoms within cutoff
                               distance of the residue of interest.
                               (NULL if allocations failed)
 
    Builds a PDB linked list of atoms neighbouring those in a specified
    residue. The input list is unmodified.
 
-   27.08.96 Original   By: ACRM
-   17.11.05 Fixed freed memory access
-   08.11.07 Moved out of mutmodel. Added check on memory allocation.
+-  27.08.96 Original   By: ACRM
+-  17.11.05 Fixed freed memory access
+-  08.11.07 Moved out of mutmodel. Added check on memory allocation.
             Uses occ rather than BVal as a flag
             MOVED FROM MUTMODEL
 */

@@ -93,14 +93,16 @@
 /************************************************************************/
 /*>void padchar(char *string, int length, char ch)
    -----------------------------------------------
-   I/O:     char  *string   String to be padded with spaces
-   Input:   int   length    Required size for string
-            char  ch        Character with which to pad
+*//**
+
+   \param[in,out] *string   String to be padded with spaces
+   \param[in]     length    Required size for string
+   \param[in]     ch        Character with which to pad
 
    Pads a string with a specified character to length characters, then 
    terminates it.
 
-   18.09.96 Original based on padterm()    By: ACRM   
+-  18.09.96 Original based on padterm()    By: ACRM   
 */
 void padchar(char *string,
              int  length,

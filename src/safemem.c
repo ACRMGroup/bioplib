@@ -113,10 +113,12 @@ static char    sBlank        = BLANK;
 /************************************************************************/
 /*>void *safemalloc(int nbytes)
    ----------------------------
+*//**
+
    Debugging version of malloc() which creates protection buffers each
    side of the requested memory block.
 
-   23.06.95 Original    By: ACRM
+-  23.06.95 Original    By: ACRM
 */
 void *safemalloc(int nbytes)
 {
@@ -210,11 +212,13 @@ shortened to the LSB.\n");
 /************************************************************************/
 /*>void safefree(void *ptr)
    ------------------------
+*//**
+
    Debugging version of free() which checks protection buffers each
    side of the requested memory block.
 
-   23.06.95 Original    By: ACRM
-   27.02.98 Added cast to ptr
+-  23.06.95 Original    By: ACRM
+-  27.02.98 Added cast to ptr
 */
 BOOL safefree(void *ptr)
 {
@@ -285,9 +289,11 @@ BOOL safefree(void *ptr)
 /************************************************************************/
 /*>void safeleaks(void)
    --------------------
+*//**
+
    Prints a list of any safemalloc()'d memory which was not freed
 
-   03.07.06  Original   By: ACRM
+-  03.07.06  Original   By: ACRM
 */
 void safeleaks(void)
 {

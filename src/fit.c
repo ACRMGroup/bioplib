@@ -86,15 +86,17 @@ static void qikfit(REAL umat[3][3], REAL rm[3][3], BOOL column);
 /*>BOOL matfit(COOR *x1, COOR *x2, REAL rm[3][3], int n,
                REAL *wt1, BOOL column)
    -----------------------------------------------------
-   Input:   COOR  *x1         First (fixed) array of coordinates
-            COOR  *x2         Second (mobile) array of coordinates
-            int   n           Number of coordinates
-            REAL  *wt1        Weight array or NULL
-            BOOL  column      TRUE: Output a column-wise matrix (as used
+*//**
+
+   \param[in]     *x1         First (fixed) array of coordinates
+   \param[in]     *x2         Second (mobile) array of coordinates
+   \param[in]     n           Number of coordinates
+   \param[in]     *wt1        Weight array or NULL
+   \param[in]     column      TRUE: Output a column-wise matrix (as used
                                  by FRODO)
                               FALSE: Output a standard row-wise matrix.
-   Output:  REAL  rm[3][3]    Returned rotation matrix
-   Returns: BOOL              TRUE:  success
+   \param[out]    rm          Returned rotation matrix
+   \return                    TRUE:  success
                               FALSE: error
 
    Fit coordinate array x2 to x1 both centred around the origin and of 
@@ -102,11 +104,11 @@ static void qikfit(REAL umat[3][3], REAL rm[3][3], BOOL column);
    If column is set the matrix will be returned column-wise rather 
    than row-wise.
 
-   04.02.91 Original based on code by Mike Sutcliffe
-   01.06.92 ANSIed & doc'd
-   17.06.93 various changes for release (including parameters)
-   11.03.94 column changed to BOOL
-   25.11.02 Corrected header!
+-  04.02.91 Original based on code by Mike Sutcliffe
+-  01.06.92 ANSIed & doc'd
+-  17.06.93 various changes for release (including parameters)
+-  11.03.94 column changed to BOOL
+-  25.11.02 Corrected header!
 */
 BOOL matfit(COOR    *x1,        /* First coord array    */
             COOR    *x2,        /* Second coord array   */
@@ -190,16 +192,18 @@ BOOL matfit(COOR    *x1,        /* First coord array    */
 /************************************************************************/
 /*>static void qikfit(REAL umat[3][3], REAL rm[3][3], BOOL column)
    ---------------------------------------------------------------
-   Input:   REAL  umat[3][3]     The U matrix
-            BOOL  column         TRUE: Create a column-wise matrix
+*//**
+
+   \param[in]     umat           The U matrix
+   \param[in]     column         TRUE: Create a column-wise matrix
                                  (other way round from normal).
-   Output:  REAL  rm[3][3]       The output rotation matrix
+   \param[out]    rm             The output rotation matrix
   
    Does the actual fitting for matfit().
-   04.02.91 Original based on code by Mike Sutcliffe
-   01.06.92 ANSIed & doc'd
-   11.03.94 column changed to BOOL
-   03.04.09 Initialize clep for fussy compliers. By: CTP
+-  04.02.91 Original based on code by Mike Sutcliffe
+-  01.06.92 ANSIed & doc'd
+-  11.03.94 column changed to BOOL
+-  03.04.09 Initialize clep for fussy compliers. By: CTP
 */
 static void qikfit(REAL  umat[3][3],
                    REAL  rm[3][3],

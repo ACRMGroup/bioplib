@@ -92,13 +92,15 @@
 /************************************************************************/
 /*>void GetFilestem(char *filename, char *stem)
    --------------------------------------------
-   Input:   char  *filename      Complete filename
-   Output:  char  *stem          The filestem
+*//**
+
+   \param[in]     *filename      Complete filename
+   \param[out]    *stem          The filestem
 
    Extracts the filestem from a complete filename. Should work under
    Unix, VMS, MS-DOS, AmigaDOS, etc.
 
-   14.04.94 Original    By: ACRM
+-  14.04.94 Original    By: ACRM
 */
 void GetFilestem(char *filename, char *stem)
 {

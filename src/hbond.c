@@ -100,10 +100,12 @@ static BOOL FindSidechainDonor(PDB *res, PDB **AtomH, PDB **AtomD);
 /************************************************************************/
 /*>int IsHBonded(PDB *res1, PDB *res2, int type)
    ---------------------------------------------
-   Input:   PDB  *res1     First residue
-            PDB  *res2     Second residue
-            int  type      HBond type to search for
-   Returns: int            HBond type found or 0 if none
+*//**
+
+   \param[in]     *res1     First residue
+   \param[in]     *res2     Second residue
+   \param[in]     type      HBond type to search for
+   \return                    HBond type found or 0 if none
 
    Determines whether 2 residues are H-bonded using the crude criteria
    of Baker & Hubbard, 1984 (Prog. Biophys. & Mol. Biol, 44, 97-179)
@@ -131,7 +133,7 @@ static BOOL FindSidechainDonor(PDB *res, PDB **AtomH, PDB **AtomD);
    HBOND_BACKBONE   (b/b -- any)
    HBOND_ANY        (any -- any)
 
-   25.01.96 Original    By: ACRM
+-  25.01.96 Original    By: ACRM
 */
 int IsHBonded(PDB *res1, PDB *res2, int type)
 {
@@ -245,17 +247,19 @@ int IsHBonded(PDB *res1, PDB *res2, int type)
 /************************************************************************/
 /*>BOOL ValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP)
    ---------------------------------------------------------------
-   Input:   PDB  *AtomH      The hydrogen
-            PDB  *AtomD      The donor (to which the H is attached)
-            PDB  *AtomA      The acceptor
-            PDB  *AtomP      The antecedent to the acceptor
-   Output:  BOOL             Valid?
+*//**
+
+   \param[in]     *AtomH      The hydrogen
+   \param[in]     *AtomD      The donor (to which the H is attached)
+   \param[in]     *AtomA      The acceptor
+   \param[in]     *AtomP      The antecedent to the acceptor
+   \return                    Valid?
 
    Determines whether a set of atoms form a valid H-bond using the
    Baker and Hubbard criteria
 
-   25.01.96 Original    By: ACRM
-   02.06.99 Added NULL antecedent handling to allow calculation of
+-  25.01.96 Original    By: ACRM
+-  02.06.99 Added NULL antecedent handling to allow calculation of
             HBonds with missing antecedents. Previously AtomP==NULL
             was handled as an invalid HBond.
 */
@@ -323,14 +327,16 @@ BOOL ValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP)
 /************************************************************************/
 /*>static BOOL FindBackboneAcceptor(PDB *res, PDB **AtomA, PDB **AtomP)
    --------------------------------------------------------------------
-   Input:   PDB  *res       Pointer to residue of interest
-   Output:  PDB  **AtomA    The acceptor atom
-            PDB  **AtomP    The antecedent (previous) atom
-   Returns: BOOL            Success?
+*//**
+
+   \param[in]     *res       Pointer to residue of interest
+   \param[out]    **AtomA    The acceptor atom
+   \param[out]    **AtomP    The antecedent (previous) atom
+   \return                    Success?
 
    Finds pointers to backbone acceptor atoms
 
-   25.01.96 Original    By: ACRM
+-  25.01.96 Original    By: ACRM
 */
 static BOOL FindBackboneAcceptor(PDB *res, PDB **AtomA, PDB **AtomP)
 {
@@ -367,15 +373,17 @@ static BOOL FindBackboneAcceptor(PDB *res, PDB **AtomA, PDB **AtomP)
 /************************************************************************/
 /*>static BOOL FindBackboneDonor(PDB *res, PDB **AtomH, PDB **AtomD)
    -----------------------------------------------------------------
-   Input:   PDB  *res       Pointer to residue of interest
-   Output:  PDB  **AtomH    The hydrogen
-            PDB  **AtomD    The 'donor' atom
-   Returns: BOOL            Success?
+*//**
+
+   \param[in]     *res       Pointer to residue of interest
+   \param[out]    **AtomH    The hydrogen
+   \param[out]    **AtomD    The 'donor' atom
+   \return                    Success?
 
    Finds pointers to backbone donor atoms
 
-   25.01.96 Original    By: ACRM
-   03.01.06 Returns FALSE if this is a proline
+-  25.01.96 Original    By: ACRM
+-  03.01.06 Returns FALSE if this is a proline
 */
 static BOOL FindBackboneDonor(PDB *res, PDB **AtomH, PDB **AtomD)
 {
@@ -409,19 +417,21 @@ static BOOL FindBackboneDonor(PDB *res, PDB **AtomH, PDB **AtomD)
 /************************************************************************/
 /*>static BOOL FindSidechainAcceptor(PDB *res, PDB **AtomA, PDB **AtomP)
    ---------------------------------------------------------------------
-   Input:   PDB  *res       Pointer to residue of interest
-   Output:  PDB  **AtomA    The acceptor atom
-            PDB  **AtomP    The antecedent (previous) atom
-   Returns: BOOL            Success?
+*//**
+
+   \param[in]     *res       Pointer to residue of interest
+   \param[out]    **AtomA    The acceptor atom
+   \param[out]    **AtomP    The antecedent (previous) atom
+   \return                    Success?
 
    Finds pointers to sidechain acceptor atoms. Each call will return
    a new set of atoms till all are found.
 
    Call with all parameters set to NULL before each new residue
 
-   25.01.96 Original    By: ACRM
-   09.02.96 Added #ifdef'd code to allow AE1/AE2 AD1/AD2
-   18.08.05 Fixed bug relating to sidechains like GLN/ASN - when finding
+-  25.01.96 Original    By: ACRM
+-  09.02.96 Added #ifdef'd code to allow AE1/AE2 AD1/AD2
+-  18.08.05 Fixed bug relating to sidechains like GLN/ASN - when finding
             the antecedent for the NE2 and ND2 atoms respectively, it
             would find OE1/OD1 rather than CD/CG. (See pprev code)
 */
@@ -492,19 +502,21 @@ static BOOL FindSidechainAcceptor(PDB *res, PDB **AtomA, PDB **AtomP)
 /************************************************************************/
 /*>static BOOL FindSidechainDonor(PDB *res, PDB **AtomH, PDB **AtomD)
    ------------------------------------------------------------------
-   Input:   PDB  *res       Pointer to residue of interest
-   Output:  PDB  **AtomH    The hydrogen
-            PDB  **AtomD    The 'donor' atom
-   Returns: BOOL            Success?
+*//**
+
+   \param[in]     *res       Pointer to residue of interest
+   \param[out]    **AtomH    The hydrogen
+   \param[out]    **AtomD    The 'donor' atom
+   \return                    Success?
 
    Finds pointers to sidechain donor atoms. Each call will return
    a new set of atoms till all are found.
 
    Call with all parameters set to NULL before each new residue
 
-   25.01.96 Original    By: ACRM
-   09.02.96 Added #ifdef'd code to allow AE1/AE2 AD1/AD2
-   19.12.02 Fixed bug in walking over multiple hydrogens. This fixes
+-  25.01.96 Original    By: ACRM
+-  09.02.96 Added #ifdef'd code to allow AE1/AE2 AD1/AD2
+-  19.12.02 Fixed bug in walking over multiple hydrogens. This fixes
             a problem when the last ATOM residue is a donor and is
             followed by only water (or mercury!) HETATMs
             Also fixed a bug where a lone residue occurs which appears
@@ -583,10 +595,12 @@ static BOOL FindSidechainDonor(PDB *res, PDB **AtomH, PDB **AtomD)
 /************************************************************************/
 /*>int IsMCDonorHBonded(PDB *res1, PDB *res2, int type)
    ----------------------------------------------------
-   Input:   PDB  *res1     First residue
-            PDB  *res2     Second residue
-            int  type      HBond type to search for
-   Returns: int            HBond type found or 0 if none
+*//**
+
+   \param[in]     *res1     First residue
+   \param[in]     *res2     Second residue
+   \param[in]     type      HBond type to search for
+   \return                    HBond type found or 0 if none
 
    Determines whether 2 residues are H-bonded using the crude criteria
    of Baker & Hubbard, 1984 (Prog. Biophys. & Mol. Biol, 44, 97-179)
@@ -599,7 +613,7 @@ static BOOL FindSidechainDonor(PDB *res, PDB **AtomH, PDB **AtomD)
    HBOND_BACK2 or HBOND_SIDE2 depending whether the second residue
    (the acceptor) is backbond or sidechain
 
-   17.01.06 Original modified from IsHbonded()    By: ACRM
+-  17.01.06 Original modified from IsHbonded()    By: ACRM
 */
 int IsMCDonorHBonded(PDB *res1, PDB *res2, int type)
 {
@@ -637,10 +651,12 @@ int IsMCDonorHBonded(PDB *res1, PDB *res2, int type)
 /************************************************************************/
 /*>int IsMCAcceptorHBonded(PDB *res1, PDB *res2, int type)
    -------------------------------------------------------
-   Input:   PDB  *res1     First residue
-            PDB  *res2     Second residue
-            int  type      HBond type to search for
-   Returns: int            HBond type found or 0 if none
+*//**
+
+   \param[in]     *res1     First residue
+   \param[in]     *res2     Second residue
+   \param[in]     type      HBond type to search for
+   \return                    HBond type found or 0 if none
 
    Determines whether 2 residues are H-bonded using the crude criteria
    of Baker & Hubbard, 1984 (Prog. Biophys. & Mol. Biol, 44, 97-179)
@@ -653,7 +669,7 @@ int IsMCDonorHBonded(PDB *res1, PDB *res2, int type)
    HBOND_BACK2 or HBOND_SIDE2 depending whether the second residue
    (the acceptor) is backbond or sidechain
 
-   17.01.06 Original    By: ACRM
+-  17.01.06 Original    By: ACRM
 */
 int IsMCAcceptorHBonded(PDB *res1, PDB *res2, int type)
 {

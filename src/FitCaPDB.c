@@ -86,18 +86,20 @@
 /************************************************************************/
 /*>BOOL FitCaPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
    --------------------------------------------------------
-   Input:   PDB  *ref_pdb     Reference PDB linked list
-   I/O:     PDB  *fit_pdb     Mobile PDB linked list
-   Output:  REAL rm[3][3]     Rotation matrix (May be input as NULL).
-   Returns: BOOL              Success
+*//**
+
+   \param[in]     *ref_pdb     Reference PDB linked list
+   \param[in,out] *fit_pdb     Mobile PDB linked list
+   \param[out]    rm           Rotation matrix (May be input as NULL).
+   \return                      Success
 
    Fits two PDB linked lists using only the CA atoms. 
 
    Actually fits fit_pdb onto ref_pdb and also returns the rotation 
    matrix. This may be NULL if these data are not required.
 
-   14.03.96 Original based on FitPDB()   By: ACRM
-   28.01.09 Initialize RetVal to TRUE!
+-  14.03.96 Original based on FitPDB()   By: ACRM
+-  28.01.09 Initialize RetVal to TRUE!
 */
 BOOL FitCaPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
 {

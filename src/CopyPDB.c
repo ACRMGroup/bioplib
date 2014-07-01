@@ -85,13 +85,15 @@
 /************************************************************************/
 /*>void CopyPDB(PDB *out, PDB *in)
    -------------------------------
-   Input:   PDB  *in     Input PDB record pointer
-   Output:  PDB  *out    Output PDB record pointer
+*//**
+
+   \param[in]     *in     Input PDB record pointer
+   \param[out]    *out    Output PDB record pointer
 
    Copy a PDB record, except that the ->next is set to NULL;
 
-   12.05.92 Original    By: ACRM
-   17.07.01 Now uses the generic *out=*in
+-  12.05.92 Original    By: ACRM
+-  17.07.01 Now uses the generic *out=*in
 */
 void CopyPDB(PDB *out,
              PDB *in)

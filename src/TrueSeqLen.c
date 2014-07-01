@@ -82,13 +82,15 @@
 /************************************************************************/
 /*>int TrueSeqLen(char *sequence)
    ------------------------------
-   Input:   char  *sequence    A sequence containing deletions
-   Returns: int                Length without deletions
+*//**
+
+   \param[in]     *sequence    A sequence containing deletions
+   \return                        Length without deletions
 
    Scans a 1-letter code sequence and calculate the length without
    `-' or ` ' residues
 
-   14.04.94 Original    By: ACRM
+-  14.04.94 Original    By: ACRM
 */
 int TrueSeqLen(char *sequence)
 {

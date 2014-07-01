@@ -92,10 +92,12 @@
 /************************************************************************/
 /*>char *QueryStrStr(char *string, char *substring)
    ------------------------------------------------
+*//**
+
    This is like strstr() but allows a ? character in the substring
    which matches any character.
 
-   15.12.95 Original    By: ACRM
+-  15.12.95 Original    By: ACRM
 */
 char *QueryStrStr(char *string, char *substring)
 {

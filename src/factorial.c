@@ -69,10 +69,12 @@
 /************************************************************************/
 /*>ULONG factorial(int n)
    ----------------------
+*//**
+
    Calculates the factorial of an integer.
    Returns 0 on numeric overflow.
    
-   09.09.96 Original   By: ACRM
+-  09.09.96 Original   By: ACRM
 */
 ULONG factorial(int n)
 {

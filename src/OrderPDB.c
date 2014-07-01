@@ -122,11 +122,13 @@ static char sAtoms[MAXSTDAA][MAXATINRES+1][8] =
 /************************************************************************/
 /*>PDB *FixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum)
    ------------------------------------------------
-   Input:   PDB   *pdb    PDB linked list to fix atom order
-            BOOL  pad     TRUE: Create dummy coordinate atoms for any
+*//**
+
+   \param[in]     *pdb    PDB linked list to fix atom order
+   \param[in]     Pad     TRUE: Create dummy coordinate atoms for any
                           missing atoms in standard residues
-            BOOL  Renum   TRUE: Renumber the atoms
-   Returns: PDB   *       Corrected PDB linked list
+   \param[in]     Renum   TRUE: Renumber the atoms
+   \return                   Corrected PDB linked list
 
    Runs through a PDB linked list and corrects the atom order to match
    the N,CA,C,O,s/c standard. Only standard amino acids are processed.
@@ -137,7 +139,7 @@ static char sAtoms[MAXSTDAA][MAXATINRES+1][8] =
 
                   pdb = FixOrderPDB(pdb,TRUE,TRUE);
 
-   08.07.93 Original    By: ACRM
+-  08.07.93 Original    By: ACRM
 */
 PDB *FixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum)
 {
@@ -176,11 +178,13 @@ PDB *FixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum)
 /************************************************************************/
 /*>PDB *ShuffleResPDB(PDB *start, PDB *end, BOOL Pad)
    --------------------------------------------------
-   Input:   PDB   *start   Start of residue to be shuffled
-            PDB   *end     Start of next residue in linked list (NULL
+*//**
+
+   \param[in]     *start   Start of residue to be shuffled
+   \param[in]     *end     Start of next residue in linked list (NULL
                            for last residue)
-            BOOL  Pad      TRUE: Create dummy records for missing atoms
-   Returns: PDB   *        Pointer to new start of linked list
+   \param[in]     Pad      TRUE: Create dummy records for missing atoms
+   \return                    Pointer to new start of linked list
 
    Shuffle atoms within a residue into the standard order. Returns a 
    pointer to the new first atom in the residue. Atoms not in the known
@@ -188,10 +192,10 @@ PDB *FixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum)
    If we fail to allocate memory for extra atom records, no action is
    taken.
 
-   08.07.93 Original    By: ACRM
-   09.03.94 Correctly handles residues not found in the standard list
+-  08.07.93 Original    By: ACRM
+-  09.03.94 Correctly handles residues not found in the standard list
             (i.e. returns them unmodified)
-   17.03.94 If no atoms are found, then we return start. This is
+-  17.03.94 If no atoms are found, then we return start. This is
             the case when partial occupancy atoms are named as "N  A",
             "N  B", etc.
 */
@@ -301,17 +305,19 @@ PDB *ShuffleResPDB(PDB *start, PDB *end, BOOL Pad)
 /************************************************************************/
 /*>BOOL GetAtomTypes(char *resnam, char **AtomTypes)
    -------------------------------------------------
-   Input:   char  *resnam      Residue name for which to search
-   Output:  char  **AtomTypes  Array of atom names contained in the 
+*//**
+
+   \param[in]     *resnam      Residue name for which to search
+   \param[out]    **AtomTypes  Array of atom names contained in the 
                                residue
-   Returns: BOOL               Success
+   \return                       Success
 
    Fill in atom types for a given residue. AtomTypes must be 
    pre-allocated and must be set up as an array of character pointers
    using Array2D() (or equivalent) rather than being created as a simple
    char types[][] - THIS WILL NOT WORK!
 
-   08.07.93 Original    By: ACRM
+-  08.07.93 Original    By: ACRM
 */
 BOOL GetAtomTypes(char *resnam, char **AtomTypes)
 {
@@ -336,16 +342,18 @@ BOOL GetAtomTypes(char *resnam, char **AtomTypes)
 /************************************************************************/
 /*>PDB *ShuffleBB(PDB *pdb)
    ------------------------
-   Input:   PDB  *pdb   Input PDB linked list
-   Returns: PDB  *      Start of shuffled PDB linked list
+*//**
+
+   \param[in]     *pdb   Input PDB linked list
+   \return                 Start of shuffled PDB linked list
 
    Shuffles the PDB list to match the standard of N,CA,C,O,CB,other.
    Basically designed to be used with backbones only since the sidechain
    order is not modified. Returns the start of the shuffled PDB linked 
    list.
 
-   13.05.92 Original
-   22.06.08 Fixed to use FindNextResidue(). It was continuing to search
+-  13.05.92 Original
+-  22.06.08 Fixed to use FindNextResidue(). It was continuing to search
             out of the current residue, so if the same residue number in
             a different chain was of the same type, it ended up changing
             that instead!

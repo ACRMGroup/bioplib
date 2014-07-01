@@ -93,9 +93,11 @@
 /************************************************************************/
 /*>void WordN(char *string1, char *string2, int MaxChar)
    -----------------------------------------------------
-   Input:      char  *string1       A string
-               int   MaxChar        Max characters to copy
-   Output:     char  *string2       A new string
+*//**
+
+   \param[in]     *string1       A string
+   \param[in]     MaxChar        Max characters to copy
+   \param[out]    *string2       A new string
 
    Removes leading spaces and extracts a space/tab delimited word. A 
    maximum of MaxChar characters will be copied into the word. If 
@@ -103,8 +105,8 @@
    characters. Thus MaxChar should always be at least 1 smaller than the 
    size of string2.
 
-   22.06.92 Original based on Word()
-   29.03.01 Changed to use KILLLEADSPACES() macro
+-  22.06.92 Original based on Word()
+-  29.03.01 Changed to use KILLLEADSPACES() macro
 */
 void WordN(char  *string1,
            char  *string2,

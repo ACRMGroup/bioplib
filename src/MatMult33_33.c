@@ -76,13 +76,15 @@
 /************************************************************************/
 /*>void MatMult33_33(REAL a[3][3], REAL b[3][3], REAL out[3][3])
    -------------------------------------------------------------
-   Input:   REAL  a[3][3]      Matrix to be multiplied
-            REAL  b[3][3]      Matrix to be multiplied
-   Output:  REAL  out[3][3]    Output matrix
+*//**
+
+   \param[in]     a            Matrix to be multiplied
+   \param[in]     b            Matrix to be multiplied
+   \param[out]    out          Output matrix
 
    Multiply two 3x3 matrices
 
-   27.09.95 Original
+-  27.09.95 Original
 */
 void MatMult33_33(REAL a[3][3], REAL b[3][3], REAL out[3][3])
 {

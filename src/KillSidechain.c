@@ -83,18 +83,20 @@
 /************************************************************************/
 /*>BOOL KillSidechain(PDB *ResStart, PDB *NextRes, BOOL doCB)
    ----------------------------------------------------------
-   Input:   PDB   *ResStart     Start of a residue in linked list
-            PDB   *NextRes      Start of next residue
-            BOOL  doCB          Flag to kill CB as part of s/c
-   Returns: BOOL                Success?
+*//**
+
+   \param[in]     *ResStart     Start of a residue in linked list
+   \param[in]     *NextRes      Start of next residue
+   \param[in]     doCB          Flag to kill CB as part of s/c
+   \return                        Success?
    
    Kill a sidechain, by calls to KillPDB(). If doCB is set, will kill 
    the CB.
    N.B. At least 1 backbone atom must occur in the linked list before the
    sidechain.
    
-   12.05.92 Original
-   05.10.94 doCB is now a BOOL as is the return
+-  12.05.92 Original
+-  05.10.94 doCB is now a BOOL as is the return
 */
 BOOL KillSidechain(PDB *ResStart,   /* Pointer to start of residue      */
                    PDB *NextRes,    /* Pointer to start if next residue */

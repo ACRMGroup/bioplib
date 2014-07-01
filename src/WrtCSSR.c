@@ -48,12 +48,12 @@
    Usage:
    ======
    WriteCSSR(fp,cssr,name,title)
-   Input:   FILE     *fp      A pointer to type FILE in which the
+   \param[in]     *fp      A pointer to type FILE in which the
                               CSSR file is stored.
-            CSSR     *cssr    A pointer to the first allocated item of
+   \param[in]     *cssr    A pointer to the first allocated item of
                               the CSSR linked list
-            char     *name    The molecule's name.
-            char     *title   Title on the molecule.
+   \param[in]     *name    The molecule's name.
+   \param[in]     *title   Title on the molecule.
 
 **************************************************************************
 
@@ -95,20 +95,22 @@
 /************************************************************************/
 /*>void WriteCSSR(FILE *fp, CSSR *cssr, char *name, char *title)
    -------------------------------------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
+*//**
+
+   \param[in]     *fp      A pointer to type FILE in which the
                               CSSR file is stored.
-            CSSR     *cssr    A pointer to the first allocated item of
+   \param[in]     *cssr    A pointer to the first allocated item of
                               the CSSR linked list
-            char     *name    The molecule's name.
-            char     *title   Title on the molecule.
+   \param[in]     *name    The molecule's name.
+   \param[in]     *title   Title on the molecule.
 
    Write a CSSR file from a CSSR linked list.
 
-   22.09.91 Original
-   01.06.92 Autodoc'd
-   10.06.93 void return; float->REAL
-   27.07.93 %f -> %lf
-   01.03.94 %lf -> %f (!)
+-  22.09.91 Original
+-  01.06.92 Autodoc'd
+-  10.06.93 void return; float->REAL
+-  27.07.93 %f -> %lf
+-  01.03.94 %lf -> %f (!)
 */
 void WriteCSSR(FILE  *fp,
                CSSR  *cssr,

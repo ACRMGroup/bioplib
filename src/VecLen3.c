@@ -72,10 +72,12 @@
 /************************************************************************/
 /*>REAL VecLen3(VEC3F Vec)
    -----------------------
-   Input:   VEC3F   Vec       Vector
-   Returns: REAL              Length of vector
+*//**
 
-   18.06.96 Original   By: ACRM
+   \param[in]     Vec       Vector
+   \return                      Length of vector
+
+-  18.06.96 Original   By: ACRM
 */
 REAL VecLen3(VEC3F Vec)
 {

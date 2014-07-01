@@ -89,19 +89,21 @@
 /************************************************************************/
 /*>PDB *FindResidueSpec(PDB *pdb, char *resspec)
    ---------------------------------------------
-   Input:   PDB   *pdb      PDB linked list
-            char  *resspec  Residue specification
-   Returns: PDB   *         Pointer to first atom of specified residue
+*//**
+
+   \param[in]     *pdb      PDB linked list
+   \param[in]     *resspec  Residue specification
+   \return                     Pointer to first atom of specified residue
                             (NULL if not found).
 
    Search a PDB linked list for a specified residue (given as
    [chain][.]num[insert])
 
-   08.08.95 Original    By: ACRM
-   08.02.96 Now calls FindResidue() to do the actual work
-   15.08.13 chain[] and insert[] are now arrays because of changes to
+-  08.08.95 Original    By: ACRM
+-  08.02.96 Now calls FindResidue() to do the actual work
+-  15.08.13 chain[] and insert[] are now arrays because of changes to
             ParseResSpec()
-   24.02.14 Now calls BiopFindResidue() By: CTP
+-  24.02.14 Now calls BiopFindResidue() By: CTP
 */
 PDB *FindResidueSpec(PDB *pdb, char *resspec)
 {

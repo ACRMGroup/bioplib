@@ -75,13 +75,15 @@
 /************************************************************************/
 /*>void GetCofGPDB(PDB *pdb,VEC3F *cg)
    -----------------------------------
-   Input:    PDB   *pdb       Start of PDB linked list
-   Output:   VEC3F *cg        Centre of geometry of specified region
+*//**
+
+   \param[in]     *pdb       Start of PDB linked list
+   \param[out]    *cg        Centre of geometry of specified region
 
    Finds the CofG of a PDB linked list, ignoring NULL coordinates.
 
-   01.10.92 Original
-   03.10.94 Fixed NULL coordinate ignoring
+-  01.10.92 Original
+-  03.10.94 Fixed NULL coordinate ignoring
 */
 void GetCofGPDB(PDB   *pdb,
                 VEC3F *cg)

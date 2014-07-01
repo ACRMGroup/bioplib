@@ -72,16 +72,18 @@
 /************************************************************************/
 /*>PDBSTRUCT *AllocPDBStructure(PDB *pdb)
    --------------------------------------
-   Input:    PDB        *pdb    PDB linked list
-   Returns:  PDBSTRUCT  *       PDBSTRUCT structure containing chain
-                                linked list
+*//**
+
+   \param[in]     *pdb    PDB linked list
+   \return                PDBSTRUCT structure containing chain
+                          linked list
 
    Takes a PDB linked list and converts it into a hierarchical structure
    of chains, residues and atoms
 
-   24.11.09  Original   By: ACRM
-   19.05.10  Correctly do doubly linked lists
-   02.06.10  Fixed some initializations!
+-  24.11.09  Original   By: ACRM
+-  19.05.10  Correctly do doubly linked lists
+-  02.06.10  Fixed some initializations!
 */
 PDBSTRUCT *AllocPDBStructure(PDB *pdb)
 {
@@ -182,13 +184,15 @@ PDBSTRUCT *AllocPDBStructure(PDB *pdb)
 /************************************************************************/
 /*>void FreePDBStructure(PDBSTRUCT *pdbstruct)
    -------------------------------------------
-   Input:    PDBSTRUCT  *       PDBSTRUCT structure containing chain
-                                linked list
+*//**
+
+   \param[in]     *pdbstruct       PDBSTRUCT structure containing chain
+                                   linked list
 
    Frees memory used by the hierarchical description of a PDB structure.
    Note this does not free the underlying PDB linked list
 
-   24.11.09  Original   By: ACRM
+-  24.11.09  Original   By: ACRM
 */
 void FreePDBStructure(PDBSTRUCT *pdbstruct)
 {
@@ -210,15 +214,17 @@ void FreePDBStructure(PDBSTRUCT *pdbstruct)
 /************************************************************************/
 /*>PDB *FindNextChain(PDB *pdb)
    ----------------------------
-   Input:    PDB        *pdb    PDB linked list
-   Returns:  PDB        *       Pointer to start of next chain
+*//**
+
+   \param[in]     *pdb    PDB linked list
+   \return                Pointer to start of next chain
 
    Takes a PDB linked list and find the start of the next chain. This is
    similar to another Bioplib routine which terminates the first chain,
    but this routines doesn't terminate.
 
-   24.11.09  Original   By: ACRM
-   04.02.14 Use CHAINMATCH By: CTP
+-  24.11.09  Original   By: ACRM
+-  04.02.14 Use CHAINMATCH By: CTP
 */
 PDB *FindNextChain(PDB *pdb)
 {

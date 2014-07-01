@@ -93,17 +93,19 @@
 /************************************************************************/
 /*>char **Array2D(int size, int dim1, int dim2)
    --------------------------------------------
-   Input:   int   size    Size of an array element
-            int   dim1    First dimension (number of rows)
-            int   dim2    Second dimension (number of columns)
-   Returns: char  **      Array of pointers. Must be cast to required 
+*//**
+
+   \param[in]     size    Size of an array element
+   \param[in]     dim1    First dimension (number of rows)
+   \param[in]     dim2    Second dimension (number of columns)
+   \return                Array of pointers. Must be cast to required 
                           type
 
    Create a 2D array of elements of size `size' with dimensions `dim1' 
    rows by `dim2' columns.
 
-   07.10.92 Original
-   12.07.93 Tidied and commented
+-  07.10.92 Original
+-  12.07.93 Tidied and commented
 */
 char **Array2D(int size, 
                int dim1, 
@@ -138,13 +140,15 @@ badexit:
 /************************************************************************/
 /*>void FreeArray2D(char **array, int dim1, int dim2)
    --------------------------------------------------
-   Input:   char  **    Array of pointers to be freed
-            int   dim1  First dimension (number of rows)
-            int   dim2  Second dimension (number of columns)
+*//**
+
+   \param[in]     array Array of pointers to be freed
+   \param[in]     dim1  First dimension (number of rows)
+   \param[in]     dim2  Second dimension (number of columns)
 
    Frees a 2D array with dimensions `dim1' rows by `dim2' columns.
 
-   07.10.92 Original
+-  07.10.92 Original
 */
 void FreeArray2D(char   **array,
                  int    dim1, 

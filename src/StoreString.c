@@ -96,14 +96,16 @@
 /************************************************************************/
 /*>STRINGLIST *StoreString(STRINGLIST *StringList, char *string)
    -------------------------------------------------------------
-   Input:     STRINGLIST  *StringList   The current linked list or NULL 
-                                        if nothing yet allocated
-              char        *string       The string to store
-   Returns:   STRINGLIST  *             Start of linked list. Used on
-                                        first call (when input StringList
-                                        is NULL) to return the pointer to
-                                        the start of the linked list.
-                                        NULL if unable to allocate.
+*//**
+
+   \param[in]     *StringList   The current linked list or NULL 
+                                if nothing yet allocated
+   \param[in]     *string       The string to store
+   \return                      Start of linked list. Used on
+                                first call (when input StringList
+                                is NULL) to return the pointer to
+                                the start of the linked list.
+                                NULL if unable to allocate.
 
    Stores strings (of any length) in a linked list of type STRINGLIST.
    Return a pointer to the start of the linked list which is used on
@@ -112,7 +114,7 @@
    If allocation fails, memory allocated so far is freed and the routine
    returns NULL.
 
-   06.11.95 Original    By: ACRM
+-  06.11.95 Original    By: ACRM
 */
 STRINGLIST *StoreString(STRINGLIST *StringList, char *string)
 {

@@ -71,17 +71,19 @@
 /************************************************************************/
 /*>char *strcatalloc(char *instr, char *catstr)
    --------------------------------------------
-   Input:   char    *instr    String to append to
-            char    *catstr   String to append
-   Returns: char    *         realloc'd version of instr with catstr
+*//**
+
+   \param[in]     *instr    String to append to
+   \param[in]     *catstr   String to append
+   \return                      realloc'd version of instr with catstr
                               appended
 
    Like strcat() but uses a realloc() on instr to make space available.
 
-   22.05.99 Original   By: ACRM
-   16.06.99 Initialise outstr to NULL
-   25.08.99 Fixed bug where testing for NULL outstr instead of catstr
-   11.07.00 Check that realloc succeeded
+-  22.05.99 Original   By: ACRM
+-  16.06.99 Initialise outstr to NULL
+-  25.08.99 Fixed bug where testing for NULL outstr instead of catstr
+-  11.07.00 Check that realloc succeeded
 */
 char *strcatalloc(char *instr, char *catstr)
 {

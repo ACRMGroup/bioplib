@@ -72,16 +72,18 @@
 /************************************************************************/
 /*>PDB *StripWatersPDB(PDB *pdbin, int *natom)
    -------------------------------------------
-   Input:   pdbin    *PDB      Input list
-   Output:  natom    *int      Number of atoms kept
-   Returns:          *PDB      Output list
+*//**
+
+   \param[in]     *pdbin      Input list
+   \param[out]    *natom      Number of atoms kept
+   \return                    Output list
 
    Take a PDB linked list and returns the PDB list minus waters
 
    N.B. The routine is non-destructive; i.e. the original PDB linked 
         list is intact after the selection process
 
-   30.04.08 Original based on StripHPDB()   By: ACRM
+-  30.04.08 Original based on StripHPDB()   By: ACRM
 */
 PDB *StripWatersPDB(PDB *pdbin, int *natom)
 {

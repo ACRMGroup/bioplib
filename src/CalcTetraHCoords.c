@@ -88,15 +88,17 @@
 /************************************************************************/
 /*>int CalcTetraHCoords(PDB *nter, COOR *coor)
    -------------------------------------------
-   Input:   PDB    *nter     Pointer to the N-terminus
-   Output:  COOR   *coor     Array of hydrogen coordinates
-   Returns: int              Number of hydrogens calculated (3)
-                             0 if antecedant atoms missing
+*//**
+
+   \param[in]     *nter     Pointer to the N-terminus
+   \param[out]    *coor     Array of hydrogen coordinates
+   \return                  Number of hydrogens calculated (3)
+                            0 if antecedant atoms missing
 
    Calculates coordinates for the extra hydrogens.
 
-   23.08.94 Original    By: ACRM
-   20.03.14 Updated error message. By: CTP
+-  23.08.94 Original    By: ACRM
+-  20.03.14 Updated error message. By: CTP
 */
 int CalcTetraHCoords(PDB *nter, COOR *coor)
 {

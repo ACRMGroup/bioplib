@@ -135,17 +135,19 @@ static int  TraceBack(int **matrix, XY **dirn, int length1, int length2,
              BOOL verbose, BOOL identity, int penalty,
              char *align1, char *align2, int *align_len)
    -----------------------------------------------------------
-   Input:   char  *seq1         First sequence
-            int   length1       First sequence length
-            char  *seq2         Second sequence
-            int   length2       Second sequence length
-            BOOL  verbose       Display N&W matrix
-            BOOL  identity      Use identity matrix
-            int   penalty       Gap insertion penalty value
-   Output:  char  *align1       Sequence 1 aligned
-            char  *align2       Sequence 2 aligned
-            int   *align_len    Alignment length
-   Returns: int                 Alignment score (0 on error)
+*//**
+
+   \param[in]     *seq1         First sequence
+   \param[in]     length1       First sequence length
+   \param[in]     *seq2         Second sequence
+   \param[in]     length2       Second sequence length
+   \param[in]     verbose       Display N&W matrix
+   \param[in]     identity      Use identity matrix
+   \param[in]     penalty       Gap insertion penalty value
+   \param[out]    *align1       Sequence 1 aligned
+   \param[out]    *align2       Sequence 2 aligned
+   \param[out]    *align_len    Alignment length
+   \return                         Alignment score (0 on error)
             
    Perform simple N&W alignment of seq1 and seq2. No window is used, so
    will be slow for long sequences.
@@ -158,7 +160,7 @@ static int  TraceBack(int **matrix, XY **dirn, int length1, int length2,
    The easy way to do this is to ensure that align1 and align2 are
    of length (length1+length2).
 
-   06.03.00 Implemented as a wrapper to affinealign() which is the old
+-  06.03.00 Implemented as a wrapper to affinealign() which is the old
             align() routine, plus support for affine gap penalties,
             plus new traceback code based on storing the path as we
             go
@@ -184,18 +186,20 @@ int align(char *seq1,
                    BOOL verbose, BOOL identity, int penalty, int penext, 
                    char *align1, char *align2, int *align_len)
    ---------------------------------------------------------------------
-   Input:   char  *seq1         First sequence
-            int   length1       First sequence length
-            char  *seq2         Second sequence
-            int   length2       Second sequence length
-            BOOL  verbose       Display N&W matrix
-            BOOL  identity      Use identity matrix
-            int   penalty       Gap insertion penalty value
-            int   penext        Extension penalty
-   Output:  char  *align1       Sequence 1 aligned
-            char  *align2       Sequence 2 aligned
-            int   *align_len    Alignment length
-   Returns: int                 Alignment score (0 on error)
+*//**
+
+   \param[in]     *seq1         First sequence
+   \param[in]     length1       First sequence length
+   \param[in]     *seq2         Second sequence
+   \param[in]     length2       Second sequence length
+   \param[in]     verbose       Display N&W matrix
+   \param[in]     identity      Use identity matrix
+   \param[in]     penalty       Gap insertion penalty value
+   \param[in]     penext        Extension penalty
+   \param[out]    *align1       Sequence 1 aligned
+   \param[out]    *align2       Sequence 2 aligned
+   \param[out]    *align_len    Alignment length
+   \return                         Alignment score (0 on error)
             
    Perform simple N&W alignment of seq1 and seq2. No window is used, so
    will be slow for long sequences.
@@ -205,14 +209,14 @@ int align(char *seq1,
    The easy way to do this is to ensure that align1 and align2 are
    of length (length1+length2).
 
-   07.10.92 Adapted from original written while at NIMR
-   08.10.92 Split into separate routines
-   09.10.92 Changed best structure to simple integers, moved 
+-  07.10.92 Adapted from original written while at NIMR
+-  08.10.92 Split into separate routines
+-  09.10.92 Changed best structure to simple integers, moved 
             SearchForBest() into TraceBack()
-   21.08.95 Was only filling in the bottom right cell at initialisation
+-  21.08.95 Was only filling in the bottom right cell at initialisation
             rather than all the right hand column and bottom row
-   11.07.96 Changed calls to calcscore() to CalcMDMScore()
-   06.03.00 Changed name to affinealign() (the routine align() is
+-  11.07.96 Changed calls to calcscore() to CalcMDMScore()
+-  06.03.00 Changed name to affinealign() (the routine align() is
             provided as a backwards compatible wrapper). Added penext 
             parameter. Now supports affine gap penalties with separate
             opening and extension penalties. The code now maintains
@@ -485,18 +489,20 @@ int affinealign(char *seq1,
                    BOOL verbose, BOOL identity, int penalty, int penext, 
                    char *align1, char *align2, int *align_len)
    ---------------------------------------------------------------------
-   Input:   char  *seq1         First sequence
-            int   length1       First sequence length
-            char  *seq2         Second sequence
-            int   length2       Second sequence length
-            BOOL  verbose       Display N&W matrix
-            BOOL  identity      Use identity matrix
-            int   penalty       Gap insertion penalty value
-            int   penext        Extension penalty
-   Output:  char  *align1       Sequence 1 aligned
-            char  *align2       Sequence 2 aligned
-            int   *align_len    Alignment length
-   Returns: int                 Alignment score (0 on error)
+*//**
+
+   \param[in]     *seq1         First sequence
+   \param[in]     length1       First sequence length
+   \param[in]     *seq2         Second sequence
+   \param[in]     length2       Second sequence length
+   \param[in]     verbose       Display N&W matrix
+   \param[in]     identity      Use identity matrix
+   \param[in]     penalty       Gap insertion penalty value
+   \param[in]     penext        Extension penalty
+   \param[out]    *align1       Sequence 1 aligned
+   \param[out]    *align2       Sequence 2 aligned
+   \param[out]    *align_len    Alignment length
+   \return                         Alignment score (0 on error)
             
    Perform simple N&W alignment of seq1 and seq2. No window is used, so
    will be slow for long sequences.
@@ -506,19 +512,19 @@ int affinealign(char *seq1,
    The easy way to do this is to ensure that align1 and align2 are
    of length (length1+length2).
 
-   07.10.92 Adapted from original written while at NIMR
-   08.10.92 Split into separate routines
-   09.10.92 Changed best structure to simple integers, moved 
+-  07.10.92 Adapted from original written while at NIMR
+-  08.10.92 Split into separate routines
+-  09.10.92 Changed best structure to simple integers, moved 
             SearchForBest() into TraceBack()
-   21.08.95 Was only filling in the bottom right cell at initialisation
+-  21.08.95 Was only filling in the bottom right cell at initialisation
             rather than all the right hand column and bottom row
-   11.07.96 Changed calls to calcscore() to CalcMDMScore()
-   06.03.00 Changed name to affinealign() (the routine align() is
+-  11.07.96 Changed calls to calcscore() to CalcMDMScore()
+-  06.03.00 Changed name to affinealign() (the routine align() is
             provided as a backwards compatible wrapper). Added penext 
             parameter. Now supports affine gap penalties with separate
             opening and extension penalties. The code now maintains
             the path as it goes.
-   27.02.07 Exactly as affinealign() but upcases characters before
+-  27.02.07 Exactly as affinealign() but upcases characters before
             comparison
 
 **************************************************************************
@@ -787,8 +793,10 @@ int affinealignuc(char *seq1,
 /************************************************************************/
 /*>BOOL ReadMDM(char *mdmfile)
    ---------------------------
-   Input:   char  *mdmfile    Mutation data matrix filename
-   Returns: BOOL              Success?
+*//**
+
+   \param[in]     *mdmfile    Mutation data matrix filename
+   \return                      Success?
    
    Read mutation data matrix into static global arrays. The matrix may
    have comments at the start introduced with a ! in the first column.
@@ -796,16 +804,16 @@ int affinealignuc(char *seq1,
    work). A line describing the residue types must appear, and may
    be placed before or after the matrix itself
 
-   07.10.92 Original
-   18.03.94 getc() -> fgetc()
-   24.11.94 Automatically looks in DATAENV if not found in current 
+-  07.10.92 Original
+-  18.03.94 getc() -> fgetc()
+-  24.11.94 Automatically looks in DATAENV if not found in current 
             directory
-   28.02.95 Modified to read any size MDM and allow comments
+-  28.02.95 Modified to read any size MDM and allow comments
             Also allows the list of aa types before or after the actual
             matrix
-   26.07.95 Removed unused variables
-   06.02.03 Fixed for new version of GetWord()
-   07.04.09 Completely re-written to allow it to read BLAST style matrix
+-  26.07.95 Removed unused variables
+-  06.02.03 Fixed for new version of GetWord()
+-  07.04.09 Completely re-written to allow it to read BLAST style matrix
             files as well as the ones used previously
             Allow comments introduced with # as well as !
             Uses MAXWORD rather than hardcoded 16
@@ -943,21 +951,23 @@ BOOL ReadMDM(char *mdmfile)
                             int *BestI, int *BestJ, char *seq1, 
                             char *seq2, char *align1, char *align2)
    ----------------------------------------------------------------
-   Input:   int  **matrix   N&W matrix
-            int  length1    Length of first sequence
-            int  length2    Length of second sequence
-            int  *BestI     x position of highest score
-            int  *BestJ     y position of highest score
-            char *seq1      First sequence
-            char *seq2      Second sequence
-   Output:  char *align1    First sequence with end aligned correctly
-            char *align2    Second sequence with end aligned correctly
-   Returns: int             Alignment length thus far
+*//**
+
+   \param[in]     **matrix   N&W matrix
+   \param[in]     length1    Length of first sequence
+   \param[in]     length2    Length of second sequence
+   \param[in]     *BestI     x position of highest score
+   \param[in]     *BestJ     y position of highest score
+   \param[in]     *seq1      First sequence
+   \param[in]     *seq2      Second sequence
+   \param[out]    *align1    First sequence with end aligned correctly
+   \param[out]    *align2    Second sequence with end aligned correctly
+   \return                     Alignment length thus far
 
    Searches the outside of the matrix for the best score and starts the
    alignment by putting in any starting - characters.
 
-   08.10.92 Original extracted from Align()
+-  08.10.92 Original extracted from Align()
 */
 static int SearchForBest(int  **matrix, 
                          int  length1, 
@@ -1015,28 +1025,29 @@ static int SearchForBest(int  **matrix,
                         char *seq1, char *seq2, char *align1, 
                         char *align2, int *align_len)
    ----------------------------------------------------------
-   Input:   int  **matrix   N&W matrix
-            XY   **dirn     Direction Matrix
-            int  length1    Length of first sequence
-            int  length2    Length of second sequence
-            char *seq1      First sequence
-            char *seq2      Second sequence
-   Output:  char *align1    First sequence aligned
-            char *align2    Second sequence aligned
-            int  *align_len Aligned sequence length
-   Returns: int             Alignment score
+*//**
+   \param[in]     **matrix   N&W matrix
+   \param[in]     **dirn     Direction Matrix
+   \param[in]     length1    Length of first sequence
+   \param[in]     length2    Length of second sequence
+   \param[in]     *seq1      First sequence
+   \param[in]     *seq2      Second sequence
+   \param[out]    *align1    First sequence aligned
+   \param[out]    *align2    Second sequence aligned
+   \param[out]    *align_len Aligned sequence length
+   \return                     Alignment score
 
    Does the traceback to find the aligment.
 
-   08.10.92 Original extracted from Align(). Rewritten to do tracing
+-  08.10.92 Original extracted from Align(). Rewritten to do tracing
             correctly.
-   09.10.92 Changed to call SearchForBest(). Nor returns score rather than
+-  09.10.92 Changed to call SearchForBest(). Nor returns score rather than
             length.
-   06.03.00 Recoded to take the path matrix which is calculated within
+-  06.03.00 Recoded to take the path matrix which is calculated within
             the main affinealign() routine rather than calculating the
             path as we go. penalty parameter removed as this is no longer
             needed. dirn parameter added.
-   28.09.00 Fixed bug where last inserts were printed properly if one chain
+-  28.09.00 Fixed bug where last inserts were printed properly if one chain
             ended first
 */
 static int TraceBack(int  **matrix, 
@@ -1136,18 +1147,20 @@ static int TraceBack(int  **matrix,
 /************************************************************************/
 /*>int CalcMDMScore(char resa, char resb)
    --------------------------------------
-   Input:   char   resa      First residue
-            char   resb      Second residue
-   Returns: int              score
+*//**
+
+   \param[in]     resa      First residue
+   \param[in]     resb      Second residue
+   \return                      score
 
    Calculate score from static globally stored mutation data matrix
 
-   07.10.92 Adapted from NIMR-written original
-   24.11.94 Only gives 10 warnings
-   28.02.95 Modified to use sMDMSize
-   24.08.95 If a residue was not found was doing an out-of-bounds array
+-  07.10.92 Adapted from NIMR-written original
+-  24.11.94 Only gives 10 warnings
+-  28.02.95 Modified to use sMDMSize
+-  24.08.95 If a residue was not found was doing an out-of-bounds array
             reference causing a potential core dump
-   11.07.96 Name changed from calcscore() and now non-static
+-  11.07.96 Name changed from calcscore() and now non-static
 */
 int CalcMDMScore(char resa, char resb)
 {
@@ -1192,19 +1205,21 @@ int CalcMDMScore(char resa, char resb)
 /************************************************************************/
 /*>int CalcMDMScoreUC(char resa, char resb)
    ----------------------------------------
-   Input:   char   resa      First residue
-            char   resb      Second residue
-   Returns: int              score
+*//**
+
+   \param[in]     resa      First residue
+   \param[in]     resb      Second residue
+   \return                      score
 
    Calculate score from static globally stored mutation data matrix
 
-   07.10.92 Adapted from NIMR-written original
-   24.11.94 Only gives 10 warnings
-   28.02.95 Modified to use sMDMSize
-   24.08.95 If a residue was not found was doing an out-of-bounds array
+-  07.10.92 Adapted from NIMR-written original
+-  24.11.94 Only gives 10 warnings
+-  28.02.95 Modified to use sMDMSize
+-  24.08.95 If a residue was not found was doing an out-of-bounds array
             reference causing a potential core dump
-   11.07.96 Name changed from calcscore() and now non-static
-   27.02.07 As CalcMDMScore() but upcases characters before comparison
+-  11.07.96 Name changed from calcscore() and now non-static
+-  27.02.07 As CalcMDMScore() but upcases characters before comparison
 */
 int CalcMDMScoreUC(char resa, char resb)
 {
@@ -1252,10 +1267,12 @@ int CalcMDMScoreUC(char resa, char resb)
 /************************************************************************/
 /*>int ZeroMDM(void)
    -----------------
-   Returns: int           Maximum value in modified matrix
+*//**
+
+   \return                   Maximum value in modified matrix
 
    Modifies all values in the MDM such that the minimum value is 0
-   17.09.96 Original
+-  17.09.96 Original
 */
 int ZeroMDM(void)
 {

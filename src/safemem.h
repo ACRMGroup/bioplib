@@ -112,7 +112,7 @@ void safeleaks(void);
    as item->next). One can therefore simply call the routine N time
    to delete N items. If start or item is NULL, does nothing
 
-   16.02.95 Original    By: ACRM
+-  16.02.95 Original    By: ACRM
 */
 #define DELETE(x, y, z)                                                  \
 do {                                                                     \

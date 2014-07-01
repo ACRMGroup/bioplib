@@ -93,8 +93,10 @@
 /************************************************************************/
 /*>void SetExtn(char *File, char *Ext)
    -----------------------------------
-   I/O:    char  *File     Filename to be modified
-   Input:  char  *Ext      New extension
+*//**
+
+   \param[in,out] *File     Filename to be modified
+   \param[in]     *Ext      New extension
 
    Force a filename extension. Modifies the input filename to have the
    specified extension. Note that the string File should be large enough
@@ -104,10 +106,10 @@
    or a `:' is found as these indicate a directory. If no `.' is found,
    one is appended to the string and the extension is added.
 
-   10.02.91 Original
-   28.05.92 ANSIed
-   22.06.92 Improved to work from end of string for Unix filenames, etc.
-   11.03.94 Added check on '\' for MS-DOS
+-  10.02.91 Original
+-  28.05.92 ANSIed
+-  22.06.92 Improved to work from end of string for Unix filenames, etc.
+-  11.03.94 Added check on '\' for MS-DOS
 */
 void SetExtn(char *File, char *Ext)
 {

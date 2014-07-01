@@ -97,15 +97,17 @@ static BOOL FindNextNumber(char *buffer, FILE *fp, int nlines, int nskip,
 /*>BOOL GetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor,
                     int *StrucType)
    -----------------------------------------------------------
-   Input:   FILE *fp           PDB file pointer
-   Output:  REAL *resolution   The resolution (0.0 if not applicable)
-            REAL *RFactor      The R-factor (0.0 if not found)
-            REAL *StrucType    Structure type:
+*//**
+
+   \param[in]     *fp           PDB file pointer
+   \param[out]    *resolution   The resolution (0.0 if not applicable)
+   \param[out]    *RFactor      The R-factor (0.0 if not found)
+   \param[out]    *StrucType    Structure type:
                                STRUCTURE_TYPE_XTAL
                                STRUCTURE_TYPE_NMR
                                STRUCTURE_TYPE_MODEL
                                STRUCTURE_TYPE_UNKNOWN
-   Returns: BOOL               TRUE if resolution found (even if not
+   \return                       TRUE if resolution found (even if not
                                applicable)
 
    This routine attempts to obtain resolution and R-factor information
@@ -131,18 +133,18 @@ static BOOL FindNextNumber(char *buffer, FILE *fp, int nlines, int nskip,
    this situation. In these cases, we lose the R-factor information.
    This occurs in approx 3.5% of the 1XXX PDB entries.
 
-   25.02.94 Original   By: ACRM
-   28.02.94 Added " R = " and check that VALUE wasn't B-VALUE
-   17.07.96 Added check for EXPERIMENT TYPE : THEORETICAL MODEL
+-  25.02.94 Original   By: ACRM
+-  28.02.94 Added " R = " and check that VALUE wasn't B-VALUE
+-  17.07.96 Added check for EXPERIMENT TYPE : THEORETICAL MODEL
             Also fixed bug in searching REMARK record
-   27.06.97 Added handing of RESOLUTION records which point you to 
+-  27.06.97 Added handing of RESOLUTION records which point you to 
             another record for the experiment type.
             Fixed some calls to FindNextNumber() which were checking
             an 80 character width
             Fixed EXPERIMENT TYPE to look for NMR as well
             Looks for EXPDTA NMR record
-   23.03.98 Added check that RESOLUTION record is in a REMARK 2
-   08.02.99 Now a wrapper to GetExptl() which also returns FreeR
+-  23.03.98 Added check that RESOLUTION record is in a REMARK 2
+-  08.02.99 Now a wrapper to GetExptl() which also returns FreeR
 */
 BOOL GetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor, 
                  int *StrucType)
@@ -156,16 +158,18 @@ BOOL GetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor,
 /*>BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
                  int *StrucType)
    ---------------------------------------------------------------------
-   Input:   FILE *fp           PDB file pointer
-   Output:  REAL *resolution   The resolution (0.0 if not applicable)
-            REAL *RFactor      The R-factor (0.0 if not found)
-            REAL *FreeR        The Free R-factor (0.0 if not found)
-            REAL *StrucType    Structure type:
+*//**
+
+   \param[in]     *fp           PDB file pointer
+   \param[out]    *resolution   The resolution (0.0 if not applicable)
+   \param[out]    *RFactor      The R-factor (0.0 if not found)
+   \param[out]    *FreeR        The Free R-factor (0.0 if not found)
+   \param[out]    *StrucType    Structure type:
                                STRUCTURE_TYPE_XTAL
                                STRUCTURE_TYPE_NMR
                                STRUCTURE_TYPE_MODEL
                                STRUCTURE_TYPE_UNKNOWN
-   Returns: BOOL               TRUE if resolution found (even if not
+   \return                       TRUE if resolution found (even if not
                                applicable)
 
    This routine attempts to obtain resolution and R-factor information
@@ -174,7 +178,7 @@ BOOL GetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor,
    found. Resolution-not-applicable structures then have the resolution
    set to zero.
 
-   12.12.11 Original   By: ACRM
+-  12.12.11 Original   By: ACRM
             New implementation for remediated PDB files.
             The old version is available as GetExptlOld() which handles
             old format files.
@@ -546,16 +550,18 @@ static int SetStrucType(char *ptr)
 /*>BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
                  int *StrucType)
    ---------------------------------------------------------------------
-   Input:   FILE *fp           PDB file pointer
-   Output:  REAL *resolution   The resolution (0.0 if not applicable)
-            REAL *RFactor      The R-factor (0.0 if not found)
-            REAL *FreeR        The Free R-factor (0.0 if not found)
-            REAL *StrucType    Structure type:
+*//**
+
+   \param[in]     *fp           PDB file pointer
+   \param[out]    *resolution   The resolution (0.0 if not applicable)
+   \param[out]    *RFactor      The R-factor (0.0 if not found)
+   \param[out]    *FreeR        The Free R-factor (0.0 if not found)
+   \param[out]    *StrucType    Structure type:
                                STRUCTURE_TYPE_XTAL
                                STRUCTURE_TYPE_NMR
                                STRUCTURE_TYPE_MODEL
                                STRUCTURE_TYPE_UNKNOWN
-   Returns: BOOL               TRUE if resolution found (even if not
+   \return                       TRUE if resolution found (even if not
                                applicable)
 
    This routine attempts to obtain resolution and R-factor information
@@ -581,26 +587,26 @@ static int SetStrucType(char *ptr)
    this situation. In these cases, we lose the R-factor information.
    This occurs in approx 3.5% of the 1XXX PDB entries.
 
-   25.02.94 Original   By: ACRM
-   28.02.94 Added " R = " and check that VALUE wasn't B-VALUE
-   17.07.96 Added check for EXPERIMENT TYPE : THEORETICAL MODEL
+-  25.02.94 Original   By: ACRM
+-  28.02.94 Added " R = " and check that VALUE wasn't B-VALUE
+-  17.07.96 Added check for EXPERIMENT TYPE : THEORETICAL MODEL
             Also fixed bug in searching REMARK record
-   27.06.97 Added handing of RESOLUTION records which point you to 
+-  27.06.97 Added handing of RESOLUTION records which point you to 
             another record for the experiment type.
             Fixed some calls to FindNextNumber() which were checking
             an 80 character width
             Fixed EXPERIMENT TYPE to look for NMR as well
             Looks for EXPDTA NMR record
-   23.03.98 Added check that RESOLUTION record is in a REMARK 2
-   08.03.99 Renamed to GetExptl() from GetResolPDB() and added
+-  23.03.98 Added check that RESOLUTION record is in a REMARK 2
+-  08.03.99 Renamed to GetExptl() from GetResolPDB() and added
             FreeR parameter. GetResolPDB() is now a wrapper to this
             routine.
             Added additional pass which looks for the structured
             REMARK 3 records
-   28.04.99 Initialise FindRefRecord et al. to zero
-   18.06.99 Added other strings to the valid structured block for pass 0
+-  28.04.99 Initialise FindRefRecord et al. to zero
+-  18.06.99 Added other strings to the valid structured block for pass 0
             Added check for -ve R-factor
-   08.09.99 Now takes the first FREE R-factor followed by 17 spaces
+-  08.09.99 Now takes the first FREE R-factor followed by 17 spaces
             rather than the last
 */
 BOOL GetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
@@ -946,6 +952,8 @@ BOOL GetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
 /*>static BOOL FindNextNumber(char *buffer, FILE *fp, int nlines, 
                               int nskip, int ncheck, REAL *value)
    --------------------------------------------------------------
+*//**
+
    Find the next number which occurs in the file within nlines lines.
    First looks through the character buffer given to the routine. If this
    fails looks at the next lines in the file itself. Extra lines are
@@ -954,21 +962,21 @@ BOOL GetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
    each new line which is read from the file. This does *not* apply to
    the initial character buffer.
 
-   Input:   char *buffer Pointer to buffer to search first
-            FILE *fp     Pointer to file to find additional lines in
-            int  nlines  Number of additional lines to scan
-            int  nskip   Skip this many characters at the start of
+   \param[in]     *buffer Pointer to buffer to search first
+   \param[in]     *fp     Pointer to file to find additional lines in
+   \param[in]     nlines  Number of additional lines to scan
+   \param[in]     nskip   Skip this many characters at the start of
                          each new line
-            int  ncheck  Check only this many characters from each new
+   \param[in]     ncheck  Check only this many characters from each new
                          line
-   Output:  REAL *value  The value which we find
-   Returns: BOOL         Success/failure.
+   \param[out]    *value  The value which we find
+   \return                 Success/failure.
 
-   25.02.94 Original   By: ACRM
-   28.02.94 Terminates at trailing decimal place
-   27.06.97 Fixed potential bug when number of lines to read ahead set
+-  25.02.94 Original   By: ACRM
+-  28.02.94 Terminates at trailing decimal place
+-  27.06.97 Fixed potential bug when number of lines to read ahead set
             to 0 was still reading characters
-   07.09.99 Added check for i > 0 in FindNextNumber when examining 
+-  07.09.99 Added check for i > 0 in FindNextNumber when examining 
             valbuff[i-1] By: MJP
 */
 static BOOL FindNextNumber(char *buffer, FILE *fp, int nlines, int nskip,

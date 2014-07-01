@@ -75,16 +75,18 @@
 /*>void CalcCellTrans(VEC3F UnitCell, VEC3F CellAngles, 
                       VEC3F *xtrans, VEC3F *ytrans, VEC3F *ztrans)
    ---------------------------------------------------------------
-   Input:   VEC3F  UnitCell       The unit cell dimensions
-            VEC3F  CellAngles     The unit cell angles
-   Output:  VEC3F  *xtrans        Translation to apply along X axis
-            VEC3F  *ytrans        Translation to apply along Y axis
-            VEC3F  *ztrans        Translation to apply along Z axis
+*//**
+
+   \param[in]     UnitCell       The unit cell dimensions
+   \param[in]     CellAngles     The unit cell angles
+   \param[out]    *xtrans        Translation to apply along X axis
+   \param[out]    *ytrans        Translation to apply along Y axis
+   \param[out]    *ztrans        Translation to apply along Z axis
 
    Calculates the offsets to apply in X, Y and Z directions for creating
    a crystal lattice from the unit cell parameters.
 
-   11.10.95 Original    By: ACRM, Based on code from Rasmol by Roger
+-  11.10.95 Original    By: ACRM, Based on code from Rasmol by Roger
                         Sayle (ros@dcs.ed.ac.uk, ras32425@ggr.co.uk)
 */
 void CalcCellTrans(VEC3F UnitCell, VEC3F CellAngles, 

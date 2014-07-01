@@ -70,15 +70,17 @@
 /************************************************************************/
 /*>REAL pearson1(REAL *x, REAL *y, int NItem)
    ------------------------------------------
-   Input:   REAL  *x     Array of x items
-            REAL  *x     Array of y items
-            int   NItem  Number of items
-   Returns: REAL         Pearson correlation coefficient
+*//**
+
+   \param[in]     *x     Array of x items
+   \param[in]     *y     Array of y items
+   \param[in]     NItem  Number of items
+   \return                 Pearson correlation coefficient
 
    This version makes a single pass through the data
 
-   15.07.94 Original    By: ACRM
-   18.01.96 Alternative version which does a single pass through the
+-  15.07.94 Original    By: ACRM
+-  18.01.96 Alternative version which does a single pass through the
             data. Method from page 191 of Statistical Methods in 
             Biology 2 ed. Norman TJ Bailey. Publ. Unibooks 1981  By: RM
 */

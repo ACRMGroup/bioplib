@@ -98,23 +98,25 @@ static REAL sTextHeight = 10.0;
 /************************************************************************/
 /*>BOOL PSInit(char *FName, char *creator, char *AltFont)
    ------------------------------------------------------
-   Input:   char *FName     PostScript filename
-            char *creator   Creator string
-            char *AltFont   Alternate font (normall greek style)
-   Returns: BOOL            Success?
+*//**
+
+   \param[in]     *FName     PostScript filename
+   \param[in]     *creator   Creator string
+   \param[in]     *AltFont   Alternate font (normall greek style)
+   \return                    Success?
 
    Initialises the file writing the Prologue. The filename and creator
    are written into the Prologue and EPSFxoff and EPSFyoff are used to
    calculate the bounding box size for EPSF plots.
-   08.05.92 Added definitions of raise, lower and greek. New parameter
+-  08.05.92 Added definitions of raise, lower and greek. New parameter
             to specify name of alternate font.
-   23.06.92 Padded BoundingBox with spaces and setting of PSXMin, etc.
-   26.07.92 Correctly divide EPSFxoff and EPSFyoff by 72 when writing
+-  23.06.92 Padded BoundingBox with spaces and setting of PSXMin, etc.
+-  26.07.92 Correctly divide EPSFxoff and EPSFyoff by 72 when writing
             offsets in prologue.
-   15.09.92 Added support for Amiga reencoding. Starting dimensions
+-  15.09.92 Added support for Amiga reencoding. Starting dimensions
             for BoundingBox set to dimensions set by Paper.
-   06.07.93 Opens the file
-   27.07.93 Floating point precision -> double
+-  06.07.93 Opens the file
+-  27.07.93 Floating point precision -> double
 */
 BOOL PSInit(char    *FName,
             char    *creator,
@@ -227,11 +229,13 @@ BOOL PSInit(char    *FName,
 /************************************************************************/
 /*>void PSThick(REAL thickness)
    ----------------------------
-   Input:   REAL thickness     Line thickness
+*//**
+
+   \param[in]     thickness     Line thickness
 
    Set the line thickness
 
-   27.07.93 Floating point precision -> double
+-  27.07.93 Floating point precision -> double
 */
 void PSThick(REAL thickness)
 {
@@ -242,11 +246,13 @@ void PSThick(REAL thickness)
 /************************************************************************/
 /*>void PSMove(REAL X, REAL Y)
    ---------------------------
-   Input:   REAL  X     X coordinate
-            REAL  Y     Y coordinate
+*//**
+
+   \param[in]     X     X coordinate
+   \param[in]     Y     Y coordinate
 
    Move to X,Y
-   27.07.93 Floating point precision -> double
+-  27.07.93 Floating point precision -> double
 */
 void PSMove(REAL X,
             REAL Y)
@@ -258,11 +264,13 @@ void PSMove(REAL X,
 /************************************************************************/
 /*>void PSDraw(REAL X, REAL Y)
    ---------------------------
-   Input:   REAL  X     X coordinate
-            REAL  Y     Y coordinate
+*//**
+
+   \param[in]     X     X coordinate
+   \param[in]     Y     Y coordinate
 
    Draw to X,Y
-   27.07.93 Floating point precision -> double
+-  27.07.93 Floating point precision -> double
 */
 void PSDraw(REAL X,
             REAL Y)
@@ -274,7 +282,9 @@ void PSDraw(REAL X,
 /************************************************************************/
 /*>void PSSetDash(char *linepatt)
    ------------------------------
-   Input:   char *linepatt    Line pattern (a string of numbers)
+*//**
+
+   \param[in]     *linepatt    Line pattern (a string of numbers)
 
    Set a line dash pattern which must be supplied as a string
 */
@@ -287,8 +297,11 @@ void PSSetDash(char *linepatt)
 /************************************************************************/
 /*>void PSClearDash(void)
    ----------------------
+*//**
+
    Clear the dash pattern to a full line
-   30.06.92 Removed redundant sprintf()'s
+
+-  30.06.92 Removed redundant sprintf()'s
 */
 void PSClearDash(void)
 {
@@ -298,8 +311,11 @@ void PSClearDash(void)
 /************************************************************************/
 /*>void PSStroke(void)
    -------------------
+*//**
+
    Actually draw what you've just done onto the paper
-   30.06.92 Removed redundant sprintf()'s
+
+-  30.06.92 Removed redundant sprintf()'s
 */
 void PSStroke(void)
 {
@@ -309,15 +325,17 @@ void PSStroke(void)
 /************************************************************************/
 /*>void PSFont(char *fontname, REAL size)
    --------------------------------------
-   Input: char *fontname    Font to set
-          REAL size         Point size of font
+*//**
+
+   \param[in]     *fontname    Font to set
+   \param[in]     size         Point size of font
 
    Set the font and size
-   08.05.92 Changed to support raise and lower
-   23.06.92 Set sTextHeight
-   15.09.92 Changed to support Amiga reencoding
-   06.07.93 Removed Amiga reecncoding for general distribution
-   27.07.93 Floating point precision -> double
+-  08.05.92 Changed to support raise and lower
+-  23.06.92 Set sTextHeight
+-  15.09.92 Changed to support Amiga reencoding
+-  06.07.93 Removed Amiga reecncoding for general distribution
+-  27.07.93 Floating point precision -> double
 */
 void PSFont(char  *fontname,
             REAL  size)
@@ -345,14 +363,17 @@ void PSFont(char  *fontname,
 /************************************************************************/
 /*>void PSLText(REAL X, REAL Y, char *label)
    -----------------------------------------
-   Input:   REAL  X       X coordinate
-            REAL  Y       Y coordinate
-            char  *label  Text to be printed
+*//**
+
+   \param[in]     X       X coordinate
+   \param[in]     Y       Y coordinate
+   \param[in]     *label  Text to be printed
 
    Left justify text
-   30.06.92 Removed redundant sprintf()'s
-   15.09.92 Multiply string width by 0.65
-   27.07.93 Floating point precision -> double
+
+-  30.06.92 Removed redundant sprintf()'s
+-  15.09.92 Multiply string width by 0.65
+-  27.07.93 Floating point precision -> double
 */
 void PSLText(REAL X,
              REAL Y,
@@ -371,17 +392,20 @@ void PSLText(REAL X,
 /************************************************************************/
 /*>void PSCBText(REAL X, REAL Y, REAL Offset, char *label)
    -------------------------------------------------------
-   Input:   REAL  X       X coordinate
-            REAL  Y       Y coordinate
-            REAL  Offset  Y offset - multiple of font height. Moves up
+*//**
+
+   \param[in]     X       X coordinate
+   \param[in]     Y       Y coordinate
+   \param[in]     Offset  Y offset - multiple of font height. Moves up
                           by this quantity
-            char  *label  Text to be printed
+   \param[in]     *label  Text to be printed
 
    Centers a piece of text with X,Y being the Coords of the BOTTOM centre 
    point
-   30.06.92 Removed redundant sprintf()'s
-   15.09.92 Multiply string width by 0.65
-   27.07.93 Floating point precision -> double
+
+-  30.06.92 Removed redundant sprintf()'s
+-  15.09.92 Multiply string width by 0.65
+-  27.07.93 Floating point precision -> double
 */
 void PSCBText(REAL X,
               REAL Y,
@@ -424,19 +448,21 @@ void PSCBText(REAL X,
 /************************************************************************/
 /*>void PSROffText(REAL X, REAL Y, REAL offset, char *label)
    ---------------------------------------------------------
-   Input:   REAL  X       X coordinate
-            REAL  Y       Y coordinate
-            REAL  offset  X offset in points; text moved to the left by
+*//**
+
+   \param[in]     X       X coordinate
+   \param[in]     Y       Y coordinate
+   \param[in]     offset  X offset in points; text moved to the left by
                           this amount
-            char  *label  Text to be printed
+   \param[in]     *label  Text to be printed
 
    Right justify text with offset in device coordinates (points).
 
-   07.05.92 Original
-   30.06.92 Removed use of PSShowText(). This can't be used with the
+-  07.05.92 Original
+-  30.06.92 Removed use of PSShowText(). This can't be used with the
             current rightJustifyText
-   15.09.92 Multiply string width by 0.65
-   27.07.93 Floating point precision -> double
+-  15.09.92 Multiply string width by 0.65
+-  27.07.93 Floating point precision -> double
 */
 void PSROffText(REAL X,
                 REAL Y,
@@ -459,15 +485,18 @@ add def\n",Y);
 /************************************************************************/
 /*>void PSLCText(REAL X, REAL Y, char *label)
    ------------------------------------------
-   Input:   REAL  X       X coordinate
-            REAL  Y       Y coordinate
-            char  *label  Text to be printed
+*//**
+
+   \param[in]     X       X coordinate
+   \param[in]     Y       Y coordinate
+   \param[in]     *label  Text to be printed
 
    Left justify text, centred on Y
-   08.05.92 Original
-   30.06.92 Removed redundant sprintf()'s
-   15.09.92 Multiply string width by 0.65
-   27.07.93 Floating point precision -> double
+
+-  08.05.92 Original
+-  30.06.92 Removed redundant sprintf()'s
+-  15.09.92 Multiply string width by 0.65
+-  27.07.93 Floating point precision -> double
 */
 void PSLCText(REAL X,
               REAL Y,
@@ -487,20 +516,23 @@ add def\n",Y);
 /************************************************************************/
 /*>void PSCTText(REAL X, REAL Y, REAL Offset, char *label)
    -------------------------------------------------------
-   Input:   REAL  X       X coordinate
-            REAL  Y       Y coordinate
-            REAL  Offset  Y offset in points. Moves down by this quantity
-            char  *label  Text to be printed
+*//**
+
+   \param[in]     X       X coordinate
+   \param[in]     Y       Y coordinate
+   \param[in]     Offset  Y offset in points. Moves down by this quantity
+   \param[in]     *label  Text to be printed
 
    Centers a piece of text with X,Y being the Coords of the TOP centre 
    point
-   26.06.92 Changed strlen() to use SimplifyText()
-   30.06.92 Removed redundant sprintf()'s
-   01.07.92 Changed Offset to be in pts rather than a multiplier of 
+
+-  26.06.92 Changed strlen() to use SimplifyText()
+-  30.06.92 Removed redundant sprintf()'s
+-  01.07.92 Changed Offset to be in pts rather than a multiplier of 
             font size.
-   27.07.92 Changed update limits to account better for descenders.
-   15.09.92 Multiply string width by 0.65
-   27.07.93 Floating point precision -> double
+-  27.07.92 Changed update limits to account better for descenders.
+-  15.09.92 Multiply string width by 0.65
+-  27.07.93 Floating point precision -> double
 */
 void PSCTText(REAL X,
               REAL Y,
@@ -546,15 +578,17 @@ void PSCTText(REAL X,
                 char *text,   char *font,    REAL size,
                 char *label,  char *lfont,   REAL lsize)
    -----------------------------------------------------
-   Input:   REAL x        X coordinate (in data units)
-            REAL y        Y coordinate (in data units)
-            REAL xoff     X-offset in pts
-            char *text    Text to be written
-            char *font    Font in which to write it
-            REAL size     Size of font
-            char *label   Label to be used to calc x offset
-            char *lfont   Font of this label
-            REAL lsize    Size of this label
+*//**
+
+   \param[in]     x        X coordinate (in data units)
+   \param[in]     y        Y coordinate (in data units)
+   \param[in]     xoff     X-offset in pts
+   \param[in]     *text    Text to be written
+   \param[in]     *font    Font in which to write it
+   \param[in]     size     Size of font
+   \param[in]     *label   Label to be used to calc x offset
+   \param[in]     *lfont   Font of this label
+   \param[in]     lsize    Size of this label
 
    Write vertical text centred on x,y offset back along x by the size of
    label and by xoff in pts. Used, for example, to title the y-axis of
@@ -562,10 +596,10 @@ void PSCTText(REAL X,
    which to move the text back. Typically this would be the longest data
    label on the graph's Y-axis.
 
-   08.05.92 Original
-   30.06.92 Removed redundant sprintf()'s
-   15.09.92 Multiply string width by 0.65
-   27.07.93 Floating point precision -> double
+-  08.05.92 Original
+-  30.06.92 Removed redundant sprintf()'s
+-  15.09.92 Multiply string width by 0.65
+-  27.07.93 Floating point precision -> double
 */
 void PSVText(REAL x,          /* Data coord position (to be offset)     */
              REAL y,          /* Data coord position                    */
@@ -608,12 +642,14 @@ add exch moveto\n",x,label,xoff);
 /************************************************************************/
 /*>void PSShowText(char *text)
    ---------------------------
-   Input:   char  *text    Text to be written
+*//**
+
+   \param[in]     *text    Text to be written
 
    Displays text, processing it first if any control codes are found. Used
    by the various text positioning routines.
 
-   08.05.92 Original
+-  08.05.92 Original
 */
 void PSShowText(char *text)
 {
@@ -709,9 +745,11 @@ void PSShowText(char *text)
 /************************************************************************/
 /*>void PSEnd(void)
    ----------------
+*//**
+
    End of page
 
-   08.05.92 Original
+-  08.05.92 Original
 */
 void PSEnd(void)
 {
@@ -724,12 +762,14 @@ void PSEnd(void)
 /************************************************************************/
 /*>char *PSCorrectCase(char *font)
    -------------------------------
-   Input:   char   *font    Input fontname
-   Returns: char   *        Case-fixed fontname
+*//**
+
+   \param[in]     *font    Input fontname
+   \return                 Case-fixed fontname
 
    Goes through a fontname and fixes case to match the required standard.
 
-   08.05.92 Original
+-  08.05.92 Original
 */
 char *PSCorrectCase(char *font)
 {

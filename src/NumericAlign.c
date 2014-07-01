@@ -139,16 +139,17 @@ static int  NumericTraceBack(int **matrix, XY **dirn, int length1,
                                    int *seq1, int *seq2, int *align1, 
                                    int *align2)
    ----------------------------------------------------------------
-   Input:   int  **matrix   N&W matrix
-            int  length1    Length of first sequence
-            int  length2    Length of second sequence
-            int  *BestI     x position of highest score
-            int  *BestJ     y position of highest score
-            int  *seq1      First sequence
-            int  *seq2      Second sequence
-   Output:  int  *align1    First sequence with end aligned correctly
-            int  *align2    Second sequence with end aligned correctly
-   Returns: int             Alignment length thus far
+*//**
+   \param[in]     **matrix   N&W matrix
+   \param[in]     length1    Length of first sequence
+   \param[in]     length2    Length of second sequence
+   \param[in]     *BestI     x position of highest score
+   \param[in]     *BestJ     y position of highest score
+   \param[in]     *seq1      First sequence
+   \param[in]     *seq2      Second sequence
+   \param[out]    *align1    First sequence with end aligned correctly
+   \param[out]    *align2    Second sequence with end aligned correctly
+   \return                     Alignment length thus far
 
    Searches the outside of the matrix for the best score and starts the
    alignment by putting in any starting 0s as insertion symbols.
@@ -156,7 +157,7 @@ static int  NumericTraceBack(int **matrix, XY **dirn, int length1,
    Identical to align.c/SearchForBest(), but uses int arrays rather than
    characters
 
-   08.03.00 Original based on align.c/SearchForBest() 08.10.92 By: ACRM
+-  08.03.00 Original based on align.c/SearchForBest() 08.10.92 By: ACRM
 */
 static int NumericSearchForBest(int  **matrix, 
                                 int  length1, 
@@ -213,8 +214,10 @@ static int NumericSearchForBest(int  **matrix,
 /************************************************************************/
 /*>BOOL NumericReadMDM(char *mdmfile)
    ----------------------------------
-   Input:   char  *mdmfile    Mutation data matrix filename
-   Returns: BOOL              Success?
+*//**
+
+   \param[in]     *mdmfile    Mutation data matrix filename
+   \return                      Success?
    
    Read mutation data matrix into static global arrays. The matrix may
    have comments at the start introduced with a ! in the first column.
@@ -227,8 +230,8 @@ static int NumericSearchForBest(int  **matrix,
    as the symbols are numeric and always start from 1 (0 is used as
    the insert character)
 
-   08.03.00 Original based on align.c/ReadMDM() 26.07.95 By: ACRM
-   06.02.03 Fixed for new version of GetWord()
+-  08.03.00 Original based on align.c/ReadMDM() 26.07.95 By: ACRM
+-  06.02.03 Fixed for new version of GetWord()
 */
 BOOL NumericReadMDM(char *mdmfile)
 {
@@ -299,9 +302,11 @@ BOOL NumericReadMDM(char *mdmfile)
 /************************************************************************/
 /*>int NumericCalcMDMScore(int resa, int resb)
    -------------------------------------------
-   Input:   int    resa      First token  
-            int    resb      Second token  
-   Returns: int              score
+*//**
+
+   \param[in]     resa      First token  
+   \param[in]     resb      Second token  
+   \return                      score
 
    Calculate score from static globally stored mutation data matrix
 
@@ -309,7 +314,7 @@ BOOL NumericReadMDM(char *mdmfile)
    array and takes integer parameters. These are used as direct lookups
    into the score array rather than being searched.
 
-   08.03.00 Original based on align.c/CalcMDMScore() 11.07.96 By: ACRM
+-  08.03.00 Original based on align.c/CalcMDMScore() 11.07.96 By: ACRM
 */
 int NumericCalcMDMScore(int resa, int resb)
 {
@@ -352,18 +357,19 @@ int NumericCalcMDMScore(int resa, int resb)
                           int penext, int *align1, int *align2, 
                           int *align_len)
    ---------------------------------------------------------------------
-   Input:   int   *seq1         First sequence of tokens
-            int   length1       First sequence length
-            int   *seq2         Second sequence of tokens
-            int   length2       Second sequence length
-            BOOL  verbose       Display N&W matrix
-            BOOL  identity      Use identity matrix
-            int   penalty       Gap insertion penalty value
-            int   penext        Extension penalty
-   Output:  int   *align1       Sequence 1 aligned
-            int   *align2       Sequence 2 aligned
-            int   *align_len    Alignment length
-   Returns: int                 Alignment score (0 on error)
+*//**
+   \param[in]     *seq1         First sequence of tokens
+   \param[in]     length1       First sequence length
+   \param[in]     *seq2         Second sequence of tokens
+   \param[in]     length2       Second sequence length
+   \param[in]     verbose       Display N&W matrix
+   \param[in]     identity      Use identity matrix
+   \param[in]     penalty       Gap insertion penalty value
+   \param[in]     penext        Extension penalty
+   \param[out]    *align1       Sequence 1 aligned
+   \param[out]    *align2       Sequence 2 aligned
+   \param[out]    *align_len    Alignment length
+   \return                         Alignment score (0 on error)
             
    Perform simple N&W alignment of seq1 and seq2. No window is used, so
    will be slow for long sequences.
@@ -377,7 +383,7 @@ int NumericCalcMDMScore(int resa, int resb)
 
    Identical to align.c/affinealign(), but uses integer arrays
 
-   08.03.00 Original based on align.c/affinealign() 06.03.00 By: ACRM
+-  08.03.00 Original based on align.c/affinealign() 06.03.00 By: ACRM
 */
 int NumericAffineAlign(int  *seq1, 
                        int  length1, 
@@ -645,23 +651,24 @@ int NumericAffineAlign(int  *seq1,
                                int *seq1, int *seq2, int *align1, 
                                int *align2, int *align_len)
    ----------------------------------------------------------------
-   Input:   int  **matrix   N&W matrix
-            XY   **dirn     Direction Matrix
-            int  length1    Length of first sequence
-            int  length2    Length of second sequence
-            int  *seq1      First sequence
-            int  *seq2      Second sequence
-   Output:  int  *align1    First sequence aligned
-            int  *align2    Second sequence aligned
-            int  *align_len Aligned sequence length
-   Returns: int             Alignment score
+*//**
+   \param[in]     **matrix   N&W matrix
+   \param[in]     **dirn     Direction Matrix
+   \param[in]     length1    Length of first sequence
+   \param[in]     length2    Length of second sequence
+   \param[in]     *seq1      First sequence
+   \param[in]     *seq2      Second sequence
+   \param[out]    *align1    First sequence aligned
+   \param[out]    *align2    Second sequence aligned
+   \param[out]    *align_len Aligned sequence length
+   \return                     Alignment score
 
    Does the traceback to find the aligment.
 
    Identical to align.c/TraceBack(), but uses integer arrays.
 
-   08.03.00 Original based on align.c/TraceBack() 06.03.00 By: ACRM
-   28.09.00 Fixed bug at end of alignment if one sequence finishes
+-  08.03.00 Original based on align.c/TraceBack() 06.03.00 By: ACRM
+-  28.09.00 Fixed bug at end of alignment if one sequence finishes
             first
 */
 static int NumericTraceBack(int  **matrix, 

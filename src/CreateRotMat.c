@@ -76,14 +76,16 @@
 /************************************************************************/
 /*>void CreateRotMat(char direction, REAL angle, REAL matrix[3][3])
    ----------------------------------------------------------------
-   Input:   char direction    Axis about which to rotate
-            REAL angle        Angle (in rads) to rotate
-   Output:  REAL matrix[3][3] Rotation matrix
+*//**
+
+   \param[in]     direction    Axis about which to rotate
+   \param[in]     angle        Angle (in rads) to rotate
+   \param[out]    matrix       Rotation matrix
 
    Create a 3x3 rotation matrix. Takes a direction as a single character
    ('x', 'y', or 'z'), an angle (in rads) and outputs a rotation matrix
    
-   22.07.93 Original    By: ACRM
+-  22.07.93 Original    By: ACRM
 */
 void CreateRotMat(char direction, REAL angle, REAL matrix[3][3])
 {

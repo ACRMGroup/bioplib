@@ -101,11 +101,13 @@
 /************************************************************************/
 /*>void FreeStringList(STRINGLIST *StringList)
    -------------------------------------------
-   Input:     STRINGLIST   *StringList    Linked list of strings
+*//**
+
+   \param[in]     *StringList    Linked list of strings
 
    Frees memory allocated for a string list.
 
-   06.11.95 Original    By: ACRM
+-  06.11.95 Original    By: ACRM
 */
 void FreeStringList(STRINGLIST *StringList)
 {

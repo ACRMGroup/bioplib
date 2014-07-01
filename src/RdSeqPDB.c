@@ -77,9 +77,11 @@ static STRINGLIST *RdSeqRes(FILE *fp);
 /************************************************************************/
 /*>char **ReadSeqresPDB(FILE *fp, int *nchains)
    --------------------------------------------
-   Input:   FILE   *fp       PDB file pointer
-   Output:  int    *nchain   Number of chains found
-   Returns: char   **        Array of sequence strings
+*//**
+
+   \param[in]     *fp       PDB file pointer
+   \param[out]    *nchains  Number of chains found
+   \return                  Array of sequence strings
 
    Reads the sequence from the SEQRES records of a PDB file. Creates
    an array of malloc()'d character arrays in which the sequence is
@@ -90,8 +92,8 @@ static STRINGLIST *RdSeqRes(FILE *fp);
    this way, but is useful to detect discrepancies compared with the
    sequence described by the ATOM records.
 
-   14.10.96 Original   By: ACRM
-   25.03.14 Added CHAINMATCH. Chain IDs handled as strings. By: CTP
+-  14.10.96 Original   By: ACRM
+-  25.03.14 Added CHAINMATCH. Chain IDs handled as strings. By: CTP
 */
 char **ReadSeqresPDB(FILE *fp, int *nchains)
 {
@@ -191,12 +193,14 @@ char **ReadSeqresPDB(FILE *fp, int *nchains)
 /************************************************************************/
 /*>static STRINGLIST *RdSeqRes(FILE *fp)
    -------------------------------------
-   Input:   FILE        *fp      PDB File pointer
-   Returns: STRINGLIST  *        Linked list of SEQRES records
+*//**
+
+   \param[in]     *fp      PDB File pointer
+   \return                 Linked list of SEQRES records
 
    Used by ReadSeqresPDB() to read the SEQRES records into a linked list.
 
-   14.10.96 Original   By: ACRM
+-  14.10.96 Original   By: ACRM
 */
 static STRINGLIST *RdSeqRes(FILE *fp)
 {

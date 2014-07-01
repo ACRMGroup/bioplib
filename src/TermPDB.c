@@ -81,9 +81,11 @@
 /************************************************************************/
 /*>PDB *TermPDB(PDB *pdb, int length)
    ----------------------------------
-   Input:   PDB   *pdb         PDB linked list
-            int   length       Number of residues after which to terminate
-   Returns: PDB   *            Pointer to next residue after terminated
+*//**
+
+   \param[in]     *pdb         PDB linked list
+   \param[in]     length       Number of residues after which to terminate
+   \return                     Pointer to next residue after terminated
                                list. NULL if not enough residues in linked
                                list.
 
@@ -92,9 +94,9 @@
 
    Note that the number of residues may cross chain boundaries.
 
-   06.07.95 Original    By: ACRM
-   26.09.95 Corrected update of resnum etc to use p-> not pdb-> (!!)
-   04.02.14 Use CHAINMATCH macro. By: CTP
+-  06.07.95 Original    By: ACRM
+-  26.09.95 Corrected update of resnum etc to use p-> not pdb-> (!!)
+-  04.02.14 Use CHAINMATCH macro. By: CTP
 */
 PDB *TermPDB(PDB *pdb, int length)
 {

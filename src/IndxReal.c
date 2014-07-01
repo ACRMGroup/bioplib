@@ -46,10 +46,13 @@
 
    Usage:
    ======
-   IndexReal(n,arrin,indx)
-   Input:  int   n       Number of elements in array
-           REAL  *arrin  Array to be indexed
-   Output: int   *indx   Index array
+
+
+      IndexReal(arrin,indx,n);
+      Input:  int   n       Number of elements in array
+              REAL  *arrin  Array to be indexed
+      Output: int   *indx   Index array
+
 
 **************************************************************************
 
@@ -81,16 +84,18 @@
 /************************************************************************/
 /*>void IndexReal(REAL *arrin, int *indx, int n)
    ---------------------------------------------
-   Input:  REAL   *arrin   Array to be indexed
-           int    n        Number of elements in array
-   Output: int    *indx    Index array
+*//**
+
+   \param[in]     *arrin   Array to be indexed
+   \param[in]     n        Number of elements in array
+   \param[out]    *indx    Index array
    
    Index an array by Heapsort.
    
-   03.06.90 Original
-   01.06.92 ANSIed and autodoc'd
-   19.07.93 Corrected bug (said j=l+1 rather than j=l+l). Oops!
-   08.07.96 Changed from double to REAL and tidied. Changed param order
+-  03.06.90 Original
+-  01.06.92 ANSIed and autodoc'd
+-  19.07.93 Corrected bug (said j=l+1 rather than j=l+l). Oops!
+-  08.07.96 Changed from double to REAL and tidied. Changed param order
 */
 void IndexReal(REAL *arrin, int *indx, int n)
 {

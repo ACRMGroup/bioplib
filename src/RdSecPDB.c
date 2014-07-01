@@ -42,7 +42,10 @@
 
    Usage:
    ======
+   
+\code
    sec = ReadSecPDB(fp,&nsec)
+\endcode
 
    This routine reads the secondary structure informaton from the
    header of a .PDB file. It reads from file fp and creates a linked
@@ -98,9 +101,11 @@
 /************************************************************************/
 /*>SECSTRUC *ReadSecPDB(FILE *fp, int *nsec)
    -----------------------------------------
-   Input:    fp    *FILE      Pointer to PDB file
-   Output:   nsec  *int       Number of sec struc regions identified
-   Returns:  sec   *SECSTRUC  Linked list of type SECSTRUC
+*//**
+
+   \param[in]     *fp      Pointer to PDB file
+   \param[out]    *nsec    Number of sec struc regions identified
+   \return                 Linked list of type SECSTRUC
 
    Reads secondary structure information from the header of a PDB file.
    Returns a pointer to a linked list of type SECSTRUC.
@@ -111,11 +116,11 @@
    to which it applies. The form of the structure should be checked
    in pdb.h
 
-   22.03.90 Original
-   20.06.90 Would crash if no secondary structure found---fixed.
-   09.07.93 Changed allocation scheme. Returns pointer to SECSTRUC.
+-  22.03.90 Original
+-  20.06.90 Would crash if no secondary structure found---fixed.
+-  09.07.93 Changed allocation scheme. Returns pointer to SECSTRUC.
             No need to initialise this before calling. Uses fsscanf()
-   18.08.98 Changed SEC to SECSTRUC 'cos of conflict in SunOS
+-  18.08.98 Changed SEC to SECSTRUC 'cos of conflict in SunOS
 */
 SECSTRUC *ReadSecPDB(FILE *fp, int *nsec)
 {

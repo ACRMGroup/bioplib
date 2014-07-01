@@ -85,15 +85,17 @@
 /************************************************************************/
 /*>BOOL CalcCterCoords(PDB *p, PDB *ca_p, PDB *c_p, PDB *o_p)
    ----------------------------------------------------------
-   I/O:     PDB  *p     OT2 PDB record whose coords are to be fixed
-   Input:   PDB  *ca_p  Antecedent CA PDB pointer
-            PDB  *c_p   Antecedent C PDB pointer
-            PDB  *o_p   Antecedent O PDB pointer
-   Returns: BOOL        Success
+*//**
+
+   \param[in,out] *p     OT2 PDB record whose coords are to be fixed
+   \param[in]     *ca_p  Antecedent CA PDB pointer
+   \param[in]     *c_p   Antecedent C PDB pointer
+   \param[in]     *o_p   Antecedent O PDB pointer
+   \return                Success
 
    This routine actually calculates the CTER OT2 coords.
 
-   15.07.90 Original
+-  15.07.90 Original
 */
 BOOL CalcCterCoords(PDB *p, PDB *ca_p, PDB *c_p, PDB *o_p)
 {

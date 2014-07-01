@@ -73,18 +73,20 @@
                       char *spacegroup,
                       REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4])
    -----------------------------------------------------------------
-   Input:   FILE    *fp            Output file pointet
-            VEC3F   UnitCell       The unit cell dimensions
-            VEC3F   CellAngles     The unit cell angles
-            char    *spacegroup    The crystal's space group
-            REAL    OrigMatrix     The origin matrix
-            REAL    ScaleMatrix    The scale matrix
+*//**
+
+   \param[in]     *fp            Output file pointet
+   \param[in]     UnitCell       The unit cell dimensions
+   \param[in]     CellAngles     The unit cell angles
+   \param[in]     *spacegroup    The crystal's space group
+   \param[in]     OrigMatrix     The origin matrix
+   \param[in]     ScaleMatrix    The scale matrix
 
    Write crystal parameters (unit cell, space group, origin and scale
    matrices) to a PDB file.
 
-   12.10.95 Original    By: ACRM
-   17.10.95 Corrected %lf to %f in fprintf()s
+-  12.10.95 Original    By: ACRM
+-  17.10.95 Corrected %lf to %f in fprintf()s
 */
 void WriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
                    char *spacegroup,

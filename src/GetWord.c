@@ -73,11 +73,13 @@ char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma);
 /************************************************************************/
 /*>char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma)
    -----------------------------------------------------------------
-   Input:   char    *buffer     Input buffer to read words from
-            int     maxlen      Max length of output word
-            BOOL    comma       Treat commas like white space?
-   Output:  char    *word       Word read from buffer
-   Returns: char    *           Pointer to start of next word in buffer
+*//**
+
+   \param[in]     *buffer     Input buffer to read words from
+   \param[in]     maxlen      Max length of output word
+   \param[in]     comma       Treat commas like white space?
+   \param[out]    *word       Word read from buffer
+   \return                        Pointer to start of next word in buffer
                                 or NULL
 
    This code is designed to be called from GetWord() or GetWordNC()
@@ -94,7 +96,7 @@ char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma);
                       string in double inverted commas)
       "\"" -> '"'     To get a double inverted comma
 
-   10.06.99 Original   By: ACRM (based on code from Bioplib)
+-  10.06.99 Original   By: ACRM (based on code from Bioplib)
 */
 char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma)
 {
@@ -211,10 +213,12 @@ char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma)
 /************************************************************************/
 /*>char *GetWord(char *buffer, char *word, int maxlen)
    ---------------------------------------------------
-   Input:   char    *buffer     Input buffer to read words from
-            int     maxlen      Max length of output word
-   Output:  char    *word       Word read from buffer
-   Returns: char    *           Pointer to start of next word in buffer
+*//**
+
+   \param[in]     *buffer     Input buffer to read words from
+   \param[in]     maxlen      Max length of output word
+   \param[out]    *word       Word read from buffer
+   \return                        Pointer to start of next word in buffer
                                 or NULL
 
    This code is a wrapper to doGetWord()
@@ -229,7 +233,7 @@ char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma)
                       string in double inverted commas)
       "\"" -> '"'     To get a double inverted comma
 
-   10.06.99 Original   By: ACRM
+-  10.06.99 Original   By: ACRM
 */
 char *GetWord(char *buffer, char *word, int maxlen)
 {
@@ -239,10 +243,12 @@ char *GetWord(char *buffer, char *word, int maxlen)
 /************************************************************************/
 /*>char *GetWordNC(char *buffer, char *word, int maxlen)
    -----------------------------------------------------
-   Input:   char    *buffer     Input buffer to read words from
-            int     maxlen      Max length of output word
-   Output:  char    *word       Word read from buffer
-   Returns: char    *           Pointer to start of next word in buffer
+*//**
+
+   \param[in]     *buffer     Input buffer to read words from
+   \param[in]     maxlen      Max length of output word
+   \param[out]    *word       Word read from buffer
+   \return                        Pointer to start of next word in buffer
                                 or NULL
 
    This code is a wrapper to doGetWord()
@@ -258,7 +264,7 @@ char *GetWord(char *buffer, char *word, int maxlen)
                       string in double inverted commas)
       "\"" -> '"'     To get a double inverted comma
 
-   10.06.99 Original By: ACRM
+-  10.06.99 Original By: ACRM
 */
 char *GetWordNC(char *buffer, char *word, int maxlen)
 {

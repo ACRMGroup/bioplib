@@ -72,16 +72,18 @@
 /************************************************************************/
 /*>REAL VecDist(REAL *a, REAL *b, int len)
    ---------------------------------------
-   Input:   REAL    *a     An arbitrary length vector (as an array)
-            REAL    *b     An arbitrary length vector (as an array)
-            int     len    The dimensionality of the vectors (array
+*//**
+
+   \param[in]     *a     An arbitrary length vector (as an array)
+   \param[in]     *b     An arbitrary length vector (as an array)
+   \param[in]     len    The dimensionality of the vectors (array
                            length)
-   Returns: REAL           The distance between the points described by
+   \return                   The distance between the points described by
                            the two vectors
 
    Finds the distance between two vectors of arbitrary length
 
-   28.07.95 Original    By: ACRM
+-  28.07.95 Original    By: ACRM
 */
 REAL VecDist(REAL *a, REAL *b, int len)
 {

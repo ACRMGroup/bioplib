@@ -81,14 +81,16 @@ static char *sAACode[4][4] =
 /************************************************************************/
 /*>char DNAtoAA(char *dna)
    -----------------------
-   Input:   char  *dna        DNA/RNA codon
-   Returns: char              1-letter amino acid code (X=termination)
+*//**
+
+   \param[in]     *dna        DNA/RNA codon
+   \return                    1-letter amino acid code (X=termination)
 
    Converts a nucleic acid codon to the 1-letter amino acid equivalent.
    Termination codons are returned as X. No special action is taken
    for initiation codons.
 
-   18.04.94 Original    By: ACRM
+-  18.04.94 Original    By: ACRM
 */
 char DNAtoAA(char *dna)
 {

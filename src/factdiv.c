@@ -69,11 +69,13 @@
 /************************************************************************/
 /*>ULONG factdiv(int n1, int n2)
    -----------------------------
+*//**
+
    Calculates the factorial of one number divided by the factorial of
    another (smaller) number.
    Returns 0 on numeric overflow or if n2 > n1
 
-   09.09.96 Original   By: ACRM
+-  09.09.96 Original   By: ACRM
 */
 ULONG factdiv(int n1, int n2)
 {

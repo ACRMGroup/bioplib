@@ -71,12 +71,14 @@
 /************************************************************************/
 /*>void CrossProd3(VEC3F *Out, VEC3F In1, VEC3F In2)
    -------------------------------------------------
-   Input:   VEC3F   In1       First vector
-            VEC3F   In2       Second vector
-   Output:  VEC3F   Out       Output vector
+*//**
+
+   \param[in]     In1       First vector
+   \param[in]     In2       Second vector
+   \param[out]    Out       Output vector
 
    Calculate the cross product of 2 vectors
-   18.06.96 Original   By: ACRM
+-  18.06.96 Original   By: ACRM
 */
 void CrossProd3(VEC3F *Out, VEC3F In1, VEC3F In2)
 {

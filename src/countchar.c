@@ -92,13 +92,15 @@
 /************************************************************************/
 /*>int countchar(char *string, char ch)
    ------------------------------------
-   Input:   char     *string      String to search for characters
-            char     ch           Character for which to search
-   Returns: int                   Number of occurrences of ch in string
+*//**
+
+   \param[in]     *string      String to search for characters
+   \param[in]     ch           Character for which to search
+   \return                           Number of occurrences of ch in string
 
    Counts occurrences of charcater ch in string, string.
 
-   17.07.95 Original    By: ACRM
+-  17.07.95 Original    By: ACRM
 */
 int countchar(char *string, char ch)
 {

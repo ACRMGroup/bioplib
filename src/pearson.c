@@ -71,14 +71,16 @@
 /************************************************************************/
 /*>REAL pearson(REAL *x, REAL *y, int NItem)
    -----------------------------------------
-   Input:   REAL  *x     Array of x items
-            REAL  *x     Array of y items
-            int   NItem  Number of items
-   Returns: REAL         Pearson correlation coefficient
+*//**
+
+   \param[in]     *x     Array of x items
+   \param[in]     *y     Array of y items
+   \param[in]     NItem  Number of items
+   \return                 Pearson correlation coefficient
 
    This version makes 2 passes through the data
 
-   15.07.94 Original    By: ACRM
+-  15.07.94 Original    By: ACRM
 */
 REAL pearson(REAL *x, REAL *y, int NItem)
 {

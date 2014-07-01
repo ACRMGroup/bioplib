@@ -81,13 +81,15 @@
 /************************************************************************/
 /*>BOOL LegalAtomSpec(char *spec)
    ------------------------------
+*//**
+
    Partner routine for AtomNameMatch(). Checks whether a wildcard
    specfication is legal (i.e. will not return an error when used
    with AtomNameMatch()).
 
    The only thing which is not legal is characters following a *
 
-   23.07.96 Original   By: ACRM
+-  23.07.96 Original   By: ACRM
 */
 BOOL LegalAtomSpec(char *spec)
 {

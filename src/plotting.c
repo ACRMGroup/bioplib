@@ -99,43 +99,44 @@ static struct
                    REAL DataXMin,   REAL DataYMin, 
                    REAL DataXMax,   REAL DataYMax)
    -------------------------------------------------------------
-   Input:   char  *filename   File to open
-            char  *title      Title for plot
-            int   dest        Destination (DEST_PS or DEST_HPGL)
-            REAL  OutXSize    Output plot X size (inches)
-            REAL  OutYSize    Output plot Y size (inches)
-            REAL  OutXOff     Output plot X offset (inches)
-            REAL  OutYOff     Output plot Y offset (inches)
-            char  *AltFont    Alternate font name 
-            REAL  xmargin     Unprintable x margin (inches, HPGL)
+*//**
+   \param[in]     *filename   File to open
+   \param[in]     *title      Title for plot
+   \param[in]     dest        Destination (DEST_PS or DEST_HPGL)
+   \param[in]     OutXSize    Output plot X size (inches)
+   \param[in]     OutYSize    Output plot Y size (inches)
+   \param[in]     OutXOff     Output plot X offset (inches)
+   \param[in]     OutYOff     Output plot Y offset (inches)
+   \param[in]     *AltFont    Alternate font name 
+   \param[in]     xmargin     Unprintable x margin (inches, HPGL)
                               Sensible default: 0.58
-            REAL  ymargin     Unprintable y margin (inches, HPGL)
+   \param[in]     ymargin     Unprintable y margin (inches, HPGL)
                               Sensible default: 0.1465
-            REAL  DataXMin    Min data X value
-            REAL  DataYMin    Min data Y value
-            REAL  DataXMax    Max data X value
-            REAL  DataYMax    Max data Y value
-   Returns: BOOL              TRUE: OK, FALSE: Failed
+   \param[in]     DataXMin    Min data X value
+   \param[in]     DataYMin    Min data Y value
+   \param[in]     DataXMax    Max data X value
+   \param[in]     DataYMax    Max data Y value
+   \return                      TRUE: OK, FALSE: Failed
 
    Initialise a device ready for plotting.
    
-   07.05.92 Original
-   25.06.92 Added HPGL support. Moved setting of PS globals to here.
-   02.07.92 Put ClearWindow() in for screen plotting. Added seek to
+-  07.05.92 Original
+-  25.06.92 Added HPGL support. Moved setting of PS globals to here.
+-  02.07.92 Put ClearWindow() in for screen plotting. Added seek to
             start of file for PS and HPGL file plotting.
-   16.07.92 Added DR2D support
-   17.07.92 Corrected call to InstallDR2DFonts() *before* InitDR2D().
+-  16.07.92 Added DR2D support
+-  17.07.92 Corrected call to InstallDR2DFonts() *before* InitDR2D().
             Changed buffer to [40]. Added bounds calc'n for DR2D.
-   20.07.92 Added alternate font parameter to DR2DInit(). Added check on
+-  20.07.92 Added alternate font parameter to DR2DInit(). Added check on
             DR2DInit() return.
-   22.07.92 Consider x-axis labelling in finding max x. Corrected to
+-  22.07.92 Consider x-axis labelling in finding max x. Corrected to
             consider precision for log axes
-   24.07.92 Added extras parameter to ftostr
-   27.07.92 Removed the specification of EPSF offsets since the
+-  24.07.92 Added extras parameter to ftostr
+-  27.07.92 Removed the specification of EPSF offsets since the
             PSFixBoundingBox() routine takes care of all this. Increased
             size of xmax border for DR2D plots.
-   06.07.93 Changed parameters
-   27.02.98 Removed unreachable breaks from switch() statement
+-  06.07.93 Changed parameters
+-  27.02.98 Removed unreachable breaks from switch() statement
 */
 BOOL AMInitPlot(char   *filename,
                 char   *title,
@@ -182,14 +183,16 @@ BOOL AMInitPlot(char   *filename,
 /************************************************************************/
 /*>void AMSetPen(int dest, int pen)
    --------------------------------
-   Input:   int   dest      Destination
-            int   pen       Pen number
+*//**
+
+   \param[in]     dest      Destination
+   \param[in]     pen       Pen number
 
    Change pen
-   06.04.92 Handles screen
-   07.05.92 Added PS support
-   25.06.92 Added HPGL support
-   16.07.92 Added DR2D support
+-  06.04.92 Handles screen
+-  07.05.92 Added PS support
+-  25.06.92 Added HPGL support
+-  16.07.92 Added DR2D support
 */   
 void AMSetPen(int   dest,
               int   pen)
@@ -218,17 +221,19 @@ void AMSetPen(int   dest,
 /************************************************************************/
 /*>void AMMove(int dest, REAL x, REAL y)
    -------------------------------------
-   Input:   int   dest      Destination
-            REAL  x         X coordinate
-            REAL  y         Y coordinate
+*//**
+
+   \param[in]     dest      Destination
+   \param[in]     x         X coordinate
+   \param[in]     y         Y coordinate
 
    Move to a position specified in data coordinates.
-   06.04.92 Handles screen
-   10.04.92 Added log support
-   29.04.92 Added check on log bounds
-   07.05.92 Added PS support
-   25.06.92 Added HPGL support
-   16.07.92 Added DR2D support
+-  06.04.92 Handles screen
+-  10.04.92 Added log support
+-  29.04.92 Added check on log bounds
+-  07.05.92 Added PS support
+-  25.06.92 Added HPGL support
+-  16.07.92 Added DR2D support
 */
 void AMMove(int  dest,
             REAL x,
@@ -258,17 +263,19 @@ void AMMove(int  dest,
 /************************************************************************/
 /*>void AMDraw(int dest, REAL x, REAL y)
    -------------------------------------
-   Input:   int   dest      Destination
-            REAL  x         X coordinate
-            REAL  y         Y coordinate
+*//**
+
+   \param[in]     dest      Destination
+   \param[in]     x         X coordinate
+   \param[in]     y         Y coordinate
 
    Draw to a position specified in data coordinates.
-   06.04.92 Handles screen
-   10.04.92 Added log support
-   29.04.92 Added check on log bounds
-   07.05.92 Added PS support
-   25.06.92 Added HPGL support
-   16.07.92 Added DR2D support
+-  06.04.92 Handles screen
+-  10.04.92 Added log support
+-  29.04.92 Added check on log bounds
+-  07.05.92 Added PS support
+-  25.06.92 Added HPGL support
+-  16.07.92 Added DR2D support
 */
 void AMDraw(int  dest,
             REAL x,
@@ -301,15 +308,17 @@ void AMDraw(int  dest,
 /************************************************************************/
 /*>void AMSetLineStyle(int dest, int style)
    ----------------------------------------
-   Input:   int   dest      Destination
-            int   style     Style number (0--5)
+*//**
+
+   \param[in]     dest      Destination
+   \param[in]     style     Style number (0--5)
 
    Set the line style
-   08.04.92 Framework
-   07.05.92 Original (screen & PS)
-   25.06.92 Added HPGL support. Removed static store of style.
-   05.07.92 Corrected line patterns. They don't have commas!
-   16.07.92 Added DR2D support
+-  08.04.92 Framework
+-  07.05.92 Original (screen & PS)
+-  25.06.92 Added HPGL support. Removed static store of style.
+-  05.07.92 Corrected line patterns. They don't have commas!
+-  16.07.92 Added DR2D support
 */
 void AMSetLineStyle(int   dest,
                     int   style)
@@ -340,13 +349,15 @@ void AMSetLineStyle(int   dest,
 /************************************************************************/
 /*>void AMEndLine(int dest)
    ------------------------
-   Input:   int   dest      Destination
+*//**
+
+   \param[in]     dest      Destination
 
    End a line; required by PostScript actually to draw on the paper.
 
-   07.05.92 Original
-   25.06.92 Added HPGL support
-   16.07.92 Added DR2D support
+-  07.05.92 Original
+-  25.06.92 Added HPGL support
+-  16.07.92 Added DR2D support
 */
 void AMEndLine(int  dest)
 {
@@ -369,21 +380,23 @@ void AMEndLine(int  dest)
 /************************************************************************/
 /*>void AMSetFont(int dest, char *PSFontName, REAL FontSize)
    ---------------------------------------------------------
-   Input:   int   dest         Destination
-            char  *PSFontName  PostScript font name
-            REAL  FontSize     Size (in points) of font
+*//**
+
+   \param[in]     dest         Destination
+   \param[in]     *PSFontName  PostScript font name
+   \param[in]     FontSize     Size (in points) of font
 
    Sets the current font using PostScript font names. If producing HPGL
    output, a lookup table is used to translate this to an HPGL font
    number
 
-   07.04.92 Framework
-   05.05.92 Original for Screen
-   07.05.92 Added PS support
-   25.06.92 Added HPGL support.
-   29.06.92 Modified to use new PS2AmigaFont() for HPGL
-   13.07.92 Added DEF_FONT parameter to SetAmigaFont()
-   16.07.92 Added DR2D support
+-  07.04.92 Framework
+-  05.05.92 Original for Screen
+-  07.05.92 Added PS support
+-  25.06.92 Added HPGL support.
+-  29.06.92 Modified to use new PS2AmigaFont() for HPGL
+-  13.07.92 Added DEF_FONT parameter to SetAmigaFont()
+-  16.07.92 Added DR2D support
 */
 void AMSetFont(int  dest, 
                char *PSFontName,
@@ -411,18 +424,20 @@ void AMSetFont(int  dest,
 /************************************************************************/
 /*>void AMText(int dest, REAL x, REAL y, char *text)
    -------------------------------------------------
-   Input:   int   dest      Destination
-            REAL  x         X coordinate
-            REAL  y         Y coordinate
-            char  *text     Text to write
+*//**
+
+   \param[in]     dest      Destination
+   \param[in]     x         X coordinate
+   \param[in]     y         Y coordinate
+   \param[in]     *text     Text to write
 
    Left/bottom justify text at position in data coordinates
-   08.04.92 Handles screen
-   10.04.92 Added log support
-   29.04.92 Added check on log bounds
-   07.05.92 Added PS support
-   25.06.92 Added HPGL support
-   16.07.92 Added DR2D support
+-  08.04.92 Handles screen
+-  10.04.92 Added log support
+-  29.04.92 Added check on log bounds
+-  07.05.92 Added PS support
+-  25.06.92 Added HPGL support
+-  16.07.92 Added DR2D support
 */
 void AMText(int  dest,
             REAL x,
@@ -455,19 +470,21 @@ void AMText(int  dest,
 /************************************************************************/
 /*>void AMCBText(int dest, REAL x, REAL y, char *text)
    ---------------------------------------------------
-   Input:   int   dest      Destination
-            REAL  x         X coordinate
-            REAL  y         Y coordinate
-            char  *text     Text to print
+*//**
+
+   \param[in]     dest      Destination
+   \param[in]     x         X coordinate
+   \param[in]     y         Y coordinate
+   \param[in]     *text     Text to print
 
    Centre-bottom justify text
 
-   07.04.92 Handles screen
-   10.04.92 Added log support
-   29.04.92 Added check on log bounds
-   07.05.92 Added PS support
-   25.06.92 Added HPGL support
-   16.07.92 Added DR2D support
+-  07.04.92 Handles screen
+-  10.04.92 Added log support
+-  29.04.92 Added check on log bounds
+-  07.05.92 Added PS support
+-  25.06.92 Added HPGL support
+-  16.07.92 Added DR2D support
 */
 void AMCBText(int   dest,
               REAL  x,
@@ -500,22 +517,24 @@ void AMCBText(int   dest,
 /************************************************************************/
 /*>void AMRText(int dest, REAL x, REAL y, REAL offset, char *text)
    ---------------------------------------------------------------
-   Input:   int   dest      Destination
-            REAL  x         X coordinate
-            REAL  y         Y coordinate
-            REAL  offset    Move left by this amount (in points)
-            char  *text     Text to print
+*//**
+
+   \param[in]     dest      Destination
+   \param[in]     x         X coordinate
+   \param[in]     y         Y coordinate
+   \param[in]     offset    Move left by this amount (in points)
+   \param[in]     *text     Text to print
 
    Right/centre justify text at position in data coordinates; offset is 
    an x-offset specified in device coordinates (pt)
    
-   06.04.92 Handles screen
-   07.04.92 Fix to positioning
-   10.04.92 Added log support
-   29.04.92 Added check on log bounds
-   07.05.92 Added PS support and offset
-   25.06.92 Added HPGL support
-   16.07.92 Added DR2D support
+-  06.04.92 Handles screen
+-  07.04.92 Fix to positioning
+-  10.04.92 Added log support
+-  29.04.92 Added check on log bounds
+-  07.05.92 Added PS support and offset
+-  25.06.92 Added HPGL support
+-  16.07.92 Added DR2D support
 */
 void AMRText(int    dest,
              REAL   x,
@@ -549,20 +568,22 @@ void AMRText(int    dest,
 /************************************************************************/
 /*>void AMLCText(int dest, REAL x, REAL y, char *text)
    ---------------------------------------------------
-   Input:   int   dest      Destination
-            REAL  x         X coordinate
-            REAL  y         Y coordinate
-            char  *text     Text to print
+*//**
+
+   \param[in]     dest      Destination
+   \param[in]     x         X coordinate
+   \param[in]     y         Y coordinate
+   \param[in]     *text     Text to print
 
    Left/centre height justify text at position in data coordinates
-   08.04.92 Handles screen
-   10.04.92 Added log support
-   29.04.92 Added check on log bounds
-   06.05.92 Fix to height centering
-   07.05.92 Added PS support
-   08.05.92 Corrected Y-pos for PS
-   25.06.92 Added HPGL support
-   16.07.92 Added DR2D support
+-  08.04.92 Handles screen
+-  10.04.92 Added log support
+-  29.04.92 Added check on log bounds
+-  06.05.92 Fix to height centering
+-  07.05.92 Added PS support
+-  08.05.92 Corrected Y-pos for PS
+-  25.06.92 Added HPGL support
+-  16.07.92 Added DR2D support
 */
 void AMLCText(int    dest,
              REAL   x,
@@ -595,24 +616,26 @@ void AMLCText(int    dest,
 /************************************************************************/
 /*>void AMCTText(int dest, REAL x, REAL y, REAL CTOffset, char *text)
    ------------------------------------------------------------------
-   Input:   int   dest      Destination
-            REAL  x         X coordinate
-            REAL  y         Y coordinate
-            REAL  CTOffset  Move down by this amount (points)
-            char  *text     Text to print
+*//**
+
+   \param[in]     dest      Destination
+   \param[in]     x         X coordinate
+   \param[in]     y         Y coordinate
+   \param[in]     CTOffset  Move down by this amount (points)
+   \param[in]     *text     Text to print
 
    Centre/top justify text at position in data coordinates. 
 
-   06.04.92 Handles screen
-   07.04.92 Fix to positioning
-   10.04.92 Added log support
-   29.04.92 Added check on log bounds
-   07.05.92 Added PS support
-   25.06.92 Added HPGL support
-   01.07.92 Changed for new versions of PSCTText() and HPGLCTText() which
+-  06.04.92 Handles screen
+-  07.04.92 Fix to positioning
+-  10.04.92 Added log support
+-  29.04.92 Added check on log bounds
+-  07.05.92 Added PS support
+-  25.06.92 Added HPGL support
+-  01.07.92 Changed for new versions of PSCTText() and HPGLCTText() which
             take offset in points.
-   16.07.92 Added DR2D support
-   07.06.93 Added CTOffset param
+-  16.07.92 Added DR2D support
+-  07.06.93 Added CTOffset param
 */
 void AMCTText(int   dest,
               REAL  x,
@@ -648,14 +671,16 @@ void AMCTText(int   dest,
 /************************************************************************/
 /*>void AMEndPlot(int dest)
    ------------------------
-   Input:   int   dest      Destination
+*//**
+
+   \param[in]     dest      Destination
 
    Close up a device after plotting.
    
-   07.05.92 Original
-   25.06.92 Added HPGL support
-   01.07.92 Added blank WriteMessage() when plotting to screen
-   16.07.92 Added DR2D support
+-  07.05.92 Original
+-  25.06.92 Added HPGL support
+-  01.07.92 Added blank WriteMessage() when plotting to screen
+-  16.07.92 Added DR2D support
 */
 void AMEndPlot(int  dest)
 {
@@ -678,8 +703,10 @@ void AMEndPlot(int  dest)
 /************************************************************************/
 /*>int PS2HPGLFont(char *font)
    ---------------------------
-   Input:   char  *font    PostScript font name
-   Returns: int            HPGL font number
+*//**
+
+   \param[in]     *font    PostScript font name
+   \return                    HPGL font number
 
    Takes the PostScript font name and works out the best HPGL equivalent
    from a translation table. On the first call, the table is read from 
@@ -691,7 +718,7 @@ void AMEndPlot(int  dest)
    If the requested translation is unsuccessful, 0 will be returned as 
    the font number.
    
-   06.07.93 Original    By: ACRM
+-  06.07.93 Original    By: ACRM
 */
 int PS2HPGLFont(char *font)
 {
@@ -793,14 +820,16 @@ int PS2HPGLFont(char *font)
 /************************************************************************/
 /*>char *SimplifyText(char *string)
    --------------------------------
-   Input:   char  *string   String containing control codes
-   Returns: char  *         String with control codes removed
+*//**
+
+   \param[in]     *string   String containing control codes
+   \return                    String with control codes removed
 
    Removes control codes from a string for screen display. Also used for
    calculating string length. The returned string is stored as static
    within the routine
 
-   06.05.92 Original
+-  06.05.92 Original
 */
 char *SimplifyText(char *string)
 {

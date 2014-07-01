@@ -93,17 +93,19 @@
 /************************************************************************/
 /*>int chindex(char *string, char ch)
    ----------------------------------
-   Input:      char  *string        A string
-                     ch             A character for which to search
-   Returns:    int                  The offset of ch in string.
+*//**
+
+   \param[in]     *string        A string
+   \param[in]     ch             A character for which to search
+   \return                          The offset of ch in string.
    
    Returns the offset of a character in a string. -1 if not found. This is
    used in a similar manner to strchr(), but gives an offset in the string
    rather than a pointer to the character.
 
-   10.02.91 Original
-   28.05.92 ANSIed
-   06.10.93 Changed name to chindex() to avoid UNIX name clash
+-  10.02.91 Original
+-  28.05.92 ANSIed
+-  06.10.93 Changed name to chindex() to avoid UNIX name clash
 */
 int chindex(char  *string,
             char  ch)

@@ -87,15 +87,17 @@
 /************************************************************************/
 /*>PDB *FindRawAtomInRes(PDB *pdb, char *atnam_in)
    -----------------------------------------------
-   Input:   PDB    *pdb         The beginning of a residue in a PDB 
+*//**
+
+   \param[in]     *pdb         The beginning of a residue in a PDB 
                                 linked list
-            char   *atnam_in    An atom name to search for (doesn't need
+   \param[in]     *atnam_in    An atom name to search for (doesn't need
                                 to be space-padded)
-   Returns: PDB    *            Pointer to required atom, NULL if not
+   \return                         Pointer to required atom, NULL if not
                                 found
 
-   28.02.01 Original based on FindAtomInRes()  By: ACRM
-   03.06.05 Now compares 4 characters rather than 5
+-  28.02.01 Original based on FindAtomInRes()  By: ACRM
+-  03.06.05 Now compares 4 characters rather than 5
 */
 PDB *FindRawAtomInRes(PDB *pdb, char *atnam_in)
 {

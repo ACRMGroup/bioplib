@@ -75,10 +75,12 @@
 /************************************************************************/
 /*>AA *InsertNextResiduesInAAList(AA *a, char res, int nres)
    ---------------------------------------------------------
+*//**
+
    Inputs:   AA    *a    Sequence linked list
              char  res   Residue to insert
              int   nres  Number of residues to insert
-   Returns:  AA *        Pointer to the residue that has just been
+   \return                  Pointer to the residue that has just been
                          inserted
 
    Inserts a set of identical residues after the current position in
@@ -86,7 +88,7 @@
    been inserted so this can be called again on the returned aa to
    insert another aa
 
-   21.08.06 Original   By: ACRM
+-  21.08.06 Original   By: ACRM
 */
 AA *InsertNextResiduesInAAList(AA *a, char res, int nres)
 {
@@ -102,16 +104,18 @@ AA *InsertNextResiduesInAAList(AA *a, char res, int nres)
 /************************************************************************/
 /*>AA *InsertNextResidueInAAList(AA *a, char res)
    ----------------------------------------------
+*//**
+
    Inputs:   AA    *a    Sequence linked list
              char  res   Residue to insert
-   Returns:  AA *        Pointer to the residue that has just been
+   \return                  Pointer to the residue that has just been
                          inserted
 
    Inserts a residues after the current position in the linked list.
    The returned value is the residue which has been inserted so this
    can be called again on the returned aa to insert another aa
 
-   21.08.06 Original   By: ACRM
+-  21.08.06 Original   By: ACRM
 */
 AA *InsertNextResidueInAAList(AA *a, char res)
 {
@@ -142,12 +146,14 @@ AA *InsertNextResidueInAAList(AA *a, char res)
 /************************************************************************/
 /*>char *BuildSeqFromAAList(AA *aa)
    --------------------------------
+*//**
+
    Inputs:   AA    *aa   Sequence linked list
-   Returns:  char *      Sequence as a string (malloc'd)
+   \return                Sequence as a string (malloc'd)
 
    Converts the linked list back into a string which is malloc'd
 
-   21.08.06 Original   By: ACRM
+-  21.08.06 Original   By: ACRM
 */
 char *BuildSeqFromAAList(AA *aa)
 {
@@ -172,10 +178,12 @@ char *BuildSeqFromAAList(AA *aa)
 /************************************************************************/
 /*>AA *InsertResidueInAAListAt(AA *aa, char res, int pos)
    ------------------------------------------------------
+*//**
+
    Inputs:   AA    *a    Sequence linked list
              char  res   Residue to insert
              int   pos   Position at which to insert (from 1...)
-   Returns:  AA *        Updated sequence linked list
+   \return                  Updated sequence linked list
 
    Inserts a residue after the specified position in the
    list. Residues are numbered from 1. If the position is > length of
@@ -183,8 +191,8 @@ char *BuildSeqFromAAList(AA *aa)
    is zero, it will be at the start of the list in which case the
    return value for the list will be different from the input value.
 
-   21.08.06 Original   By: ACRM
-   18.06.08 Set inserted residue's flag to FALSE.  By: CTP
+-  21.08.06 Original   By: ACRM
+-  18.06.08 Set inserted residue's flag to FALSE.  By: CTP
 */
 AA *InsertResidueInAAListAt(AA *aa, char res, int pos)
 {
@@ -243,11 +251,13 @@ AA *InsertResidueInAAListAt(AA *aa, char res, int pos)
 /************************************************************************/
 /*>AA *InsertResiduesInAAListAt(AA *aa, char res, int nres, int pos)
    -----------------------------------------------------------------
+*//**
+
    Inputs:   AA    *aa   Sequence linked list
              char  res   Residue to insert
              int   nres  Number of residues to insert
              int   pos   Position at which to insert (from 1...)
-   Returns:  AA *        Updated sequence linked list
+   \return                  Updated sequence linked list
 
    Inserts a set of residues after the specified position in the
    list. Residues are numbered from 1. If the position is > length of
@@ -255,7 +265,7 @@ AA *InsertResidueInAAListAt(AA *aa, char res, int pos)
    is zero, it will be at the start of the list in which case the
    return value for the list will be different from the input value.
 
-   21.08.06 Original   By: ACRM
+-  21.08.06 Original   By: ACRM
 */
 AA *InsertResiduesInAAListAt(AA *aa, char res, int nres, int pos)
 {
@@ -271,12 +281,14 @@ AA *InsertResiduesInAAListAt(AA *aa, char res, int nres, int pos)
 /************************************************************************/
 /*>AA *BuildAAList(char *seq)
    --------------------------
+*//**
+
    Inputs:   char  *seq      The sequence as a string
-   Returns:  AA *            A linked list representation
+   \return                      A linked list representation
 
    Converts a sequence string into a linked list
 
-   21.08.06 Original   By: ACRM
+-  21.08.06 Original   By: ACRM
 */
 AA *BuildAAList(char *seq)
 {
@@ -312,15 +324,17 @@ AA *BuildAAList(char *seq)
 /************************************************************************/
 /*>int FindAAListOffsetByResnum(AA *aa, int resnum)
    ------------------------------------------------
+*//**
+
    Inputs:   AA    *aa     Sequence linked list
              int   resnum  Residue number
-   Returns:  int           Linked list offset
+   \return                   Linked list offset
 
    Searches the linked list of the specified resnum (i.e. the original
    residue number in the sequence before any insertions were made) and 
    returns the position of that residue in the list (numbered from 1)
 
-   21.08.06 Original   By: ACRM
+-  21.08.06 Original   By: ACRM
 */
 int FindAAListOffsetByResnum(AA *aa, int resnum)
 {
@@ -344,15 +358,17 @@ int FindAAListOffsetByResnum(AA *aa, int resnum)
 /************************************************************************/
 /*>AA *FindAAListItemByResnum(AA *aa, int resnum)
    ----------------------------------------------
+*//**
+
    Inputs:   AA    *aa     Sequence linked list
              int   resnum  Residue number
-   Returns:  AA *          Linked list item
+   \return                    Linked list item
 
    Searches the linked list of the specified resnum (i.e. the original
    residue number in the sequence before any insertions were made) and 
    returns a pointer to that item in the list.
 
-   21.08.06 Original   By: ACRM
+-  21.08.06 Original   By: ACRM
 */
 AA *FindAAListItemByResnum(AA *aa, int resnum)
 {
@@ -371,13 +387,15 @@ AA *FindAAListItemByResnum(AA *aa, int resnum)
 /************************************************************************/
 /*>void SetAAListFlagByResnum(AA *aa, int resnum)
    ----------------------------------------------
+*//**
+
    Inputs:   AA    *aa    Sequence linked list
 
    Searches the linked list of the specified resnum (i.e. the original
    residue number in the sequence before any insertions were made) and 
    sets the flag in that item in the linked list
 
-   21.08.06 Original   By: ACRM
+-  21.08.06 Original   By: ACRM
 */
 void SetAAListFlagByResnum(AA *aa, int resnum)
 {
@@ -390,15 +408,17 @@ void SetAAListFlagByResnum(AA *aa, int resnum)
 /************************************************************************/
 /*>char *BuildFlagSeqFromAAList(AA *aa, char ch)
    ---------------------------------------------
+*//**
+
    Inputs:   AA    *aa    Sequence linked list
              char  ch     Character to use in the sequence
-   Returns:  char  *      Sequence string (malloc'd)
+   \return                 Sequence string (malloc'd)
 
    Builds a sequence string with blanks except where the flag in the
    sequence structure is set. At these positions the character specified
    in ch is used instead.
 
-   21.08.06 Original   By: ACRM
+-  21.08.06 Original   By: ACRM
 */
 char *BuildFlagSeqFromAAList(AA *aa, char ch)
 {
@@ -423,12 +443,14 @@ char *BuildFlagSeqFromAAList(AA *aa, char ch)
 /************************************************************************/
 /*>int GetAAListLen(AA *aa)
    ------------------------
+*//**
+
    Inputs:   AA    *a    Sequence linked list
-   Returns:  int         Length of sequence linked list
+   \return                 Length of sequence linked list
 
    Returns the number of items in the linked list
 
-   21.08.06 Original   By: ACRM
+-  21.08.06 Original   By: ACRM
 */
 int GetAAListLen(AA *aa)
 {

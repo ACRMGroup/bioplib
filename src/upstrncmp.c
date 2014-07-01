@@ -91,15 +91,17 @@
 /************************************************************************/
 /*>int upstrncmp(char *word1, char *word2, int ncomp)
    --------------------------------------------------
-   Input:   char *word1     First word
-            char *word2     Second word
-            int  ncomp      Number of characters to compare
-   Returns: int             0 if strings match or offset of first 
+*//**
+
+   \param[in]     *word1     First word
+   \param[in]     *word2     Second word
+   \param[in]     ncomp      Number of characters to compare
+   \return                     0 if strings match or offset of first 
                             mismatched character
 
    Like strncmp(), but upcases each character before comparison
 
-   20.04.94 Original   By: ACRM
+-  20.04.94 Original   By: ACRM
 */
 int upstrncmp(char *word1, char *word2, int ncomp)
 {

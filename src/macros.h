@@ -209,8 +209,8 @@
    as item->next). One can therefore simply call the routine N times
    to delete N items. If (start) or (item) is NULL, does nothing
 
-   16.02.95 Original    By: ACRM
-   10.04.08 Fixed position of break. By: CTP
+-  16.02.95 Original    By: ACRM
+-  10.04.08 Fixed position of break. By: CTP
 */
 #define DELETE(x, y, z)                                                  \
 do {                                                                     \
@@ -255,7 +255,7 @@ do {                                                                     \
    as item->next). One can therefore simply call the routine N times
    to delete N items. If (start) or (item) is NULL, does nothing
 
-   13.03.99 Original    By: ACRM
+-  13.03.99 Original    By: ACRM
 */
 #define DELETEDOUBLE(s, x, y)                                            \
         do { y *_deleteandnext_macro_temp;                               \
@@ -277,7 +277,7 @@ do {                                                                     \
    This is used when wanting to look at the previous item in a singly
    linked list.
 
-   26.01.06 Original    By: ACRM
+-  26.01.06 Original    By: ACRM
 */
 #define FINDPREV(p, s, l)                                                \
         do { p = (s);                                                    \
@@ -347,7 +347,7 @@ do {  int _kts_macro_i;                                                 \
 
 /* Tests for the presence of (y) in array (x) of length (l). The result
    (TRUE or FALSE) is returned in (r)
-   02.08.95 Original
+-  02.08.95 Original
 */
 #define TESTINARRAY(x, l, y, r)                                          \
 do {                                                                     \
@@ -362,7 +362,7 @@ do {                                                                     \
 
 /* Finds offset of item (y) in array (x) of length (l). The result
    is returned in (r) which is -1 if item not found
-   02.08.95 Original
+-  02.08.95 Original
 */
 #define FINDINARRAY(x, l, y, r)                                          \
 do {                                                                     \
@@ -387,10 +387,12 @@ do {                                                                     \
 /************************************************************************/
 /*>PADCHARMINTERM(string, char, length)
    ------------------------------------
+*//**
+
    Pads a string to a specified length using char and terminates at that 
    point
 
-   13.03.99 Original   By: ACRM
+-  13.03.99 Original   By: ACRM
 */
 #define PADCHARMINTERM(s, c, l)                                          \
 do {  int _padminterm_macro_i;                                           \
@@ -406,9 +408,11 @@ do {  int _padminterm_macro_i;                                           \
 /************************************************************************/
 /*>DOTIFY(char *str)
    -----------------
+*//**
+
    Macro to replace ' ' in a string with '.'
 
-   21.04.99 Original   By: ACRM
+-  21.04.99 Original   By: ACRM
 */
 #define DOTIFY(str)                                                      \
 do {                                                                     \
@@ -422,9 +426,11 @@ do {                                                                     \
 /************************************************************************/
 /*>DEDOTIFY(char *str)
    -------------------
+*//**
+
    Macro to replace '.' in a string with ' '
 
-   21.04.99 Original   By: ACRM
+-  21.04.99 Original   By: ACRM
 */
 #define DEDOTIFY(str)                                                    \
 do {                                                                     \
@@ -439,9 +445,11 @@ do {                                                                     \
 /************************************************************************/
 /*>SUBSCHAR(s, x, y)
    -----------------
+*//**
+
    Substitute character x by character y in string s
 
-   21.05.99 Original
+-  21.05.99 Original
 */
 #define SUBSCHAR(s, x, y)                                                \
 do {  char *_subschar_macro_ch = (s);                                    \
@@ -455,7 +463,7 @@ do {  char *_subschar_macro_ch = (s);                                    \
 
 
 /* Bit-wise operators
-   02.08.95 Original
+-  02.08.95 Original
 */
 #define SET(x, y)   (x) |= (y)
 #define UNSET(x, y) (x) &= (~(y))

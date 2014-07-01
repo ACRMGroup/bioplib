@@ -71,9 +71,9 @@
             REAL xk,REAL yk,REAL zk,REAL xl,REAL yl,REAL zl)
    ---------------------------------------------------------
    Input:   REAL    xi,yi,zi    Input coordinates
-                    xj,yj,zj
-                    xk,yk,zk
-                    xl,yl,zl
+   Input:           xj,yj,zj
+   Input:           xk,yk,zk
+   Input:           xl,yl,zl
    Returns: REAL                The torsion angle between the 4 atoms
 
    Calculates the torsion angle described by 4 sets of coordinates.

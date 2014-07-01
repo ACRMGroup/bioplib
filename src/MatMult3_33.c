@@ -76,14 +76,16 @@
 /************************************************************************/
 /*>void MatMult3_33(VEC3F vecin, REAL matin[3][3], VEC3F *vecout)
    -------------------------------------------------------------
-   Input:   VEC3F vecin        Vector to be multiplied
-            REAL  matin[3][3]  Rotation matrix
-   Output:  VEC3F *vecout      Output multiplied vector
+*//**
+
+   \param[in]     vecin        Vector to be multiplied
+   \param[in]     matin        Rotation matrix
+   \param[out]    *vecout      Output multiplied vector
 
    Multiply a 3-vector by a 3x3 matrix
 
-   30.09.92 Original
-   03.08.93 Changed multiplication to standard direction
+-  30.09.92 Original
+-  03.08.93 Changed multiplication to standard direction
 */
 void MatMult3_33(VEC3F vecin, 
                  REAL  matin[3][3], 

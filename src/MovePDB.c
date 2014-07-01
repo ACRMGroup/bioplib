@@ -73,17 +73,19 @@
 /************************************************************************/
 /*>BOOL MovePDB(PDB *move, PDB **from, PDB **to)
    ---------------------------------------------
-   Input:   PDB    *move     PDB record to be moved
-   I/O:     PDB    **from    Start of PDB linked list containing record
-            PDB    **to      Start of output linked list
-   Returns: BOOL             Success?
+*//**
+
+   \param[in]     *move     PDB record to be moved
+   \param[in,out] **from    Start of PDB linked list containing record
+   \param[in,out] **to      Start of output linked list
+   \return                     Success?
 
    Moves a PDB record from one linked list to another. from and to should
    point to the start of the 2 lists. If the to list hasn't been started,
    to should be NULL. Returns TRUE if moved, FALSE otherwise.
 
-   13.05.92 Original
-   19.06.92 Changed p=*to, etc. for crappy compilers
+-  13.05.92 Original
+-  19.06.92 Changed p=*to, etc. for crappy compilers
 */
 BOOL MovePDB(PDB *move, PDB **from, PDB **to)
 {

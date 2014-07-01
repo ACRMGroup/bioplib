@@ -95,13 +95,15 @@
 /************************************************************************/
 /*>BOOL InStringList(STRINGLIST *StringList, char *string)
    -------------------------------------------------------
-   Input:     STRINGLIST   *StringList    Linked list of strings
-              char         *string        String for which to search
-   Returns:   BOOL                        Is string found?
+*//**
+
+   \param[in]     *StringList    Linked list of strings
+   \param[in]     *string        String for which to search
+   \return                                Is string found?
 
    Searches a string list for an *exact match* with the specified string.
 
-   06.11.95 Original    By: ACRM
+-  06.11.95 Original    By: ACRM
 */
 BOOL InStringList(STRINGLIST *StringList, char *string)
 {

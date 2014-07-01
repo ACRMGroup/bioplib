@@ -66,21 +66,21 @@
    Usage:
    ======
    parse(comline,nkeys,keywords,floatparam,strparam)
-   Input:      char  *comline       A command line string to parse
-               int   nkeys          Number of keywords
-               KeyWd *keywords      Array of keyword structures
-   Output:     REAL  *floatparam    Array of returned strings
-               char  **strparam     Array of pointers to returned strings
-   Returns:    int                  Index of found command or error flag
+   \param[in]     *comline       A command line string to parse
+   \param[in]     nkeys          Number of keywords
+   \param[in]     *keywords      Array of keyword structures
+   \param[out]    *floatparam    Array of returned strings
+   \param[out]    **strparam     Array of pointers to returned strings
+   \return                          Index of found command or error flag
 
    mparse(comline,nkeys,keywords,floatparam,strparam,nparam)
-   Input:      char   *comline       A command line string to parse
-               int    nkeys          Number of keywords
-               MKeyWd *keywords      Array of keyword structures
-   Output:     REAL   *floatparam    Array of returned strings
-               char   **strparam     Array of pointers to returned strings
-               int    *nparam        Number of parameters found
-   Returns:    int                   Index of found command or error flag
+   \param[in]     *comline       A command line string to parse
+   \param[in]     nkeys          Number of keywords
+   \param[in]     *keywords      Array of keyword structures
+   \param[out]    *floatparam    Array of returned strings
+   \param[out]    **strparam     Array of pointers to returned strings
+   \param[out]    *nparam        Number of parameters found
+   \return                           Index of found command or error flag
 
 
 **************************************************************************
@@ -132,20 +132,22 @@
 /*>int parse(char *comline, int nkeys, KeyWd *keywords,
              REAL *floatparam, char **strparam)
    ----------------------------------------------------
-   Input:      char  *comline       A command line string to parse
-               int   nkeys          Number of keywords
-               KeyWd *keywords      Array of keyword structures
-   Output:     REAL  *floatparam    Array of returned strings
-               char  **strparam     Array of pointers to returned strings
-   Returns:    int                  Index of found command or error flag
+*//**
+
+   \param[in]     *comline       A command line string to parse
+   \param[in]     nkeys          Number of keywords
+   \param[in]     *keywords      Array of keyword structures
+   \param[out]    *floatparam    Array of returned strings
+   \param[out]    **strparam     Array of pointers to returned strings
+   \return                          Index of found command or error flag
 
    Keyword-based command parser. Fixed number of parameters.
 
-   11.07.90 Original    By: ACRM
-   22.04.93 Tidied comments, etc. Corrected NULL to 0.
-   11.03.94 Added $ line handling
-   08.10.99 Initialise nlett
-   28.02.11 Added # for comments
+-  11.07.90 Original    By: ACRM
+-  22.04.93 Tidied comments, etc. Corrected NULL to 0.
+-  11.03.94 Added $ line handling
+-  08.10.99 Initialise nlett
+-  28.02.11 Added # for comments
 */
 int parse(char  *comline,
           int   nkeys,
@@ -229,10 +231,12 @@ int parse(char  *comline,
 /************************************************************************/
 /*>int match(char *comstring, char *string2, int *nletters)
    --------------------------------------------------------
-   Input:      char  *comstring     A character string
-               char  *string2       A second string
-   Output:     int   *nletters      Number of letters matched
-   Returns:    int                  0 String mismatch
+*//**
+
+   \param[in]     *comstring     A character string
+   \param[in]     *string2       A second string
+   \param[out]    *nletters      Number of letters matched
+   \return                          0 String mismatch
                                     1 First string finished first
                                     2 Second string finished first
 
@@ -242,8 +246,8 @@ int parse(char  *comline,
    space or NULL have a mismatch. The routine calls StringToUpper()
    on `comstring' before the comparison.
 
-   11.07.90 Original    By: ACRM
-   22.04.93 Tidied comments, etc. Added check on malloc and corrected
+-  11.07.90 Original    By: ACRM
+-  22.04.93 Tidied comments, etc. Added check on malloc and corrected
             calls to free()
 */
 int match(char *comstring,
@@ -286,16 +290,18 @@ int match(char *comstring,
 /************************************************************************/
 /*>int GetString(char *command, char *strparam)
    --------------------------------------------
-   Input:      char  *command       A character string
-   Output:     char  *strparam      Returned character string
-   Returns:    int                  Number of characters pulled out
+*//**
+
+   \param[in]     *command       A character string
+   \param[out]    *strparam      Returned character string
+   \return                          Number of characters pulled out
                                     of the command string
 
    This routine returns the first space-delimited group of characters
    from character string `command'
 
-   11.07.90 Original    By: ACRM
-   22.04.93 Tidied comments, etc. Changed toggle method
+-  11.07.90 Original    By: ACRM
+-  22.04.93 Tidied comments, etc. Changed toggle method
 */
 int GetString(char *command,
               char *strparam)
@@ -335,18 +341,20 @@ int GetString(char *command,
 /************************************************************************/
 /*>int GetParam(char *command, REAL *value, int *nletters)
    -------------------------------------------------------
-   Input:      char  *command       A character string
-   Output:     REAL  *value         Returned float value
-               int   *nletters      Number of charcters pulled out
+*//**
+
+   \param[in]     *command       A character string
+   \param[out]    *value         Returned float value
+   \param[out]    *nletters      Number of charcters pulled out
                                     of the command string
-   Returns:    int                  0 If error
+   \return                          0 If error
                                     1 If OK
 
    This routine extracts the first space-delimited number from the
    `command' character string.
 
-   11.07.90 Original    By: ACRM
-   22.04.93 Tidied comments, etc. Corrected NULL to 0
+-  11.07.90 Original    By: ACRM
+-  22.04.93 Tidied comments, etc. Corrected NULL to 0
 */
 int GetParam(char  *command,
              REAL  *value,
@@ -366,19 +374,21 @@ int GetParam(char  *command,
 /*>int mparse(char *comline, int nkeys, MKeyWd *keywords,
               REAL *floatparam, char **strparam, int *nparam)
    ----------------------------------------------------------
-   Input:      char   *comline       A command line string to parse
-               int    nkeys          Number of keywords
-               MKeyWd *keywords      Array of keyword structures
-   Output:     REAL   *floatparam    Array of returned strings
-               char   **strparam     Array of pointers to returned strings
-               int    *nparam        Number of parameters found
-   Returns:    int                   Index of found command or error flag
+*//**
+
+   \param[in]     *comline       A command line string to parse
+   \param[in]     nkeys          Number of keywords
+   \param[in]     *keywords      Array of keyword structures
+   \param[out]    *floatparam    Array of returned strings
+   \param[out]    **strparam     Array of pointers to returned strings
+   \param[out]    *nparam        Number of parameters found
+   \return                           Index of found command or error flag
 
    As parse(), but allows variable number of parameters to each keyword.
 
-   23.02.94 Original based on parse()   By: ACRM
-   11.03.94 Added $ line handling
-   08.10.99 Initialise nlett to 0
+-  23.02.94 Original based on parse()   By: ACRM
+-  11.03.94 Added $ line handling
+-  08.10.99 Initialise nlett to 0
 */
 int mparse(char   *comline,
            int    nkeys,

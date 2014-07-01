@@ -75,14 +75,16 @@
 /************************************************************************/
 /*>void GetCofGPDBRange(PDB *start, PDB *stop, VEC3F *cg)
    ------------------------------------------------------
-   Input:    PDB   *start     Start of region of interest in PDB list
-             PDB   *stop      Beginning of next residue
-   Output:   VEC3F *cg        Centre of geometry of specified region
+*//**
+
+   \param[in]     *start     Start of region of interest in PDB list
+   \param[in]     *stop      Beginning of next residue
+   \param[out]    *cg        Centre of geometry of specified region
 
    Find CofG of a range in a PDB linked list, ignoring NULL coordinates
    (specified as all coords==9999.000)
 
-   03.10.94 Original    By: ACRM
+-  03.10.94 Original    By: ACRM
 */
 void GetCofGPDBRange(PDB *start, PDB *stop, VEC3F *cg)
 {

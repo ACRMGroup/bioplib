@@ -92,23 +92,25 @@
 /*>int ReadRawPIR(FILE *fp, char **seqs, int maxchain, BOOL upcase,
                   SEQINFO *seqinfo, BOOL *error)
    ------------------------------------------------------------------
-   Input:   FILE    *fp      File pointer
-            int     maxchain Max number of chains to read. This is the
+*//**
+
+   \param[in]     *fp      File pointer
+   \param[in]     maxchain Max number of chains to read. This is the
                              dimension of the seqs array.
                              N.B. THIS SHOULD BE AT LEAST 1 MORE THAN
                              THE EXPECTED MAXIMUM NUMBER OF SEQUENCES
-            BOOL    upcase   Should lower-case letters be upcased?
-   Output:  char    **seqs   Array of character pointers which will
+   \param[in]     upcase   Should lower-case letters be upcased?
+   \param[out]    **seqs   Array of character pointers which will
                              be filled in with sequence information.
                              Memory will be allocated for any sequence
                              length.
-            SEQINFO *seqinfo This structure will be filled in with
+   \param[out]    *seqinfo This structure will be filled in with
                              extra information about the sequence.
                              Header & title information and details
                              of any punctuation.
-            BOOL    *error   TRUE if an error occured (e.g. memory
+   \param[out]    *error   TRUE if an error occured (e.g. memory
                              allocation)
-   Returns: int              Number of chains in this sequence.
+   \return                      Number of chains in this sequence.
                              0 if file ended, or no valid sequence
                              entries found.
 
@@ -144,11 +146,11 @@
    Text lines: Text lines after an entry (beginning with R;, C;, A;, 
    N; or F;) are ignored.
 
-   28.02.95 Original based on ReadPIR()    By: ACRM
-   13.03.95 chpos++ had got moved wrongly when adapting from ReadPIR().
+-  28.02.95 Original based on ReadPIR()    By: ACRM
+-  13.03.95 chpos++ had got moved wrongly when adapting from ReadPIR().
             Put it back fixing handling of text lines.
-   26.07.95 Removed unused variables
-   06.02.96 Remove any trailing spaces
+-  26.07.95 Removed unused variables
+-  06.02.96 Remove any trailing spaces
 */
 int ReadRawPIR(FILE *fp, char **seqs, int maxchain, BOOL upcase,
                SEQINFO *seqinfo, BOOL *error)

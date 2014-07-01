@@ -94,14 +94,16 @@
 /************************************************************************/
 /*>void StringToLower(char *string1, char *string2)
    ------------------------------------------------
-   Input:      char  *string1       A character string
-   Output:     char  *string2       Lower case version of string1
+*//**
+
+   \param[in]     *string1       A character string
+   \param[out]    *string2       Lower case version of string1
    
    This routine converts a lower or mixed case string to lower case.
    
-   06.02.91 Original
-   28.05.92 ANSIed
-   07.01.93 Checks case before converting for SysV
+-  06.02.91 Original
+-  28.05.92 ANSIed
+-  07.01.93 Checks case before converting for SysV
 */
 void StringToLower(char *string1,
                    char *string2)

@@ -99,25 +99,27 @@
 /*>int ReadPIR(FILE *fp, BOOL DoInsert, char **seqs, int maxchain, 
                SEQINFO *seqinfo, BOOL *punct, BOOL *error)
    ------------------------------------------------------------------
-   Input:   FILE    *fp      File pointer
-            BOOL    DoInsert TRUE Read - characters into the sequence
+*//**
+
+   \param[in]     *fp      File pointer
+   \param[in]     DoInsert TRUE Read - characters into the sequence
                              FALSE Skip - characters
-            int     maxchain Max number of chains to read. This is the
+   \param[in]     maxchain Max number of chains to read. This is the
                              dimension of the seqs array.
                              N.B. THIS SHOULD BE AT LEAST 1 MORE THAN
                              THE EXPECTED MAXIMUM NUMBER OF SEQUENCES
-   Output:  char    **seqs   Array of character pointers which will
+   \param[out]    **seqs   Array of character pointers which will
                              be filled in with sequence information.
                              Memory will be allocated for any sequence
                              length.
-            SEQINFO *seqinfo This structure will be filled in with
+   \param[out]    *seqinfo This structure will be filled in with
                              extra information about the sequence.
                              Header & title information and details
                              of any punctuation.
-            BOOL    *punct   TRUE if any punctuation found.
-            BOOL    *error   TRUE if an error occured (e.g. memory
+   \param[out]    *punct   TRUE if any punctuation found.
+   \param[out]    *error   TRUE if an error occured (e.g. memory
                              allocation)
-   Returns: int              Number of chains in this sequence.
+   \return                      Number of chains in this sequence.
                              0 if file ended, or no valid sequence
                              entries found.
 
@@ -153,16 +155,16 @@
    Text lines: Text lines after an entry (beginning with R;, C;, A;, 
    N; or F;) are ignored.
 
-   02.03.94 Original    By: ACRM
-   03.03.94 Added / and = handling, upcasing, strcpy()->strncpy(),
+-  02.03.94 Original    By: ACRM
+-  03.03.94 Added / and = handling, upcasing, strcpy()->strncpy(),
             header lines without semi-colon, title lines without -
-   07.03.94 Added sequence insertion handling and DoInsert parameter.
-   11.05.94 buffer is now 504 characters (V38.0 spec allows 500 chars)
+-  07.03.94 Added sequence insertion handling and DoInsert parameter.
+-  11.05.94 buffer is now 504 characters (V38.0 spec allows 500 chars)
             Removes leading spaces from entry code and terminates at
             first space (V39.0 spec allows comments after the code).
-   28.02.95 Added check that buffer doesn't overflow. Check on nseq
+-  28.02.95 Added check that buffer doesn't overflow. Check on nseq
             changed to >=
-   06.02.96 Removes trailing spaces from comment line
+-  06.02.96 Removes trailing spaces from comment line
 */
 int ReadPIR(FILE *fp, BOOL DoInsert, char **seqs, int maxchain, 
             SEQINFO *seqinfo, BOOL *punct, BOOL *error)

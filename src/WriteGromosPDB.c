@@ -46,8 +46,8 @@
    Usage:
    ======
    WritePDB(fp, pdb)
-   Input:   FILE  *fp      A pointer to the file to write
-            PDB   *pdb     The start of the PDB linked list.
+   \param[in]     *fp      A pointer to the file to write
+   \param[in]     *pdb     The start of the PDB linked list.
 
 **************************************************************************
 
@@ -76,18 +76,20 @@
 /************************************************************************/
 /*>void WriteGromosPDB(FILE *fp, PDB *pdb)
    ---------------------------------------
-   Input:   FILE *fp   PDB file pointer to be written
-            PDB  *pdb  PDB linked list to write
+*//**
+
+   \param[in]     *fp   PDB file pointer to be written
+   \param[in]     *pdb  PDB linked list to write
 
    Write a PDB linked list by calls to WritePDBRecord()
 
-   08.03.89 Original
-   01.06.92 ANSIed and autodoc'd
-   10.06.93 Uses NEXT macro; void type
-   08.07.93 Added insertion of TER cards
-   22.02.94 And a TER card at the end of the file
-   15.02.01 This is the old WritePDB()
-   04.02.14 Use CHAINMATCH macro. By: CTP
+-  08.03.89 Original
+-  01.06.92 ANSIed and autodoc'd
+-  10.06.93 Uses NEXT macro; void type
+-  08.07.93 Added insertion of TER cards
+-  22.02.94 And a TER card at the end of the file
+-  15.02.01 This is the old WritePDB()
+-  04.02.14 Use CHAINMATCH macro. By: CTP
 */
 void WriteGromosPDB(FILE *fp,
                     PDB  *pdb)
@@ -113,18 +115,20 @@ void WriteGromosPDB(FILE *fp,
 /************************************************************************/
 /*>void WriteGromosPDBRecord(FILE *fp, PDB *pdb)
    ---------------------------------------------
-   Input:   FILE  *fp     PDB file pointer to be written
-            PDB   *pdb    PDB linked list record to write
+*//**
+
+   \param[in]     *fp     PDB file pointer to be written
+   \param[in]     *pdb    PDB linked list record to write
 
    Write a PDB record
 
-   08.03.89 Original
-   28.03.90 Changed to match ReadPDB() V1.2 for column widths
-   01.06.92 ANSIed and autodoc'd
-   10.06.93 void type
-   22.06.93 Changed to %lf. Ljust strings
-   11.03.94 %lf back to %f (!)
-   12.02.01 This is the old WritePDBRecord()
+-  08.03.89 Original
+-  28.03.90 Changed to match ReadPDB() V1.2 for column widths
+-  01.06.92 ANSIed and autodoc'd
+-  10.06.93 void type
+-  22.06.93 Changed to %lf. Ljust strings
+-  11.03.94 %lf back to %f (!)
+-  12.02.01 This is the old WritePDBRecord()
 */
 void WriteGromosPDBRecord(FILE *fp,
                           PDB  *pdb)

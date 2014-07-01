@@ -85,15 +85,17 @@
 /************************************************************************/
 /*>BOOL CopyPDBCoords(PDB *out, PDB *in)
    -------------------------------------
-   Input:   PDB  *in      Input PDB linked list
-   Output:  PDB  *out     Output PDB linked list
-   Returns: BOOL          Success?
+*//**
+
+   \param[in]     *in      Input PDB linked list
+   \param[out]    *out     Output PDB linked list
+   \return                 Success?
 
    Applies the coordinates of `in' to `out'. Assumes that the structures
    are equivalent with identical atom ordering. Makes a simple check on
    resnam and atnam at each position.
 
-   11.10.95 Original   By: ACRM
+-  11.10.95 Original   By: ACRM
 */
 BOOL CopyPDBCoords(PDB *out, PDB *in)
 {

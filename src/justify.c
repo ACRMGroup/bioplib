@@ -69,11 +69,13 @@
 /************************************************************************/
 /*>void RightJustify(char *string)
    -------------------------------
-   I/O:     char    *string           A string 
+*//**
+
+   \param[in,out] *string           A string 
 
    Right justifies a string in place
 
-   30.05.02 Original   By: ACRM
+-  30.05.02 Original   By: ACRM
 */
 void RightJustify(char *string)
 {

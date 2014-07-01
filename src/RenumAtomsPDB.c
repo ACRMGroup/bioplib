@@ -71,10 +71,12 @@
 /************************************************************************/
 /*>void RenumAtomsPDB(PDB *pdb)
    ----------------------------
-   I/O:   PDB  *pdb   PDB linked list to renumber
+*//**
+
+   \param[in,out] *pdb   PDB linked list to renumber
 
    Renumber the atoms throughout a PDB linked list
-   01.08.93 Original
+-  01.08.93 Original
 */
 void RenumAtomsPDB(PDB *pdb)
 {

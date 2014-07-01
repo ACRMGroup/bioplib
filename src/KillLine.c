@@ -92,14 +92,16 @@
 /************************************************************************/
 /*>void KillLine(FILE *fp)
    -----------------------
-   Input:      FILE  *fp            A file pointer
+*//**
+
+   \param[in]     *fp            A file pointer
    
    This routine reads characters from a file till it reaches a '\n' or 
    the end of file.
 
-   08.02.91 Original
-   28.05.92 ANSIed
-   18.03.94 getc() -> fgetc()
+-  08.02.91 Original
+-  28.05.92 ANSIed
+-  18.03.94 getc() -> fgetc()
 */
 void KillLine(FILE *fp)
 {

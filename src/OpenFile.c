@@ -98,14 +98,16 @@
 /************************************************************************/
 /*>FILE *OpenFile(char *filename, char *envvar, char *mode, BOOL *noenv)
    ---------------------------------------------------------------------
-   Input:     char    *filename     Filename to be opened
-              char    *envvar       Unix/MS-DOS environment variable
+*//**
+
+   \param[in]     *filename     Filename to be opened
+   \param[in]     *envvar       Unix/MS-DOS environment variable
                                     Other OS assign name (with :)
-              char    *mode         Mode in which to open file (r, w, etc)
-   Output:    BOOL    *noenv        Set to TRUE under Unix/MS-DOS if 
+   \param[in]     *mode         Mode in which to open file (r, w, etc)
+   \param[out]    *noenv        Set to TRUE under Unix/MS-DOS if 
                                     the reason for failure was that the
                                     environment variable was not set.
-   Returns:   FILE    *             File pointer or NULL on failure
+   \return                          File pointer or NULL on failure
 
    Attempts to open a filename as specified. Returns a file
    pointer. If this fails:
@@ -121,13 +123,13 @@
 
    Returns the pointer returned by the open() command after all this.
 
-   22.09.94 Original    By: ACRM
-   11.09.94 Puts a : in for the assign type.
-   24.11.94 Added __unix define. Checks for trailing / in environment
+-  22.09.94 Original    By: ACRM
+-  11.09.94 Puts a : in for the assign type.
+-  24.11.94 Added __unix define. Checks for trailing / in environment
             variable
-   08.03.95 Corrected basename to filename in non-unix version
-   09.03.95 Checks that filename is not a NULL or blank string
-   28.07.05 Added conditionals for Mac OS/X: __MACH__ and __APPLE__
+-  08.03.95 Corrected basename to filename in non-unix version
+-  09.03.95 Checks that filename is not a NULL or blank string
+-  28.07.05 Added conditionals for Mac OS/X: __MACH__ and __APPLE__
 */
 FILE *OpenFile(char *filename, char *envvar, char *mode, BOOL *noenv)
 {

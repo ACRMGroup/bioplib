@@ -71,17 +71,19 @@
 /************************************************************************/
 /*>BOOL WrapString(char *in, char *out, int maxlen)
    ------------------------------------------------
-   Input:     char    *in      Input string
-              int     maxlen   Max length of output string
-   Output:    char    *out     Output wrapped string
-   Returns:   BOOL             Output string was long enough
+*//**
+
+   \param[in]     *in      Input string
+   \param[in]     maxlen   Max length of output string
+   \param[out]    *out     Output wrapped string
+   \return                     Output string was long enough
 
    Wraps a string with double inverted commas if it contains spaces
    and escapes any contained double inverted commas with a backslash.
    If the output string wasn't big enough, then the routine just
    returns FALSE without copying anything into the output string.
 
-   30.05.02 Original   By: ACRM
+-  30.05.02 Original   By: ACRM
 */
 BOOL WrapString(char *in, char *out, int maxlen)
 {
@@ -169,16 +171,18 @@ BOOL WrapString(char *in, char *out, int maxlen)
 /************************************************************************/
 /*>BOOL WrapPrint(FILE *out, char *string)
    ---------------------------------------
-   Input:     FILE    *out     Output file pointer
-              char    *string  String to be printed
-   Returns:   BOOL             OK?
+*//**
+
+   \param[in]     *out     Output file pointer
+   \param[in]     *string  String to be printed
+   \return                     OK?
 
    Wraps a string with double inverted commas if it contains spaces
    and escapes any contained double inverted commas with a backslash.
    Allocates memory for temporary storage of the wrapped string.
    Returns FALSE if this memory allocation failed.
 
-   30.05.02 Original   By: ACRM
+-  30.05.02 Original   By: ACRM
 */
 BOOL WrapPrint(FILE *out, char *string)
 {

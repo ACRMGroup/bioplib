@@ -91,28 +91,30 @@
                        char *insert1, char *chain2, int resnum2, 
                        char *insert2)
    -----------------------------------------------------------------------
-   Input:   PDB    *inpdb   Input PDB linked list
-            char   *chain1  Start residue chain name
-            int    resnum1  Start residue number
-            char   *insert1 Start residue insert code
-            char   *chain2  End residue chain name
-            int    resnum2  End residue number
-            char   *insert2 End residue insert code
-   Returns: PDB    *        PDB linked list of the region of interest.
+*//**
+
+   \param[in]     *inpdb   Input PDB linked list
+   \param[in]     *chain1  Start residue chain name
+   \param[in]     resnum1  Start residue number
+   \param[in]     *insert1 Start residue insert code
+   \param[in]     *chain2  End residue chain name
+   \param[in]     resnum2  End residue number
+   \param[in]     *insert2 End residue insert code
+   \return                 PDB linked list of the region of interest.
 
    Reduces a PDB linked list to those residues within a specified zone.
    Note that the PDB linked list is duplicated before extraction so
    pointers do not match those in the input PDB linked list. Excess
    records in the new PDB linked list are freed.
 
-   10.01.96 Original   By: ACRM
-   22.03.06 Modified to allow non-exact zones. i.e. the extracted zone
+-  10.01.96 Original   By: ACRM
+-  22.03.06 Modified to allow non-exact zones. i.e. the extracted zone
             will be the widest subset of the specified zone. So, if
             you specifiy 30-35Z and the PDB file only has 30-35B
             then that will be extracted.
-   29.10.10 Fixed extraction where end of zone matched last residue in
+-  29.10.10 Fixed extraction where end of zone matched last residue in
             a chain
-   04.02.14 Use CHAINMATCH By: CTP
+-  04.02.14 Use CHAINMATCH By: CTP
 */
 PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
                     char *chain2, int resnum2, char *insert2)

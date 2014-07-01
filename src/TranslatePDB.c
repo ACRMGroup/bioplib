@@ -72,12 +72,14 @@
 /************************************************************************/
 /*>void TranslatePDB(PDB *pdb,VEC3F tvect)
    ---------------------------------------
-   I/O:    PDB   *pdb   PDB linked list to move
-   Input:  VEC3F tvect  Translation vector
+*//**
+
+   \param[in,out] *pdb   PDB linked list to move
+   \param[in]     tvect  Translation vector
 
    Translates a PDB linked list, ignoring null (9999.0) coordinates.
-   01.10.92 Original
-   11.03.94 Changed check on 9999.0 to >9998.0 and cast to REAL
+-  01.10.92 Original
+-  11.03.94 Changed check on 9999.0 to >9998.0 and cast to REAL
 */
 void TranslatePDB(PDB   *pdb,
                   VEC3F tvect)

@@ -95,19 +95,21 @@
 /************************************************************************/
 /*>BOOL OpenStdFiles(char *infile, char *outfile, FILE **in, FILE **out)
    ---------------------------------------------------------------------
-   Input:   char     *infile     Input filename
-            char     *outfile    Output filename
-   Output:  FILE     **in        Input file pointer
-            FILE     **out       Output file pointer
-   Returns: BOOL                 Success?
+*//**
+
+   \param[in]     *infile     Input filename
+   \param[in]     *outfile    Output filename
+   \param[out]    **in        Input file pointer
+   \param[out]    **out       Output file pointer
+   \return                         Success?
 
    Open the files if specified. In and out are not modified if files
    are not specified.
 
-   29.06.94 Original    By: ACRM
-   24.08.94 Name changed from OpenFiles() and placed in gen lib.
-   18.12.95 Now treats a filename of - as stdin/stdout
-   05.02.96 Allows NULL pointers
+-  29.06.94 Original    By: ACRM
+-  24.08.94 Name changed from OpenFiles() and placed in gen lib.
+-  18.12.95 Now treats a filename of - as stdin/stdout
+-  05.02.96 Allows NULL pointers
 */
 BOOL OpenStdFiles(char *infile, char *outfile, FILE **in, FILE **out)
 {

@@ -91,21 +91,23 @@ static FILE    *sHPGLFile = NULL;         /* Plot file                  */
 /*>BOOL HPGLInit(char *filename, char *AltFont,
                  REAL xmargin,   REAL ymargin)
    --------------------------------------------
-   Input:   char  *filename   HPGL file name
-            char  *AltFont    Alternative font used for Greek characters
-            REAL  xmargin     Unprintable x margin
-            REAL  ymargin     Unprintable y margin
+*//**
+
+   \param[in]     *filename   HPGL file name
+   \param[in]     *AltFont    Alternative font used for Greek characters
+   \param[in]     xmargin     Unprintable x margin
+   \param[in]     ymargin     Unprintable y margin
    Globals: REAL  PSxpicsize  X picture size
             REAL  PSypicsize  Y picture size
             REAL  PSxoffset   X offset
             REAL  PSyoffset   Y offset
-   Returns: BOOL              Success
+   \return                      Success
 
    Initialise an HPGL plot. The parameters specify the unprintable margins
    on the output device.
-   25.06.92 Taken from MoG. Changed to support offsets. Added parameters.
-   29.06.92 Added initialisation of alternate font.
-   06.07.93 Added AltFont parameter
+-  25.06.92 Taken from MoG. Changed to support offsets. Added parameters.
+-  29.06.92 Added initialisation of alternate font.
+-  06.07.93 Added AltFont parameter
 */
 BOOL HPGLInit(char *filename,
               char *AltFont,
@@ -141,11 +143,13 @@ BOOL HPGLInit(char *filename,
 /************************************************************************/
 /*>void HPGLPen(int num)
    ---------------------
-   Input:   int  num      Pen number
+*//**
+
+   \param[in]     num      Pen number
 
    Select a Pen
-   25.06.92 Taken from MoG
-   08.09.92 Changed to store pen first (having seen IntroCAD output)
+-  25.06.92 Taken from MoG
+-  08.09.92 Changed to store pen first (having seen IntroCAD output)
 */
 void HPGLPen(int num)
 {
@@ -158,11 +162,13 @@ void HPGLPen(int num)
 /************************************************************************/
 /*>void HPGLMove(REAL x, REAL y)
    -----------------------------
-   Input:   REAL   x     X position (0.0--1.0)
-            REAL   y     Y position (0.0--1.0)
+*//**
+
+   \param[in]     x     X position (0.0--1.0)
+   \param[in]     y     Y position (0.0--1.0)
 
    Move on HPGL plot
-   25.06.92 Taken from MoG
+-  25.06.92 Taken from MoG
 */
 void HPGLMove(REAL x,
               REAL y)
@@ -176,11 +182,13 @@ void HPGLMove(REAL x,
 /************************************************************************/
 /*>void HPGLDraw(REAL x, REAL y)
    -----------------------------
-   Input:   REAL   x     X position (0.0--1.0)
-            REAL   y     Y position (0.0--1.0)
+*//**
+
+   \param[in]     x     X position (0.0--1.0)
+   \param[in]     y     Y position (0.0--1.0)
 
    Draw on HPGL plot
-   25.06.92 Taken from MoG
+-  25.06.92 Taken from MoG
 */
 void HPGLDraw(REAL x,
               REAL y)
@@ -194,9 +202,13 @@ void HPGLDraw(REAL x,
 /************************************************************************/
 /*>void HPGLSetDash(int style)
    ---------------------------
-   Input:   int  style    Line style
+*//**
+
+   \param[in]     style    Line style
 
    Set the line style (may be printer dependent):
+
+
          0 Solid line
          1 ............
          2 -.-.-.-.-.-.
@@ -204,8 +216,8 @@ void HPGLDraw(REAL x,
          4 -..-..-..-..
          5 --.--.--.--.
 
-   25.06.92 Framework
-   26.06.92 Original
+-  25.06.92 Framework
+-  26.06.92 Original
 */
 void HPGLSetDash(int style)
 {
@@ -235,14 +247,16 @@ void HPGLSetDash(int style)
 /************************************************************************/
 /*>void HPGLFont(int font, REAL size)
    ----------------------------------
-   Input:   int   font       Font number
-            REAL  size       Point size of font
+*//**
+
+   \param[in]     font       Font number
+   \param[in]     size       Point size of font
 
    Set font for HPGL plot
-   25.06.92 Taken from MoG
-   29.06.92 Corrected CA to CS and added SS. Changed to use global width
+-  25.06.92 Taken from MoG
+-  29.06.92 Corrected CA to CS and added SS. Changed to use global width
             and height variables. Altered width to 1/2.4 * height
-   27.07.93 Changed precision of floating i/o to double
+-  27.07.93 Changed precision of floating i/o to double
 */
 void HPGLFont(int    font,
               REAL   size)
@@ -273,13 +287,16 @@ void HPGLFont(int    font,
 /************************************************************************/
 /*>void HPGLLText(REAL x, REAL y, char *string)
    --------------------------------------------
-   Input:   REAL  x        X coordinate
-            REAL  y        Y coordinate
-            char  *string  Text to print
+*//**
+
+   \param[in]     x        X coordinate
+   \param[in]     y        Y coordinate
+   \param[in]     *string  Text to print
 
    Write left justified text on HPGL plot
-   25.06.92 Taken from MoG
-   29.06.92 Changed to use HPGLShowText().
+
+-  25.06.92 Taken from MoG
+-  29.06.92 Changed to use HPGLShowText().
 */
 void HPGLLText(REAL x,
                REAL y,
@@ -297,18 +314,20 @@ void HPGLLText(REAL x,
 /************************************************************************/
 /*>void HPGLCBText(REAL x, REAL y, REAL offset, char *text)
    --------------------------------------------------------
-   Input:   REAL  x        X coordinate
-            REAL  y        Y coordinate
-            REAL  offset   Y-offset (multiplied by font height). 
+*//**
+
+   \param[in]     x        X coordinate
+   \param[in]     y        Y coordinate
+   \param[in]     offset   Y-offset (multiplied by font height). 
                            Move text up by this amount
-            char  *string  Text to print
+   \param[in]     *text    Text to print
 
    Write centre-bottom justified text in HPGL
 
-   25.06.92 Framework
-   26.06.92 Original
-   29.06.92 Added SimplifyText(). Changed to use HPGLShowText().
-   06.07.92 Modified x-pos for wider font width
+-  25.06.92 Framework
+-  26.06.92 Original
+-  29.06.92 Added SimplifyText(). Changed to use HPGLShowText().
+-  06.07.92 Modified x-pos for wider font width
 */
 void HPGLCBText(REAL x, 
                 REAL y, 
@@ -335,17 +354,19 @@ void HPGLCBText(REAL x,
 /************************************************************************/
 /*>void HPGLROffText(REAL x, REAL y, REAL offset, char *text)
    ----------------------------------------------------------
-   Input:   REAL  x        X coordinate
-            REAL  y        Y coordinate
-            REAL  offset   Move left by this amount (pts)
-            char  *string  Text to print
+*//**
+
+   \param[in]     x        X coordinate
+   \param[in]     y        Y coordinate
+   \param[in]     offset   Move left by this amount (pts)
+   \param[in]     *text    Text to print
 
    Print right-justified text to HPGL
 
-   25.06.92 Framework
-   26.06.92 Original
-   29.06.92 Added SimplifyText(). Changed to use HPGLShowText().
-   06.07.92 Modified x-pos for wider font width
+-  25.06.92 Framework
+-  26.06.92 Original
+-  29.06.92 Added SimplifyText(). Changed to use HPGLShowText().
+-  06.07.92 Modified x-pos for wider font width
 */
 void HPGLROffText(REAL x, 
                   REAL y, 
@@ -376,15 +397,17 @@ void HPGLROffText(REAL x,
 /************************************************************************/
 /*>void HPGLLCText(REAL x, REAL y, char *text)
    -------------------------------------------
-   Input:   REAL  x        X coordinate
-            REAL  y        Y coordinate
-            char  *text    Text to print
+*//**
+
+   \param[in]     x        X coordinate
+   \param[in]     y        Y coordinate
+   \param[in]     *text    Text to print
 
    Print left-centre justified text
    
-   25.06.92 Framework
-   26.06.92 Original
-   29.06.92 Changed to use HPGLShowText().
+-  25.06.92 Framework
+-  26.06.92 Original
+-  29.06.92 Changed to use HPGLShowText().
 */
 void HPGLLCText(REAL x, 
                 REAL y, 
@@ -408,19 +431,21 @@ void HPGLLCText(REAL x,
 /************************************************************************/
 /*>void HPGLCTText(REAL x, REAL y, REAL offset, char *text)
    --------------------------------------------------------
-   Input:   REAL  x        X coordinate
-            REAL  y        Y coordinate
-            REAL  offset   Y offset in points. Move text down by this.
-            char  *string  Text to print
+*//**
+
+   \param[in]     x        X coordinate
+   \param[in]     y        Y coordinate
+   \param[in]     offset   Y offset in points. Move text down by this.
+   \param[in]     *text    Text to print
 
    Center Top justify text at x,y with y-offset in pts.
 
-   25.06.92 Framework
-   26.06.92 Original
-   29.06.92 Added SimplifyText(). Changed to use HPGLShowText().
-   01.07.92 Corrected y-positioning. Changed offset to be in pts rather
+-  25.06.92 Framework
+-  26.06.92 Original
+-  29.06.92 Added SimplifyText(). Changed to use HPGLShowText().
+-  01.07.92 Corrected y-positioning. Changed offset to be in pts rather
             than a multiplier of font size.
-   06.07.92 Modified x-pos for wider font width
+-  06.07.92 Modified x-pos for wider font width
 */
 void HPGLCTText(REAL x, 
                 REAL y, 
@@ -451,15 +476,17 @@ void HPGLCTText(REAL x,
 /*>void HPGLVText(REAL x, REAL y, REAL xoff, char *text, int TitleFont,
              REAL TitleSize, char *label, int LabelFont, REAL LabelSize)
    ---------------------------------------------------------------------
-   Input:   REAL x            X coordinate (in data units)
-            REAL y            Y coordinate (in data units)
-            REAL xoff         X-offset in pts
-            char *text        Text to be written
-            char *TitleFont   Font in which to write it
-            REAL TitleSize    Size of font
-            char *label       Label to be used to calc x offset
-            char *LabelFont   Font of this label
-            REAL LabelSize    Size of this label
+*//**
+
+   \param[in]     x            X coordinate (in data units)
+   \param[in]     y            Y coordinate (in data units)
+   \param[in]     xoff         X-offset in pts
+   \param[in]     *text        Text to be written
+   \param[in]     *TitleFont   Font in which to write it
+   \param[in]     TitleSize    Size of font
+   \param[in]     *label       Label to be used to calc x offset
+   \param[in]     *LabelFont   Font of this label
+   \param[in]     LabelSize    Size of this label
 
    Write vertical text centred on x,y offset back along x by the size of
    label and by xoff in pts
@@ -470,10 +497,10 @@ void HPGLCTText(REAL x,
    it is a bug in the PLT: interpreter which requires this, or whether 
    it is standard HPGL. Define FIXVERT if it improves your output.
 
-   25.06.92 Framework
-   29.06.92 Original
-   06.07.92 Modified x-pos for wider font width
-   27.07.93 Changed precision of floating i/o to double
+-  25.06.92 Framework
+-  29.06.92 Original
+-  06.07.92 Modified x-pos for wider font width
+-  27.07.93 Changed precision of floating i/o to double
 */
 void HPGLVText(REAL x, 
                REAL y, 
@@ -542,8 +569,12 @@ void HPGLVText(REAL x,
 /************************************************************************/
 /*>void HPGLEnd(void)
    ------------------
+*//**
+
+
    Close the HPGL plot file
-   06.07.93 Original
+
+-  06.07.93 Original
 */
 void HPGLEnd(void)
 {
@@ -553,17 +584,19 @@ void HPGLEnd(void)
 /************************************************************************/
 /*>void HPGLShowText(char *text, BOOL orientation, int XBase, int YBase)
    ---------------------------------------------------------------------
-   Input:   char  *text       Text to be displayed with control codes
-            int   orientation TRUE=vertical, FALSE=horizontal
-            int   XBase       Position at which to start (device coords)
-            int   XBase       Position at which to start (device coords)
+*//**
+
+   \param[in]     *text       Text to be displayed with control codes
+   \param[in]     orientation TRUE=vertical, FALSE=horizontal
+   \param[in]     XBase       Position at which to start (device coords)
+   \param[in]     YBase       Position at which to start (device coords)
 
    Displays the text, raising or lowering as appropriate and selecting
    alternate font where required. Used by the various ...Text() routines.
 
-   29.06.92 Original based on PostScript version.
-   27.07.93 Changed precision of floating i/o to double
-   11.03.94 Changed orientation to BOOL
+-  29.06.92 Original based on PostScript version.
+-  27.07.93 Changed precision of floating i/o to double
+-  11.03.94 Changed orientation to BOOL
 */
 void HPGLShowText(char *text, 
                   BOOL orientation,
