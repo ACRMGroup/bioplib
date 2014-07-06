@@ -1,8 +1,7 @@
 #include "writepdbml_suite.h"
 
 /* Globals */
-//static char test_output_filename[]     = "/tmp/test-XXXXX",
-static char test_output_filename[]     = "tmp_out/test-XXXXX",
+static char test_output_filename[]     = "/tmp/test-XXXXX",
             test_input_filename[160]   = "data/wholepdb_suite/",
             test_example_filename[160] = "data/wholepdb_suite/";
 
