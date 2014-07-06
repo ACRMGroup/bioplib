@@ -3,8 +3,8 @@
 
    \file       WholePDB.c
    
-   \version    V1.5
-   \date       21.06.14
+   \version    V1.6
+   \date       06.07.14
    \brief      
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014
@@ -52,6 +52,8 @@
 -  V1.3  17.03.09 popen() prototype skipped for Windows. By: CTP
 -  V1.4  22.04.14 Added handling of PDBML files. By CTP
 -  V1.5  21.06.14 Updated writing of PDBML files. By: CTP
+-  V1.6  06.07.14 Defined _XOPEN_SOURCE and __USE_XOPEN. Required for 
+                  time.h on some linux systems. By: CTP
 
 *************************************************************************/
 /* Includes
@@ -65,6 +67,8 @@
 #include "pdb.h"
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+#define _XOPEN_SOURCE
+#define __USE_XOPEN
 #include <time.h>
 
 
