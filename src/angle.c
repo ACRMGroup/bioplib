@@ -39,6 +39,8 @@
    These routines return angles and torsion angles. The definition of a
    torsion angle is the chemical definition:
    i.e. Assuming the atoms are co-planar:
+
+
             A---B          A---B
                 | = 0.0        |  = 180.0
                 |              |
@@ -48,35 +50,37 @@
 
    Usage:
    ======
-   REAL angle(xi,yi,zi,xj,yj,zj,xk,yk,zk)
-   Input:   REAL     xi,yi,zi    Input coordinates
-   Input:            xj,yj,zj
-   Input:            xk,yk,zk
-   Returns: REAL                 The angle between the 3 atoms
 
 
-   REAL phi(xi,yi,zi,xj,yj,zj,xk,yk,zk,xl,yl,zl)
-   Input:   REAL     xi,yi,zi    Input coordinates
-   Input:            xj,yj,zj
-   Input:            xk,yk,zk
-   Input:            xl,yl,zl
-   Returns: REAL                 The torsion angle between the 4 atoms
+      REAL angle(xi,yi,zi,xj,yj,zj,xk,yk,zk)
+      Input:   REAL     xi,yi,zi    Input coordinates
+      Input:            xj,yj,zj
+      Input:            xk,yk,zk
+      Returns: REAL                 The angle between the 3 atoms
 
 
-   REAL simpleang(ang)
-   Input:   REAL     ang         An angle
-   Returns: REAL                 Simplified angle
+      REAL phi(xi,yi,zi,xj,yj,zj,xk,yk,zk,xl,yl,zl)
+      Input:   REAL     xi,yi,zi    Input coordinates
+      Input:            xj,yj,zj
+      Input:            xk,yk,zk
+      Input:            xl,yl,zl
+      Returns: REAL                 The torsion angle between the 4 atoms
+
+
+      REAL simpleang(ang)
+      Input:   REAL     ang         An angle
+      Returns: REAL                 Simplified angle
    
-   Simplifies a signed angle to an unsigned angle <=2*PI
+      Simplifies a signed angle to an unsigned angle <=2*PI
 
 
-   REAL TrueAngle(REAL opp, REAL adj)
-   Input:   REAL     opp         Length of opposite side
-   Input:   REAL     adj         Length of adjacent side
-   Returns: REAL                 The angle from 0 to 2PI
+      REAL TrueAngle(REAL opp, REAL adj)
+      Input:   REAL     opp         Length of opposite side
+      Input:   REAL     adj         Length of adjacent side
+      Returns: REAL                 The angle from 0 to 2PI
 
-   Returns the true positive angle between 0 and 2PI given the opp and
-   adj lengths
+      Returns the true positive angle between 0 and 2PI given the opp and
+      adj lengths
 
 **************************************************************************
 
@@ -114,10 +118,17 @@
               REAL zj,REAL xk,REAL yk,REAL zk)
    ---------------------------------------------------
 *//**
-   Input:   REAL    xi,yi,zi    Input coordinates
-   Input:           xj,yj,zj
-   Input:           xk,yk,zk
-   Returns: REAL                The angle between the 3 atoms
+
+   \param[in]     xi          Input coordinate
+   \param[in]     yi          Input coordinate
+   \param[in]     zi          Input coordinate
+   \param[in]     xj          Input coordinate
+   \param[in]     yj          Input coordinate
+   \param[in]     zj          Input coordinate
+   \param[in]     xk          Input coordinate
+   \param[in]     yk          Input coordinate
+   \param[in]     zk          Input coordinate
+   \return                    The angle between the 3 atoms
 
    Calculates the angle between three sets of coordinates
 

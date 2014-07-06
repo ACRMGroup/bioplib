@@ -165,10 +165,10 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 -  V2.22 21.12.11 doReadPDB() modified for cases where atoms are single
                   occupancy but occupancy is < 1.0
 -  V2.23 04.02.14 Use CHAINMATCH macro. By: CTP
-   V2,24 22.04.14 Added PDBML parsing with doReadPDBML() and 
+-  V2.24 22.04.14 Added PDBML parsing with doReadPDBML() and 
                   CheckFileFormatPDBML(). By CTP
-   V2,25 02.06.14 Updated doReadPDBML(). By: CTP
-   V2,26 09.06.14 Set gPDBXML flag. By: CTP
+-  V2.25 02.06.14 Updated doReadPDBML(). By: CTP
+-  V2.26 09.06.14 Set gPDBXML flag. By: CTP
 
 *************************************************************************/
 /* Defines required for includes

@@ -77,11 +77,11 @@
    ---------------------------------------------------------
 *//**
 
-   Inputs:   AA    *a    Sequence linked list
-             char  res   Residue to insert
-             int   nres  Number of residues to insert
-   \return                  Pointer to the residue that has just been
-                         inserted
+   \param[in]   *a    Sequence linked list
+   \param[in]   res   Residue to insert
+   \param[in]   nres  Number of residues to insert
+   \return            Pointer to the residue that has just been
+                      inserted
 
    Inserts a set of identical residues after the current position in
    the linked list.  The returned value is the last residue which has
@@ -106,10 +106,10 @@ AA *InsertNextResiduesInAAList(AA *a, char res, int nres)
    ----------------------------------------------
 *//**
 
-   Inputs:   AA    *a    Sequence linked list
-             char  res   Residue to insert
-   \return                  Pointer to the residue that has just been
-                         inserted
+   \param[in]   *a    Sequence linked list
+   \param[in]   res   Residue to insert
+   \return            Pointer to the residue that has just been
+                      inserted
 
    Inserts a residues after the current position in the linked list.
    The returned value is the residue which has been inserted so this
@@ -148,7 +148,7 @@ AA *InsertNextResidueInAAList(AA *a, char res)
    --------------------------------
 *//**
 
-   Inputs:   AA    *aa   Sequence linked list
+   \param[in]   *aa       Sequence linked list
    \return                Sequence as a string (malloc'd)
 
    Converts the linked list back into a string which is malloc'd
@@ -180,9 +180,9 @@ char *BuildSeqFromAAList(AA *aa)
    ------------------------------------------------------
 *//**
 
-   Inputs:   AA    *a    Sequence linked list
-             char  res   Residue to insert
-             int   pos   Position at which to insert (from 1...)
+   \param[in]   *aa         Sequence linked list
+   \param[in]   res         Residue to insert
+   \param[in]   pos         Position at which to insert (from 1...)
    \return                  Updated sequence linked list
 
    Inserts a residue after the specified position in the
@@ -253,10 +253,10 @@ AA *InsertResidueInAAListAt(AA *aa, char res, int pos)
    -----------------------------------------------------------------
 *//**
 
-   Inputs:   AA    *aa   Sequence linked list
-             char  res   Residue to insert
-             int   nres  Number of residues to insert
-             int   pos   Position at which to insert (from 1...)
+   \param[in]   *aa         Sequence linked list
+   \param[in]   res         Residue to insert
+   \param[in]   nres        Number of residues to insert
+   \param[in]   pos         Position at which to insert (from 1...)
    \return                  Updated sequence linked list
 
    Inserts a set of residues after the specified position in the
@@ -283,7 +283,7 @@ AA *InsertResiduesInAAListAt(AA *aa, char res, int nres, int pos)
    --------------------------
 *//**
 
-   Inputs:   char  *seq      The sequence as a string
+   \param[in]   *seq            The sequence as a string
    \return                      A linked list representation
 
    Converts a sequence string into a linked list
@@ -326,9 +326,9 @@ AA *BuildAAList(char *seq)
    ------------------------------------------------
 *//**
 
-   Inputs:   AA    *aa     Sequence linked list
-             int   resnum  Residue number
-   \return                   Linked list offset
+   \param[in]   *aa           Sequence linked list
+   \param[in]   resnum        Residue number
+   \return                    Linked list offset
 
    Searches the linked list of the specified resnum (i.e. the original
    residue number in the sequence before any insertions were made) and 
@@ -360,8 +360,8 @@ int FindAAListOffsetByResnum(AA *aa, int resnum)
    ----------------------------------------------
 *//**
 
-   Inputs:   AA    *aa     Sequence linked list
-             int   resnum  Residue number
+   \param[in]   *aa           Sequence linked list
+   \param[in]   resnum        Residue number
    \return                    Linked list item
 
    Searches the linked list of the specified resnum (i.e. the original
@@ -389,8 +389,9 @@ AA *FindAAListItemByResnum(AA *aa, int resnum)
    ----------------------------------------------
 *//**
 
-   Inputs:   AA    *aa    Sequence linked list
-
+   \param[in]   *aa           Sequence linked list
+   \param[in]   resnum        Residue number
+   
    Searches the linked list of the specified resnum (i.e. the original
    residue number in the sequence before any insertions were made) and 
    sets the flag in that item in the linked list
@@ -410,8 +411,8 @@ void SetAAListFlagByResnum(AA *aa, int resnum)
    ---------------------------------------------
 *//**
 
-   Inputs:   AA    *aa    Sequence linked list
-             char  ch     Character to use in the sequence
+   \param[in]   *aa        Sequence linked list
+   \param[in]   ch         Character to use in the sequence
    \return                 Sequence string (malloc'd)
 
    Builds a sequence string with blanks except where the flag in the
@@ -445,7 +446,7 @@ char *BuildFlagSeqFromAAList(AA *aa, char ch)
    ------------------------
 *//**
 
-   Inputs:   AA    *a    Sequence linked list
+   \param[in]   *aa        Sequence linked list
    \return                 Length of sequence linked list
 
    Returns the number of items in the linked list

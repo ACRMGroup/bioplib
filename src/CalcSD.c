@@ -44,18 +44,20 @@
 
    Usage:
    ======
-   #include "MathUtil.h" before using these routines
 
-   CalcSD(val,action,mean,SD)
-   --------------------------
-   Input:   val     int       The value to be sampled
-   Input:   action  short     0: Sample the value
-                              1: Calculate & return mean and SD
-                              2: Clear the sample lists
-   Output:  mean    *REAL     The returned mean
-   Output:  SD      *REAL     The returned standard deviation
 
-   The output values are only set when action=1
+      #include "MathUtil.h" before using these routines
+
+      CalcSD(val,action,mean,SD)
+      --------------------------
+      Input:   val     int       The value to be sampled
+      Input:   action  short     0: Sample the value
+                                 1: Calculate & return mean and SD
+                                 2: Clear the sample lists
+      Output:  mean    *REAL     The returned mean
+      Output:  SD      *REAL     The returned standard deviation
+
+      The output values are only set when action=1
 
 
 **************************************************************************
@@ -88,21 +90,24 @@
 /************************************************************************/
 /*>void CalcSD(REAL val, int action, REAL *mean, REAL *SD)
    -------------------------------------------------------
+*//**
+
    Calculate the mean and standard deviation from a set of numbers. 
    The routine is called with each value to be sampled and the action 
    required is specified:
 
-   Input:   val     int       The value to be sampled
-   Input:   action  short     0: Sample the value
-                              1: Calculate & return mean and SD
-                              2: Clear the sample lists
-   Output:  mean    *REAL     The returned mean
-   Output:  SD      *REAL     The returned standard deviation
+   \param[in]     val          The value to be sampled
+   \param[in]     action       0: Sample the value
+                               1: Calculate & return mean and SD
+                               2: Clear the sample lists
+   \param[out]    mean         The returned mean
+   \param[out]    SD           The returned standard deviation
 
    The output values are only set when action=1
-   30.03.90 Original    By: ACRM
-   17.06.93 Modified for book
-   22.06.94 Fixed for 0 values supplied
+
+-  30.03.90 Original    By: ACRM
+-  17.06.93 Modified for book
+-  22.06.94 Fixed for 0 values supplied
 */
 void CalcSD(REAL val, int action, REAL *mean, REAL *SD)
 {

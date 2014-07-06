@@ -97,14 +97,20 @@ static FILE    *sHPGLFile = NULL;         /* Plot file                  */
    \param[in]     *AltFont    Alternative font used for Greek characters
    \param[in]     xmargin     Unprintable x margin
    \param[in]     ymargin     Unprintable y margin
-   Globals: REAL  PSxpicsize  X picture size
-            REAL  PSypicsize  Y picture size
-            REAL  PSxoffset   X offset
-            REAL  PSyoffset   Y offset
    \return                      Success
 
    Initialise an HPGL plot. The parameters specify the unprintable margins
    on the output device.
+
+   The plot is also affected by global variables:
+
+
+      PSxpicsize  X picture size
+      PSypicsize  Y picture size
+      PSxoffset   X offset
+      PSyoffset   Y offset
+
+
 -  25.06.92 Taken from MoG. Changed to support offsets. Added parameters.
 -  29.06.92 Added initialisation of alternate font.
 -  06.07.93 Added AltFont parameter

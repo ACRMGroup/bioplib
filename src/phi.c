@@ -70,16 +70,26 @@
 /*>REAL phi(REAL xi,REAL yi,REAL zi,REAL xj,REAL yj,REAL zj,
             REAL xk,REAL yk,REAL zk,REAL xl,REAL yl,REAL zl)
    ---------------------------------------------------------
-   Input:   REAL    xi,yi,zi    Input coordinates
-   Input:           xj,yj,zj
-   Input:           xk,yk,zk
-   Input:           xl,yl,zl
-   Returns: REAL                The torsion angle between the 4 atoms
+*//**
+
+   \param[in]     xi          Input coordinate
+   \param[in]     yi          Input coordinate
+   \param[in]     zi          Input coordinate
+   \param[in]     xj          Input coordinate
+   \param[in]     yj          Input coordinate
+   \param[in]     zj          Input coordinate
+   \param[in]     xk          Input coordinate
+   \param[in]     yk          Input coordinate
+   \param[in]     zk          Input coordinate
+   \param[in]     xl          Input coordinate
+   \param[in]     yl          Input coordinate
+   \param[in]     zl          Input coordinate
+   \return                    The torsion angle between the 4 atoms
 
    Calculates the torsion angle described by 4 sets of coordinates.
 
-   04.03.91 Original    By: ACRM
-   16.06.93 Changed float to REAL
+-  04.03.91 Original    By: ACRM
+-  16.06.93 Changed float to REAL
 */
 REAL phi(REAL xi,
          REAL yi,

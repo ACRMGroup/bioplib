@@ -44,7 +44,7 @@
    ======
 
    int AddNTerHs(PDB **ppdb, BOOL Charmm)
-   --------------------------------------
+
    This routine is used to generate a set of N-terminal hydrogens.
    By default GROMOS naming is used; the Charmm flag changes this to
    Charmm format in which case an extra NTER residue will be created.

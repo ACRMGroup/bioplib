@@ -44,22 +44,24 @@
 
    Usage:
    ======
-   #include "MathUtil.h" before using these routines
 
-   void CalcExtSD(REAL val, int action, REAL *Sx, REAL *SxSq, 
-                  int *NValues, REAL *mean, REAL *SD)
-   ----------------------------------------------------------
-   Input:   val     int       The value to be sampled
-   Input:   action  short     0: Sample the value
-                              1: Calculate & return mean and SD
-                              2: Clear the sample lists
-   Output:  mean    *REAL     The returned mean
-   Output:  SD      *REAL     The returned standard deviation
-   I/O:     Sx      *REAL     Sum of values
-   I/O:     SxSq    *REAL     Sum of values squared
-   I/O:     NValues *int      Number of values
 
-   The output values are only set when action==1
+      #include "MathUtil.h" before using these routines
+
+      void CalcExtSD(REAL val, int action, REAL *Sx, REAL *SxSq, 
+                     int *NValues, REAL *mean, REAL *SD)
+      ----------------------------------------------------------
+      Input:   val     int       The value to be sampled
+      Input:   action  short     0: Sample the value
+                                 1: Calculate & return mean and SD
+                                 2: Clear the sample lists
+      Output:  mean    *REAL     The returned mean
+      Output:  SD      *REAL     The returned standard deviation
+      I/O:     Sx      *REAL     Sum of values
+      I/O:     SxSq    *REAL     Sum of values squared
+      I/O:     NValues *int      Number of values
+
+      The output values are only set when action==1
 
 **************************************************************************
 
@@ -92,19 +94,21 @@
 /*>void CalcExtSD(REAL val, int action, REAL *Sx, REAL *SxSq, 
                   int *NValues, REAL *mean, REAL *SD)
    ----------------------------------------------------------
+*//**
+
    Calculate the mean and standard deviation from a set of numbers. 
    The routine is called with each value to be sampled and the action 
    required is specified:
 
-   Input:   val     int       The value to be sampled
-   Input:   action  short     0: Sample the value
-                              1: Calculate & return mean and SD
-                              2: Clear the sample lists
-   Output:  mean    *REAL     The returned mean
-   Output:  SD      *REAL     The returned standard deviation
-   I/O:     Sx      *REAL     Sum of values
-   I/O:     SxSq    *REAL     Sum of values squared
-   I/O:     NValues *int      Number of values
+   \param[in]     val          The value to be sampled
+   \param[in]     action       0: Sample the value
+                               1: Calculate & return mean and SD
+                               2: Clear the sample lists
+   \param[out]    mean         The returned mean
+   \param[out]    SD           The returned standard deviation
+   \param[in,out] Sx           Sum of values
+   \param[in,out] SxSq         Sum of values squared
+   \param[in,out] NValues      Number of values
 
    The output values are only set when action==1
 
@@ -112,8 +116,8 @@
    variables are kept outside the function instead of being static
    within the function
 
-   13.10.93 Original based on CalcSD   By: ACRM
-   22.06.94 Fixed for only one value supplied
+-  13.10.93 Original based on CalcSD   By: ACRM
+-  22.06.94 Fixed for only one value supplied
 */
 void CalcExtSD(REAL val, int action, REAL *Sx, REAL *SxSq, 
                int *NValues, REAL *mean, REAL *SD)
