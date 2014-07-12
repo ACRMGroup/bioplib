@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V2.26
-   \date       09.06.14
+   \version    V2.27
+   \date       07.07.14
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2014
@@ -169,6 +169,7 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                   CheckFileFormatPDBML(). By CTP
 -  V2.25 02.06.14 Updated doReadPDBML(). By: CTP
 -  V2.26 09.06.14 Set gPDBXML flag. By: CTP
+-  V2.27 07.07.14 Renaming of functions with "bl" prefix. By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -203,9 +204,9 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 /************************************************************************/
 /* Prototypes
 */
-static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
-                             int NPartial, PDB **ppdb, PDB **pp, 
-                             int *natom);
+static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
+                               int NPartial, PDB **ppdb, PDB **pp, 
+                               int *natom);
 #if !defined(__APPLE__) && !defined(MS_WINDOWS)
 FILE *popen(char *, char *);
 #endif
@@ -214,8 +215,8 @@ int  pclose(FILE *);
 #endif
 
 /************************************************************************/
-/*>PDB *ReadPDB(FILE *fp, int *natom)
-   ----------------------------------
+/*>PDB *blReadPDB(FILE *fp, int *natom)
+   ------------------------------------
 *//**
 
    \param[in]     *fp      A pointer to type FILE in which the
@@ -236,19 +237,20 @@ int  pclose(FILE *);
 -  25.01.06 Added call to RemoveAlternates(). This deals with odd uses
             of multiple occupancies like 3pga and the instance where
             the alternates are all grouped at the end of the file.
+-  07.07.14 Renamed to blReadPDB() By: CTP
 */
-PDB *ReadPDB(FILE *fp,
-             int  *natom)
+PDB *blReadPDB(FILE *fp,
+               int  *natom)
 {
    PDB *pdb;
-   pdb = doReadPDB(fp, natom, TRUE, 1, 1);
-   pdb = RemoveAlternates(pdb);
+   pdb = bldoReadPDB(fp, natom, TRUE, 1, 1);
+   pdb = blRemoveAlternates(pdb);
    return(pdb);
 }
 
 /************************************************************************/
-/*>PDB *ReadPDBAll(FILE *fp, int *natom)
-   -------------------------------------
+/*>PDB *blReadPDBAll(FILE *fp, int *natom)
+   ---------------------------------------
 *//**
 
    \param[in]     *fp      A pointer to type FILE in which the
@@ -262,16 +264,17 @@ PDB *ReadPDB(FILE *fp,
 
 -  04.10.94 Original    By: ACRM
 -  06.03.95 Added value for NMR model to read (0 = all)   
+-  07.07.14 Renamed to blReadPDBAll() By: CTP
 */
-PDB *ReadPDBAll(FILE *fp,
+PDB *blReadPDBAll(FILE *fp,
              int  *natom)
 {
-   return(doReadPDB(fp, natom, TRUE, 0, 0));
+   return(bldoReadPDB(fp, natom, TRUE, 0, 0));
 }
 
 /************************************************************************/
-/*>PDB *ReadPDBAtoms(FILE *fp, int *natom)
-   ---------------------------------------
+/*>PDB *blReadPDBAtoms(FILE *fp, int *natom)
+   -----------------------------------------
 *//**
 
    \param[in]     *fp      A pointer to type FILE in which the
@@ -289,19 +292,20 @@ PDB *ReadPDBAll(FILE *fp,
 -  25.01.06 Added call to RemoveAlternates(). This deals with odd uses
             of multiple occupancies like 3pga and the instance where
             the alternates are all grouped at the end of the file.
+-  07.07.14 Renamed to blReadPDBAtoms() By: CTP
 */
-PDB *ReadPDBAtoms(FILE *fp,
-                  int  *natom)
+PDB *blReadPDBAtoms(FILE *fp,
+                    int  *natom)
 {
    PDB *pdb;
-   pdb = doReadPDB(fp, natom, FALSE, 1, 1);
-   pdb = RemoveAlternates(pdb);
+   pdb = bldoReadPDB(fp, natom, FALSE, 1, 1);
+   pdb = blRemoveAlternates(pdb);
    return(pdb);
 }
 
 /************************************************************************/
-/*>PDB *ReadPDBOccRank(FILE *fp, int *natom, int OccRank)
-   ------------------------------------------------------
+/*>PDB *blReadPDBOccRank(FILE *fp, int *natom, int OccRank)
+   --------------------------------------------------------
 *//**
 
    \param[in]     *fp      A pointer to type FILE in which the
@@ -316,15 +320,16 @@ PDB *ReadPDBAtoms(FILE *fp,
 
 -  17.03.94 Original    By: ACRM
 -  06.03.95 Added value for NMR model to read (1 = first)
+-  07.07.14 Renamed to bldoReadPDB() By: CTP
 */
-PDB *ReadPDBOccRank(FILE *fp, int *natom, int OccRank)
+PDB *blReadPDBOccRank(FILE *fp, int *natom, int OccRank)
 {
-   return(doReadPDB(fp, natom, TRUE, OccRank, 1));
+   return(bldoReadPDB(fp, natom, TRUE, OccRank, 1));
 }
 
 /************************************************************************/
-/*>PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
-   -----------------------------------------------------------
+/*>PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
+   -------------------------------------------------------------
 *//**
 
    \param[in]     *fp      A pointer to type FILE in which the
@@ -339,16 +344,17 @@ PDB *ReadPDBOccRank(FILE *fp, int *natom, int OccRank)
 
 -  17.03.94 Original    By: ACRM
 -  06.03.95 Added value for NMR model to read (1 = first)
+-  07.07.14 Renamed to blReadPDBAtomsOccRank() By: CTP
 */
-PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
+PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
 {
-   return(doReadPDB(fp, natom, FALSE, OccRank, 1));
+   return(bldoReadPDB(fp, natom, FALSE, OccRank, 1));
 }
 
 /************************************************************************/
-/*>PDB *doReadPDB(FILE *fpin, int *natom, BOOL AllAtoms, int OccRank,
-                  int ModelNum)
-   ------------------------------------------------------------------
+/*>PDB *bldoReadPDB(FILE *fpin, int *natom, BOOL AllAtoms, int OccRank,
+                    int ModelNum)
+   --------------------------------------------------------------------
 *//**
 
    \param[in]     *fpin    A pointer to type FILE in which the
@@ -420,12 +426,13 @@ PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
 -  22.04.14 V2.24 Call doReadPDBML() for PDBML-formatted PDB file. By: CTP
 -  02.06.14 V2.25 Updated doReadPDBML(). By: CTP
 -  09.06.14 V2.26 Set gPDBXML flag. By: CTP
+-  07.07.14 V2.27 Renamed to bldoReadPDB() By: CTP
 */
-PDB *doReadPDB(FILE *fpin,
-               int  *natom,
-               BOOL AllAtoms,
-               int  OccRank,
-               int  ModelNum)
+PDB *bldoReadPDB(FILE *fpin,
+                 int  *natom,
+                 BOOL AllAtoms,
+                 int  OccRank,
+                 int  ModelNum)
 {
    char     record_type[8],
             atnambuff[8],
@@ -504,10 +511,10 @@ PDB *doReadPDB(FILE *fpin,
 
 
    /* Check file format */
-   if(CheckFileFormatPDBML(fp))
+   if(blCheckFileFormatPDBML(fp))
    {
       /* Parse PDBML-formatted PDB file */
-      pdb = doReadPDBML(fp,natom,AllAtoms,OccRank,ModelNum);
+      pdb = bldoReadPDBML(fp,natom,AllAtoms,OccRank,ModelNum);
       xmlCleanupParser();     /* free globals set by parser */
       if(cmd[0]) unlink(cmd); /* delete tmp file            */
       return( pdb );          /* return PDB list            */
@@ -551,7 +558,7 @@ PDB *doReadPDB(FILE *fpin,
             altpos = atnambuff[4];
 
             /* Fix the atom name accounting for start in column 13 or 14*/
-            atnam = FixAtomName(atnambuff, occ);
+            atnam = blFixAtomName(atnambuff, occ);
             
             /* Check for full occupancy. If occupancy is 0.0 assume that 
                it is actually fully occupied; the column just hasn't been
@@ -585,8 +592,8 @@ PDB *doReadPDB(FILE *fpin,
                
                if(NPartial != 0)
                {
-                  if(!StoreOccRankAtom(OccRank,multi,NPartial,&pdb,&p,
-                                       natom))
+                  if(!blStoreOccRankAtom(OccRank,multi,NPartial,&pdb,&p,
+                                         natom))
                   {
                      if(pdb != NULL) FREELIST(pdb, PDB);
                      *natom = (-1);
@@ -658,8 +665,8 @@ PDB *doReadPDB(FILE *fpin,
                   /* Atom name has changed 
                      Select and store the OccRank highest occupancy atom
                      */
-                  if(!StoreOccRankAtom(OccRank,multi,NPartial,&pdb,&p,
-                                       natom))
+                  if(!blStoreOccRankAtom(OccRank,multi,NPartial,&pdb,&p,
+                                         natom))
                   {
                      if(pdb != NULL) FREELIST(pdb, PDB);
                      *natom = (-1);
@@ -704,7 +711,7 @@ PDB *doReadPDB(FILE *fpin,
 
    if(NPartial != 0)
    {
-      if(!StoreOccRankAtom(OccRank,multi,NPartial,&pdb,&p,natom))
+      if(!blStoreOccRankAtom(OccRank,multi,NPartial,&pdb,&p,natom))
       {
          if(pdb != NULL) FREELIST(pdb, PDB);
          *natom = (-1);
@@ -720,10 +727,10 @@ PDB *doReadPDB(FILE *fpin,
 }
 
 /************************************************************************/
-/*>static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
-                                int NPartial, PDB **ppdb, PDB **pp, 
-                                int *natom)
-   ----------------------------------------------------------------
+/*>static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
+                                  int NPartial, PDB **ppdb, PDB **pp, 
+                                  int *natom)
+   ------------------------------------------------------------------
 *//**
 
    \param[in]     OccRank     Occupancy ranking required (>=1)
@@ -750,9 +757,9 @@ PDB *doReadPDB(FILE *fpin,
             with their occupancy (0.0) rather than the next higher
             occupancy. Handles residues like 1zeh/B16
 */
-static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
-                             int NPartial, PDB **ppdb, PDB **pp, 
-                             int *natom)
+static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
+                               int NPartial, PDB **ppdb, PDB **pp, 
+                               int *natom)
 {
    int  i,
         j,
@@ -843,8 +850,8 @@ static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
 }
 
 /************************************************************************/
-/*>char *FixAtomName(char *name, REAL occup)
-   -----------------------------------------
+/*>char *blFixAtomName(char *name, REAL occup)
+   -------------------------------------------
 *//**
 
    \param[in]     *name     Atom name read from file
@@ -868,11 +875,11 @@ static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
             position (e.g. ' CA A' -> ' CA  ') or if there is a 
             character in the first position (e.g. '1HG1A' -> '1HG1 ')
             or if the occupancy is not zero/one
-
             NOTE!!! To support this, the routine now has a second 
             parameter: REAL occup
+-  07.07.14 Renamed to blFixAtomName() By: CTP
 */
-char *FixAtomName(char *name, REAL occup)
+char *blFixAtomName(char *name, REAL occup)
 {
    char *newname;
    int  len;
@@ -926,8 +933,8 @@ char *FixAtomName(char *name, REAL occup)
 }
 
 /************************************************************************/
-/*>PDB *RemoveAlternates(PDB *pdb)
-   -------------------------------
+/*>PDB *blRemoveAlternates(PDB *pdb)
+   ---------------------------------
 *//**
 
    \param[in,out] *pdb       PDB 
@@ -939,8 +946,11 @@ char *FixAtomName(char *name, REAL occup)
 
 -  25.01.05 Original based on code written for Inpharmatica   By: ACRM
 -  04.02.14 Use CHAINMATCH macro. By: CTP
+-  07.07.14 Renamed to blRemoveAlternates() Use blWritePDBRecord()
+            Use bl prefix for functions By: CTP
+
 */
-PDB *RemoveAlternates(PDB *pdb)
+PDB *blRemoveAlternates(PDB *pdb)
 {
    PDB   *p, 
          *q, 
@@ -960,7 +970,7 @@ PDB *RemoveAlternates(PDB *pdb)
    r_prev=NULL;
    for(p=pdb; p!=NULL; p=q)
    {
-      q=FindNextResidue(p);
+      q=blFindNextResidue(p);
       
       /* Step through atoms                                             */
       for(r=p; r!=q; NEXT(r))
@@ -969,7 +979,7 @@ PDB *RemoveAlternates(PDB *pdb)
          {
 #ifdef DEBUG
             fprintf(stderr,"\n\nAlt pos found for record:\n");
-            WritePDBRecord(stderr, r);
+            blWritePDBRecord(stderr, r);
 #endif
             /* We have an alternate, store it and search for the other 
                ones  
@@ -989,7 +999,7 @@ PDB *RemoveAlternates(PDB *pdb)
                      alts[altCount++] = s;
 #ifdef DEBUG
                      fprintf(stderr,"Partner atom found in res:\n");
-                     WritePDBRecord(stderr, s);
+                     blWritePDBRecord(stderr, s);
 #endif
                   }
                   else
@@ -1029,7 +1039,7 @@ Increase MAXPARTIAL in ReadPDB.c\n", s->chain[0],
 #ifdef DEBUG
                         fprintf(stderr,"Partner found outside \
 residue:\n");
-                        WritePDBRecord(stderr, s);
+                        blWritePDBRecord(stderr, s);
 #endif
                      }
                      else
@@ -1086,7 +1096,7 @@ flag\n\n");
                   {
 #ifdef DEBUG
                      fprintf(stderr,"Highest occupancy selected:\n");
-                     WritePDBRecord(stderr, alts[i]);
+                     blWritePDBRecord(stderr, alts[i]);
 #endif
                      alts[i]->altpos = ' ';
                   }
@@ -1121,7 +1131,7 @@ pointer\n");
                      /* Delete the alternate we don't need              */
 #ifdef DEBUG
                      fprintf(stderr,"Deleting Alt pos record:\n");
-                     WritePDBRecord(stderr, alts[i]);
+                     blWritePDBRecord(stderr, alts[i]);
 #endif
                      
                      FINDPREV(a_prev, pdb, alts[i]);
@@ -1143,9 +1153,9 @@ pointer\n");
 
 
 /************************************************************************/
-/*>PDB *doReadPDBML(FILE *fp, int *natom, BOOL AllAtoms, int OccRank,
-                     int ModelNum)
-   ------------------------------------------------------------------
+/*>PDB *bldoReadPDBML(FILE *fp, int *natom, BOOL AllAtoms, int OccRank,
+                      int ModelNum)
+   --------------------------------------------------------------------
 *//**
 
    \param[in]     *fpin    A pointer to type FILE in which the
@@ -1172,13 +1182,14 @@ pointer\n");
             labels (label_seq_id, etc.) if author-defined labels are 
             omitted. By: CTP
 -  09.06.14 Set gPDBXML flag. By: CTP
+-  07.07.14 Renamed to bldoReadPDBML() By: CTP
 
 */
-PDB *doReadPDBML(FILE *fpin,
-                 int  *natom,
-                 BOOL AllAtoms,
-                 int  OccRank,
-                 int  ModelNum)
+PDB *bldoReadPDBML(FILE *fpin,
+                   int  *natom,
+                   BOOL AllAtoms,
+                   int  OccRank,
+                   int  ModelNum)
 {
    xmlParserCtxtPtr ctxt;
    xmlDoc  *document;
@@ -1469,8 +1480,8 @@ PDB *doReadPDBML(FILE *fpin,
          if(NPartial != 0 && strcmp(curr_pdb->atnam,store_atnam))
          {
             /* Store atom */
-            if( StoreOccRankAtom(OccRank,multi,NPartial,&pdb,&end_pdb,
-                                 natom) )
+            if( blStoreOccRankAtom(OccRank,multi,NPartial,&pdb,&end_pdb,
+                                   natom) )
             {
                LAST(end_pdb);
                NPartial = 0;
@@ -1551,7 +1562,7 @@ PDB *doReadPDBML(FILE *fpin,
    /* Store final atom (if partial occupancy) */   
    if(NPartial != 0)
    {
-      if(!StoreOccRankAtom(OccRank,multi,NPartial,&pdb,&end_pdb,natom))
+      if(!blStoreOccRankAtom(OccRank,multi,NPartial,&pdb,&end_pdb,natom))
       {
          /* Error: Failed to store atom in pdb list */
          if(pdb != NULL) FREELIST(pdb,PDB);
@@ -1575,8 +1586,8 @@ PDB *doReadPDBML(FILE *fpin,
 
 
 /************************************************************************/
-/*>static BOOL CheckFileFormatPDBML(FILE *fp)
-   ------------------------------------------
+/*>BOOL blCheckFileFormatPDBML(FILE *fp)
+   -------------------------------------
 *//**
 
    \param[in]     *fp      A pointer to type FILE in which the
@@ -1590,9 +1601,10 @@ PDB *doReadPDBML(FILE *fpin,
    
    
 -  22.04.14 Original By: CTP
+-  07.07.14 Renamed to blCheckFileFormatPDBML() By: CTP
    
 */
-BOOL CheckFileFormatPDBML(FILE *fp)
+BOOL blCheckFileFormatPDBML(FILE *fp)
 {
    char buffer[80];
    int  i;

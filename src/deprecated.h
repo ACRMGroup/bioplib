@@ -59,6 +59,7 @@
    =================
    
 -  V1.0  07.05.14 Original By: CTP
+-  V1.1  07.07.14 Rename functions with 'bl' prefix. By: CTP
 
 *************************************************************************/
 #ifndef _DEPRECATED_H
@@ -127,18 +128,19 @@
   24.02.14 Converted into wrapper for BiopFindHetatmResidue(). By: CTP
   25.02.14 Added error message. By: CTP
   07.05.14 Converted to macro. By: CTP
+  07.07.14 Use bl prefix for functions By: CTP
 */
 #define FindHetatmResidue(pdb, chain, resnum, insert)                    \
 ({                                                                       \
    char chain_a[2]  = " ",                                               \
         insert_a[2] = " ";                                               \
                                                                          \
-   DEPRECATED("FindHetatmResidue()","BiopFindHetatmResidue()");          \
+   DEPRECATED("FindHetatmResidue()","blFindHetatmResidue()");            \
                                                                          \
    chain_a[0]  = chain;                                                  \
    insert_a[0] = insert;                                                 \
                                                                          \
-   BiopFindHetatmResidue(pdb, chain_a, resnum, insert_a);                \
+   blFindHetatmResidue(pdb, chain_a, resnum, insert_a);                  \
 })
 
 
@@ -152,7 +154,7 @@
   24.02.14 Converted into wrapper for BiopFindResidue(). By: CTP
   25.02.14 Added error message. By: CTP
   07.05.14 Converted to macro. By: CTP
-
+  07.07.14 Use bl prefix for functions By: CTP
 */
 
 #define FindResidue(pdb, chain, resnum, insert)                          \
@@ -160,12 +162,12 @@
    char chain_a[2]  = " ",                                               \
         insert_a[2] = " ";                                               \
                                                                          \
-   DEPRECATED("FindResidue()","BiopFindResidue()");                      \
+   DEPRECATED("FindResidue()","blFindResidue()");                        \
                                                                          \
    chain_a[0]  = chain;                                                  \
    insert_a[0] = insert;                                                 \
                                                                          \
-   BiopFindResidue(pdb, chain_a, resnum, insert_a);                      \
+   blFindResidue(pdb, chain_a, resnum, insert_a);                        \
 })
 
 
@@ -253,6 +255,7 @@
 -  24.02.14 Converted into wrapper for BiopInPDBZone() By: CTP
 -  25.02.14 Added error message. By: CTP
 -  07.05.14 Converted to macro. By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 #define InPDBZone(p, chain, resnum1, insert1, resnum2, insert2)          \
 ({                                                                       \
@@ -260,14 +263,736 @@
         insert1_a[2] = " ",                                              \
         insert2_a[2] = " ";                                              \
                                                                          \
-   DEPRECATED("InPDBZone()","BiopInPDBZone()");                          \
+   DEPRECATED("InPDBZone()","blInPDBZone()");                            \
                                                                          \
    chain_a[0]   = chain;                                                 \
    insert1_a[0] = insert1;                                               \
    insert2_a[0] = insert2;                                               \
                                                                          \
-   BiopInPDBZone(p,chain_a,resnum1,insert1_a,resnum2, insert2_a);        \
+   blInPDBZone(p,chain_a,resnum1,insert1_a,resnum2, insert2_a);          \
 })
+
+/************************************************************************/
+/*>void WritePDB(FILE *fp, PDB *pdb)
+   ---------------------------------
+*//**
+
+   \param[in]     *fp   PDB file pointer to be written
+   \param[in]     *pdb  PDB linked list to write
+
+   Write a PDB linked list by calls to WritePDBRecord()
+
+-  08.03.89 Original
+-  01.06.92 ANSIed and autodoc'd
+-  10.06.93 Uses NEXT macro; void type
+-  08.07.93 Added insertion of TER cards
+-  22.02.94 And a TER card at the end of the file
+-  04.02.14 Use CHAINMATCH macro. By: CTP
+-  21.06.14 Function deprecated. Converted to wrapper for blWriteAsPDB().
+            By: CTP
+*/
+#define WritePDB(fp, pdb)                                                \
+({                                                                       \
+   DEPRECATED("WritePDB","blWritePDB()");                                \
+   blWriteAsPDB(fp, pdb);                                                \
+})
+
+/************************************************************************/
+/*>void WriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
+   --------------------------------------------
+*//**
+
+   \param[in]     *fp        File pointer
+   \param[in]     *wpdb      Whole PDB structure pointer
+
+   Writes a PDB file including header and trailer information
+
+-  30.05.02  Original   By: ACRM
+-  21.06.14  Deprecated function. By CTP.
+-  07.07.14  Use bl prefix for functions. Moved to deprecated.h By: CTP
+*/
+#define WriteWholePDB(fp, wpdb)                                          \
+({                                                                       \
+   DEPRECATED("WriteWholePDB","blWriteWholePDB()");                      \
+                                                                         \
+   blWriteWholePDBHeader(fp, wpdb);                                      \
+   blWritePDB(fp, wpdb->pdb);                                            \
+   blWriteWholePDBTrailer(fp, wpdb);                                     \
+})
+
+
+/************************************************************************/
+/*>void WriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
+   --------------------------------------------------
+*//**
+
+   \param[in]     *fp        File pointer
+   \param[in]     *wpdb      Whole PDB structure pointer
+
+   Writes the header of a PDB file 
+
+-  30.05.02  Original   By: ACRM
+-  21.06.14  Deprecated By: CTP
+-  07.07.14  Moved to deprecated.h By: CTP
+*/
+#define WriteWholePDBHeader(fp, wpdb)                                    \
+({                                                                       \
+   DEPRECATED("WriteWholePDBHeader()","blWriteWholePDBHeader()");        \
+   blWriteWholePDBHeader(fp, wpdb);                                      \
+})
+
+
+/************************************************************************/
+/*>void WriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
+   ---------------------------------------------------
+*//**
+
+   \param[in]     *fp        File pointer
+   \param[in]     *wpdb      Whole PDB structure pointer
+
+   Writes the trailer of a PDB file 
+
+-  30.05.02  Original   By: ACRM
+-  21.06.14  Deprecated By: CTP
+-  07.07.14  Moved to deprecated.h By: CTP
+*/
+#define WriteWholePDBTrailer(fp, wpdb)                                   \
+({                                                                       \
+   DEPRECATED("WriteWholePDBTrailer()","blWriteWholePDBTrailer()");      \
+   blWriteWholePDBTrailer(fp, wpdb);                                     \
+})
+
+/************************************************************************/
+/* Renamed Functions 
+*/
+/*
+#define XXX(a,b,c)                                                       \
+({                                                                       \
+   DEPRECATED("XXX","blXXX");                                            \
+   blXXX(a,b,c);                                                         \
+})
+*/
+
+/************************************************************************/
+/* Renamed functions: ReadPDB.c                                         */
+
+#define ReadPDB(fp, natom)                                               \
+({                                                                       \
+   DEPRECATED("ReadPDB()","blReadPDB()");                                \
+   blReadPDB(fp, natom);                                                 \
+})
+
+#define ReadPDBAll(fp, natom)                                            \
+({                                                                       \
+   DEPRECATED("ReadPDBAll()","blReadPDBAll()");                          \
+   blReadPDBAll(fp, natom);                                              \
+})
+
+#define ReadPDBAtoms(fp, natom)                                          \
+({                                                                       \
+   DEPRECATED("ReadPDBAtoms()","blReadPDBAtoms()");                      \
+   blReadPDBAtoms(fp, natom);                                            \
+})
+
+#define ReadPDBOccRank(fp, natom, OccRank)                               \
+({                                                                       \
+   DEPRECATED("ReadPDBOccRank()","blReadPDBOccRank()");                  \
+   blReadPDBOccRank(fp, natom, OccRank);                                 \
+})
+
+#define ReadPDBAtomsOccRank(fp, natom, OccRank)                          \
+({                                                                       \
+   DEPRECATED("ReadPDBAtomsOccRank()","blReadPDBAtomsOccRank()");        \
+   blReadPDBAtomsOccRank(fp, natom, OccRank);                            \
+})
+
+#define doReadPDB(fpin, natom, AllAtoms, OccRank, ModelNum)              \
+({                                                                       \
+   DEPRECATED("doReadPDB()","bldoReadPDB()");                            \
+   bldoReadPDB(fpin, natom, AllAtoms, OccRank, ModelNum);                \
+})
+
+#define FixAtomName(name, occup)                                         \
+({                                                                       \
+   DEPRECATED("FixAtomName()","blFixAtomName()");                        \
+   blFixAtomName(name, occup);                                           \
+})
+
+#define RemoveAlternates(pdb)                                            \
+({                                                                       \
+   DEPRECATED("RemoveAlternates","blRemoveAlternates");                  \
+   blRemoveAlternates(pdb);                                              \
+})
+
+#define doReadPDBML(fp, natom, AllAtoms, OccRank, ModelNum)              \
+({                                                                       \
+   DEPRECATED("doReadPDBML()","bldoReadPDBML()");                        \
+   bldoReadPDBML(fp, natom, AllAtoms, OccRank, ModelNum);                \
+})
+
+#define CheckFileFormatPDBML(fp)                                         \
+({                                                                       \
+   DEPRECATED("CheckFileFormatPDBML()","blCheckFileFormatPDBML()");      \
+   blCheckFileFormatPDBML(fp);                                           \
+})
+
+/************************************************************************/
+/* Renamed functions: WritePDB.c                                        */
+
+#define WritePDBRecord(fp, pdb)                                          \
+({                                                                       \
+   DEPRECATED("WritePDBRecord()","blWritePDBRecord()");                  \
+   blWritePDBRecord(fp, pdb);                                            \
+})
+
+#define WritePDBRecordAtnam(fp, pdb)                                     \
+({                                                                       \
+   DEPRECATED("WritePDBRecordAtnam()","blWritePDBRecordAtnam()");        \
+   blWritePDBRecordAtnam(fp, pdb);                                       \
+})
+
+/************************************************************************/
+/* Renamed functions: WholePDB.c                                        */
+
+#define FreeWholePDB(wpdb)                                               \
+({                                                                       \
+   DEPRECATED("FreeWholePDB()","blFreeWholePDB()");                      \
+   blFreeWholePDB(wpdb);                                                 \
+})
+
+#define ReadWholePDB(fpin)                                               \
+({                                                                       \
+   DEPRECATED("ReadWholePDB()","blReadWholePDB()");                      \
+   blReadWholePDB(fpin);                                                 \
+})
+
+#define ReadWholePDBAtoms(fpin)                                          \
+({                                                                       \
+   DEPRECATED("ReadWholePDBAtoms()","blReadWholePDBAtoms()");            \
+   blReadWholePDBAtoms(fpin);                                            \
+})
+
+/************************************************************************/
+/* Renamed functions: pdb.h                                             */
+
+#define WriteGromosPDB(fp, pdb)                                          \
+({                                                                       \
+   DEPRECATED("WriteGromosPDB()","blWriteGromosPDB()");                  \
+   blWriteGromosPDB(fp, pdb);                                            \
+})
+#define WriteGromosPDBRecord(fp, pdb)                                    \
+({                                                                       \
+   DEPRECATED("WriteGromosPDBRecord()","blWriteGromosPDBRecord()");      \
+   blWriteGromosPDBRecord(fp, pdb);                                      \
+})
+
+#define GetCofGPDB(pdb, cg)                                              \
+({                                                                       \
+   DEPRECATED("GetCofGPDB()","blGetCofGPDB()");                          \
+   blGetCofGPDB(pdb, cg);                                                \
+})
+
+#define GetCofGPDBRange(start, stop, cg)                                 \
+({                                                                       \
+   DEPRECATED("GetCofGPDBRange()","blGetCofGPDBRange()");                \
+   blGetCofGPDBRange(start, stop, cg);                                   \
+})
+
+#define GetCofGPDBSCRange(start, stop, cg)                               \
+({                                                                       \
+   DEPRECATED("GetCofGPDBSCRange()","blGetCofGPDBSCRange()");            \
+   blGetCofGPDBSCRange(start, stop, cg);                                 \
+})
+
+#define OriginPDB(pdb)                                                   \
+({                                                                       \
+   DEPRECATED("OriginPDB()","blOriginPDB()");                            \
+   blOriginPDB(pdb);                                                     \
+})
+
+#define RotatePDB(pdb, rm)                                               \
+({                                                                       \
+   DEPRECATED("RotatePDB()","blRotatePDB()");                            \
+   blRotatePDB(pdb, rm);                                                 \
+})
+
+#define TranslatePDB(pdb, tvect)                                         \
+({                                                                       \
+   DEPRECATED("TranslatePDB()","blTranslatePDB()");                      \
+   blTranslatePDB(pdb, tvect);                                           \
+})
+
+
+/*345678901234567890123456789012345678901234567890123456789012345678901234567890*/
+#define FitPDB(ref_pdb, fit_pdb, rm)                                     \
+({                                                                       \
+   DEPRECATED("FitPDB()","blFitPDB()");                                  \
+   blFitPDB(ref_pdb, fit_pdb, rm);                                       \
+})
+
+#define FitCaPDB(ref_pdb, fit_pdb, rm)                                   \
+({                                                                       \
+   DEPRECATED("FitCaPDB()","blFitCaPDB()");                              \
+   blFitCaPDB(ref_pdb, fit_pdb, rm);                                     \
+})
+
+#define FitNCaCPDB(ref_pdb, fit_pdb, rm)                                 \
+({                                                                       \
+   DEPRECATED("FitNCaCPDB()","blFitNCaCPDB()");                          \
+   blFitNCaCPDB(ref_pdb, fit_pdb, rm);                                   \
+})
+
+#define FitCaCbPDB(ref_pdb, fit_pdb, rm)                                 \
+({                                                                       \
+   DEPRECATED("FitCaCbPDB()","blFitCaCbPDB()");                          \
+   blFitCaCbPDB(ref_pdb, fit_pdb, rm);                                   \
+})
+
+#define CalcRMSPDB(pdb1, pdb2)                                           \
+({                                                                       \
+   DEPRECATED("CalcRMSPDB()","blCalcRMSPDB()");                          \
+   blCalcRMSPDB(pdb1, pdb2);                                             \
+})
+
+#define GetPDBCoor(pdb, coor)                                            \
+({                                                                       \
+   DEPRECATED("GetPDBCoor()","blGetPDBCoor()");                          \
+   blGetPDBCoor(pdb, coor);                                              \
+})
+
+#define HAddPDB(fp, pdb)                                                 \
+({                                                                       \
+   DEPRECATED("HAddPDB()","blHAddPDB()");                                \
+   blHAddPDB(fp, pdb);                                                   \
+})
+
+#define ReadPGP(fp)                                                      \
+({                                                                       \
+   DEPRECATED("ReadPGP()","blReadPGP()");                                \
+   blReadPGP(fp);                                                        \
+})
+
+#define OpenPGPFile(pgpfile, AllHyd)                                     \
+({                                                                       \
+   DEPRECATED("OpenPGPFile()","blOpenPGPFile()");                        \
+   blOpenPGPFile(pgpfile, AllHyd);                                       \
+})
+
+#define SelectAtomsPDB(pdbin, nsel, sel, natom)                          \
+({                                                                       \
+   DEPRECATED("SelectAtomsPDB()","blSelectAtomsPDB()");                  \
+   blSelectAtomsPDB(pdbin, nsel, sel, natom);                            \
+})
+
+#define StripHPDB(pdbin, natom)                                          \
+({                                                                       \
+   DEPRECATED("StripHPDB()","blStripHPDB()");                            \
+   blStripHPDB(pdbin, natom);                                            \
+})
+
+#define ReadSecPDB(fp, nsec)                                             \
+({                                                                       \
+   DEPRECATED("ReadSecPDB()","blReadSecPDB()");                          \
+   blReadSecPDB(fp, nsec);                                               \
+})
+
+#define RenumAtomsPDB(pdb)                                               \
+({                                                                       \
+   DEPRECATED("RenumAtomsPDB()","blRenumAtomsPDB()");                    \
+   blRenumAtomsPDB(pdb);                                                 \
+})
+
+#define FindEndPDB(start)                                                \
+({                                                                       \
+   DEPRECATED("FindEndPDB()","blFindEndPDB()");                          \
+   blFindEndPDB(start);                                                  \
+})
+
+#define FixOrderPDB(pdb, Pad, Renum)                                     \
+({                                                                       \
+   DEPRECATED("FixOrderPDB()","blFixOrderPDB()");                        \
+   blFixOrderPDB(pdb, Pad, Renum);                                       \
+})
+
+#define ShuffleResPDB(start, end, Pad)                                   \
+({                                                                       \
+   DEPRECATED("ShuffleResPDB()","blShuffleResPDB()");                    \
+   blShuffleResPDB(start, end, Pad);                                     \
+})
+
+#define GetAtomTypes(resnam, AtomTypes)                                  \
+({                                                                       \
+   DEPRECATED("GetAtomTypes()","blGetAtomTypes()");                      \
+   blGetAtomTypes(resnam, AtomTypes);                                    \
+})
+
+#define KillPDB(pdb, prev)                                               \
+({                                                                       \
+   DEPRECATED("KillPDB()","blKillPDB()");                                \
+   blKillPDB(pdb, prev);                                                 \
+})
+
+#define CopyPDB(out, in)                                                 \
+({                                                                       \
+   DEPRECATED("CopyPDB()","blCopyPDB()");                                \
+   blCopyPDB(out, in);                                                   \
+})
+
+#define MovePDB(move, from, to)                                          \
+({                                                                       \
+   DEPRECATED("MovePDB()","blMovePDB()");                                \
+   blMovePDB(move, from, to);                                            \
+})
+
+#define AppendPDB(first, second)                                         \
+({                                                                       \
+   DEPRECATED("AppendPDB()","blAppendPDB()");                            \
+   blAppendPDB(first, second);                                           \
+})
+
+#define ShuffleBB(pdb)                                                   \
+({                                                                       \
+   DEPRECATED("ShuffleBB()","blShuffleBB()");                            \
+   blShuffleBB(pdb);                                                     \
+})
+
+#define CalcChi(pdb, type)                                               \
+({                                                                       \
+   DEPRECATED("CalcChi()","blCalcChi()");                                \
+   blCalcChi(pdb, type);                                                 \
+})
+
+#define GetPDBByN(pdb, n)                                                \
+({                                                                       \
+   DEPRECATED("GetPDBByN()","blGetPDBByN()");                            \
+   blGetPDBByN(pdb, n);                                                  \
+})
+
+#define SetChi(pdb, next, chi, type)                                     \
+({                                                                       \
+   DEPRECATED("SetChi()","blSetChi()");                                  \
+   blSetChi(pdb, next, chi, type);                                       \
+})
+
+#define KillSidechain(ResStart, NextRes, doCB)                           \
+({                                                                       \
+   DEPRECATED("KillSidechain()","blKillSidechain()");                    \
+   blKillSidechain(ResStart, NextRes, doCB);                             \
+})
+
+#define SetResnam(ResStart, NextRes, resnam, resnum, insert, chain)      \
+({                                                                       \
+   DEPRECATED("SetResnam()","blSetResnam()");                            \
+   blSetResnam(ResStart, NextRes, resnam, resnum, insert, chain);        \
+})
+
+#define ApplyMatrixPDB(pdb, rm)                                          \
+({                                                                       \
+   DEPRECATED("ApplyMatrixPDB()","blApplyMatrixPDB()");                  \
+   blApplyMatrixPDB(pdb, rm);                                            \
+})
+
+
+#define GetResolPDB(fp, resolution, RFactor, StrucType)                  \
+({                                                                       \
+   DEPRECATED("GetResolPDB()","blGetResolPDB()");                        \
+   blGetResolPDB(fp, resolution, RFactor, StrucType);                    \
+})
+
+#define GetExptl(fp, resolution, RFactor, FreeR, StrucType)              \
+({                                                                       \
+   DEPRECATED("GetExptl()","blGetExptl()");                              \
+   blGetExptl(fp, resolution, RFactor, FreeR, StrucType);                \
+})
+
+#define GetExptlOld(fp, resolution, RFactor, FreeR, StrucType)           \
+({                                                                       \
+   DEPRECATED("GetExptlOld()","blGetExptlOld()");                        \
+   blGetExptlOld(fp, resolution, RFactor, FreeR, StrucType);             \
+})
+
+#define ReportStructureType(type)                                        \
+({                                                                       \
+   DEPRECATED("ReportStructureType()","blReportStructureType()");        \
+   blReportStructureType(type);                                          \
+})
+
+#define IndexPDB(pdb, natom)                                             \
+({                                                                       \
+   DEPRECATED("IndexPDB()","blIndexPDB()");                              \
+   blIndexPDB(pdb, natom);                                               \
+})
+
+#define ReadDisulphidesPDB(fp, error)                                    \
+({                                                                       \
+   DEPRECATED("ReadDisulphidesPDB()","blReadDisulphidesPDB()");          \
+   blReadDisulphidesPDB(fp, error);                                      \
+})
+
+#define ParseResSpec(spec, chain, resnum, insert)                        \
+({                                                                       \
+   DEPRECATED("ParseResSpec()","blParseResSpec()");                      \
+   blParseResSpec(spec, chain, resnum, insert);                          \
+})
+
+#define ParseResSpecNoUpper(spec, chain, resnum, insert)                 \
+({                                                                       \
+   DEPRECATED("ParseResSpecNoUpper()","blParseResSpecNoUpper()");        \
+   blParseResSpecNoUpper(spec, chain, resnum, insert);                   \
+})
+
+#define DoParseResSpec(spec, chain, resnum, insert, uppercaseresspec)    \
+({                                                                       \
+   DEPRECATED("DoParseResSpec()","blDoParseResSpec()");                  \
+   blDoParseResSpec(spec, chain, resnum, insert, uppercaseresspec);      \
+})
+
+#define RepSChain(pdb, sequence, ChiTable, RefCoords)                    \
+({                                                                       \
+   DEPRECATED("RepSChain()","blRepSChain()");                            \
+   blRepSChain(pdb, sequence, ChiTable, RefCoords);                      \
+})
+
+#define FindNextChainPDB(pdb)                                            \
+({                                                                       \
+   DEPRECATED("FindNextChainPDB()","blFindNextChainPDB()");              \
+   blFindNextChainPDB(pdb);                                              \
+})
+
+#define FixCterPDB(pdb, style)                                           \
+({                                                                       \
+   DEPRECATED("FixCterPDB()","blFixCterPDB()");                          \
+   blFixCterPDB(pdb, style);                                             \
+})
+
+#define CalcCterCoords(p, ca_p, c_p, o_p)                                \
+({                                                                       \
+   DEPRECATED("CalcCterCoords()","blCalcCterCoords()");                  \
+   blCalcCterCoords(p, ca_p, c_p, o_p);                                  \
+})
+
+#define CalcTetraHCoords(nter, coor)                                     \
+({                                                                       \
+   DEPRECATED("CalcTetraHCoords()","blCalcTetraHCoords()");              \
+   blCalcTetraHCoords(nter, coor);                                       \
+})
+
+#define AddNTerHs(ppdb, Charmm)                                          \
+({                                                                       \
+   DEPRECATED("AddNTerHs()","blAddNTerHs()");                            \
+   blAddNTerHs(ppdb, Charmm);                                            \
+})
+
+#define FNam2PDB(filename)                                               \
+({                                                                       \
+   DEPRECATED("FNam2PDB()","blFNam2PDB()");                              \
+   blFNam2PDB(filename);                                                 \
+})
+
+#define TermPDB(pdb, length)                                             \
+({                                                                       \
+   DEPRECATED("TermPDB()","blTermPDB()");                                \
+   blTermPDB(pdb, length);                                               \
+})
+
+#define FindHetatmResidueSpec(pdb, resspec)                              \
+({                                                                       \
+   DEPRECATED("FindHetatmResidueSpec()","blFindHetatmResidueSpec()");    \
+   blFindHetatmResidueSpec(pdb, resspec);                                \
+})
+
+#define FindResidueSpec(pdb, resspec)                                    \
+({                                                                       \
+   DEPRECATED("FindResidueSpec()","blFindResidueSpec()");                \
+   blFindResidueSpec(pdb, resspec);                                      \
+})
+
+#define FindNextResidue(pdb)                                             \
+({                                                                       \
+   DEPRECATED("FindNextResidue()","blFindNextResidue()");                \
+   blFindNextResidue(pdb);                                               \
+})
+
+#define DupePDB(in)                                                      \
+({                                                                       \
+   DEPRECATED("DupePDB()","blDupePDB()");                                \
+   blDupePDB(in);                                                        \
+})
+
+#define CopyPDBCoords(out, in)                                           \
+({                                                                       \
+   DEPRECATED("CopyPDBCoords()","blCopyPDBCoords()");                    \
+   blCopyPDBCoords(out, in);                                             \
+})
+
+#define CalcCellTrans(UnitCell, CellAngles, xtrans, ytrans, ztrans)      \
+({                                                                       \
+   DEPRECATED("CalcCellTrans()","blCalcCellTrans()");                    \
+   blCalcCellTrans(UnitCell, CellAngles, xtrans, ytrans, ztrans);        \
+})
+
+#define GetCrystPDB(fp, UnitCell, CellAngles, spacegroup, OrigMatrix, ScaleMatrix) \
+({                                                                       \
+   DEPRECATED("GetCrystPDB()","blGetCrystPDB()");                        \
+   blGetCrystPDB(fp, UnitCell, CellAngles, spacegroup, OrigMatrix, ScaleMatrix); \
+})
+
+#define WriteCrystPDB(fp, UnitCell, CellAngles, spacegroup, OrigMatrix, ScaleMatrix) \
+({                                                                       \
+   DEPRECATED("WriteCrystPDB()","blWriteCrystPDB()");                    \
+   blWriteCrystPDB(fp, UnitCell, CellAngles, spacegroup, OrigMatrix, ScaleMatrix); \
+})
+
+#define ExtractZonePDB(inpdb, chain1, resnum1, insert1, chain2, resnum2, insert2) \
+({                                                                       \
+   DEPRECATED("ExtractZonePDB()","blExtractZonePDB()");                  \
+   blExtractZonePDB(inpdb, chain1, resnum1, insert1, chain2, resnum2, insert2); \
+})
+
+#define FindAtomInRes(pdb, atnam)                                        \
+({                                                                       \
+   DEPRECATED("FindAtomInRes()","blFindAtomInRes()");                    \
+   blFindAtomInRes(pdb, atnam);                                          \
+})
+
+#define InPDBZoneSpec(p, resspec1, resspec2)                             \
+({                                                                       \
+   DEPRECATED("InPDBZoneSpec()","blInPDBZoneSpec()");                    \
+   blInPDBZoneSpec(p, resspec1, resspec2);                               \
+})
+
+#define AtomNameMatch(atnam, spec, ErrorWarn)                            \
+({                                                                       \
+   DEPRECATED("AtomNameMatch()","blAtomNameMatch()");                    \
+   blAtomNameMatch(atnam, spec, ErrorWarn);                              \
+})
+
+#define AtomNameRawMatch(atnam, spec, ErrorWarn)                         \
+({                                                                       \
+   DEPRECATED("AtomNameRawMatch()","blAtomNameRawMatch()");              \
+   blAtomNameRawMatch(atnam, spec, ErrorWarn);                           \
+})
+
+#define LegalAtomSpec(spec)                                              \
+({                                                                       \
+   DEPRECATED("LegalAtomSpec()","blLegalAtomSpec()");                    \
+   blLegalAtomSpec(spec);                                                \
+})
+
+#define RepOneSChain(pdb, ResSpec, aa, ChiTable, RefCoords)              \
+({                                                                       \
+   DEPRECATED("RepOneSChain()","blRepOneSChain()");                      \
+   blRepOneSChain(pdb, ResSpec, aa, ChiTable, RefCoords);                \
+})
+
+/* Check this OK */
+#define EndRepSChain()                                                   \
+({                                                                       \
+   DEPRECATED("EndRepSChain()","blEndRepSChain()");                      \
+   blEndRepSChain();                                                     \
+})
+
+#define ReadSeqresPDB(fp, nchains)                                       \
+({                                                                       \
+   DEPRECATED("ReadSeqresPDB()","blReadSeqresPDB()");                    \
+   blReadSeqresPDB(fp, nchains);                                         \
+})
+
+#define SelectCaPDB(pdb)                                                 \
+({                                                                       \
+   DEPRECATED("SelectCaPDB()","blSelectCaPDB()");                        \
+   blSelectCaPDB(pdb);                                                   \
+})
+
+#define AddCBtoGly(pdb)                                                  \
+({                                                                       \
+   DEPRECATED("AddCBtoGly()","blAddCBtoGly()");                          \
+   blAddCBtoGly(pdb);                                                    \
+})
+
+#define AddCBtoAllGly(pdb)                                               \
+({                                                                       \
+   DEPRECATED("AddCBtoAllGly()","blAddCBtoAllGly()");                    \
+   blAddCBtoAllGly(pdb);                                                 \
+})
+
+#define StripGlyCB(pdb)                                                  \
+({                                                                       \
+   DEPRECATED("StripGlyCB()","blStripGlyCB()");                          \
+   blStripGlyCB(pdb);                                                    \
+})
+
+#define BuildAtomNeighbourPDBList(pdb, pRes, NeighbDist)                 \
+({                                                                       \
+   DEPRECATED("BuildAtomNeighbourPDBList()","blBuildAtomNeighbourPDBList()"); \
+   blBuildAtomNeighbourPDBList(pdb, pRes, NeighbDist);                   \
+})
+
+#define FindAtomWildcardInRes(pdb, pattern)                              \
+({                                                                       \
+   DEPRECATED("FindAtomWildcardInRes()","blFindAtomWildcardInRes()");    \
+   blFindAtomWildcardInRes(pdb, pattern);                                \
+})
+
+#define DupeResiduePDB(in)                                               \
+({                                                                       \
+   DEPRECATED("DupeResiduePDB()","blDupeResiduePDB()");                  \
+   blDupeResiduePDB(in);                                                 \
+})
+
+#define StripWatersPDB(pdbin, natom)                                     \
+({                                                                       \
+   DEPRECATED("StripWatersPDB()","blStripWatersPDB()");                  \
+   blStripWatersPDB(pdbin, natom);                                       \
+})
+
+#define AllocPDBStructure(pdb)                                           \
+({                                                                       \
+   DEPRECATED("AllocPDBStructure()","blAllocPDBStructure()");            \
+   blAllocPDBStructure(pdb);                                             \
+})
+
+#define FindNextChain(pdb)                                               \
+({                                                                       \
+   DEPRECATED("FindNextChain()","blFindNextChain()");                    \
+   blFindNextChain(pdb);                                                 \
+})
+
+#define FreePDBStructure(pdbstruct)                                      \
+({                                                                       \
+   DEPRECATED("FreePDBStructure()","blFreePDBStructure()");              \
+   blFreePDBStructure(pdbstruct);                                        \
+})
+
+
+/************************************************************************/
+/* Renamed functions: hbond.h                                           */
+
+#define IsHBonded(res1, res2, type)                                      \
+({                                                                       \
+   DEPRECATED("IsHBonded()","blIsHBonded()");                            \
+   blIsHBonded(res1, res2, type);                                        \
+})
+
+#define ValidHBond(AtomH, AtomD, AtomA, AtomP)                           \
+({                                                                       \
+   DEPRECATED("ValidHBond()","blValidHBond()");                          \
+   blValidHBond(AtomH, AtomD, AtomA, AtomP);                             \
+})
+
+#define IsMCDonorHBonded(res1, res2, type)                               \
+({                                                                       \
+   DEPRECATED("IsMCDonorHBonded()","blIsMCDonorHBonded()");              \
+   blIsMCDonorHBonded(res1, res2, type);                                 \
+})
+
+#define IsMCAcceptorHBonded(res1, res2, type)                            \
+({                                                                       \
+   DEPRECATED("IsMCAcceptorHBonded()","blIsMCAcceptorHBonded()");        \
+   blIsMCAcceptorHBonded(res1, res2, type);                              \
+})
+
+
 
 /************************************************************************/
 /* Globals

@@ -3,12 +3,12 @@
 
    \file       RdSecPDB.c
    
-   \version    V1.3R
-   \date       18.08.98
+   \version    V1.4
+   \date       07.07.14
    \brief      Read secondary structure information from the HELIX, TURN
                and SHEET records in a PDB file
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-8
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -70,6 +70,7 @@
 -  V1.2  09.07.93 Changed allocation scheme. Returns pointer to SECSTRUC.
                   No need to initialise this before calling
 -  V1.3  18.08.98 Changed SEC to SECSTRUC 'cos of conflict in SunOS
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -99,8 +100,8 @@
 */
 
 /************************************************************************/
-/*>SECSTRUC *ReadSecPDB(FILE *fp, int *nsec)
-   -----------------------------------------
+/*>SECSTRUC *blReadSecPDB(FILE *fp, int *nsec)
+   -------------------------------------------
 *//**
 
    \param[in]     *fp      Pointer to PDB file
@@ -121,8 +122,9 @@
 -  09.07.93 Changed allocation scheme. Returns pointer to SECSTRUC.
             No need to initialise this before calling. Uses fsscanf()
 -  18.08.98 Changed SEC to SECSTRUC 'cos of conflict in SunOS
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-SECSTRUC *ReadSecPDB(FILE *fp, int *nsec)
+SECSTRUC *blReadSecPDB(FILE *fp, int *nsec)
 {
    int         class,
                res1,

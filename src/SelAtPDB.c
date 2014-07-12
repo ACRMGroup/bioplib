@@ -3,11 +3,11 @@
 
    \file       SelAtPDB.c
    
-   \version    V1.8
-   \date       03.20.09
+   \version    V1.9
+   \date       07.07.14
    \brief      Select a subset of atom types from a PDB linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2009
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -82,6 +82,7 @@
 -  V1.6  26.07.95 Removed unused variables
 -  V1.7  16.10.96 Added SelectCaPDB()
 -  V1.8  04.02.09 SelectAtomsPDB(): Initialize q for fussy compliers
+-  V1.9  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -110,8 +111,8 @@
 */
 
 /************************************************************************/
-/*>PDB *SelectAtomsPDB(PDB *pdbin, int nsel, char **sel, int *natom)
-   -----------------------------------------------------------------
+/*>PDB *blSelectAtomsPDB(PDB *pdbin, int nsel, char **sel, int *natom)
+   -------------------------------------------------------------------
 *//**
 
    \param[in]     *pdbin      Input list
@@ -148,8 +149,9 @@
             scheme. Changed back to sel[] variables *must* be 4
             chars.
 -  04.02.09 Initialize q for fussy compliers
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *SelectAtomsPDB(PDB *pdbin, int nsel, char **sel, int *natom)
+PDB *blSelectAtomsPDB(PDB *pdbin, int nsel, char **sel, int *natom)
 {
    PDB   *pdbout  = NULL,
          *p,
@@ -190,7 +192,7 @@ PDB *SelectAtomsPDB(PDB *pdbin, int nsel, char **sel, int *natom)
             (*natom)++;
             
             /* Copy the record to the output list (sets ->next to NULL) */
-            CopyPDB(q, p);
+            blCopyPDB(q, p);
             
             break;
          }

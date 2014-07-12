@@ -3,8 +3,8 @@
 
    \file       OriginPDB.c
    
-   \version    V1.1R
-   \date       22.02.94
+   \version    V1.2
+   \date       07.07.14
    \brief      Move a PDB linked list to the origin
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-4
@@ -48,6 +48,7 @@
    =================
 -  V1.0  01.10.92 Original
 -  V1.1  22.02.94 Changed NULL check to any coordinate not 9999.0
+-  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -71,8 +72,8 @@
 */
 
 /************************************************************************/
-/*>void OriginPDB(PDB *pdb)
-   ------------------------
+/*>void blOriginPDB(PDB *pdb)
+   --------------------------
 *//**
 
    \param[in,out] *pdb    PDB linked list to move
@@ -82,13 +83,14 @@
 -  01.10.92 Original
 -  22.02.94 Changed NULL check to any coordinate not 9999.0
 -  11.03.94 Changed NULL check to >9998.0 Added cast to REAL
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void OriginPDB(PDB *pdb)
+void blOriginPDB(PDB *pdb)
 {
    PDB   *p;
    VEC3F cg;
 
-   GetCofGPDB(pdb,&cg);
+   blGetCofGPDB(pdb,&cg);
 
    for(p=pdb; p!=NULL; NEXT(p))
    {

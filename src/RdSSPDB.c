@@ -3,12 +3,12 @@
 
    \file       RdSSPDB.c
    
-   \version    V1.0R
-   \date       01.03.94
+   \version    V1.1
+   \date       07.07.14
    \brief      Read disulphide information from header records of a PDB
                file
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-4
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -75,8 +75,8 @@
 */
 
 /************************************************************************/
-/*>DISULPHIDE *ReadDisulphidesPDB(FILE *fp, BOOL *error)
-   -----------------------------------------------------
+/*>DISULPHIDE *blReadDisulphidesPDB(FILE *fp, BOOL *error)
+   -------------------------------------------------------
 *//**
 
    \param[in]     *fp     PDB file pointer
@@ -91,8 +91,9 @@
    the error flag is set to TRUE
 
 -  14.10.93 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-DISULPHIDE *ReadDisulphidesPDB(FILE *fp, BOOL *error)
+DISULPHIDE *blReadDisulphidesPDB(FILE *fp, BOOL *error)
 {
    DISULPHIDE *dis = NULL,
               *p   = NULL;

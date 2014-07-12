@@ -3,8 +3,8 @@
 
    \file       GetCGPDB.c
    
-   \version    V1.1R
-   \date       03.10.94
+   \version    V1.2
+   \date       07.07.14
    \brief      Find CofG of a PDB linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-4
@@ -49,6 +49,7 @@
 -  V1.0  01.10.92 Original
 -  V1.1  03.10.94 Added GetCofGPDBRange(), FindCofGPDBSCRange() and 
                   fixed NULL coord search in GetCofGPDB()
+-  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -73,8 +74,8 @@
 
 
 /************************************************************************/
-/*>void GetCofGPDB(PDB *pdb,VEC3F *cg)
-   -----------------------------------
+/*>void blGetCofGPDB(PDB *pdb,VEC3F *cg)
+   -------------------------------------
 *//**
 
    \param[in]     *pdb       Start of PDB linked list
@@ -84,9 +85,10 @@
 
 -  01.10.92 Original
 -  03.10.94 Fixed NULL coordinate ignoring
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void GetCofGPDB(PDB   *pdb,
-                VEC3F *cg)
+void blGetCofGPDB(PDB   *pdb,
+                  VEC3F *cg)
 {
    int natom;
    PDB *p;

@@ -3,11 +3,11 @@
 
    \file       OrderPDB.c
    
-   \version    V1.3R
-   \date       23.06.08
+   \version    V1.4
+   \date       07.07.14
    \brief      Functions to modify atom order in PDB linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2008
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -50,6 +50,8 @@
 -  V1.1  09.03.94 Bug fix in ShuffleResPDB(). Added PCA to sAtoms table
 -  V1.2  18.03.94 Bug fix in ShuffleResPDB().
 -  V1.3  22.06.08 Bug fix in ShuffleBB()
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
+
 
 *************************************************************************/
 /* Includes
@@ -120,8 +122,8 @@ static char sAtoms[MAXSTDAA][MAXATINRES+1][8] =
 */
 
 /************************************************************************/
-/*>PDB *FixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum)
-   ------------------------------------------------
+/*>PDB *blFixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum)
+   --------------------------------------------------
 *//**
 
    \param[in]     *pdb    PDB linked list to fix atom order
@@ -140,8 +142,9 @@ static char sAtoms[MAXSTDAA][MAXATINRES+1][8] =
                   pdb = FixOrderPDB(pdb,TRUE,TRUE);
 
 -  08.07.93 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *FixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum)
+PDB *blFixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum)
 {
    PDB   *start   = NULL,
          *end     = NULL,
@@ -152,9 +155,9 @@ PDB *FixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum)
    for(start=pdb; start!=NULL; start=end)
    {
       /* Find a residue's limits                                        */
-      end = FindEndPDB(start);
+      end = blFindEndPDB(start);
       
-      p = ShuffleResPDB(start, end, Pad);
+      p = blShuffleResPDB(start, end, Pad);
       
       if(ret == NULL)
       {
@@ -169,14 +172,14 @@ PDB *FixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum)
          NEXT(current);
    }
 
-   if(Renum) RenumAtomsPDB(ret);
+   if(Renum) blRenumAtomsPDB(ret);
    
    return(ret);
 }
 
 
 /************************************************************************/
-/*>PDB *ShuffleResPDB(PDB *start, PDB *end, BOOL Pad)
+/*>PDB *blShuffleResPDB(PDB *start, PDB *end, BOOL Pad)
    --------------------------------------------------
 *//**
 
@@ -198,8 +201,9 @@ PDB *FixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum)
 -  17.03.94 If no atoms are found, then we return start. This is
             the case when partial occupancy atoms are named as "N  A",
             "N  B", etc.
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *ShuffleResPDB(PDB *start, PDB *end, BOOL Pad)
+PDB *blShuffleResPDB(PDB *start, PDB *end, BOOL Pad)
 {
    int   i,
          j;
@@ -236,7 +240,7 @@ PDB *ShuffleResPDB(PDB *start, PDB *end, BOOL Pad)
                    !strncmp(atnam,    "CD  ",4)))
                {
                   /* Atom found, move to return list                    */
-                  MovePDB(p, &start, &ret);
+                  blMovePDB(p, &start, &ret);
                   found = TRUE;
                   break;
                }
@@ -250,9 +254,9 @@ PDB *ShuffleResPDB(PDB *start, PDB *end, BOOL Pad)
                {
                   /* Copy in information for this residue               */
                   if(ret != NULL)
-                     CopyPDB(extra, ret);
+                     blCopyPDB(extra, ret);
                   else
-                     CopyPDB(extra, start);
+                     blCopyPDB(extra, start);
    
                   /* Set required atom name and NULL coordinates        */
                   strcpy(extra->atnam,atnam);
@@ -263,7 +267,7 @@ PDB *ShuffleResPDB(PDB *start, PDB *end, BOOL Pad)
                   extra->bval = (REAL)20.0;
    
                   /* Now move this record into the return list          */
-                  MovePDB(extra, &extra, &ret);
+                  blMovePDB(extra, &extra, &ret);
                }
             }
          }
@@ -303,8 +307,8 @@ PDB *ShuffleResPDB(PDB *start, PDB *end, BOOL Pad)
 
 
 /************************************************************************/
-/*>BOOL GetAtomTypes(char *resnam, char **AtomTypes)
-   -------------------------------------------------
+/*>BOOL blGetAtomTypes(char *resnam, char **AtomTypes)
+   ---------------------------------------------------
 *//**
 
    \param[in]     *resnam      Residue name for which to search
@@ -318,8 +322,9 @@ PDB *ShuffleResPDB(PDB *start, PDB *end, BOOL Pad)
    char types[][] - THIS WILL NOT WORK!
 
 -  08.07.93 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL GetAtomTypes(char *resnam, char **AtomTypes)
+BOOL blGetAtomTypes(char *resnam, char **AtomTypes)
 {
    int   i,
          j;
@@ -340,7 +345,7 @@ BOOL GetAtomTypes(char *resnam, char **AtomTypes)
 }
 
 /************************************************************************/
-/*>PDB *ShuffleBB(PDB *pdb)
+/*>PDB *blShuffleBB(PDB *pdb)
    ------------------------
 *//**
 
@@ -357,8 +362,9 @@ BOOL GetAtomTypes(char *resnam, char **AtomTypes)
             out of the current residue, so if the same residue number in
             a different chain was of the same type, it ended up changing
             that instead!
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *ShuffleBB(PDB *pdb)
+PDB *blShuffleBB(PDB *pdb)
 {
    PDB   *N    = NULL,
          *CA   = NULL,
@@ -369,7 +375,7 @@ PDB *ShuffleBB(PDB *pdb)
          *p,
          *next = NULL;
 
-   next = FindNextResidue(pdb);
+   next = blFindNextResidue(pdb);
           
    for(p=pdb; p!=next; NEXT(p))
    {
@@ -389,14 +395,14 @@ PDB *ShuffleBB(PDB *pdb)
    if(N==NULL) return(pdb);
  
    /* Move atoms in order from the pdb list to the ret list             */
-   MovePDB(N,  &pdb, &ret);
-   if(CA != NULL) MovePDB(CA, &pdb, &ret);
-   if(C  != NULL) MovePDB(C,  &pdb, &ret);
-   if(O  != NULL) MovePDB(O,  &pdb, &ret);
-   if(CB != NULL) MovePDB(CB, &pdb, &ret);
+   blMovePDB(N,  &pdb, &ret);
+   if(CA != NULL) blMovePDB(CA, &pdb, &ret);
+   if(C  != NULL) blMovePDB(C,  &pdb, &ret);
+   if(O  != NULL) blMovePDB(O,  &pdb, &ret);
+   if(CB != NULL) blMovePDB(CB, &pdb, &ret);
  
    /* Append the remains of pdb onto ret                                */
-   AppendPDB(ret, pdb);
+   blAppendPDB(ret, pdb);
     
    return(ret);
 }

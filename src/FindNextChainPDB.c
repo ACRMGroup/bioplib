@@ -3,8 +3,8 @@
 
    \file       FindNextChainPDB.c
    
-   \version    V1.11
-   \date       04.02.14
+   \version    V1.12
+   \date       07.07.14
    \brief      PDB linked list manipulation
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2014
@@ -58,7 +58,7 @@
 -  V1.9  14.03.96 Added FindAtomInRes()
 -  V1.10 08.10.99 Initialised some variables
 -  V1.11 04.02.14 Use CHAINMATCH By: CTP
-
+-  V1.12 07.07.14 Use bl prefix for functions By: CTP
 *************************************************************************/
 /* Includes
 */
@@ -84,8 +84,8 @@
 */
 
 /************************************************************************/
-/*>PDB *FindNextChainPDB(PDB *pdb)
-   -------------------------------
+/*>PDB *blFindNextChainPDB(PDB *pdb)
+   ---------------------------------
 *//**
 
    \param[in,out] *pdb      PDB linked list
@@ -96,8 +96,9 @@
 
 -  23.05.94 Original    By: ACRM
 -  04.02.14 Use CHAINMATCH By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *FindNextChainPDB(PDB *pdb)
+PDB *blFindNextChainPDB(PDB *pdb)
 {
    PDB  *p, *ret = NULL;
    

@@ -3,8 +3,8 @@
 
    \file       FindHetatmResidue.c
    
-   \version    V1.2
-   \date       25.02.14
+   \version    V1.4
+   \date       07.07.14
    \brief      Parse a residue specification
    
    \copyright  2011-2014
@@ -50,6 +50,8 @@
 -  V1.1  24.02.14 Added BiopFindHetatmResidue() By: CTP
 -  V1.2  25.02.14 Added error message for FindHetatmResidue(). By: CTP
 -  V1.3  07.05.14 Moved FindHetatmResidue() to deprecated.h By: CTP
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
+
 
 *************************************************************************/
 /* Includes
@@ -78,15 +80,18 @@
 
 
 /************************************************************************/
-/*>PDB *BiopFindHetatmResidue(PDB *pdb, char chain, int resnum, char insert)
+/*>PDB *blFindHetatmResidue(PDB *pdb, char chain, int resnum, char insert)
   ------------------------------------------------------------------------
   Finds a pointer to the start of a residue in a PDB linked list, but
   requires the residue is a HETATM record
   Uses string for chain and insert.
 
-  24.02.14 Original. By: CTP
+-  24.02.14 Original. By: CTP
+-  07.07.14 Renamed to FindHetatmResidue().
+            Use bl prefix for functions By: CTP
+
 */
-PDB *BiopFindHetatmResidue(PDB *pdb, char *chain, int resnum, char *insert)
+PDB *blFindHetatmResidue(PDB *pdb, char *chain, int resnum, char *insert)
 {
    PDB *p;
 

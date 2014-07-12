@@ -3,11 +3,12 @@
 
    \file       SetResnam.c
    
-   \version    V1.2
-   \date       01.03.94
+   \version    V1.3
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin, University of Reading, 
+               2002-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -48,6 +49,7 @@
    =================
 -  V1.1  01.03.94
 -  V1.2  27.02.98 Removed unreachable break from switch()
+-  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -71,9 +73,9 @@
 
 
 /************************************************************************/
-/*>void SetResnam(PDB *ResStart, PDB *NextRes, char *resnam, int resnum,
-                  char *insert, char *chain)
-   ---------------------------------------------------------------------
+/*>void blSetResnam(PDB *ResStart, PDB *NextRes, char *resnam, int resnum,
+                    char *insert, char *chain)
+   -----------------------------------------------------------------------
 *//**
 
    \param[in,out] *ResStart   Pointer to start of residue (linked list)
@@ -86,13 +88,14 @@
    Change the residue name, number, insert and chain for an amino acid.
 
 -  12.05.92 Original
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void SetResnam(PDB  *ResStart,
-               PDB  *NextRes,
-               char *resnam,
-               int  resnum,
-               char *insert,
-               char *chain)
+void blSetResnam(PDB  *ResStart,
+                 PDB  *NextRes,
+                 char *resnam,
+                 int  resnum,
+                 char *insert,
+                 char *chain)
 {
    PDB *p;
    

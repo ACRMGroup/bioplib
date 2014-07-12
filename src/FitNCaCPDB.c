@@ -3,8 +3,8 @@
 
    \file       FitNCaCPDB.c
    
-   \version    V1.3R
-   \date       14.03.96
+   \version    V1.4
+   \date       07.07.14
    \brief      Fit two PDB linked lists. Also a weighted fit and support
                routines
    
@@ -55,6 +55,7 @@
                   Changed FitPDB() and FitCaCbPDB() to use 
                   ApplyMatrixPDB() rather than RotatePDB() since the PDB
                   linked lists are already at the origin
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -82,8 +83,8 @@
 */
 
 /************************************************************************/
-/*>BOOL FitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
-   ----------------------------------------------------------
+/*>BOOL blFitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
+   ------------------------------------------------------------
 *//**
 
    \param[in]     *ref_pdb     Reference PDB linked list
@@ -97,8 +98,9 @@
    matrix. This may be NULL if these data are not required.
 
 -  12.12.01 Original based on FitCaPDB()   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL FitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
+BOOL blFitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
 {
    REAL  RotMat[3][3];
    COOR  *ref_coor   = NULL,
@@ -120,9 +122,9 @@ BOOL FitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
    SELECT(sel[2], "C   ");
    if((sel[0]==NULL)||(sel[1]==NULL)||(sel[2]==NULL)||(sel[3]==NULL))
       return(FALSE);
-   if((ref_bb_pdb = SelectAtomsPDB(ref_pdb, 3, sel, &natoms))==NULL)
+   if((ref_bb_pdb = blSelectAtomsPDB(ref_pdb, 3, sel, &natoms))==NULL)
       RetVal = FALSE;
-   if((fit_bb_pdb = SelectAtomsPDB(fit_pdb, 3, sel, &natoms))==NULL)
+   if((fit_bb_pdb = blSelectAtomsPDB(fit_pdb, 3, sel, &natoms))==NULL)
       RetVal = FALSE;
    free(sel[0]);
    free(sel[1]);
@@ -132,16 +134,16 @@ BOOL FitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
    if(RetVal)
    {
       /* Get the CofG of the BB structures and the original mobile      */
-      GetCofGPDB(ref_bb_pdb, &ref_bb_CofG);
-      GetCofGPDB(fit_bb_pdb, &fit_bb_CofG);
+      blGetCofGPDB(ref_bb_pdb, &ref_bb_CofG);
+      blGetCofGPDB(fit_bb_pdb, &fit_bb_CofG);
       
       /* Move them both to the origin                                   */
-      OriginPDB(ref_bb_pdb);
-      OriginPDB(fit_bb_pdb);
+      blOriginPDB(ref_bb_pdb);
+      blOriginPDB(fit_bb_pdb);
       
       /* Create coordinate arrays, checking numbers match               */
-      NCoor = GetPDBCoor(ref_bb_pdb, &ref_coor);
-      if(GetPDBCoor(fit_bb_pdb, &fit_coor) != NCoor)
+      NCoor = blGetPDBCoor(ref_bb_pdb, &ref_coor);
+      if(blGetPDBCoor(fit_bb_pdb, &fit_coor) != NCoor)
       {
          RetVal = FALSE;
       }
@@ -165,9 +167,9 @@ BOOL FitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
                tvect.x = (-fit_bb_CofG.x);
                tvect.y = (-fit_bb_CofG.y);
                tvect.z = (-fit_bb_CofG.z);
-               TranslatePDB(fit_pdb, tvect);
-               ApplyMatrixPDB(fit_pdb, RotMat);
-               TranslatePDB(fit_pdb, ref_bb_CofG);
+               blTranslatePDB(fit_pdb, tvect);
+               blApplyMatrixPDB(fit_pdb, RotMat);
+               blTranslatePDB(fit_pdb, ref_bb_CofG);
             }
          }
       }

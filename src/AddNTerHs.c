@@ -3,8 +3,8 @@
 
    \file       AddNTerHs.c
    
-   \version    V1.7
-   \date       04.02.14
+   \version    V1.8
+   \date       07.07.14
    \brief      Routines to add N-terminal hydrogens and C-terminal
                oxygens.
    
@@ -64,6 +64,7 @@
 -  V1.5  06.02.03 Handles atnam_raw
 -  V1.6  03.06.05 Handles altpos
 -  V1.7  04.02.14 Use CHAINMATCH By: CTP
+-  V1.8  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -93,8 +94,8 @@ static int doAddGromosNTer(PDB **ppdb, PDB *nter);
 static int doAddCharmmNTer(PDB **ppdb, PDB *nter);
 
 /************************************************************************/
-/*>int AddNTerHs(PDB **ppdb, BOOL Charmm)
-   --------------------------------------
+/*>int blAddNTerHs(PDB **ppdb, BOOL Charmm)
+   ----------------------------------------
 *//**
 
    \param[in,out] **ppdb      Pointer to pointer to PDB linked list
@@ -105,8 +106,9 @@ static int doAddCharmmNTer(PDB **ppdb, PDB *nter);
 
 -  23.08.94 Original    By: ACRM
 -  04.02.14 Use CHAINMATCH By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int AddNTerHs(PDB **ppdb, BOOL Charmm)
+int blAddNTerHs(PDB **ppdb, BOOL Charmm)
 {
    PDB  *p;
    char chain[8] = "-";
@@ -151,7 +153,7 @@ static PDB *KillNTerH(PDB *pdb)
        *end,
        *prev = NULL;
 
-   end = FindEndPDB(pdb);
+   end = blFindEndPDB(pdb);
    
    for(p=pdb; p!=end; NEXT(p))
    {
@@ -203,7 +205,7 @@ static int doAddGromosNTer(PDB **ppdb, PDB *nter)
       for(prev = *ppdb; prev->next != nter; NEXT(prev));
    }
 
-   if(CalcTetraHCoords(nter, coor))
+   if(blCalcTetraHCoords(nter, coor))
    {
       /* Initialise some space to store the 3 extra hydrogens           */
       INIT(H1, PDB);
@@ -212,9 +214,9 @@ static int doAddGromosNTer(PDB **ppdb, PDB *nter)
       if(H1==NULL || H2==NULL || H3==NULL) return(0);
       
       /* Initialise the hydrogens with the res info, etc.               */
-      CopyPDB(H1, nter);
-      CopyPDB(H2, nter);
-      CopyPDB(H3, nter);
+      blCopyPDB(H1, nter);
+      blCopyPDB(H2, nter);
+      blCopyPDB(H3, nter);
       H1->bval = H2->bval = H3->bval = (REAL)20.0;
 
       /* Link these extra records into the linked list                  */
@@ -285,7 +287,7 @@ static int doAddCharmmNTer(PDB **ppdb, PDB *nter)
       for(prev = *ppdb; prev->next != nter; NEXT(prev));
    }
 
-   if(CalcTetraHCoords(nter, coor))
+   if(blCalcTetraHCoords(nter, coor))
    {
       /* Initialise some space to store the 3 extra hydrogens           */
       INIT(H1, PDB);
@@ -318,7 +320,7 @@ static int doAddCharmmNTer(PDB **ppdb, PDB *nter)
       strcpy(H2->insert,      " ");
       H2->altpos = ' ';                   /* 03.06.05                   */
 
-      CopyPDB(H3, nter);
+      blCopyPDB(H3, nter);
       strcpy(H3->atnam,  "HT3 ");
       strcpy(H3->atnam_raw,   " HT3");
       H3->bval   = 20.0;

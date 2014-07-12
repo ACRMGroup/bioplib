@@ -3,11 +3,12 @@
 
    \file       StripHPDB.c
    
-   \version    V1.7
-   \date       16.10.96
+   \version    V1.8
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin, University of Reading, 
+               2002-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -57,6 +58,7 @@
 -  V1.5  01.11.94 Added HStripPDB()
 -  V1.6  26.07.95 Removed unused variables
 -  V1.7  16.10.96 Added SelectCaPDB()
+-  V1.8  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -80,8 +82,8 @@
 
 
 /************************************************************************/
-/*>PDB *StripHPDB(PDB *pdbin, int *natom)
-   --------------------------------------
+/*>PDB *blStripHPDB(PDB *pdbin, int *natom)
+   ----------------------------------------
 *//**
 
    \param[in]     *pdbin      Input list
@@ -95,8 +97,9 @@
 
 -  01.11.94 Original based on SelAtomsPDB()   By: ACRM
 -  26.07.95 Removed unused variables
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *StripHPDB(PDB *pdbin, int *natom)
+PDB *blStripHPDB(PDB *pdbin, int *natom)
 {
    PDB   *pdbout  = NULL,
          *p,
@@ -132,7 +135,7 @@ PDB *StripHPDB(PDB *pdbin, int *natom)
          (*natom)++;
          
          /* Copy the record to the output list (sets ->next to NULL)    */
-         CopyPDB(q, p);
+         blCopyPDB(q, p);
       }
    }
 

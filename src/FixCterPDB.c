@@ -3,8 +3,8 @@
 
    \file       FixCterPDB.c
    
-   \version    V1.6
-   \date       04.02.14
+   \version    V1.7
+   \date       07.07.14
    \brief      Routine to add C-terminal oxygens.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
@@ -61,6 +61,7 @@
 -  V1.4  06.02.03 Handles atnam_raw
 -  V1.5  03.06.05 Handles altpos
 -  V1.6  04.02.14 Use CHAINMATCH By: CTP
+-  V1.7  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -90,8 +91,8 @@ static void StandardiseCTers(PDB *pdb);
 static BOOL SetCterStyle(PDB *start, PDB *end, int style);
 
 /************************************************************************/
-/*>BOOL FixCterPDB(PDB *pdb, int style)
-   ------------------------------------
+/*>BOOL blFixCterPDB(PDB *pdb, int style)
+   --------------------------------------
 *//**
 
    \param[in,out] *pdb   PDB linked list to modify
@@ -113,8 +114,9 @@ static BOOL SetCterStyle(PDB *start, PDB *end, int style);
 -  06.02.03 Handles atnam_raw
 -  03.06.05 Handles altpos
 -  04.02.14 Use CHAINMATCH By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL FixCterPDB(PDB *pdb, int style)
+BOOL blFixCterPDB(PDB *pdb, int style)
 {
    PDB   *p,
          *start,
@@ -131,7 +133,7 @@ BOOL FixCterPDB(PDB *pdb, int style)
    start = pdb;
    while(start != NULL)
    {
-      end = FindEndPDB(start);
+      end = blFindEndPDB(start);
       
       if(end==NULL || !CHAINMATCH(end->chain,start->chain))
       {
@@ -160,11 +162,11 @@ BOOL FixCterPDB(PDB *pdb, int style)
             INIT(O2, PDB);
             CLEAR_PDB(O2);
             if(O1 != NULL) 
-               CopyPDB(O2, O1);
+               blCopyPDB(O2, O1);
             else if(CA != NULL)
-               CopyPDB(O2, CA);
+               blCopyPDB(O2, CA);
             else if(C != NULL)
-               CopyPDB(O2, C);
+               blCopyPDB(O2, C);
                
             O2->bval = 20.0;
             strcpy(O2->atnam,"OXT ");
@@ -187,7 +189,7 @@ BOOL FixCterPDB(PDB *pdb, int style)
             }
             else
             {
-               if(!CalcCterCoords(O2,CA,C,O1))
+               if(!blCalcCterCoords(O2,CA,C,O1))
                   return(FALSE);
             }
 
@@ -234,6 +236,7 @@ BOOL FixCterPDB(PDB *pdb, int style)
 -  06.02.03 Handles atnam_raw
 -  03.06.05 Handles altpos
 -  04.02.14 Use CHAINMATCH By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 static void StandardiseCTers(PDB *pdb)
 {
@@ -247,7 +250,7 @@ static void StandardiseCTers(PDB *pdb)
    start = pdb;
    while(start != NULL)
    {
-      end = FindEndPDB(start);
+      end = blFindEndPDB(start);
 
       /* If it's a c-terminal residue or the one before CTER,
          fix the names of the oxygens

@@ -3,11 +3,11 @@
 
    \file       ParseRes.c
    
-   \version    V1.12
-   \date       26.02.14
+   \version    V1.13
+   \date       07.07.14
    \brief      Parse a residue specification
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2013
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -70,6 +70,7 @@
                   no insert
 -  V1.11 28.08.13 chain is now a properly terminated string
 -  V1.12 26.02.14 Parsing handles multi-letter chains. By: CTP
+-  V1.13 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -95,8 +96,8 @@
 */
 
 /************************************************************************/
-/*>BOOL ParseResSpec(char *spec, char *chain, int *resnum, char *insert)
-   ---------------------------------------------------------------------
+/*>BOOL blParseResSpec(char *spec, char *chain, int *resnum, char *insert)
+   -----------------------------------------------------------------------
 *//**
 
    \param[in]     *spec    Residue specification
@@ -126,16 +127,17 @@
             too many PDB files with lower case chain names (e.g. 1gav,
             3n9r, etc.) for the old default behaviour or up-casing 
             everything.   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL ParseResSpec(char *spec, char *chain, int *resnum, char *insert)
+BOOL blParseResSpec(char *spec, char *chain, int *resnum, char *insert)
 {
-   return DoParseResSpec(spec, chain, resnum, insert, FALSE);
+   return blDoParseResSpec(spec, chain, resnum, insert, FALSE);
 }
 
 /************************************************************************/
-/*>BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum, 
+/*>BOOL blParseResSpecNoUpper(char *spec, char *chain, int *resnum, 
                             char *insert)
-   --------------------------------------------------------------
+   ----------------------------------------------------------------
 *//**
 
    \param[in]     *spec    Residue specification
@@ -154,17 +156,18 @@ BOOL ParseResSpec(char *spec, char *chain, int *resnum, char *insert)
    specification to upper case before processing.
    
 -  29.09.05 Original   By: TL
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum, 
-                         char *insert)
+BOOL blParseResSpecNoUpper(char *spec, char *chain, int *resnum, 
+                           char *insert)
 {
-   return DoParseResSpec(spec, chain, resnum, insert, FALSE);
+   return blDoParseResSpec(spec, chain, resnum, insert, FALSE);
 }
 
 /************************************************************************/
-/*>BOOL DoParseResSpec(char *inSpec, char *chain, int *resnum, 
-                       char *insert, BOOL uppercaseresspec)
-   -----------------------------------------------------------
+/*>BOOL blDoParseResSpec(char *inSpec, char *chain, int *resnum, 
+                         char *insert, BOOL uppercaseresspec)
+   -------------------------------------------------------------
 *//**
 
    \param[in]     *inSpec              Residue specification
@@ -209,9 +212,10 @@ BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum,
             If the period separator between the chain id and the residue
             number is absent then the chain id is set from any non-numeric
             lead characters. By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL DoParseResSpec(char *inSpec, char *chain, int *resnum, char *insert, 
-                    BOOL uppercaseresspec)
+BOOL blDoParseResSpec(char *inSpec, char *chain, int *resnum,
+                      char *insert, BOOL uppercaseresspec)
 {
    char  *ptr,
          *ptr2,

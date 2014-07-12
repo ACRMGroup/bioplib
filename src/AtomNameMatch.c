@@ -3,8 +3,8 @@
 
    \file       AtomNameMatch.c
    
-   \version    V1.7R
-   \date       11.10.99
+   \version    V1.8
+   \date       07.07.14
    \brief      Tests for matching atom names with wild cards
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-9
@@ -59,6 +59,7 @@
 -  V1.7  11.10.99 Allow a . to be used to start a number (such that the
                   default blank chain name is used). Allows negative 
                   residue numbers
+-  V1.8  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -84,8 +85,8 @@
 */
 
 /************************************************************************/
-/*>BOOL AtomNameMatch(char *atnam, char *spec, BOOL *ErrorWarn)
-   ------------------------------------------------------------
+/*>BOOL blAtomNameMatch(char *atnam, char *spec, BOOL *ErrorWarn)
+   --------------------------------------------------------------
 *//**
 
    \param[in]     *atnam      The atom name to test
@@ -112,8 +113,9 @@
                 ?B* matches all beta atoms
 
 -  23.07.96 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL AtomNameMatch(char *atnam, char *spec, BOOL *ErrorWarn)
+BOOL blAtomNameMatch(char *atnam, char *spec, BOOL *ErrorWarn)
 {
    char *specp,
         *atnamp;
@@ -194,8 +196,8 @@ BOOL AtomNameMatch(char *atnam, char *spec, BOOL *ErrorWarn)
 
 
 /************************************************************************/
-/*>BOOL AtomNameRawMatch(char *atnam, char *spec, BOOL *ErrorWarn)
-   ---------------------------------------------------------------
+/*>BOOL blAtomNameRawMatch(char *atnam, char *spec, BOOL *ErrorWarn)
+   -----------------------------------------------------------------
 *//**
 
    \param[in]     *atnam      The atom name to check
@@ -222,8 +224,9 @@ BOOL AtomNameMatch(char *atnam, char *spec, BOOL *ErrorWarn)
    Written as a wrapper to AtomNameMatch()
 
 -  15.02.01 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL AtomNameRawMatch(char *atnam, char *spec, BOOL *ErrorWarn)
+BOOL blAtomNameRawMatch(char *atnam, char *spec, BOOL *ErrorWarn)
 {
    /* If atom spec starts with a < then just bump the spec pointer, 
       otherwise bump the atom name pointer since we will look from the 
@@ -238,7 +241,7 @@ BOOL AtomNameRawMatch(char *atnam, char *spec, BOOL *ErrorWarn)
       atnam++;
    }
 
-   return(AtomNameMatch(atnam, spec, ErrorWarn));
+   return(blAtomNameMatch(atnam, spec, ErrorWarn));
 }
 
 #ifdef TEST_MAIN
@@ -250,25 +253,25 @@ int main(int argc, char **argv)
    printf("Atom name '%s':\n", atnam);
 
    strcpy(spec,"CA");
-   printf("'%s' matches? %s\n", spec, (AtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
+   printf("'%s' matches? %s\n", spec, (blAtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
    
    strcpy(spec,"<CA");
-   printf("'%s' matches? %s\n", spec, (AtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
+   printf("'%s' matches? %s\n", spec, (blAtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
    
    strcpy(spec,"C*");
-   printf("'%s' matches? %s\n", spec, (AtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
+   printf("'%s' matches? %s\n", spec, (blAtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
    
    strcpy(spec,"CA*");
-   printf("'%s' matches? %s\n", spec, (AtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
+   printf("'%s' matches? %s\n", spec, (blAtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
    
    strcpy(spec,"CA?");
-   printf("'%s' matches? %s\n", spec, (AtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
+   printf("'%s' matches? %s\n", spec, (blAtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
    
    strcpy(spec,"C\\*");
-   printf("'%s' matches? %s\n", spec, (AtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
+   printf("'%s' matches? %s\n", spec, (blAtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
    
    strcpy(spec,"C?");
-   printf("'%s' matches? %s\n", spec, (AtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
+   printf("'%s' matches? %s\n", spec, (blAtomNameRawMatch(atnam, spec, NULL)?"YES":"NO"));
 
    return(0);
 }

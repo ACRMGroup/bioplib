@@ -3,8 +3,8 @@
 
    \file       FindNextResidue.c
    
-   \version    V1.11
-   \date       04.02.14
+   \version    V1.12
+   \date       07.07.14
    \brief      PDB linked list manipulation
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2014
@@ -58,6 +58,7 @@
 -  V1.9  14.03.96 Added FindAtomInRes()
 -  V1.10 08.10.99 Initialised some variables
 -  V1.11 04.02.14 Use CHAINMATCH By: CTP
+-  V1.12 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -84,8 +85,8 @@
 */
 
 /************************************************************************/
-/*>PDB *FindEndPDB(PDB *start)
-   ---------------------------
+/*>PDB *blFindEndPDB(PDB *start)
+   -----------------------------
 *//**
 
    \param[in]     *start    PDB linked list
@@ -97,15 +98,16 @@
 -  08.07.93 Original    By: ACRM
 -  09.08.95 Now simply calls FindNextResidue() which is a rather more
             sensible name. Retained for backwards compatibility
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *FindEndPDB(PDB *start)
+PDB *blFindEndPDB(PDB *start)
 {
-   return(FindNextResidue(start));
+   return(blFindNextResidue(start));
 }
 
 /************************************************************************/
-/*>PDB *FindNextResidue(PDB *pdb)
-   ------------------------------
+/*>PDB *blFindNextResidue(PDB *pdb)
+   --------------------------------
 *//**
 
    \param[in]     *pdb      PDB linked list
@@ -116,8 +118,9 @@ PDB *FindEndPDB(PDB *start)
 
 -  08.08.95 Original    By: ACRM
 -  04.02.14 Use CHAINMATCH By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *FindNextResidue(PDB *pdb)
+PDB *blFindNextResidue(PDB *pdb)
 {
    PDB  *p;
 

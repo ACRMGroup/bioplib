@@ -3,8 +3,8 @@
 
    \file       RdSeqPDB.c
    
-   \version    V1.1
-   \date       25.03.14
+   \version    V1.2
+   \date       07.07.14
    \brief      Read sequence from SEQRES records in a PDB file
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2014
@@ -48,6 +48,7 @@
    =================
 -  V1.0  14.10.96 Original   By: ACRM
 -  V1.1  25.03.14 Added CHAINMATCH. By: CTP
+-  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -70,13 +71,13 @@
 /************************************************************************/
 /* Prototypes
 */
-char **ReadSeqresPDB(FILE *fp, int *nchains);
+char **blReadSeqresPDB(FILE *fp, int *nchains);
 static STRINGLIST *RdSeqRes(FILE *fp);
 
 
 /************************************************************************/
-/*>char **ReadSeqresPDB(FILE *fp, int *nchains)
-   --------------------------------------------
+/*>char **blReadSeqresPDB(FILE *fp, int *nchains)
+   ----------------------------------------------
 *//**
 
    \param[in]     *fp       PDB file pointer
@@ -94,8 +95,9 @@ static STRINGLIST *RdSeqRes(FILE *fp);
 
 -  14.10.96 Original   By: ACRM
 -  25.03.14 Added CHAINMATCH. Chain IDs handled as strings. By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char **ReadSeqresPDB(FILE *fp, int *nchains)
+char **blReadSeqresPDB(FILE *fp, int *nchains)
 {
    STRINGLIST *seqres = NULL, 
               *s;

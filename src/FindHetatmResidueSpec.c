@@ -3,8 +3,8 @@
 
    \file       FindHetatmResidueSpec.c
    
-   \version    V1.2
-   \date       24.02.14
+   \version    V1.3
+   \date       07.07.14
    \brief      Parse a residue specification
    
    \copyright  (c) 2011-2014
@@ -49,6 +49,7 @@
 -  V1.0  26.10.11 Original based on FindResidueSpec.c
 -  V1.1  28.08.13 Mofified for new ParseResSpec that terminates strings
 -  V1.2  24.02.14 Now calls BiopFindResidue(). By: CTP
+-  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -75,8 +76,8 @@
 /* Prototypes
 */
 /************************************************************************/
-/*>PDB *FindHetatmResidueSpec(PDB *pdb, char *resspec)
-   ---------------------------------------------------
+/*>PDB *blFindHetatmResidueSpec(PDB *pdb, char *resspec)
+   -----------------------------------------------------
 *//**
 
    \param[in]     *pdb      PDB linked list
@@ -90,15 +91,16 @@
 -  26.10.11 Original    By: ACRM
 -  28.08.13 Mofified for new ParseResSpec that terminates strings
 -  24.02.14 Now calls BiopFindResidue(). By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *FindHetatmResidueSpec(PDB *pdb, char *resspec)
+PDB *blFindHetatmResidueSpec(PDB *pdb, char *resspec)
 {
    char chain[8],
         insert[8];
    int  resnum;
 
-   if(ParseResSpec(resspec, chain, &resnum, insert))    
-      return(BiopFindHetatmResidue(pdb, chain, resnum, insert));
+   if(blParseResSpec(resspec, chain, &resnum, insert))    
+      return(blFindHetatmResidue(pdb, chain, resnum, insert));
    
    return(NULL);
 }

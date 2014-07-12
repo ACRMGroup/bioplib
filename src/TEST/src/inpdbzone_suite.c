@@ -65,7 +65,7 @@ START_TEST(test_01)
    /* expected output */
    expected_output =  TRUE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -87,7 +87,7 @@ START_TEST(test_02)
    /* expected output */
    expected_output = FALSE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -109,7 +109,7 @@ START_TEST(test_03)
    /* expected output */
    expected_output = FALSE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -132,7 +132,7 @@ START_TEST(test_04)
    /* expected output */
    expected_output = FALSE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -154,7 +154,7 @@ START_TEST(test_05)
    /* expected output */
    expected_output =  TRUE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -176,7 +176,7 @@ START_TEST(test_06)
    /* expected output */
    expected_output =  TRUE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -198,7 +198,7 @@ START_TEST(test_07)
    /* expected output */
    expected_output = FALSE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -220,7 +220,7 @@ START_TEST(test_08)
    /* expected output */
    expected_output =  TRUE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -242,7 +242,7 @@ START_TEST(test_09)
    /* expected output */
    expected_output =  TRUE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -264,7 +264,7 @@ START_TEST(test_10)
    /* expected output */
    expected_output =  TRUE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -286,7 +286,7 @@ START_TEST(test_11)
    /* expected output */
    expected_output = TRUE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -308,7 +308,7 @@ START_TEST(test_12)
    /* expected output */
    expected_output = FALSE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -331,7 +331,7 @@ START_TEST(test_single_resnum_01)
    /* expected output */
    expected_output =  TRUE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -353,7 +353,7 @@ START_TEST(test_single_resnum_02)
    /* expected output */
    expected_output = FALSE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -375,7 +375,7 @@ START_TEST(test_single_resnum_03)
    /* expected output */
    expected_output =  TRUE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -397,7 +397,7 @@ START_TEST(test_single_resnum_04)
    /* expected output */
    expected_output =  TRUE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -419,7 +419,7 @@ START_TEST(test_single_resnum_05)
    /* expected output */
    expected_output = FALSE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -441,7 +441,7 @@ START_TEST(test_single_resnum_06)
    /* expected output */
    expected_output =  TRUE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -463,7 +463,7 @@ START_TEST(test_single_resnum_07)
    /* expected output */
    expected_output = FALSE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -485,7 +485,7 @@ START_TEST(test_single_resnum_08)
    /* expected output */
    expected_output = FALSE;
    
-   output = BiopInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
+   output = blInPDBZone(pdb, chain, resnum1, insert1, resnum2, insert2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -759,7 +759,7 @@ Suite *inpdbzone_suite(void)
 {
    Suite *s = suite_create("InPDBZone");
    
-   /* BiopInPDBZone() */
+   /* blInPDBZone() */
    TCase *tc_core = tcase_create("Core");
    tcase_add_checked_fixture(tc_core, inpdbzone_setup, 
                              inpdbzone_teardown);

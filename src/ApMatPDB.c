@@ -3,8 +3,8 @@
 
    \file       ApMatPDB.c
    
-   \version    V1.0R
-   \date       August 1993
+   \version    V1.1
+   \date       07.07.14
    \brief      
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993
@@ -69,8 +69,8 @@
 */
 
 /************************************************************************/
-/*>void ApplyMatrixPDB(PDB *pdb, REAL matrix[3][3])
-   ------------------------------------------------
+/*>void blApplyMatrixPDB(PDB *pdb, REAL matrix[3][3])
+   --------------------------------------------------
 *//**
 
    \param[in,out] *pdb          PDB linked list
@@ -79,9 +79,10 @@
    Apply a rotation matrix to a PDB linked list.
 
 -  22.07.93 Original (old RotatePDB())   By: ACRM
+-  07.07.14 Renamed to blApplyMatrixPDB() By: CTP
 */
-void ApplyMatrixPDB(PDB  *pdb,
-                    REAL matrix[3][3])
+void blApplyMatrixPDB(PDB  *pdb,
+                      REAL matrix[3][3])
 {
    PDB   *p;
    VEC3F incoords,

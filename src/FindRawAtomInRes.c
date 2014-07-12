@@ -3,11 +3,11 @@
 
    \file       FindRawAtomInRes.c
    
-   \version    V1.12R
-   \date       03.06.05
+   \version    V1.13
+   \date       07.07.14
    \brief      PDB linked list manipulation
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2005
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -59,6 +59,7 @@
 -  V1.10 08.10.99 Initialised some variables
 -  V1.11 28.02.01 Added FindRawAtomInRes()
 -  V1.12 03.06.05 Compares 4 rather than 5 characters
+-  V1.13 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -85,8 +86,8 @@
 */
 
 /************************************************************************/
-/*>PDB *FindRawAtomInRes(PDB *pdb, char *atnam_in)
-   -----------------------------------------------
+/*>PDB *blFindRawAtomInRes(PDB *pdb, char *atnam_in)
+   -------------------------------------------------
 *//**
 
    \param[in]     *pdb         The beginning of a residue in a PDB 
@@ -98,8 +99,9 @@
 
 -  28.02.01 Original based on FindAtomInRes()  By: ACRM
 -  03.06.05 Now compares 4 characters rather than 5
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *FindRawAtomInRes(PDB *pdb, char *atnam_in)
+PDB *blFindRawAtomInRes(PDB *pdb, char *atnam_in)
 {
    PDB *end,
        *p;
@@ -111,7 +113,7 @@ PDB *FindRawAtomInRes(PDB *pdb, char *atnam_in)
    padterm(atnam,5);
    
    /* Find the end of this residue                                      */
-   end = FindNextResidue(pdb);
+   end = blFindNextResidue(pdb);
    
    /* Search for the required atom                                      */
    for(p=pdb; p!=end; NEXT(p))

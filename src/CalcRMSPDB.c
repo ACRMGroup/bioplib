@@ -3,8 +3,8 @@
 
    \file       CalcRMSPDB.c
    
-   \version    V1.3R
-   \date       14.03.96
+   \version    V1.4
+   \date       07.07.14
    \brief      Fit two PDB linked lists. Also a weighted fit and support
                routines
    
@@ -55,6 +55,7 @@
                   Changed FitPDB() and FitCaCbPDB() to use 
                   ApplyMatrixPDB() rather than RotatePDB() since the PDB
                   linked lists are already at the origin
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -82,8 +83,8 @@
 */
 
 /************************************************************************/
-/*>REAL CalcRMSPDB(PDB *pdb1, PDB *pdb2)
-   -------------------------------------
+/*>REAL blCalcRMSPDB(PDB *pdb1, PDB *pdb2)
+   ---------------------------------------
 *//**
 
    \param[in]     *pdb1   First PDB linked list
@@ -95,8 +96,9 @@
    order). No checks are made on this.
 
 -  11.03.94 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-REAL CalcRMSPDB(PDB *pdb1, PDB *pdb2)
+REAL blCalcRMSPDB(PDB *pdb1, PDB *pdb2)
 {
    PDB *p, *q;
    int count = 0;

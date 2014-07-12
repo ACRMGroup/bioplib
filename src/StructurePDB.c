@@ -3,8 +3,8 @@
 
    \file       StructurePDB.c
    
-   \version    V1.2
-   \date       04.02.14
+   \version    V1.3
+   \date       07.07.14
    \brief      Build a structured PDB representation
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2009-14
@@ -49,6 +49,8 @@
 -  V1.0   24.11.09  Original
 -  V1.1   19.05.10  PDBRESIDUE and PDBCHAIN are doubly linked lists
 -  V1.2   04.02.14  Use CHAINMATCH By: CTP
+-  V1.3   07.07.14  Use bl prefix for functions By: CTP
+
 *************************************************************************/
 /* Includes
 */
@@ -70,8 +72,8 @@
 
 
 /************************************************************************/
-/*>PDBSTRUCT *AllocPDBStructure(PDB *pdb)
-   --------------------------------------
+/*>PDBSTRUCT *blAllocPDBStructure(PDB *pdb)
+   ----------------------------------------
 *//**
 
    \param[in]     *pdb    PDB linked list
@@ -84,8 +86,9 @@
 -  24.11.09  Original   By: ACRM
 -  19.05.10  Correctly do doubly linked lists
 -  02.06.10  Fixed some initializations!
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDBSTRUCT *AllocPDBStructure(PDB *pdb)
+PDBSTRUCT *blAllocPDBStructure(PDB *pdb)
 {
    PDB        *pdbc, *pdbr;
    PDB        *nextchain, *nextres;
@@ -104,7 +107,7 @@ PDBSTRUCT *AllocPDBStructure(PDB *pdb)
    /* Build the chain list                                              */
    for(pdbc=pdb; pdbc!=NULL; pdbc=nextchain)
    {
-      nextchain = FindNextChain(pdbc);
+      nextchain = blFindNextChain(pdbc);
 
       if(pdbstruct->chains == NULL)
       {
@@ -117,7 +120,7 @@ PDBSTRUCT *AllocPDBStructure(PDB *pdb)
       }
       if(chain == NULL)
       {
-         FreePDBStructure(pdbstruct);
+         blFreePDBStructure(pdbstruct);
          return(NULL);
       }
       
@@ -136,7 +139,7 @@ PDBSTRUCT *AllocPDBStructure(PDB *pdb)
          char resid[24];
          int  i, j;
          
-         nextres = FindNextResidue(pdbr);
+         nextres = blFindNextResidue(pdbr);
          
          if(chain->residues == NULL)
          {
@@ -149,7 +152,7 @@ PDBSTRUCT *AllocPDBStructure(PDB *pdb)
          }
          if(residue == NULL)
          {
-            FreePDBStructure(pdbstruct);
+            blFreePDBStructure(pdbstruct);
             return(NULL);
          }
          
@@ -182,8 +185,8 @@ PDBSTRUCT *AllocPDBStructure(PDB *pdb)
 }
 
 /************************************************************************/
-/*>void FreePDBStructure(PDBSTRUCT *pdbstruct)
-   -------------------------------------------
+/*>void blFreePDBStructure(PDBSTRUCT *pdbstruct)
+   ---------------------------------------------
 *//**
 
    \param[in]     *pdbstruct       PDBSTRUCT structure containing chain
@@ -193,8 +196,9 @@ PDBSTRUCT *AllocPDBStructure(PDB *pdb)
    Note this does not free the underlying PDB linked list
 
 -  24.11.09  Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void FreePDBStructure(PDBSTRUCT *pdbstruct)
+void blFreePDBStructure(PDBSTRUCT *pdbstruct)
 {
    PDBCHAIN *chain = NULL;
 
@@ -212,8 +216,8 @@ void FreePDBStructure(PDBSTRUCT *pdbstruct)
 
 
 /************************************************************************/
-/*>PDB *FindNextChain(PDB *pdb)
-   ----------------------------
+/*>PDB *blFindNextChain(PDB *pdb)
+   ------------------------------
 *//**
 
    \param[in]     *pdb    PDB linked list
@@ -225,8 +229,9 @@ void FreePDBStructure(PDBSTRUCT *pdbstruct)
 
 -  24.11.09  Original   By: ACRM
 -  04.02.14 Use CHAINMATCH By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *FindNextChain(PDB *pdb)
+PDB *blFindNextChain(PDB *pdb)
 {
    PDB  *p, *ret = NULL;
    
@@ -256,8 +261,8 @@ int main(int argc, char **argv)
    
    
    fp   = fopen(argv[1], "r");
-   pdb  = ReadPDB(fp, &natoms);
-   pdbs = AllocPDBStructure(pdb);
+   pdb  = blReadPDB(fp, &natoms);
+   pdbs = blAllocPDBStructure(pdb);
 
    for(chain=pdbs->chains; chain!=NULL; NEXT(chain))
    {
@@ -267,7 +272,7 @@ int main(int argc, char **argv)
          fprintf(stdout, "COMMENT: Residue %s\n", residue->resid);
          for(p=residue->start; p!=residue->stop; NEXT(p))
          {
-            WritePDBRecord(stdout, p);
+            blWritePDBRecord(stdout, p);
          }
       }
    }
@@ -277,11 +282,11 @@ int main(int argc, char **argv)
       fprintf(stdout,"COMMENT: Chain %s\n", chain->chain);
       for(p=chain->start; p!=chain->stop; NEXT(p))
       {
-         WritePDBRecord(stdout, p);
+         blWritePDBRecord(stdout, p);
       }
    }
 
-   FreePDBStructure(pdbs);
+   blFreePDBStructure(pdbs);
 
    return(0);
 }

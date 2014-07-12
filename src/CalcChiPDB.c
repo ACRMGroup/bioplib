@@ -3,8 +3,8 @@
 
    \file       CalcChiPDB.c
    
-   \version    V1.1R
-   \date       27.02.98
+   \version    V1.2
+   \date       07.07.14
    \brief      Perform calculations on PDB linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-8
@@ -48,6 +48,7 @@
    =================
 -  V1.0  22.02.94 Original
 -  V1.1  27.02.98 Removed unreachable break from switch()
+-  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -72,8 +73,8 @@
 */
 
 /************************************************************************/
-/*>REAL CalcChi(PDB *pdb, int type)
-   --------------------------------
+/*>REAL blCalcChi(PDB *pdb, int type)
+   ----------------------------------
 *//**
 
    \param[in]     *pdb     PDB linked list
@@ -82,19 +83,21 @@
 
    Calculates a sidechain torsion angle from a pdb linked list. The atoms
    to be included in the calculation are specified by type.
-   
+
+
          type     Atom names        Sequential atom numbers
          --------------------------------------------------
          0        N,  CA, CB, XG    (0 - 1 - 4 - 5)
          1        CA, CB, XG, XD    (1 - 4 - 5 - 6)
          2        CB, XG, XD, XE    (4 - 5 - 6 - 7)
          3        XG, XD, XE, XZ    (5 - 6 - 7 - 8)
-   
+
 -  13.05.92 Original
 -  27.02.98 Removed unreachable break from switch()
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-REAL CalcChi(PDB *pdb,
-             int type)
+REAL blCalcChi(PDB *pdb,
+               int type)
 {
    REAL  chi = 0.0;
    PDB   *one,
@@ -105,28 +108,28 @@ REAL CalcChi(PDB *pdb,
    switch(type)
    {
    case 0:              /* N,  CA, CB, XG    (0 - 1 - 4 - 5)            */
-      one   = GetPDBByN(pdb, 0);
-      two   = GetPDBByN(pdb, 1);
-      three = GetPDBByN(pdb, 4);
-      four  = GetPDBByN(pdb, 5);
+      one   = blGetPDBByN(pdb, 0);
+      two   = blGetPDBByN(pdb, 1);
+      three = blGetPDBByN(pdb, 4);
+      four  = blGetPDBByN(pdb, 5);
       break;
    case 1:              /* CA, CB, XG, XD    (1 - 4 - 5 - 6)            */
-      one   = GetPDBByN(pdb, 1);
-      two   = GetPDBByN(pdb, 4);
-      three = GetPDBByN(pdb, 5);
-      four  = GetPDBByN(pdb, 6);
+      one   = blGetPDBByN(pdb, 1);
+      two   = blGetPDBByN(pdb, 4);
+      three = blGetPDBByN(pdb, 5);
+      four  = blGetPDBByN(pdb, 6);
       break;
    case 2:              /* CB, XG, XD, XE    (4 - 5 - 6 - 7)            */
-      one   = GetPDBByN(pdb, 4);
-      two   = GetPDBByN(pdb, 5);
-      three = GetPDBByN(pdb, 6);
-      four  = GetPDBByN(pdb, 7);
+      one   = blGetPDBByN(pdb, 4);
+      two   = blGetPDBByN(pdb, 5);
+      three = blGetPDBByN(pdb, 6);
+      four  = blGetPDBByN(pdb, 7);
       break;
    case 3:              /* XG, XD, XE, XZ    (5 - 6 - 7 - 8)            */
-      one   = GetPDBByN(pdb, 5);
-      two   = GetPDBByN(pdb, 6);
-      three = GetPDBByN(pdb, 7);
-      four  = GetPDBByN(pdb, 8);
+      one   = blGetPDBByN(pdb, 5);
+      two   = blGetPDBByN(pdb, 6);
+      three = blGetPDBByN(pdb, 7);
+      four  = blGetPDBByN(pdb, 8);
       break;
    default:
       return(chi);

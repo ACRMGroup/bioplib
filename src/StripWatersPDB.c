@@ -3,11 +3,11 @@
 
    \file       StripWatersPDB.c
    
-   \version    V1.0
-   \date       30.04.08
+   \version    V1.1
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 2008
+   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 2008-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -47,6 +47,7 @@
    Revision History:
    =================
 -  V1.0  30.04.08 Original based on StripHPDB()   By: ACRM
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -70,8 +71,8 @@
 
 
 /************************************************************************/
-/*>PDB *StripWatersPDB(PDB *pdbin, int *natom)
-   -------------------------------------------
+/*>PDB *blStripWatersPDB(PDB *pdbin, int *natom)
+   ---------------------------------------------
 *//**
 
    \param[in]     *pdbin      Input list
@@ -85,7 +86,7 @@
 
 -  30.04.08 Original based on StripHPDB()   By: ACRM
 */
-PDB *StripWatersPDB(PDB *pdbin, int *natom)
+PDB *blStripWatersPDB(PDB *pdbin, int *natom)
 {
    PDB   *pdbout  = NULL,
          *p,
@@ -121,7 +122,7 @@ PDB *StripWatersPDB(PDB *pdbin, int *natom)
          (*natom)++;
          
          /* Copy the record to the output list (sets ->next to NULL)    */
-         CopyPDB(q, p);
+         blCopyPDB(q, p);
       }
    }
 

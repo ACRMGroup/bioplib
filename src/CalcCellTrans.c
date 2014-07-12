@@ -3,8 +3,8 @@
 
    \file       CalcCellTrans.c
    
-   \version    V1.0R
-   \date       12.10.95
+   \version    V1.1
+   \date       07.07.14
    \brief      Calculate offsets for creating a crystal lattice
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-1995
@@ -47,6 +47,7 @@
    Revision History:
    =================
 -  V1.0R 12.10.05 Original
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -72,9 +73,9 @@
 */
 
 /************************************************************************/
-/*>void CalcCellTrans(VEC3F UnitCell, VEC3F CellAngles, 
+/*>void blCalcCellTrans(VEC3F UnitCell, VEC3F CellAngles, 
                       VEC3F *xtrans, VEC3F *ytrans, VEC3F *ztrans)
-   ---------------------------------------------------------------
+   -----------------------------------------------------------------
 *//**
 
    \param[in]     UnitCell       The unit cell dimensions
@@ -88,9 +89,10 @@
 
 -  11.10.95 Original    By: ACRM, Based on code from Rasmol by Roger
                         Sayle (ros@dcs.ed.ac.uk, ras32425@ggr.co.uk)
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void CalcCellTrans(VEC3F UnitCell, VEC3F CellAngles, 
-                   VEC3F *xtrans, VEC3F *ytrans, VEC3F *ztrans)
+void blCalcCellTrans(VEC3F UnitCell, VEC3F CellAngles, 
+                     VEC3F *xtrans, VEC3F *ytrans, VEC3F *ztrans)
 {
    REAL lena, lenb, lenc,
         cosa, cosb, cosg, sing,

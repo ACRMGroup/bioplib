@@ -3,11 +3,11 @@
 
    \file       InPDBZoneSpec.c
    
-   \version    V1.4
-   \date       24.02.14
+   \version    V1.5
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-6
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -51,6 +51,7 @@
 -  V1.2  18.06.96 Added InPDBZone() from QTree program
 -  V1.3  19.09.96 Added InPDBZoneSpec()
 -  V1.4  24.02.14 InPDBZoneSpec() handles multi-letter chain id. By: CTP
+-  V1.5  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -73,8 +74,8 @@
 
 
 /************************************************************************/
-/*>BOOL InPDBZoneSpec(PDB *p, char *resspec1, char *resspec2)
-   ----------------------------------------------------------
+/*>BOOL blInPDBZoneSpec(PDB *p, char *resspec1, char *resspec2)
+   ------------------------------------------------------------
 *//**
 
    \param[in]     *p         Pointer to a PDB record
@@ -95,9 +96,10 @@
 -  24.02.14 Uses string for chain and insert instead of char.
             Wildcard match for multi-letter chain id. 
             Now calls BiopInPDBZone(). By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 
 */
-BOOL InPDBZoneSpec(PDB *p, char *resspec1, char *resspec2)
+BOOL blInPDBZoneSpec(PDB *p, char *resspec1, char *resspec2)
 {
    char chain1[8],  chain2[8],
         insert1[8], insert2[8];
@@ -128,11 +130,11 @@ BOOL InPDBZoneSpec(PDB *p, char *resspec1, char *resspec2)
    }
    
    
-   ParseResSpec(resspec1, chain1, &res1, insert1);
-   ParseResSpec(resspec2, chain2, &res2, insert2);
+   blParseResSpec(resspec1, chain1, &res1, insert1);
+   blParseResSpec(resspec2, chain2, &res2, insert2);
 
    if(!CHAINMATCH(chain1,chain2))
       return(FALSE);
 
-   return(BiopInPDBZone(p, chain1, res1, insert1, res2, insert2));
+   return(blInPDBZone(p, chain1, res1, insert1, res2, insert2));
 }

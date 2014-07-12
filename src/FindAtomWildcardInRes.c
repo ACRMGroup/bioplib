@@ -3,11 +3,11 @@
 
    \file       FindAtomWildcardInRes.c
    
-   \version    V1.0
-   \date       27.08.96
+   \version    V1.1
+   \date       07.07.14
    \brief      Find an atom within a residue allowing wild cards
    
-   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 1996
+   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 1996-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -47,6 +47,8 @@
    Revision History:
    =================
 -  V1.0  27.08.96 Original moved from mutmodel  By: ACRM
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
+
 
 *************************************************************************/
 /* Includes
@@ -67,8 +69,8 @@
 */
 
 /************************************************************************/
-/*>PDB *FindAtomWildcardInRes(PDB *pdb, char *pattern)
-   ---------------------------------------------------
+/*>PDB *blFindAtomWildcardInRes(PDB *pdb, char *pattern)
+   -----------------------------------------------------
 *//**
 
    \param[in]     *pdb      Pointer to start of a residue
@@ -83,14 +85,15 @@
    Returns the first atom which matches
 
 -  27.08.96 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *FindAtomWildcardInRes(PDB *pdb, char *pattern)
+PDB *blFindAtomWildcardInRes(PDB *pdb, char *pattern)
 {
    PDB  *p, *pNext;
    int  i;
    BOOL ok;
    
-   pNext = FindNextResidue(pdb);
+   pNext = blFindNextResidue(pdb);
    
    for(p=pdb; p!=pNext; NEXT(p))
    {

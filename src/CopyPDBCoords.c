@@ -3,8 +3,8 @@
 
    \file       CopyPDBCoords.c
    
-   \version    V1.10R
-   \date       08.10.99
+   \version    V1.11
+   \date       07.07.14
    \brief      PDB linked list manipulation
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-6
@@ -57,6 +57,7 @@
 -  V1.8  10.01.96 Added ExtractZonePDB()
 -  V1.9  14.03.96 Added FindAtomInRes()
 -  V1.10 08.10.99 Initialised some variables
+-  V1.11 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -83,8 +84,8 @@
 */
 
 /************************************************************************/
-/*>BOOL CopyPDBCoords(PDB *out, PDB *in)
-   -------------------------------------
+/*>BOOL blCopyPDBCoords(PDB *out, PDB *in)
+   ---------------------------------------
 *//**
 
    \param[in]     *in      Input PDB linked list
@@ -96,8 +97,9 @@
    resnam and atnam at each position.
 
 -  11.10.95 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL CopyPDBCoords(PDB *out, PDB *in)
+BOOL blCopyPDBCoords(PDB *out, PDB *in)
 {
    PDB *p, *q;
    

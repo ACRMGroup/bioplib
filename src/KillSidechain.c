@@ -3,11 +3,11 @@
 
    \file       KillSidechain.c
    
-   \version    V1.10
-   \date       08.10.99
+   \version    V1.11
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-6
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -57,6 +57,7 @@
 -  V1.8  10.01.96 Added ExtractZonePDB()
 -  V1.9  14.03.96 Added FindAtomInRes()
 -  V1.10 08.10.99 Initialised some variables
+-  V1.11 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -81,8 +82,8 @@
 
 
 /************************************************************************/
-/*>BOOL KillSidechain(PDB *ResStart, PDB *NextRes, BOOL doCB)
-   ----------------------------------------------------------
+/*>BOOL blKillSidechain(PDB *ResStart, PDB *NextRes, BOOL doCB)
+   ------------------------------------------------------------
 *//**
 
    \param[in]     *ResStart     Start of a residue in linked list
@@ -98,9 +99,9 @@
 -  12.05.92 Original
 -  05.10.94 doCB is now a BOOL as is the return
 */
-BOOL KillSidechain(PDB *ResStart,   /* Pointer to start of residue      */
-                   PDB *NextRes,    /* Pointer to start if next residue */
-                   BOOL doCB)       /* Flag to kill the CB              */
+BOOL blKillSidechain(PDB *ResStart, /* Pointer to start of residue      */
+                     PDB *NextRes,  /* Pointer to start if next residue */
+                     BOOL doCB)     /* Flag to kill the CB              */
 {
    PDB *p,
        *prev = NULL;
@@ -115,8 +116,8 @@ BOOL KillSidechain(PDB *ResStart,   /* Pointer to start of residue      */
       {
          if(prev == NULL) return(FALSE); /* No b/b atom before s/c      */
 
-         /* KillPDB() returns the next in list, so exit if list ended   */
-         if(KillPDB(p, prev) == NULL) break;
+         /* blKillPDB() returns the next in list, so exit if list ended */
+         if(blKillPDB(p, prev) == NULL) break;
          p = prev;
       }
       
@@ -125,8 +126,8 @@ BOOL KillSidechain(PDB *ResStart,   /* Pointer to start of residue      */
       {
          if(prev == NULL) return(FALSE);  /* No b/b atom before s/c     */
 
-         /* KillPDB() returns the next in list, so exit if list ended   */
-         if(KillPDB(p, prev) == NULL) break;
+         /* blKillPDB() returns the next in list, so exit if list ended */
+         if(blKillPDB(p, prev) == NULL) break;
          p = prev;
       }
       

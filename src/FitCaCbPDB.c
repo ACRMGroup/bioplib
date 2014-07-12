@@ -3,8 +3,8 @@
 
    \file       FitCaCbPDB.c
    
-   \version    V1.3R
-   \date       14.03.96
+   \version    V1.4
+   \date       07.07.14
    \brief      Fit two PDB linked lists. Also a weighted fit and support
                routines
    
@@ -55,6 +55,7 @@
                   Changed FitPDB() and FitCaCbPDB() to use 
                   ApplyMatrixPDB() rather than RotatePDB() since the PDB
                   linked lists are already at the origin
+-  V1.4  07.07.14 Use bl prefix for functions. By: CTP
 
 *************************************************************************/
 /* Includes
@@ -82,8 +83,8 @@
 */
 
 /************************************************************************/
-/*>BOOL FitCaCbPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
-   ----------------------------------------------------------
+/*>BOOL blFitCaCbPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
+   ------------------------------------------------------------
 *//**
 
    \param[in]     *ref_pdb   Reference PDB linked list
@@ -104,8 +105,9 @@
             output if rm is not NULL
 -  14.03.96 Changed to use ApplyMatrixPDB() rather than RotatePDB() since
             we are already at the origin
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL FitCaCbPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
+BOOL blFitCaCbPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
 {
    REAL  RotMat[3][3],
          *weights    = NULL;
@@ -124,15 +126,15 @@ BOOL FitCaCbPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
          *start      = NULL;
 
    /* Get the CofG of the reference structure                           */
-   GetCofGPDB(ref_pdb, &ref_CofG);
+   blGetCofGPDB(ref_pdb, &ref_CofG);
 
    /* Move them both to the origin                                      */
-   OriginPDB(ref_pdb);
-   OriginPDB(fit_pdb);
+   blOriginPDB(ref_pdb);
+   blOriginPDB(fit_pdb);
    
    /* Create coordinate arrays                                          */
-   NCoor = GetPDBCoor(ref_pdb, &ref_coor);
-   if((NCoor == 0) || (GetPDBCoor(fit_pdb, &fit_coor) != NCoor))
+   NCoor = blGetPDBCoor(ref_pdb, &ref_coor);
+   if((NCoor == 0) || (blGetPDBCoor(fit_pdb, &fit_coor) != NCoor))
    {
       /* Free and return if arrays don't match                          */
       if(ref_coor) free(ref_coor);
@@ -195,11 +197,11 @@ BOOL FitCaCbPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
    
    /* Now we can rotate the rotation list                               */
    if(RetVal)
-      ApplyMatrixPDB(fit_pdb, RotMat);
+      blApplyMatrixPDB(fit_pdb, RotMat);
 
    /* Translate both structures back to reference CofG                  */
-   TranslatePDB(fit_pdb, ref_CofG);
-   TranslatePDB(ref_pdb, ref_CofG);
+   blTranslatePDB(fit_pdb, ref_CofG);
+   blTranslatePDB(ref_pdb, ref_CofG);
 
    /* Free the coordinate and weights arrays                            */
    free(ref_coor);

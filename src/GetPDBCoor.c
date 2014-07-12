@@ -77,8 +77,8 @@
 
 
 /************************************************************************/
-/*>int GetPDBCoor(PDB *pdb, COOR **coor)
-   -------------------------------------
+/*>int blGetPDBCoor(PDB *pdb, COOR **coor)
+   ---------------------------------------
 *//**
 
    \param[in]     *pdb    PDB linked list
@@ -90,8 +90,9 @@
 
 -  17.06.93 Original    By: ACRM
 -  22.06.93 Corrected return value
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int GetPDBCoor(PDB *pdb, COOR **coor)
+int blGetPDBCoor(PDB *pdb, COOR **coor)
 {
    PDB   *p;
    int   NAtoms;

@@ -3,8 +3,8 @@
 
    \file       CopyPDB.c
    
-   \version    V1.10R
-   \date       08.10.99
+   \version    V1.11
+   \date       07.07.14
    \brief      PDB linked list manipulation
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-6
@@ -57,6 +57,7 @@
 -  V1.8  10.01.96 Added ExtractZonePDB()
 -  V1.9  14.03.96 Added FindAtomInRes()
 -  V1.10 08.10.99 Initialised some variables
+-  V1.11 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -83,8 +84,8 @@
 */
 
 /************************************************************************/
-/*>void CopyPDB(PDB *out, PDB *in)
-   -------------------------------
+/*>void blCopyPDB(PDB *out, PDB *in)
+   ---------------------------------
 *//**
 
    \param[in]     *in     Input PDB record pointer
@@ -94,9 +95,10 @@
 
 -  12.05.92 Original    By: ACRM
 -  17.07.01 Now uses the generic *out=*in
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void CopyPDB(PDB *out,
-             PDB *in)
+void blCopyPDB(PDB *out,
+               PDB *in)
 {
    *out = *in;
    out->next   = NULL;

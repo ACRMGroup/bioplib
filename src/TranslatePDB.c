@@ -3,8 +3,8 @@
 
    \file       TranslatePDB.c
    
-   \version    V1.2
-   \date       27.02.98
+   \version    V1.3
+   \date       07.07.14
    \brief      
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-8
@@ -48,6 +48,7 @@
    =================
 -  V1.1  01.03.94 Original
 -  V1.2  27.02.98 Removed unreachable break from switch()
+-  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -70,8 +71,8 @@
 
 
 /************************************************************************/
-/*>void TranslatePDB(PDB *pdb,VEC3F tvect)
-   ---------------------------------------
+/*>void blTranslatePDB(PDB *pdb,VEC3F tvect)
+   -----------------------------------------
 *//**
 
    \param[in,out] *pdb   PDB linked list to move
@@ -80,9 +81,10 @@
    Translates a PDB linked list, ignoring null (9999.0) coordinates.
 -  01.10.92 Original
 -  11.03.94 Changed check on 9999.0 to >9998.0 and cast to REAL
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void TranslatePDB(PDB   *pdb,
-                  VEC3F tvect)
+void blTranslatePDB(PDB   *pdb,
+                    VEC3F tvect)
 {
    PDB *p;
 

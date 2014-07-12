@@ -3,11 +3,11 @@
 
    \file       GetPDBByN.c
    
-   \version    V1.10
-   \date       08.10.99
+   \version    V1.11
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-6
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -57,6 +57,7 @@
 -  V1.8  10.01.96 Added ExtractZonePDB()
 -  V1.9  14.03.96 Added FindAtomInRes()
 -  V1.10 08.10.99 Initialised some variables
+-  V1.11 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -78,8 +79,8 @@
 
 
 /************************************************************************/
-/*>PDB *GetPDBByN(PDB *pdb, int n)
-   -------------------------------
+/*>PDB *blGetPDBByN(PDB *pdb, int n)
+   ---------------------------------
 *//**
 
    \param[in]     *pdb    PDB linked list
@@ -91,8 +92,10 @@
    The pointer returned is the n'th item in the list
    
 -  13.05.92 Original
+-  07.07.14 Use bl prefix for functions By: CTP
+
 */
-PDB *GetPDBByN(PDB *pdb,
+PDB *blGetPDBByN(PDB *pdb,
                int n)
 {
    PDB *p;

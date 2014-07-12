@@ -3,11 +3,11 @@
 
    \file       MovePDB.c
    
-   \version    V1.2a
-   \date       06.01.11
+   \version    V1.3
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-8
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -49,6 +49,7 @@
 -  V1.1  01.03.94
 -  V1.2  27.02.98 Removed unreachable break from switch()
 -  V1.2a 06.01.11 Corrected description
+-  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -71,8 +72,8 @@
 
 
 /************************************************************************/
-/*>BOOL MovePDB(PDB *move, PDB **from, PDB **to)
-   ---------------------------------------------
+/*>BOOL blMovePDB(PDB *move, PDB **from, PDB **to)
+   -----------------------------------------------
 *//**
 
    \param[in]     *move     PDB record to be moved
@@ -86,8 +87,9 @@
 
 -  13.05.92 Original
 -  19.06.92 Changed p=*to, etc. for crappy compilers
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL MovePDB(PDB *move, PDB **from, PDB **to)
+BOOL blMovePDB(PDB *move, PDB **from, PDB **to)
 {
    PDB *p;
    BOOL ret = FALSE;

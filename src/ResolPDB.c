@@ -3,11 +3,11 @@
 
    \file       ResolPDB.c
    
-   \version    V1.6R
-   \date       30.05.02
+   \version    V1.8
+   \date       07.07.14
    \brief      Get resolution and R-factor information out of a PDB file
    
-   \copyright  (c) UCL / Dr. Andrew C.R. Martin, 1994-2002
+   \copyright  (c) UCL / Dr. Andrew C.R. Martin, 1994-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -65,6 +65,8 @@
 -  V1.7  13.12.12 Complete re-implementation of GetExptl() for remediated
                   PDB files. Old version for old PDB files available as
                   GetExptlOld()
+-  V1.8  07.07.14 Use bl prefix for functions By: CTP
+
 
 *************************************************************************/
 /* Includes
@@ -94,9 +96,9 @@ static BOOL FindNextNumber(char *buffer, FILE *fp, int nlines, int nskip,
 
 
 /************************************************************************/
-/*>BOOL GetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor,
+/*>BOOL blGetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor,
                     int *StrucType)
-   -----------------------------------------------------------
+   -------------------------------------------------------------
 *//**
 
    \param[in]     *fp           PDB file pointer
@@ -145,19 +147,20 @@ static BOOL FindNextNumber(char *buffer, FILE *fp, int nlines, int nskip,
             Looks for EXPDTA NMR record
 -  23.03.98 Added check that RESOLUTION record is in a REMARK 2
 -  08.02.99 Now a wrapper to GetExptl() which also returns FreeR
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL GetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor, 
-                 int *StrucType)
+BOOL blGetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor, 
+                   int *StrucType)
 {
    REAL FreeR;
    
-   return(GetExptl(fp, resolution, RFactor, &FreeR, StrucType));
+   return(blGetExptl(fp, resolution, RFactor, &FreeR, StrucType));
 }
 
 /************************************************************************/
-/*>BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
-                 int *StrucType)
-   ---------------------------------------------------------------------
+/*>BOOL blGetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
+                   int *StrucType)
+   -----------------------------------------------------------------------
 *//**
 
    \param[in]     *fp           PDB file pointer
@@ -186,8 +189,9 @@ BOOL GetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor,
             first is used
             If multiple R-factors are provided in different sections, 
             then the first one is returned.
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
+BOOL blGetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
               int *StrucType)
 {
    char *ptr,
@@ -354,7 +358,34 @@ BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
 }
 
 /************************************************************************/
-char *ReportStructureType(int StrucType)
+/*>char *blReportStructureType(int StrucType)
+   ------------------------------------------
+*//**
+
+   \param[in]     StrucType    Stucture type returned by ResolPDB()
+   \return                     Stucture type description.
+
+   Returns structure description.
+
+
+      STRUCTURE_TYPE_UNKNOWN     Unknown
+      STRUCTURE_TYPE_XTAL        X-ray crystal structure
+      STRUCTURE_TYPE_NMR         NMR
+      STRUCTURE_TYPE_MODEL       Model
+      STRUCTURE_TYPE_ELECTDIFF   Electron Diffraction
+      STRUCTURE_TYPE_FIBER       Fiber Diffraction
+      STRUCTURE_TYPE_SSNMR       Solid State NMR
+      STRUCTURE_TYPE_NEUTRON     Neutron Scattering
+      STRUCTURE_TYPE_EM          Electron Miscroscopy
+      STRUCTURE_TYPE_SOLSCAT     Solution Scattering
+      STRUCTURE_TYPE_IR          Infra-red Spectroscopy
+      STRUCTURE_TYPE_POWDER      Powder Diffraction
+      STRUCTURE_TYPE_FRET        Fluorescence Transfer
+
+
+-  07.07.14 Use bl prefix for functions By: CTP
+*/
+char *blReportStructureType(int StrucType)
 {
    switch(StrucType)
    {
@@ -608,8 +639,9 @@ static int SetStrucType(char *ptr)
             Added check for -ve R-factor
 -  08.09.99 Now takes the first FREE R-factor followed by 17 spaces
             rather than the last
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL GetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
+BOOL blGetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
                  int *StrucType)
 {
    BOOL ResNotApplic   = FALSE,  /* Found resolution not applicable     */
@@ -1091,7 +1123,7 @@ int main(int argc, char **argv)
    printf("Resol:     %f\n",resol);
    printf("RFactor:   %f\n",RFactor);
    printf("Free R:    %f\n",FreeR);
-   printf("StrucType: %s\n", ReportStructureType(StrucType));
+   printf("StrucType: %s\n", blReportStructureType(StrucType));
    
    return(0);
 }

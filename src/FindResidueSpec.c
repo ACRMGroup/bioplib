@@ -3,8 +3,8 @@
 
    \file       FindResidueSpec.c
    
-   \version    V1.9
-   \date       24.02.14
+   \version    V1.10
+   \date       07.07.14
    \brief      Parse a residue specification
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -62,6 +62,7 @@
 -  V1.8  15.08.13 FindResidueSpec() modified as chain and insert now need
                   to be arrays
 -  V1.9  24.02.14 Now calls BiopFindResidue() By: CTP
+-  V1.10 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -87,8 +88,8 @@
 */
 
 /************************************************************************/
-/*>PDB *FindResidueSpec(PDB *pdb, char *resspec)
-   ---------------------------------------------
+/*>PDB *blFindResidueSpec(PDB *pdb, char *resspec)
+   -----------------------------------------------
 *//**
 
    \param[in]     *pdb      PDB linked list
@@ -104,15 +105,16 @@
 -  15.08.13 chain[] and insert[] are now arrays because of changes to
             ParseResSpec()
 -  24.02.14 Now calls BiopFindResidue() By: CTP
+-  07.07.14 Now calls blFindResidue() Use bl prefix for functions By: CTP
 */
-PDB *FindResidueSpec(PDB *pdb, char *resspec)
+PDB *blFindResidueSpec(PDB *pdb, char *resspec)
 {
    char chain[8],
         insert[8];
    int  resnum;
 
-   if(ParseResSpec(resspec, chain, &resnum, insert))
-      return(BiopFindResidue(pdb, chain, resnum, insert));
+   if(blParseResSpec(resspec, chain, &resnum, insert))
+      return(blFindResidue(pdb, chain, resnum, insert));
    
    return(NULL);
 }

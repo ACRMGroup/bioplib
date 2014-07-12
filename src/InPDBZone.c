@@ -3,8 +3,8 @@
 
    \file       InPDBZone.c
    
-   \version    V1.7
-   \date       07.05.14
+   \version    V1.8
+   \date       07.07.14
    \brief      
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -55,6 +55,7 @@
 -  V1.6  02.03.14 Use strcmp to compare inserts.
                   Bugfix for insert residues. By: CTP
 -  V1.7  07.05.14 Moved InPDBZone() to deprecated.h By: CTP
+-  V1.8  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -76,9 +77,9 @@
 
 
 /************************************************************************/
-/*>BOOL BiopInPDBZone(PDB *p, char *chain, int resnum1, char *insert1, 
+/*>BOOL blInPDBZone(PDB *p, char *chain, int resnum1, char *insert1, 
                     int resnum2, char *insert2)
-   ---------------------------------------------------------------
+   -----------------------------------------------------------------
 *//**
 
    \param[in]     *p         Pointer to a PDB record
@@ -100,9 +101,10 @@
             Fixed bug handling insert residues where start and finish of 
             zone have same residue number. By: CTP
    
+-  07.07.14 Renamed to blInPDBZone(). Use bl prefix for functions By: CTP
 */
-BOOL BiopInPDBZone(PDB *p, char *chain, int resnum1, char *insert1, 
-                   int resnum2, char *insert2)
+BOOL blInPDBZone(PDB *p, char *chain, int resnum1, char *insert1, 
+                 int resnum2, char *insert2)
 {
    if(CHAINMATCH(p->chain,chain))
    {

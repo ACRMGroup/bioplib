@@ -3,11 +3,11 @@
 
    \file       hbond.h
    
-   \version    V1.0
-   \date       26.01.96
+   \version    V1.1
+   \date       07.07.14
    \brief      Header file for hbond determining code
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -47,10 +47,13 @@
    Revision History:
    =================
 -  V1.0  26.01.96 Original    By: ACRM
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 #ifndef _hbond_h
 #define _hbond_h
+
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -72,10 +75,10 @@
 /************************************************************************/
 /* Prototypes
 */
-int  IsHBonded(PDB *res1, PDB *res2, int type);
-BOOL ValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP);
-int IsMCDonorHBonded(PDB *res1, PDB *res2, int type);
-int IsMCAcceptorHBonded(PDB *res1, PDB *res2, int type);
+int  blIsHBonded(PDB *res1, PDB *res2, int type);
+BOOL blValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP);
+int blIsMCDonorHBonded(PDB *res1, PDB *res2, int type);
+int blIsMCAcceptorHBonded(PDB *res1, PDB *res2, int type);
 
 
 #endif

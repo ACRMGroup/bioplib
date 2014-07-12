@@ -3,8 +3,8 @@
 
    \file       FitCaPDB.c
    
-   \version    V1.4R
-   \date       28.01.09
+   \version    V1.5
+   \date       07.07.14
    \brief      Fit two PDB linked lists. Also a weighted fit and support
                routines
    
@@ -57,6 +57,7 @@
                   linked lists are already at the origin
 -  V1.4  28.01.09 Initialize RetVal - this randomly worked in 32bit but
                   broke in 64bit
+-  V1.5  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -84,7 +85,7 @@
 */
 
 /************************************************************************/
-/*>BOOL FitCaPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
+/*>BOOL blFitCaPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
    --------------------------------------------------------
 *//**
 
@@ -100,8 +101,9 @@
 
 -  14.03.96 Original based on FitPDB()   By: ACRM
 -  28.01.09 Initialize RetVal to TRUE!
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL FitCaPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
+BOOL blFitCaPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
 {
    REAL  RotMat[3][3];
    COOR  *ref_coor   = NULL,
@@ -121,9 +123,9 @@ BOOL FitCaPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
    SELECT(sel[0], "CA  ");
    if(sel[0]==NULL)
       return(FALSE);
-   if((ref_ca_pdb = SelectAtomsPDB(ref_pdb, 1, sel, &natoms))==NULL)
+   if((ref_ca_pdb = blSelectAtomsPDB(ref_pdb, 1, sel, &natoms))==NULL)
       RetVal = FALSE;
-   if((fit_ca_pdb = SelectAtomsPDB(fit_pdb, 1, sel, &natoms))==NULL)
+   if((fit_ca_pdb = blSelectAtomsPDB(fit_pdb, 1, sel, &natoms))==NULL)
       RetVal = FALSE;
    free(sel[0]);
    
@@ -131,16 +133,16 @@ BOOL FitCaPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
    if(RetVal)
    {
       /* Get the CofG of the CA structures and the original mobile      */
-      GetCofGPDB(ref_ca_pdb, &ref_ca_CofG);
-      GetCofGPDB(fit_ca_pdb, &fit_ca_CofG);
+      blGetCofGPDB(ref_ca_pdb, &ref_ca_CofG);
+      blGetCofGPDB(fit_ca_pdb, &fit_ca_CofG);
       
       /* Move them both to the origin                                   */
-      OriginPDB(ref_ca_pdb);
-      OriginPDB(fit_ca_pdb);
+      blOriginPDB(ref_ca_pdb);
+      blOriginPDB(fit_ca_pdb);
       
       /* Create coordinate arrays, checking numbers match               */
-      NCoor = GetPDBCoor(ref_ca_pdb, &ref_coor);
-      if(GetPDBCoor(fit_ca_pdb, &fit_coor) != NCoor)
+      NCoor = blGetPDBCoor(ref_ca_pdb, &ref_coor);
+      if(blGetPDBCoor(fit_ca_pdb, &fit_coor) != NCoor)
       {
          RetVal = FALSE;
       }
@@ -164,9 +166,9 @@ BOOL FitCaPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
                tvect.x = (-fit_ca_CofG.x);
                tvect.y = (-fit_ca_CofG.y);
                tvect.z = (-fit_ca_CofG.z);
-               TranslatePDB(fit_pdb, tvect);
-               ApplyMatrixPDB(fit_pdb, RotMat);
-               TranslatePDB(fit_pdb, ref_ca_CofG);
+               blTranslatePDB(fit_pdb, tvect);
+               blApplyMatrixPDB(fit_pdb, RotMat);
+               blTranslatePDB(fit_pdb, ref_ca_CofG);
             }
          }
       }

@@ -3,11 +3,11 @@
 
    \file       GetCrystPDB.c
    
-   \version    V1.0
-   \date       12.10.95
+   \version    V1.1
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-1995
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -47,6 +47,7 @@
    Revision History:
    =================
 -  V1.0R 12.10.05 Original
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -73,10 +74,10 @@
 
 
 /************************************************************************/
-/*>int GetCrystPDB(FILE *fp, VEC3F *UnitCell, VEC3F *CellAngles,
-                   char *spacegroup,
-                   REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4])
-   --------------------------------------------------------------
+/*>int blGetCrystPDB(FILE *fp, VEC3F *UnitCell, VEC3F *CellAngles,
+                     char *spacegroup,
+                     REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4])
+   ----------------------------------------------------------------
 *//**
 
    \param[in]     *fp                 Input file pointer
@@ -85,7 +86,10 @@
    \param[out]    *spacegroup         The spacegroup
    \param[out]    OrigMatrix          The origin matrix
    \param[out]    ScaleMatrix         The scale matrix
-   \return                                 Flags for elements read:
+   \return                            Flags for elements read.
+
+
+                                    Flags for elements read:
                                         0: Nothing at all
                                         XTAL_DATA_CRYST: Unit cell
                                         XTAL_DATA_ORIGX: Origin matrix
@@ -101,10 +105,11 @@
 
 -  12.10.95 Original    By: ACRM
 -  17.10.95 Correctly returns retval if no ATOM/HETATM records not found
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int GetCrystPDB(FILE *fp, VEC3F *UnitCell, VEC3F *CellAngles,
-                char *spacegroup,
-                REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4])
+int blGetCrystPDB(FILE *fp, VEC3F *UnitCell, VEC3F *CellAngles,
+                  char *spacegroup,
+                  REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4])
 {
    int  ch,
         i, j,

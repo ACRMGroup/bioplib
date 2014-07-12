@@ -3,8 +3,8 @@
 
    \file       FindAtomInRes.c
    
-   \version    V1.10R
-   \date       08.10.99
+   \version    V1.11
+   \date       07.07.14
    \brief      PDB linked list manipulation
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-6
@@ -57,6 +57,7 @@
 -  V1.8  10.01.96 Added ExtractZonePDB()
 -  V1.9  14.03.96 Added FindAtomInRes()
 -  V1.10 08.10.99 Initialised some variables
+-  V1.11 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -83,8 +84,8 @@
 */
 
 /************************************************************************/
-/*>PDB *FindAtomInRes(PDB *pdb, char *atnam_in)
-   --------------------------------------------
+/*>PDB *blFindAtomInRes(PDB *pdb, char *atnam_in)
+   ----------------------------------------------
 *//**
 
    \param[in]     *pdb         The beginning of a residue in a PDB 
@@ -95,8 +96,9 @@
                                found
 
 -  14.03.96 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *FindAtomInRes(PDB *pdb, char *atnam_in)
+PDB *blFindAtomInRes(PDB *pdb, char *atnam_in)
 {
    PDB *end,
        *p;
@@ -108,7 +110,7 @@ PDB *FindAtomInRes(PDB *pdb, char *atnam_in)
    padterm(atnam,4);
    
    /* Find the end of this residue                                      */
-   end = FindNextResidue(pdb);
+   end = blFindNextResidue(pdb);
    
    /* Search for the required atom                                      */
    for(p=pdb; p!=end; NEXT(p))

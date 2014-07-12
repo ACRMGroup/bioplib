@@ -3,8 +3,8 @@
 
    \file       WriteGromosPDB.c
    
-   \version    V1.7
-   \date       04.02.14
+   \version    V1.8
+   \date       07.07.14
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -62,6 +62,7 @@
 -  V1.5  22.02.94 Added TER card at end of file
 -  V1.6  30.05.02 Changed PDB field from 'junk' to 'record_type'
 -  V1.7  04.02.14 Use CHAINMATCH macro. By: CTP
+-  V1.8  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 #include <stdio.h>
@@ -74,8 +75,8 @@
 #include "macros.h"
 
 /************************************************************************/
-/*>void WriteGromosPDB(FILE *fp, PDB *pdb)
-   ---------------------------------------
+/*>void blWriteGromosPDB(FILE *fp, PDB *pdb)
+   -----------------------------------------
 *//**
 
    \param[in]     *fp   PDB file pointer to be written
@@ -90,9 +91,10 @@
 -  22.02.94 And a TER card at the end of the file
 -  15.02.01 This is the old WritePDB()
 -  04.02.14 Use CHAINMATCH macro. By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void WriteGromosPDB(FILE *fp,
-                    PDB  *pdb)
+void blWriteGromosPDB(FILE *fp,
+                      PDB  *pdb)
 {
    PDB   *p;
    char  PrevChain[8];
@@ -107,14 +109,14 @@ void WriteGromosPDB(FILE *fp,
          fprintf(fp,"TER   \n");
          strcpy(PrevChain,p->chain);
       }
-      WriteGromosPDBRecord(fp,p);
+      blWriteGromosPDBRecord(fp,p);
    }
    fprintf(fp,"TER   \n");
 }
 
 /************************************************************************/
-/*>void WriteGromosPDBRecord(FILE *fp, PDB *pdb)
-   ---------------------------------------------
+/*>void blWriteGromosPDBRecord(FILE *fp, PDB *pdb)
+   -----------------------------------------------
 *//**
 
    \param[in]     *fp     PDB file pointer to be written
@@ -129,8 +131,9 @@ void WriteGromosPDB(FILE *fp,
 -  22.06.93 Changed to %lf. Ljust strings
 -  11.03.94 %lf back to %f (!)
 -  12.02.01 This is the old WritePDBRecord()
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void WriteGromosPDBRecord(FILE *fp,
+void blWriteGromosPDBRecord(FILE *fp,
                           PDB  *pdb)
 {
    fprintf(fp,"%-6s%5d  %-4s%-4s%1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f\n",

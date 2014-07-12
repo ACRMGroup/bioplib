@@ -3,8 +3,8 @@
 
    \file       BuildAtomNeighbourPDBList.c
    
-   \version    V1.2
-   \date       08.11.07
+   \version    V1.3
+   \date       07.07.14
    \brief      Build a new PDB linked list containing atos within a given
                distance of a specified residue
    
@@ -51,6 +51,7 @@
 -  V1.1  17.11.05 Fixed freed memory access
 -  V1.2  08.11.07 Moved out of mutmodel. Added check on memory allocation.
                   Uses occ rather than BVal as a flag
+-  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -72,8 +73,8 @@
 */
 
 /************************************************************************/
-/*>PDB *BuildAtomNeighbourPDBList(PDB *pdb, PDB *pRes, REAL NeighbDist)
-   --------------------------------------------------------------------
+/*>PDB *blBuildAtomNeighbourPDBList(PDB *pdb, PDB *pRes, REAL NeighbDist)
+   ----------------------------------------------------------------------
 *//**
 
    \param[in]     *pdb        PDB linked list of whole structure
@@ -93,8 +94,9 @@
 -  08.11.07 Moved out of mutmodel. Added check on memory allocation.
             Uses occ rather than BVal as a flag
             MOVED FROM MUTMODEL
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *BuildAtomNeighbourPDBList(PDB *pdb, PDB *pRes, REAL NeighbDist)
+PDB *blBuildAtomNeighbourPDBList(PDB *pdb, PDB *pRes, REAL NeighbDist)
 {
    PDB  *pdbN  = NULL,
         *prev  = NULL,
@@ -103,7 +105,7 @@ PDB *BuildAtomNeighbourPDBList(PDB *pdb, PDB *pRes, REAL NeighbDist)
    REAL DCutSq = NeighbDist * NeighbDist;
    
    /* First, simply duplicate the PDB linked list                       */
-   if(!(pdbN = DupePDB(pdb)))
+   if(!(pdbN = blDupePDB(pdb)))
       return(NULL);
 
    /* We'll use the Occ column as a flag                                */
@@ -111,7 +113,7 @@ PDB *BuildAtomNeighbourPDBList(PDB *pdb, PDB *pRes, REAL NeighbDist)
       p->occ = 0.0;
    
    /* Find the atom after the residue in which we are interested        */
-   pNext = FindNextResidue(pRes);
+   pNext = blFindNextResidue(pRes);
 
    /* Look at each atom in our residue in turn flagging atoms in the
       duplicate list which are in range

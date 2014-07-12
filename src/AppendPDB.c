@@ -3,7 +3,7 @@
 
    \file       AppendPDB.c
    
-   \version    V1.10R
+   \version    V1.11
    \date       08.10.99
    \brief      PDB linked list manipulation
    
@@ -83,8 +83,8 @@
 */
 
 /************************************************************************/
-/*>PDB *AppendPDB(PDB *first, PDB *second)
-   ---------------------------------------
+/*>PDB *blAppendPDB(PDB *first, PDB *second)
+   -----------------------------------------
 *//**
 
    \param[in]     *first    First linked list (may be NULL)
@@ -95,9 +95,10 @@
    first was NULL).
 -  13.05.92 Original
 -  09.07.93 Changed to use LAST()
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *AppendPDB(PDB *first,
-               PDB *second)
+PDB *blAppendPDB(PDB *first,
+                 PDB *second)
 {
    PDB *p;
 

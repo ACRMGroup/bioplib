@@ -3,8 +3,8 @@
 
    \file       DupeResiduePDB.c
    
-   \version    V1.1
-   \date       08.11.07
+   \version    V1.2
+   \date       07.07.14
    \brief      Create a new PDB linked list with a copy of a residue
    
    \copyright  (c) Dr. Andrew C. R. Martin, UCL, 1996-2007
@@ -48,6 +48,7 @@
    =================
 -  V1.0 27.08.96 Original from mutmodel  By: ACRM
 -  V1.1 08.11.07 Initialize p and q; Moved into bioplib
+-  V1.2 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -69,7 +70,7 @@
 */
 
 /************************************************************************/
-/*>PDB *DupeResiduePDB(PDB *in)
+/*>PDB *blDupeResiduePDB(PDB *in)
    ----------------------------
 *//**
 
@@ -83,8 +84,9 @@
 -  27.08.96 Original   By: ACRM
 -  08.11.07 Initialize p and q
             Moved into bioplib
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *DupeResiduePDB(PDB *in)
+PDB *blDupeResiduePDB(PDB *in)
 {
    PDB *pNext,
        *out = NULL,
@@ -92,7 +94,7 @@ PDB *DupeResiduePDB(PDB *in)
        *q = NULL;
    
    /* Find the next residue                                             */
-   pNext = FindNextResidue(in);
+   pNext = blFindNextResidue(in);
 
    for(p=in; p!=pNext; NEXT(p))
    {
@@ -111,7 +113,7 @@ PDB *DupeResiduePDB(PDB *in)
          return(NULL);
       }
       
-      CopyPDB(q, p);
+      blCopyPDB(q, p);
    }
    
    return(out);

@@ -3,8 +3,8 @@
 
    \file       HAddPDB.c
    
-   \version    V2.16
-   \date       20.03.14
+   \version    V2.17
+   \date       07.07.14
    \brief      Add hydrogens to a PDB linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2014
@@ -117,6 +117,7 @@
 -  V2.15 24.01.06 Fixed error message in GenH() which could try to print 
                   from NULL pointer
 -  V2.16 20.03.14 Updated error message in GenH(). By: CTP
+-  V2.17 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -186,13 +187,14 @@ static void SetRawAtnam(char *out, char *in);
 static PDB  *StripDummyH(PDB *pdb, int *nhyd);
 
 /************************************************************************/
-/*>int HAddPDB(FILE *fp, PDB  *pdb)
-   --------------------------------
+/*>int blHAddPDB(FILE *fp, PDB  *pdb)
+   ----------------------------------
 *//**
 
    \param[in]     *fp       File pointer to PGP file
    \param[in,out] *pdb      PDB Linked list to which Hs are added
    \return                        Number of Hs added. 0 if error.
+
    Globals: HADDINFO gHaddInfo Information on Hs added
 
    This routine adds hydrogens to a PDB linked list. Performs all
@@ -208,8 +210,9 @@ static PDB  *StripDummyH(PDB *pdb, int *nhyd);
 -  08.03.94 Only reads PGP on first call. err_flag changed to BOOL.
 -  28.11.05 Removes any dummy hydrogens added because there were
             missing atoms
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int HAddPDB(FILE *fp, PDB  *pdb)
+int blHAddPDB(FILE *fp, PDB  *pdb)
 {
    PDB            *p;
    int            nhydrogens,
@@ -222,7 +225,7 @@ int HAddPDB(FILE *fp, PDB  *pdb)
    {
       /* Read the parameter file                                        */
       FirstCall = FALSE;
-      ReadPGP(fp);
+      blReadPGP(fp);
    }
 
    /* Generate the hydrogens                                            */
@@ -240,8 +243,8 @@ int HAddPDB(FILE *fp, PDB  *pdb)
 }
 
 /************************************************************************/
-/*>int ReadPGP(FILE *fp)
-   ---------------------
+/*>int blReadPGP(FILE *fp)
+   -----------------------
 *//**
 
    \param[in]     *fp  Pointer to PGP file.
@@ -257,8 +260,9 @@ int HAddPDB(FILE *fp, PDB  *pdb)
 -  27.07.93 Changed to use fsscanf()
 -  01.03.94 Changed static variable names
 -  01.09.94 Moved n++ out of the fsscanf()
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int ReadPGP(FILE *fp)
+int blReadPGP(FILE *fp)
 {
    char  buffer[160];
    int   n=0;
@@ -1249,8 +1253,8 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
 }
 
 /************************************************************************/
-/*>FILE *OpenPGPFile(char *pgpfile, BOOL AllHyd)
-   ---------------------------------------------
+/*>FILE *blOpenPGPFile(char *pgpfile, BOOL AllHyd)
+   -----------------------------------------------
 *//**
 
    \param[in]     *pgpfile       Name of a PGP file or NULL
@@ -1261,8 +1265,9 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
 
 -  23.08.94 Original    By: ACRM
 -  28.07.05 Added conditionals for msdos and Mac OS/X
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-FILE *OpenPGPFile(char *pgpfile, BOOL AllHyd)
+FILE *blOpenPGPFile(char *pgpfile, BOOL AllHyd)
 {
    char *datadir,
         buffer[160],

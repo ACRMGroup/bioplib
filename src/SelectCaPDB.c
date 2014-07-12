@@ -3,11 +3,11 @@
 
    \file       SelectCaPDB.c
    
-   \version    V1.7
-   \date       16.10.96
+   \version    V1.8
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-6
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -57,6 +57,7 @@
 -  V1.5  01.11.94 Added HStripPDB()
 -  V1.6  26.07.95 Removed unused variables
 -  V1.7  16.10.96 Added SelectCaPDB()
+-  V1.8  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -82,8 +83,8 @@
 
 
 /************************************************************************/
-/*>PDB *SelectCaPDB(PDB *pdb)
-   --------------------------
+/*>PDB *blSelectCaPDB(PDB *pdb)
+   ----------------------------
 *//**
 
    \param[in]     *pdb     A PDB linked list
@@ -110,8 +111,9 @@
 
 -  15.10.96 Original   By: ACRM
 -  11.01.02 Added check on pdb!=NULL in case there are no CAs (DNA etc)
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *SelectCaPDB(PDB *pdb)
+PDB *blSelectCaPDB(PDB *pdb)
 {
    PDB *p, *prev;
 

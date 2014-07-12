@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.56
-   \date       21.06.14
+   \version    V1.57
+   \date       07.07.14
    \brief      Include file for pdb routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2014
@@ -132,6 +132,7 @@
                   blFormatCheckWritePDB(), blWriteWholePDB(), 
                   blWriteWholePDBHeader() and blWriteWholePDBTrailer().
                   By: CTP
+-  V1.57 07.07.14 Rename functions with 'bl' prefix. By: CTP
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -359,16 +360,16 @@ typedef struct
 /* Prototypes
 */
 
-PDB *ReadPDB(FILE *fp, int *natom);
-PDB *ReadPDBAll(FILE *fp, int *natom);
-PDB *ReadPDBAtoms(FILE *fp, int *natom);
-PDB *ReadPDBOccRank(FILE *fp, int *natom, int OccRank);
-PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank);
-PDB *doReadPDB(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank, 
-               int ModelNum);
-PDB *doReadPDBML(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank, 
+PDB *blReadPDB(FILE *fp, int *natom);
+PDB *blReadPDBAll(FILE *fp, int *natom);
+PDB *blReadPDBAtoms(FILE *fp, int *natom);
+PDB *blReadPDBOccRank(FILE *fp, int *natom, int OccRank);
+PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank);
+PDB *bldoReadPDB(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank, 
                  int ModelNum);
-BOOL CheckFileFormatPDBML(FILE *fp);
+PDB *bldoReadPDBML(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank, 
+                   int ModelNum);
+BOOL blCheckFileFormatPDBML(FILE *fp);
 
 BOOL blWritePDB(FILE *fp, PDB  *pdb);
 void blWriteAsPDB(FILE *fp, PDB  *pdb);
@@ -378,119 +379,114 @@ BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb);
 void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb);
 void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb);
 
-void WritePDB(FILE *fp, PDB *pdb);
-void WritePDBRecord(FILE *fp, PDB *pdb);
-void WritePDBRecordAtnam(FILE *fp, PDB  *pdb);
-void WritePDBML(FILE *fp, PDB *pdb);
-void WriteGromosPDB(FILE *fp, PDB *pdb);
-void WriteGromosPDBRecord(FILE *fp, PDB *pdb);
-void GetCofGPDB(PDB   *pdb, VEC3F *cg);
-void GetCofGPDBRange(PDB *start, PDB *stop, VEC3F *cg);
-void GetCofGPDBSCRange(PDB *start, PDB *stop, VEC3F *cg);
-void OriginPDB(PDB *pdb);
-void RotatePDB(PDB  *pdb, REAL rm[3][3]);
-void TranslatePDB(PDB   *pdb, VEC3F tvect);
-BOOL FitPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3]);
-BOOL FitCaPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3]);
-BOOL FitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3]);
-BOOL FitCaCbPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3]);
-REAL CalcRMSPDB(PDB *pdb1, PDB *pdb2);
-int GetPDBCoor(PDB *pdb, COOR **coor);
+void blWritePDBRecord(FILE *fp, PDB *pdb);
+void blWritePDBRecordAtnam(FILE *fp, PDB  *pdb);
+void blWriteGromosPDB(FILE *fp, PDB *pdb);
+void blWriteGromosPDBRecord(FILE *fp, PDB *pdb);
+void blGetCofGPDB(PDB   *pdb, VEC3F *cg);
+void blGetCofGPDBRange(PDB *start, PDB *stop, VEC3F *cg);
+void blGetCofGPDBSCRange(PDB *start, PDB *stop, VEC3F *cg);
+void blOriginPDB(PDB *pdb);
+void blRotatePDB(PDB  *pdb, REAL rm[3][3]);
+void blTranslatePDB(PDB   *pdb, VEC3F tvect);
+BOOL blFitPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3]);
+BOOL blFitCaPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3]);
+BOOL blFitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3]);
+BOOL blFitCaCbPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3]);
+REAL blCalcRMSPDB(PDB *pdb1, PDB *pdb2);
+int blGetPDBCoor(PDB *pdb, COOR **coor);
 BOOL blFindZonePDB(PDB *pdb, int start, char *startinsert, int stop, 
                    char *stopinsert, char *chain, int mode, 
                    PDB **pdb_start, PDB **pdb_stop);
-int HAddPDB(FILE *fp, PDB *pdb);
-int ReadPGP(FILE *fp);
-FILE *OpenPGPFile(char *pgpfile, BOOL AllHyd);
-PDB *SelectAtomsPDB(PDB *pdbin, int nsel, char **sel, int *natom);
-PDB *StripHPDB(PDB *pdbin, int *natom);
-SECSTRUC *ReadSecPDB(FILE *fp, int *nsec);
-void RenumAtomsPDB(PDB *pdb);
-PDB *FindEndPDB(PDB *start);
-PDB *FixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum);
-PDB *ShuffleResPDB(PDB *start, PDB *end, BOOL Pad);
-BOOL GetAtomTypes(char *resnam, char **AtomTypes);
-PDB *KillPDB(PDB *pdb, PDB *prev);
-void CopyPDB(PDB *out, PDB *in);
-BOOL MovePDB(PDB *move, PDB **from, PDB **to);
-PDB *AppendPDB(PDB *first, PDB *second);
-PDB *ShuffleBB(PDB *pdb);
-REAL CalcChi(PDB *pdb, int type);
-PDB *GetPDBByN(PDB *pdb, int n);
-void SetChi(PDB *pdb, PDB *next, REAL chi, int type);
-BOOL KillSidechain(PDB *ResStart, PDB *NextRes, BOOL doCB);
-void SetResnam(PDB *ResStart, PDB *NextRes, char *resnam, int resnum,   
-               char *insert, char *chain);
-void ApplyMatrixPDB(PDB *pdb, REAL matrix[3][3]);
-BOOL GetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor, 
+int blHAddPDB(FILE *fp, PDB *pdb);
+int blReadPGP(FILE *fp);
+FILE *blOpenPGPFile(char *pgpfile, BOOL AllHyd);
+PDB *blSelectAtomsPDB(PDB *pdbin, int nsel, char **sel, int *natom);
+PDB *blStripHPDB(PDB *pdbin, int *natom);
+SECSTRUC *blReadSecPDB(FILE *fp, int *nsec);
+void blRenumAtomsPDB(PDB *pdb);
+PDB *blFindEndPDB(PDB *start);
+PDB *blFixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum);
+PDB *blShuffleResPDB(PDB *start, PDB *end, BOOL Pad);
+BOOL blGetAtomTypes(char *resnam, char **AtomTypes);
+PDB *blKillPDB(PDB *pdb, PDB *prev);
+void blCopyPDB(PDB *out, PDB *in);
+BOOL blMovePDB(PDB *move, PDB **from, PDB **to);
+PDB *blAppendPDB(PDB *first, PDB *second);
+PDB *blShuffleBB(PDB *pdb);
+REAL blCalcChi(PDB *pdb, int type);
+PDB *blGetPDBByN(PDB *pdb, int n);
+void blSetChi(PDB *pdb, PDB *next, REAL chi, int type);
+BOOL blKillSidechain(PDB *ResStart, PDB *NextRes, BOOL doCB);
+void blSetResnam(PDB *ResStart, PDB *NextRes, char *resnam, int resnum,   
+                 char *insert, char *chain);
+void blApplyMatrixPDB(PDB *pdb, REAL matrix[3][3]);
+BOOL blGetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor, 
                  int *StrucType);
-BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
+BOOL blGetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
               int *StrucType);
-BOOL GetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
+BOOL blGetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
               int *StrucType);
-char *ReportStructureType(int type);
-PDB **IndexPDB(PDB *pdb, int *natom);
-DISULPHIDE *ReadDisulphidesPDB(FILE *fp, BOOL *error);
-BOOL ParseResSpec(char *spec, char *chain, int *resnum, char *insert);
-BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum, char *insert);
-BOOL DoParseResSpec(char *spec, char *chain, int *resnum, char *insert, 
-                    BOOL uppercaseresspec);
-BOOL RepSChain(PDB *pdb, char *sequence, char *ChiTable, char *RefCoords);
-PDB *FindNextChainPDB(PDB *pdb);
-BOOL FixCterPDB(PDB *pdb, int style);
-BOOL CalcCterCoords(PDB *p, PDB *ca_p, PDB *c_p, PDB *o_p);
-int CalcTetraHCoords(PDB *nter, COOR *coor);
-int AddNTerHs(PDB **ppdb, BOOL Charmm);
-char *FNam2PDB(char *filename);
-PDB *TermPDB(PDB *pdb, int length);
-char *GetPDBChainLabels(PDB *pdb);
+char *blReportStructureType(int type);
+PDB **blIndexPDB(PDB *pdb, int *natom);
+DISULPHIDE *blReadDisulphidesPDB(FILE *fp, BOOL *error);
+BOOL blParseResSpec(char *spec, char *chain, int *resnum, char *insert);
+BOOL blParseResSpecNoUpper(char *spec, char *chain, int *resnum, char *insert);
+BOOL blDoParseResSpec(char *spec, char *chain, int *resnum, char *insert, 
+                      BOOL uppercaseresspec);
+BOOL blRepSChain(PDB *pdb, char *sequence, char *ChiTable, char *RefCoords);
+PDB *blFindNextChainPDB(PDB *pdb);
+BOOL blFixCterPDB(PDB *pdb, int style);
+BOOL blCalcCterCoords(PDB *p, PDB *ca_p, PDB *c_p, PDB *o_p);
+int blCalcTetraHCoords(PDB *nter, COOR *coor);
+int blAddNTerHs(PDB **ppdb, BOOL Charmm);
+char *blFNam2PDB(char *filename);
+PDB *blTermPDB(PDB *pdb, int length);
+char *GetPDBChainLabels(PDB *pdb); /* Deprecated function */
 char **blGetPDBChainLabels(PDB *pdb, int *nchains);
-PDB *FindHetatmResidueSpec(PDB *pdb, char *resspec);
-PDB *FindResidueSpec(PDB *pdb, char *resspec);
-PDB *FindNextResidue(PDB *pdb);
-PDB *DupePDB(PDB *in);
-BOOL CopyPDBCoords(PDB *out, PDB *in);
-void CalcCellTrans(VEC3F UnitCell, VEC3F CellAngles, 
-                   VEC3F *xtrans, VEC3F *ytrans, VEC3F *ztrans);
-int GetCrystPDB(FILE *fp, VEC3F *UnitCell, VEC3F *CellAngles,
-                char *spacegroup,
-                REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4]);
-void WriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
-                   char *spacegroup,
-                   REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4]);
-PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
-                    char *chain2, int resnum2, char *insert2);
-PDB *BiopFindResidue(PDB *pdb, char *chain, int resnum, char *insert);
-PDB *BiopFindHetatmResidue(PDB *pdb, char *chain, int resnum, char *insert);
-PDB *FindAtomInRes(PDB *pdb, char *atnam);
-BOOL BiopInPDBZone(PDB *p, char *chain, int resnum1, char *insert1, 
+PDB *blFindHetatmResidueSpec(PDB *pdb, char *resspec);
+PDB *blFindResidueSpec(PDB *pdb, char *resspec);
+PDB *blFindNextResidue(PDB *pdb);
+PDB *blDupePDB(PDB *in);
+BOOL blCopyPDBCoords(PDB *out, PDB *in);
+void blCalcCellTrans(VEC3F UnitCell, VEC3F CellAngles, 
+                     VEC3F *xtrans, VEC3F *ytrans, VEC3F *ztrans);
+int blGetCrystPDB(FILE *fp, VEC3F *UnitCell, VEC3F *CellAngles,
+                  char *spacegroup,
+                  REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4]);
+void blWriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
+                     char *spacegroup,
+                     REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4]);
+PDB *blExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
+                      char *chain2, int resnum2, char *insert2);
+PDB *blFindResidue(PDB *pdb, char *chain, int resnum, char *insert);
+PDB *blFindHetatmResidue(PDB *pdb, char *chain, int resnum, char *insert);
+PDB *blFindAtomInRes(PDB *pdb, char *atnam);
+BOOL blInPDBZone(PDB *p, char *chain, int resnum1, char *insert1, 
                  int resnum2, char *insert2);
-BOOL InPDBZoneSpec(PDB *p, char *resspec1, char *resspec2);
-BOOL AtomNameMatch(char *atnam, char *spec, BOOL *ErrorWarn);
-BOOL AtomNameRawMatch(char *atnam, char *spec, BOOL *ErrorWarn);
-BOOL LegalAtomSpec(char *spec);
-BOOL RepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
-                  char *RefCoords);
-void EndRepSChain(void);
-char **ReadSeqresPDB(FILE *fp, int *nchains);
-PDB *SelectCaPDB(PDB *pdb);
-char *FixAtomName(char *name, REAL occup);
+BOOL blInPDBZoneSpec(PDB *p, char *resspec1, char *resspec2);
+BOOL blAtomNameMatch(char *atnam, char *spec, BOOL *ErrorWarn);
+BOOL blAtomNameRawMatch(char *atnam, char *spec, BOOL *ErrorWarn);
+BOOL blLegalAtomSpec(char *spec);
+BOOL blRepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
+                    char *RefCoords);
+void blEndRepSChain(void);
+char **blReadSeqresPDB(FILE *fp, int *nchains);
+PDB *blSelectCaPDB(PDB *pdb);
+char *blFixAtomName(char *name, REAL occup);
 
-void FreeWholePDB(WHOLEPDB *wpdb);
-void WriteWholePDB(FILE *fp, WHOLEPDB *wpdb);
-void WriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb);
-void WriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb);
-WHOLEPDB *ReadWholePDB(FILE *fpin);
-WHOLEPDB *ReadWholePDBAtoms(FILE *fpin);
-BOOL AddCBtoGly(PDB *pdb);
-BOOL AddCBtoAllGly(PDB *pdb);
-PDB *StripGlyCB(PDB *pdb);
-PDB *RemoveAlternates(PDB *pdb);
-PDB *BuildAtomNeighbourPDBList(PDB *pdb, PDB *pRes, REAL NeighbDist);
-PDB *FindAtomWildcardInRes(PDB *pdb, char *pattern);
-PDB *DupeResiduePDB(PDB *in);
-PDB *StripWatersPDB(PDB *pdbin, int *natom);
-PDBSTRUCT *AllocPDBStructure(PDB *pdb);
-PDB *FindNextChain(PDB *pdb);
-void FreePDBStructure(PDBSTRUCT *pdbstruct);
+void blFreeWholePDB(WHOLEPDB *wpdb);
+WHOLEPDB *blReadWholePDB(FILE *fpin);
+WHOLEPDB *blReadWholePDBAtoms(FILE *fpin);
+BOOL blAddCBtoGly(PDB *pdb);
+BOOL blAddCBtoAllGly(PDB *pdb);
+PDB *blStripGlyCB(PDB *pdb);
+PDB *blRemoveAlternates(PDB *pdb);
+PDB *blBuildAtomNeighbourPDBList(PDB *pdb, PDB *pRes, REAL NeighbDist);
+PDB *blFindAtomWildcardInRes(PDB *pdb, char *pattern);
+PDB *blDupeResiduePDB(PDB *in);
+PDB *blStripWatersPDB(PDB *pdbin, int *natom);
+PDBSTRUCT *blAllocPDBStructure(PDB *pdb);
+PDB *blFindNextChain(PDB *pdb);
+void blFreePDBStructure(PDBSTRUCT *pdbstruct);
 #endif

@@ -3,11 +3,11 @@
 
    \file       KillPDB.c
    
-   \version    V1.10
-   \date       08.10.99
+   \version    V1.11
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-6
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -57,6 +57,7 @@
 -  V1.8  10.01.96 Added ExtractZonePDB()
 -  V1.9  14.03.96 Added FindAtomInRes()
 -  V1.10 08.10.99 Initialised some variables
+-  V1.11 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -80,8 +81,8 @@
 
 
 /************************************************************************/
-/*>PDB *KillPDB(PDB *pdb, PDB *prev)
-   ---------------------------------
+/*>PDB *blKillPDB(PDB *pdb, PDB *prev)
+   -----------------------------------
 *//**
 
    \param[in]     *pdb    Pointer to item in PDB linked list to be removed
@@ -94,9 +95,10 @@
 
 -  12.05.92 Original
 -  11.03.94 Now handles prev==NULL to delete first item in a list
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *KillPDB(PDB *pdb,              /* Pointer to record to kill        */
-             PDB *prev)             /* Pointer to previous record       */
+PDB *blKillPDB(PDB *pdb,              /* Pointer to record to kill      */
+               PDB *prev)             /* Pointer to previous record     */
 {
    PDB *p;
 

@@ -39,7 +39,7 @@ void wholepdb_teardown(void)
    gPDBXMLForce = force_pdbml_flag;
 
    /* Free WPDB */
-   if(wpdb) FreeWholePDB(wpdb);
+   if(wpdb) blFreeWholePDB(wpdb);
 }
 
 /* Core tests */
@@ -54,7 +54,7 @@ START_TEST(test_read_pdb)
    /* read test file */
    strcat(test_input_filename,filename_in);
    fp = fopen(test_input_filename,"r");
-   wpdb = ReadWholePDB(fp);
+   wpdb = blReadWholePDB(fp);
    fclose(fp);
 
    /* tests */
@@ -78,7 +78,7 @@ START_TEST(test_write_pdb_01)
    /* read input file */
    strcat(test_input_filename,filename_in);
    fp = fopen(test_input_filename,"r");
-   wpdb = ReadWholePDB(fp);
+   wpdb = blReadWholePDB(fp);
    fclose(fp);
 
    /* write output file */
@@ -113,7 +113,7 @@ START_TEST(test_write_pdbml_01)
    /* read input file */
    strcat(test_input_filename,filename_in);
    fp = fopen(test_input_filename,"r");
-   wpdb = ReadWholePDB(fp);
+   wpdb = blReadWholePDB(fp);
    fclose(fp);
 
    /* write output file */
@@ -146,7 +146,7 @@ START_TEST(test_read_pdbml)
    /* read test file */
    strcat(test_input_filename,filename_in);
    fp = fopen(test_input_filename,"r");
-   wpdb = ReadWholePDB(fp);
+   wpdb = blReadWholePDB(fp);
    fclose(fp);
 
    /* tests */
@@ -170,7 +170,7 @@ START_TEST(test_write_pdb_02)
    /* read input file */
    strcat(test_input_filename,filename_in);
    fp = fopen(test_input_filename,"r");
-   wpdb = ReadWholePDB(fp);
+   wpdb = blReadWholePDB(fp);
    fclose(fp);
 
    /* write output file */
@@ -205,7 +205,7 @@ START_TEST(test_write_pdbml_02)
    /* read input file */
    strcat(test_input_filename,filename_in);
    fp = fopen(test_input_filename,"r");
-   wpdb = ReadWholePDB(fp);
+   wpdb = blReadWholePDB(fp);
    fclose(fp);
 
    /* write output file */
@@ -240,7 +240,7 @@ START_TEST(test_read_write_pdb)
    /* read input file */
    strcat(test_input_filename,filename_in);
    fp = fopen(test_input_filename,"r");
-   wpdb = ReadWholePDB(fp);
+   wpdb = blReadWholePDB(fp);
    fclose(fp);
 
    /* write output file */
@@ -275,7 +275,7 @@ START_TEST(test_read_write_pdbml)
    /* read input file */
    strcat(test_input_filename,filename_in);
    fp = fopen(test_input_filename,"r");
-   wpdb = ReadWholePDB(fp);
+   wpdb = blReadWholePDB(fp);
    fclose(fp);
 
    /* write output file */

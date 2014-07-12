@@ -3,11 +3,11 @@
 
    \file       IndexPDB.c
    
-   \version    V2.0R
-   \date       01.03.94
+   \version    V2.1
+   \date       07.07.14
    \brief      Create an array of pointers into a PDB linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-4
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -61,6 +61,7 @@
 -  V1.1  01.06.92 ANSIed and documented, FPU condition added
 -  V2.0  24.02.94 Completely re-written. Note that the calling format
                   has changed!! NOT BACKWARDLY COMPATIBLE!
+-  V2.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -74,7 +75,7 @@
 #include "macros.h"
 
 /************************************************************************/
-/*>PDB **IndexPDB(PDB *pdb, int *natom)
+/*>PDB **blIndexPDB(PDB *pdb, int *natom)
    ------------------------------------
 *//**
 
@@ -90,8 +91,9 @@
 -  19.07.90 Original
 -  01.06.92 ANSIed and documented.
 -  24.02.94 Re-written. Now allocates and returns the index.
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB **IndexPDB(PDB *pdb, int *natom)
+PDB **blIndexPDB(PDB *pdb, int *natom)
 {
    PDB *p,
        **indx;

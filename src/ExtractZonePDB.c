@@ -3,8 +3,8 @@
 
    \file       ExtractZonePDB.c
    
-   \version    V1.14
-   \date       04.02.14
+   \version    V1.15
+   \date       07.07.14
    \brief      PDB linked list manipulation
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2014
@@ -61,6 +61,7 @@
 -  V1.12 22.03.06 Modified ExtractZonePDB() to allow non-exact ranges
 -  V1.13 29.10.10 Fixed bug when end of zone was last residue in a chain
 -  V1.14 04.02.14 Use CHAINMATCH By: CTP
+-  V1.15 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -87,9 +88,9 @@
 */
 
 /************************************************************************/
-/*>PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, 
-                       char *insert1, char *chain2, int resnum2, 
-                       char *insert2)
+/*>PDB *blExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, 
+                         char *insert1, char *chain2, int resnum2, 
+                         char *insert2)
    -----------------------------------------------------------------------
 *//**
 
@@ -115,9 +116,11 @@
 -  29.10.10 Fixed extraction where end of zone matched last residue in
             a chain
 -  04.02.14 Use CHAINMATCH By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
-                    char *chain2, int resnum2, char *insert2)
+PDB *blExtractZonePDB(PDB *inpdb, 
+                      char *chain1, int resnum1, char *insert1, 
+                      char *chain2, int resnum2, char *insert2)
 {
    PDB *pdb, *p, 
        *start = NULL, 
@@ -125,7 +128,7 @@ PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
        *prev  = NULL;
 
    /* Duplicate the PDB linked list                                     */
-   if((pdb = DupePDB(inpdb))==NULL)
+   if((pdb = blDupePDB(inpdb))==NULL)
       return(NULL);
 
    /* Find the first residue in the PDB linked list                     

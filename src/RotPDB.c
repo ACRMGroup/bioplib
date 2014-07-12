@@ -3,7 +3,7 @@
 
    \file       RotPDB.c
    
-   \version    V1.0R
+   \version    V1.1
    \date       August 1993
    \brief      Rotate a PDB linked list
    
@@ -72,8 +72,8 @@
 
 
 /************************************************************************/
-/*>void RotatePDB(PDB *pdb, REAL matrix[3][3])
-   -------------------------------------------
+/*>void blRotatePDB(PDB *pdb, REAL matrix[3][3])
+   ---------------------------------------------
 *//**
 
    \param[in,out] *pdb          PDB linked list to rotate
@@ -86,16 +86,17 @@
 -  30.09.92 Original
 -  01.10.92 Added check on NULL coordinates
 -  22.07.93 Moves to origin first; calls ApplyMatrixPDB() to do the work
+-  07.07.14 Renamed to blRotatePDB(). Use bl prefix for functions. By: CTP
 */
-void RotatePDB(PDB *pdb, REAL matrix[3][3])
+void blRotatePDB(PDB *pdb, REAL matrix[3][3])
 {
    VEC3F CofG;
          
-   GetCofGPDB(pdb, &CofG);
-   OriginPDB(pdb);
+   blGetCofGPDB(pdb, &CofG);
+   blOriginPDB(pdb);
    
-   ApplyMatrixPDB(pdb, matrix);
+   blApplyMatrixPDB(pdb, matrix);
    
-   TranslatePDB(pdb, CofG);
+   blTranslatePDB(pdb, CofG);
 }
 

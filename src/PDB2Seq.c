@@ -3,8 +3,8 @@
 
    \file       PDB2Seq.c
    
-   \version    V1.13
-   \date       04.02.14
+   \version    V1.14
+   \date       07.07.14
    \brief      Conversion from PDB to sequence and other sequence
                related routines
    
@@ -66,6 +66,8 @@
 -  V1.11 30.05.02 Changed PDB field from 'junk' to 'record_type'
 -  V1.12 10.06.05 Fixed bug - was undercounting by 1 for CA-only chains
 -  V1.13 04.02.14 Use CHAINMATCH By: CTP
+-  V1.14 07.07.14 Use bl prefix for functions By: CTP
+
 
 *************************************************************************/
 /* Includes
@@ -126,8 +128,9 @@
             it correctly points to the first residue. This solves a
             bug with CA-only chains where it was undercounting by 1
 -  04.02.14 Use CHAINMATCH By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char *DoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
+char *blDoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
 {
    int   resnum,
          rescount,
@@ -258,9 +261,9 @@ int main(int argc, char **argv)
    char *seq;
    FILE *fp;
    fp = fopen("/acrm/data/pdb/pdb1crn.ent", "r");
-   pdb=ReadPDB(fp, &natoms);
+   pdb=blReadPDB(fp, &natoms);
    
-   seq = DoPDB2Seq(pdb, FALSE, FALSE, FALSE);
+   seq = blDoPDB2Seq(pdb, FALSE, FALSE, FALSE);
    return(0);
 }
 #endif

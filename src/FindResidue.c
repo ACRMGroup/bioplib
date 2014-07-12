@@ -3,8 +3,8 @@
 
    \file       FindResidue.c
    
-   \version    V1.10
-   \date       07.05.14
+   \version    V1.11
+   \date       07.07.14
    \brief      Parse a residue specification
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -62,6 +62,8 @@
 -  V1.8  24.02.14 Added BiopFindResidue(). By: CTP
 -  V1.9  25.02.14 Added error message for FindResidue(). By: CTP
 -  V1.10 07.05.14 Moved FindResidue() to deprecated.h. By: CTP
+-  V1.11 07.07.14 Use bl prefix for functions By: CTP
+
 
 *************************************************************************/
 /* Includes
@@ -88,14 +90,18 @@
 
 
 /************************************************************************/
-/*>PDB *BiopFindResidue(PDB *pdb, char *chain, int resnum, char *insert)
+/*>PDB *blFindResidue(PDB *pdb, char *chain, int resnum, char *insert)
   --------------------------------------------------------------------
+*//**
+
   Finds a pointer to the start of a residue in a PDB linked list.
   Uses string for chain and insert.
 
-  24.02.14 Original   By: CTP
+-  24.02.14 Original   By: CTP
+-  07.07.14 Renamed to blFindResidue()
+            Use bl prefix for functions By: CTP
 */
-PDB *BiopFindResidue(PDB *pdb, char *chain, int resnum, char *insert)
+PDB *blFindResidue(PDB *pdb, char *chain, int resnum, char *insert)
 {
    PDB *p;
 

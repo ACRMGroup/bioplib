@@ -3,8 +3,8 @@
 
    \file       CalcCterCoords.c
    
-   \version    V1.3R
-   \date       13.11.96
+   \version    V1.4
+   \date       07.07.14
    \brief      Calcualtes C-terminal oxygen coordinates.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-6
@@ -56,6 +56,7 @@
 -  V1.2  12.11.96 If any of the antecedant coordinates are undefined, set
                   the terminal oxygen to NULL coordinates
 -  V1.3  13.11.96 Also checks for missing CA,C and O1 records
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -83,8 +84,8 @@
 */
 
 /************************************************************************/
-/*>BOOL CalcCterCoords(PDB *p, PDB *ca_p, PDB *c_p, PDB *o_p)
-   ----------------------------------------------------------
+/*>BOOL blCalcCterCoords(PDB *p, PDB *ca_p, PDB *c_p, PDB *o_p)
+   ------------------------------------------------------------
 *//**
 
    \param[in,out] *p     OT2 PDB record whose coords are to be fixed
@@ -96,8 +97,9 @@
    This routine actually calculates the CTER OT2 coords.
 
 -  15.07.90 Original
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL CalcCterCoords(PDB *p, PDB *ca_p, PDB *c_p, PDB *o_p)
+BOOL blCalcCterCoords(PDB *p, PDB *ca_p, PDB *c_p, PDB *o_p)
 {
    REAL  gr    = 1.3,
          alpha = 120.0*PI/180.0,

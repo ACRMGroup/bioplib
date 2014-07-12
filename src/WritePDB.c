@@ -3,8 +3,8 @@
 
    \file       WritePDB.c
    
-   \version    V1.12
-   \date       21.06.14
+   \version    V1.13
+   \date       07.07.14
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -72,6 +72,8 @@
                   blWriteAsPDB(). Renamed WritePDBML() to blWriteAsPDBML()
                   and deprecated WritePDB(). Defined WRITEPDB_MAIN.
                   By: CTP
+-  V1.13 07.07.14 Renamed functions to use bl prefix. Moved WritePDB() to 
+                  deprecated.h By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -152,32 +154,6 @@ BOOL blFormatCheckWritePDB(PDB *pdb)
 }
 
 /************************************************************************/
-/*>void WritePDB(FILE *fp, PDB *pdb)
-   ---------------------------------
-*//**
-
-   \param[in]     *fp   PDB file pointer to be written
-   \param[in]     *pdb  PDB linked list to write
-
-   Write a PDB linked list by calls to WritePDBRecord()
-
--  08.03.89 Original
--  01.06.92 ANSIed and autodoc'd
--  10.06.93 Uses NEXT macro; void type
--  08.07.93 Added insertion of TER cards
--  22.02.94 And a TER card at the end of the file
--  04.02.14 Use CHAINMATCH macro. By: CTP
--  21.06.14 Function deprecated. Converted to wrapper for blWriteAsPDB().
-            By: CTP
-*/
-void WritePDB(FILE *fp,
-              PDB  *pdb)
-{
-   DEPRECATED("WritePDB","blWritePDB()");
-   blWriteAsPDB(fp, pdb);
-}
-
-/************************************************************************/
 /*>void blWriteAsPDB(FILE *fp, PDB *pdb)
    -------------------------------------
 *//**
@@ -194,6 +170,7 @@ void WritePDB(FILE *fp,
 -  22.02.94 And a TER card at the end of the file
 -  04.02.14 Use CHAINMATCH macro. By: CTP
 -  17.06.14 Renamed to blWriteAsPDB() By: CTP
+-  07.07.14 Use blWritePDBRecord() By: CTP
 */
 void blWriteAsPDB(FILE *fp,
                   PDB  *pdb)
@@ -211,14 +188,14 @@ void blWriteAsPDB(FILE *fp,
          fprintf(fp,"TER   \n");
          strcpy(PrevChain,p->chain);
       }
-      WritePDBRecord(fp,p);
+      blWritePDBRecord(fp,p);
    }
    fprintf(fp,"TER   \n");
 }
 
 /************************************************************************/
-/*>void WritePDBRecord(FILE *fp, PDB *pdb)
-   ---------------------------------------
+/*>void blWritePDBRecord(FILE *fp, PDB *pdb)
+   -----------------------------------------
 *//**
 
    \param[in]     *fp     PDB file pointer to be written
@@ -234,9 +211,10 @@ void blWriteAsPDB(FILE *fp,
 -  11.03.94 %lf back to %f (!)
 -  15.02.01 Modified to use atnam_raw
 -  03.06.05 Modified to use altpos
+-  07.07.14 Renamed to blWritePDBRecord() By: CTP
 */
-void WritePDBRecord(FILE *fp,
-                    PDB  *pdb)
+void blWritePDBRecord(FILE *fp,
+                      PDB  *pdb)
 {
    fprintf(fp,"%-6s%5d %-4s%c%-4s%1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f\n",
            pdb->record_type,
@@ -254,8 +232,8 @@ void WritePDBRecord(FILE *fp,
            pdb->bval);
 }
 /************************************************************************/
-/*>void WritePDBRecordAtnam(FILE *fp, PDB *pdb)
-   --------------------------------------------
+/*>void blWritePDBRecordAtnam(FILE *fp, PDB *pdb)
+   ----------------------------------------------
 *//**
 
    \param[in]     *fp     PDB file pointer to be written
@@ -273,9 +251,10 @@ void WritePDBRecord(FILE *fp,
 -  03.06.05 Modified to use altpos
 -  22.09.05 This is like the old version which used atnam rather
             than atnam_raw
+-  07.07.14 Renamed to blWritePDBRecordAtnam() By: CTP
 */
-void WritePDBRecordAtnam(FILE *fp,
-                         PDB  *pdb)
+void blWritePDBRecordAtnam(FILE *fp,
+                           PDB  *pdb)
 {
    fprintf(fp,"%-6s%5d  %-4s%-4s%1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f\n",
            pdb->record_type,

@@ -3,8 +3,8 @@
 
    \file       TermPDB.c
    
-   \version    V1.11
-   \date       04.02.14
+   \version    V1.12
+   \date       07.07.14
    \brief      
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2014
@@ -58,6 +58,7 @@
 -  V1.9  14.03.96 Added FindAtomInRes()
 -  V1.10 08.10.99 Initialised some variables
 -  V1.11 04.02.14 Use CHAINMATCH macro. By: CTP
+-  V1.12 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -79,7 +80,7 @@
 
 
 /************************************************************************/
-/*>PDB *TermPDB(PDB *pdb, int length)
+/*>PDB *blTermPDB(PDB *pdb, int length)
    ----------------------------------
 *//**
 
@@ -97,8 +98,9 @@
 -  06.07.95 Original    By: ACRM
 -  26.09.95 Corrected update of resnum etc to use p-> not pdb-> (!!)
 -  04.02.14 Use CHAINMATCH macro. By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *TermPDB(PDB *pdb, int length)
+PDB *blTermPDB(PDB *pdb, int length)
 {
    int  resnum,
         count;
