@@ -3,11 +3,11 @@
 
    \file       pearson1.c
    
-   \version    V1.2
-   \date       06.10.98
+   \version    V1.3
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 1996-8
+   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 1996-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -47,12 +47,14 @@
    Revision History:
    =================
 -  V1.0  29.01.96 Original   By: ACRM
+-  V1.3  07.07.14 Include MathUtil.h instead of MathType.h 
+                  Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <math.h>
-#include "MathType.h"
+#include "MathUtil.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -68,8 +70,8 @@
 
 
 /************************************************************************/
-/*>REAL pearson1(REAL *x, REAL *y, int NItem)
-   ------------------------------------------
+/*>REAL blpearson1(REAL *x, REAL *y, int NItem)
+   --------------------------------------------
 *//**
 
    \param[in]     *x     Array of x items
@@ -83,8 +85,9 @@
 -  18.01.96 Alternative version which does a single pass through the
             data. Method from page 191 of Statistical Methods in 
             Biology 2 ed. Norman TJ Bailey. Publ. Unibooks 1981  By: RM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-REAL pearson1(REAL *x, REAL *y, int NItem)
+REAL blpearson1(REAL *x, REAL *y, int NItem)
 {
    REAL SumX,
         SumY,

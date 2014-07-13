@@ -3,11 +3,11 @@
 
    \file       pldist.c
    
-   \version    V1.0
-   \date       16.11.99
+   \version    V1.1
+   \date       07.07.14
    \brief      Calculate distance from a point to a line
    
-   \copyright  (c) University of Reading / Dr. Andrew C. R. Martin 1999
+   \copyright  (c) University of Reading / Dr. Andrew C. R. Martin 1999-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -47,12 +47,14 @@
    Revision History:
    =================
 
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
+
 *************************************************************************/
 /* Includes
 */
 #include <stdio.h>
 #include <math.h>
-#include "MathType.h"
+#include "MathUtil.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -72,12 +74,12 @@
 */
 
 /************************************************************************/
-/*>REAL PointLineDistance(REAL Px, REAL Py, REAL Pz,
+/*>REAL blPointLineDistance(REAL Px, REAL Py, REAL Pz,
                           REAL P1x, REAL P1y, REAL P1z,
                           REAL P2x, REAL P2y, REAL P2z,
                           REAL *Rx, REAL *Ry, REAL *Rz,
                           REAL *frac)
-   ----------------------------------------------------
+   ------------------------------------------------------
 *//**
    \param[in]     Px          Point x coordinate
    \param[in]     Py          Point y coordinate
@@ -107,13 +109,14 @@
    Thus if (0<=frac<=1) then the point R is within the line segment
    P1-P2
 
-    16.11.99 Original   By: ACRM
+-  16.11.99 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-REAL PointLineDistance(REAL Px, REAL Py, REAL Pz,
-                       REAL P1x, REAL P1y, REAL P1z,
-                       REAL P2x, REAL P2y, REAL P2z,
-                       REAL *Rx, REAL *Ry, REAL *Rz,
-                       REAL *frac)
+REAL blPointLineDistance(REAL Px, REAL Py, REAL Pz,
+                         REAL P1x, REAL P1y, REAL P1z,
+                         REAL P2x, REAL P2y, REAL P2z,
+                         REAL *Rx, REAL *Ry, REAL *Rz,
+                         REAL *frac)
 {
    VEC3F A, u, Q, PQ, PR, QP, QP2;
    REAL  alen, len, f;
@@ -220,10 +223,10 @@ int main(int argc, char **argv)
    P1x = 5;  P1y = 2;  P1z = 0;
    P2x = 10; P2y = 2;  P2z = 0;
    
-   d = PointLineDistance(Px, Py, Pz,
-                         P1x, P1y, P1z,
-                         P2x, P2y, P2z,
-                         &Rx, &Ry, &Rz, &f);
+   d = blPointLineDistance(Px, Py, Pz,
+                           P1x, P1y, P1z,
+                           P2x, P2y, P2z,
+                           &Rx, &Ry, &Rz, &f);
    
    printf("*** Distance is %f; Point R is %f %f %f; f is %f\n",
           d,Rx,Ry,Rz,f);

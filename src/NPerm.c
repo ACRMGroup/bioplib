@@ -3,11 +3,11 @@
 
    \file       NPerm.c
    
-   \version    V1.0
-   \date       10.09.96
+   \version    V1.1
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -47,6 +47,7 @@
    Revision History:
    =================
 -  V1.0  10.09.96 Original
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -68,7 +69,7 @@
 
 
 /************************************************************************/
-/*>ULONG NPerm(int n, int r)
+/*>ULONG blNPerm(int n, int r)
    -------------------------
 *//**
 
@@ -76,10 +77,11 @@
    Returns 0 if a numeric overflow occurs.
 
 -  09.09.96 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-ULONG NPerm(int n, int r)
+ULONG blNPerm(int n, int r)
 {
-   return(factdiv(n,(n-r)));
+   return(blfactdiv(n,(n-r)));
 }
 
 

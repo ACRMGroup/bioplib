@@ -3,11 +3,11 @@
 
    \file       WriteCrystPDB.c
    
-   \version    V1.0
-   \date       12.10.95
+   \version    V1.1
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-1995
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -47,13 +47,14 @@
    Revision History:
    =================
 -  V1.0R 12.10.05 Original
+-  V1.1  07.07.14 Include MAthUtil.h Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <stdio.h>
 #include <math.h>
-#include "MathType.h"
+#include "MathUtil.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -69,10 +70,10 @@
 
 
 /************************************************************************/
-/*>void WriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
+/*>void blWriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
                       char *spacegroup,
                       REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4])
-   -----------------------------------------------------------------
+   -------------------------------------------------------------------
 *//**
 
    \param[in]     *fp            Output file pointet
@@ -87,8 +88,9 @@
 
 -  12.10.95 Original    By: ACRM
 -  17.10.95 Corrected %lf to %f in fprintf()s
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void WriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
+void blWriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
                    char *spacegroup,
                    REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4])
 {

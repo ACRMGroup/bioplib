@@ -3,11 +3,11 @@
 
    \file       NComb.c
    
-   \version    V1.0
-   \date       10.09.96
+   \version    V1.1
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -47,6 +47,8 @@
    Revision History:
    =================
 -  V1.0  10.09.96 Original
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
+
 
 *************************************************************************/
 /* Includes
@@ -68,19 +70,20 @@
 
 
 /************************************************************************/
-/*>ULONG NComb(int n, int r)
-   -------------------------
+/*>ULONG blNComb(int n, int r)
+   ---------------------------
 *//**
 
    Calculates number of combinations of n items in r groups
    Returns 0 if a numeric overflow occurs.
    
 -  09.09.96 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-ULONG NComb(int n, int r)
+ULONG blNComb(int n, int r)
 {
    ULONG f;
-   f = factorial(r);
+   f = blfactorial(r);
    
-   return((f>0L)?(NPerm(n,r)/factorial(r)):0L);
+   return((f>0L)?(blNPerm(n,r)/blfactorial(r)):0L);
 }

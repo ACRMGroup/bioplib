@@ -3,11 +3,11 @@
 
    \file       help.c
    
-   \version    V1.3R
-   \date       18.01.95
+   \version    V1.4
+   \date       07.07.14
    \brief      Provides a simple file-based command line help utility
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-5
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -77,6 +77,7 @@
 -  V1.3  18.01.95 Help() changed to call OpenFile() rather than handling 
                   alternative directory internally. Consequently assign 
                   or envvar is called HELPDIR.
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -170,10 +171,10 @@ void Help(char *string,
 
       if((fp=OpenFile(HelpFile, HELPENV, "r", &NoEnv))==NULL)
       {
-         screen("   Error==> Unable to open help file.\n");
+         blscreen("   Error==> Unable to open help file.\n");
          sprintf(FileBuff,"            The %s environment variable \
 or assign has not been set.\n",HELPENV);
-         screen(FileBuff);
+         blscreen(FileBuff);
          return;
       }
 
@@ -198,9 +199,9 @@ or assign has not been set.\n",HELPENV);
             {
                buffer[buffpos] = '\0';
 
-               screen("   ");
-               screen(buffer);
-               screen("\n");
+               blscreen("   ");
+               blscreen(buffer);
+               blscreen("\n");
                buffpos = 0;
             }
             for(i=1; i<strlen(FileBuff); i++)
@@ -216,15 +217,15 @@ or assign has not been set.\n",HELPENV);
       {
          buffer[buffpos] = '\0';
 
-         screen("   ");
-         screen(buffer);
-         screen("\n");
+         blscreen("   ");
+         blscreen(buffer);
+         blscreen("\n");
       }
    }
    else  /* Asking for help on a specific subject                       */
    {
       Found = FALSE;
-      PagingOn();
+      blPagingOn();
       
       while(fgets(FileBuff, BUFFLEN, fp))
       {
@@ -241,19 +242,19 @@ or assign has not been set.\n",HELPENV);
                   TERMINATE(FileBuff);
                   if(FileBuff[0] == '#') break;
 
-                  screen(FileBuff);
-                  screen("\n");
+                  blscreen(FileBuff);
+                  blscreen("\n");
                }
             }
          }
       }
       if(!Found)
       {
-         screen("   Sorry, no help on '");
-         screen(string);
-         screen("'\n");
+         blscreen("   Sorry, no help on '");
+         blscreen(string);
+         blscreen("'\n");
       }
-      PagingOff();
+      blPagingOff();
    }
 }
 
@@ -320,8 +321,8 @@ void DoHelp(char *string,
    {
       for(;;)
       {
-         prompt("Help");
-         GetKybdString(buffer, 160);
+         blprompt("Help");
+         blGetKybdString(buffer, 160);
 
          TERMINATE(buffer);
          if(buffer[0])

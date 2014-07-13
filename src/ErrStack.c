@@ -3,11 +3,11 @@
 
    \file       ErrStack.c
    
-   \version    V1.0R
-   \date       31.08.94
+   \version    V1.1
+   \date       07.07.14
    \brief      Build and print an error stack for program failure.
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -47,13 +47,13 @@
 
    Usage:
    ======
-   StoreError(char *routine, char *error)
-   --------------------------------------
+   blStoreError(char *routine, char *error)
+   ----------------------------------------
    The routine is called with the name of the routine at fault and the
    description of the fault.
 
-   ShowErrors(void *PrintRoutine, BOOL Trace)
-   ------------------------------------------
+   blShowErrors(void *PrintRoutine, BOOL Trace)
+   --------------------------------------------
    The routine is called with a pointer to the routine which is to
    do the actual error display and a flag to indicate whether the
    faulty routine names should be displyed. This is only of use if
@@ -71,6 +71,7 @@
    Revision History:
    =================
 -  V1.0  31.08.94 Original    By: ACRM
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -105,8 +106,8 @@ static ERRORSTACK *sErrorStack = NULL;
 static void PrintAnError(char *error);
 
 /************************************************************************/
-/*>void StoreError(char *routine, char *error)
-   -------------------------------------------
+/*>void blStoreError(char *routine, char *error)
+   ---------------------------------------------
 *//**
 
    \param[in]     *routine        Name of the routine generating the error
@@ -115,8 +116,9 @@ static void PrintAnError(char *error);
    Stores an error on the error stack.
 
 -  31.08.94 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void StoreError(char *routine, char *error)
+void blStoreError(char *routine, char *error)
 {
    static ERRORSTACK *p = NULL;
    
@@ -146,8 +148,8 @@ void StoreError(char *routine, char *error)
 }
 
 /************************************************************************/
-/*>void ShowErrors(void *PrintRoutine(char *), BOOL Trace)
-   -------------------------------------------------------
+/*>void blShowErrors(void *PrintRoutine(char *), BOOL Trace)
+   ---------------------------------------------------------
 *//**
 
    \param[in]     *PrintRoutine           The print routine or NULL
@@ -159,8 +161,9 @@ void StoreError(char *routine, char *error)
 -  31.08.94 Original    By: ACRM
 -  06.09.94 No longer tries to set PrintRoutine if was NULL (strict ANSI
             compliance)
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void ShowErrors(void *PrintRoutine(char *), BOOL Trace)
+void blShowErrors(void *PrintRoutine(char *), BOOL Trace)
 {
    ERRORSTACK *p;
    char       buffer[160];

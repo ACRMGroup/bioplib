@@ -3,11 +3,11 @@
 
    \file       WindIO.c
    
-   \version    V1.4R
-   \date       01.02.01
+   \version    V1.5
+   \date       07.07.14
    \brief      Windowing I/O for various systems
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2001
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -53,6 +53,8 @@
 -  V1.2  18.03.94 Bug fix in WindowInteractive(). Includes SysDefs.h
 -  V1.3  18.10.95 Moved Yorn() here from general.c
 -  V1.4  01.02.01 Changed gets() to fgets()
+-  V1.5  07.07.14 Use bl prefix for functions By: CTP
+
 
 *************************************************************************/
 /* Definition of windowing type. If nothing defined, simple screen I/O
@@ -91,8 +93,8 @@ static BOOL sDoPaging    = FALSE,
 */
 
 /************************************************************************/
-/*>screen(char *string)
-   --------------------
+/*>blscreen(char *string)
+   ----------------------
 *//**
 
    \param[in]     *string    String to write on window
@@ -108,8 +110,9 @@ static BOOL sDoPaging    = FALSE,
 -  01.02.01 Added maxlen parameter
 -  15.02.01 oops! removed maxlen parameter, value of 80 should have gone
             into GetKybdString()
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void screen(char *string)
+void blscreen(char *string)
 {
    if(sDoPaging && sInteractive)
    {
@@ -124,8 +127,8 @@ void screen(char *string)
             if(!sWindowMode)
                printf("\n");
 
-            prompt("More...");
-            GetKybdString(dummy, 80);
+            blprompt("More...");
+            blGetKybdString(dummy, 80);
          }
       }
    }
@@ -152,8 +155,8 @@ void screen(char *string)
 }
 
 /************************************************************************/
-/*>prompt(char *string)
-   --------------------
+/*>blprompt(char *string)
+   ----------------------
 *//**
 
    \param[in]     *string   Prompt string
@@ -169,20 +172,21 @@ void screen(char *string)
 -  05.10.92 Added AMIGA_WINDOWS support
 -  11.03.94 Modified to save prompt string even if not windowing
 -  15.03.94 Now sets up string and just calls RePrompt()
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void prompt(char *string)
+void blprompt(char *string)
 {
    if(string[strlen(string)-1] == '.')
       sprintf(sPromptString,"%s ",string);
    else
       sprintf(sPromptString,"%s> ",string);
 
-   RePrompt();
+   blRePrompt();
 }
 
 /************************************************************************/
-/*>void RePrompt(void)
-   -------------------
+/*>void blRePrompt(void)
+   ---------------------
 *//**
 
    Reissue the current prompt. Only has any effect when windowing is not
@@ -192,8 +196,9 @@ void prompt(char *string)
 -  10.03.94 Original   By: ACRM
 -  15.03.94 Changed to work whenever we're not windowing and are 
             interactive
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void RePrompt(void)
+void blRePrompt(void)
 {
    if(!sWindowMode && sInteractive)
    {
@@ -203,8 +208,8 @@ void RePrompt(void)
 }
 
 /************************************************************************/
-/*>void GetKybdString(char *string, int maxlen)
-   --------------------------------------------
+/*>void blGetKybdString(char *string, int maxlen)
+   ----------------------------------------------
 *//**
 
    Reads a string from the keyboard
@@ -212,8 +217,9 @@ void RePrompt(void)
 -  05.10.92 Added AMIGA_WINDOWS support
 -  15.03.94 Added check on sWindowMode
 -  01.02.01 Added maxlen parameter and changed gets() to fgets()
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void GetKybdString(char *string, int maxlen)
+void blGetKybdString(char *string, int maxlen)
 {
    if(sWindowMode)
    {
@@ -236,35 +242,37 @@ void GetKybdString(char *string, int maxlen)
 }
 
 /************************************************************************/
-/*>void PagingOn(void)
-   -------------------
+/*>void blPagingOn(void)
+   ---------------------
 *//**
 
    Switches on screen paging.
 -  07.10.92 Original
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void PagingOn(void)
+void blPagingOn(void)
 {
    sLineCount = 0;
    sDoPaging  = TRUE;
 }
 
 /************************************************************************/
-/*>void PagingOff(void)
-   --------------------
+/*>void blPagingOff(void)
+   ----------------------
 *//**
 
    Switches off screen paging.
 -  07.10.92 Original
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void PagingOff(void)
+void blPagingOff(void)
 {
    sDoPaging  = FALSE;
 }
 
 /************************************************************************/
-/*>void WindowMode(BOOL mode)
-   --------------------------
+/*>void blWindowMode(BOOL mode)
+   ----------------------------
 *//**
 
    \param[in]     mode    TRUE:  Use windowing
@@ -273,8 +281,9 @@ void PagingOff(void)
    Switch window mode on or off.
 -  11.03.94 Original    By: ACRM
 -  15.03.94 Added check on WINDOWING
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void WindowMode(BOOL mode)
+void blWindowMode(BOOL mode)
 {
 #ifdef WINDOWING
    sWindowMode = mode;
@@ -284,8 +293,8 @@ void WindowMode(BOOL mode)
 }
 
 /************************************************************************/
-/*>void WindowInteractive(BOOL mode)
-   ---------------------------------
+/*>void blWindowInteractive(BOOL mode)
+   -----------------------------------
 *//**
 
    \param[in]     mode    TRUE:  Is interactive (default)
@@ -296,18 +305,19 @@ void WindowMode(BOOL mode)
 
 -  15.03.94 Original    By: ACRM
 -  17.03.94 Set sInteractive not sWindowMode!
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void WindowInteractive(BOOL mode)
+void blWindowInteractive(BOOL mode)
 {
    sInteractive = mode;
 
-   if(!mode) WindowMode(FALSE);
+   if(!mode) blWindowMode(FALSE);
 }
 
 
 /************************************************************************/
-/*>int YorN(char deflt)
-   --------------------
+/*>int blYorN(char deflt)
+   ----------------------
 *//**
 
    \param[in]     *deflt   Default response ('y' or 'n') if return is 
@@ -329,14 +339,15 @@ void WindowInteractive(BOOL mode)
 
 -  18.06.93 Original    By: ACRM
 -  01.02.01 Added maxlen parameter to GetKybdString()
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int YorN(char deflt)
+int blYorN(char deflt)
 {
    char  buffer[80],
          response;
    int   i;
 
-   GetKybdString(buffer, 20);
+   blGetKybdString(buffer, 20);
    response = buffer[0];
 
    if((response != 'Y') && (response != 'y') &&

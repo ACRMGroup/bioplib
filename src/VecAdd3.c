@@ -3,11 +3,11 @@
 
    \file       VecAdd3.c
    
-   \version    V1.2
-   \date       06.10.98
+   \version    V1.4
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-8
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -49,11 +49,13 @@
 -  V1.0  29.01.96 Original   By: ACRM
 -  V1.1  18.06.96 Added vector routines
 -  V1.2  06.10.98 Added VecAdd3()
+-  V1.4  07.07.14 Include MathUtil.h Use bl prefix for functions By: CTP
+
 
 *************************************************************************/
 /* Includes
 */
-#include "MathType.h"
+#include "MathUtil.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -69,8 +71,8 @@
 
 
 /************************************************************************/
-/*>void VecAdd3(VEC3F *Out, VEC3F In1, VEC3F In2)
-   ----------------------------------------------
+/*>void blVecAdd3(VEC3F *Out, VEC3F In1, VEC3F In2)
+   ------------------------------------------------
 *//**
 
    \param[in]     In1       First vector
@@ -79,8 +81,9 @@
 
    Add 2 vectors
 -  06.10.98 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void VecAdd3(VEC3F *Out, VEC3F In1, VEC3F In2)
+void blVecAdd3(VEC3F *Out, VEC3F In1, VEC3F In2)
 {
    Out->x = In1.x + In2.x;
    Out->y = In1.y + In2.y;

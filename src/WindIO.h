@@ -3,11 +3,11 @@
 
    \file       WindIO.h
    
-   \version    V1.3R
-   \date       18.10.95
+   \version    V1.4
+   \date       07.07.14
    \brief      Header for window/normal interface routines
 
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-5
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -46,21 +46,23 @@
 
    Revision History:
    =================
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 #ifndef _WINDIO_H
 #define _WINDIO_H
 
 #include "SysDefs.h"
+#include "deprecated.h"
 
-void screen(char *string);
-void prompt(char *string);
-void RePrompt(void);
-void GetKybdString(char *string, int maxlen);
-void PagingOn(void);
-void PagingOff(void);
-void WindowMode(BOOL mode);
-void WindowInteractive(BOOL mode);
-int YorN(char deflt);
+void blscreen(char *string);
+void blprompt(char *string);
+void blRePrompt(void);
+void blGetKybdString(char *string, int maxlen);
+void blPagingOn(void);
+void blPagingOff(void);
+void blWindowMode(BOOL mode);
+void blWindowInteractive(BOOL mode);
+int blYorN(char deflt);
 
 #endif

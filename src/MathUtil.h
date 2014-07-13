@@ -3,11 +3,11 @@
 
    \file       MathUtil.h
    
-   \version    V1.3R
-   \date       06.10.98
+   \version    V1.4
+   \date       07.07.14
    \brief      Prototypes, etc. for maths utility routines
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-8
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -50,6 +50,7 @@
 -  V1.1  18.06.96 Added vector routines
 -  V1.2  10.09.96 Added combperm.c routines
 -  V1.3  06.10.98 Added VecAdd3()
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 #ifndef _MATHUTIL_H
@@ -58,27 +59,28 @@
 #include <math.h>
 #include "MathType.h"
 #include "SysDefs.h"
+#include "deprecated.h"
 
-void CalcSD(REAL val, int action, REAL *mean, REAL *SD);
-void CalcExtSD(REAL val, int action, REAL *Sx, REAL *SxSq, 
-               int *NValues, REAL *mean, REAL *SD);
-REAL pearson(REAL *x, REAL *y, int NItem);
-REAL pearson1(REAL *x, REAL *y, int NItem);
+void blCalcSD(REAL val, int action, REAL *mean, REAL *SD);
+void blCalcExtSD(REAL val, int action, REAL *Sx, REAL *SxSq, 
+                 int *NValues, REAL *mean, REAL *SD);
+REAL blpearson(REAL *x, REAL *y, int NItem);
+REAL blpearson1(REAL *x, REAL *y, int NItem);
 
-void CrossProd3(VEC3F *Out, VEC3F In1, VEC3F In2);
-void VecSub3(VEC3F *Out, VEC3F In1, VEC3F In2);
-void VecAdd3(VEC3F *Out, VEC3F In1, VEC3F In2);
-REAL VecLen3(VEC3F Vec);
-REAL DistPtVect(VEC3F Point, VEC3F End1, VEC3F End2);
-REAL PointLineDistance(REAL Px, REAL Py, REAL Pz,
+void blCrossProd3(VEC3F *Out, VEC3F In1, VEC3F In2);
+void blVecSub3(VEC3F *Out, VEC3F In1, VEC3F In2);
+void blVecAdd3(VEC3F *Out, VEC3F In1, VEC3F In2);
+REAL blVecLen3(VEC3F Vec);
+REAL blDistPtVect(VEC3F Point, VEC3F End1, VEC3F End2);
+REAL blPointLineDistance(REAL Px, REAL Py, REAL Pz,
                        REAL P1x, REAL P1y, REAL P1z,
                        REAL P2x, REAL P2y, REAL P2z,
                        REAL *Rx, REAL *Ry, REAL *Rz,
                        REAL *frac);
-ULONG factorial(int n);
-ULONG factdiv(int n1, int n2);
-ULONG NPerm(int n, int r);
-ULONG NComb(int n, int r);
+ULONG blfactorial(int n);
+ULONG blfactdiv(int n1, int n2);
+ULONG blNPerm(int n, int r);
+ULONG blNComb(int n, int r);
 
 #endif
 

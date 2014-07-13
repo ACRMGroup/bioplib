@@ -3,11 +3,11 @@
 
    \file       BuffInp.h
    
-   \version    V1.0R
-   \date       08.03.94
+   \version    V1.1
+   \date       07.07.14
    \brief      Header file for BuffInp.c
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -47,6 +47,8 @@
    Revision History:
    =================
 
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
+
 *************************************************************************/
 #ifndef _BUFFINPUT_H
 #define _BUFFINPUT_H
@@ -56,6 +58,7 @@
 */
 #include <stdio.h>
 #include "SysDefs.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines
@@ -71,8 +74,8 @@ typedef struct
 /************************************************************************/
 /* Prototypes
 */
-INBUFFER *OpenBufferedFile(char *filename, int maxstr);
-BOOL ReadBufferedFile(INBUFFER *bfp, char *string, int length);
-BOOL ProbeBufferedFile(INBUFFER *bfp, char *string, int length);
+INBUFFER *blOpenBufferedFile(char *filename, int maxstr);
+BOOL blReadBufferedFile(INBUFFER *bfp, char *string, int length);
+BOOL blProbeBufferedFile(INBUFFER *bfp, char *string, int length);
 
 #endif

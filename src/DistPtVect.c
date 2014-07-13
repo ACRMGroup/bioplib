@@ -3,11 +3,11 @@
 
    \file       DistPtVect.c
    
-   \version    V1.2
-   \date       06.10.98
+   \version    V1.3
+   \date       07.07.14
    \brief      General maths/stats/vector functions
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-8
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -49,6 +49,7 @@
 -  V1.0  29.01.96 Original   By: ACRM
 -  V1.1  18.06.96 Added vector routines
 -  V1.2  06.10.98 Added VecAdd3()
+-  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -70,8 +71,8 @@
 */
 
 /************************************************************************/
-/*>REAL DistPtVect(VEC3F Point, VEC3F End1, VEC3F End2)
-   ----------------------------------------------------
+/*>REAL blDistPtVect(VEC3F Point, VEC3F End1, VEC3F End2)
+   ------------------------------------------------------
 *//**
 
    \param[in]     Point     The coordinates of a point
@@ -83,8 +84,9 @@
    end points
 
 -  18.06.96 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-REAL DistPtVect(VEC3F Point, VEC3F End1, VEC3F End2)
+REAL blDistPtVect(VEC3F Point, VEC3F End1, VEC3F End2)
 {
    VEC3F Vec,
          UVec,
@@ -93,10 +95,10 @@ REAL DistPtVect(VEC3F Point, VEC3F End1, VEC3F End2)
    REAL  len;
    
    /* Find the vector from End1 to End2                                 */
-   VecSub3(&Vec, End2, End1);
+   blVecSub3(&Vec, End2, End1);
 
    /* Find the length of this vector                                    */
-   len = VecLen3(Vec);
+   len = blVecLen3(Vec);
 
    /* Now calculate the unit vector                                     */
    UVec.x = Vec.x / len;
@@ -111,8 +113,8 @@ REAL DistPtVect(VEC3F Point, VEC3F End1, VEC3F End2)
    PQVec.z = End1.z - Point.z;
 
    /* PRVect is the cross product of PQVect with the unit vector        */
-   CrossProd3(&PRVec, PQVec, UVec);
+   blCrossProd3(&PRVec, PQVec, UVec);
 
    /* The length we want is the length of this vector                   */
-   return(VecLen3(PRVec));
+   return(blVecLen3(PRVec));
 }

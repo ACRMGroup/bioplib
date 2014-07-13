@@ -992,6 +992,214 @@
    blIsMCAcceptorHBonded(res1, res2, type);                              \
 })
 
+/************************************************************************/
+/* Renamed functions: BuffInp.h                                         */
+
+
+#define OpenBufferedFile(filename, maxstr)                               \
+({                                                                       \
+   DEPRECATED("OpenBufferedFile()","blOpenBufferedFile()");              \
+   blOpenBufferedFile(filename, maxstr);                                 \
+})
+
+#define ReadBufferedFile(bfp, string, length)                            \
+({                                                                       \
+   DEPRECATED("ReadBufferedFile()","blReadBufferedFile()");              \
+   blReadBufferedFile(bfp, string, length);                              \
+})
+
+#define ProbeBufferedFile(bfp, string, length)                           \
+({                                                                       \
+   DEPRECATED("ProbeBufferedFile()","blProbeBufferedFile()");            \
+   blProbeBufferedFile(bfp, string, length);                             \
+})
+
+
+
+/************************************************************************/
+/* Renamed functions: ErrStack.h                                        */
+
+#define StoreError(routine, error)                                       \
+({                                                                       \
+   DEPRECATED("StoreError()","blStoreError()");                          \
+   blStoreError(routine, error);                                         \
+})
+
+#define ShowErrors(PrintRoutine, Trace)                                  \
+({                                                                       \
+   DEPRECATED("ShowErrors()","blShowErrors()");                          \
+   blShowErrors(PrintRoutine, Trace);                                    \
+})
+
+
+
+/************************************************************************/
+/* Renamed functions: MathUtil.h                                        */
+
+#define CalcSD(val, action, mean, SD)                                    \
+({                                                                       \
+   DEPRECATED("CalcSD()","blCalcSD()");                                  \
+   blCalcSD(val, action, mean, SD);                                      \
+})
+#define CalcExtSD(val, action, Sx, SxSq, NValues, mean, SD)              \
+({                                                                       \
+   DEPRECATED("CalcExtSD()","blCalcExtSD()");                            \
+   blCalcExtSD(val, action, Sx, SxSq, NValues, mean, SD);                \
+})
+#define pearson(x, y, NItem)                                             \
+({                                                                       \
+   DEPRECATED("pearson()","blpearson()");                                \
+   blpearson(x, y, NItem);                                               \
+})
+#define pearson1(x, y, NItem)                                            \
+({                                                                       \
+   DEPRECATED("pearson1()","blpearson1()");                              \
+   blpearson1(x, y, NItem);                                              \
+})
+
+#define CrossProd3(Out, In1, In2)                                        \
+({                                                                       \
+   DEPRECATED("CrossProd3()","blCrossProd3()");                          \
+   blCrossProd3(Out, In1, In2);                                          \
+})
+
+#define VecSub3(Out, In1, In2)                                           \
+({                                                                       \
+   DEPRECATED("VecSub3()","blVecSub3()");                                \
+   blVecSub3(Out, In1, In2);                                             \
+})
+
+#define VecAdd3(Out, In1, In2)                                           \
+({                                                                       \
+   DEPRECATED("VecAdd3()","blVecAdd3()");                                \
+   blVecAdd3(Out, In1, In2);                                             \
+})
+
+#define VecLen3(Vec)                                                     \
+({                                                                       \
+   DEPRECATED("VecLen3()","blVecLen3()");                                \
+   blVecLen3(Vec);                                                       \
+})
+
+#define DistPtVect(Point, End1, End2)                                    \
+({                                                                       \
+   DEPRECATED("DistPtVect()","blDistPtVect()");                          \
+   blDistPtVect(Point, End1, End2);                                      \
+})
+
+#define PointLineDistance(Px, Py, Pz, P1x, P1y, P1z, P2x, P2y, P2z, Rx, Ry, Rz, frac) \
+({                                                                       \
+   DEPRECATED("PointLineDistance()","blPointLineDistance()");            \
+   blPointLineDistance(Px, Py, Pz, P1x, P1y, P1z, P2x, P2y, P2z, Rx, Ry, Rz, frac)  \
+})
+
+#define factorial(n)                                                     \
+({                                                                       \
+   DEPRECATED("factorial()","blfactorial()");                            \
+   blfactorial(n);                                                       \
+})
+
+#define factdiv(n1, n2)                                                  \
+({                                                                       \
+   DEPRECATED("factdiv()","blfactdiv()");                                \
+   blfactdiv(n1, n2);                                                    \
+})
+
+#define NPerm(n, r)                                                      \
+({                                                                       \
+   DEPRECATED("NPerm()","blNPerm()");                                    \
+   blNPerm(n, r);                                                        \
+})
+
+#define NComb(n, r)                                                      \
+({                                                                       \
+   DEPRECATED("NComb()","blNComb()");                                    \
+   blNComb(n, r);                                                        \
+})
+
+/************************************************************************/
+/* Renamed functions: WindIO.h                                          */
+
+#define screen(string)                                                   \
+({                                                                       \
+   DEPRECATED("screen()","blscreen()");                                  \
+   blscreen(string);                                                     \
+})
+
+#define prompt(string)                                                   \
+({                                                                       \
+   DEPRECATED("prompt()","blprompt()");                                  \
+   blprompt(string);                                                     \
+})
+
+#define RePrompt()                                                       \
+({                                                                       \
+   DEPRECATED("RePrompt()","blRePrompt()");                              \
+   blRePrompt();                                                         \
+})
+
+#define GetKybdString(string, maxlen)                                    \
+({                                                                       \
+   DEPRECATED("GetKybdString()","blGetKybdString()");                    \
+   blGetKybdString(string, maxlen);                                      \
+})
+
+#define PagingOn()                                                       \
+({                                                                       \
+   DEPRECATED("PagingOn()","blPagingOn()");                              \
+   blPagingOn();                                                         \
+})
+
+#define PagingOff()                                                      \
+({                                                                       \
+   DEPRECATED("PagingOff()","blPagingOff()");                            \
+   blPagingOff();                                                        \
+})
+
+#define WindowMode(mode)                                                 \
+({                                                                       \
+   DEPRECATED("WindowMode()","blWindowMode()");                          \
+   blWindowMode(mode);                                                   \
+})
+
+#define WindowInteractive(mode)                                          \
+({                                                                       \
+   DEPRECATED("WindowInteractive()","blWindowInteractive()");            \
+   blWindowInteractive(mode);                                            \
+})
+
+#define YorN(deflt)                                                      \
+({                                                                       \
+   DEPRECATED("YorN()","blYorN()");                                      \
+   blYorN(deflt);                                                        \
+})
+
+
+
+
+
+/* Renamed functions: aalist.h                                          */
+/* Renamed functions: angle.h                                           */
+/* Renamed functions: array.h                                           */
+/* Renamed functions: cssr.h                                            */
+/* Renamed functions: deprecated.h                                      */
+/* Renamed functions: fit.h                                             */
+/* Renamed functions: fsscanf.h                                         */
+/* Renamed functions: general.h                                         */
+/* Renamed functions: hbond.h                                           */
+/* Renamed functions: help.h                                            */
+/* Renamed functions: hpgl.h                                            */
+/* Renamed functions: macros.h                                          */
+/* Renamed functions: matrix.h                                          */
+/* Renamed functions: parse.h                                           */
+/* Renamed functions: pdb.h                                             */
+/* Renamed functions: plotting.h                                        */
+/* Renamed functions: port.h                                            */
+/* Renamed functions: ps.h                                              */
+/* Renamed functions: safemem.h                                         */
+/* Renamed functions: seq.h                                             */
+ 
+
 
 
 /************************************************************************/

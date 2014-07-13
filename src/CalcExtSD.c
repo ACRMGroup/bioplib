@@ -3,11 +3,11 @@
 
    \file       CalcExtSD.c
    
-   \version    V1.3R
-   \date       22.06.94
+   \version    V1.4
+   \date       07.07.14
    \brief      Calculate mean and standard deviation
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-3
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -71,6 +71,7 @@
 -  V1.1  17.06.93 Modified for book
 -  V1.2  01.03.94 Added CalcExtSD()
 -  V1.3  22.06.94 Fixed for just one value
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -91,9 +92,9 @@
 */
 
 /************************************************************************/
-/*>void CalcExtSD(REAL val, int action, REAL *Sx, REAL *SxSq, 
+/*>void blCalcExtSD(REAL val, int action, REAL *Sx, REAL *SxSq, 
                   int *NValues, REAL *mean, REAL *SD)
-   ----------------------------------------------------------
+   ------------------------------------------------------------
 *//**
 
    Calculate the mean and standard deviation from a set of numbers. 
@@ -118,9 +119,10 @@
 
 -  13.10.93 Original based on CalcSD   By: ACRM
 -  22.06.94 Fixed for only one value supplied
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void CalcExtSD(REAL val, int action, REAL *Sx, REAL *SxSq, 
-               int *NValues, REAL *mean, REAL *SD)
+void blCalcExtSD(REAL val, int action, REAL *Sx, REAL *SxSq, 
+                 int *NValues, REAL *mean, REAL *SD)
 {
    switch(action)
    {

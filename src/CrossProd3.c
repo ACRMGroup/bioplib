@@ -3,11 +3,11 @@
 
    \file       CrossProd3.c
    
-   \version    V1.2
-   \date       06.10.98
+   \version    V1.3
+   \date       07.07.14
    \brief      General maths/stats/vector functions
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-8
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -49,12 +49,13 @@
 -  V1.0  29.01.96 Original   By: ACRM
 -  V1.1  18.06.96 Added vector routines
 -  V1.2  06.10.98 Added VecAdd3()
+-  V1.3  07.07.14 Use MathUtil.h Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <math.h>
-#include "MathType.h"
+#include "MathUtil.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -69,8 +70,8 @@
 */
 
 /************************************************************************/
-/*>void CrossProd3(VEC3F *Out, VEC3F In1, VEC3F In2)
-   -------------------------------------------------
+/*>void blCrossProd3(VEC3F *Out, VEC3F In1, VEC3F In2)
+   ---------------------------------------------------
 *//**
 
    \param[in]     In1       First vector
@@ -79,8 +80,9 @@
 
    Calculate the cross product of 2 vectors
 -  18.06.96 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void CrossProd3(VEC3F *Out, VEC3F In1, VEC3F In2)
+void blCrossProd3(VEC3F *Out, VEC3F In1, VEC3F In2)
 {
    Out->x = In1.y*In2.z - In1.z*In2.y;
    Out->y = In1.z*In2.x - In1.x*In2.z;

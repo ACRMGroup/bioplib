@@ -3,13 +3,13 @@
 
    \file       BuffInp.c
    
-   \version    V1.1R
-   \date       11.03.94
+   \version    V1.2
+   \date       07.07.14
    \brief      Read from a file a line at a time, allowing one to probe
                ahead and look at the contants of the next line without
                removing it from the input stream.
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -52,6 +52,7 @@
 -  V1.1  11.03.94 Changes to ReadBufferedFile() and ProbeBufferedFile()
                   to RePrompt() if reading from stdin when we get a 
                   blank line
+-  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -76,8 +77,8 @@
 */
 
 /************************************************************************/
-/*>INBUFFER OpenBufferedFile(char *filename, int maxstr)
-   -----------------------------------------------------
+/*>INBUFFER blOpenBufferedFile(char *filename, int maxstr)
+   -------------------------------------------------------
 *//**
 
    \param[in]     *filename   File name
@@ -89,8 +90,9 @@
 
 -  28.02.94 Original    By: ACRM
 -  03.03.94 If filename is NULL, make file stdin
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-INBUFFER *OpenBufferedFile(char *filename, int maxstr)
+INBUFFER *blOpenBufferedFile(char *filename, int maxstr)
 {
    FILE     *fp;
    INBUFFER *BuffStruc = NULL;
@@ -117,8 +119,8 @@ INBUFFER *OpenBufferedFile(char *filename, int maxstr)
 }
 
 /************************************************************************/
-/*>BOOL ReadBufferedFile(INBUFFER *bfp, char *string, int length)
-   --------------------------------------------------------------
+/*>BOOL blReadBufferedFile(INBUFFER *bfp, char *string, int length)
+   ----------------------------------------------------------------
 *//**
 
    \param[in]     *bfp      Pointer to a buffered file structure
@@ -134,8 +136,9 @@ INBUFFER *OpenBufferedFile(char *filename, int maxstr)
 -  07.03.94 Added code to skip blank lines
 -  10.03.94 Added call to RePrompt() if we're reading from stdin and
             we get a blank line
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL ReadBufferedFile(INBUFFER *bfp, char *string, int length)
+BOOL blReadBufferedFile(INBUFFER *bfp, char *string, int length)
 {
    int bufflen = 0;
    
@@ -157,7 +160,7 @@ BOOL ReadBufferedFile(INBUFFER *bfp, char *string, int length)
          }
 
          if(!bufflen && bfp->fp == stdin)
-            RePrompt();
+            blRePrompt();
       }
    }
    else
@@ -170,8 +173,8 @@ BOOL ReadBufferedFile(INBUFFER *bfp, char *string, int length)
 }
 
 /************************************************************************/
-/*>BOOL ProbeBufferedFile(INBUFFER *bfp, char *string, int length)
-   ---------------------------------------------------------------
+/*>BOOL blProbeBufferedFile(INBUFFER *bfp, char *string, int length)
+   -----------------------------------------------------------------
 *//**
 
    \param[in]     *bfp      Pointer to a buffered file structure
@@ -189,8 +192,9 @@ BOOL ReadBufferedFile(INBUFFER *bfp, char *string, int length)
 -  28.02.94 Original    By: ACRM
 -  07.03.94 Added code to skip blank lines
 -  10.03.94 Added call to RePrompt() after blank line
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL ProbeBufferedFile(INBUFFER *bfp, char *string, int length)
+BOOL blProbeBufferedFile(INBUFFER *bfp, char *string, int length)
 {
    int bufflen = 0;
    
@@ -214,7 +218,7 @@ BOOL ProbeBufferedFile(INBUFFER *bfp, char *string, int length)
          }
 
          if(!bufflen && bfp->fp == stdin)
-            RePrompt();
+            blRePrompt();
       }
    }
 
