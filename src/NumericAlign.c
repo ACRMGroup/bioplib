@@ -3,12 +3,12 @@
 
    \file       NumericAlign.c
    
-   \version    V1.2
-   \date       06.02.03
+   \version    V1.3
+   \date       07.07.14
    \brief      Perform Needleman & Wunsch sequence alignment on two
                sequences encoded as numeric symbols.
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin / University of Reading 1993-2003
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin / University of Reading 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -65,6 +65,7 @@
 -  V1.1  28.09.00 Fixed bug at end of alignment if one sequence finishes
                   first
 -  V1.2  06.02.03 Fixed for new version of GetWord()
+-  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 
 *************************************************************************/
@@ -232,6 +233,7 @@ static int NumericSearchForBest(int  **matrix,
 
 -  08.03.00 Original based on align.c/ReadMDM() 26.07.95 By: ACRM
 -  06.02.03 Fixed for new version of GetWord()
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 BOOL NumericReadMDM(char *mdmfile)
 {
@@ -262,7 +264,7 @@ BOOL NumericReadMDM(char *mdmfile)
 
 
    /* Allocate memory for the MDM and the AA List                       */
-   if((sMDMScore = (int **)Array2D(sizeof(int),sMDMSize,sMDMSize))==NULL)
+   if((sMDMScore = (int **)blArray2D(sizeof(int),sMDMSize,sMDMSize))==NULL)
       return(FALSE);
 
    /* Fill the matrix with zeros                                        */
@@ -384,6 +386,7 @@ int NumericCalcMDMScore(int resa, int resb)
    Identical to align.c/affinealign(), but uses integer arrays
 
 -  08.03.00 Original based on align.c/affinealign() 06.03.00 By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 int NumericAffineAlign(int  *seq1, 
                        int  length1, 
@@ -412,9 +415,9 @@ int NumericAffineAlign(int  *seq1,
    maxdim = MAX(length1, length2);
    
    /* Initialise the score matrix                                       */
-   if((matrix = (int **)Array2D(sizeof(int), maxdim, maxdim))==NULL)
+   if((matrix = (int **)blArray2D(sizeof(int), maxdim, maxdim))==NULL)
       return(0);
-   if((dirn   = (XY **)Array2D(sizeof(XY), maxdim, maxdim))==NULL)
+   if((dirn   = (XY **)blArray2D(sizeof(XY), maxdim, maxdim))==NULL)
       return(0);
       
    for(i=0;i<maxdim;i++)
@@ -639,8 +642,8 @@ int NumericAffineAlign(int  *seq1,
       }
    }
     
-   FreeArray2D((char **)matrix, maxdim, maxdim);
-   FreeArray2D((char **)dirn,   maxdim, maxdim);
+   blFreeArray2D((char **)matrix, maxdim, maxdim);
+   blFreeArray2D((char **)dirn,   maxdim, maxdim);
     
    return(score);
 }

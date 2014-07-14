@@ -3,11 +3,11 @@
 
    \file       array3.c
    
-   \version    V1.0R
-   \date       30.50.02
+   \version    V1.1
+   \date       07.07.14
    \brief      Allocate and free 3D arrays
    
-   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002
+   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002-14
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -63,11 +63,14 @@
    Revision History:
    =================
 -  V1.0  30.05.02 Original
+-  V1.1  07.07.14 Include array.h. Remove FreeArray3D() prototype. 
+         Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <stdlib.h>
+#include "array.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -84,11 +87,11 @@
 /************************************************************************/
 /* Prototypes
 */
-void FreeArray3D(char ***array, int dim1, int dim2, int dim3);
+
 
 /************************************************************************/
-/*>char ***Array3D(int size, int dim1, int dim2, int dim3)
-   -------------------------------------------------------
+/*>char ***blArray3D(int size, int dim1, int dim2, int dim3)
+   ---------------------------------------------------------
 *//**
 
    \param[in]     size    Size of an array element
@@ -102,8 +105,9 @@ void FreeArray3D(char ***array, int dim1, int dim2, int dim3);
    rows by `dim2' columns by `dim3' planes
 
 -  30.05.02 Original
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char ***Array3D(int size, int dim1, int dim2, int dim3)
+char ***blArray3D(int size, int dim1, int dim2, int dim3)
 {
    char  ***array  = NULL;
    int   i, j;
@@ -137,14 +141,14 @@ char ***Array3D(int size, int dim1, int dim2, int dim3)
    return(array);
    
 badexit:
-   FreeArray3D(array, dim1, dim2, dim3);
+   blFreeArray3D(array, dim1, dim2, dim3);
 
    return(NULL);
 }
 
 /************************************************************************/
-/*>void FreeArray3D(char ***array, int dim1, int dim2, int dim3)
-   -------------------------------------------------------------
+/*>void blFreeArray3D(char ***array, int dim1, int dim2, int dim3)
+   ---------------------------------------------------------------
 *//**
 
    \param[in]     array Array of pointers to be freed
@@ -156,8 +160,9 @@ badexit:
    `dim3' planes.
 
 -  30.05.02 Original
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void FreeArray3D(char ***array, int dim1, int dim2, int dim3)
+void blFreeArray3D(char ***array, int dim1, int dim2, int dim3)
 {
    int   i, j;
    

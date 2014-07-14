@@ -174,7 +174,7 @@ BOOL blRepSChain(PDB  *pdb,         /* PDB linked list                  */
       FILE  *fp_ChiTable;
 
       /* Allocate 2D array for equivalent torsions                      */
-      if((sChiTab = (int **)Array2D(sizeof(int), NUMAAKNOWN, NUMAAKNOWN)) 
+      if((sChiTab = (int **)blArray2D(sizeof(int), NUMAAKNOWN, NUMAAKNOWN)) 
          == NULL)
          return(FALSE);
    
@@ -293,7 +293,7 @@ BOOL blRepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
       FILE  *fp_ChiTable;
 
       /* Allocate 2D array for equivalent torsions                      */
-      if((sChiTab = (int **)Array2D(sizeof(int), NUMAAKNOWN, NUMAAKNOWN)) 
+      if((sChiTab = (int **)blArray2D(sizeof(int), NUMAAKNOWN, NUMAAKNOWN)) 
          == NULL)
          return(FALSE);
    
@@ -385,7 +385,7 @@ void blEndRepSChain(void)
 
       if(sChiTab != NULL)
       {
-         FreeArray2D((char **)sChiTab, NUMAAKNOWN, NUMAAKNOWN);
+         blFreeArray2D((char **)sChiTab, NUMAAKNOWN, NUMAAKNOWN);
          sChiTab = NULL;
       }
    }

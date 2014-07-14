@@ -1287,7 +1287,7 @@
 
 /************************************************************************/
 /* Renamed functions: array.h                                           */
-/*
+
 #define Array2D(size, dim1, dim2)                                        \
 ({                                                                       \
    DEPRECATED("Array2D()","blArray2D()");                                \
@@ -1313,7 +1313,7 @@
    blFreeArray3D(array, dim1, dim2, dim3);                               \
 })
 
-*/
+
 
 /************************************************************************/
 /* Renamed functions: cssr.h                                            */

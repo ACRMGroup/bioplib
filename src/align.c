@@ -221,6 +221,7 @@ int align(char *seq1,
             parameter. Now supports affine gap penalties with separate
             opening and extension penalties. The code now maintains
             the path as it goes.
+-  07.07.14 Use bl prefix for functions By: CTP
 **************************************************************************
 ******   NOTE AND CHANGES SHOULD BE PROPAGATED TO affinealignuc()   ******
 **************************************************************************
@@ -252,9 +253,9 @@ int affinealign(char *seq1,
    maxdim = MAX(length1, length2);
    
    /* Initialise the score matrix                                       */
-   if((matrix = (int **)Array2D(sizeof(int), maxdim, maxdim))==NULL)
+   if((matrix = (int **)blArray2D(sizeof(int), maxdim, maxdim))==NULL)
       return(0);
-   if((dirn   = (XY **)Array2D(sizeof(XY), maxdim, maxdim))==NULL)
+   if((dirn   = (XY **)blArray2D(sizeof(XY), maxdim, maxdim))==NULL)
       return(0);
       
    for(i=0;i<maxdim;i++)
@@ -477,8 +478,8 @@ int affinealign(char *seq1,
       }
    }
     
-   FreeArray2D((char **)matrix, maxdim, maxdim);
-   FreeArray2D((char **)dirn,   maxdim, maxdim);
+   blFreeArray2D((char **)matrix, maxdim, maxdim);
+   blFreeArray2D((char **)dirn,   maxdim, maxdim);
     
    return(score);
 }
@@ -526,6 +527,7 @@ int affinealign(char *seq1,
             the path as it goes.
 -  27.02.07 Exactly as affinealign() but upcases characters before
             comparison
+-  07.07.14 Use bl prefix for functions By: CTP
 
 **************************************************************************
 ******    NOTE AND CHANGES SHOULD BE PROPAGATED TO affinealign()    ******
@@ -558,9 +560,9 @@ int affinealignuc(char *seq1,
    maxdim = MAX(length1, length2);
    
    /* Initialise the score matrix                                       */
-   if((matrix = (int **)Array2D(sizeof(int), maxdim, maxdim))==NULL)
+   if((matrix = (int **)blArray2D(sizeof(int), maxdim, maxdim))==NULL)
       return(0);
-   if((dirn   = (XY **)Array2D(sizeof(XY), maxdim, maxdim))==NULL)
+   if((dirn   = (XY **)blArray2D(sizeof(XY), maxdim, maxdim))==NULL)
       return(0);
       
    for(i=0;i<maxdim;i++)
@@ -783,8 +785,8 @@ int affinealignuc(char *seq1,
       }
    }
     
-   FreeArray2D((char **)matrix, maxdim, maxdim);
-   FreeArray2D((char **)dirn,   maxdim, maxdim);
+   blFreeArray2D((char **)matrix, maxdim, maxdim);
+   blFreeArray2D((char **)dirn,   maxdim, maxdim);
     
    return(score);
 }
@@ -817,6 +819,7 @@ int affinealignuc(char *seq1,
             files as well as the ones used previously
             Allow comments introduced with # as well as !
             Uses MAXWORD rather than hardcoded 16
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 BOOL ReadMDM(char *mdmfile)
 {
@@ -857,21 +860,21 @@ BOOL ReadMDM(char *mdmfile)
    }
 
    /* Allocate memory for the MDM and the AA List                       */
-   if((sMDMScore = (int **)Array2D(sizeof(int),sMDMSize,sMDMSize))==NULL)
+   if((sMDMScore = (int **)blArray2D(sizeof(int),sMDMSize,sMDMSize))==NULL)
       return(FALSE);
    if((sMDM_AAList = (char *)malloc((sMDMSize+1)*sizeof(char)))==NULL)
    {
-      FreeArray2D((char **)sMDMScore, sMDMSize, sMDMSize);
+      blFreeArray2D((char **)sMDMScore, sMDMSize, sMDMSize);
       return(FALSE);
    }
 
    /* Allocate temporary storage for a row from the matrix              */
    tmpStoreSize = 2*sMDMSize;
-   if((tmpStore = (char **)Array2D(sizeof(char), tmpStoreSize, MAXWORD))
+   if((tmpStore = (char **)blArray2D(sizeof(char), tmpStoreSize, MAXWORD))
       ==NULL)
    {
       free(sMDM_AAList);
-      FreeArray2D((char **)sMDMScore, sMDMSize, sMDMSize);
+      blFreeArray2D((char **)sMDMScore, sMDMSize, sMDMSize);
       return(FALSE);
    }
 
@@ -940,7 +943,7 @@ BOOL ReadMDM(char *mdmfile)
       }
    }
    fclose(mdm);
-   FreeArray2D((char **)tmpStore, tmpStoreSize, MAXWORD);
+   blFreeArray2D((char **)tmpStore, tmpStoreSize, MAXWORD);
    
    return(TRUE);
 }

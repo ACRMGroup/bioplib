@@ -3,11 +3,11 @@
 
    \file       array2.c
    
-   \version    V1.4R
-   \date       18.03.94
+   \version    V1.5
+   \date       07/07.14
    \brief      Allocate and free 2D arrays
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-4
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -68,11 +68,14 @@
 -  V1.3  01.03.94 Corrected other include file usage
 -  V1.4  18.03.94 Added NULL definition for systems which don't define
                   it in stdlib.h
+-  V1.5  07.07.14 Include array.h Use bl prefix for functions By: CTP
+
 
 *************************************************************************/
 /* Includes
 */
 #include <stdlib.h>
+#include "array.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -91,7 +94,7 @@
 */
 
 /************************************************************************/
-/*>char **Array2D(int size, int dim1, int dim2)
+/*>char **blArray2D(int size, int dim1, int dim2)
    --------------------------------------------
 *//**
 
@@ -106,10 +109,12 @@
 
 -  07.10.92 Original
 -  12.07.93 Tidied and commented
+-  07.07.14 Use bl prefix for functions By: CTP
+
 */
-char **Array2D(int size, 
-               int dim1, 
-               int dim2)
+char **blArray2D(int size, 
+                 int dim1, 
+                 int dim2)
 {
    char  **array  = NULL;
    int   i;
@@ -138,8 +143,8 @@ badexit:
 }
 
 /************************************************************************/
-/*>void FreeArray2D(char **array, int dim1, int dim2)
-   --------------------------------------------------
+/*>void blFreeArray2D(char **array, int dim1, int dim2)
+   ----------------------------------------------------
 *//**
 
    \param[in]     array Array of pointers to be freed
@@ -149,10 +154,11 @@ badexit:
    Frees a 2D array with dimensions `dim1' rows by `dim2' columns.
 
 -  07.10.92 Original
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void FreeArray2D(char   **array,
-                 int    dim1, 
-                 int    dim2)
+void blFreeArray2D(char   **array,
+                   int    dim1, 
+                   int    dim2)
 {
    int   i;
    

@@ -3,11 +3,11 @@
 
    \file       array.h
    
-   \version    V1.5R
-   \date       30.05.02
+   \version    V1.6
+   \date       07.07.14
    \brief      Include file for 2D/3D array functions
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2002
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -48,10 +48,12 @@
    =================
 -  V1.4  18.03.94
 -  V1.5  30.05.02 Added 3D functions
+-  V1.6  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -70,10 +72,10 @@
 #ifndef _ARRAY_H
 #define _ARRAY_H
 
-char **Array2D(int size, int dim1, int dim2);
-void FreeArray2D(char **array, int dim1, int dim2);
+char **blArray2D(int size, int dim1, int dim2);
+void blFreeArray2D(char **array, int dim1, int dim2);
 
-char ***Array3D(int size, int dim1, int dim2, int dim3);
-void FreeArray3D(char ***array, int dim1, int dim2, int dim3);
+char ***blArray3D(int size, int dim1, int dim2, int dim3);
+void blFreeArray3D(char ***array, int dim1, int dim2, int dim3);
 
 #endif
