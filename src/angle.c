@@ -3,11 +3,11 @@
 
    \file       angle.c
    
-   \version    V1.5R
-   \date       27.03.95
+   \version    V1.6
+   \date       07.07.14
    \brief      Calculate angles, torsions, etc.
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-5
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -92,6 +92,8 @@
 -  V1.3  01.06.92 ANSIed
 -  V1.4  08.12.92 Changed abs() to ABS() from macros.h
 -  V1.5  27.03.95 Added TrueAngle()
+-  V1.6  07.07.14 Include angle.h Use bl prefix for functions By: CTP
+
 
 *************************************************************************/
 /* Includes
@@ -100,6 +102,7 @@
 
 #include "MathType.h"
 #include "macros.h"
+#include "angle.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -136,15 +139,15 @@
 -  04.03.91 Fixed return value
 -  16.06.93 Changed float to REAL
 */
-REAL angle(REAL xi,
-           REAL yi,
-           REAL zi,
-           REAL xj,
-           REAL yj,
-           REAL zj,
-           REAL xk,
-           REAL yk,
-           REAL zk)
+REAL blangle(REAL xi,
+             REAL yi,
+             REAL zi,
+             REAL xj,
+             REAL yj,
+             REAL zj,
+             REAL xk,
+             REAL yk,
+             REAL zk)
 {
    REAL qx,qy,qz,sq,px,py,pz,sp,cosa2,a2;
 

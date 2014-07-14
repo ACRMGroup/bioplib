@@ -288,9 +288,9 @@ BOOL blValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP)
             return(FALSE);
       }
 
-      ang1 = angle(AtomP->x, AtomP->y, AtomP->z,
-                   AtomA->x, AtomA->y, AtomA->z,
-                   AtomD->x, AtomD->y, AtomD->z);
+      ang1 = blangle(AtomP->x, AtomP->y, AtomP->z,
+                     AtomA->x, AtomA->y, AtomA->z,
+                     AtomD->x, AtomD->y, AtomD->z);
 
       if((DISTSQ(AtomD, AtomA) < DADISTSQ) &&
          ang1 >= PI/2.0                    &&
@@ -299,9 +299,9 @@ BOOL blValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP)
    }
    else
    {
-      ang2 = angle(AtomD->x, AtomD->y, AtomD->z,
-                   AtomH->x, AtomH->y, AtomH->z,
-                   AtomA->x, AtomA->y, AtomA->z);
+      ang2 = blangle(AtomD->x, AtomD->y, AtomD->z,
+                     AtomH->x, AtomH->y, AtomH->z,
+                     AtomA->x, AtomA->y, AtomA->z);
 
       /* If the antecedent isn't defined then just set ang1 to within
          the allowed range
@@ -312,9 +312,9 @@ BOOL blValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP)
       }
       else
       {
-         ang1 = angle(AtomP->x, AtomP->y, AtomP->z,
-                      AtomA->x, AtomA->y, AtomA->z,
-                      AtomH->x, AtomH->y, AtomH->z);
+         ang1 = blangle(AtomP->x, AtomP->y, AtomP->z,
+                        AtomA->x, AtomA->y, AtomA->z,
+                        AtomH->x, AtomH->y, AtomH->z);
       }
 
       if((DISTSQ(AtomH, AtomA) < HADISTSQ) &&

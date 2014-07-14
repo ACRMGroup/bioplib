@@ -1252,7 +1252,7 @@
 
 /************************************************************************/
 /* Renamed functions: angle.h                                           */
-/*
+
 #define angle(xi, yi, zi, xj, yj, zj, xk, yk, zk)                        \
 ({                                                                       \
    DEPRECATED("angle()","blangle()");                                    \
@@ -1283,7 +1283,7 @@
    blTorToCoor(ant1, ant2, ant3, bond, theta, torsion, coords);          \
 })
 
-*/
+
 
 /************************************************************************/
 /* Renamed functions: array.h                                           */
