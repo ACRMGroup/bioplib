@@ -3,11 +3,11 @@
 
    \file       OpenFile.c
    
-   \version    V1.22
-   \date       28.07.05
+   \version    V1.23
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2005
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -72,6 +72,7 @@
 -  V1.20 18.09.96 Added padchar()
 -  V1.21 18.06.02 Added string.h
 -  V1.22 28.07.05 Added conditionals for Mac OS/X
+-  V1.23 07.07.14 Include general.h Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -81,6 +82,7 @@
 #include <string.h>
 #include "SysDefs.h"
 #include "port.h"
+#include "general.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -96,8 +98,8 @@
 
 
 /************************************************************************/
-/*>FILE *OpenFile(char *filename, char *envvar, char *mode, BOOL *noenv)
-   ---------------------------------------------------------------------
+/*>FILE *blOpenFile(char *filename, char *envvar, char *mode, BOOL *noenv)
+   -----------------------------------------------------------------------
 *//**
 
    \param[in]     *filename     Filename to be opened
@@ -130,8 +132,9 @@
 -  08.03.95 Corrected basename to filename in non-unix version
 -  09.03.95 Checks that filename is not a NULL or blank string
 -  28.07.05 Added conditionals for Mac OS/X: __MACH__ and __APPLE__
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-FILE *OpenFile(char *filename, char *envvar, char *mode, BOOL *noenv)
+FILE *blOpenFile(char *filename, char *envvar, char *mode, BOOL *noenv)
 {
    char *datadir,
         buffer[160];

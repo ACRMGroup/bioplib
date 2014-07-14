@@ -110,7 +110,7 @@ PDB *blFindRawAtomInRes(PDB *pdb, char *atnam_in)
    
    /* First copy the specified atom name and pad to 5 chars             */
    strcpy(atnam,atnam_in);
-   padterm(atnam,5);
+   blpadterm(atnam,5);
    
    /* Find the end of this residue                                      */
    end = blFindNextResidue(pdb);

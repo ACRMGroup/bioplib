@@ -3,11 +3,11 @@
 
    \file       ps.c
    
-   \version    V1.3R
-   \date       22.06.94
+   \version    V1.5
+   \date       07.07.14
    \brief      PostScript plotting routines
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-4
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -62,6 +62,7 @@
 -  V1.1  06.07.93 Modified for book
 -  V1.2  27.07.93 Changed I/O precision to double
 -  V1.4  22.06.94 The file pointer is now global rather than static
+-  V1.5  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Defines and macros
@@ -336,13 +337,14 @@ void PSStroke(void)
 -  15.09.92 Changed to support Amiga reencoding
 -  06.07.93 Removed Amiga reecncoding for general distribution
 -  27.07.93 Floating point precision -> double
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 void PSFont(char  *fontname,
             REAL  size)
 {
    char font[80];
    
-   StringToUpper(fontname,font);
+   blStringToUpper(fontname,font);
 
    if(!strncmp(font,"TIMES",5))
    {

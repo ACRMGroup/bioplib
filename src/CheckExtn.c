@@ -3,11 +3,11 @@
 
    \file       CheckExtn.c
    
-   \version    V1.20R
-   \date       18.09.96
+   \version    V1.21
+   \date       07.07.14
    \brief      General purpose routines
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-6
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -71,6 +71,7 @@
 -  V1.18 18.12.95 OpenStdFiles() treats filename of - as stdin/stdout
 -  V1.19 05.02.96 OpenStdFiles() allows NULL pointers instead if filenames
 -  V1.20 18.09.96 Added padchar()
+-  V1.21 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -94,8 +95,8 @@
 /* Prototypes
 */
 /************************************************************************/
-/*>BOOL CheckExtn(char *string, char *ext)
-   ---------------------------------------
+/*>BOOL blCheckExtn(char *string, char *ext)
+   -----------------------------------------
 *//**
 
    \param[in]     *string    String to be checked for given extension
@@ -105,9 +106,10 @@
    Check the extension of a filename. For use on machines like VAXes,
    MS-DOS and Amigas, everything is converted to upper case first.
 -  18.06.93 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL CheckExtn(char  *string,
-               char  *ext)
+BOOL blCheckExtn(char  *string,
+                 char  *ext)
 {
    int   extl     = strlen(ext),
          strl     = strlen(string);
@@ -125,8 +127,8 @@ BOOL CheckExtn(char  *string,
       return(FALSE);
    }
          
-   StringToUpper(string,buff1);
-   StringToUpper(ext,   buff2);
+   blStringToUpper(string,buff1);
+   blStringToUpper(ext,   buff2);
          
    if(strncmp(buff2,buff1+(strl-extl),extl))
       RetVal = FALSE;

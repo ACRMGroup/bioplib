@@ -3,11 +3,11 @@
 
    \file       general.h
    
-   \version    V1.12R
-   \date       30.05.02
+   \version    V1.13
+   \date       07.07.14
    \brief      Header file for general purpose routines
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2002
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -59,6 +59,7 @@
 -  V1.11 13.06.00 Added strcatalloc()
 -  V1.12 30.05.02 Added WrapString(), WrapPrint(), RightJustify(), 
                   GetWordNC() and getfield()
+-  V1.13 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 #ifndef _GENERAL_H
@@ -75,44 +76,44 @@ typedef struct _stringlist
    char               *string;
 }  STRINGLIST;
 
-void StringToLower(char *string1, char *string2);
-void StringToUpper(char *string1, char *string2);
-char *KillLeadSpaces(char *string);
-void KillLine(FILE *fp);
-void SetExtn(char *File, char *Ext);
-int chindex(char *string, char ch);
-void Word(char *string1, char *string2);
-void WordN(char *string1, char *string2, int  MaxChar);
-void padterm(char *string, int length); /* defined in cssr.h */
-void padchar(char *string, int length, char ch);
-BOOL CheckExtn(char *string, char *ext);
-char *ftostr(char *str, int maxlen, REAL x, int precision);
+void blStringToLower(char *string1, char *string2);
+void blStringToUpper(char *string1, char *string2);
+char *blKillLeadSpaces(char *string);
+void blKillLine(FILE *fp);
+void blSetExtn(char *File, char *Ext);
+int blchindex(char *string, char ch);
+void blWord(char *string1, char *string2);
+void blWordN(char *string1, char *string2, int  MaxChar);
+void blpadterm(char *string, int length); /* defined in cssr.h */
+void blpadchar(char *string, int length, char ch);
+BOOL blCheckExtn(char *string, char *ext);
+char *blftostr(char *str, int maxlen, REAL x, int precision);
 
-void GetFilestem(char *filename, char *stem);
-int upstrcmp(char *word1, char *word2);
-int upstrncmp(char *word1, char *word2, int ncomp);
-char *GetWord(char *buffer, char *word, int maxsize);
-BOOL OpenStdFiles(char *infile, char *outfile, FILE **in, FILE **out);
-FILE *OpenFile(char *filename, char *envvar, char *mode, BOOL *noenv);
-int countchar(char *string, char ch);
-char *fgetsany(FILE *fp);
-char *strcatalloc(char *instr, char *catstr);
+void blGetFilestem(char *filename, char *stem);
+int blupstrcmp(char *word1, char *word2);
+int blupstrncmp(char *word1, char *word2, int ncomp);
+char *blGetWord(char *buffer, char *word, int maxsize);
+BOOL blOpenStdFiles(char *infile, char *outfile, FILE **in, FILE **out);
+FILE *blOpenFile(char *filename, char *envvar, char *mode, BOOL *noenv);
+int blcountchar(char *string, char ch);
+char *blfgetsany(FILE *fp);
+char *blstrcatalloc(char *instr, char *catstr);
 
-STRINGLIST *StoreString(STRINGLIST *StringList, char *string);
-BOOL InStringList(STRINGLIST *StringList, char *string);
-void FreeStringList(STRINGLIST *StringList);
+STRINGLIST *blStoreString(STRINGLIST *StringList, char *string);
+BOOL blInStringList(STRINGLIST *StringList, char *string);
+void blFreeStringList(STRINGLIST *StringList);
 
-char *QueryStrStr(char *string, char *substring);
+char *blQueryStrStr(char *string, char *substring);
 
-void IndexReal(REAL *arrin, int *indx, int n);
+void blIndexReal(REAL *arrin, int *indx, int n);
 
-FILE *OpenOrPipe(char *filename);
-int CloseOrPipe(FILE *fp);
+FILE *blOpenOrPipe(char *filename);
+int blCloseOrPipe(FILE *fp);
 
-BOOL WrapString(char *in, char *out, int maxlen);
-BOOL WrapPrint(FILE *out, char *string);
-void RightJustify(char *string);
-char *GetWordNC(char *buffer, char *word, int maxlen);
-void getfield(char *buffer, int start, int width, char *str);
+BOOL blWrapString(char *in, char *out, int maxlen);
+BOOL blWrapPrint(FILE *out, char *string);
+void blRightJustify(char *string);
+char *blGetWordNC(char *buffer, char *word, int maxlen);
+void blgetfield(char *buffer, int start, int width, char *str);
 
 #endif

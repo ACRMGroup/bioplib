@@ -110,8 +110,8 @@ int  pclose(FILE *);
 */
 void blFreeWholePDB(WHOLEPDB *wpdb)
 {
-   FreeStringList(wpdb->header);
-   FreeStringList(wpdb->trailer);
+   blFreeStringList(wpdb->header);
+   blFreeStringList(wpdb->trailer);
    FREELIST(wpdb->pdb, PDB);
    free(wpdb);
 }
@@ -377,7 +377,7 @@ static WHOLEPDB *bldoReadWholePDB(FILE *fpin, BOOL atomsonly)
       {
          break;
       }
-      if((wpdb->header = StoreString(wpdb->header, buffer))==NULL)
+      if((wpdb->header = blStoreString(wpdb->header, buffer))==NULL)
          return(NULL);
       }
    }
@@ -407,13 +407,13 @@ static WHOLEPDB *bldoReadWholePDB(FILE *fpin, BOOL atomsonly)
             !strncmp(buffer, "MASTER", 6) ||
             !strncmp(buffer, "END   ", 6))
          {
-            wpdb->trailer = StoreString(wpdb->trailer, buffer);
+            wpdb->trailer = blStoreString(wpdb->trailer, buffer);
          }
       }
    }
    else
    {
-      wpdb->trailer = StoreString(wpdb->trailer, "END   \n");
+      wpdb->trailer = blStoreString(wpdb->trailer, "END   \n");
    }
    
    return(wpdb);
@@ -565,13 +565,13 @@ static STRINGLIST *blParseHeaderPDBML(FILE *fpin)
                      {
                         sprintf(title_line, "TITLE     %s\n",
                                 title_field);
-                        title_lines = StoreString(NULL,title_line);
+                        title_lines = blStoreString(NULL,title_line);
                      }
                      else
                      {
                         sprintf(title_line, "TITLE   %2d%s\n", nlines,
                                 title_field);
-                        StoreString(title_lines,title_line);
+                        blStoreString(title_lines,title_line);
                      }
                   }
                }
@@ -596,7 +596,7 @@ static STRINGLIST *blParseHeaderPDBML(FILE *fpin)
            header_field, date_field, pdb_field);
    
    /* Make Stringlist                                                   */
-   wpdb_header = StoreString(wpdb_header, header_line);
+   wpdb_header = blStoreString(wpdb_header, header_line);
    wpdb_header->next = title_lines;
    
    return(wpdb_header);

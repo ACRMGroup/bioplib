@@ -169,7 +169,7 @@ void Help(char *string,
    {
       BOOL NoEnv;
 
-      if((fp=OpenFile(HelpFile, HELPENV, "r", &NoEnv))==NULL)
+      if((fp=blOpenFile(HelpFile, HELPENV, "r", &NoEnv))==NULL)
       {
          blscreen("   Error==> Unable to open help file.\n");
          sprintf(FileBuff,"            The %s environment variable \

@@ -752,7 +752,7 @@ int main(int argc, char **argv)
    if((fp = fopen(argv[1],"r")))
    {
       /* Open the PGP file                                              */
-      if((pgp = OpenFile("Explicit.pgp","DATADIR","r",&noenv)))
+      if((pgp = blOpenFile("Explicit.pgp","DATADIR","r",&noenv)))
       {
          /* Read the PDB file                                           */
          if((pdb  = blReadPDB(fp, &natom)))

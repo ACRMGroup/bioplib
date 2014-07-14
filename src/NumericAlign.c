@@ -244,7 +244,7 @@ BOOL NumericReadMDM(char *mdmfile)
         *p;
    BOOL noenv;
 
-   if((mdm=OpenFile(mdmfile, DATAENV, "r", &noenv))==NULL)
+   if((mdm=blOpenFile(mdmfile, DATAENV, "r", &noenv))==NULL)
    {
       return(FALSE);
    }
@@ -260,7 +260,7 @@ BOOL NumericReadMDM(char *mdmfile)
 
    /* See how many fields there are in the buffer                       */
    for(p = buffer, sMDMSize = 0; p!=NULL; sMDMSize++)
-      p = GetWord(p, word, 16);
+      p = blGetWord(p, word, 16);
 
 
    /* Allocate memory for the MDM and the AA List                       */
@@ -283,12 +283,12 @@ BOOL NumericReadMDM(char *mdmfile)
       KILLLEADSPACES(p, buffer);
       if(strlen(p))
       {
-         GetWord(buffer, word, 16);
+         blGetWord(buffer, word, 16);
          if(sscanf(word,"%d",&j))    /* A row of numbers                */
          {
             for(p = buffer, j = 0; p!=NULL && j<sMDMSize; j++)
             {
-               p = GetWord(p, word, 16);
+               p = blGetWord(p, word, 16);
                sscanf(word,"%d",&(sMDMScore[i][j]));
             }
             i++;

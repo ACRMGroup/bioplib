@@ -224,7 +224,7 @@ BOOL blGetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
          int  remarkType = 0;
          
          /* See which REMARK type it is                                 */
-         ptr = GetWord(buffer+6, word, 80);
+         ptr = blGetWord(buffer+6, word, 80);
          if(sscanf(word, "%d", &remarkType))
          {
             switch(remarkType)
@@ -232,10 +232,10 @@ BOOL blGetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
             case 2:
                if(*resolution == 0.0)
                {
-                  ptr = GetWord(ptr, word, 80);
+                  ptr = blGetWord(ptr, word, 80);
                   if(!strncmp(word, "RESOLUTION", 10))
                   {
-                     ptr = GetWord(ptr, word, 80);
+                     ptr = blGetWord(ptr, word, 80);
                      if(!sscanf(word, "%lf", resolution))
                      {
                         *resolution = 0.0;
@@ -465,12 +465,12 @@ static BOOL HasText(char *ptr, char *hasWords, char *notWords)
    
    
    /* Step through the words we must have                               */
-   while((h=GetWord(h, word1, 80))!=NULL)
+   while((h=blGetWord(h, word1, 80))!=NULL)
    {
       nRequired++;
       /* Step through the words in our string                           */
       p = ptr;
-      while((p=GetWord(p, word2, 80))!=NULL)
+      while((p=blGetWord(p, word2, 80))!=NULL)
       {
          if(!strcmp(word1, word2))
          {
@@ -490,11 +490,11 @@ static BOOL HasText(char *ptr, char *hasWords, char *notWords)
       there any we must NOT have? 
       Step through the words we must not have 
    */
-   while((n=GetWord(n, word1, 80))!=NULL)
+   while((n=blGetWord(n, word1, 80))!=NULL)
    {
       /* Step through the words in our string                           */
       p = ptr;
-      while((p=GetWord(p, word2, 80))!=NULL)
+      while((p=blGetWord(p, word2, 80))!=NULL)
       {
          /* Return false if we have a match                             */
          if(!strcmp(word1, word2))

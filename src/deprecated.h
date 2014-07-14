@@ -1385,7 +1385,7 @@
 
 /************************************************************************/
 /* Renamed functions: general.h                                         */
-/*
+
 #define StringToLower(string1, string2)                                  \
 ({                                                                       \
    DEPRECATED("StringToLower()","blStringToLower()");                    \
@@ -1590,7 +1590,7 @@
    blgetfield(buffer, start, width, str);                                \
 })
 
-*/
+
 
 /************************************************************************/
 /* Renamed functions: help.h                                            */

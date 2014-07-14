@@ -3,11 +3,11 @@
 
    \file       wrapprint.c
    
-   \version    V1.0
-   \date       30.05.02
+   \version    V1.2
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002
+   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002-14
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -46,6 +46,7 @@
 
    Revision History:
    =================
+-  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -69,8 +70,8 @@
 */
 
 /************************************************************************/
-/*>BOOL WrapString(char *in, char *out, int maxlen)
-   ------------------------------------------------
+/*>BOOL blWrapString(char *in, char *out, int maxlen)
+   --------------------------------------------------
 *//**
 
    \param[in]     *in      Input string
@@ -84,8 +85,9 @@
    returns FALSE without copying anything into the output string.
 
 -  30.05.02 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL WrapString(char *in, char *out, int maxlen)
+BOOL blWrapString(char *in, char *out, int maxlen)
 {
    int  len,
         ndic,
@@ -124,7 +126,7 @@ BOOL WrapString(char *in, char *out, int maxlen)
    /* See if the string has double inverted commas - if so we need
       to escape them, so increment the string length
    */
-   ndic = countchar(in, '"');
+   ndic = blcountchar(in, '"');
    len += ndic;
 
    /* Check that there is space for our padded string                   */
@@ -169,8 +171,8 @@ BOOL WrapString(char *in, char *out, int maxlen)
 }
 
 /************************************************************************/
-/*>BOOL WrapPrint(FILE *out, char *string)
-   ---------------------------------------
+/*>BOOL blWrapPrint(FILE *out, char *string)
+   -----------------------------------------
 *//**
 
    \param[in]     *out     Output file pointer
@@ -183,8 +185,9 @@ BOOL WrapString(char *in, char *out, int maxlen)
    Returns FALSE if this memory allocation failed.
 
 -  30.05.02 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL WrapPrint(FILE *out, char *string)
+BOOL blWrapPrint(FILE *out, char *string)
 {
    int len;
    char *buffer;
@@ -196,7 +199,7 @@ BOOL WrapPrint(FILE *out, char *string)
    if((buffer=(char *)malloc(len*sizeof(char)))==NULL)
       return(FALSE);
    
-   if(!WrapString(string, buffer, len))
+   if(!blWrapString(string, buffer, len))
    {
       free(buffer);
       return(FALSE);

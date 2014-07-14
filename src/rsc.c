@@ -179,7 +179,7 @@ BOOL blRepSChain(PDB  *pdb,         /* PDB linked list                  */
          return(FALSE);
    
       /* Open files                                                     */
-      if((fp_ChiTable = OpenFile(ChiTable,"DATADIR","r",&noenv)) == NULL)
+      if((fp_ChiTable = blOpenFile(ChiTable,"DATADIR","r",&noenv)) == NULL)
       {
          if(noenv)
          {
@@ -193,7 +193,7 @@ BOOL blRepSChain(PDB  *pdb,         /* PDB linked list                  */
          return(FALSE);
       }
 
-      if((sFp_RefCoords = OpenFile(RefCoords,"DATADIR","r",&noenv)) == 
+      if((sFp_RefCoords = blOpenFile(RefCoords,"DATADIR","r",&noenv)) == 
          NULL)
       {
          if(noenv)
@@ -298,7 +298,7 @@ BOOL blRepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
          return(FALSE);
    
       /* Open files                                                     */
-      if((fp_ChiTable = OpenFile(ChiTable,"DATADIR","r",&noenv)) == NULL)
+      if((fp_ChiTable = blOpenFile(ChiTable,"DATADIR","r",&noenv)) == NULL)
       {
          if(noenv)
          {
@@ -312,7 +312,7 @@ BOOL blRepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
          return(FALSE);
       }
 
-      if((sFp_RefCoords = OpenFile(RefCoords,"DATADIR","r",&noenv)) == 
+      if((sFp_RefCoords = blOpenFile(RefCoords,"DATADIR","r",&noenv)) == 
          NULL)
       {
          if(noenv)

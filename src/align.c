@@ -831,7 +831,7 @@ BOOL ReadMDM(char *mdmfile)
         **tmpStore;
    BOOL noenv;
 
-   if((mdm=OpenFile(mdmfile, DATAENV, "r", &noenv))==NULL)
+   if((mdm=blOpenFile(mdmfile, DATAENV, "r", &noenv))==NULL)
    {
       return(FALSE);
    }
@@ -848,7 +848,7 @@ BOOL ReadMDM(char *mdmfile)
          sMDMSize = 0;
          for(p = buffer; p!=NULL;)
          {
-            p = GetWord(p, word, MAXWORD);
+            p = blGetWord(p, word, MAXWORD);
             /* Increment counter if this is numeric                     */
             if(isdigit(word[0]) || 
                ((word[0] == '-')&&(isdigit(word[1]))))
@@ -903,7 +903,7 @@ BOOL ReadMDM(char *mdmfile)
          Numeric = 0;
          for(p = buffer, i = 0; p!=NULL && i<tmpStoreSize; i++)
          {
-            p = GetWord(p, tmpStore[i], MAXWORD);
+            p = blGetWord(p, tmpStore[i], MAXWORD);
             /* Incremement Numeric counter if it's a numeric field      */
             if(isdigit(tmpStore[i][0]) || 
                ((tmpStore[i][0] == '-')&&(isdigit(tmpStore[i][1]))))

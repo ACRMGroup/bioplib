@@ -431,7 +431,7 @@ PDB *blReadCSSRasPDB(FILE  *fp,
                                                     &link[6],
                                                     &link[7]);
       strcpy(p->record_type,"ATOM   ");
-      padterm(p->atnam,4);
+      blpadterm(p->atnam,4);
       strcpy(p->resnam,"ATM ");
       strcpy(p->insert," ");
       strcpy(p->chain," ");

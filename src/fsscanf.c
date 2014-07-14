@@ -3,11 +3,11 @@
 
    \file       fsscanf.c
    
-   \version    V1.3R
-   \date       13.01.97
+   \version    V1.4
+   \date       07.07.14
    \brief      Read from a string using FORTRAN-like rigid formatting
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-7
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -90,6 +90,7 @@
 -  V1.3  13.01.97 Now does the EOF return at the end of the routine
                   rather than at the beginning so that all the variable
                   get set to blank or zero first.
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -162,6 +163,7 @@
             buffer is a NULL variable and the EOF on blank string is
             moved to the end such that all output variables are set to 
             zero or blank before the EOF return.
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 int fsscanf(char *buffer, char *format, ...)
 {
@@ -323,7 +325,7 @@ int fsscanf(char *buffer, char *format, ...)
             /* If the input buffer ran out in this string, pad with 
                spaces and terminate.
             */
-            if(strlen(ptr) < width) padterm(ptr, width);
+            if(strlen(ptr) < width) blpadterm(ptr, width);
          }
          else                          /* Input buffer empty            */
          {

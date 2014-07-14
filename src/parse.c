@@ -3,11 +3,11 @@
 
    \file       parse.c
    
-   \version    V1.10R
-   \date       28.02.11
+   \version    V1.11
+   \date       07.07.14
    \brief      A keyword command parser
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2011
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -105,6 +105,7 @@
                   acts as if the line had been a comment.
 -  V1.9  08.10.99 Initialised some variables
 -  V1.10 28.02.11 Added # as a comment introducer
+-  V1.11 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -148,6 +149,7 @@
 -  11.03.94 Added $ line handling
 -  08.10.99 Initialise nlett
 -  28.02.11 Added # for comments
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 int parse(char  *comline,
           int   nkeys,
@@ -158,7 +160,7 @@ int parse(char  *comline,
    char *command;
    int  i,n,found,nletters,nlett = 0;
 
-   command = KillLeadSpaces(comline);
+   command = blKillLeadSpaces(comline);
    TERMINATE(command);
 
    if(command[0] == '$')
@@ -204,7 +206,7 @@ int parse(char  *comline,
    {
       for(i=0; i<(keywords[found]).nparam; i++)
       {
-         command = KillLeadSpaces(command);
+         command = blKillLeadSpaces(command);
          if((nletters = GetString(command,strparam[i]))==0)
          {
             return(PARSE_ERRP);
@@ -217,7 +219,7 @@ int parse(char  *comline,
       /* A numeric or no parameter                                      */
       for(i=0; i<(keywords[found]).nparam; i++)
       {
-         command = KillLeadSpaces(command);
+         command = blKillLeadSpaces(command);
          if(!GetParam(command,&(floatparam[i]),&nletters))
          {
             return(PARSE_ERRP);
@@ -262,7 +264,7 @@ int match(char *comstring,
    string1 = (char *)malloc((strlen(comstring) + 2) * sizeof(char));
    if(string1 == NULL) return(0);
 
-   StringToUpper(comstring,string1);
+   blStringToUpper(comstring,string1);
 
    for(i=0;;i++)
    {
@@ -389,6 +391,7 @@ int GetParam(char  *command,
 -  23.02.94 Original based on parse()   By: ACRM
 -  11.03.94 Added $ line handling
 -  08.10.99 Initialise nlett to 0
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 int mparse(char   *comline,
            int    nkeys,
@@ -400,7 +403,7 @@ int mparse(char   *comline,
    char *command;
    int  i,n,found,nletters,nlett=0;
 
-   command = KillLeadSpaces(comline);
+   command = blKillLeadSpaces(comline);
    TERMINATE(command);
    
    if(command[0] == '$')
@@ -449,7 +452,7 @@ int mparse(char   *comline,
    {
       for(i=0; i<(keywords[found]).maxparam; i++)
       {
-         command = KillLeadSpaces(command);
+         command = blKillLeadSpaces(command);
          if((nletters = GetString(command,strparam[i]))==0)
          {
             if(i < (keywords[found]).minparam)
@@ -469,7 +472,7 @@ int mparse(char   *comline,
       /* A numeric or no parameter                                      */
       for(i=0; i<(keywords[found]).maxparam; i++)
       {
-         command = KillLeadSpaces(command);
+         command = blKillLeadSpaces(command);
          if(!GetParam(command,&(floatparam[i]),&nletters))
          {
             if(i < (keywords[found]).minparam)

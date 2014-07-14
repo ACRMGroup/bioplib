@@ -566,6 +566,7 @@ preceeding the last residue\n");
 -  24.05.99 Fixed two memory leaks
 -  05.12.02 Added setting of atnam_raw
 -  03.06.05 Added setting of altpos
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta, 
                   BOOL firstres)
@@ -773,7 +774,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 
       hlist->resnum=sNo;
       hlist->insert[0]=sIns;              /* 26.01.96                   */
-      padterm(hlist->insert,4);
+      blpadterm(hlist->insert,4);
       strcpy(hlist->atnam,sGHName[5]);
       SetRawAtnam(hlist->atnam_raw, sGHName[5]);   /* 05.12.02          */
       hlist->altpos = ' ';                         /* 03.06.05          */
@@ -844,7 +845,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 
          hlist->resnum=sNo;
          hlist->insert[0]=sIns;           /* 26.01.96                   */
-         padterm(hlist->insert,4);
+         blpadterm(hlist->insert,4);
          strcpy(hlist->atnam,sGHName[4]);
          SetRawAtnam(hlist->atnam_raw, sGHName[4]);   /* 05.12.02       */
          hlist->altpos = ' ';                         /* 03.06.05       */
@@ -865,7 +866,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 
          hlist->resnum=sNo;
          hlist->insert[0]=sIns;           /* 26.01.96                   */
-         padterm(hlist->insert,4);
+         blpadterm(hlist->insert,4);
          strcpy(hlist->atnam,sGHName[5]);
          SetRawAtnam(hlist->atnam_raw, sGHName[5]);   /* 05.12.02       */
          hlist->altpos = ' ';                         /* 03.06.05       */
@@ -946,7 +947,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 
             hlist->resnum=sNo;
             hlist->insert[0]=sIns;        /* 26.01.96                   */
-            padterm(hlist->insert,4);
+            blpadterm(hlist->insert,4);
             strcpy(hlist->atnam,sGHName[4]);
             SetRawAtnam(hlist->atnam_raw, sGHName[4]);   /* 05.12.02    */
             hlist->altpos = ' ';                         /* 03.06.05    */
@@ -967,7 +968,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 
             hlist->resnum=sNo;
             hlist->insert[0]=sIns;        /* 26.01.96                   */
-            padterm(hlist->insert,4);
+            blpadterm(hlist->insert,4);
             strcpy(hlist->atnam,sGHName[5]);
             SetRawAtnam(hlist->atnam_raw, sGHName[5]);   /* 05.12.02    */
             hlist->altpos = ' ';                         /* 03.06.05    */
@@ -988,7 +989,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 
             hlist->resnum=sNo;
             hlist->insert[0]=sIns;        /* 26.01.96                   */
-            padterm(hlist->insert,4);
+            blpadterm(hlist->insert,4);
             strcpy(hlist->atnam,sGHName[6]);
             SetRawAtnam(hlist->atnam_raw, sGHName[6]);   /* 05.12.02    */
             hlist->altpos = ' ';                         /* 03.06.05    */
@@ -1029,7 +1030,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 
             hlist->resnum=sNo; 
             hlist->insert[0]=sIns;        /* 26.01.96                   */
-            padterm(hlist->insert,4);
+            blpadterm(hlist->insert,4);
             strcpy(hlist->atnam,sGHName[4]);
             SetRawAtnam(hlist->atnam_raw, sGHName[4]);   /* 05.12.02    */
             hlist->altpos = ' ';                         /* 03.06.05    */
@@ -1086,7 +1087,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 
          hlist->resnum=sNo;
          hlist->insert[0]=sIns;           /* 26.01.96                   */
-         padterm(hlist->insert,4);
+         blpadterm(hlist->insert,4);
          strcpy(hlist->atnam,sGHName[4]);
          SetRawAtnam(hlist->atnam_raw, sGHName[4]);   /* 05.12.02       */
          hlist->altpos = ' ';                         /* 03.06.05       */

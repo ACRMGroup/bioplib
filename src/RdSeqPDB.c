@@ -203,6 +203,7 @@ char **blReadSeqresPDB(FILE *fp, int *nchains)
    Used by ReadSeqresPDB() to read the SEQRES records into a linked list.
 
 -  14.10.96 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 static STRINGLIST *RdSeqRes(FILE *fp)
 {
@@ -213,7 +214,7 @@ static STRINGLIST *RdSeqRes(FILE *fp)
    {
       if(!strncmp(buffer,"SEQRES",6))
       {
-         if((seqres = StoreString(seqres, buffer)) == NULL)
+         if((seqres = blStoreString(seqres, buffer)) == NULL)
          {
             FREELIST(seqres, STRINGLIST);
             return(NULL);

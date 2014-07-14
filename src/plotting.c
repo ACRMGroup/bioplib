@@ -3,11 +3,11 @@
 
    \file       plotting.c
    
-   \version    V1.2R
-   \date       27.02.98
+   \version    V1.3
+   \date       07.07.14
    \brief      Top level HPGL/PS plotting routines
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-8
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -53,6 +53,7 @@
 -  V1.0  06.04.92 Original    By: ACRM
 -  V1.1  01.03.94 First release
 -  V1.2  27.02.98 Removed unreachable breaks from switch() statement
+-  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -719,6 +720,7 @@ void AMEndPlot(int  dest)
    the font number.
    
 -  06.07.93 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 int PS2HPGLFont(char *font)
 {
@@ -784,8 +786,8 @@ int PS2HPGLFont(char *font)
                /* Copy in the info, down casing the font name & removing
                   leading spaces and tabs
                */
-               StringToLower(FontName, buffer);
-               strcpy(FontTable[NTrans].PSFont, KillLeadSpaces(buffer));
+               blStringToLower(FontName, buffer);
+               strcpy(FontTable[NTrans].PSFont, blKillLeadSpaces(buffer));
                FontTable[NTrans].HPGLFont = FontNum;
                
                /* Increment the translation count                       */
@@ -801,8 +803,8 @@ int PS2HPGLFont(char *font)
    {
       char  *ptr = NULL;
       
-      StringToLower(font, buffer);
-      ptr = KillLeadSpaces(buffer);
+      blStringToLower(font, buffer);
+      ptr = blKillLeadSpaces(buffer);
 
       for(i=0; i<NTrans; i++)
       {

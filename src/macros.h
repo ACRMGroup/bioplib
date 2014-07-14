@@ -3,8 +3,8 @@
 
    \file       Macros.h
    
-   \version    V2.19
-   \date       07.05.14
+   \version    V2.20
+   \date       07.07.14
    \brief      Useful macros
    
    \copyright  SciTech Software 1991-2014
@@ -135,6 +135,8 @@
                   stopping prev from being changed
 -  V2.18 29.04.14 Added DEPRECATED()   By: CTP
 -  V2.19 07.05.14 Moved DEPRECATED() to deprecated.h  By: CTP
+-  V2.20 07.07.14 Use bl prefix for functions - change padterm() to 
+                  blpadterm() By: CTP
 
 *************************************************************************/
 #ifndef _MACROS_H
@@ -379,9 +381,9 @@ do {                                                                     \
 /* Used just like padterm, but doesn't touch the string if it's already
    longer than len characters
 */
-#define PADMINTERM(string, len)                                \
-        do {                                                   \
-        if(strlen((string)) < (len)) padterm((string), (len)); \
+#define PADMINTERM(string, len)                                  \
+        do {                                                     \
+        if(strlen((string)) < (len)) blpadterm((string), (len)); \
         } while(0)
 
 /************************************************************************/

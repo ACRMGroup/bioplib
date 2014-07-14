@@ -909,7 +909,7 @@ char *blFixAtomName(char *name, REAL occup)
       /* If the first character is a digit, move it to the end          */
       if(isdigit(name[0]))
       {
-         if((len = chindex(name,' ')) == (-1))
+         if((len = blchindex(name,' ')) == (-1))
          {
             /* We didn't find a space in the name, so add the character
                onto the end of the string and re-terminate

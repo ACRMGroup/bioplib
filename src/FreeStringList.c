@@ -3,11 +3,11 @@
 
    \file       FreeStringList.c
    
-   \version    V1.20R
-   \date       18.09.96
+   \version    V1.21
+   \date       07.07.14
    \brief      General purpose routines
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-6
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -71,6 +71,7 @@
 -  V1.18 18.12.95 OpenStdFiles() treats filename of - as stdin/stdout
 -  V1.19 05.02.96 OpenStdFiles() allows NULL pointers instead if filenames
 -  V1.20 18.09.96 Added padchar()
+-  V1.21 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -99,8 +100,8 @@
 */
 
 /************************************************************************/
-/*>void FreeStringList(STRINGLIST *StringList)
-   -------------------------------------------
+/*>void blFreeStringList(STRINGLIST *StringList)
+   ---------------------------------------------
 *//**
 
    \param[in]     *StringList    Linked list of strings
@@ -108,8 +109,9 @@
    Frees memory allocated for a string list.
 
 -  06.11.95 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void FreeStringList(STRINGLIST *StringList)
+void blFreeStringList(STRINGLIST *StringList)
 {
    STRINGLIST *p;
    
