@@ -1178,26 +1178,927 @@
 
 
 
+
+/************************************************************************/
 /* Renamed functions: aalist.h                                          */
+
+#define InsertNextResiduesInAAList(a, res, nres)                         \
+({                                                                       \
+   DEPRECATED("InsertNextResiduesInAAList()","blInsertNextResiduesInAAList()");\
+   blInsertNextResiduesInAAList(a, res, nres);                           \
+})
+
+#define InsertNextResidueInAAList(a, res)                                \
+({                                                                       \
+   DEPRECATED("InsertNextResidueInAAList()","blInsertNextResidueInAAList()");\
+   blInsertNextResidueInAAList(a, res);                                  \
+})
+
+#define BuildSeqFromAAList(aa)                                           \
+({                                                                       \
+   DEPRECATED("BuildSeqFromAAList()","blBuildSeqFromAAList()");          \
+   blBuildSeqFromAAList(aa);                                             \
+})
+
+#define InsertResidueInAAListAt(aa, res, pos)                            \
+({                                                                       \
+   DEPRECATED("InsertResidueInAAListAt()","blInsertResidueInAAListAt()");\
+   blInsertResidueInAAListAt(aa, res, pos);                              \
+})
+
+#define InsertResiduesInAAListAt(aa, res, nres, pos)                     \
+({                                                                       \
+   DEPRECATED("InsertResiduesInAAListAt()","blInsertResiduesInAAListAt()");\
+   blInsertResiduesInAAListAt(aa, res, nres, pos);                       \
+})
+
+#define BuildAAList(seq)                                                 \
+({                                                                       \
+   DEPRECATED("BuildAAList()","blBuildAAList()");                        \
+   blBuildAAList(seq);                                                   \
+})
+
+#define FindAAListOffsetByResnum(aa, resnum)                             \
+({                                                                       \
+   DEPRECATED("FindAAListOffsetByResnum()","blFindAAListOffsetByResnum()");\
+   blFindAAListOffsetByResnum(aa, resnum);                               \
+})
+
+#define FindAAListItemByResnum(aa, resnum)                               \
+({                                                                       \
+   DEPRECATED("FindAAListItemByResnum()","blFindAAListItemByResnum()");  \
+   blFindAAListItemByResnum(aa, resnum);                                 \
+})
+
+#define SetAAListFlagByResnum(aa, resnum)                                \
+({                                                                       \
+   DEPRECATED("SetAAListFlagByResnum()","blSetAAListFlagByResnum()");    \
+   blSetAAListFlagByResnum(aa, resnum);                                  \
+})
+
+#define BuildFlagSeqFromAAList(aa, ch)                                   \
+({                                                                       \
+   DEPRECATED("BuildFlagSeqFromAAList()","blBuildFlagSeqFromAAList()");  \
+   blBuildFlagSeqFromAAList(aa, ch);                                     \
+})
+
+#define GetAAListLen(aa)                                                 \
+({                                                                       \
+   DEPRECATED("GetAAListLen()","blGetAAListLen()");                      \
+   blGetAAListLen(aa);                                                   \
+})
+
+
+
+/************************************************************************/
 /* Renamed functions: angle.h                                           */
+/*
+#define angle(xi, yi, zi, xj, yj, zj, xk, yk, zk)                        \
+({                                                                       \
+   DEPRECATED("angle()","blangle()");                                    \
+   blangle(xi, yi, zi, xj, yj, zj, xk, yk, zk);                          \
+})
+
+#define phi(xi, yi, zi, xj, yj, zj, xk, yk, zk, xl, yl, zl)              \
+({                                                                       \
+   DEPRECATED("phi()","blphi()");                                        \
+   blphi(xi, yi, zi, xj, yj, zj, xk, yk, zk, xl, yl, zl);                \
+})
+
+#define simpleangle(ang)                                                 \
+({                                                                       \
+   DEPRECATED("simpleangle()","blsimpleangle()");                        \
+   blsimpleangle(ang);                                                   \
+})
+
+#define TrueAngle(opp, adj)                                              \
+({                                                                       \
+   DEPRECATED("TrueAngle()","blTrueAngle()");                            \
+   blTrueAngle(opp, adj);                                                \
+})
+
+#define TorToCoor(ant1, ant2, ant3, bond, theta, torsion, coords)        \
+({                                                                       \
+   DEPRECATED("TorToCoor()","blTorToCoor()");                            \
+   blTorToCoor(ant1, ant2, ant3, bond, theta, torsion, coords);          \
+})
+
+*/
+
+/************************************************************************/
 /* Renamed functions: array.h                                           */
+/*
+#define Array2D(size, dim1, dim2)                                        \
+({                                                                       \
+   DEPRECATED("Array2D()","blArray2D()");                                \
+   blArray2D(size, dim1, dim2);                                          \
+})
+
+#define FreeArray2D(array, dim1, dim2)                                   \
+({                                                                       \
+   DEPRECATED("FreeArray2D()","blFreeArray2D()");                        \
+   blFreeArray2D(array, dim1, dim2);                                     \
+})
+
+
+#define Array3D(size, dim1, dim2, dim3)                                  \
+({                                                                       \
+   DEPRECATED("Array3D()","blArray3D()");                                \
+   blArray3D(size, dim1, dim2, dim3);                                    \
+})
+
+#define FreeArray3D(array, dim1, dim2, dim3)                             \
+({                                                                       \
+   DEPRECATED("FreeArray3D()","blFreeArray3D()");                        \
+   blFreeArray3D(array, dim1, dim2, dim3);                               \
+})
+
+*/
+
+/************************************************************************/
 /* Renamed functions: cssr.h                                            */
-/* Renamed functions: deprecated.h                                      */
+/*
+#define ReadCSSR(fp, natom, name, title)                                 \
+({                                                                       \
+   DEPRECATED("ReadCSSR()","blReadCSSR()");                              \
+   blReadCSSR(fp, natom, name, title);                                   \
+})
+
+#define ReadCSSRasPDB(fp, natom)                                         \
+({                                                                       \
+   DEPRECATED("ReadCSSRasPDB()","blReadCSSRasPDB()");                    \
+   blReadCSSRasPDB(fp, natom);                                           \
+})
+
+#define NormaliseCSSR(cssr, cell, alpha, beta, gamma)                    \
+({                                                                       \
+   DEPRECATED("NormaliseCSSR()","blNormaliseCSSR()");                    \
+   blNormaliseCSSR(cssr, cell, alpha, beta, gamma);                      \
+})
+
+#define NormalisePDB(pdb, cell, alpha, beta, gamma)                      \
+({                                                                       \
+   DEPRECATED("NormalisePDB()","blNormalisePDB()");                      \
+   blNormalisePDB(pdb, cell, alpha, beta, gamma);                        \
+})
+
+#define ortho(cell, alpha, beta, gamma, amatrx, isw, ncode)              \
+({                                                                       \
+   DEPRECATED("ortho()","blortho()");                                    \
+   blortho(cell, alpha, beta, gamma, amatrx, isw, ncode);                \
+})
+
+#define padterm(string, len)                                             \
+({                                                                       \
+   DEPRECATED("padterm()","blpadterm()");                                \
+   blpadterm(string, len);                                               \
+})
+
+#define WriteCSSR(fp, cssr, name, title)                                 \
+({                                                                       \
+   DEPRECATED("WriteCSSR()","blWriteCSSR()");                            \
+   blWriteCSSR(fp, cssr, name, title);                                   \
+})
+
+*/
+
+/************************************************************************/
 /* Renamed functions: fit.h                                             */
+/*
+#define matfit(x1, x2, rm, n, wt1, column)                               \
+({                                                                       \
+   DEPRECATED("matfit()","blmatfit()");                                  \
+   blmatfit(x1, x2, rm, n, wt1, column);                                 \
+})
+
+*/
+
+/************************************************************************/
 /* Renamed functions: fsscanf.h                                         */
+/* NOTE: Can this be converted to macro? */
+
+/*
+#define fsscanf(buffer, format, ...);
+*/
+
+/************************************************************************/
 /* Renamed functions: general.h                                         */
-/* Renamed functions: hbond.h                                           */
+/*
+#define StringToLower(string1, string2)                                  \
+({                                                                       \
+   DEPRECATED("StringToLower()","blStringToLower()");                    \
+   blStringToLower(string1, string2);                                    \
+})
+
+#define StringToUpper(string1, string2)                                  \
+({                                                                       \
+   DEPRECATED("StringToUpper()","blStringToUpper()");                    \
+   blStringToUpper(string1, string2);                                    \
+})
+
+#define KillLeadSpaces(string)                                           \
+({                                                                       \
+   DEPRECATED("KillLeadSpaces()","blKillLeadSpaces()");                  \
+   blKillLeadSpaces(string);                                             \
+})
+
+#define KillLine(fp)                                                     \
+({                                                                       \
+   DEPRECATED("KillLine()","blKillLine()");                              \
+   blKillLine(fp);                                                       \
+})
+
+#define SetExtn(File, Ext)                                               \
+({                                                                       \
+   DEPRECATED("SetExtn()","blSetExtn()");                                \
+   blSetExtn(File, Ext);                                                 \
+})
+
+#define chindex(string, ch)                                              \
+({                                                                       \
+   DEPRECATED("chindex()","blchindex()");                                \
+   blchindex(string, ch);                                                \
+})
+
+#define Word(string1, string2)                                           \
+({                                                                       \
+   DEPRECATED("Word()","blWord()");                                      \
+   blWord(string1, string2);                                             \
+})
+
+#define WordN(string1, string2, MaxChar)                                 \
+({                                                                       \
+   DEPRECATED("WordN()","blWordN()");                                    \
+   blWordN(string1, string2, MaxChar);                                   \
+})
+
+#define padterm(string, length)                                          \
+({                                                                       \
+   DEPRECATED("padterm()","blpadterm()");                                \
+   blpadterm(string, length);                                            \
+})
+
+#define padchar(string, length, ch)                                      \
+({                                                                       \
+   DEPRECATED("padchar()","blpadchar()");                                \
+   blpadchar(string, length, ch);                                        \
+})
+
+#define CheckExtn(string, ext)                                           \
+({                                                                       \
+   DEPRECATED("CheckExtn()","blCheckExtn()");                            \
+   blCheckExtn(string, ext);                                             \
+})
+
+#define ftostr(str, maxlen, x, precision)                                \
+({                                                                       \
+   DEPRECATED("ftostr()","blftostr()");                                  \
+   blftostr(str, maxlen, x, precision);                                  \
+})
+
+
+#define GetFilestem(filename, stem)                                      \
+({                                                                       \
+   DEPRECATED("GetFilestem()","blGetFilestem()");                        \
+   blGetFilestem(filename, stem);                                        \
+})
+
+#define upstrcmp(word1, word2)                                           \
+({                                                                       \
+   DEPRECATED("upstrcmp()","blupstrcmp()");                              \
+   blupstrcmp(word1, word2);                                             \
+})
+
+#define upstrncmp(word1, word2, ncomp)                                   \
+({                                                                       \
+   DEPRECATED("upstrncmp()","blupstrncmp()");                            \
+   blupstrncmp(word1, word2, ncomp);                                     \
+})
+
+#define GetWord(buffer, word, maxsize)                                   \
+({                                                                       \
+   DEPRECATED("GetWord()","blGetWord()");                                \
+   blGetWord(buffer, word, maxsize);                                     \
+})
+
+#define OpenStdFiles(infile, outfile, in, out)                           \
+({                                                                       \
+   DEPRECATED("OpenStdFiles()","blOpenStdFiles()");                      \
+   blOpenStdFiles(infile, outfile, in, out);                             \
+})
+
+#define OpenFile(filename, envvar, mode, noenv)                          \
+({                                                                       \
+   DEPRECATED("OpenFile()","blOpenFile()");                              \
+   blOpenFile(filename, envvar, mode, noenv);                            \
+})
+
+#define countchar(string, ch)                                            \
+({                                                                       \
+   DEPRECATED("countchar()","blcountchar()");                            \
+   blcountchar(string, ch);                                              \
+})
+
+#define fgetsany(fp)                                                     \
+({                                                                       \
+   DEPRECATED("fgetsany()","blfgetsany()");                              \
+   blfgetsany(fp);                                                       \
+})
+
+#define strcatalloc(instr, catstr)                                       \
+({                                                                       \
+   DEPRECATED("strcatalloc()","blstrcatalloc()");                        \
+   blstrcatalloc(instr, catstr);                                         \
+})
+
+
+#define StoreString(StringList, string)                                  \
+({                                                                       \
+   DEPRECATED("StoreString()","blStoreString()");                        \
+   blStoreString(StringList, string);                                    \
+})
+
+#define InStringList(StringList, string)                                 \
+({                                                                       \
+   DEPRECATED("InStringList()","blInStringList()");                      \
+   blInStringList(StringList, string);                                   \
+})
+
+#define FreeStringList(StringList)                                       \
+({                                                                       \
+   DEPRECATED("FreeStringList()","blFreeStringList()");                  \
+   blFreeStringList(StringList);                                         \
+})
+
+
+#define QueryStrStr(string, substring)                                   \
+({                                                                       \
+   DEPRECATED("QueryStrStr()","blQueryStrStr()");                        \
+   blQueryStrStr(string, substring);                                     \
+})
+
+
+#define IndexReal(arrin, indx, n)                                        \
+({                                                                       \
+   DEPRECATED("IndexReal()","blIndexReal()");                            \
+   blIndexReal(arrin, indx, n);                                          \
+})
+
+
+#define OpenOrPipe(filename)                                             \
+({                                                                       \
+   DEPRECATED("OpenOrPipe()","blOpenOrPipe()");                          \
+   blOpenOrPipe(filename);                                               \
+})
+
+#define CloseOrPipe(fp)                                                  \
+({                                                                       \
+   DEPRECATED("CloseOrPipe()","blCloseOrPipe()");                        \
+   blCloseOrPipe(fp);                                                    \
+})
+
+
+#define WrapString(in, out, maxlen)                                      \
+({                                                                       \
+   DEPRECATED("WrapString()","blWrapString()");                          \
+   blWrapString(in, out, maxlen);                                        \
+})
+
+#define WrapPrint(out, string)                                           \
+({                                                                       \
+   DEPRECATED("WrapPrint()","blWrapPrint()");                            \
+   blWrapPrint(out, string);                                             \
+})
+
+#define RightJustify(string)                                             \
+({                                                                       \
+   DEPRECATED("RightJustify()","blRightJustify()");                      \
+   blRightJustify(string);                                               \
+})
+
+#define GetWordNC(buffer, word, maxlen)                                  \
+({                                                                       \
+   DEPRECATED("GetWordNC()","blGetWordNC()");                            \
+   blGetWordNC(buffer, word, maxlen);                                    \
+})
+
+#define getfield(buffer, start, width, str)                              \
+({                                                                       \
+   DEPRECATED("getfield()","blgetfield()");                              \
+   blgetfield(buffer, start, width, str);                                \
+})
+
+*/
+
+/************************************************************************/
 /* Renamed functions: help.h                                            */
+/*
+#define Help(string, HelpFile)                                           \
+({                                                                       \
+   DEPRECATED("Help()","blHelp()");                                      \
+   blHelp(string, HelpFile);                                             \
+})
+
+#define DoHelp(string, HelpFile)                                         \
+({                                                                       \
+   DEPRECATED("DoHelp()","blDoHelp()");                                  \
+   blDoHelp(string, HelpFile);                                           \
+})
+
+*/
+
+/************************************************************************/
 /* Renamed functions: hpgl.h                                            */
-/* Renamed functions: macros.h                                          */
+/*
+#define HPGLInit(filename, AltFont, xmargin, ymargin)                    \
+({                                                                       \
+   DEPRECATED("HPGLInit()","blHPGLInit()");                              \
+   blHPGLInit(filename, AltFont, xmargin, ymargin);                      \
+})
+
+#define HPGLPen(num)                                                     \
+({                                                                       \
+   DEPRECATED("HPGLPen()","blHPGLPen()");                                \
+   blHPGLPen(num);                                                       \
+})
+
+#define HPGLMove(x, y)                                                   \
+({                                                                       \
+   DEPRECATED("HPGLMove()","blHPGLMove()");                              \
+   blHPGLMove(x, y);                                                     \
+})
+
+#define HPGLDraw(x, y)                                                   \
+({                                                                       \
+   DEPRECATED("HPGLDraw()","blHPGLDraw()");                              \
+   blHPGLDraw(x, y);                                                     \
+})
+
+#define HPGLSetDash(style)                                               \
+({                                                                       \
+   DEPRECATED("HPGLSetDash()","blHPGLSetDash()");                        \
+   blHPGLSetDash(style);                                                 \
+})
+
+#define HPGLFont(font, size)                                             \
+({                                                                       \
+   DEPRECATED("HPGLFont()","blHPGLFont()");                              \
+   blHPGLFont(font, size);                                               \
+})
+
+#define HPGLLText(x, y, string)                                          \
+({                                                                       \
+   DEPRECATED("HPGLLText()","blHPGLLText()");                            \
+   blHPGLLText(x, y, string);                                            \
+})
+
+#define HPGLCBText(x, y, offset, text)                                   \
+({                                                                       \
+   DEPRECATED("HPGLCBText()","blHPGLCBText()");                          \
+   blHPGLCBText(x, y, offset, text);                                     \
+})
+
+#define HPGLROffText(x, y, offset, text)                                 \
+({                                                                       \
+   DEPRECATED("HPGLROffText()","blHPGLROffText()");                      \
+   blHPGLROffText(x, y, offset, text);                                   \
+})
+
+#define HPGLLCText(x, y, text)                                           \
+({                                                                       \
+   DEPRECATED("HPGLLCText()","blHPGLLCText()");                          \
+   blHPGLLCText(x, y, text);                                             \
+})
+
+#define HPGLCTText(x, y, offset, text)                                   \
+({                                                                       \
+   DEPRECATED("HPGLCTText()","blHPGLCTText()");                          \
+   blHPGLCTText(x, y, offset, text);                                     \
+})
+
+#define HPGLVText(x, y, xoff, text, TitleFont, TitleSize, label, LabelFont, LabelSize)\
+({                                                                       \
+   DEPRECATED("HPGLVText()","blHPGLVText()");                            \
+   blHPGLVText(x, y, xoff, text, TitleFont, TitleSize, label, LabelFont, LabelSize);\
+})
+
+#define HPGLEnd()                                                        \
+({                                                                       \
+   DEPRECATED("HPGLEnd()","blHPGLEnd()");                                \
+   blHPGLEnd();                                                          \
+})
+
+#define HPGLShowText(text, orientation, XBase, YBase)                    \
+({                                                                       \
+   DEPRECATED("HPGLShowText()","blHPGLShowText()");                      \
+   blHPGLShowText(text, orientation, XBase, YBase);                      \
+})
+
+*/
+
+/************************************************************************/
 /* Renamed functions: matrix.h                                          */
+/*
+#define MatMult3_33(vecin, matin, vecout)                                \
+({                                                                       \
+   DEPRECATED("MatMult3_33()","blMatMult3_33()");                        \
+   blMatMult3_33(vecin, matin, vecout);                                  \
+})
+
+#define MatMult33_33(a, b, out)                                          \
+({                                                                       \
+   DEPRECATED("MatMult33_33()","blMatMult33_33()");                      \
+   blMatMult33_33(a, b, out);                                            \
+})
+
+#define invert33(s, ss)                                                  \
+({                                                                       \
+   DEPRECATED("invert33()","blinvert33()");                              \
+   blinvert33(s, ss);                                                    \
+})
+
+#define CreateRotMat(direction, angle, matrix)                           \
+({                                                                       \
+   DEPRECATED("CreateRotMat()","blCreateRotMat()");                      \
+   blCreateRotMat(direction, angle, matrix);                             \
+})
+
+#define VecDist(a, b, len)                                               \
+({                                                                       \
+   DEPRECATED("VecDist()","blVecDist()");                                \
+   blVecDist(a, b, len);                                                 \
+})
+
+*/
+
+/************************************************************************/
 /* Renamed functions: parse.h                                           */
-/* Renamed functions: pdb.h                                             */
+/*
+#define parse(comline, nkeys, keywords, REALparam, strparam)             \
+({                                                                       \
+   DEPRECATED("parse()","blparse()");                                    \
+   blparse(comline, nkeys, keywords, REALparam, strparam);               \
+})
+
+#define mparse(comline, nkeys, keywords, REALparam, strparam, nparams)   \
+({                                                                       \
+   DEPRECATED("mparse()","blmparse()");                                  \
+   blmparse(comline, nkeys, keywords, REALparam, strparam, nparams);     \
+})
+
+#define match(comstring, string2, nletters)                              \
+({                                                                       \
+   DEPRECATED("match()","blmatch()");                                    \
+   blmatch(comstring, string2, nletters);                                \
+})
+
+#define GetString(command, strparam)                                     \
+({                                                                       \
+   DEPRECATED("GetString()","blGetString()");                            \
+   blGetString(command, strparam);                                       \
+})
+
+#define GetParam( command, value, nletters)                              \
+({                                                                       \
+   DEPRECATED("GetParam()","blGetParam()");                              \
+   blGetParam( command, value, nletters);                                \
+})
+*/
+
+/************************************************************************/
 /* Renamed functions: plotting.h                                        */
-/* Renamed functions: port.h                                            */
+/*
+#define AMInitPlot(filename, title, dest, OutXSize, OutYSize, OutXOff, OutYOff, AltFont, xmargin, ymargin, DataXMin, DataYMin, DataXMax, DataYMax)\
+({                                                                       \
+   DEPRECATED("AMInitPlot()","blAMInitPlot()");                          \
+   blAMInitPlot(filename, title, dest, OutXSize, OutYSize, OutXOff, OutYOff, AltFont, xmargin, ymargin, DataXMin, DataYMin, DataXMax, DataYMax);\
+})
+
+#define AMSetPen(dest, pen)                                              \
+({                                                                       \
+   DEPRECATED("AMSetPen()","blAMSetPen()");                              \
+   blAMSetPen(dest, pen);                                                \
+})
+
+#define AMMove(dest, x, y)                                               \
+({                                                                       \
+   DEPRECATED("AMMove()","blAMMove()");                                  \
+   blAMMove(dest, x, y);                                                 \
+})
+
+#define AMDraw(dest, x, y)                                               \
+({                                                                       \
+   DEPRECATED("AMDraw()","blAMDraw()");                                  \
+   blAMDraw(dest, x, y);                                                 \
+})
+
+#define AMSetLineStyle(dest, style)                                      \
+({                                                                       \
+   DEPRECATED("AMSetLineStyle()","blAMSetLineStyle()");                  \
+   blAMSetLineStyle(dest, style);                                        \
+})
+
+#define AMEndLine(dest)                                                  \
+({                                                                       \
+   DEPRECATED("AMEndLine()","blAMEndLine()");                            \
+   blAMEndLine(dest);                                                    \
+})
+
+#define AMSetFont(dest, PSFontName, FontSize)                            \
+({                                                                       \
+   DEPRECATED("AMSetFont()","blAMSetFont()");                            \
+   blAMSetFont(dest, PSFontName, FontSize);                              \
+})
+
+#define AMText(dest, x, y, text)                                         \
+({                                                                       \
+   DEPRECATED("AMText()","blAMText()");                                  \
+   blAMText(dest, x, y, text);                                           \
+})
+
+#define AMCBText(dest, x, y, text)                                       \
+({                                                                       \
+   DEPRECATED("AMCBText()","blAMCBText()");                              \
+   blAMCBText(dest, x, y, text);                                         \
+})
+
+#define AMRText(dest, x, y, offset, text)                                \
+({                                                                       \
+   DEPRECATED("AMRText()","blAMRText()");                                \
+   blAMRText(dest, x, y, offset, text);                                  \
+})
+
+#define AMLCText(dest, x, y, text)                                       \
+({                                                                       \
+   DEPRECATED("AMLCText()","blAMLCText()");                              \
+   blAMLCText(dest, x, y, text);                                         \
+})
+
+#define AMCTText(dest, x, y, CTOffset, text)                             \
+({                                                                       \
+   DEPRECATED("AMCTText()","blAMCTText()");                              \
+   blAMCTText(dest, x, y, CTOffset, text);                               \
+})
+
+#define AMEndPlot(dest)                                                  \
+({                                                                       \
+   DEPRECATED("AMEndPlot()","blAMEndPlot()");                            \
+   blAMEndPlot(dest);                                                    \
+})
+
+#define PS2HPGLFont(font)                                                \
+({                                                                       \
+   DEPRECATED("PS2HPGLFont()","blPS2HPGLFont()");                        \
+   blPS2HPGLFont(font);                                                  \
+})
+
+#define SimplifyText(string)                                             \
+({                                                                       \
+   DEPRECATED("SimplifyText()","blSimplifyText()");                      \
+   blSimplifyText(string);                                               \
+})
+
+*/
+
+
+/************************************************************************/
 /* Renamed functions: ps.h                                              */
-/* Renamed functions: safemem.h                                         */
+/*
+#define PSInit(FName, creator, AltFont)                                  \
+({                                                                       \
+   DEPRECATED("PSInit()","blPSInit()");                                  \
+   blPSInit(FName, creator, AltFont);                                    \
+})
+
+#define PSThick(thickness)                                               \
+({                                                                       \
+   DEPRECATED("PSThick()","blPSThick()");                                \
+   blPSThick(thickness);                                                 \
+})
+
+#define PSMove(X, Y)                                                     \
+({                                                                       \
+   DEPRECATED("PSMove()","blPSMove()");                                  \
+   blPSMove(X, Y);                                                       \
+})
+
+#define PSDraw(X, Y)                                                     \
+({                                                                       \
+   DEPRECATED("PSDraw()","blPSDraw()");                                  \
+   blPSDraw(X, Y);                                                       \
+})
+
+#define PSSetDash(linepatt)                                              \
+({                                                                       \
+   DEPRECATED("PSSetDash()","blPSSetDash()");                            \
+   blPSSetDash(linepatt);                                                \
+})
+
+#define PSClearDash()                                                    \
+({                                                                       \
+   DEPRECATED("PSClearDash()","blPSClearDash()");                        \
+   blPSClearDash();                                                      \
+})
+
+#define PSStroke()                                                       \
+({                                                                       \
+   DEPRECATED("PSStroke()","blPSStroke()");                              \
+   blPSStroke();                                                         \
+})
+
+#define PSFont(fontname, size)                                           \
+({                                                                       \
+   DEPRECATED("PSFont()","blPSFont()");                                  \
+   blPSFont(fontname, size);                                             \
+})
+
+#define PSLText(X, Y, label)                                             \
+({                                                                       \
+   DEPRECATED("PSLText()","blPSLText()");                                \
+   blPSLText(X, Y, label);                                               \
+})
+
+#define PSCBText(X, Y, Offset, label)                                    \
+({                                                                       \
+   DEPRECATED("PSCBText()","blPSCBText()");                              \
+   blPSCBText(X, Y, Offset, label);                                      \
+})
+
+#define PSROffText(X, Y, offset, label)                                  \
+({                                                                       \
+   DEPRECATED("PSROffText()","blPSROffText()");                          \
+   blPSROffText(X, Y, offset, label);                                    \
+})
+
+#define PSLCText(X, Y, label)                                            \
+({                                                                       \
+   DEPRECATED("PSLCText()","blPSLCText()");                              \
+   blPSLCText(X, Y, label);                                              \
+})
+
+#define PSCTText(X, Y, Offset, label)                                    \
+({                                                                       \
+   DEPRECATED("PSCTText()","blPSCTText()");                              \
+   blPSCTText(X, Y, Offset, label);                                      \
+})
+
+#define PSVText(x, y, xoff, text, font, size, label, lfont, lsize)       \
+({                                                                       \
+   DEPRECATED("PSVText()","blPSVText()");                                \
+   blPSVText(x, y, xoff, text, font, size, label, lfont, lsize);         \
+})
+
+#define PSShowText(text)                                                 \
+({                                                                       \
+   DEPRECATED("PSShowText()","blPSShowText()");                          \
+   blPSShowText(text);                                                   \
+})
+
+#define PSEnd()                                                          \
+({                                                                       \
+   DEPRECATED("PSEnd()","blPSEnd()");                                    \
+   blPSEnd();                                                            \
+})
+
+#define PSCorrectCase(font)                                              \
+({                                                                       \
+   DEPRECATED("PSCorrectCase()","blPSCorrectCase()");                    \
+   blPSCorrectCase(font);                                                \
+})
+
+*/
+
+
+/************************************************************************/
 /* Renamed functions: seq.h                                             */
+/*
+#define throne(three)                                                    \
+({                                                                       \
+   DEPRECATED("throne()","blthrone()");                                  \
+   blthrone(three);                                                      \
+})
+
+#define thronex(three)                                                   \
+({                                                                       \
+   DEPRECATED("thronex()","blthronex()");                                \
+   blthronex(three);                                                     \
+})
+
+#define onethr(one)                                                      \
+({                                                                       \
+   DEPRECATED("onethr()","blonethr()");                                  \
+   blonethr(one);                                                        \
+})
+
+#define DoPDB2Seq(pdb, DoAsxGlx, ProtOnly, NoX)                          \
+({                                                                       \
+   DEPRECATED("DoPDB2Seq()","blDoPDB2Seq()");                            \
+   blDoPDB2Seq(pdb, DoAsxGlx, ProtOnly, NoX);                            \
+})
+
+#define SplitSeq(LinearSeq, seqs)                                        \
+({                                                                       \
+   DEPRECATED("SplitSeq()","blSplitSeq()");                              \
+   blSplitSeq(LinearSeq, seqs);                                          \
+})
+
+#define ReadSimplePIR(fp, maxres, seqs)                                  \
+({                                                                       \
+   DEPRECATED("ReadSimplePIR()","blReadSimplePIR()");                    \
+   blReadSimplePIR(fp, maxres, seqs);                                    \
+})
+
+#define ReadPIR(fp, DoInsert, seqs, maxchain, seqinfo, punct, error)     \
+({                                                                       \
+   DEPRECATED("ReadPIR()","blReadPIR()");                                \
+   blReadPIR(fp, DoInsert, seqs, maxchain, seqinfo, punct, error);       \
+})
+
+#define ReadRawPIR(fp, seqs, maxchain, upcase, seqinfo, error)           \
+({                                                                       \
+   DEPRECATED("ReadRawPIR()","blReadRawPIR()");                          \
+   blReadRawPIR(fp, seqs, maxchain, upcase, seqinfo, error);             \
+})
+
+#define align(seq1, length1, seq2, length2, verbose, identity, penalty, align1, align2, align_len)\
+({                                                                       \
+   DEPRECATED("align()","blalign()");                                    \
+   blalign(seq1, length1, seq2, length2, verbose, identity, penalty, align1, align2, align_len);\
+})
+
+#define affinealign(seq1, length1, seq2, length2, verbose, identity, penalty, penext, align1, align2, align_len)\
+({                                                                       \
+   DEPRECATED("affinealign()","blaffinealign()");                        \
+   blaffinealign(seq1, length1, seq2, length2, verbose, identity, penalty, penext, align1, align2, align_len);\
+})
+
+#define CalcMDMScore(resa, resb)                                         \
+({                                                                       \
+   DEPRECATED("CalcMDMScore()","blCalcMDMScore()");                      \
+   blCalcMDMScore(resa, resb);                                           \
+})
+
+#define affinealignuc(seq1, length1, seq2, length2, verbose, identity, penalty, penext, align1, align2, align_len)\
+({                                                                       \
+   DEPRECATED("affinealignuc()","blaffinealignuc()");                    \
+   blaffinealignuc(seq1, length1, seq2, length2, verbose, identity, penalty, penext, align1, align2, align_len);\
+})
+
+#define CalcMDMScoreUC(resa, resb)                                       \
+({                                                                       \
+   DEPRECATED("CalcMDMScoreUC()","blCalcMDMScoreUC()");                  \
+   blCalcMDMScoreUC(resa, resb);                                         \
+})
+
+#define ReadMDM(mdmfile)                                                 \
+({                                                                       \
+   DEPRECATED("ReadMDM()","blReadMDM()");                                \
+   blReadMDM(mdmfile);                                                   \
+})
+
+#define ZeroMDM()                                                        \
+({                                                                       \
+   DEPRECATED("ZeroMDM()","blZeroMDM()");                                \
+   blZeroMDM();                                                          \
+})
+
+#define DNAtoAA(dna)                                                     \
+({                                                                       \
+   DEPRECATED("DNAtoAA()","blDNAtoAA()");                                \
+   blDNAtoAA(dna);                                                       \
+})
+
+#define TrueSeqLen(sequence)                                             \
+({                                                                       \
+   DEPRECATED("TrueSeqLen()","blTrueSeqLen()");                          \
+   blTrueSeqLen(sequence);                                               \
+})
+
+#define KnownSeqLen(sequence)                                            \
+({                                                                       \
+   DEPRECATED("KnownSeqLen()","blKnownSeqLen()");                        \
+   blKnownSeqLen(sequence);                                              \
+})
+
+#define NumericReadMDM(mdmfile)                                          \
+({                                                                       \
+   DEPRECATED("NumericReadMDM()","blNumericReadMDM()");                  \
+   blNumericReadMDM(mdmfile);                                            \
+})
+
+#define NumericCalcMDMScore(resa, resb)                                  \
+({                                                                       \
+   DEPRECATED("NumericCalcMDMScore()","blNumericCalcMDMScore()");        \
+   blNumericCalcMDMScore(resa, resb);                                    \
+})
+
+#define NumericAffineAlign(seq1, length1, seq2, length2, verbose, identity, penalty, penext, align1, align2, align_len)\
+({                                                                       \
+   DEPRECATED("NumericAffineAlign()","blNumericAffineAlign()");          \
+   blNumericAffineAlign(seq1, length1, seq2, length2, verbose, identity, penalty, penext, align1, align2, align_len);\
+})
+
+*/
  
 
 

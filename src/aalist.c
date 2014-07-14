@@ -3,11 +3,11 @@
 
    \file       aalist.c
    
-   \version    V3.0
-   \date       18.02.09
+   \version    V3.1
+   \date       07.07.14
    \brief      Amino acid linked lists.
    
-   \copyright  (c) UCL / Dr. Andrew C.R. Martin 2006-2009
+   \copyright  (c) UCL / Dr. Andrew C.R. Martin 2006-2014
    \author     Dr. Andrew C.R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -51,6 +51,7 @@
 -  V1.0  21.08.06 Original   By: ACRM
 -  V3.0  06.11.08 Incorporated into ProFit V3 By: CTP
 -  V3.0  18.02.09 Moved to bioplib. By: CTP
+-  V3.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -73,8 +74,8 @@
 
 
 /************************************************************************/
-/*>AA *InsertNextResiduesInAAList(AA *a, char res, int nres)
-   ---------------------------------------------------------
+/*>AA *blInsertNextResiduesInAAList(AA *a, char res, int nres)
+   -----------------------------------------------------------
 *//**
 
    \param[in]   *a    Sequence linked list
@@ -89,21 +90,22 @@
    insert another aa
 
 -  21.08.06 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-AA *InsertNextResiduesInAAList(AA *a, char res, int nres)
+AA *blInsertNextResiduesInAAList(AA *a, char res, int nres)
 {
    int i;
    for(i=0; i<nres; i++)
    {
-      a = InsertNextResidueInAAList(a, res);
+      a = blInsertNextResidueInAAList(a, res);
    }
    return(a);
 }
 
 
 /************************************************************************/
-/*>AA *InsertNextResidueInAAList(AA *a, char res)
-   ----------------------------------------------
+/*>AA *blInsertNextResidueInAAList(AA *a, char res)
+   ------------------------------------------------
 *//**
 
    \param[in]   *a    Sequence linked list
@@ -116,8 +118,9 @@ AA *InsertNextResiduesInAAList(AA *a, char res, int nres)
    can be called again on the returned aa to insert another aa
 
 -  21.08.06 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-AA *InsertNextResidueInAAList(AA *a, char res)
+AA *blInsertNextResidueInAAList(AA *a, char res)
 {
    AA *b = NULL;
 
@@ -144,7 +147,7 @@ AA *InsertNextResidueInAAList(AA *a, char res)
 
 
 /************************************************************************/
-/*>char *BuildSeqFromAAList(AA *aa)
+/*>char *blBuildSeqFromAAList(AA *aa)
    --------------------------------
 *//**
 
@@ -154,14 +157,15 @@ AA *InsertNextResidueInAAList(AA *a, char res)
    Converts the linked list back into a string which is malloc'd
 
 -  21.08.06 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char *BuildSeqFromAAList(AA *aa)
+char *blBuildSeqFromAAList(AA *aa)
 {
    AA *a;
    char *seq=NULL;
    int count=0;
    
-   count = GetAAListLen(aa);
+   count = blGetAAListLen(aa);
    if((seq=(char *)malloc((1+count)*sizeof(char)))!=NULL)
    {
       count = 0;
@@ -176,8 +180,8 @@ char *BuildSeqFromAAList(AA *aa)
 
 
 /************************************************************************/
-/*>AA *InsertResidueInAAListAt(AA *aa, char res, int pos)
-   ------------------------------------------------------
+/*>AA *blInsertResidueInAAListAt(AA *aa, char res, int pos)
+   --------------------------------------------------------
 *//**
 
    \param[in]   *aa         Sequence linked list
@@ -193,8 +197,9 @@ char *BuildSeqFromAAList(AA *aa)
 
 -  21.08.06 Original   By: ACRM
 -  18.06.08 Set inserted residue's flag to FALSE.  By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-AA *InsertResidueInAAListAt(AA *aa, char res, int pos)
+AA *blInsertResidueInAAListAt(AA *aa, char res, int pos)
 {
    AA *a, *b;
    int count=0;
@@ -249,8 +254,8 @@ AA *InsertResidueInAAListAt(AA *aa, char res, int pos)
 
 
 /************************************************************************/
-/*>AA *InsertResiduesInAAListAt(AA *aa, char res, int nres, int pos)
-   -----------------------------------------------------------------
+/*>AA *blInsertResiduesInAAListAt(AA *aa, char res, int nres, int pos)
+   -------------------------------------------------------------------
 *//**
 
    \param[in]   *aa         Sequence linked list
@@ -266,21 +271,22 @@ AA *InsertResidueInAAListAt(AA *aa, char res, int pos)
    return value for the list will be different from the input value.
 
 -  21.08.06 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-AA *InsertResiduesInAAListAt(AA *aa, char res, int nres, int pos)
+AA *blInsertResiduesInAAListAt(AA *aa, char res, int nres, int pos)
 {
    int i;
    for(i=0; i<nres; i++)
    {
-      aa = InsertResidueInAAListAt(aa, res, pos);
+      aa = blInsertResidueInAAListAt(aa, res, pos);
    }
    return(aa);
 }
 
 
 /************************************************************************/
-/*>AA *BuildAAList(char *seq)
-   --------------------------
+/*>AA *blBuildAAList(char *seq)
+   ----------------------------
 *//**
 
    \param[in]   *seq            The sequence as a string
@@ -289,8 +295,9 @@ AA *InsertResiduesInAAListAt(AA *aa, char res, int nres, int pos)
    Converts a sequence string into a linked list
 
 -  21.08.06 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-AA *BuildAAList(char *seq)
+AA *blBuildAAList(char *seq)
 {
    AA *aa = NULL, 
       *a  = NULL;
@@ -322,8 +329,8 @@ AA *BuildAAList(char *seq)
 
    
 /************************************************************************/
-/*>int FindAAListOffsetByResnum(AA *aa, int resnum)
-   ------------------------------------------------
+/*>int blFindAAListOffsetByResnum(AA *aa, int resnum)
+   --------------------------------------------------
 *//**
 
    \param[in]   *aa           Sequence linked list
@@ -335,8 +342,9 @@ AA *BuildAAList(char *seq)
    returns the position of that residue in the list (numbered from 1)
 
 -  21.08.06 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int FindAAListOffsetByResnum(AA *aa, int resnum)
+int blFindAAListOffsetByResnum(AA *aa, int resnum)
 {
    int count=1;
    AA  *a;
@@ -356,8 +364,8 @@ int FindAAListOffsetByResnum(AA *aa, int resnum)
 
 
 /************************************************************************/
-/*>AA *FindAAListItemByResnum(AA *aa, int resnum)
-   ----------------------------------------------
+/*>AA *blFindAAListItemByResnum(AA *aa, int resnum)
+   ------------------------------------------------
 *//**
 
    \param[in]   *aa           Sequence linked list
@@ -369,8 +377,9 @@ int FindAAListOffsetByResnum(AA *aa, int resnum)
    returns a pointer to that item in the list.
 
 -  21.08.06 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-AA *FindAAListItemByResnum(AA *aa, int resnum)
+AA *blFindAAListItemByResnum(AA *aa, int resnum)
 {
    AA  *a;
    
@@ -385,8 +394,8 @@ AA *FindAAListItemByResnum(AA *aa, int resnum)
 
 
 /************************************************************************/
-/*>void SetAAListFlagByResnum(AA *aa, int resnum)
-   ----------------------------------------------
+/*>void blSetAAListFlagByResnum(AA *aa, int resnum)
+   ------------------------------------------------
 *//**
 
    \param[in]   *aa           Sequence linked list
@@ -397,18 +406,19 @@ AA *FindAAListItemByResnum(AA *aa, int resnum)
    sets the flag in that item in the linked list
 
 -  21.08.06 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void SetAAListFlagByResnum(AA *aa, int resnum)
+void blSetAAListFlagByResnum(AA *aa, int resnum)
 {
    AA *a;
-   if((a = FindAAListItemByResnum(aa, resnum))!=NULL)
+   if((a = blFindAAListItemByResnum(aa, resnum))!=NULL)
       a->flag = TRUE;
 }
 
 
 /************************************************************************/
-/*>char *BuildFlagSeqFromAAList(AA *aa, char ch)
-   ---------------------------------------------
+/*>char *blBuildFlagSeqFromAAList(AA *aa, char ch)
+   -----------------------------------------------
 *//**
 
    \param[in]   *aa        Sequence linked list
@@ -420,14 +430,15 @@ void SetAAListFlagByResnum(AA *aa, int resnum)
    in ch is used instead.
 
 -  21.08.06 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char *BuildFlagSeqFromAAList(AA *aa, char ch)
+char *blBuildFlagSeqFromAAList(AA *aa, char ch)
 {
    AA *a;
    char *seq=NULL;
    int count=0;
 
-   count = GetAAListLen(aa);
+   count = blGetAAListLen(aa);
    if((seq=(char *)malloc((1+count)*sizeof(char)))!=NULL)
    {
       count = 0;
@@ -442,8 +453,8 @@ char *BuildFlagSeqFromAAList(AA *aa, char ch)
 
 
 /************************************************************************/
-/*>int GetAAListLen(AA *aa)
-   ------------------------
+/*>int blGetAAListLen(AA *aa)
+   --------------------------
 *//**
 
    \param[in]   *aa        Sequence linked list
@@ -452,8 +463,9 @@ char *BuildFlagSeqFromAAList(AA *aa, char ch)
    Returns the number of items in the linked list
 
 -  21.08.06 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int GetAAListLen(AA *aa)
+int blGetAAListLen(AA *aa)
 {
    AA *a;
    int count;
