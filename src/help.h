@@ -3,11 +3,11 @@
 
    \file       help.h
    
-   \version    V1.0R
-   \date       01.03.94
+   \version    V1.1
+   \date       07.07.14
    \brief      Include file for help functions
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-4
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -46,12 +46,15 @@
 
    Revision History:
    =================
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 #ifndef _HELP_H
 #define _HELP_H
 
-void Help(char *string, char *HelpFile);
-void DoHelp(char *string, char *HelpFile);
+#include "deprecated.h"
+
+void blHelp(char *string, char *HelpFile);
+void blDoHelp(char *string, char *HelpFile);
 
 #endif

@@ -109,8 +109,8 @@
 */
 
 /************************************************************************/
-/*>void Help(char *string, char *HelpFile)
-   ---------------------------------------
+/*>void blHelp(char *string, char *HelpFile)
+   -----------------------------------------
 *//**
 
    \param[in]     *string     Topic on which to provide help. If "help" or
@@ -142,9 +142,10 @@
 -  11.03.94 Resets FirstCall to TRUE when file is closed
 -  18.01.95 Calls OpenFile() rather than handling alternative directory
             internally. Consequently assign or envvar is called HELPDIR.
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void Help(char *string,
-          char *HelpFile)
+void blHelp(char *string,
+            char *HelpFile)
 {
    int         nletters,
                buffpos,
@@ -259,8 +260,8 @@ or assign has not been set.\n",HELPENV);
 }
 
 /************************************************************************/
-/*>void DoHelp(char *string, char *HelpFile)
-   -----------------------------------------
+/*>void blDoHelp(char *string, char *HelpFile)
+   -------------------------------------------
 *//**
 
    \param[in]     *string   String on which to give help, must include
@@ -286,9 +287,10 @@ or assign has not been set.\n",HELPENV);
 -  04.01.94 Changed to fix problem with compilers which
             don't let you write to strings defined in double 
             inverted commas and never assigned to a variable
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void DoHelp(char *string,
-            char *HelpFile)
+void blDoHelp(char *string,
+              char *HelpFile)
 {
    int   i;
    char  *str,
@@ -309,13 +311,13 @@ void DoHelp(char *string,
    else
    {
       /* No keyword was specified, so give help on help                 */
-      Help("Help",HelpFile);
+      blHelp("Help",HelpFile);
    }
    
    
    if(str)  /* If specified, just give help on the keyword              */
    {
-      Help(str,HelpFile);
+      blHelp(str,HelpFile);
    }
    else     /* Sit in a loop handling each keyword                      */
    {
@@ -326,7 +328,7 @@ void DoHelp(char *string,
 
          TERMINATE(buffer);
          if(buffer[0])
-            Help(buffer,HelpFile);
+            blHelp(buffer,HelpFile);
          else
             break;
       }
