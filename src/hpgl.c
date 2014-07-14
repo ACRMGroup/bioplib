@@ -129,7 +129,7 @@ BOOL blHPGLInit(char *filename,
                
    if((sHPGLFile = fopen(filename,"w")) == NULL) return(FALSE);
    
-   HPGLAltFont = PS2HPGLFont(AltFont);
+   HPGLAltFont = blPS2HPGLFont(AltFont);
 
    xoff = (int)((PSxoffset - xmargin) * 1024);
    yoff = (int)((PSyoffset - ymargin) * 1024);
@@ -354,7 +354,7 @@ void blHPGLCBText(REAL x,
             ypos;
    
    xpos = (int)(10000.0 * x);
-   xpos -= strlen(SimplifyText(text)) * sFontWidth / 2;
+   xpos -= strlen(blSimplifyText(text)) * sFontWidth / 2;
    xpos += sFontWidth / 6;
    
    ypos = (int)(10000.0 * y);
@@ -396,7 +396,7 @@ void blHPGLROffText(REAL x,
    /* Base position                                                     */
    xpos = (int)(10000.0 * x);
    /* Right justify                                                     */
-   xpos -= (strlen(SimplifyText(text)) * sFontWidth);
+   xpos -= (strlen(blSimplifyText(text)) * sFontWidth);
    xpos += sFontWidth/6;
    /* Convert offset from pt to plotter units                           */
    xpos += (int)((offset * 10000.0) / (72.0 * PSxpicsize));
@@ -475,7 +475,7 @@ void blHPGLCTText(REAL x,
             ypos;
    
    xpos = (int)(10000.0 * x);
-   xpos -= (strlen(SimplifyText(text)) * sFontWidth / 2.0);
+   xpos -= (strlen(blSimplifyText(text)) * sFontWidth / 2.0);
    xpos += sFontWidth/6;
    
    ypos = (int)(10000.0 * y);
@@ -542,7 +542,7 @@ void blHPGLVText(REAL x,
 #endif
    
    /* Find size of label                                                */
-   LabelWidth  = strlen(SimplifyText(label)) * 
+   LabelWidth  = strlen(blSimplifyText(label)) * 
                  (LabelSize * 10000.0) / (2.0 * 72.0 * PSxpicsize);
    /* Convert offset from points to plotter units                       */
    xoff *= 10000.0 / (72.0 * PSxpicsize);
@@ -556,7 +556,7 @@ void blHPGLVText(REAL x,
    x += xoff;
    
    /* Now find the y-start to centre the string vertically              */
-   y -= strlen(SimplifyText(text)) * sFontWidth / 2;
+   y -= strlen(blSimplifyText(text)) * sFontWidth / 2;
    y += sFontWidth/6;
    
 #ifdef FIXVERT

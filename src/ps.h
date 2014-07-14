@@ -3,11 +3,11 @@
 
    \file       ps.h
    
-   \version    V1.11R
-   \date       23.06.94
+   \version    V1.12
+   \date       07.07.14
    \brief      Include file for PostScript routine
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-4
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -53,6 +53,7 @@
 -  V1.7  25.02.91 Fixed prototypes and definition of PSFile.
 -  V1.10 07.05.92 Changed all prototypes to doubles
 -  V1.11 23.06.94 Made gPSFile a global
+-  V1.12 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 #ifndef _PS_H
@@ -65,6 +66,7 @@
 
 #include "SysDefs.h"
 #include "MathType.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Globals
@@ -86,23 +88,23 @@
 /************************************************************************/
 /* Prototypes
 */
-BOOL PSInit(char *FName, char *creator, char *AltFont);
-void PSThick(REAL thickness);
-void PSMove(REAL X, REAL Y);
-void PSDraw(REAL X, REAL Y);
-void PSSetDash(char *linepatt);
-void PSClearDash(void);
-void PSStroke(void);
-void PSFont(char *fontname, REAL size);
-void PSLText(REAL X, REAL Y, char *label);
-void PSCBText(REAL X, REAL Y, REAL Offset, char *label);
-void PSROffText(REAL X, REAL Y, REAL offset, char *label);
-void PSLCText(REAL X, REAL Y, char *label);
-void PSCTText(REAL X, REAL Y, REAL Offset, char *label);
-void PSVText(REAL x, REAL y, REAL xoff, char *text, char *font, REAL size,
+BOOL blPSInit(char *FName, char *creator, char *AltFont);
+void blPSThick(REAL thickness);
+void blPSMove(REAL X, REAL Y);
+void blPSDraw(REAL X, REAL Y);
+void blPSSetDash(char *linepatt);
+void blPSClearDash(void);
+void blPSStroke(void);
+void blPSFont(char *fontname, REAL size);
+void blPSLText(REAL X, REAL Y, char *label);
+void blPSCBText(REAL X, REAL Y, REAL Offset, char *label);
+void blPSROffText(REAL X, REAL Y, REAL offset, char *label);
+void blPSLCText(REAL X, REAL Y, char *label);
+void blPSCTText(REAL X, REAL Y, REAL Offset, char *label);
+void blPSVText(REAL x, REAL y, REAL xoff, char *text, char *font, REAL size,
              char *label, char *lfont, REAL lsize);
-void PSShowText(char *text);
-void PSEnd(void);
-char *PSCorrectCase(char *font);
+void blPSShowText(char *text);
+void blPSEnd(void);
+char *blPSCorrectCase(char *font);
 
 #endif

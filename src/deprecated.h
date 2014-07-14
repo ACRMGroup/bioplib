@@ -1769,7 +1769,7 @@
 
 /************************************************************************/
 /* Renamed functions: plotting.h                                        */
-/*
+
 #define AMInitPlot(filename, title, dest, OutXSize, OutYSize, OutXOff, OutYOff, AltFont, xmargin, ymargin, DataXMin, DataYMin, DataXMax, DataYMax)\
 ({                                                                       \
    DEPRECATED("AMInitPlot()","blAMInitPlot()");                          \
@@ -1860,12 +1860,10 @@
    blSimplifyText(string);                                               \
 })
 
-*/
-
 
 /************************************************************************/
 /* Renamed functions: ps.h                                              */
-/*
+
 #define PSInit(FName, creator, AltFont)                                  \
 ({                                                                       \
    DEPRECATED("PSInit()","blPSInit()");                                  \
@@ -1968,7 +1966,7 @@
    blPSCorrectCase(font);                                                \
 })
 
-*/
+
 
 
 /************************************************************************/

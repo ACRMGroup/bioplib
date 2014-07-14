@@ -3,11 +3,11 @@
 
    \file       plotting.h
    
-   \version    V1.0R
-   \date       01.03.94
+   \version    V1.1
+   \date       07.07.14
    \brief      Include file for using plotting routines
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-4
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -46,6 +46,8 @@
 
    Revision History:
    =================
+   
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 #ifndef _PLOTTING_H
@@ -60,6 +62,7 @@
 
 #include "hpgl.h"
 #include "ps.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines
@@ -71,24 +74,24 @@
 /************************************************************************/
 /* Prototypes
 */
-BOOL AMInitPlot(char *filename, char *title, int dest, REAL OutXSize, 
-                REAL OutYSize, REAL OutXOff, REAL OutYOff,
-                char *AltFont, REAL xmargin, REAL ymargin,
-                REAL DataXMin, REAL DataYMin, REAL DataXMax,
-                REAL DataYMax);
-void AMSetPen(int dest, int pen);
-void AMMove(int dest, REAL x, REAL y);
-void AMDraw(int dest, REAL x, REAL y);
-void AMSetLineStyle(int dest, int style);
-void AMEndLine(int dest);
-void AMSetFont(int dest, char *PSFontName, REAL FontSize);
-void AMText(int dest, REAL x, REAL y, char *text);
-void AMCBText(int dest, REAL x, REAL y, char *text);
-void AMRText(int dest, REAL x, REAL y, REAL offset, char *text);
-void AMLCText(int dest, REAL x, REAL y, char *text);
-void AMCTText(int dest, REAL x, REAL y, REAL CTOffset, char *text);
-void AMEndPlot(int dest);
-int  PS2HPGLFont(char *font);
-char *SimplifyText(char *string);
+BOOL blAMInitPlot(char *filename, char *title, int dest, REAL OutXSize, 
+                  REAL OutYSize, REAL OutXOff, REAL OutYOff,
+                  char *AltFont, REAL xmargin, REAL ymargin,
+                  REAL DataXMin, REAL DataYMin, REAL DataXMax,
+                  REAL DataYMax);
+void blAMSetPen(int dest, int pen);
+void blAMMove(int dest, REAL x, REAL y);
+void blAMDraw(int dest, REAL x, REAL y);
+void blAMSetLineStyle(int dest, int style);
+void blAMEndLine(int dest);
+void blAMSetFont(int dest, char *PSFontName, REAL FontSize);
+void blAMText(int dest, REAL x, REAL y, char *text);
+void blAMCBText(int dest, REAL x, REAL y, char *text);
+void blAMRText(int dest, REAL x, REAL y, REAL offset, char *text);
+void blAMLCText(int dest, REAL x, REAL y, char *text);
+void blAMCTText(int dest, REAL x, REAL y, REAL CTOffset, char *text);
+void blAMEndPlot(int dest);
+int  blPS2HPGLFont(char *font);
+char *blSimplifyText(char *string);
 
 #endif

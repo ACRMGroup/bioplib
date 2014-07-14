@@ -93,12 +93,12 @@ static struct
 */
 
 /************************************************************************/
-/*>BOOL AMInitPlot(char *filename,  char *title,   int dest, 
-                   REAL OutXSize,   REAL OutYSize, 
-                   REAL OutXOff,    REAL OutYOff,
-                   char *AltFont,   REAL xmargin,  REAL ymargin,
-                   REAL DataXMin,   REAL DataYMin, 
-                   REAL DataXMax,   REAL DataYMax)
+/*>BOOL blAMInitPlot(char *filename,  char *title,   int dest, 
+                     REAL OutXSize,   REAL OutYSize, 
+                     REAL OutXOff,    REAL OutYOff,
+                     char *AltFont,   REAL xmargin,  REAL ymargin,
+                     REAL DataXMin,   REAL DataYMin, 
+                     REAL DataXMax,   REAL DataYMax)
    -------------------------------------------------------------
 *//**
    \param[in]     *filename   File to open
@@ -140,20 +140,20 @@ static struct
 -  27.02.98 Removed unreachable breaks from switch() statement
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL AMInitPlot(char   *filename,
-                char   *title,
-                int    dest,
-                REAL   OutXSize, 
-                REAL   OutYSize, 
-                REAL   OutXOff, 
-                REAL   OutYOff,
-                char   *AltFont,
-                REAL   xmargin,
-                REAL   ymargin,
-                REAL   DataXMin,
-                REAL   DataYMin,
-                REAL   DataXMax,
-                REAL   DataYMax)
+BOOL blAMInitPlot(char   *filename,
+                  char   *title,
+                  int    dest,
+                  REAL   OutXSize, 
+                  REAL   OutYSize, 
+                  REAL   OutXOff, 
+                  REAL   OutYOff,
+                  char   *AltFont,
+                  REAL   xmargin,
+                  REAL   ymargin,
+                  REAL   DataXMin,
+                  REAL   DataYMin,
+                  REAL   DataXMax,
+                  REAL   DataYMax)
 {
    PSxpicsize     = OutXSize;
    PSypicsize     = OutYSize;
@@ -172,7 +172,7 @@ BOOL AMInitPlot(char   *filename,
       /* Screen Version                                                 */
       break;
    case DEST_PS:
-      return(PSInit(filename, title, AltFont));
+      return(blPSInit(filename, title, AltFont));
    case DEST_HPGL:
       return(blHPGLInit(filename, AltFont, xmargin, ymargin));
    default:
@@ -183,8 +183,8 @@ BOOL AMInitPlot(char   *filename,
 }
 
 /************************************************************************/
-/*>void AMSetPen(int dest, int pen)
-   --------------------------------
+/*>void blAMSetPen(int dest, int pen)
+   ----------------------------------
 *//**
 
    \param[in]     dest      Destination
@@ -197,8 +197,8 @@ BOOL AMInitPlot(char   *filename,
 -  16.07.92 Added DR2D support
 -  07.07.14 Use bl prefix for functions By: CTP
 */   
-void AMSetPen(int   dest,
-              int   pen)
+void blAMSetPen(int   dest,
+                int   pen)
 {
    static REAL pens[MAXPEN] = {0.5, 0.75, 1.0, 1.25, 1.5, 1.75};
 
@@ -211,7 +211,7 @@ void AMSetPen(int   dest,
       /* Screen Version                                                 */
       break;
    case DEST_PS:
-      PSThick(pens[pen]);
+      blPSThick(pens[pen]);
       break;
    case DEST_HPGL:
       blHPGLPen(pen+1);
@@ -222,8 +222,8 @@ void AMSetPen(int   dest,
 }
 
 /************************************************************************/
-/*>void AMMove(int dest, REAL x, REAL y)
-   -------------------------------------
+/*>void blAMMove(int dest, REAL x, REAL y)
+   ---------------------------------------
 *//**
 
    \param[in]     dest      Destination
@@ -239,9 +239,9 @@ void AMSetPen(int   dest,
 -  16.07.92 Added DR2D support
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-void AMMove(int  dest,
-            REAL x,
-            REAL y)
+void blAMMove(int  dest,
+              REAL x,
+              REAL y)
 {
    switch(dest)
    {
@@ -252,7 +252,7 @@ void AMMove(int  dest,
       x = (x-sGraph.xmin) * sGraph.XPScale;
       y = (y-sGraph.ymin) * sGraph.YPScale;
 
-      PSMove(x,y);
+      blPSMove(x,y);
       break;
    case DEST_HPGL:
       x = (x-sGraph.xmin) * sGraph.XPScale;
@@ -265,8 +265,8 @@ void AMMove(int  dest,
 }
 
 /************************************************************************/
-/*>void AMDraw(int dest, REAL x, REAL y)
-   -------------------------------------
+/*>void blAMDraw(int dest, REAL x, REAL y)
+   ---------------------------------------
 *//**
 
    \param[in]     dest      Destination
@@ -282,9 +282,9 @@ void AMMove(int  dest,
 -  16.07.92 Added DR2D support
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-void AMDraw(int  dest,
-            REAL x,
-            REAL y)
+void blAMDraw(int  dest,
+              REAL x,
+              REAL y)
 {
    switch(dest)
    {
@@ -296,7 +296,7 @@ void AMDraw(int  dest,
 
       y = (y-sGraph.ymin) * sGraph.YPScale;
 
-      PSDraw(x,y);
+      blPSDraw(x,y);
       break;
    case DEST_HPGL:
       x = (x-sGraph.xmin) * sGraph.XPScale;
@@ -311,8 +311,8 @@ void AMDraw(int  dest,
 }
 
 /************************************************************************/
-/*>void AMSetLineStyle(int dest, int style)
-   ----------------------------------------
+/*>void blAMSetLineStyle(int dest, int style)
+   ------------------------------------------
 *//**
 
    \param[in]     dest      Destination
@@ -326,8 +326,8 @@ void AMDraw(int  dest,
 -  16.07.92 Added DR2D support
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-void AMSetLineStyle(int   dest,
-                    int   style)
+void blAMSetLineStyle(int   dest,
+                      int   style)
 {
    static char PSPattern[6][16] = {"",    /* PostScript line patterns   */
                                    "2",
@@ -341,8 +341,8 @@ void AMSetLineStyle(int   dest,
       /* Screen Version                                                 */
       break;
    case DEST_PS:
-      if(style == 0) PSClearDash();
-      else           PSSetDash(PSPattern[style]);
+      if(style == 0) blPSClearDash();
+      else           blPSSetDash(PSPattern[style]);
       break;
    case DEST_HPGL:
       blHPGLSetDash(style);
@@ -353,8 +353,8 @@ void AMSetLineStyle(int   dest,
 }
 
 /************************************************************************/
-/*>void AMEndLine(int dest)
-   ------------------------
+/*>void blAMEndLine(int dest)
+   --------------------------
 *//**
 
    \param[in]     dest      Destination
@@ -364,8 +364,9 @@ void AMSetLineStyle(int   dest,
 -  07.05.92 Original
 -  25.06.92 Added HPGL support
 -  16.07.92 Added DR2D support
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void AMEndLine(int  dest)
+void blAMEndLine(int  dest)
 {
    switch(dest)
    {
@@ -373,7 +374,7 @@ void AMEndLine(int  dest)
       /* Screen Version                                                 */
       break;
    case DEST_PS:
-      PSStroke();
+      blPSStroke();
       break;
    case DEST_HPGL:
       break;
@@ -384,8 +385,8 @@ void AMEndLine(int  dest)
 
 
 /************************************************************************/
-/*>void AMSetFont(int dest, char *PSFontName, REAL FontSize)
-   ---------------------------------------------------------
+/*>void blAMSetFont(int dest, char *PSFontName, REAL FontSize)
+   -----------------------------------------------------------
 *//**
 
    \param[in]     dest         Destination
@@ -403,10 +404,11 @@ void AMEndLine(int  dest)
 -  29.06.92 Modified to use new PS2AmigaFont() for HPGL
 -  13.07.92 Added DEF_FONT parameter to SetAmigaFont()
 -  16.07.92 Added DR2D support
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void AMSetFont(int  dest, 
-               char *PSFontName,
-               REAL FontSize)
+void blAMSetFont(int  dest, 
+                 char *PSFontName,
+                 REAL FontSize)
 {
    int FontNum;
    
@@ -416,10 +418,10 @@ void AMSetFont(int  dest,
       /* Screen Version                                                 */
       break;
    case DEST_PS:
-      PSFont(PSFontName, FontSize);
+      blPSFont(PSFontName, FontSize);
       break;
    case DEST_HPGL:
-      FontNum = PS2HPGLFont(PSFontName);
+      FontNum = blPS2HPGLFont(PSFontName);
       blHPGLFont(FontNum, FontSize);
       break;
    default:
@@ -428,8 +430,8 @@ void AMSetFont(int  dest,
 }
 
 /************************************************************************/
-/*>void AMText(int dest, REAL x, REAL y, char *text)
-   -------------------------------------------------
+/*>void blAMText(int dest, REAL x, REAL y, char *text)
+   ---------------------------------------------------
 *//**
 
    \param[in]     dest      Destination
@@ -444,11 +446,12 @@ void AMSetFont(int  dest,
 -  07.05.92 Added PS support
 -  25.06.92 Added HPGL support
 -  16.07.92 Added DR2D support
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void AMText(int  dest,
-            REAL x,
-            REAL y,
-            char *text)
+void blAMText(int  dest,
+              REAL x,
+              REAL y,
+              char *text)
 {
    switch(dest)
    {
@@ -460,7 +463,7 @@ void AMText(int  dest,
       x = (x-sGraph.xmin) * sGraph.XPScale;
       y = (y-sGraph.ymin) * sGraph.YPScale;
 
-      PSLText(x,y,text);
+      blPSLText(x,y,text);
       break;
    case DEST_HPGL:
       x = (x-sGraph.xmin) * sGraph.XPScale;
@@ -474,8 +477,8 @@ void AMText(int  dest,
 }
 
 /************************************************************************/
-/*>void AMCBText(int dest, REAL x, REAL y, char *text)
-   ---------------------------------------------------
+/*>void blAMCBText(int dest, REAL x, REAL y, char *text)
+   -----------------------------------------------------
 *//**
 
    \param[in]     dest      Destination
@@ -491,11 +494,12 @@ void AMText(int  dest,
 -  07.05.92 Added PS support
 -  25.06.92 Added HPGL support
 -  16.07.92 Added DR2D support
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void AMCBText(int   dest,
-              REAL  x,
-              REAL  y,
-              char  *text)
+void blAMCBText(int   dest,
+                REAL  x,
+                REAL  y,
+                char  *text)
 {
    switch(dest)
    {
@@ -507,7 +511,7 @@ void AMCBText(int   dest,
       x = (x-sGraph.xmin) * sGraph.XPScale;
       y = (y-sGraph.ymin) * sGraph.YPScale;
 
-      PSCBText(x, y, 0.0, text);
+      blPSCBText(x, y, 0.0, text);
       break;
    case DEST_HPGL:
       x = (x-sGraph.xmin) * sGraph.XPScale;
@@ -521,8 +525,8 @@ void AMCBText(int   dest,
 }
 
 /************************************************************************/
-/*>void AMRText(int dest, REAL x, REAL y, REAL offset, char *text)
-   ---------------------------------------------------------------
+/*>void blAMRText(int dest, REAL x, REAL y, REAL offset, char *text)
+   -----------------------------------------------------------------
 *//**
 
    \param[in]     dest      Destination
@@ -543,11 +547,11 @@ void AMCBText(int   dest,
 -  16.07.92 Added DR2D support
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-void AMRText(int    dest,
-             REAL   x,
-             REAL   y,
-             REAL   offset,
-             char   *text)
+void blAMRText(int    dest,
+               REAL   x,
+               REAL   y,
+               REAL   offset,
+               char   *text)
 {
    switch(dest)
    {
@@ -559,7 +563,7 @@ void AMRText(int    dest,
       x = (x-sGraph.xmin) * sGraph.XPScale;
       y = (y-sGraph.ymin) * sGraph.YPScale;
 
-      PSROffText(x, y, offset, text);
+      blPSROffText(x, y, offset, text);
       break;
    case DEST_HPGL:
       x = (x-sGraph.xmin) * sGraph.XPScale;
@@ -573,8 +577,8 @@ void AMRText(int    dest,
 }
 
 /************************************************************************/
-/*>void AMLCText(int dest, REAL x, REAL y, char *text)
-   ---------------------------------------------------
+/*>void blAMLCText(int dest, REAL x, REAL y, char *text)
+   -----------------------------------------------------
 *//**
 
    \param[in]     dest      Destination
@@ -591,11 +595,12 @@ void AMRText(int    dest,
 -  08.05.92 Corrected Y-pos for PS
 -  25.06.92 Added HPGL support
 -  16.07.92 Added DR2D support
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void AMLCText(int    dest,
-             REAL   x,
-             REAL   y,
-             char   *text)
+void blAMLCText(int    dest,
+                REAL   x,
+                REAL   y,
+                char   *text)
 {
    switch(dest)
    {
@@ -607,7 +612,7 @@ void AMLCText(int    dest,
       x = (x-sGraph.xmin) * sGraph.XPScale;
       y = (y-sGraph.ymin) * sGraph.YPScale;
 
-      PSLCText(x,y,text);
+      blPSLCText(x,y,text);
       break;
    case DEST_HPGL:
       x = (x-sGraph.xmin) * sGraph.XPScale;
@@ -621,8 +626,8 @@ void AMLCText(int    dest,
 }
 
 /************************************************************************/
-/*>void AMCTText(int dest, REAL x, REAL y, REAL CTOffset, char *text)
-   ------------------------------------------------------------------
+/*>void blAMCTText(int dest, REAL x, REAL y, REAL CTOffset, char *text)
+   --------------------------------------------------------------------
 *//**
 
    \param[in]     dest      Destination
@@ -645,11 +650,11 @@ void AMLCText(int    dest,
 -  07.06.93 Added CTOffset param
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-void AMCTText(int   dest,
-              REAL  x,
-              REAL  y,
-              REAL  CTOffset,
-              char  *text)
+void blAMCTText(int   dest,
+                REAL  x,
+                REAL  y,
+                REAL  CTOffset,
+                char  *text)
 {
    switch(dest)
    {
@@ -662,7 +667,7 @@ void AMCTText(int   dest,
 
       y = (y-sGraph.ymin) * sGraph.YPScale;
 
-      PSCTText(x, y, CTOffset, text);
+      blPSCTText(x, y, CTOffset, text);
       break;
    case DEST_HPGL:
       x = (x-sGraph.xmin) * sGraph.XPScale;
@@ -677,8 +682,8 @@ void AMCTText(int   dest,
 }
 
 /************************************************************************/
-/*>void AMEndPlot(int dest)
-   ------------------------
+/*>void blAMEndPlot(int dest)
+   --------------------------
 *//**
 
    \param[in]     dest      Destination
@@ -691,7 +696,7 @@ void AMCTText(int   dest,
 -  16.07.92 Added DR2D support
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-void AMEndPlot(int  dest)
+void blAMEndPlot(int  dest)
 {
    switch(dest)
    {
@@ -699,7 +704,7 @@ void AMEndPlot(int  dest)
       /* Screen Version                                                 */
       break;
    case DEST_PS:
-      PSEnd();
+      blPSEnd();
       break;
    case DEST_HPGL:
       blHPGLEnd();
@@ -710,8 +715,8 @@ void AMEndPlot(int  dest)
 }
 
 /************************************************************************/
-/*>int PS2HPGLFont(char *font)
-   ---------------------------
+/*>int blPS2HPGLFont(char *font)
+   -----------------------------
 *//**
 
    \param[in]     *font    PostScript font name
@@ -730,7 +735,7 @@ void AMEndPlot(int  dest)
 -  06.07.93 Original    By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-int PS2HPGLFont(char *font)
+int blPS2HPGLFont(char *font)
 {
    int         i;
    char        buffer[MAXBUFF];
@@ -828,8 +833,8 @@ int PS2HPGLFont(char *font)
 }
 
 /************************************************************************/
-/*>char *SimplifyText(char *string)
-   --------------------------------
+/*>char *blSimplifyText(char *string)
+   ----------------------------------
 *//**
 
    \param[in]     *string   String containing control codes
@@ -840,8 +845,9 @@ int PS2HPGLFont(char *font)
    within the routine
 
 -  06.05.92 Original
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char *SimplifyText(char *string)
+char *blSimplifyText(char *string)
 {
    static char retstring[MAXBUFF];
    int         i, j;
