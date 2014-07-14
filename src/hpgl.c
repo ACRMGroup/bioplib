@@ -3,11 +3,11 @@
 
    \file       hpgl.c
    
-   \version    V2.1R
-   \date       01.03.94
+   \version    V2.2
+   \date       07.07.14
    \brief      HPGL plotting functions
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-4
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -50,6 +50,7 @@
 -  V1.1  28.05.92 ANSIed
 -  V2.0  25.06.92 Modified for AMPlot2; floats->doubles
 -  V2.1  27.07.93 Changed some missed float->double
+-  V2.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -88,9 +89,9 @@ static FILE    *sHPGLFile = NULL;         /* Plot file                  */
 */
 
 /************************************************************************/
-/*>BOOL HPGLInit(char *filename, char *AltFont,
+/*>BOOL blHPGLInit(char *filename, char *AltFont,
                  REAL xmargin,   REAL ymargin)
-   --------------------------------------------
+   ----------------------------------------------
 *//**
 
    \param[in]     *filename   HPGL file name
@@ -114,11 +115,12 @@ static FILE    *sHPGLFile = NULL;         /* Plot file                  */
 -  25.06.92 Taken from MoG. Changed to support offsets. Added parameters.
 -  29.06.92 Added initialisation of alternate font.
 -  06.07.93 Added AltFont parameter
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL HPGLInit(char *filename,
-              char *AltFont,
-              REAL xmargin, 
-              REAL ymargin)
+BOOL blHPGLInit(char *filename,
+                char *AltFont,
+                REAL xmargin, 
+                REAL ymargin)
 {
    char        buffer[80];
    int         xoff,
@@ -147,8 +149,8 @@ BOOL HPGLInit(char *filename,
 }
 
 /************************************************************************/
-/*>void HPGLPen(int num)
-   ---------------------
+/*>void blHPGLPen(int num)
+   -----------------------
 *//**
 
    \param[in]     num      Pen number
@@ -156,8 +158,9 @@ BOOL HPGLInit(char *filename,
    Select a Pen
 -  25.06.92 Taken from MoG
 -  08.09.92 Changed to store pen first (having seen IntroCAD output)
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLPen(int num)
+void blHPGLPen(int num)
 {
    char buffer[80];
    
@@ -166,8 +169,8 @@ void HPGLPen(int num)
 }
 
 /************************************************************************/
-/*>void HPGLMove(REAL x, REAL y)
-   -----------------------------
+/*>void blHPGLMove(REAL x, REAL y)
+   -------------------------------
 *//**
 
    \param[in]     x     X position (0.0--1.0)
@@ -175,9 +178,10 @@ void HPGLPen(int num)
 
    Move on HPGL plot
 -  25.06.92 Taken from MoG
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLMove(REAL x,
-              REAL y)
+void blHPGLMove(REAL x,
+                REAL y)
 {
    char buffer[80];
    
@@ -186,8 +190,8 @@ void HPGLMove(REAL x,
 }
 
 /************************************************************************/
-/*>void HPGLDraw(REAL x, REAL y)
-   -----------------------------
+/*>void blHPGLDraw(REAL x, REAL y)
+   -------------------------------
 *//**
 
    \param[in]     x     X position (0.0--1.0)
@@ -195,9 +199,10 @@ void HPGLMove(REAL x,
 
    Draw on HPGL plot
 -  25.06.92 Taken from MoG
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLDraw(REAL x,
-              REAL y)
+void blHPGLDraw(REAL x,
+                REAL y)
 {
    char buffer[80];
    
@@ -206,8 +211,8 @@ void HPGLDraw(REAL x,
 }
 
 /************************************************************************/
-/*>void HPGLSetDash(int style)
-   ---------------------------
+/*>void blHPGLSetDash(int style)
+   -----------------------------
 *//**
 
    \param[in]     style    Line style
@@ -224,8 +229,9 @@ void HPGLDraw(REAL x,
 
 -  25.06.92 Framework
 -  26.06.92 Original
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLSetDash(int style)
+void blHPGLSetDash(int style)
 {
    switch(style)
    {
@@ -251,8 +257,8 @@ void HPGLSetDash(int style)
 }
 
 /************************************************************************/
-/*>void HPGLFont(int font, REAL size)
-   ----------------------------------
+/*>void blHPGLFont(int font, REAL size)
+   ------------------------------------
 *//**
 
    \param[in]     font       Font number
@@ -263,9 +269,10 @@ void HPGLSetDash(int style)
 -  29.06.92 Corrected CA to CS and added SS. Changed to use global width
             and height variables. Altered width to 1/2.4 * height
 -  27.07.93 Changed precision of floating i/o to double
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLFont(int    font,
-              REAL   size)
+void blHPGLFont(int    font,
+                REAL   size)
 {
    char   buffer[80];
    REAL width;
@@ -291,8 +298,8 @@ void HPGLFont(int    font,
 }
 
 /************************************************************************/
-/*>void HPGLLText(REAL x, REAL y, char *string)
-   --------------------------------------------
+/*>void blHPGLLText(REAL x, REAL y, char *string)
+   ----------------------------------------------
 *//**
 
    \param[in]     x        X coordinate
@@ -303,10 +310,11 @@ void HPGLFont(int    font,
 
 -  25.06.92 Taken from MoG
 -  29.06.92 Changed to use HPGLShowText().
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLLText(REAL x,
-               REAL y,
-               char *string)
+void blHPGLLText(REAL x,
+                 REAL y,
+                 char *string)
 {
    char buffer[80];
    
@@ -314,12 +322,12 @@ void HPGLLText(REAL x,
            (int)(10000.0 * x),(int)(10000.0 * y));
    fputs(buffer,sHPGLFile);
    
-   HPGLShowText(string,0,(int)(10000.0 * x),(int)(10000.0 * y));
+   blHPGLShowText(string,0,(int)(10000.0 * x),(int)(10000.0 * y));
 }
 
 /************************************************************************/
-/*>void HPGLCBText(REAL x, REAL y, REAL offset, char *text)
-   --------------------------------------------------------
+/*>void blHPGLCBText(REAL x, REAL y, REAL offset, char *text)
+   ----------------------------------------------------------
 *//**
 
    \param[in]     x        X coordinate
@@ -334,11 +342,12 @@ void HPGLLText(REAL x,
 -  26.06.92 Original
 -  29.06.92 Added SimplifyText(). Changed to use HPGLShowText().
 -  06.07.92 Modified x-pos for wider font width
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLCBText(REAL x, 
-                REAL y, 
-                REAL offset, 
-                char *text)
+void blHPGLCBText(REAL x, 
+                  REAL y, 
+                  REAL offset, 
+                  char *text)
 {
    char     buffer[80];
    int      xpos,
@@ -354,12 +363,12 @@ void HPGLCBText(REAL x,
    sprintf(buffer,"PU;PA%d, %d;", xpos, ypos);
    fputs(buffer,sHPGLFile);
 
-   HPGLShowText(text,0,xpos,ypos);
+   blHPGLShowText(text,0,xpos,ypos);
 }
 
 /************************************************************************/
-/*>void HPGLROffText(REAL x, REAL y, REAL offset, char *text)
-   ----------------------------------------------------------
+/*>void blHPGLROffText(REAL x, REAL y, REAL offset, char *text)
+   ------------------------------------------------------------
 *//**
 
    \param[in]     x        X coordinate
@@ -373,11 +382,12 @@ void HPGLCBText(REAL x,
 -  26.06.92 Original
 -  29.06.92 Added SimplifyText(). Changed to use HPGLShowText().
 -  06.07.92 Modified x-pos for wider font width
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLROffText(REAL x, 
-                  REAL y, 
-                  REAL offset, 
-                  char *text)
+void blHPGLROffText(REAL x, 
+                    REAL y, 
+                    REAL offset, 
+                    char *text)
 {
    char     buffer[80];
    int      xpos,
@@ -397,12 +407,12 @@ void HPGLROffText(REAL x,
    
    sprintf(buffer,"PU;PA%d, %d;\n", xpos, ypos);
    fputs(buffer,sHPGLFile);
-   HPGLShowText(text,0,xpos,ypos);
+   blHPGLShowText(text,0,xpos,ypos);
 }
 
 /************************************************************************/
-/*>void HPGLLCText(REAL x, REAL y, char *text)
-   -------------------------------------------
+/*>void blHPGLLCText(REAL x, REAL y, char *text)
+   ---------------------------------------------
 *//**
 
    \param[in]     x        X coordinate
@@ -414,10 +424,11 @@ void HPGLROffText(REAL x,
 -  25.06.92 Framework
 -  26.06.92 Original
 -  29.06.92 Changed to use HPGLShowText().
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLLCText(REAL x, 
-                REAL y, 
-                char *text)
+void blHPGLLCText(REAL x, 
+                  REAL y, 
+                  char *text)
 {
    char  buffer[80];
    int   xpos,
@@ -431,12 +442,12 @@ void HPGLLCText(REAL x,
    
    sprintf(buffer,"PU;PA%d, %d;", xpos, ypos);
    fputs(buffer,sHPGLFile);
-   HPGLShowText(text,0,xpos,ypos);
+   blHPGLShowText(text,0,xpos,ypos);
 }
 
 /************************************************************************/
-/*>void HPGLCTText(REAL x, REAL y, REAL offset, char *text)
-   --------------------------------------------------------
+/*>void blHPGLCTText(REAL x, REAL y, REAL offset, char *text)
+   ----------------------------------------------------------
 *//**
 
    \param[in]     x        X coordinate
@@ -452,11 +463,12 @@ void HPGLLCText(REAL x,
 -  01.07.92 Corrected y-positioning. Changed offset to be in pts rather
             than a multiplier of font size.
 -  06.07.92 Modified x-pos for wider font width
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLCTText(REAL x, 
-                REAL y, 
-                REAL offset, 
-                char *text)
+void blHPGLCTText(REAL x, 
+                  REAL y, 
+                  REAL offset, 
+                  char *text)
 {
    char     buffer[80];
    int      xpos,
@@ -475,13 +487,13 @@ void HPGLCTText(REAL x,
    sprintf(buffer,"PU;PA%d, %d;\n", xpos, ypos);
    fputs(buffer,sHPGLFile);
    
-   HPGLShowText(text,0,xpos,ypos);
+   blHPGLShowText(text,0,xpos,ypos);
 }
 
 /************************************************************************/
-/*>void HPGLVText(REAL x, REAL y, REAL xoff, char *text, int TitleFont,
+/*>void blHPGLVText(REAL x, REAL y, REAL xoff, char *text, int TitleFont,
              REAL TitleSize, char *label, int LabelFont, REAL LabelSize)
-   ---------------------------------------------------------------------
+   -----------------------------------------------------------------------
 *//**
 
    \param[in]     x            X coordinate (in data units)
@@ -507,16 +519,17 @@ void HPGLCTText(REAL x,
 -  29.06.92 Original
 -  06.07.92 Modified x-pos for wider font width
 -  27.07.93 Changed precision of floating i/o to double
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLVText(REAL x, 
-               REAL y, 
-               REAL xoff, 
-               char *text, 
-               int  TitleFont, 
-               REAL TitleSize, 
-               char *label, 
-               int  LabelFont, 
-               REAL LabelSize)
+void blHPGLVText(REAL x, 
+                 REAL y, 
+                 REAL xoff, 
+                 char *text, 
+                 int  TitleFont, 
+                 REAL TitleSize, 
+                 char *label, 
+                 int  LabelFont, 
+                 REAL LabelSize)
 {
    REAL   LabelWidth;
    char   buffer[240];
@@ -563,7 +576,7 @@ void HPGLVText(REAL x,
    /* Now output the text                                               */
    sprintf(buffer,"PU;PA%d,%d;DR0,1;",(int)x,(int)y);
    fputs(buffer,sHPGLFile);
-   HPGLShowText(text,1,(int)x,(int)y);
+   blHPGLShowText(text,1,(int)x,(int)y);
    fputs("DR;\n",sHPGLFile);
    
 #ifdef FIXVERT
@@ -573,23 +586,24 @@ void HPGLVText(REAL x,
 }
 
 /************************************************************************/
-/*>void HPGLEnd(void)
-   ------------------
+/*>void blHPGLEnd(void)
+   --------------------
 *//**
 
 
    Close the HPGL plot file
 
 -  06.07.93 Original
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLEnd(void)
+void blHPGLEnd(void)
 {
    fclose(sHPGLFile);
 }
 
 /************************************************************************/
-/*>void HPGLShowText(char *text, BOOL orientation, int XBase, int YBase)
-   ---------------------------------------------------------------------
+/*>void blHPGLShowText(char *text, BOOL orientation, int XBase, int YBase)
+   -----------------------------------------------------------------------
 *//**
 
    \param[in]     *text       Text to be displayed with control codes
@@ -603,11 +617,12 @@ void HPGLEnd(void)
 -  29.06.92 Original based on PostScript version.
 -  27.07.93 Changed precision of floating i/o to double
 -  11.03.94 Changed orientation to BOOL
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLShowText(char *text, 
-                  BOOL orientation,
-                  int  XBase,
-                  int  YBase)
+void blHPGLShowText(char *text, 
+                    BOOL orientation,
+                    int  XBase,
+                    int  YBase)
 {
    char     buffer[MAXBUFF],
             OutBuff[MAXBUFF];

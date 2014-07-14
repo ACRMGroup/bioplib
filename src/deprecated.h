@@ -1611,7 +1611,7 @@
 
 /************************************************************************/
 /* Renamed functions: hpgl.h                                            */
-/*
+
 #define HPGLInit(filename, AltFont, xmargin, ymargin)                    \
 ({                                                                       \
    DEPRECATED("HPGLInit()","blHPGLInit()");                              \
@@ -1696,7 +1696,7 @@
    blHPGLShowText(text, orientation, XBase, YBase);                      \
 })
 
-*/
+
 
 /************************************************************************/
 /* Renamed functions: matrix.h                                          */

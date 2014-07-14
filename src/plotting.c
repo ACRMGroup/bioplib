@@ -138,6 +138,7 @@ static struct
             size of xmax border for DR2D plots.
 -  06.07.93 Changed parameters
 -  27.02.98 Removed unreachable breaks from switch() statement
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 BOOL AMInitPlot(char   *filename,
                 char   *title,
@@ -173,7 +174,7 @@ BOOL AMInitPlot(char   *filename,
    case DEST_PS:
       return(PSInit(filename, title, AltFont));
    case DEST_HPGL:
-      return(HPGLInit(filename, AltFont, xmargin, ymargin));
+      return(blHPGLInit(filename, AltFont, xmargin, ymargin));
    default:
       break;
    }
@@ -194,6 +195,7 @@ BOOL AMInitPlot(char   *filename,
 -  07.05.92 Added PS support
 -  25.06.92 Added HPGL support
 -  16.07.92 Added DR2D support
+-  07.07.14 Use bl prefix for functions By: CTP
 */   
 void AMSetPen(int   dest,
               int   pen)
@@ -212,7 +214,7 @@ void AMSetPen(int   dest,
       PSThick(pens[pen]);
       break;
    case DEST_HPGL:
-      HPGLPen(pen+1);
+      blHPGLPen(pen+1);
       break;
    default:
       break;
@@ -235,6 +237,7 @@ void AMSetPen(int   dest,
 -  07.05.92 Added PS support
 -  25.06.92 Added HPGL support
 -  16.07.92 Added DR2D support
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 void AMMove(int  dest,
             REAL x,
@@ -254,7 +257,7 @@ void AMMove(int  dest,
    case DEST_HPGL:
       x = (x-sGraph.xmin) * sGraph.XPScale;
       y = (y-sGraph.ymin) * sGraph.YPScale;
-      HPGLMove(x,y);
+      blHPGLMove(x,y);
       break;
    default:
       break;
@@ -277,6 +280,7 @@ void AMMove(int  dest,
 -  07.05.92 Added PS support
 -  25.06.92 Added HPGL support
 -  16.07.92 Added DR2D support
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 void AMDraw(int  dest,
             REAL x,
@@ -299,7 +303,7 @@ void AMDraw(int  dest,
 
       y = (y-sGraph.ymin) * sGraph.YPScale;
 
-      HPGLDraw(x,y);
+      blHPGLDraw(x,y);
       break;
    default:
       break;
@@ -320,6 +324,7 @@ void AMDraw(int  dest,
 -  25.06.92 Added HPGL support. Removed static store of style.
 -  05.07.92 Corrected line patterns. They don't have commas!
 -  16.07.92 Added DR2D support
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 void AMSetLineStyle(int   dest,
                     int   style)
@@ -340,7 +345,7 @@ void AMSetLineStyle(int   dest,
       else           PSSetDash(PSPattern[style]);
       break;
    case DEST_HPGL:
-      HPGLSetDash(style);
+      blHPGLSetDash(style);
       break;
    default:
       break;
@@ -415,7 +420,7 @@ void AMSetFont(int  dest,
       break;
    case DEST_HPGL:
       FontNum = PS2HPGLFont(PSFontName);
-      HPGLFont(FontNum, FontSize);
+      blHPGLFont(FontNum, FontSize);
       break;
    default:
       break;
@@ -461,7 +466,7 @@ void AMText(int  dest,
       x = (x-sGraph.xmin) * sGraph.XPScale;
       y = (y-sGraph.ymin) * sGraph.YPScale;
 
-      HPGLLText(x,y,text);
+      blHPGLLText(x,y,text);
       break;
    default:
       break;
@@ -508,7 +513,7 @@ void AMCBText(int   dest,
       x = (x-sGraph.xmin) * sGraph.XPScale;
       y = (y-sGraph.ymin) * sGraph.YPScale;
 
-      HPGLCBText(x, y, 0.0, text);
+      blHPGLCBText(x, y, 0.0, text);
       break;
    default:
       break;
@@ -536,6 +541,7 @@ void AMCBText(int   dest,
 -  07.05.92 Added PS support and offset
 -  25.06.92 Added HPGL support
 -  16.07.92 Added DR2D support
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 void AMRText(int    dest,
              REAL   x,
@@ -559,7 +565,7 @@ void AMRText(int    dest,
       x = (x-sGraph.xmin) * sGraph.XPScale;
       y = (y-sGraph.ymin) * sGraph.YPScale;
 
-      HPGLROffText(x, y, offset, text);
+      blHPGLROffText(x, y, offset, text);
       break;
    default:
       break;
@@ -607,7 +613,7 @@ void AMLCText(int    dest,
       x = (x-sGraph.xmin) * sGraph.XPScale;
       y = (y-sGraph.ymin) * sGraph.YPScale;
 
-      HPGLLCText(x,y,text);
+      blHPGLLCText(x,y,text);
       break;
    default:
       break;
@@ -637,6 +643,7 @@ void AMLCText(int    dest,
             take offset in points.
 -  16.07.92 Added DR2D support
 -  07.06.93 Added CTOffset param
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 void AMCTText(int   dest,
               REAL  x,
@@ -662,7 +669,7 @@ void AMCTText(int   dest,
 
       y = (y-sGraph.ymin) * sGraph.YPScale;
 
-      HPGLCTText(x, y, CTOffset, text);
+      blHPGLCTText(x, y, CTOffset, text);
       break;
    default:
       break;
@@ -682,6 +689,7 @@ void AMCTText(int   dest,
 -  25.06.92 Added HPGL support
 -  01.07.92 Added blank WriteMessage() when plotting to screen
 -  16.07.92 Added DR2D support
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 void AMEndPlot(int  dest)
 {
@@ -694,7 +702,7 @@ void AMEndPlot(int  dest)
       PSEnd();
       break;
    case DEST_HPGL:
-      HPGLEnd();
+      blHPGLEnd();
       break;
    default:
       break;
