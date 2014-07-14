@@ -3,11 +3,11 @@
 
    \file       ReadCSSR.c
    
-   \version    V1.5R
-   \date       30.05.02
+   \version    V1.6
+   \date       07.07.14
    \brief      Read a CSSR file
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2002
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -132,6 +132,7 @@
 -  V1.3  10.06.93 Tidied for book
 -  V1.4  27.07.93 Changed I/O to double precision
 -  V1.5  30.05.02 Changed PDB field from 'junk' to 'record_type'
+-  V1.6  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -162,8 +163,8 @@
 */
 
 /************************************************************************/
-/*>CSSR *ReadCSSR(FILE *fp, int *natom, char *name, char *title)
-   -------------------------------------------------------------
+/*>CSSR *blReadCSSR(FILE *fp, int *natom, char *name, char *title)
+   ---------------------------------------------------------------
 *//**
 
    \param[in]     *fp      A pointer to type FILE in which the
@@ -182,8 +183,9 @@
             list. No need to call init_cssr
 -  13.07.93 Returns NULL if allocation failed
 -  27.07.93 Changed I/O to double precision
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-CSSR *ReadCSSR(FILE  *fp,
+CSSR *blReadCSSR(FILE  *fp,
                int   *natom,
                char  *name,
                char  *title)
@@ -299,14 +301,14 @@ CSSR *ReadCSSR(FILE  *fp,
    }
    
    /* Normalise if necessary                                            */
-   if(!orthonormal) NormaliseCSSR(cssr,cell,alpha,beta,gamma);
+   if(!orthonormal) blNormaliseCSSR(cssr,cell,alpha,beta,gamma);
    
    return(cssr);
 }
 
 /************************************************************************/
-/*>PDB *ReadCSSRasPDB(FILE *fp, int *natom)
-   ----------------------------------------
+/*>PDB *blReadCSSRasPDB(FILE *fp, int *natom)
+   ------------------------------------------
 *//**
 
    \param[in]     *fp      A pointer to type FILE in which the
@@ -324,8 +326,9 @@ CSSR *ReadCSSR(FILE  *fp,
             list. No need to call init_pdb
 -  13.07.93 Returns NULL if allocation failed
 -  27.07.93 Changed I/O to double precision
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *ReadCSSRasPDB(FILE  *fp,
+PDB *blReadCSSRasPDB(FILE  *fp,
                    int   *natom)
 {
    char  buffer[160],
@@ -443,15 +446,15 @@ PDB *ReadCSSRasPDB(FILE  *fp,
    }
    
    /* Normalise if necessary                                            */
-   if(!orthonormal) NormalisePDB(pdb,cell,alpha,beta,gamma);
+   if(!orthonormal) blNormalisePDB(pdb,cell,alpha,beta,gamma);
    
    return(pdb);
 }
 
 /************************************************************************/
-/*>void NormaliseCSSR(CSSR *cssr, REAL cell[3], REAL alpha, 
-                      REAL beta, REAL gamma)
-   --------------------------------------------------------
+/*>void blNormaliseCSSR(CSSR *cssr, REAL cell[3], REAL alpha, 
+                        REAL beta, REAL gamma)
+   ----------------------------------------------------------
 *//**
 
    \param[in,out] *cssr    Pointer to CSSR linked list
@@ -465,12 +468,13 @@ PDB *ReadCSSRasPDB(FILE  *fp,
 -  06.09.91 Original
 -  01.06.92 Documented
 -  10.06.93 void return
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void NormaliseCSSR(CSSR *cssr,
-                   REAL cell[3],
-                   REAL alpha,
-                   REAL beta,
-                   REAL gamma)
+void blNormaliseCSSR(CSSR *cssr,
+                     REAL cell[3],
+                     REAL alpha,
+                     REAL beta,
+                     REAL gamma)
 {
    int   ncode = 1,           /* Assume a* along X and c* || Z          */
          isw   = 0;           /* Fractional-->Orthonormal               */
@@ -478,7 +482,7 @@ void NormaliseCSSR(CSSR *cssr,
          tempx,tempy,tempz;   /* Used during matrix multiplication      */
    CSSR  *p;
    
-   ortho(cell,alpha,beta,gamma,matrix,isw,ncode);
+   blortho(cell,alpha,beta,gamma,matrix,isw,ncode);
    
    /* Now multiply the coordinates by the matrix                        */
    for(p=cssr;p;NEXT(p))
@@ -509,9 +513,9 @@ void NormaliseCSSR(CSSR *cssr,
 }
 
 /************************************************************************/
-/*>void NormalisePDB(PDB *pdb, REAL cell[3], REAL alpha,
+/*>void blNormalisePDB(PDB *pdb, REAL cell[3], REAL alpha,
                      REAL beta, REAL gamma)
-   -----------------------------------------------------
+   -------------------------------------------------------
 *//**
 
    \param[in,out] *pdb     Pointer to PDB linked list
@@ -525,12 +529,13 @@ void NormaliseCSSR(CSSR *cssr,
 -  06.09.91 Original
 -  01.06.92 Documented
 -  10.06.93 void return
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void NormalisePDB(PDB   *pdb,
-                  REAL  cell[3],
-                  REAL  alpha,
-                  REAL  beta,
-                  REAL  gamma)
+void blNormalisePDB(PDB   *pdb,
+                    REAL  cell[3],
+                    REAL  alpha,
+                    REAL  beta,
+                    REAL  gamma)
 {
    int   ncode = 1,           /* Assume a* along X and c* || Z          */
          isw   = 0;           /* Fractional-->Orthonormal               */
@@ -538,7 +543,7 @@ void NormalisePDB(PDB   *pdb,
          tempx,tempy,tempz;   /* Used during matrix multiplication      */
    PDB   *p;
    
-   ortho(cell,alpha,beta,gamma,matrix,isw,ncode);
+   blortho(cell,alpha,beta,gamma,matrix,isw,ncode);
    
    /* Now multiply the coordinates by the matrix                        */
    for(p=pdb;p;NEXT(p))
@@ -561,8 +566,8 @@ void NormalisePDB(PDB   *pdb,
 }
 
 /************************************************************************/
-/*>void ortho(REAL cell[3], REAL alpha, REAL beta, REAL gamma,
-              REAL amatrx[3][3], int isw, int ncode)
+/*>void blortho(REAL cell[3], REAL alpha, REAL beta, REAL gamma,
+                REAL amatrx[3][3], int isw, int ncode)
    -----------------------------------------------------------
 *//**
 
@@ -593,14 +598,15 @@ void NormalisePDB(PDB   *pdb,
 -  06.09.91 Original
 -  01.06.92 Documented
 -  10.06.93 void return
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void ortho(REAL  cell[3],        /* Cell dimensions                     */
-           REAL  alpha,          /* Cell angles                         */
-           REAL  beta,
-           REAL  gamma,
-           REAL  amatrx[3][3],   /* Returned conversion matrix          */
-           int   isw,            /* 0: Frac-->Ortho,  1: Ortho-->Frac   */
-           int   ncode)          /* Orientation of reciprocal axes      */
+void blortho(REAL  cell[3],        /* Cell dimensions                     */
+             REAL  alpha,          /* Cell angles                         */
+             REAL  beta,
+             REAL  gamma,
+             REAL  amatrx[3][3],   /* Returned conversion matrix          */
+             int   isw,            /* 0: Frac-->Ortho,  1: Ortho-->Frac   */
+             int   ncode)          /* Orientation of reciprocal axes      */
 {
    REAL  ro[3][3],
          rf[3][3],

@@ -67,6 +67,7 @@
 #include <stdio.h>
 #include "SysDefs.h"
 #include "MathType.h"
+#include "deprecated.h"
 
 typedef struct _stringlist
 {
@@ -82,7 +83,7 @@ void SetExtn(char *File, char *Ext);
 int chindex(char *string, char ch);
 void Word(char *string1, char *string2);
 void WordN(char *string1, char *string2, int  MaxChar);
-void padterm(char *string, int length);
+void padterm(char *string, int length); /* defined in cssr.h */
 void padchar(char *string, int length, char ch);
 BOOL CheckExtn(char *string, char *ext);
 char *ftostr(char *str, int maxlen, REAL x, int precision);

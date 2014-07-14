@@ -3,11 +3,11 @@
 
    \file       cssr.h
    
-   \version    V1.0R
-   \date       09.09.91
+   \version    V1.1
+   \date       07.07.14
    \brief      Defines for CSSR handling
    
-   \copyright  SciTech Software 1991
+   \copyright  SciTech Software 1991-2014
    \author     Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -47,6 +47,7 @@
 
    Revision History:
    =================
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 ***************************************************************************/
 #ifndef _CSSR_H
@@ -54,6 +55,7 @@
 
 #include "MathType.h"
 #include "pdb.h"
+#include "deprecated.h"
 
 struct cssr_entry
 {
@@ -80,15 +82,15 @@ typedef struct cssr_entry CSSR;
 /************************************************************************/
 /* Prototypes
 */
-CSSR *ReadCSSR(FILE *fp, int *natom, char *name, char *title);
-PDB *ReadCSSRasPDB(FILE *fp, int *natom);
-void NormaliseCSSR(CSSR *cssr, REAL cell[3], REAL alpha, REAL beta,
-                   REAL gamma);
-void NormalisePDB(PDB *pdb, REAL cell[3], REAL alpha, REAL beta,
-                  REAL gamma);
-void ortho(REAL cell[3], REAL alpha, REAL beta, REAL gamma,
+CSSR *blReadCSSR(FILE *fp, int *natom, char *name, char *title);
+PDB *blReadCSSRasPDB(FILE *fp, int *natom);
+void blNormaliseCSSR(CSSR *cssr, REAL cell[3], REAL alpha, REAL beta,
+                     REAL gamma);
+void blNormalisePDB(PDB *pdb, REAL cell[3], REAL alpha, REAL beta,
+                    REAL gamma);
+void blortho(REAL cell[3], REAL alpha, REAL beta, REAL gamma,
            REAL amatrx[3][3], int isw, int ncode);
-void padterm(char *string, int len);
-void WriteCSSR(FILE *fp, CSSR *cssr, char *name, char *title);
+/* void blpadterm(char *string, int len);*/ /* defined in general.h */
+void blWriteCSSR(FILE *fp, CSSR *cssr, char *name, char *title);
 
 #endif

@@ -3,11 +3,11 @@
 
    \file       WrtCSSR.c
    
-   \version    V1.3R
-   \date       01.03.94
+   \version    V1.4
+   \date       07.07.14
    \brief      Write a CSSR file
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-4
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -64,6 +64,7 @@
 -  V1.2  10.06.93 void return; float->REAL
 -  V1.3  27.07.93 %f -> %lf
 -  V1.3  01.03.94 %lf -> %f  (!)
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -93,8 +94,8 @@
 */
 
 /************************************************************************/
-/*>void WriteCSSR(FILE *fp, CSSR *cssr, char *name, char *title)
-   -------------------------------------------------------------
+/*>void blWriteCSSR(FILE *fp, CSSR *cssr, char *name, char *title)
+   ---------------------------------------------------------------
 *//**
 
    \param[in]     *fp      A pointer to type FILE in which the
@@ -111,11 +112,12 @@
 -  10.06.93 void return; float->REAL
 -  27.07.93 %f -> %lf
 -  01.03.94 %lf -> %f (!)
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void WriteCSSR(FILE  *fp,
-               CSSR  *cssr,
-               char  *name,
-               char  *title)
+void blWriteCSSR(FILE  *fp,
+                 CSSR  *cssr,
+                 char  *name,
+                 char  *title)
 {
    REAL  cell[3],
          alpha, beta, gamma;

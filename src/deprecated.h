@@ -1317,7 +1317,7 @@
 
 /************************************************************************/
 /* Renamed functions: cssr.h                                            */
-/*
+
 #define ReadCSSR(fp, natom, name, title)                                 \
 ({                                                                       \
    DEPRECATED("ReadCSSR()","blReadCSSR()");                              \
@@ -1348,11 +1348,14 @@
    blortho(cell, alpha, beta, gamma, amatrx, isw, ncode);                \
 })
 
+/* Defined in general.h */
+/*
 #define padterm(string, len)                                             \
 ({                                                                       \
    DEPRECATED("padterm()","blpadterm()");                                \
    blpadterm(string, len);                                               \
 })
+*/
 
 #define WriteCSSR(fp, cssr, name, title)                                 \
 ({                                                                       \
@@ -1360,7 +1363,7 @@
    blWriteCSSR(fp, cssr, name, title);                                   \
 })
 
-*/
+
 
 /************************************************************************/
 /* Renamed functions: fit.h                                             */
