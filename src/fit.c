@@ -3,11 +3,11 @@
 
    \file       fit.c
    
-   \version    V1.5
-   \date       03.04.09
+   \version    V1.6
+   \date       07.07.14
    \brief      Perform least squares fitting of coordinate sets
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-7
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -56,6 +56,7 @@
 -  V1.3  11.02.94 Changed column flag to BOOL
 -  V1.4  03.06.97 Corrected documentation
 -  V1.5  03.04.09 Initialize clep in qikfit() By: CTP
+-  V1.6  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -83,9 +84,9 @@
 static void qikfit(REAL umat[3][3], REAL rm[3][3], BOOL column);
 
 /************************************************************************/
-/*>BOOL matfit(COOR *x1, COOR *x2, REAL rm[3][3], int n,
+/*>BOOL blmatfit(COOR *x1, COOR *x2, REAL rm[3][3], int n,
                REAL *wt1, BOOL column)
-   -----------------------------------------------------
+   -------------------------------------------------------
 *//**
 
    \param[in]     *x1         First (fixed) array of coordinates
@@ -109,13 +110,15 @@ static void qikfit(REAL umat[3][3], REAL rm[3][3], BOOL column);
 -  17.06.93 various changes for release (including parameters)
 -  11.03.94 column changed to BOOL
 -  25.11.02 Corrected header!
+-  07.07.14 Use bl prefix for functions By: CTP
+
 */
-BOOL matfit(COOR    *x1,        /* First coord array    */
-            COOR    *x2,        /* Second coord array   */
-            REAL    rm[3][3],   /* Rotation matrix      */
-            int     n,          /* Number of points     */
-            REAL    *wt1,       /* Weight array         */
-            BOOL    column)     /* Column-wise output   */
+BOOL blmatfit(COOR    *x1,        /* First coord array    */
+              COOR    *x2,        /* Second coord array   */
+              REAL    rm[3][3],   /* Rotation matrix      */
+              int     n,          /* Number of points     */
+              REAL    *wt1,       /* Weight array         */
+              BOOL    column)     /* Column-wise output   */
 {
    int  i,j;
    REAL umat[3][3];

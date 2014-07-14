@@ -1367,14 +1367,13 @@
 
 /************************************************************************/
 /* Renamed functions: fit.h                                             */
-/*
+
 #define matfit(x1, x2, rm, n, wt1, column)                               \
 ({                                                                       \
    DEPRECATED("matfit()","blmatfit()");                                  \
    blmatfit(x1, x2, rm, n, wt1, column);                                 \
 })
 
-*/
 
 /************************************************************************/
 /* Renamed functions: fsscanf.h                                         */

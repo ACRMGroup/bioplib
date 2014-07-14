@@ -3,11 +3,11 @@
 
    \file       fit.h
    
-   \version    V1.1R
-   \date       01.03.94
+   \version    V1.2
+   \date       07.07.14
    \brief      Include file for least squares fitting
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-4
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -48,6 +48,7 @@
    =================
 -  V1.0  04.02.91 Original
 -  V1.1  08.12.92 Removed qikfit() prototype as is static
+-  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 #ifndef _FIT_H
@@ -55,10 +56,11 @@
 
 #include "MathType.h"
 #include "SysDefs.h"
+#include "deprecated.h"
 
 /* Prototypes for functions defined in fit.c                            */
-BOOL matfit(COOR *x1, COOR *x2, REAL rm[3][3], int n, REAL *wt1, 
-            BOOL column);
+BOOL blmatfit(COOR *x1, COOR *x2, REAL rm[3][3], int n, REAL *wt1, 
+              BOOL column);
 
 #endif
 
