@@ -1594,7 +1594,7 @@
 
 /************************************************************************/
 /* Renamed functions: help.h                                            */
-/*
+
 #define Help(string, HelpFile)                                           \
 ({                                                                       \
    DEPRECATED("Help()","blHelp()");                                      \
@@ -1607,7 +1607,7 @@
    blDoHelp(string, HelpFile);                                           \
 })
 
-*/
+
 
 /************************************************************************/
 /* Renamed functions: hpgl.h                                            */
