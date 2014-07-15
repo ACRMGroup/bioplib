@@ -107,6 +107,7 @@ static int  **sMDMScore;
 static int  sMDMSize = 0;
 
 /************************************************************************/
+/*
 BOOL NumericReadMDM(char *mdmfile);
 int NumericCalcMDMScore(int resa, int resb);
 int NumericAffineAlign(int  *seq1, 
@@ -120,6 +121,7 @@ int NumericAffineAlign(int  *seq1,
                        int *align1, 
                        int *align2,
                        int  *align_len);
+*/
 
 /************************************************************************/
 /* Prototypes
@@ -213,8 +215,8 @@ static int NumericSearchForBest(int  **matrix,
 
 
 /************************************************************************/
-/*>BOOL NumericReadMDM(char *mdmfile)
-   ----------------------------------
+/*>BOOL blNumericReadMDM(char *mdmfile)
+   ------------------------------------
 *//**
 
    \param[in]     *mdmfile    Mutation data matrix filename
@@ -235,7 +237,7 @@ static int NumericSearchForBest(int  **matrix,
 -  06.02.03 Fixed for new version of GetWord()
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL NumericReadMDM(char *mdmfile)
+BOOL blNumericReadMDM(char *mdmfile)
 {
    FILE *mdm = NULL;
    int  i, j;
@@ -302,8 +304,8 @@ BOOL NumericReadMDM(char *mdmfile)
 }
 
 /************************************************************************/
-/*>int NumericCalcMDMScore(int resa, int resb)
-   -------------------------------------------
+/*>int blNumericCalcMDMScore(int resa, int resb)
+   ---------------------------------------------
 *//**
 
    \param[in]     resa      First token  
@@ -317,8 +319,9 @@ BOOL NumericReadMDM(char *mdmfile)
    into the score array rather than being searched.
 
 -  08.03.00 Original based on align.c/CalcMDMScore() 11.07.96 By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int NumericCalcMDMScore(int resa, int resb)
+int blNumericCalcMDMScore(int resa, int resb)
 {
    int        i,j;
    static int NWarn = 0;
@@ -354,10 +357,10 @@ int NumericCalcMDMScore(int resa, int resb)
 }                               
 
 /************************************************************************/
-/*>int NumericAffineAlign(int *seq1, int length1, int *seq2, int length2, 
-                          BOOL verbose, BOOL identity, int penalty, 
-                          int penext, int *align1, int *align2, 
-                          int *align_len)
+/*>int blNumericAffineAlign(int *seq1, int length1, int *seq2, int length2, 
+                            BOOL verbose, BOOL identity, int penalty, 
+                            int penext, int *align1, int *align2, 
+                            int *align_len)
    ---------------------------------------------------------------------
 *//**
    \param[in]     *seq1         First sequence of tokens
@@ -388,17 +391,17 @@ int NumericCalcMDMScore(int resa, int resb)
 -  08.03.00 Original based on align.c/affinealign() 06.03.00 By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-int NumericAffineAlign(int  *seq1, 
-                       int  length1, 
-                       int  *seq2, 
-                       int  length2, 
-                       BOOL verbose, 
-                       BOOL identity, 
-                       int  penalty, 
-                       int  penext,
-                       int  *align1, 
-                       int  *align2,
-                       int  *align_len)
+int blNumericAffineAlign(int  *seq1, 
+                         int  length1, 
+                         int  *seq2, 
+                         int  length2, 
+                         BOOL verbose, 
+                         BOOL identity, 
+                         int  penalty, 
+                         int  penext,
+                         int  *align1, 
+                         int  *align2,
+                         int  *align_len)
 {
    XY    **dirn   = NULL;
    int   **matrix = NULL,
@@ -439,8 +442,8 @@ int NumericAffineAlign(int  *seq1,
       }
       else
       {
-         matrix[length1-1][j] = NumericCalcMDMScore(seq1[length1-1], 
-                                                    seq2[j]);
+         matrix[length1-1][j] = blNumericCalcMDMScore(seq1[length1-1], 
+                                                      seq2[j]);
       }
    }
 
@@ -453,8 +456,8 @@ int NumericAffineAlign(int  *seq1,
       }
       else
       {
-         matrix[i][length2-1] = NumericCalcMDMScore(seq1[i], 
-                                                    seq2[length2-1]);
+         matrix[i][length2-1] = blNumericCalcMDMScore(seq1[i], 
+                                                      seq2[length2-1]);
       }
    }
 
@@ -537,7 +540,7 @@ int NumericAffineAlign(int  *seq1,
          }
          else
          {
-            matrix[i1][j] += NumericCalcMDMScore(seq1[i1],seq2[j]);
+            matrix[i1][j] += blNumericCalcMDMScore(seq1[i1],seq2[j]);
          }
       }
 
@@ -611,7 +614,7 @@ int NumericAffineAlign(int  *seq1,
          }
          else
          {
-            matrix[i][j1] += NumericCalcMDMScore(seq1[i],seq2[j1]);
+            matrix[i][j1] += blNumericCalcMDMScore(seq1[i],seq2[j1]);
          }
       }
    } 

@@ -3,11 +3,11 @@
 
    \file       align.c
    
-   \version    V3.3
-   \date       07.04.09
+   \version    V3.4
+   \date       07.07.14
    \brief      Perform Needleman & Wunsch sequence alignment
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2009
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -76,6 +76,7 @@
 -  V3.2  27.02.07 Added affinealineuc() and CalcMDMScoreUC()
 -  V3.3  07.04.09 Complete re-write of ReadMDM() so it can read BLAST
                   style matrix files as well as our own
+-  V3.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -131,9 +132,9 @@ static int  TraceBack(int **matrix, XY **dirn, int length1, int length2,
 
 
 /************************************************************************/
-/*>int align(char *seq1, int length1, char *seq2, int length2, 
-             BOOL verbose, BOOL identity, int penalty,
-             char *align1, char *align2, int *align_len)
+/*>int blalign(char *seq1, int length1, char *seq2, int length2, 
+               BOOL verbose, BOOL identity, int penalty,
+               char *align1, char *align2, int *align_len)
    -----------------------------------------------------------
 *//**
 
@@ -164,27 +165,28 @@ static int  TraceBack(int **matrix, XY **dirn, int length1, int length2,
             align() routine, plus support for affine gap penalties,
             plus new traceback code based on storing the path as we
             go
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int align(char *seq1, 
-          int  length1, 
-          char *seq2, 
-          int  length2, 
-          BOOL verbose, 
-          BOOL identity, 
-          int  penalty, 
-          char *align1, 
-          char *align2,
-          int  *align_len)
+int blalign(char *seq1, 
+            int  length1, 
+            char *seq2, 
+            int  length2, 
+            BOOL verbose, 
+            BOOL identity, 
+            int  penalty, 
+            char *align1, 
+            char *align2,
+            int  *align_len)
 {
-   return(affinealign(seq1, length1, seq2, length2, verbose, identity,
-                      penalty, 0, align1, align2, align_len));
+   return(blaffinealign(seq1, length1, seq2, length2, verbose, identity,
+                        penalty, 0, align1, align2, align_len));
 }
 
 
 /************************************************************************/
-/*>int affinealign(char *seq1, int length1, char *seq2, int length2, 
-                   BOOL verbose, BOOL identity, int penalty, int penext, 
-                   char *align1, char *align2, int *align_len)
+/*>int blaffinealign(char *seq1, int length1, char *seq2, int length2, 
+                     BOOL verbose, BOOL identity, int penalty, int penext, 
+                     char *align1, char *align2, int *align_len)
    ---------------------------------------------------------------------
 *//**
 
@@ -226,314 +228,7 @@ int align(char *seq1,
 ******   NOTE AND CHANGES SHOULD BE PROPAGATED TO affinealignuc()   ******
 **************************************************************************
 */
-int affinealign(char *seq1, 
-                int  length1, 
-                char *seq2, 
-                int  length2, 
-                BOOL verbose, 
-                BOOL identity, 
-                int  penalty, 
-                int  penext,
-                char *align1, 
-                char *align2,
-                int  *align_len)
-{
-   XY    **dirn   = NULL;
-   int   **matrix = NULL,
-         maxdim,
-         i,    j,    k,    l,
-         i1,   j1,
-         dia,  right, down,
-         rcell, dcell, maxoff,
-         match = 1,
-         thisscore,
-         gapext,
-         score;
-   
-   maxdim = MAX(length1, length2);
-   
-   /* Initialise the score matrix                                       */
-   if((matrix = (int **)blArray2D(sizeof(int), maxdim, maxdim))==NULL)
-      return(0);
-   if((dirn   = (XY **)blArray2D(sizeof(XY), maxdim, maxdim))==NULL)
-      return(0);
-      
-   for(i=0;i<maxdim;i++)
-   {
-      for(j=0;j<maxdim;j++)
-      {
-         matrix[i][j] = 0;
-         dirn[i][j].x = -1;
-         dirn[i][j].y = -1;
-      }
-   }
-    
-   /* Fill in scores up the right hand side of the matrix               */
-   for(j=0; j<length2; j++)
-   {
-      if(identity)
-      {
-         if(seq1[length1-1] == seq2[j]) matrix[length1-1][j] = match;
-      }
-      else
-      {
-         matrix[length1-1][j] = CalcMDMScore(seq1[length1-1], seq2[j]);
-      }
-   }
-
-   /* Fill in scores along the bottom row of the matrix                 */
-   for(i=0; i<length1; i++)
-   {
-      if(identity)
-      {
-         if(seq1[i] == seq2[length2-1]) matrix[i][length2-1] = match;
-      }
-      else
-      {
-         matrix[i][length2-1] = CalcMDMScore(seq1[i], seq2[length2-1]);
-      }
-   }
-
-   i = length1 - 1;
-   j = length2 - 1;
-   
-   /* Move back along the diagonal                                      */
-   while(i > 0 && j > 0)
-   {
-      i--;
-      j--;
-
-      /* Fill in the scores along this row                              */
-      for(i1 = i; i1 > -1; i1--)
-      {
-         dia   = matrix[i1+1][j+1];
-
-         /* Find highest score to right of diagonal                     */
-         rcell = i1+2;
-         if(i1+2 >= length1)  right = 0;
-         else                 right = matrix[i1+2][j+1] - penalty;
-         
-         gapext = 1;
-         for(k = i1+3; k<length1; k++, gapext++)
-         {
-            thisscore = matrix[k][j+1] - (penalty + gapext*penext);
-            
-            if(thisscore > right) 
-            {
-               right = thisscore;
-               rcell = k;
-            }
-         }
-
-         /* Find highest score below diagonal                           */
-         dcell = j+2;
-         if(j+2 >= length2)  down = 0;
-         else                down   = matrix[i1+1][j+2] - penalty;
-         
-         gapext = 1;
-         for(l = j+3; l<length2; l++, gapext++)
-         {
-            thisscore = matrix[i1+1][l] - (penalty + gapext*penext);
-
-            if(thisscore > down) 
-            {
-               down = thisscore;
-               dcell = l;
-            }
-         }
-         
-         /* Set score to best of these                                  */
-         maxoff = MAX(right, down);
-         if(dia >= maxoff)
-         {
-            matrix[i1][j] = dia;
-            dirn[i1][j].x = i1+1;
-            dirn[i1][j].y = j+1;
-         }
-         else
-         {
-            if(right > down)
-            {
-               matrix[i1][j] = right;
-               dirn[i1][j].x = rcell;
-               dirn[i1][j].y = j+1;
-            }
-            else
-            {
-               matrix[i1][j] = down;
-               dirn[i1][j].x = i1+1;
-               dirn[i1][j].y = dcell;
-            }
-         }
-       
-         /* Add the score for a match                                   */
-         if(identity)
-         {
-            if(seq1[i1] == seq2[j]) matrix[i1][j] += match;
-         }
-         else
-         {
-            matrix[i1][j] += CalcMDMScore(seq1[i1],seq2[j]);
-         }
-      }
-
-      /* Fill in the scores in this column                              */
-      for(j1 = j; j1 > -1; j1--)
-      {
-         dia   = matrix[i+1][j1+1];
-         
-         /* Find highest score to right of diagonal                     */
-         rcell = i+2;
-         if(i+2 >= length1)   right = 0;
-         else                 right = matrix[i+2][j1+1] - penalty;
-
-         gapext = 1;
-         for(k = i+3; k<length1; k++, gapext++)
-         {
-            thisscore = matrix[k][j1+1] - (penalty + gapext*penext);
-            
-            if(thisscore > right) 
-            {
-               right = thisscore;
-               rcell = k;
-            }
-         }
-
-         /* Find highest score below diagonal                           */
-         dcell = j1+2;
-         if(j1+2 >= length2)  down = 0;
-         else                 down = matrix[i+1][j1+2] - penalty;
-
-         gapext = 1;
-         for(l = j1+3; l<length2; l++, gapext++)
-         {
-            thisscore = matrix[i+1][l] - (penalty + gapext*penext);
-            
-            if(thisscore > down) 
-            {
-               down = thisscore;
-               dcell = l;
-            }
-         }
-
-         /* Set score to best of these                                  */
-         maxoff = MAX(right, down);
-         if(dia >= maxoff)
-         {
-            matrix[i][j1] = dia;
-            dirn[i][j1].x = i+1;
-            dirn[i][j1].y = j1+1;
-         }
-         else
-         {
-            if(right > down)
-            {
-               matrix[i][j1] = right;
-               dirn[i][j1].x = rcell;
-               dirn[i][j1].y = j1+1;
-            }
-            else
-            {
-               matrix[i][j1] = down;
-               dirn[i][j1].x = i+1;
-               dirn[i][j1].y = dcell;
-            }
-         }
-       
-         /* Add the score for a match                                   */
-         if(identity)
-         {
-            if(seq1[i] == seq2[j1]) matrix[i][j1] += match;
-         }
-         else
-         {
-            matrix[i][j1] += CalcMDMScore(seq1[i],seq2[j1]);
-         }
-      }
-   } 
-   
-   score = TraceBack(matrix, dirn, length1, length2,
-                     seq1, seq2, align1, align2, align_len);
-
-   if(verbose)
-   {
-      printf("Matrix:\n-------\n");
-      for(j=0; j<length2;j++)
-      {
-         for(i=0; i<length1; i++)
-         {
-            printf("%3d ",matrix[i][j]);
-         }
-         printf("\n");
-      }
-
-      printf("Path:\n-----\n");
-      for(j=0; j<length2;j++)
-      {
-         for(i=0; i<length1; i++)
-         {
-            printf("(%3d,%3d) ",dirn[i][j].x,dirn[i][j].y);
-         }
-         printf("\n");
-      }
-   }
-    
-   blFreeArray2D((char **)matrix, maxdim, maxdim);
-   blFreeArray2D((char **)dirn,   maxdim, maxdim);
-    
-   return(score);
-}
-
-
-/************************************************************************/
-/*>int affinealign(char *seq1, int length1, char *seq2, int length2, 
-                   BOOL verbose, BOOL identity, int penalty, int penext, 
-                   char *align1, char *align2, int *align_len)
-   ---------------------------------------------------------------------
-*//**
-
-   \param[in]     *seq1         First sequence
-   \param[in]     length1       First sequence length
-   \param[in]     *seq2         Second sequence
-   \param[in]     length2       Second sequence length
-   \param[in]     verbose       Display N&W matrix
-   \param[in]     identity      Use identity matrix
-   \param[in]     penalty       Gap insertion penalty value
-   \param[in]     penext        Extension penalty
-   \param[out]    *align1       Sequence 1 aligned
-   \param[out]    *align2       Sequence 2 aligned
-   \param[out]    *align_len    Alignment length
-   \return                         Alignment score (0 on error)
-            
-   Perform simple N&W alignment of seq1 and seq2. No window is used, so
-   will be slow for long sequences.
-
-   Note that you must allocate sufficient memory for the aligned 
-   sequences.
-   The easy way to do this is to ensure that align1 and align2 are
-   of length (length1+length2).
-
--  07.10.92 Adapted from original written while at NIMR
--  08.10.92 Split into separate routines
--  09.10.92 Changed best structure to simple integers, moved 
-            SearchForBest() into TraceBack()
--  21.08.95 Was only filling in the bottom right cell at initialisation
-            rather than all the right hand column and bottom row
--  11.07.96 Changed calls to calcscore() to CalcMDMScore()
--  06.03.00 Changed name to affinealign() (the routine align() is
-            provided as a backwards compatible wrapper). Added penext 
-            parameter. Now supports affine gap penalties with separate
-            opening and extension penalties. The code now maintains
-            the path as it goes.
--  27.02.07 Exactly as affinealign() but upcases characters before
-            comparison
--  07.07.14 Use bl prefix for functions By: CTP
-
-**************************************************************************
-******    NOTE AND CHANGES SHOULD BE PROPAGATED TO affinealign()    ******
-**************************************************************************
-*/
-int affinealignuc(char *seq1, 
+int blaffinealign(char *seq1, 
                   int  length1, 
                   char *seq2, 
                   int  length2, 
@@ -584,7 +279,7 @@ int affinealignuc(char *seq1,
       }
       else
       {
-         matrix[length1-1][j] = CalcMDMScoreUC(seq1[length1-1], seq2[j]);
+         matrix[length1-1][j] = blCalcMDMScore(seq1[length1-1], seq2[j]);
       }
    }
 
@@ -597,7 +292,7 @@ int affinealignuc(char *seq1,
       }
       else
       {
-         matrix[i][length2-1] = CalcMDMScoreUC(seq1[i], seq2[length2-1]);
+         matrix[i][length2-1] = blCalcMDMScore(seq1[i], seq2[length2-1]);
       }
    }
 
@@ -680,7 +375,7 @@ int affinealignuc(char *seq1,
          }
          else
          {
-            matrix[i1][j] += CalcMDMScoreUC(seq1[i1],seq2[j]);
+            matrix[i1][j] += blCalcMDMScore(seq1[i1],seq2[j]);
          }
       }
 
@@ -754,7 +449,7 @@ int affinealignuc(char *seq1,
          }
          else
          {
-            matrix[i][j1] += CalcMDMScoreUC(seq1[i],seq2[j1]);
+            matrix[i][j1] += blCalcMDMScore(seq1[i],seq2[j1]);
          }
       }
    } 
@@ -793,8 +488,316 @@ int affinealignuc(char *seq1,
 
 
 /************************************************************************/
-/*>BOOL ReadMDM(char *mdmfile)
-   ---------------------------
+/*>int blaffinealignuc(char *seq1, int length1, char *seq2, int length2, 
+                       BOOL verbose, BOOL identity, int penalty, 
+                       int penext, char *align1, char *align2, 
+                       int *align_len)
+   ---------------------------------------------------------------------
+*//**
+
+   \param[in]     *seq1         First sequence
+   \param[in]     length1       First sequence length
+   \param[in]     *seq2         Second sequence
+   \param[in]     length2       Second sequence length
+   \param[in]     verbose       Display N&W matrix
+   \param[in]     identity      Use identity matrix
+   \param[in]     penalty       Gap insertion penalty value
+   \param[in]     penext        Extension penalty
+   \param[out]    *align1       Sequence 1 aligned
+   \param[out]    *align2       Sequence 2 aligned
+   \param[out]    *align_len    Alignment length
+   \return                         Alignment score (0 on error)
+            
+   Perform simple N&W alignment of seq1 and seq2. No window is used, so
+   will be slow for long sequences.
+
+   Note that you must allocate sufficient memory for the aligned 
+   sequences.
+   The easy way to do this is to ensure that align1 and align2 are
+   of length (length1+length2).
+
+-  07.10.92 Adapted from original written while at NIMR
+-  08.10.92 Split into separate routines
+-  09.10.92 Changed best structure to simple integers, moved 
+            SearchForBest() into TraceBack()
+-  21.08.95 Was only filling in the bottom right cell at initialisation
+            rather than all the right hand column and bottom row
+-  11.07.96 Changed calls to calcscore() to CalcMDMScore()
+-  06.03.00 Changed name to affinealign() (the routine align() is
+            provided as a backwards compatible wrapper). Added penext 
+            parameter. Now supports affine gap penalties with separate
+            opening and extension penalties. The code now maintains
+            the path as it goes.
+-  27.02.07 Exactly as affinealign() but upcases characters before
+            comparison
+-  07.07.14 Use bl prefix for functions By: CTP
+
+**************************************************************************
+******    NOTE AND CHANGES SHOULD BE PROPAGATED TO affinealign()    ******
+**************************************************************************
+*/
+int blaffinealignuc(char *seq1, 
+                    int  length1, 
+                    char *seq2, 
+                    int  length2, 
+                    BOOL verbose, 
+                    BOOL identity, 
+                    int  penalty, 
+                    int  penext,
+                    char *align1, 
+                    char *align2,
+                    int  *align_len)
+{
+   XY    **dirn   = NULL;
+   int   **matrix = NULL,
+         maxdim,
+         i,    j,    k,    l,
+         i1,   j1,
+         dia,  right, down,
+         rcell, dcell, maxoff,
+         match = 1,
+         thisscore,
+         gapext,
+         score;
+   
+   maxdim = MAX(length1, length2);
+   
+   /* Initialise the score matrix                                       */
+   if((matrix = (int **)blArray2D(sizeof(int), maxdim, maxdim))==NULL)
+      return(0);
+   if((dirn   = (XY **)blArray2D(sizeof(XY), maxdim, maxdim))==NULL)
+      return(0);
+      
+   for(i=0;i<maxdim;i++)
+   {
+      for(j=0;j<maxdim;j++)
+      {
+         matrix[i][j] = 0;
+         dirn[i][j].x = -1;
+         dirn[i][j].y = -1;
+      }
+   }
+    
+   /* Fill in scores up the right hand side of the matrix               */
+   for(j=0; j<length2; j++)
+   {
+      if(identity)
+      {
+         if(seq1[length1-1] == seq2[j]) matrix[length1-1][j] = match;
+      }
+      else
+      {
+         matrix[length1-1][j] = blCalcMDMScoreUC(seq1[length1-1],seq2[j]);
+      }
+   }
+
+   /* Fill in scores along the bottom row of the matrix                 */
+   for(i=0; i<length1; i++)
+   {
+      if(identity)
+      {
+         if(seq1[i] == seq2[length2-1]) matrix[i][length2-1] = match;
+      }
+      else
+      {
+         matrix[i][length2-1] = blCalcMDMScoreUC(seq1[i],seq2[length2-1]);
+      }
+   }
+
+   i = length1 - 1;
+   j = length2 - 1;
+   
+   /* Move back along the diagonal                                      */
+   while(i > 0 && j > 0)
+   {
+      i--;
+      j--;
+
+      /* Fill in the scores along this row                              */
+      for(i1 = i; i1 > -1; i1--)
+      {
+         dia   = matrix[i1+1][j+1];
+
+         /* Find highest score to right of diagonal                     */
+         rcell = i1+2;
+         if(i1+2 >= length1)  right = 0;
+         else                 right = matrix[i1+2][j+1] - penalty;
+         
+         gapext = 1;
+         for(k = i1+3; k<length1; k++, gapext++)
+         {
+            thisscore = matrix[k][j+1] - (penalty + gapext*penext);
+            
+            if(thisscore > right) 
+            {
+               right = thisscore;
+               rcell = k;
+            }
+         }
+
+         /* Find highest score below diagonal                           */
+         dcell = j+2;
+         if(j+2 >= length2)  down = 0;
+         else                down   = matrix[i1+1][j+2] - penalty;
+         
+         gapext = 1;
+         for(l = j+3; l<length2; l++, gapext++)
+         {
+            thisscore = matrix[i1+1][l] - (penalty + gapext*penext);
+
+            if(thisscore > down) 
+            {
+               down = thisscore;
+               dcell = l;
+            }
+         }
+         
+         /* Set score to best of these                                  */
+         maxoff = MAX(right, down);
+         if(dia >= maxoff)
+         {
+            matrix[i1][j] = dia;
+            dirn[i1][j].x = i1+1;
+            dirn[i1][j].y = j+1;
+         }
+         else
+         {
+            if(right > down)
+            {
+               matrix[i1][j] = right;
+               dirn[i1][j].x = rcell;
+               dirn[i1][j].y = j+1;
+            }
+            else
+            {
+               matrix[i1][j] = down;
+               dirn[i1][j].x = i1+1;
+               dirn[i1][j].y = dcell;
+            }
+         }
+       
+         /* Add the score for a match                                   */
+         if(identity)
+         {
+            if(seq1[i1] == seq2[j]) matrix[i1][j] += match;
+         }
+         else
+         {
+            matrix[i1][j] += blCalcMDMScoreUC(seq1[i1],seq2[j]);
+         }
+      }
+
+      /* Fill in the scores in this column                              */
+      for(j1 = j; j1 > -1; j1--)
+      {
+         dia   = matrix[i+1][j1+1];
+         
+         /* Find highest score to right of diagonal                     */
+         rcell = i+2;
+         if(i+2 >= length1)   right = 0;
+         else                 right = matrix[i+2][j1+1] - penalty;
+
+         gapext = 1;
+         for(k = i+3; k<length1; k++, gapext++)
+         {
+            thisscore = matrix[k][j1+1] - (penalty + gapext*penext);
+            
+            if(thisscore > right) 
+            {
+               right = thisscore;
+               rcell = k;
+            }
+         }
+
+         /* Find highest score below diagonal                           */
+         dcell = j1+2;
+         if(j1+2 >= length2)  down = 0;
+         else                 down = matrix[i+1][j1+2] - penalty;
+
+         gapext = 1;
+         for(l = j1+3; l<length2; l++, gapext++)
+         {
+            thisscore = matrix[i+1][l] - (penalty + gapext*penext);
+            
+            if(thisscore > down) 
+            {
+               down = thisscore;
+               dcell = l;
+            }
+         }
+
+         /* Set score to best of these                                  */
+         maxoff = MAX(right, down);
+         if(dia >= maxoff)
+         {
+            matrix[i][j1] = dia;
+            dirn[i][j1].x = i+1;
+            dirn[i][j1].y = j1+1;
+         }
+         else
+         {
+            if(right > down)
+            {
+               matrix[i][j1] = right;
+               dirn[i][j1].x = rcell;
+               dirn[i][j1].y = j1+1;
+            }
+            else
+            {
+               matrix[i][j1] = down;
+               dirn[i][j1].x = i+1;
+               dirn[i][j1].y = dcell;
+            }
+         }
+       
+         /* Add the score for a match                                   */
+         if(identity)
+         {
+            if(seq1[i] == seq2[j1]) matrix[i][j1] += match;
+         }
+         else
+         {
+            matrix[i][j1] += blCalcMDMScoreUC(seq1[i],seq2[j1]);
+         }
+      }
+   } 
+   
+   score = TraceBack(matrix, dirn, length1, length2,
+                     seq1, seq2, align1, align2, align_len);
+
+   if(verbose)
+   {
+      printf("Matrix:\n-------\n");
+      for(j=0; j<length2;j++)
+      {
+         for(i=0; i<length1; i++)
+         {
+            printf("%3d ",matrix[i][j]);
+         }
+         printf("\n");
+      }
+
+      printf("Path:\n-----\n");
+      for(j=0; j<length2;j++)
+      {
+         for(i=0; i<length1; i++)
+         {
+            printf("(%3d,%3d) ",dirn[i][j].x,dirn[i][j].y);
+         }
+         printf("\n");
+      }
+   }
+    
+   blFreeArray2D((char **)matrix, maxdim, maxdim);
+   blFreeArray2D((char **)dirn,   maxdim, maxdim);
+    
+   return(score);
+}
+
+
+/************************************************************************/
+/*>BOOL blReadMDM(char *mdmfile)
+   -----------------------------
 *//**
 
    \param[in]     *mdmfile    Mutation data matrix filename
@@ -821,7 +824,7 @@ int affinealignuc(char *seq1,
             Uses MAXWORD rather than hardcoded 16
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL ReadMDM(char *mdmfile)
+BOOL blReadMDM(char *mdmfile)
 {
    FILE *mdm = NULL;
    int  i, j, k, row, tmpStoreSize;
@@ -1148,8 +1151,8 @@ static int TraceBack(int  **matrix,
 
 
 /************************************************************************/
-/*>int CalcMDMScore(char resa, char resb)
-   --------------------------------------
+/*>int blCalcMDMScore(char resa, char resb)
+   ----------------------------------------
 *//**
 
    \param[in]     resa      First residue
@@ -1164,8 +1167,9 @@ static int TraceBack(int  **matrix,
 -  24.08.95 If a residue was not found was doing an out-of-bounds array
             reference causing a potential core dump
 -  11.07.96 Name changed from calcscore() and now non-static
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int CalcMDMScore(char resa, char resb)
+int blCalcMDMScore(char resa, char resb)
 {
    int        i,j;
    static int NWarn = 0;
@@ -1206,8 +1210,8 @@ int CalcMDMScore(char resa, char resb)
 }                               
 
 /************************************************************************/
-/*>int CalcMDMScoreUC(char resa, char resb)
-   ----------------------------------------
+/*>int blCalcMDMScoreUC(char resa, char resb)
+   ------------------------------------------
 *//**
 
    \param[in]     resa      First residue
@@ -1223,8 +1227,9 @@ int CalcMDMScore(char resa, char resb)
             reference causing a potential core dump
 -  11.07.96 Name changed from calcscore() and now non-static
 -  27.02.07 As CalcMDMScore() but upcases characters before comparison
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int CalcMDMScoreUC(char resa, char resb)
+int blCalcMDMScoreUC(char resa, char resb)
 {
    int        i,j;
    static int NWarn = 0;
@@ -1268,16 +1273,17 @@ int CalcMDMScoreUC(char resa, char resb)
 }                               
 
 /************************************************************************/
-/*>int ZeroMDM(void)
-   -----------------
+/*>int blZeroMDM(void)
+   -------------------
 *//**
 
    \return                   Maximum value in modified matrix
 
    Modifies all values in the MDM such that the minimum value is 0
 -  17.09.96 Original
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int ZeroMDM(void)
+int blZeroMDM(void)
 {
    int MinVal = sMDMScore[0][0],
        MaxVal = sMDMScore[0][0],

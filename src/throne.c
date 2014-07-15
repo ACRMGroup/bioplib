@@ -3,8 +3,8 @@
 
    \file       throne.c
    
-   \version    V1.8
-   \date       30.01.14
+   \version    V1.9
+   \date       07.07.14
    \brief      Convert between 1 and 3 letter aa codes
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -68,12 +68,14 @@
 -  V1.8  30.01.14 Added pyrrolysine and selenocysteine to translation 
                   table. By: CTP
                   PYL translates to O, SEC translates to U.
+-  V1.9  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <string.h>
 #include "SysDefs.h"
+#include "seq.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -118,8 +120,8 @@ BOOL gBioplibSeqNucleicAcid = FALSE;
 
 
 /************************************************************************/
-/*>char throne(char *three)
-   ------------------------
+/*>char blthrone(char *three)
+   --------------------------
 *//**
 
    \param[in]     *three    Three letter code
@@ -131,8 +133,9 @@ BOOL gBioplibSeqNucleicAcid = FALSE;
 -  29.09.92 Original    By: ACRM
 -  11.03.94 Modified to handle ASX and GLX in the tables
 -  25.07.95 Added handling of gBioplibSeqNucleicAcid
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char throne(char *three)
+char blthrone(char *three)
 {
    int j;
 
@@ -153,8 +156,8 @@ char throne(char *three)
 
 
 /************************************************************************/
-/*>char thronex(char *three)
-   -------------------------
+/*>char blthronex(char *three)
+   ---------------------------
 *//**
 
    \param[in]     *three    Three letter code
@@ -165,8 +168,9 @@ char throne(char *three)
    
 -  29.09.92 Original    By: ACRM
 -  25.07.95 Added handling of gBioplibSeqNucleicAcid
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char thronex(char *three)
+char blthronex(char *three)
 {
    int j;
 
@@ -184,8 +188,8 @@ char thronex(char *three)
 
 
 /************************************************************************/
-/*>char *onethr(char one)
-   ----------------------
+/*>char *blonethr(char one)
+   ------------------------
 *//**
 
    \param[in]     one     One letter code
@@ -199,8 +203,9 @@ char thronex(char *three)
             acids rather than amino acids
 -  03.02.09 Fixed nucleic search - j was incrementing instead of 
             decrementing!
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char *onethr(char one)
+char *blonethr(char one)
 {
    int j;
 

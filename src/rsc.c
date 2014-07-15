@@ -241,7 +241,7 @@ BOOL blRepSChain(PDB  *pdb,         /* PDB linked list                  */
       else     /* Not a DEL, see if it needs replacing                  */
       {
          /* If there is a sequence mismatch, replace the residue        */
-         if(*seq != throne(p->resnam))
+         if(*seq != blthrone(p->resnam))
             p = DoReplace(ResStart,NextRes,*seq,sChiTab,sFp_RefCoords);
          if(p == NULL) return(FALSE);
 
@@ -345,7 +345,7 @@ BOOL blRepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
    NextRes = blFindNextResidue(ResStart);
    
    /* If there is a sequence mismatch, replace the residue              */
-   if(aa != throne(ResStart->resnam))
+   if(aa != blthrone(ResStart->resnam))
    {
       if(DoReplace(ResStart, NextRes, aa, sChiTab, sFp_RefCoords) == 
          NULL) 
@@ -421,7 +421,7 @@ static PDB *DoReplace(PDB  *ResStart,  /* Pointer to start of residue   */
    PDB   *p;
    
    /* Check we need to do a replacement                                 */
-   if(seq == throne(ResStart->resnam)) return(NULL);
+   if(seq == blthrone(ResStart->resnam)) return(NULL);
    
    if(!strncmp(ResStart->resnam,"GLY",3)) /* Replace Gly with X         */
       retval = ReplaceGly(ResStart,NextRes,seq,fp_RefCoords);
@@ -538,7 +538,7 @@ static int ReplaceGly(PDB  *ResStart,
          *parent_mc = NULL;         /* Parent mainchain                 */
    char  *three;                    /* Three letter code                */
    
-   three = onethr(seq);
+   three = blonethr(seq);
    
    /* Read the required residue type out of the reference coordinate file.
       Returns NULL if unable to allocate memory, or residue not found.
@@ -829,7 +829,7 @@ static int Replace(PDB  *ResStart,
          *parent_mc = NULL;         /* Parent mainchain                 */
    char  *three;                    /* Three letter code                */
    
-   three = onethr(seq);
+   three = blonethr(seq);
    
    /* Read the required residue type out of the reference coordinate file.
       Returns NULL if unable to allocate memory, or residue not found.
@@ -1002,7 +1002,7 @@ static PDB *ReadRefCoords(FILE *fp,
    
    rewind(fp);
    
-   three = onethr(seq);
+   three = blonethr(seq);
 
    /* Get lines from the file                                           */
    while(fgets(buffer, MAXBUFF, fp))

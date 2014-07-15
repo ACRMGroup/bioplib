@@ -3,11 +3,11 @@
 
    \file       seq.h
    
-   \version    V2.10R
-   \date       27.02.07
+   \version    V2.11
+   \date       07.07.14
    \brief      Header file for sequence handling
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2007
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -57,6 +57,10 @@
 -  V2.8  08.03.00 Added Numeric***() alignment routines
 -  V2.9  02.10.00 Modified DoPDB2Seq()
 -  V2.10 27.02.07 Added CalcMDMScoreUC() and affinealignuc()
+-  V2.11 07.07.14 Use bl prefix for functions. Renamed PDB2Seq macros to
+                  blPDB2Seq and added PDB2Seq defines to deprecated.h 
+                  By: CTP
+
 
 *************************************************************************/
 #ifndef _SEQ_H
@@ -65,6 +69,7 @@
 #include "MathType.h"
 #include "SysDefs.h"
 #include "pdb.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -90,45 +95,46 @@ typedef struct
 
 extern BOOL gBioplibSeqNucleicAcid;
 
-#define PDB2Seq(x)         DoPDB2Seq((x), FALSE, FALSE, FALSE)
-#define PDB2SeqX(x)        DoPDB2Seq((x), TRUE,  FALSE, FALSE)
-#define PDB2SeqNoX(x)      DoPDB2Seq((x), FALSE, FALSE, TRUE)
-#define PDB2SeqXNoX(x)     DoPDB2Seq((x), TRUE,  FALSE, TRUE)
+#define blPDB2Seq(x)         blDoPDB2Seq((x), FALSE, FALSE, FALSE)
+#define blPDB2SeqX(x)        blDoPDB2Seq((x), TRUE,  FALSE, FALSE)
+#define blPDB2SeqNoX(x)      blDoPDB2Seq((x), FALSE, FALSE, TRUE)
+#define blPDB2SeqXNoX(x)     blDoPDB2Seq((x), TRUE,  FALSE, TRUE)
 
-#define PDBProt2Seq(x)     DoPDB2Seq((x), FALSE, TRUE, FALSE)
-#define PDBProt2SeqX(x)    DoPDB2Seq((x), TRUE,  TRUE, FALSE)
-#define PDBProt2SeqNoX(x)  DoPDB2Seq((x), FALSE, TRUE, TRUE)
-#define PDBProt2SeqXNoX(x) DoPDB2Seq((x), TRUE,  TRUE, TRUE)
+#define blPDBProt2Seq(x)     blDoPDB2Seq((x), FALSE, TRUE, FALSE)
+#define blPDBProt2SeqX(x)    blDoPDB2Seq((x), TRUE,  TRUE, FALSE)
+#define blPDBProt2SeqNoX(x)  blDoPDB2Seq((x), FALSE, TRUE, TRUE)
+#define blPDBProt2SeqXNoX(x) blDoPDB2Seq((x), TRUE,  TRUE, TRUE)
 
-char throne(char *three);
-char thronex(char *three);
-char *onethr(char one);
-char *DoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX);
-int SplitSeq(char *LinearSeq, char **seqs);
-int ReadSimplePIR(FILE *fp, int  maxres, char **seqs);
-int ReadPIR(FILE *fp, BOOL DoInsert, char **seqs, int maxchain, 
-            SEQINFO *seqinfo, BOOL *punct, BOOL *error);
-int ReadRawPIR(FILE *fp, char **seqs, int maxchain, BOOL upcase,
-               SEQINFO *seqinfo, BOOL *error);
-int align(char *seq1, int  length1, char *seq2, int  length2, 
-          BOOL verbose, BOOL identity, int  penalty, 
-          char *align1, char *align2, int  *align_len);
-int affinealign(char *seq1, int  length1, char *seq2, int  length2, 
-                BOOL verbose, BOOL identity, int  penalty, int penext,
-                char *align1, char *align2, int  *align_len);
-int CalcMDMScore(char resa, char resb);
-int affinealignuc(char *seq1, int  length1, char *seq2, int  length2, 
+char blthrone(char *three);
+char blthronex(char *three);
+char *blonethr(char one);
+char *blDoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX);
+int blSplitSeq(char *LinearSeq, char **seqs);
+int blReadSimplePIR(FILE *fp, int  maxres, char **seqs);
+int blReadPIR(FILE *fp, BOOL DoInsert, char **seqs, int maxchain, 
+              SEQINFO *seqinfo, BOOL *punct, BOOL *error);
+int blReadRawPIR(FILE *fp, char **seqs, int maxchain, BOOL upcase,
+                 SEQINFO *seqinfo, BOOL *error);
+int blalign(char *seq1, int  length1, char *seq2, int  length2, 
+            BOOL verbose, BOOL identity, int  penalty, 
+            char *align1, char *align2, int  *align_len);
+int blaffinealign(char *seq1, int  length1, char *seq2, int  length2, 
                   BOOL verbose, BOOL identity, int  penalty, int penext,
                   char *align1, char *align2, int  *align_len);
-int CalcMDMScoreUC(char resa, char resb);
-BOOL ReadMDM(char *mdmfile);
-int ZeroMDM(void);
-char DNAtoAA(char *dna);
-int TrueSeqLen(char *sequence);
-int KnownSeqLen(char *sequence);
-BOOL NumericReadMDM(char *mdmfile);
-int NumericCalcMDMScore(int resa, int resb);
-int NumericAffineAlign(int *seq1, int length1, int *seq2, int length2, 
-                       BOOL verbose, BOOL identity, int penalty, int penext,
-                       int *align1, int *align2, int *align_len);
+int blCalcMDMScore(char resa, char resb);
+int blaffinealignuc(char *seq1, int  length1, char *seq2, int  length2, 
+                    BOOL verbose, BOOL identity, int  penalty, int penext,
+                    char *align1, char *align2, int  *align_len);
+int blCalcMDMScoreUC(char resa, char resb);
+BOOL blReadMDM(char *mdmfile);
+int blZeroMDM(void);
+char blDNAtoAA(char *dna);
+int blTrueSeqLen(char *sequence);
+int blKnownSeqLen(char *sequence);
+BOOL blNumericReadMDM(char *mdmfile);
+int blNumericCalcMDMScore(int resa, int resb);
+int blNumericAffineAlign(int *seq1, int length1, int *seq2, int length2, 
+                         BOOL verbose, BOOL identity, int penalty,
+                         int penext, int *align1, int *align2, 
+                         int *align_len);
 #endif

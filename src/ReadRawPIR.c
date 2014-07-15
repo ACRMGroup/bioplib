@@ -3,11 +3,11 @@
 
    \file       ReadRawPIR.c
    
-   \version    V2.7
-   \date       06.02.96
+   \version    V2.8
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-6
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -64,6 +64,7 @@
 -  V2.5  26.07.95 Removed unused variables
 -  V2.6  30.10.95 Cosmetic
 -  V2.7  06.02.96 Removes trailing spaces from comment line
+-  V2.8  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -89,7 +90,7 @@
 
 
 /************************************************************************/
-/*>int ReadRawPIR(FILE *fp, char **seqs, int maxchain, BOOL upcase,
+/*>int blReadRawPIR(FILE *fp, char **seqs, int maxchain, BOOL upcase,
                   SEQINFO *seqinfo, BOOL *error)
    ------------------------------------------------------------------
 *//**
@@ -152,8 +153,8 @@
 -  26.07.95 Removed unused variables
 -  06.02.96 Remove any trailing spaces
 */
-int ReadRawPIR(FILE *fp, char **seqs, int maxchain, BOOL upcase,
-               SEQINFO *seqinfo, BOOL *error)
+int blReadRawPIR(FILE *fp, char **seqs, int maxchain, BOOL upcase,
+                 SEQINFO *seqinfo, BOOL *error)
 {
    int  ch,
         i,

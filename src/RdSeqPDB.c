@@ -180,7 +180,7 @@ char **blReadSeqresPDB(FILE *fp, int *nchains)
          /* Break out if not all positions were filled in               */
          if(res[i][0] == ' ')
             break;
-         seqs[chainnum][nres++] = throne(res[i]);
+         seqs[chainnum][nres++] = blthrone(res[i]);
       }
    }
    /* Terminate last chain                                              */

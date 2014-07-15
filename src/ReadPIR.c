@@ -3,11 +3,11 @@
 
    \file       ReadPIR.c
    
-   \version    V2.7R
-   \date       06.02.96
+   \version    V2.8
+   \date       07.07.14
    \brief      Read a PIR sequence file
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-6
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -70,6 +70,7 @@
 -  V2.5  26.07.95 Removed unused variables
 -  V2.6  30.10.95 Cosmetic
 -  V2.7  06.02.96 Removes trailing spaces from comment line
+-  V2.8  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -96,7 +97,7 @@
 */
 
 /************************************************************************/
-/*>int ReadPIR(FILE *fp, BOOL DoInsert, char **seqs, int maxchain, 
+/*>int blReadPIR(FILE *fp, BOOL DoInsert, char **seqs, int maxchain, 
                SEQINFO *seqinfo, BOOL *punct, BOOL *error)
    ------------------------------------------------------------------
 *//**
@@ -165,9 +166,10 @@
 -  28.02.95 Added check that buffer doesn't overflow. Check on nseq
             changed to >=
 -  06.02.96 Removes trailing spaces from comment line
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int ReadPIR(FILE *fp, BOOL DoInsert, char **seqs, int maxchain, 
-            SEQINFO *seqinfo, BOOL *punct, BOOL *error)
+int blReadPIR(FILE *fp, BOOL DoInsert, char **seqs, int maxchain, 
+              SEQINFO *seqinfo, BOOL *punct, BOOL *error)
 {
    int  ch,
         i,

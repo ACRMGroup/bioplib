@@ -1970,7 +1970,7 @@
 
 /************************************************************************/
 /* Renamed functions: seq.h                                             */
-/*
+
 #define throne(three)                                                    \
 ({                                                                       \
    DEPRECATED("throne()","blthrone()");                                  \
@@ -2097,10 +2097,18 @@
    blNumericAffineAlign(seq1, length1, seq2, length2, verbose, identity, penalty, penext, align1, align2, align_len);\
 })
 
-*/
- 
+/************************************************************************/
+/* Renamed macros: seq.h                                                */
 
+#define PDB2Seq(x)          blPDB2Seq(x)
+#define PDB2SeqX(x)         blPDB2SeqX(x)
+#define PDB2SeqNoX(x)       blPDB2SeqNoX(x)
+#define PDB2SeqXNoX(x)      blPDB2SeqXNoX(x)
 
+#define PDBProt2Seq(x)      blPDBProt2Seq(x)
+#define PDBProt2SeqX(x)     blPDBProt2SeqX(x)
+#define PDBProt2SeqNoX(x)   blPDBProt2SeqNoX(x)
+#define PDBProt2SeqXNoX(x)  blPDBProt2SeqXNoX(x)
 
 /************************************************************************/
 /* Globals

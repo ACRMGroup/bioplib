@@ -93,8 +93,8 @@
 */
 
 /************************************************************************/
-/*>char *DoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
-   -----------------------------------------------------------------
+/*>char *blDoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
+   -------------------------------------------------------------------
 *//**
 
    \param[in]     *pdb     PDB linked list
@@ -194,7 +194,7 @@ char *blDoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
       return(sequence);
    }
    
-   sequence[0] = ((DoAsxGlx)?thronex(p->resnam):throne(p->resnam));
+   sequence[0] = ((DoAsxGlx)?blthronex(p->resnam):blthrone(p->resnam));
    if((!ProtOnly) || (!gBioplibSeqNucleicAcid))
       rescount = 1;
    else
@@ -229,8 +229,8 @@ char *blDoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
             if(strncmp(p->resnam,"NTER",4) && strncmp(p->resnam,"CTER",4))
             {
                sequence[rescount] = ((DoAsxGlx) ? 
-                                     thronex(p->resnam):
-                                     throne(p->resnam));
+                                     blthronex(p->resnam):
+                                     blthrone(p->resnam));
                if((!ProtOnly) || (!gBioplibSeqNucleicAcid))
                   rescount++;
 
