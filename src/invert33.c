@@ -3,11 +3,11 @@
 
    \file       invert33.c
    
-   \version    V1.6
-   \date       27.09.95
+   \version    V1.7
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-5
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -54,12 +54,14 @@
 -  V1.4  03.08.93 Changed matrix multiplication to standard direction
 -  V1.5  28.07.95 Added VecDist()
 -  V1.6  27.09.95 Added MatMult33_33()
+-  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <math.h>
 #include "MathType.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -75,8 +77,8 @@
 
 
 /************************************************************************/
-/*>void invert33(REAL s[3][3], REAL ss[3][3])
-   ------------------------------------------
+/*>void blinvert33(REAL s[3][3], REAL ss[3][3])
+   --------------------------------------------
 *//**
 
    \param[in]     s        Input matrix
@@ -88,9 +90,10 @@
 -  01.06.92 Documented
 -  10.06.93 void return
 -  12.09.02 Fixed SERIOUS bug! Was basically rubbish before!
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void invert33(REAL s[3][3],
-              REAL ss[3][3])
+void blinvert33(REAL s[3][3],
+                REAL ss[3][3])
 {
    int   i,  j,
          i1, j1,

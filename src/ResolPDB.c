@@ -578,9 +578,9 @@ static int SetStrucType(char *ptr)
 
 
 /************************************************************************/
-/*>BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
-                 int *StrucType)
-   ---------------------------------------------------------------------
+/*>BOOL blGetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, 
+                      REAL *FreeR, int *StrucType)
+   -------------------------------------------------------------
 *//**
 
    \param[in]     *fp           PDB file pointer

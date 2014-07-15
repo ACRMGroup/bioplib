@@ -3,12 +3,12 @@
 
    \file       openorpipe.c
    
-   \version    V1.8
-   \date       02.04.09
+   \version    V1.9
+   \date       07.07.14
    \brief      Open a file for writing unless the filename starts with
                a | in which case open as a pipe
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1997-2009
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1997-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -58,6 +58,7 @@
                   which defines them differently
 -  V1.7  17.03.09 popen() prototype now skipped for Windows.
 -  V1.8  02.04.09 Clean compile with NOPIPE defined
+-  V1.9  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -70,6 +71,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include "macros.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -90,8 +92,8 @@ int  pclose(FILE *);
 #endif
 
 /************************************************************************/
-/*>FILE *OpenOrPipe(char *filename)
-   --------------------------------
+/*>FILE *blOpenOrPipe(char *filename)
+   ----------------------------------
 *//**
 
    \param[in]     *filename     A file or pipe to be opened
@@ -106,8 +108,9 @@ int  pclose(FILE *);
 -  26.06.97 Added call to signal()
 -  18.08.98 Added case to popen() for SunOS
 -  28.01.05 Added NOPIPE define
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-FILE *OpenOrPipe(char *filename)
+FILE *blOpenOrPipe(char *filename)
 {
    char *fnam;
    
@@ -130,8 +133,8 @@ FILE *OpenOrPipe(char *filename)
 }
 
 /************************************************************************/
-/*>int CloseOrPipe(FILE *fp)
-   -------------------------
+/*>int blCloseOrPipe(FILE *fp)
+   ---------------------------
 *//**
 
    \param[in]     *fp        File pointer to be closed
@@ -145,8 +148,9 @@ FILE *OpenOrPipe(char *filename)
 -  26.06.97 Added call to signal()
 -  28.01.05 Added NOPIPE define
 -  02.04.09 Moved 'int ret' to be in the #else
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int CloseOrPipe(FILE *fp)
+int blCloseOrPipe(FILE *fp)
 {
 #ifdef NOPIPE
    return(fclose(fp));

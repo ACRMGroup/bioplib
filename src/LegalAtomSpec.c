@@ -3,11 +3,11 @@
 
    \file       LegalAtomSpec.c
    
-   \version    V1.7
-   \date       11.10.99
+   \version    V1.8
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002
+   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002-14
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -59,11 +59,13 @@
 -  V1.7  11.10.99 Allow a . to be used to start a number (such that the
                   default blank chain name is used). Allows negative 
                   residue numbers
+-  V1.8  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include "SysDefs.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -79,7 +81,7 @@
 
 
 /************************************************************************/
-/*>BOOL LegalAtomSpec(char *spec)
+/*>BOOL blLegalAtomSpec(char *spec)
    ------------------------------
 *//**
 
@@ -90,8 +92,9 @@
    The only thing which is not legal is characters following a *
 
 -  23.07.96 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL LegalAtomSpec(char *spec)
+BOOL blLegalAtomSpec(char *spec)
 {
    char *chp;
    

@@ -3,8 +3,8 @@
 
    \file       FNam2PDB.c
    
-   \version    V1.1
-   \date       26.07.95
+   \version    V1.2
+   \date       07.07.14
    \brief      Extract a PDB code from a filename
    
    \copyright  (c) Dr. Andrew C. R. Martin 1995
@@ -48,6 +48,7 @@
    =================
 -  V1.0  24.07.95 Original
 -  V1.1  26.07.95 Fixed a NULL to '\0'
+-  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -56,6 +57,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include "macros.h"
+#include "pdb.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -70,8 +72,8 @@
 */
 
 /************************************************************************/
-/*>char *FNam2PDB(char *filename)
-   ------------------------------
+/*>char *blFNam2PDB(char *filename)
+   --------------------------------
 *//**
 
    \param[in]     *filename    A PDB filename containing a PDB code
@@ -109,8 +111,9 @@
 
 -  24.07.95 Original    By: ACRM
 -  26.07.95 Corrected a NULL to '\0'
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char *FNam2PDB(char *filename)
+char *blFNam2PDB(char *filename)
 {
    int         length,
                pos;

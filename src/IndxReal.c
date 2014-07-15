@@ -3,11 +3,11 @@
 
    \file       IndxReal.c
    
-   \version    V1.3
-   \date       08.07.96
+   \version    V1.4
+   \date       07.07.14
    \brief      Index heapsort a REAL array
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-1996
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -62,12 +62,14 @@
 -  V1.1  01.06.92 ANSIed and autodoc'd
 -  V1.2  19.07.93 Corrected bug (said j=l+1 rather than j=l+l). Oops!
 -  V1.3  08.07.96 Changed from double to REAL and tidied.
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <math.h>
 #include "MathType.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -82,8 +84,8 @@
 */
 
 /************************************************************************/
-/*>void IndexReal(REAL *arrin, int *indx, int n)
-   ---------------------------------------------
+/*>void blIndexReal(REAL *arrin, int *indx, int n)
+   -----------------------------------------------
 *//**
 
    \param[in]     *arrin   Array to be indexed
@@ -96,8 +98,9 @@
 -  01.06.92 ANSIed and autodoc'd
 -  19.07.93 Corrected bug (said j=l+1 rather than j=l+l). Oops!
 -  08.07.96 Changed from double to REAL and tidied. Changed param order
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void IndexReal(REAL *arrin, int *indx, int n)
+void blIndexReal(REAL *arrin, int *indx, int n)
 {
    int  i, j, l,
         ir,

@@ -3,11 +3,11 @@
 
    \file       MatMult33_33.c
    
-   \version    V1.6
-   \date       27.09.95
+   \version    V1.7
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002
+   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002-14
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -54,11 +54,13 @@
 -  V1.4  03.08.93 Changed matrix multiplication to standard direction
 -  V1.5  28.07.95 Added VecDist()
 -  V1.6  27.09.95 Added MatMult33_33()
+-  V1.7  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include "MathType.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -74,8 +76,8 @@
 
 
 /************************************************************************/
-/*>void MatMult33_33(REAL a[3][3], REAL b[3][3], REAL out[3][3])
-   -------------------------------------------------------------
+/*>void blMatMult33_33(REAL a[3][3], REAL b[3][3], REAL out[3][3])
+   ---------------------------------------------------------------
 *//**
 
    \param[in]     a            Matrix to be multiplied
@@ -85,8 +87,9 @@
    Multiply two 3x3 matrices
 
 -  27.09.95 Original
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void MatMult33_33(REAL a[3][3], REAL b[3][3], REAL out[3][3])
+void blMatMult33_33(REAL a[3][3], REAL b[3][3], REAL out[3][3])
 {
    int  i, j, k;
    REAL ab;

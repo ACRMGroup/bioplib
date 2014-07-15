@@ -3,11 +3,11 @@
 
    \file       KillLine.c
    
-   \version    V1.20
-   \date       18.09.96
+   \version    V1.21
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-6
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -70,11 +70,13 @@
 -  V1.18 18.12.95 OpenStdFiles() treats filename of - as stdin/stdout
 -  V1.19 05.02.96 OpenStdFiles() allows NULL pointers instead if filenames
 -  V1.20 18.09.96 Added padchar()
+-  V2.21 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <stdio.h>
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -90,8 +92,8 @@
 
 
 /************************************************************************/
-/*>void KillLine(FILE *fp)
-   -----------------------
+/*>void blKillLine(FILE *fp)
+   -------------------------
 *//**
 
    \param[in]     *fp            A file pointer
@@ -102,8 +104,9 @@
 -  08.02.91 Original
 -  28.05.92 ANSIed
 -  18.03.94 getc() -> fgetc()
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void KillLine(FILE *fp)
+void blKillLine(FILE *fp)
 {
    int ch;
    

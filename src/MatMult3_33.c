@@ -3,8 +3,8 @@
 
    \file       MatMult3_33.c
    
-   \version    V1.6
-   \date       27.09.95
+   \version    V1.7
+   \date       07.07.14
    \brief      
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-5
@@ -54,11 +54,13 @@
 -  V1.4  03.08.93 Changed matrix multiplication to standard direction
 -  V1.5  28.07.95 Added VecDist()
 -  V1.6  27.09.95 Added MatMult33_33()
+-  V1.7  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include "MathType.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -74,8 +76,8 @@
 
 
 /************************************************************************/
-/*>void MatMult3_33(VEC3F vecin, REAL matin[3][3], VEC3F *vecout)
-   -------------------------------------------------------------
+/*>void blMatMult3_33(VEC3F vecin, REAL matin[3][3], VEC3F *vecout)
+   ----------------------------------------------------------------
 *//**
 
    \param[in]     vecin        Vector to be multiplied
@@ -86,10 +88,11 @@
 
 -  30.09.92 Original
 -  03.08.93 Changed multiplication to standard direction
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void MatMult3_33(VEC3F vecin, 
-                 REAL  matin[3][3], 
-                 VEC3F *vecout)
+void blMatMult3_33(VEC3F vecin, 
+                  REAL  matin[3][3], 
+                  VEC3F *vecout)
 {
    vecout->x = vecin.x * matin[0][0] +
                vecin.y * matin[1][0] +

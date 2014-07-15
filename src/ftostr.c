@@ -3,11 +3,11 @@
 
    \file       ftostr.c
    
-   \version    V1.3R
-   \date       03.06.05
+   \version    V1.4
+   \date       07.07.14
    \brief      Convert a REAL to a string
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2005
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    EMail:      andrew@bioinf.org.uk
 
 **************************************************************************
@@ -75,6 +75,7 @@
 #include "MathType.h"
 #include "SysDefs.h"
 #include "macros.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -89,8 +90,8 @@
 */
 
 /************************************************************************/
-/*>char *ftostr(char *str, int maxlen, REAL x, int precision)
-   ----------------------------------------------------------
+/*>char *blftostr(char *str, int maxlen, REAL x, int precision)
+   ------------------------------------------------------------
 *//**
 
    \param[out]    *str       String version of number
@@ -116,11 +117,12 @@
             handle "%.0f" inconsistently
 -  14.11.97 Oops, had forgotten to fix this in the check for e-form
 -  03.06.05 Tidied up some loops to stop warnings under GCC 3.2.2
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char *ftostr(char  *str,
-             int   maxlen,
-             REAL  x,
-             int   precision)
+char *blftostr(char  *str,
+               int   maxlen,
+               REAL  x,
+               int   precision)
 {
    char   fmt[8],
           *ptr;

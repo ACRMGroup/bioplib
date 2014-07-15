@@ -3,11 +3,10 @@
 
    \file       strcatalloc.c
    
-   \version    V1.1
-   \date       11.07.00
-   \brief      
+   \version    V1.2
+   \date       07.07.14
    
-   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002
+   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002-14
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -48,12 +47,14 @@
    =================
 -  V1.0  22.05.99 Original   By: ACRM
 -  V1.1  11.07.00 Check that realloc succeeded
+-  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <stdlib.h>
 #include <string.h>
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -69,8 +70,8 @@
 
 
 /************************************************************************/
-/*>char *strcatalloc(char *instr, char *catstr)
-   --------------------------------------------
+/*>char *blstrcatalloc(char *instr, char *catstr)
+   ----------------------------------------------
 *//**
 
    \param[in]     *instr    String to append to
@@ -84,8 +85,9 @@
 -  16.06.99 Initialise outstr to NULL
 -  25.08.99 Fixed bug where testing for NULL outstr instead of catstr
 -  11.07.00 Check that realloc succeeded
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char *strcatalloc(char *instr, char *catstr)
+char *blstrcatalloc(char *instr, char *catstr)
 {
    int  totLen;
    char *outstr = NULL;

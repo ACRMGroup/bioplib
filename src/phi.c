@@ -3,11 +3,11 @@
 
    \file       phi.c
    
-   \version    V1.5
-   \date       27.03.95
+   \version    V1.6
+   \date       07.07.14
    \brief      Calculate a torsion angle
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-5
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -47,11 +47,14 @@
    Revision History:
    =================
 
+-  V1.7  07.07.14 Use bl prefix for functions By: CTP
+
 *************************************************************************/
 /* Includes
 */
 #include <math.h>
 #include "MathType.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -67,8 +70,8 @@
 
 
 /************************************************************************/
-/*>REAL phi(REAL xi,REAL yi,REAL zi,REAL xj,REAL yj,REAL zj,
-            REAL xk,REAL yk,REAL zk,REAL xl,REAL yl,REAL zl)
+/*>REAL blphi(REAL xi,REAL yi,REAL zi,REAL xj,REAL yj,REAL zj,
+              REAL xk,REAL yk,REAL zk,REAL xl,REAL yl,REAL zl)
    ---------------------------------------------------------
 *//**
 
@@ -90,19 +93,20 @@
 
 -  04.03.91 Original    By: ACRM
 -  16.06.93 Changed float to REAL
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-REAL phi(REAL xi,
-         REAL yi,
-         REAL zi,
-         REAL xj,
-         REAL yj,
-         REAL zj,
-         REAL xk,
-         REAL yk,
-         REAL zk,
-         REAL xl,
-         REAL yl,
-         REAL zl)
+REAL blphi(REAL xi,
+           REAL yi,
+           REAL zi,
+           REAL xj,
+           REAL yj,
+           REAL zj,
+           REAL xk,
+           REAL yk,
+           REAL zk,
+           REAL xl,
+           REAL yl,
+           REAL zl)
 {
    REAL xij,yij,zij,
         xkj,ykj,zkj,

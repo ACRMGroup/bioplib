@@ -3,11 +3,11 @@
 
    \file       StringToLower.c
    
-   \version    V1.21
-   \date       18.06.02
+   \version    V1.22
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2002
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -71,12 +71,14 @@
 -  V1.19 05.02.96 OpenStdFiles() allows NULL pointers instead if filenames
 -  V1.20 18.09.96 Added padchar()
 -  V1.21 18.06.02 Added string.h
+-  V1.22 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <ctype.h>
 #include <string.h>
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -92,7 +94,7 @@
 
 
 /************************************************************************/
-/*>void StringToLower(char *string1, char *string2)
+/*>void blStringToLower(char *string1, char *string2)
    ------------------------------------------------
 *//**
 
@@ -104,8 +106,9 @@
 -  06.02.91 Original
 -  28.05.92 ANSIed
 -  07.01.93 Checks case before converting for SysV
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void StringToLower(char *string1,
+void blStringToLower(char *string1,
                    char *string2)
 {
    int i;

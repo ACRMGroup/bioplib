@@ -3,11 +3,11 @@
 
    \file       OpenStdFiles.c
    
-   \version    V1.21
-   \date       18.06.02
+   \version    V1.22
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2002
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -71,6 +71,7 @@
 -  V1.19 05.02.96 OpenStdFiles() allows NULL pointers instead if filenames
 -  V1.20 18.09.96 Added padchar()
 -  V1.21 18.06.02 Added string.h
+-  V1.22 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -78,6 +79,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "SysDefs.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -93,8 +95,8 @@
 
 
 /************************************************************************/
-/*>BOOL OpenStdFiles(char *infile, char *outfile, FILE **in, FILE **out)
-   ---------------------------------------------------------------------
+/*>BOOL blOpenStdFiles(char *infile, char *outfile, FILE **in, FILE **out)
+   -----------------------------------------------------------------------
 *//**
 
    \param[in]     *infile     Input filename
@@ -110,8 +112,9 @@
 -  24.08.94 Name changed from OpenFiles() and placed in gen lib.
 -  18.12.95 Now treats a filename of - as stdin/stdout
 -  05.02.96 Allows NULL pointers
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL OpenStdFiles(char *infile, char *outfile, FILE **in, FILE **out)
+BOOL blOpenStdFiles(char *infile, char *outfile, FILE **in, FILE **out)
 {
    if(infile!=NULL && infile[0] && strcmp(infile,"-"))
    {

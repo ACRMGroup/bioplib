@@ -3,11 +3,11 @@
 
    \file       factdiv.c
    
-   \version    V1.0
-   \date       10.09.96
+   \version    V1.1
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 1996
+   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 1996-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -47,11 +47,13 @@
    Revision History:
    =================
 -  V1.0  10.09.96 Original
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include "SysDefs.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -67,8 +69,8 @@
 
 
 /************************************************************************/
-/*>ULONG factdiv(int n1, int n2)
-   -----------------------------
+/*>ULONG blfactdiv(int n1, int n2)
+   -------------------------------
 *//**
 
    Calculates the factorial of one number divided by the factorial of
@@ -76,8 +78,9 @@
    Returns 0 on numeric overflow or if n2 > n1
 
 -  09.09.96 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-ULONG factdiv(int n1, int n2)
+ULONG blfactdiv(int n1, int n2)
 {
    int   i;
    ULONG ret  = 1L,

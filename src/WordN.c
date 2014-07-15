@@ -3,11 +3,11 @@
 
    \file       WordN.c
    
-   \version    V1.20
-   \date       18.09.96
+   \version    V1.21
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002
+   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002-14
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -70,12 +70,14 @@
 -  V1.18 18.12.95 OpenStdFiles() treats filename of - as stdin/stdout
 -  V1.19 05.02.96 OpenStdFiles() allows NULL pointers instead if filenames
 -  V1.20 18.09.96 Added padchar()
+-  V1.22 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <string.h>
 #include "macros.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -91,8 +93,8 @@
 
 
 /************************************************************************/
-/*>void WordN(char *string1, char *string2, int MaxChar)
-   -----------------------------------------------------
+/*>void blWordN(char *string1, char *string2, int MaxChar)
+   -------------------------------------------------------
 *//**
 
    \param[in]     *string1       A string
@@ -107,10 +109,11 @@
 
 -  22.06.92 Original based on Word()
 -  29.03.01 Changed to use KILLLEADSPACES() macro
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void WordN(char  *string1,
-           char  *string2,
-           int   MaxChar)
+void blWordN(char  *string1,
+             char  *string2,
+             int   MaxChar)
 {
    int j;
    char *str;

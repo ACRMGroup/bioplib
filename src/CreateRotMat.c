@@ -54,12 +54,14 @@
 -  V1.4  03.08.93 Changed matrix multiplication to standard direction
 -  V1.5  28.07.95 Added VecDist()
 -  V1.6  27.09.95 Added MatMult33_33()
+-  V1.7  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <math.h>
 #include "MathType.h"
+#include "matrix.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -74,8 +76,8 @@
 */
 
 /************************************************************************/
-/*>void CreateRotMat(char direction, REAL angle, REAL matrix[3][3])
-   ----------------------------------------------------------------
+/*>void blCreateRotMat(char direction, REAL angle, REAL matrix[3][3])
+   ------------------------------------------------------------------
 *//**
 
    \param[in]     direction    Axis about which to rotate
@@ -86,8 +88,9 @@
    ('x', 'y', or 'z'), an angle (in rads) and outputs a rotation matrix
    
 -  22.07.93 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void CreateRotMat(char direction, REAL angle, REAL matrix[3][3])
+void blCreateRotMat(char direction, REAL angle, REAL matrix[3][3])
 {
    int   i, j,
          m, 

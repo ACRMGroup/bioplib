@@ -3,11 +3,11 @@
 
    \file       VecDist.c
    
-   \version    V1.2
-   \date       06.10.98
+   \version    V1.3
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-8
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -49,12 +49,14 @@
 -  V1.0  29.01.96 Original   By: ACRM
 -  V1.1  18.06.96 Added vector routines
 -  V1.2  06.10.98 Added VecAdd3()
+-  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <math.h>
 #include "MathType.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -70,8 +72,8 @@
 
 
 /************************************************************************/
-/*>REAL VecDist(REAL *a, REAL *b, int len)
-   ---------------------------------------
+/*>REAL blVecDist(REAL *a, REAL *b, int len)
+   -----------------------------------------
 *//**
 
    \param[in]     *a     An arbitrary length vector (as an array)
@@ -84,8 +86,9 @@
    Finds the distance between two vectors of arbitrary length
 
 -  28.07.95 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-REAL VecDist(REAL *a, REAL *b, int len)
+REAL blVecDist(REAL *a, REAL *b, int len)
 {
    REAL sumsq = 0.0;
    int  i;

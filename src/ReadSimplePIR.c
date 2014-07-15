@@ -3,11 +3,11 @@
 
    \file       ReadSimplePIR.c
    
-   \version    V2.8
-   \date       18.06.02
+   \version    V2.9
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2002
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -64,6 +64,7 @@
 -  V2.6  30.10.95 Cosmetic
 -  V2.7  06.02.96 Removes trailing spaces from comment line
 -  V2.8  18.06.02 Added string.h
+-  V2.9  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -72,6 +73,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -87,8 +89,8 @@
 
 
 /************************************************************************/
-/*>int ReadSimplePIR(FILE *fp, int maxres, char **seqs)
-   ----------------------------------------------------
+/*>int blReadSimplePIR(FILE *fp, int maxres, char **seqs)
+   ------------------------------------------------------
 *//**
 
    \param[in]     *fp       File pointer
@@ -104,10 +106,11 @@
 -  01.06.91 Original
 -  03.03.94 Added check on case before toupper(). Changed name.
 -  18.03.94 Changed getc() to fgetc()
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int ReadSimplePIR(FILE *fp,
-                  int  maxres,
-                  char **seqs)
+int blReadSimplePIR(FILE *fp,
+                    int  maxres,
+                    char **seqs)
 {
    char *buffer;
    int  rescount = 0,

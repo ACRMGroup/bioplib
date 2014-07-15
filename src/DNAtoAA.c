@@ -3,11 +3,11 @@
 
    \file       DNAtoAA.c
    
-   \version    V1.0R
-   \date       11.05.94
+   \version    V1.1
+   \date       07.07.14
    \brief      Convert DNA codons to amino acid 1-letter code
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -47,6 +47,8 @@
 
    Revision History:
    =================
+   
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -54,6 +56,7 @@
 #include "macros.h"
 #include <string.h>
 #include <ctype.h>
+#include "seq.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -79,8 +82,8 @@ static char *sAACode[4][4] =
 */
 
 /************************************************************************/
-/*>char DNAtoAA(char *dna)
-   -----------------------
+/*>char blDNAtoAA(char *dna)
+   -------------------------
 *//**
 
    \param[in]     *dna        DNA/RNA codon
@@ -91,8 +94,9 @@ static char *sAACode[4][4] =
    for initiation codons.
 
 -  18.04.94 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char DNAtoAA(char *dna)
+char blDNAtoAA(char *dna)
 {
    char buffer[8], *p;
    int idx1, idx2, idx3;

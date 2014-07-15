@@ -3,11 +3,11 @@
 
    \file       SetExtn.c
    
-   \version    V1.20
-   \date       18.09.96
+   \version    V1.21
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-6
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -70,12 +70,14 @@
 -  V1.18 18.12.95 OpenStdFiles() treats filename of - as stdin/stdout
 -  V1.19 05.02.96 OpenStdFiles() allows NULL pointers instead if filenames
 -  V1.20 18.09.96 Added padchar()
+-  V2.21 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <string.h>
 #include "SysDefs.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -91,8 +93,8 @@
 
 
 /************************************************************************/
-/*>void SetExtn(char *File, char *Ext)
-   -----------------------------------
+/*>void blSetExtn(char *File, char *Ext)
+   -------------------------------------
 *//**
 
    \param[in,out] *File     Filename to be modified
@@ -110,8 +112,9 @@
 -  28.05.92 ANSIed
 -  22.06.92 Improved to work from end of string for Unix filenames, etc.
 -  11.03.94 Added check on '\' for MS-DOS
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void SetExtn(char *File, char *Ext)
+void blSetExtn(char *File, char *Ext)
 {
    int   pos,
          InDir    = FALSE;

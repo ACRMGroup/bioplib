@@ -3,11 +3,11 @@
 
    \file       chindex.c
    
-   \version    V1.21
-   \date       18.06.02
+   \version    V1.22
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002
+   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002-14
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -71,11 +71,13 @@
 -  V1.19 05.02.96 OpenStdFiles() allows NULL pointers instead if filenames
 -  V1.20 18.09.96 Added padchar()
 -  V1.21 18.06.02 Added string.h
+-  V1.22 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <string.h>
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -91,8 +93,8 @@
 
 
 /************************************************************************/
-/*>int chindex(char *string, char ch)
-   ----------------------------------
+/*>int blchindex(char *string, char ch)
+   ------------------------------------
 *//**
 
    \param[in]     *string        A string
@@ -106,9 +108,10 @@
 -  10.02.91 Original
 -  28.05.92 ANSIed
 -  06.10.93 Changed name to chindex() to avoid UNIX name clash
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int chindex(char  *string,
-            char  ch)
+int blchindex(char  *string,
+              char  ch)
 {
    int count;
    

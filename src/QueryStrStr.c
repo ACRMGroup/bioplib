@@ -3,11 +3,11 @@
 
    \file       QueryStrStr.c
    
-   \version    V1.20
-   \date       18.09.96
+   \version    V1.21
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-6
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -70,11 +70,13 @@
 -  V1.18 18.12.95 OpenStdFiles() treats filename of - as stdin/stdout
 -  V1.19 05.02.96 OpenStdFiles() allows NULL pointers instead if filenames
 -  V1.20 18.09.96 Added padchar()
+-  V1.21 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <string.h>
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -90,16 +92,17 @@
 
 
 /************************************************************************/
-/*>char *QueryStrStr(char *string, char *substring)
-   ------------------------------------------------
+/*>char *blQueryStrStr(char *string, char *substring)
+   --------------------------------------------------
 *//**
 
    This is like strstr() but allows a ? character in the substring
    which matches any character.
 
 -  15.12.95 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char *QueryStrStr(char *string, char *substring)
+char *blQueryStrStr(char *string, char *substring)
 {
    int  i, j, 
         lenstr, 

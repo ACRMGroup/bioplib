@@ -3,11 +3,11 @@
 
    \file       justify.c
    
-   \version    V1.1
-   \date       18.06.02
+   \version    V1.2
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002
+   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002-14
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -48,11 +48,13 @@
    =================
 -  V1.0  30.05.02 Original
 -  V1.1  18.06.02 Added string.h
+-  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <string.h>
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -67,8 +69,8 @@
 */
 
 /************************************************************************/
-/*>void RightJustify(char *string)
-   -------------------------------
+/*>void blRightJustify(char *string)
+   ---------------------------------
 *//**
 
    \param[in,out] *string           A string 
@@ -76,8 +78,9 @@
    Right justifies a string in place
 
 -  30.05.02 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void RightJustify(char *string)
+void blRightJustify(char *string)
 {
    int len, dec;
 

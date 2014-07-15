@@ -3,11 +3,11 @@
 
    \file       Word.c
    
-   \version    V1.21
-   \date       18.06.02
+   \version    V1.22
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2002
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -71,12 +71,14 @@
 -  V1.19 05.02.96 OpenStdFiles() allows NULL pointers instead if filenames
 -  V1.20 18.09.96 Added padchar()
 -  V1.21 18.06.02 Added string.h
+-  V1.22 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <string.h>
 #include "macros.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -92,8 +94,8 @@
 
 
 /************************************************************************/
-/*>void Word(char *string1, char *string2)
-   ---------------------------------------
+/*>void blWord(char *string1, char *string2)
+   -----------------------------------------
 *//**
 
    \param[in]     *string1       A string
@@ -106,9 +108,10 @@
 -  28.05.92 ANSIed
 -  22.06.92 Added tab check.
 -  29.03.01 Changed to use KILLLEADSPACES macro
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void Word(char  *string1,
-          char  *string2)
+void blWord(char  *string1,
+            char  *string2)
 {
    int j;
    char *str;

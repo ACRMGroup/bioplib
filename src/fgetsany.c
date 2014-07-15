@@ -3,12 +3,12 @@
 
    \file       fgetsany.c
    
-   \version    V1.0
-   \date       11.09.95
+   \version    V1.1
+   \date       07.07.14
    \brief      Like fgets(), but allocates memory and returns pointer
                to memory block
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1995
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1995-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -90,6 +90,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -107,8 +108,8 @@ extern int errno;
 */
 
 /************************************************************************/
-/*>char *fgetsany(FILE *fp)
-   ------------------------
+/*>char *blfgetsany(FILE *fp)
+   --------------------------
 *//**
 
    \param[in]     *fp           File pointer open for reading
@@ -126,8 +127,9 @@ extern int errno;
    allocation failure (errno==ENOMEM). 
 
 -  11.09.95 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char *fgetsany(FILE *fp)
+char *blfgetsany(FILE *fp)
 {
    int  bufflen = MAXBUFF,
         buffpos = 0,

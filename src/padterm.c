@@ -3,11 +3,11 @@
 
    \file       padterm.c
    
-   \version    V1.21
-   \date       18.06.02
+   \version    V1.22
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2002
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -72,6 +72,7 @@
 -  V1.19 05.02.96 OpenStdFiles() allows NULL pointers instead if filenames
 -  V1.20 18.09.96 Added padchar()
 -  V1.21 18.06.02 Added string.h
+-  V1.22 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -92,8 +93,8 @@
 
 
 /************************************************************************/
-/*>void padterm(char *string, int  length)
-   ---------------------------------------
+/*>void blpadterm(char *string, int  length)
+   -----------------------------------------
 *//**
 
    \param[in,out] *string   String to be padded with spaces
@@ -102,9 +103,10 @@
    Pads a string with spaces to length characters, then terminates it.
 
 -  06.09.91 Original    By: ACRM   
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void padterm(char *string,
-             int  length)
+void blpadterm(char *string,
+               int  length)
 {
    int i;
    

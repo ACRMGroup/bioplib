@@ -3,11 +3,11 @@
 
    \file       KnownSeqLen.c
    
-   \version    V1.10
-   \date       02.10.00
+   \version    V1.11
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2000
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -62,10 +62,12 @@
                   protein-only. Added macros to recreate the
                   old PDB2Seq() interface and similar new calls
 -  V1.10 02.10.00 Added NoX option
+-  V1.11 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -81,8 +83,8 @@
 
 
 /************************************************************************/
-/*>int KnownSeqLen(char *sequence)
-   -------------------------------
+/*>int blKnownSeqLen(char *sequence)
+   ---------------------------------
 *//**
 
    \param[in]     *sequence    A sequence containing deletions
@@ -92,8 +94,9 @@
    `-', ` ' or '?' residues
 
 -  13.05.94 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int KnownSeqLen(char *sequence)
+int blKnownSeqLen(char *sequence)
 {
    int length = 0,
        i = 0;

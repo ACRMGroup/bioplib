@@ -3,8 +3,8 @@
 
    \file       SplitSeq.c
    
-   \version    V1.10
-   \date       02.10.00
+   \version    V1.11
+   \date       07.07.14
    \brief      
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2000
@@ -62,12 +62,14 @@
                   protein-only. Added macros to recreate the
                   old PDB2Seq() interface and similar new calls
 -  V1.10 02.10.00 Added NoX option
+-  V1.11 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <stdlib.h>
 #include <string.h>
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -83,8 +85,8 @@
 
 
 /************************************************************************/
-/*>int SplitSeq(char *LinearSeq, char **seqs)
-   ------------------------------------------
+/*>int blSplitSeq(char *LinearSeq, char **seqs)
+   --------------------------------------------
 *//**
 
    \param[in]     *LinearSeq   Array containing sequence with chains
@@ -100,8 +102,9 @@
 -  18.06.93 Original    By: ACRM
 -  09.07.93 Cleans up properly of allocation failed
 -  07.09.94 Sequence space was being allocated one too small
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int SplitSeq(char *LinearSeq, char **seqs)
+int blSplitSeq(char *LinearSeq, char **seqs)
 {
    char  *ptr,
          *star;

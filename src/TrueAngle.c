@@ -3,11 +3,11 @@
 
    \file       TrueAngle.c
    
-   \version    V1.5
-   \date       27.03.95
+   \version    V1.6
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-5
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -59,12 +59,14 @@
 -  V1.3  01.06.92 ANSIed
 -  V1.4  08.12.92 Changed abs() to ABS() from macros.h
 -  V1.5  27.03.95 Added TrueAngle()
+-  V1.6  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <math.h>
 #include "MathType.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -80,8 +82,8 @@
 
 
 /************************************************************************/
-/*>REAL TrueAngle(REAL opp, REAL adj)
-   ----------------------------------
+/*>REAL blTrueAngle(REAL opp, REAL adj)
+   ------------------------------------
 *//**
 
    \param[in]     opp     Opposite length
@@ -91,8 +93,9 @@
    Return the +ve angle between 0 and 2PI given the opp and adj values.
 
 -  25.07.94 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-REAL TrueAngle(REAL opp, REAL adj)
+REAL blTrueAngle(REAL opp, REAL adj)
 {
    REAL ang;
    

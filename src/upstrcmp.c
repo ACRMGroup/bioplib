@@ -3,11 +3,11 @@
 
    \file       upstrcmp.c
    
-   \version    V1.20
-   \date       18.09.96
+   \version    V1.21
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-6
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -70,11 +70,13 @@
 -  V1.18 18.12.95 OpenStdFiles() treats filename of - as stdin/stdout
 -  V1.19 05.02.96 OpenStdFiles() allows NULL pointers instead if filenames
 -  V1.20 18.09.96 Added padchar()
+-  V1.21 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <ctype.h>
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -90,8 +92,8 @@
 
 
 /************************************************************************/
-/*>int upstrcmp(char *word1, char *word2)
-   --------------------------------------
+/*>int blupstrcmp(char *word1, char *word2)
+   ----------------------------------------
 *//**
 
    \param[in]     *word1     First word
@@ -102,8 +104,9 @@
    Like strcmp(), but upcases each character before comparison
 
 -  20.04.94 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int upstrcmp(char *word1, char *word2)
+int blupstrcmp(char *word1, char *word2)
 {
    int i;
 

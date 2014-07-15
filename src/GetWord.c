@@ -3,11 +3,11 @@
 
    \file       GetWord.c
    
-   \version    V2.0
-   \date       10.06.99
+   \version    V2.1
+   \date       07.07.14
    \brief      Get a space delimited word from a string
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1995
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1995-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -48,6 +48,7 @@
    =================
 -  V1.0  02.03.99 Original   By: ACRM
 -  V2.0  10.06.99 Complete rewrite to allow escaping of characters
+-  V2.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -55,6 +56,7 @@
 #include <stdio.h>
 #include "macros.h"
 #include "SysDefs.h"
+#include "general.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -211,8 +213,8 @@ char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma)
 }
 
 /************************************************************************/
-/*>char *GetWord(char *buffer, char *word, int maxlen)
-   ---------------------------------------------------
+/*>char *blGetWord(char *buffer, char *word, int maxlen)
+   -----------------------------------------------------
 *//**
 
    \param[in]     *buffer     Input buffer to read words from
@@ -234,15 +236,16 @@ char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma)
       "\"" -> '"'     To get a double inverted comma
 
 -  10.06.99 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char *GetWord(char *buffer, char *word, int maxlen)
+char *blGetWord(char *buffer, char *word, int maxlen)
 {
    return(doGetWord(buffer, word, maxlen, TRUE));
 }
 
 /************************************************************************/
-/*>char *GetWordNC(char *buffer, char *word, int maxlen)
-   -----------------------------------------------------
+/*>char *blGetWordNC(char *buffer, char *word, int maxlen)
+   -------------------------------------------------------
 *//**
 
    \param[in]     *buffer     Input buffer to read words from
@@ -265,8 +268,9 @@ char *GetWord(char *buffer, char *word, int maxlen)
       "\"" -> '"'     To get a double inverted comma
 
 -  10.06.99 Original By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char *GetWordNC(char *buffer, char *word, int maxlen)
+char *blGetWordNC(char *buffer, char *word, int maxlen)
 {
    return(doGetWord(buffer, word, maxlen, FALSE));
 }

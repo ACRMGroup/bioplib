@@ -117,9 +117,9 @@
 */
 
 /************************************************************************/
-/*>REAL angle(REAL xi,REAL yi,REAL zi,REAL xj,REAL yj,
+/*>REAL blangle(REAL xi,REAL yi,REAL zi,REAL xj,REAL yj,
               REAL zj,REAL xk,REAL yk,REAL zk)
-   ---------------------------------------------------
+   -----------------------------------------------------
 *//**
 
    \param[in]     xi          Input coordinate

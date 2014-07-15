@@ -3,11 +3,11 @@
 
    \file       simpleangle.c
    
-   \version    V1.5
-   \date       27.03.95
+   \version    V1.6
+   \date       07.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin, 1993-5
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin, 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -47,12 +47,15 @@
    Revision History:
    =================
 
+-  V1.6  07.07.14 Use bl prefix for functions By: CTP
+
 *************************************************************************/
 /* Includes
 */
 #include <math.h>
 #include "MathType.h"
 #include "macros.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -68,8 +71,8 @@
 
 
 /************************************************************************/
-/*>REAL simpleangle(REAL ang)
-   --------------------------
+/*>REAL blsimpleangle(REAL ang)
+   ----------------------------
 *//**
 
    \param[in]     ang         An angle
@@ -80,8 +83,9 @@
 -  07.02.89 Original    By: ACRM
 -  04.03.91 Fixed return value
 -  16.06.93 Changed float to REAL
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-REAL simpleangle(REAL ang)
+REAL blsimpleangle(REAL ang)
 {
    /* Reduce to less than 360 degrees                                   */
    while(ang > 2*PI) ang -= 2*PI;

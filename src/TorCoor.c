@@ -3,11 +3,11 @@
 
    \file       TorCoor.c
    
-   \version    V1.0
-   \date       08.07.96
+   \version    V1.1
+   \date       07.07.14
    \brief      Calculate cartesian coordinates from torsion angle
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1989-96
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1989-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -55,6 +55,7 @@
 
 #include "MathType.h"
 #include "SysDefs.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -70,10 +71,10 @@
 */
 
 /************************************************************************/
-/*>BOOL TorToCoor(VEC3F ant1, VEC3F ant2, VEC3F ant3, 
-                  REAL bond, REAL theta, REAL torsion,
-                  VEC3F *coords)
-   ---------------------------------------------------
+/*>BOOL blTorToCoor(VEC3F ant1, VEC3F ant2, VEC3F ant3, 
+                    REAL bond, REAL theta, REAL torsion,
+                    VEC3F *coords)
+   -----------------------------------------------------
 *//**
 
    \param[in]     ant1      First antecedent atom coordinates
@@ -91,10 +92,11 @@
 
 -  08.07.96 Original By: ACRM based on FORTRAN code adapted from Bob
             Bruccoleri's code from CONGEN.
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL TorToCoor(VEC3F ant1, VEC3F ant2, VEC3F ant3, 
-               REAL bond, REAL theta, REAL torsion,
-               VEC3F *coords)
+BOOL blTorToCoor(VEC3F ant1, VEC3F ant2, VEC3F ant3, 
+                 REAL bond, REAL theta, REAL torsion,
+                 VEC3F *coords)
 {
    REAL x1,  y1,  z1,
         x2,  y2,  z2,
