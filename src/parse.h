@@ -3,11 +3,11 @@
 
    \file       Parse.h
    
-   \version    V1.8R
-   \date       11.03.94
+   \version    V1.9
+   \date       07.07.14
    \brief      Include file for the command parser
    
-   \copyright  SciTech Software 1991-4
+   \copyright  SciTech Software 1991-2014
    \author     Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -54,6 +54,7 @@
 -  V1.3-1.6       Skipped
 -  V1.7  01.03.94 Added mparse()
 -  V1.8  11.03.94 Skipped
+-  V1.9  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 #ifndef _PARSE_H
@@ -63,6 +64,7 @@
 /* Includes
 */
 #include "MathType.h"
+#include "deprecated.h"
 
 /************************************************************************/
 /* Defines
@@ -111,12 +113,12 @@ typedef struct              /* Used to store keywords for mparse()      */
 /************************************************************************/
 /* Prototypes
 */
-int parse(char *comline, int nkeys, KeyWd *keywords, REAL *REALparam,
+int blparse(char *comline, int nkeys, KeyWd *keywords, REAL *REALparam,
           char **strparam);
-int mparse(char *comline, int nkeys, MKeyWd *keywords, REAL *REALparam,
+int blmparse(char *comline, int nkeys, MKeyWd *keywords, REAL *REALparam,
           char **strparam, int *nparams);
-int match(char *comstring, char *string2, int *nletters);
-int GetString(char *command, char *strparam);
-int GetParam(char  *command, REAL *value, int *nletters);
+int blmatch(char *comstring, char *string2, int *nletters);
+int blGetString(char *command, char *strparam);
+int blGetParam(char  *command, REAL *value, int *nletters);
 
 #endif

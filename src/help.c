@@ -186,7 +186,7 @@ or assign has not been set.\n",HELPENV);
    rewind(fp);
 
    /* If asking from general help, display known commands               */
-   if(match(string,"HELP",&nletters) || string[0] == '?')
+   if(blmatch(string,"HELP",&nletters) || string[0] == '?')
    {
       /* Search the file for keywords, echoing them to the screen       */
       buffpos = 0;
@@ -235,7 +235,7 @@ or assign has not been set.\n",HELPENV);
          {
             ptr = FileBuff+1;
             UPPER(ptr);
-            if(match(string,ptr,&nletters))
+            if(blmatch(string,ptr,&nletters))
             {
                Found = TRUE;
                while(fgets(FileBuff, BUFFLEN, fp))

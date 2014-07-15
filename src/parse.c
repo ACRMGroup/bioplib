@@ -130,8 +130,8 @@
 #define DIC 34       /* Double inverted commas                          */
 
 /************************************************************************/
-/*>int parse(char *comline, int nkeys, KeyWd *keywords,
-             REAL *floatparam, char **strparam)
+/*>int blparse(char *comline, int nkeys, KeyWd *keywords,
+               REAL *floatparam, char **strparam)
    ----------------------------------------------------
 *//**
 
@@ -151,11 +151,11 @@
 -  28.02.11 Added # for comments
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-int parse(char  *comline,
-          int   nkeys,
-          KeyWd *keywords,
-          REAL  *floatparam,
-          char  **strparam)
+int blparse(char  *comline,
+            int   nkeys,
+            KeyWd *keywords,
+            REAL  *floatparam,
+            char  **strparam)
 {
    char *command;
    int  i,n,found,nletters,nlett = 0;
@@ -184,7 +184,7 @@ int parse(char  *comline,
                          0 if a mismatch
          We only want to act in the first case
       */
-      if((n=match(command,(keywords[i]).name,&nletters))==1)
+      if((n=blmatch(command,(keywords[i]).name,&nletters))==1)
       {
          if(found)      /* If found already                             */
          {
@@ -207,7 +207,7 @@ int parse(char  *comline,
       for(i=0; i<(keywords[found]).nparam; i++)
       {
          command = blKillLeadSpaces(command);
-         if((nletters = GetString(command,strparam[i]))==0)
+         if((nletters = blGetString(command,strparam[i]))==0)
          {
             return(PARSE_ERRP);
          }
@@ -220,7 +220,7 @@ int parse(char  *comline,
       for(i=0; i<(keywords[found]).nparam; i++)
       {
          command = blKillLeadSpaces(command);
-         if(!GetParam(command,&(floatparam[i]),&nletters))
+         if(!blGetParam(command,&(floatparam[i]),&nletters))
          {
             return(PARSE_ERRP);
          }
@@ -231,8 +231,8 @@ int parse(char  *comline,
 }
 
 /************************************************************************/
-/*>int match(char *comstring, char *string2, int *nletters)
-   --------------------------------------------------------
+/*>int blmatch(char *comstring, char *string2, int *nletters)
+   ----------------------------------------------------------
 *//**
 
    \param[in]     *comstring     A character string
@@ -251,10 +251,11 @@ int parse(char  *comline,
 -  11.07.90 Original    By: ACRM
 -  22.04.93 Tidied comments, etc. Added check on malloc and corrected
             calls to free()
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int match(char *comstring,
-          char *string2,
-          int  *nletters)
+int blmatch(char *comstring,
+            char *string2,
+            int  *nletters)
 {
    int  i;
    char *string1;
@@ -290,8 +291,8 @@ int match(char *comstring,
 }
 
 /************************************************************************/
-/*>int GetString(char *command, char *strparam)
-   --------------------------------------------
+/*>int blGetString(char *command, char *strparam)
+   ----------------------------------------------
 *//**
 
    \param[in]     *command       A character string
@@ -304,9 +305,10 @@ int match(char *comstring,
 
 -  11.07.90 Original    By: ACRM
 -  22.04.93 Tidied comments, etc. Changed toggle method
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int GetString(char *command,
-              char *strparam)
+int blGetString(char *command,
+                char *strparam)
 {
    int i,j,inv_commas;
 
@@ -341,8 +343,8 @@ int GetString(char *command,
 }
 
 /************************************************************************/
-/*>int GetParam(char *command, REAL *value, int *nletters)
-   -------------------------------------------------------
+/*>int blGetParam(char *command, REAL *value, int *nletters)
+   ---------------------------------------------------------
 *//**
 
    \param[in]     *command       A character string
@@ -357,15 +359,16 @@ int GetString(char *command,
 
 -  11.07.90 Original    By: ACRM
 -  22.04.93 Tidied comments, etc. Corrected NULL to 0
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int GetParam(char  *command,
-             REAL  *value,
-             int   *nletters)
+int blGetParam(char  *command,
+               REAL  *value,
+               int   *nletters)
 {
    char buffer[50];
    int  retval;
 
-   if((*nletters = GetString(command,buffer))==0)
+   if((*nletters = blGetString(command,buffer))==0)
       return(0);
 
    retval = sscanf(buffer,"%lf",value);
@@ -373,9 +376,9 @@ int GetParam(char  *command,
 }
 
 /************************************************************************/
-/*>int mparse(char *comline, int nkeys, MKeyWd *keywords,
-              REAL *floatparam, char **strparam, int *nparam)
-   ----------------------------------------------------------
+/*>int blmparse(char *comline, int nkeys, MKeyWd *keywords,
+                REAL *floatparam, char **strparam, int *nparam)
+   ------------------------------------------------------------
 *//**
 
    \param[in]     *comline       A command line string to parse
@@ -393,12 +396,12 @@ int GetParam(char  *command,
 -  08.10.99 Initialise nlett to 0
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-int mparse(char   *comline,
-           int    nkeys,
-           MKeyWd *keywords,
-           REAL   *floatparam,
-           char   **strparam,
-           int    *nparam)
+int blmparse(char   *comline,
+             int    nkeys,
+             MKeyWd *keywords,
+             REAL   *floatparam,
+             char   **strparam,
+             int    *nparam)
 {
    char *command;
    int  i,n,found,nletters,nlett=0;
@@ -426,7 +429,7 @@ int mparse(char   *comline,
                          0 if a mismatch
          We only want to act in the first case
       */
-      if((n=match(command,(keywords[i]).name,&nletters))==1)
+      if((n=blmatch(command,(keywords[i]).name,&nletters))==1)
       {
          if(found)      /* If found already                             */
          {
@@ -453,7 +456,7 @@ int mparse(char   *comline,
       for(i=0; i<(keywords[found]).maxparam; i++)
       {
          command = blKillLeadSpaces(command);
-         if((nletters = GetString(command,strparam[i]))==0)
+         if((nletters = blGetString(command,strparam[i]))==0)
          {
             if(i < (keywords[found]).minparam)
                return(PARSE_ERRP);
@@ -473,7 +476,7 @@ int mparse(char   *comline,
       for(i=0; i<(keywords[found]).maxparam; i++)
       {
          command = blKillLeadSpaces(command);
-         if(!GetParam(command,&(floatparam[i]),&nletters))
+         if(!blGetParam(command,&(floatparam[i]),&nletters))
          {
             if(i < (keywords[found]).minparam)
                return(PARSE_ERRP);

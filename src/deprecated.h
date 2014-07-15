@@ -1735,7 +1735,7 @@
 
 /************************************************************************/
 /* Renamed functions: parse.h                                           */
-/*
+
 #define parse(comline, nkeys, keywords, REALparam, strparam)             \
 ({                                                                       \
    DEPRECATED("parse()","blparse()");                                    \
@@ -1765,7 +1765,7 @@
    DEPRECATED("GetParam()","blGetParam()");                              \
    blGetParam( command, value, nletters);                                \
 })
-*/
+
 
 /************************************************************************/
 /* Renamed functions: plotting.h                                        */
