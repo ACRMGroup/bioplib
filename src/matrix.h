@@ -3,11 +3,11 @@
 
    \file       matrix.h
    
-   \version    V1.6R
-   \date       27.09.95
+   \version    V1.7
+   \date       07.07.14
    \brief      Include file for matrix operations
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1995
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1995-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -47,6 +47,8 @@
    Revision History:
    =================
 
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
+
 *************************************************************************/
 /* Includes
 */
@@ -68,11 +70,12 @@
 #ifndef _MATRIX_H
 #define _MATRIX_H
 #include "MathType.h"
+#include "deprecated.h"
 
-void MatMult3_33(VEC3F vecin, REAL matin[3][3], VEC3F *vecout);
-void MatMult33_33(REAL a[3][3], REAL b[3][3], REAL out[3][3]);
-void invert33(REAL s[3][3], REAL ss[3][3]);
-void CreateRotMat(char direction, REAL angle, REAL matrix[3][3]);
-REAL VecDist(REAL *a, REAL *b, int len);
+void blMatMult3_33(VEC3F vecin, REAL matin[3][3], VEC3F *vecout);
+void blMatMult33_33(REAL a[3][3], REAL b[3][3], REAL out[3][3]);
+void blinvert33(REAL s[3][3], REAL ss[3][3]);
+void blCreateRotMat(char direction, REAL angle, REAL matrix[3][3]);
+REAL blVecDist(REAL *a, REAL *b, int len);
 
 #endif

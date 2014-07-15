@@ -1700,7 +1700,7 @@
 
 /************************************************************************/
 /* Renamed functions: matrix.h                                          */
-/*
+
 #define MatMult3_33(vecin, matin, vecout)                                \
 ({                                                                       \
    DEPRECATED("MatMult3_33()","blMatMult3_33()");                        \
@@ -1731,7 +1731,6 @@
    blVecDist(a, b, len);                                                 \
 })
 
-*/
 
 /************************************************************************/
 /* Renamed functions: parse.h                                           */

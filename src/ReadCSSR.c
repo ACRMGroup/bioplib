@@ -714,7 +714,7 @@ void blortho(REAL  cell[3],        /* Cell dimensions                     */
       break;
    }
 
-   invert33(ro,rf);
+   blinvert33(ro,rf);
    for(i=0;i<3;i++)
    {
       for(j=0;j<3;j++)

@@ -95,7 +95,7 @@ void blApplyMatrixPDB(PDB  *pdb,
          incoords.x = p->x;
          incoords.y = p->y;
          incoords.z = p->z;
-         MatMult3_33(incoords,matrix,&outcoords);
+         blMatMult3_33(incoords,matrix,&outcoords);
          p->x = outcoords.x;
          p->y = outcoords.y;
          p->z = outcoords.z;
