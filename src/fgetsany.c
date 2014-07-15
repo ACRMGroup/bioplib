@@ -83,6 +83,7 @@
    =================
 
 -  V1.0  11.09.95 Original    By: ACRM
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -90,7 +91,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
-#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros

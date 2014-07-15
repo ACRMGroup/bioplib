@@ -71,7 +71,6 @@
 #include <stdlib.h>
 #include <signal.h>
 #include "macros.h"
-#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros

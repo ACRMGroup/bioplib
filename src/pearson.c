@@ -47,15 +47,14 @@
    Revision History:
    =================
 -  V1.0  29.01.96 Original   By: ACRM
--  V1.3  07.07.14 Include MathUtil.h instead of MathType.h
-                  Use bl prefix for functions By: CTP
+-  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 
 *************************************************************************/
 /* Includes
 */
 #include <math.h>
-#include "MathUtil.h"
+#include "MathType.h"
 
 
 /************************************************************************/

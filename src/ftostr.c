@@ -63,6 +63,7 @@
 -  V1.1  09.10.97 Fixed inconsistent handling of %.0f between C libs
 -  V1.2  14.11.97 Another fix to same
 -  V1.3  03.06.05 Tidied up to stop warnings under GCC 3.2.2
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -75,7 +76,6 @@
 #include "MathType.h"
 #include "SysDefs.h"
 #include "macros.h"
-#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros

@@ -55,7 +55,7 @@
 /* Includes
 */
 #include <math.h>
-#include "MathUtil.h"
+#include "MathType.h"
 
 /************************************************************************/
 /* Defines and macros

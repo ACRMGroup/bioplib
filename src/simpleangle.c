@@ -55,7 +55,6 @@
 #include <math.h>
 #include "MathType.h"
 #include "macros.h"
-#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros

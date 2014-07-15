@@ -76,7 +76,6 @@
 /* Includes
 */
 #include <string.h>
-#include "general.h"
 
 /************************************************************************/
 /* Defines and macros

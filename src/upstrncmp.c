@@ -76,7 +76,6 @@
 /* Includes
 */
 #include <ctype.h>
-#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros

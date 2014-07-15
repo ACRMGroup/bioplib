@@ -57,7 +57,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include "macros.h"
-#include "pdb.h"
 
 /************************************************************************/
 /* Defines and macros

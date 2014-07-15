@@ -47,14 +47,14 @@
    Revision History:
    =================
 -  V1.0R 12.10.05 Original
--  V1.1  07.07.14 Include MAthUtil.h Use bl prefix for functions By: CTP
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <stdio.h>
 #include <math.h>
-#include "MathUtil.h"
+#include "MathType.h"
 
 /************************************************************************/
 /* Defines and macros

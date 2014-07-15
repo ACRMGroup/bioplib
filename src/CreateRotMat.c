@@ -61,7 +61,6 @@
 */
 #include <math.h>
 #include "MathType.h"
-#include "matrix.h"
 
 /************************************************************************/
 /* Defines and macros

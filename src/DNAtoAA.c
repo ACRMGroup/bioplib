@@ -56,7 +56,6 @@
 #include "macros.h"
 #include <string.h>
 #include <ctype.h>
-#include "seq.h"
 
 /************************************************************************/
 /* Defines and macros

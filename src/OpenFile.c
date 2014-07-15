@@ -82,7 +82,6 @@
 #include <string.h>
 #include "SysDefs.h"
 #include "port.h"
-#include "general.h"
 
 /************************************************************************/
 /* Defines and macros

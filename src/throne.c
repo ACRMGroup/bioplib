@@ -75,7 +75,6 @@
 */
 #include <string.h>
 #include "SysDefs.h"
-#include "seq.h"
 
 /************************************************************************/
 /* Defines and macros

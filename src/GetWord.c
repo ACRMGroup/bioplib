@@ -56,7 +56,6 @@
 #include <stdio.h>
 #include "macros.h"
 #include "SysDefs.h"
-#include "general.h"
 
 /************************************************************************/
 /* Defines and macros

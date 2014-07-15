@@ -61,7 +61,6 @@
 */
 #include <math.h>
 #include "MathType.h"
-#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros

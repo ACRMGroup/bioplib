@@ -49,13 +49,13 @@
 -  V1.0  29.01.96 Original   By: ACRM
 -  V1.1  18.06.96 Added vector routines
 -  V1.2  06.10.98 Added VecAdd3()
--  V1.4  07.07.14 Include MathUtil.h Use bl prefix for functions By: CTP
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 
 *************************************************************************/
 /* Includes
 */
-#include "MathUtil.h"
+#include "MathType.h"
 
 /************************************************************************/
 /* Defines and macros

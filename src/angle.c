@@ -102,7 +102,6 @@
 
 #include "MathType.h"
 #include "macros.h"
-#include "angle.h"
 
 /************************************************************************/
 /* Defines and macros

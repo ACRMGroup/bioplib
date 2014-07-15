@@ -75,7 +75,6 @@
 /* Includes
 */
 #include <stdlib.h>
-#include "array.h"
 
 /************************************************************************/
 /* Defines and macros

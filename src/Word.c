@@ -78,7 +78,6 @@
 */
 #include <string.h>
 #include "macros.h"
-#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros

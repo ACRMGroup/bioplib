@@ -77,7 +77,6 @@
 /* Includes
 */
 #include <string.h>
-#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
