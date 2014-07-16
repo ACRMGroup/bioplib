@@ -59,7 +59,7 @@
 #include "deprecated.h"
 
 /* Prototypes for functions defined in fit.c                            */
-BOOL blmatfit(COOR *x1, COOR *x2, REAL rm[3][3], int n, REAL *wt1, 
+BOOL blMatfit(COOR *x1, COOR *x2, REAL rm[3][3], int n, REAL *wt1, 
               BOOL column);
 
 #endif

@@ -92,7 +92,7 @@
 
 
 /************************************************************************/
-/*>void blpadchar(char *string, int length, char ch)
+/*>void blPadchar(char *string, int length, char ch)
    -------------------------------------------------
 *//**
 
@@ -106,7 +106,7 @@
 -  18.09.96 Original based on padterm()    By: ACRM   
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-void blpadchar(char *string,
+void blPadchar(char *string,
                int  length,
                char ch)
 {

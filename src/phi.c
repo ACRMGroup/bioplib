@@ -69,7 +69,7 @@
 
 
 /************************************************************************/
-/*>REAL blphi(REAL xi,REAL yi,REAL zi,REAL xj,REAL yj,REAL zj,
+/*>REAL blPhi(REAL xi,REAL yi,REAL zi,REAL xj,REAL yj,REAL zj,
               REAL xk,REAL yk,REAL zk,REAL xl,REAL yl,REAL zl)
    ---------------------------------------------------------
 *//**
@@ -94,7 +94,7 @@
 -  16.06.93 Changed float to REAL
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-REAL blphi(REAL xi,
+REAL blPhi(REAL xi,
            REAL yi,
            REAL zi,
            REAL xj,

@@ -243,7 +243,7 @@ PDB *blReadPDB(FILE *fp,
                int  *natom)
 {
    PDB *pdb;
-   pdb = bldoReadPDB(fp, natom, TRUE, 1, 1);
+   pdb = blDoReadPDB(fp, natom, TRUE, 1, 1);
    pdb = blRemoveAlternates(pdb);
    return(pdb);
 }
@@ -269,7 +269,7 @@ PDB *blReadPDB(FILE *fp,
 PDB *blReadPDBAll(FILE *fp,
              int  *natom)
 {
-   return(bldoReadPDB(fp, natom, TRUE, 0, 0));
+   return(blDoReadPDB(fp, natom, TRUE, 0, 0));
 }
 
 /************************************************************************/
@@ -298,7 +298,7 @@ PDB *blReadPDBAtoms(FILE *fp,
                     int  *natom)
 {
    PDB *pdb;
-   pdb = bldoReadPDB(fp, natom, FALSE, 1, 1);
+   pdb = blDoReadPDB(fp, natom, FALSE, 1, 1);
    pdb = blRemoveAlternates(pdb);
    return(pdb);
 }
@@ -320,11 +320,11 @@ PDB *blReadPDBAtoms(FILE *fp,
 
 -  17.03.94 Original    By: ACRM
 -  06.03.95 Added value for NMR model to read (1 = first)
--  07.07.14 Renamed to bldoReadPDB() By: CTP
+-  07.07.14 Renamed to blDoReadPDB() By: CTP
 */
 PDB *blReadPDBOccRank(FILE *fp, int *natom, int OccRank)
 {
-   return(bldoReadPDB(fp, natom, TRUE, OccRank, 1));
+   return(blDoReadPDB(fp, natom, TRUE, OccRank, 1));
 }
 
 /************************************************************************/
@@ -348,11 +348,11 @@ PDB *blReadPDBOccRank(FILE *fp, int *natom, int OccRank)
 */
 PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
 {
-   return(bldoReadPDB(fp, natom, FALSE, OccRank, 1));
+   return(blDoReadPDB(fp, natom, FALSE, OccRank, 1));
 }
 
 /************************************************************************/
-/*>PDB *bldoReadPDB(FILE *fpin, int *natom, BOOL AllAtoms, int OccRank,
+/*>PDB *blDoReadPDB(FILE *fpin, int *natom, BOOL AllAtoms, int OccRank,
                     int ModelNum)
    --------------------------------------------------------------------
 *//**
@@ -426,9 +426,9 @@ PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
 -  22.04.14 V2.24 Call doReadPDBML() for PDBML-formatted PDB file. By: CTP
 -  02.06.14 V2.25 Updated doReadPDBML(). By: CTP
 -  09.06.14 V2.26 Set gPDBXML flag. By: CTP
--  07.07.14 V2.27 Renamed to bldoReadPDB() By: CTP
+-  07.07.14 V2.27 Renamed to blDoReadPDB() By: CTP
 */
-PDB *bldoReadPDB(FILE *fpin,
+PDB *blDoReadPDB(FILE *fpin,
                  int  *natom,
                  BOOL AllAtoms,
                  int  OccRank,
@@ -514,7 +514,7 @@ PDB *bldoReadPDB(FILE *fpin,
    if(blCheckFileFormatPDBML(fp))
    {
       /* Parse PDBML-formatted PDB file */
-      pdb = bldoReadPDBML(fp,natom,AllAtoms,OccRank,ModelNum);
+      pdb = blDoReadPDBML(fp,natom,AllAtoms,OccRank,ModelNum);
       xmlCleanupParser();     /* free globals set by parser */
       if(cmd[0]) unlink(cmd); /* delete tmp file            */
       return( pdb );          /* return PDB list            */
@@ -909,7 +909,7 @@ char *blFixAtomName(char *name, REAL occup)
       /* If the first character is a digit, move it to the end          */
       if(isdigit(name[0]))
       {
-         if((len = blchindex(name,' ')) == (-1))
+         if((len = blChindex(name,' ')) == (-1))
          {
             /* We didn't find a space in the name, so add the character
                onto the end of the string and re-terminate
@@ -1153,7 +1153,7 @@ pointer\n");
 
 
 /************************************************************************/
-/*>PDB *bldoReadPDBML(FILE *fp, int *natom, BOOL AllAtoms, int OccRank,
+/*>PDB *blDoReadPDBML(FILE *fp, int *natom, BOOL AllAtoms, int OccRank,
                       int ModelNum)
    --------------------------------------------------------------------
 *//**
@@ -1182,10 +1182,10 @@ pointer\n");
             labels (label_seq_id, etc.) if author-defined labels are 
             omitted. By: CTP
 -  09.06.14 Set gPDBXML flag. By: CTP
--  07.07.14 Renamed to bldoReadPDBML() By: CTP
+-  07.07.14 Renamed to blDoReadPDBML() By: CTP
 
 */
-PDB *bldoReadPDBML(FILE *fpin,
+PDB *blDoReadPDBML(FILE *fpin,
                    int  *natom,
                    BOOL AllAtoms,
                    int  OccRank,

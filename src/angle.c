@@ -92,7 +92,7 @@
 -  V1.3  01.06.92 ANSIed
 -  V1.4  08.12.92 Changed abs() to ABS() from macros.h
 -  V1.5  27.03.95 Added TrueAngle()
--  V1.6  07.07.14 Include angle.h Use bl prefix for functions By: CTP
+-  V1.6  07.07.14 Use bl prefix for functions By: CTP
 
 
 *************************************************************************/
@@ -116,7 +116,7 @@
 */
 
 /************************************************************************/
-/*>REAL blangle(REAL xi,REAL yi,REAL zi,REAL xj,REAL yj,
+/*>REAL blAngle(REAL xi,REAL yi,REAL zi,REAL xj,REAL yj,
               REAL zj,REAL xk,REAL yk,REAL zk)
    -----------------------------------------------------
 *//**
@@ -137,8 +137,9 @@
 -  07.02.89 Original    By: ACRM
 -  04.03.91 Fixed return value
 -  16.06.93 Changed float to REAL
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-REAL blangle(REAL xi,
+REAL blAngle(REAL xi,
              REAL yi,
              REAL zi,
              REAL xj,

@@ -431,7 +431,7 @@ PDB *blReadCSSRasPDB(FILE  *fp,
                                                     &link[6],
                                                     &link[7]);
       strcpy(p->record_type,"ATOM   ");
-      blpadterm(p->atnam,4);
+      blPadterm(p->atnam,4);
       strcpy(p->resnam,"ATM ");
       strcpy(p->insert," ");
       strcpy(p->chain," ");
@@ -482,7 +482,7 @@ void blNormaliseCSSR(CSSR *cssr,
          tempx,tempy,tempz;   /* Used during matrix multiplication      */
    CSSR  *p;
    
-   blortho(cell,alpha,beta,gamma,matrix,isw,ncode);
+   blOrtho(cell,alpha,beta,gamma,matrix,isw,ncode);
    
    /* Now multiply the coordinates by the matrix                        */
    for(p=cssr;p;NEXT(p))
@@ -543,7 +543,7 @@ void blNormalisePDB(PDB   *pdb,
          tempx,tempy,tempz;   /* Used during matrix multiplication      */
    PDB   *p;
    
-   blortho(cell,alpha,beta,gamma,matrix,isw,ncode);
+   blOrtho(cell,alpha,beta,gamma,matrix,isw,ncode);
    
    /* Now multiply the coordinates by the matrix                        */
    for(p=pdb;p;NEXT(p))
@@ -566,7 +566,7 @@ void blNormalisePDB(PDB   *pdb,
 }
 
 /************************************************************************/
-/*>void blortho(REAL cell[3], REAL alpha, REAL beta, REAL gamma,
+/*>void blOrtho(REAL cell[3], REAL alpha, REAL beta, REAL gamma,
                 REAL amatrx[3][3], int isw, int ncode)
    -----------------------------------------------------------
 *//**
@@ -600,7 +600,7 @@ void blNormalisePDB(PDB   *pdb,
 -  10.06.93 void return
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-void blortho(REAL  cell[3],        /* Cell dimensions                     */
+void blOrtho(REAL  cell[3],        /* Cell dimensions                     */
              REAL  alpha,          /* Cell angles                         */
              REAL  beta,
              REAL  gamma,
@@ -714,7 +714,7 @@ void blortho(REAL  cell[3],        /* Cell dimensions                     */
       break;
    }
 
-   blinvert33(ro,rf);
+   blInvert33(ro,rf);
    for(i=0;i<3;i++)
    {
       for(j=0;j<3;j++)

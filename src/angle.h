@@ -75,11 +75,11 @@
 #ifndef _ANGLE_H
 #define _ANGLE_H
 
-REAL blangle(REAL xi, REAL yi, REAL zi, REAL xj, REAL yj, REAL zj,
+REAL blAngle(REAL xi, REAL yi, REAL zi, REAL xj, REAL yj, REAL zj,
              REAL xk, REAL yk, REAL zk);
-REAL blphi(REAL xi, REAL yi, REAL zi, REAL xj, REAL yj, REAL zj,
+REAL blPhi(REAL xi, REAL yi, REAL zi, REAL xj, REAL yj, REAL zj,
            REAL xk, REAL yk, REAL zk, REAL xl, REAL yl, REAL zl);
-REAL blsimpleangle(REAL ang);
+REAL blSimpleangle(REAL ang);
 REAL blTrueAngle(REAL opp, REAL adj);
 BOOL blTorToCoor(VEC3F ant1, VEC3F ant2, VEC3F ant3, 
                  REAL bond, REAL theta, REAL torsion,

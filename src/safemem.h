@@ -61,9 +61,9 @@
 #include "deprecated.h"
 
 /* Prototypes                                                           */
-void *blsafemalloc(int nbytes);
-BOOL blsafefree(void *ptr);
-void blsafeleaks(void);
+void *blSafemalloc(int nbytes);
+BOOL blSafefree(void *ptr);
+void blSafeleaks(void);
 
 /* Undefine memory macros defined by macros.h                           */
 #ifdef _MACROS_H
@@ -76,15 +76,15 @@ void blsafeleaks(void);
 #endif
 
 /* Redefine macros to use safe versions of malloc()/free()              */
-#define INIT(x,y) do { x=(y *)blsafemalloc(sizeof(y));                   \
+#define INIT(x,y) do { x=(y *)blSafemalloc(sizeof(y));                   \
                     if(x != NULL) x->next = NULL; } while(0)
-#define INITPREV(x,y) do { x=(y *)blsafemalloc(sizeof(y));               \
+#define INITPREV(x,y) do { x=(y *)blSafemalloc(sizeof(y));               \
                        if(x != NULL) {x->next = NULL; x->prev = NULL;} } \
                       while(0)
-#define ALLOCNEXT(x,y) do { (x)->next=(y *)blsafemalloc(sizeof(y));      \
+#define ALLOCNEXT(x,y) do { (x)->next=(y *)blSafemalloc(sizeof(y));      \
                          if((x)->next != NULL) { (x)->next->next=NULL; } \
                          NEXT(x); } while(0)
-#define ALLOCNEXTPREV(x,y) do { (x)->next=(y *)blsafemalloc(sizeof(y));  \
+#define ALLOCNEXTPREV(x,y) do { (x)->next=(y *)blSafemalloc(sizeof(y));  \
                              if((x)->next != NULL)                       \
                              { (x)->next->prev = (x);                    \
                                (x)->next->next=NULL; }                   \

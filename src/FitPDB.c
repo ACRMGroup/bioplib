@@ -142,7 +142,7 @@ BOOL blFitPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
    }
    
    /* Everything OK, go ahead with the fitting                          */
-   RetVal = blmatfit(ref_coor,fit_coor,RotMat,NCoor,NULL,FALSE);
+   RetVal = blMatfit(ref_coor,fit_coor,RotMat,NCoor,NULL,FALSE);
    
    /* Now we can rotate the rotation list                               */
    if(RetVal)

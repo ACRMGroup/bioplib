@@ -86,7 +86,7 @@
 /************************************************************************/
 /* Prototypes
 */
-static WHOLEPDB *bldoReadWholePDB(FILE *fpin, BOOL atomsonly);
+static WHOLEPDB *blDoReadWholePDB(FILE *fpin, BOOL atomsonly);
 static STRINGLIST *blParseHeaderPDBML(FILE *fpin);
 
 #if !defined(__APPLE__) && !defined(MS_WINDOWS)
@@ -227,11 +227,11 @@ void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
    }
 
 -  07.03.07 Made into a wrapper to doReadWholePDB()
--  07.07.14 Use bldoReadWholePDB() Renamed to blReadWholePDB() By: CTP
+-  07.07.14 Use blDoReadWholePDB() Renamed to blReadWholePDB() By: CTP
 */
 WHOLEPDB *blReadWholePDB(FILE *fpin)
 {
-   return(bldoReadWholePDB(fpin, FALSE));
+   return(blDoReadWholePDB(fpin, FALSE));
 }
 
 /************************************************************************/
@@ -258,17 +258,17 @@ WHOLEPDB *blReadWholePDB(FILE *fpin)
    }
 
 -  07.03.07 Made into a wrapper to doReadWholePDB()
--  07.07.14 Use bldoReadWholePDB() Renamed to blReadWholePDBAtoms() 
+-  07.07.14 Use blDoReadWholePDB() Renamed to blReadWholePDBAtoms() 
             By: CTP
 */
 WHOLEPDB *blReadWholePDBAtoms(FILE *fpin)
 {
-   return(bldoReadWholePDB(fpin, TRUE));
+   return(blDoReadWholePDB(fpin, TRUE));
 }
 
 
 /************************************************************************/
-/*>static WHOLEPDB *bldoReadWholePDB(FILE *fpin, BOOL atomsonly)
+/*>static WHOLEPDB *blDoReadWholePDB(FILE *fpin, BOOL atomsonly)
    -------------------------------------------------------------
 *//**
 
@@ -297,12 +297,12 @@ WHOLEPDB *blReadWholePDBAtoms(FILE *fpin)
 -  05.06.07 Added support for Unix compress'd files
 -  22.04.14 Handles PDBML format. By: CTP
 -  07.07.14 Use Renamed ReadPDB functions. Use blParseHeaderPDBML().
-            Renamed to bldoReadWholePDB() By: CTP
+            Renamed to blDoReadWholePDB() By: CTP
 
    TODO FIXME!!!!! Move all this into doReadPDB so that we don't worry 
    about rewinding any more
 */
-static WHOLEPDB *bldoReadWholePDB(FILE *fpin, BOOL atomsonly)
+static WHOLEPDB *blDoReadWholePDB(FILE *fpin, BOOL atomsonly)
 {
    WHOLEPDB *wpdb;
    char     buffer[MAXBUFF];

@@ -71,7 +71,7 @@
 
 
 /************************************************************************/
-/*>REAL blpearson(REAL *x, REAL *y, int NItem)
+/*>REAL blPearson(REAL *x, REAL *y, int NItem)
    -------------------------------------------
 *//**
 
@@ -86,7 +86,7 @@
 -  07.07.14 Use bl prefix for functions By: CTP
 
 */
-REAL blpearson(REAL *x, REAL *y, int NItem)
+REAL blPearson(REAL *x, REAL *y, int NItem)
 {
    REAL MeanX,
         MeanY,

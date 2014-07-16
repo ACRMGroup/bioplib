@@ -132,7 +132,7 @@ static int  TraceBack(int **matrix, XY **dirn, int length1, int length2,
 
 
 /************************************************************************/
-/*>int blalign(char *seq1, int length1, char *seq2, int length2, 
+/*>int blAlign(char *seq1, int length1, char *seq2, int length2, 
                BOOL verbose, BOOL identity, int penalty,
                char *align1, char *align2, int *align_len)
    -----------------------------------------------------------
@@ -167,7 +167,7 @@ static int  TraceBack(int **matrix, XY **dirn, int length1, int length2,
             go
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-int blalign(char *seq1, 
+int blAlign(char *seq1, 
             int  length1, 
             char *seq2, 
             int  length2, 
@@ -178,13 +178,13 @@ int blalign(char *seq1,
             char *align2,
             int  *align_len)
 {
-   return(blaffinealign(seq1, length1, seq2, length2, verbose, identity,
+   return(blAffinealign(seq1, length1, seq2, length2, verbose, identity,
                         penalty, 0, align1, align2, align_len));
 }
 
 
 /************************************************************************/
-/*>int blaffinealign(char *seq1, int length1, char *seq2, int length2, 
+/*>int blAffinealign(char *seq1, int length1, char *seq2, int length2, 
                      BOOL verbose, BOOL identity, int penalty, int penext, 
                      char *align1, char *align2, int *align_len)
    ---------------------------------------------------------------------
@@ -228,7 +228,7 @@ int blalign(char *seq1,
 ******   NOTE AND CHANGES SHOULD BE PROPAGATED TO affinealignuc()   ******
 **************************************************************************
 */
-int blaffinealign(char *seq1, 
+int blAffinealign(char *seq1, 
                   int  length1, 
                   char *seq2, 
                   int  length2, 
@@ -488,7 +488,7 @@ int blaffinealign(char *seq1,
 
 
 /************************************************************************/
-/*>int blaffinealignuc(char *seq1, int length1, char *seq2, int length2, 
+/*>int blAffinealignuc(char *seq1, int length1, char *seq2, int length2, 
                        BOOL verbose, BOOL identity, int penalty, 
                        int penext, char *align1, char *align2, 
                        int *align_len)
@@ -536,7 +536,7 @@ int blaffinealign(char *seq1,
 ******    NOTE AND CHANGES SHOULD BE PROPAGATED TO affinealign()    ******
 **************************************************************************
 */
-int blaffinealignuc(char *seq1, 
+int blAffinealignuc(char *seq1, 
                     int  length1, 
                     char *seq2, 
                     int  length2, 

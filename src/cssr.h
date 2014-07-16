@@ -88,9 +88,9 @@ void blNormaliseCSSR(CSSR *cssr, REAL cell[3], REAL alpha, REAL beta,
                      REAL gamma);
 void blNormalisePDB(PDB *pdb, REAL cell[3], REAL alpha, REAL beta,
                     REAL gamma);
-void blortho(REAL cell[3], REAL alpha, REAL beta, REAL gamma,
+void blOrtho(REAL cell[3], REAL alpha, REAL beta, REAL gamma,
            REAL amatrx[3][3], int isw, int ncode);
-/* void blpadterm(char *string, int len);*/ /* defined in general.h */
+/* void blPadterm(char *string, int len);*/ /* defined in general.h */
 void blWriteCSSR(FILE *fp, CSSR *cssr, char *name, char *title);
 
 #endif

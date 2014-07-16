@@ -68,7 +68,7 @@
 */
 
 /************************************************************************/
-/*>void blgetfield(char *buffer, int start, int width, char *str)
+/*>void blGetfield(char *buffer, int start, int width, char *str)
    --------------------------------------------------------------
 *//**
 
@@ -87,7 +87,7 @@
 -  30.05.02 Original   By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-void blgetfield(char *buffer, int start, int width, char *str)
+void blGetfield(char *buffer, int start, int width, char *str)
 {
    int i, 
        j,

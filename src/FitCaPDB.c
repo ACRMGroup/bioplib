@@ -156,7 +156,7 @@ BOOL blFitCaPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
          else
          {
             /* Everything OK, go ahead with the fitting                 */
-            if(!blmatfit(ref_coor,fit_coor,RotMat,NCoor,NULL,FALSE))
+            if(!blMatfit(ref_coor,fit_coor,RotMat,NCoor,NULL,FALSE))
             {
                RetVal = FALSE;
             }

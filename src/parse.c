@@ -130,7 +130,7 @@
 #define DIC 34       /* Double inverted commas                          */
 
 /************************************************************************/
-/*>int blparse(char *comline, int nkeys, KeyWd *keywords,
+/*>int blParse(char *comline, int nkeys, KeyWd *keywords,
                REAL *floatparam, char **strparam)
    ----------------------------------------------------
 *//**
@@ -151,7 +151,7 @@
 -  28.02.11 Added # for comments
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-int blparse(char  *comline,
+int blParse(char  *comline,
             int   nkeys,
             KeyWd *keywords,
             REAL  *floatparam,
@@ -184,7 +184,7 @@ int blparse(char  *comline,
                          0 if a mismatch
          We only want to act in the first case
       */
-      if((n=blmatch(command,(keywords[i]).name,&nletters))==1)
+      if((n=blMatch(command,(keywords[i]).name,&nletters))==1)
       {
          if(found)      /* If found already                             */
          {
@@ -231,7 +231,7 @@ int blparse(char  *comline,
 }
 
 /************************************************************************/
-/*>int blmatch(char *comstring, char *string2, int *nletters)
+/*>int blMatch(char *comstring, char *string2, int *nletters)
    ----------------------------------------------------------
 *//**
 
@@ -253,7 +253,7 @@ int blparse(char  *comline,
             calls to free()
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-int blmatch(char *comstring,
+int blMatch(char *comstring,
             char *string2,
             int  *nletters)
 {
@@ -376,7 +376,7 @@ int blGetParam(char  *command,
 }
 
 /************************************************************************/
-/*>int blmparse(char *comline, int nkeys, MKeyWd *keywords,
+/*>int blMparse(char *comline, int nkeys, MKeyWd *keywords,
                 REAL *floatparam, char **strparam, int *nparam)
    ------------------------------------------------------------
 *//**
@@ -396,7 +396,7 @@ int blGetParam(char  *command,
 -  08.10.99 Initialise nlett to 0
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-int blmparse(char   *comline,
+int blMparse(char   *comline,
              int    nkeys,
              MKeyWd *keywords,
              REAL   *floatparam,
@@ -429,7 +429,7 @@ int blmparse(char   *comline,
                          0 if a mismatch
          We only want to act in the first case
       */
-      if((n=blmatch(command,(keywords[i]).name,&nletters))==1)
+      if((n=blMatch(command,(keywords[i]).name,&nletters))==1)
       {
          if(found)      /* If found already                             */
          {

@@ -172,10 +172,10 @@ void blHelp(char *string,
 
       if((fp=blOpenFile(HelpFile, HELPENV, "r", &NoEnv))==NULL)
       {
-         blscreen("   Error==> Unable to open help file.\n");
+         blScreen("   Error==> Unable to open help file.\n");
          sprintf(FileBuff,"            The %s environment variable \
 or assign has not been set.\n",HELPENV);
-         blscreen(FileBuff);
+         blScreen(FileBuff);
          return;
       }
 
@@ -186,7 +186,7 @@ or assign has not been set.\n",HELPENV);
    rewind(fp);
 
    /* If asking from general help, display known commands               */
-   if(blmatch(string,"HELP",&nletters) || string[0] == '?')
+   if(blMatch(string,"HELP",&nletters) || string[0] == '?')
    {
       /* Search the file for keywords, echoing them to the screen       */
       buffpos = 0;
@@ -200,9 +200,9 @@ or assign has not been set.\n",HELPENV);
             {
                buffer[buffpos] = '\0';
 
-               blscreen("   ");
-               blscreen(buffer);
-               blscreen("\n");
+               blScreen("   ");
+               blScreen(buffer);
+               blScreen("\n");
                buffpos = 0;
             }
             for(i=1; i<strlen(FileBuff); i++)
@@ -218,9 +218,9 @@ or assign has not been set.\n",HELPENV);
       {
          buffer[buffpos] = '\0';
 
-         blscreen("   ");
-         blscreen(buffer);
-         blscreen("\n");
+         blScreen("   ");
+         blScreen(buffer);
+         blScreen("\n");
       }
    }
    else  /* Asking for help on a specific subject                       */
@@ -235,7 +235,7 @@ or assign has not been set.\n",HELPENV);
          {
             ptr = FileBuff+1;
             UPPER(ptr);
-            if(blmatch(string,ptr,&nletters))
+            if(blMatch(string,ptr,&nletters))
             {
                Found = TRUE;
                while(fgets(FileBuff, BUFFLEN, fp))
@@ -243,17 +243,17 @@ or assign has not been set.\n",HELPENV);
                   TERMINATE(FileBuff);
                   if(FileBuff[0] == '#') break;
 
-                  blscreen(FileBuff);
-                  blscreen("\n");
+                  blScreen(FileBuff);
+                  blScreen("\n");
                }
             }
          }
       }
       if(!Found)
       {
-         blscreen("   Sorry, no help on '");
-         blscreen(string);
-         blscreen("'\n");
+         blScreen("   Sorry, no help on '");
+         blScreen(string);
+         blScreen("'\n");
       }
       blPagingOff();
    }
@@ -323,7 +323,7 @@ void blDoHelp(char *string,
    {
       for(;;)
       {
-         blprompt("Help");
+         blPrompt("Help");
          blGetKybdString(buffer, 160);
 
          TERMINATE(buffer);

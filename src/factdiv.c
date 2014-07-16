@@ -68,7 +68,7 @@
 
 
 /************************************************************************/
-/*>ULONG blfactdiv(int n1, int n2)
+/*>ULONG blFactdiv(int n1, int n2)
    -------------------------------
 *//**
 
@@ -79,7 +79,7 @@
 -  09.09.96 Original   By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-ULONG blfactdiv(int n1, int n2)
+ULONG blFactdiv(int n1, int n2)
 {
    int   i;
    ULONG ret  = 1L,

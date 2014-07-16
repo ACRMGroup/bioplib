@@ -83,7 +83,7 @@
 ULONG blNComb(int n, int r)
 {
    ULONG f;
-   f = blfactorial(r);
+   f = blFactorial(r);
    
-   return((f>0L)?(blNPerm(n,r)/blfactorial(r)):0L);
+   return((f>0L)?(blNPerm(n,r)/blFactorial(r)):0L);
 }

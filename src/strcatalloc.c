@@ -69,7 +69,7 @@
 
 
 /************************************************************************/
-/*>char *blstrcatalloc(char *instr, char *catstr)
+/*>char *blStrcatalloc(char *instr, char *catstr)
    ----------------------------------------------
 *//**
 
@@ -86,7 +86,7 @@
 -  11.07.00 Check that realloc succeeded
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-char *blstrcatalloc(char *instr, char *catstr)
+char *blStrcatalloc(char *instr, char *catstr)
 {
    int  totLen;
    char *outstr = NULL;

@@ -64,8 +64,8 @@
 void blCalcSD(REAL val, int action, REAL *mean, REAL *SD);
 void blCalcExtSD(REAL val, int action, REAL *Sx, REAL *SxSq, 
                  int *NValues, REAL *mean, REAL *SD);
-REAL blpearson(REAL *x, REAL *y, int NItem);
-REAL blpearson1(REAL *x, REAL *y, int NItem);
+REAL blPearson(REAL *x, REAL *y, int NItem);
+REAL blPearson1(REAL *x, REAL *y, int NItem);
 
 void blCrossProd3(VEC3F *Out, VEC3F In1, VEC3F In2);
 void blVecSub3(VEC3F *Out, VEC3F In1, VEC3F In2);
@@ -77,8 +77,8 @@ REAL blPointLineDistance(REAL Px, REAL Py, REAL Pz,
                        REAL P2x, REAL P2y, REAL P2z,
                        REAL *Rx, REAL *Ry, REAL *Rz,
                        REAL *frac);
-ULONG blfactorial(int n);
-ULONG blfactdiv(int n1, int n2);
+ULONG blFactorial(int n);
+ULONG blFactdiv(int n1, int n2);
 ULONG blNPerm(int n, int r);
 ULONG blNComb(int n, int r);
 

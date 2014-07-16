@@ -55,8 +55,8 @@
 #include "SysDefs.h"
 #include "deprecated.h"
 
-void blscreen(char *string);
-void blprompt(char *string);
+void blScreen(char *string);
+void blPrompt(char *string);
 void blRePrompt(void);
 void blGetKybdString(char *string, int maxlen);
 void blPagingOn(void);

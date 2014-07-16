@@ -90,7 +90,7 @@
 */
 
 /************************************************************************/
-/*>int blupstrncmp(char *word1, char *word2, int ncomp)
+/*>int blUpstrncmp(char *word1, char *word2, int ncomp)
    ----------------------------------------------------
 *//**
 
@@ -105,7 +105,7 @@
 -  20.04.94 Original   By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-int blupstrncmp(char *word1, char *word2, int ncomp)
+int blUpstrncmp(char *word1, char *word2, int ncomp)
 {
    int i;
 

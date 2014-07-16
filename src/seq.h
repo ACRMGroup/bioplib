@@ -105,9 +105,9 @@ extern BOOL gBioplibSeqNucleicAcid;
 #define blPDBProt2SeqNoX(x)  blDoPDB2Seq((x), FALSE, TRUE, TRUE)
 #define blPDBProt2SeqXNoX(x) blDoPDB2Seq((x), TRUE,  TRUE, TRUE)
 
-char blthrone(char *three);
-char blthronex(char *three);
-char *blonethr(char one);
+char blThrone(char *three);
+char blThronex(char *three);
+char *blOnethr(char one);
 char *blDoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX);
 int blSplitSeq(char *LinearSeq, char **seqs);
 int blReadSimplePIR(FILE *fp, int  maxres, char **seqs);
@@ -115,14 +115,14 @@ int blReadPIR(FILE *fp, BOOL DoInsert, char **seqs, int maxchain,
               SEQINFO *seqinfo, BOOL *punct, BOOL *error);
 int blReadRawPIR(FILE *fp, char **seqs, int maxchain, BOOL upcase,
                  SEQINFO *seqinfo, BOOL *error);
-int blalign(char *seq1, int  length1, char *seq2, int  length2, 
+int blAlign(char *seq1, int  length1, char *seq2, int  length2, 
             BOOL verbose, BOOL identity, int  penalty, 
             char *align1, char *align2, int  *align_len);
-int blaffinealign(char *seq1, int  length1, char *seq2, int  length2, 
+int blAffinealign(char *seq1, int  length1, char *seq2, int  length2, 
                   BOOL verbose, BOOL identity, int  penalty, int penext,
                   char *align1, char *align2, int  *align_len);
 int blCalcMDMScore(char resa, char resb);
-int blaffinealignuc(char *seq1, int  length1, char *seq2, int  length2, 
+int blAffinealignuc(char *seq1, int  length1, char *seq2, int  length2, 
                     BOOL verbose, BOOL identity, int  penalty, int penext,
                     char *align1, char *align2, int  *align_len);
 int blCalcMDMScoreUC(char resa, char resb);

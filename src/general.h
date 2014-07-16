@@ -81,23 +81,23 @@ void blStringToUpper(char *string1, char *string2);
 char *blKillLeadSpaces(char *string);
 void blKillLine(FILE *fp);
 void blSetExtn(char *File, char *Ext);
-int blchindex(char *string, char ch);
+int blChindex(char *string, char ch);
 void blWord(char *string1, char *string2);
 void blWordN(char *string1, char *string2, int  MaxChar);
-void blpadterm(char *string, int length); /* defined in cssr.h */
-void blpadchar(char *string, int length, char ch);
+void blPadterm(char *string, int length); /* defined in cssr.h */
+void blPadchar(char *string, int length, char ch);
 BOOL blCheckExtn(char *string, char *ext);
-char *blftostr(char *str, int maxlen, REAL x, int precision);
+char *blFtostr(char *str, int maxlen, REAL x, int precision);
 
 void blGetFilestem(char *filename, char *stem);
-int blupstrcmp(char *word1, char *word2);
-int blupstrncmp(char *word1, char *word2, int ncomp);
+int blUpstrcmp(char *word1, char *word2);
+int blUpstrncmp(char *word1, char *word2, int ncomp);
 char *blGetWord(char *buffer, char *word, int maxsize);
 BOOL blOpenStdFiles(char *infile, char *outfile, FILE **in, FILE **out);
 FILE *blOpenFile(char *filename, char *envvar, char *mode, BOOL *noenv);
-int blcountchar(char *string, char ch);
-char *blfgetsany(FILE *fp);
-char *blstrcatalloc(char *instr, char *catstr);
+int blCountchar(char *string, char ch);
+char *blFgetsany(FILE *fp);
+char *blStrcatalloc(char *instr, char *catstr);
 
 STRINGLIST *blStoreString(STRINGLIST *StringList, char *string);
 BOOL blInStringList(STRINGLIST *StringList, char *string);
@@ -114,6 +114,6 @@ BOOL blWrapString(char *in, char *out, int maxlen);
 BOOL blWrapPrint(FILE *out, char *string);
 void blRightJustify(char *string);
 char *blGetWordNC(char *buffer, char *word, int maxlen);
-void blgetfield(char *buffer, int start, int width, char *str);
+void blGetfield(char *buffer, int start, int width, char *str);
 
 #endif

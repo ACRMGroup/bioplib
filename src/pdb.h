@@ -365,9 +365,9 @@ PDB *blReadPDBAll(FILE *fp, int *natom);
 PDB *blReadPDBAtoms(FILE *fp, int *natom);
 PDB *blReadPDBOccRank(FILE *fp, int *natom, int OccRank);
 PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank);
-PDB *bldoReadPDB(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank, 
+PDB *blDoReadPDB(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank, 
                  int ModelNum);
-PDB *bldoReadPDBML(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank, 
+PDB *blDoReadPDBML(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank, 
                    int ModelNum);
 BOOL blCheckFileFormatPDBML(FILE *fp);
 

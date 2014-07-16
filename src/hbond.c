@@ -288,7 +288,7 @@ BOOL blValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP)
             return(FALSE);
       }
 
-      ang1 = blangle(AtomP->x, AtomP->y, AtomP->z,
+      ang1 = blAngle(AtomP->x, AtomP->y, AtomP->z,
                      AtomA->x, AtomA->y, AtomA->z,
                      AtomD->x, AtomD->y, AtomD->z);
 
@@ -299,7 +299,7 @@ BOOL blValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP)
    }
    else
    {
-      ang2 = blangle(AtomD->x, AtomD->y, AtomD->z,
+      ang2 = blAngle(AtomD->x, AtomD->y, AtomD->z,
                      AtomH->x, AtomH->y, AtomH->z,
                      AtomA->x, AtomA->y, AtomA->z);
 
@@ -312,7 +312,7 @@ BOOL blValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP)
       }
       else
       {
-         ang1 = blangle(AtomP->x, AtomP->y, AtomP->z,
+         ang1 = blAngle(AtomP->x, AtomP->y, AtomP->z,
                         AtomA->x, AtomA->y, AtomA->z,
                         AtomH->x, AtomH->y, AtomH->z);
       }

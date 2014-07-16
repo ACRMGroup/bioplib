@@ -90,7 +90,7 @@
 */
 
 /************************************************************************/
-/*>char *blftostr(char *str, int maxlen, REAL x, int precision)
+/*>char *blFtostr(char *str, int maxlen, REAL x, int precision)
    ------------------------------------------------------------
 *//**
 
@@ -119,7 +119,7 @@
 -  03.06.05 Tidied up some loops to stop warnings under GCC 3.2.2
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-char *blftostr(char  *str,
+char *blFtostr(char  *str,
                int   maxlen,
                REAL  x,
                int   precision)

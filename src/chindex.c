@@ -92,7 +92,7 @@
 
 
 /************************************************************************/
-/*>int blchindex(char *string, char ch)
+/*>int blChindex(char *string, char ch)
    ------------------------------------
 *//**
 
@@ -109,7 +109,7 @@
 -  06.10.93 Changed name to chindex() to avoid UNIX name clash
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-int blchindex(char  *string,
+int blChindex(char  *string,
               char  ch)
 {
    int count;

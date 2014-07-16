@@ -136,7 +136,7 @@
 -  V2.18 29.04.14 Added DEPRECATED()   By: CTP
 -  V2.19 07.05.14 Moved DEPRECATED() to deprecated.h  By: CTP
 -  V2.20 07.07.14 Use bl prefix for functions - change padterm() to 
-                  blpadterm() By: CTP
+                  blPadterm() By: CTP
 
 *************************************************************************/
 #ifndef _MACROS_H
@@ -383,7 +383,7 @@ do {                                                                     \
 */
 #define PADMINTERM(string, len)                                  \
         do {                                                     \
-        if(strlen((string)) < (len)) blpadterm((string), (len)); \
+        if(strlen((string)) < (len)) blPadterm((string), (len)); \
         } while(0)
 
 /************************************************************************/

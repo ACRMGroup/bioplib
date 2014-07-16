@@ -113,11 +113,11 @@ typedef struct              /* Used to store keywords for mparse()      */
 /************************************************************************/
 /* Prototypes
 */
-int blparse(char *comline, int nkeys, KeyWd *keywords, REAL *REALparam,
+int blParse(char *comline, int nkeys, KeyWd *keywords, REAL *REALparam,
           char **strparam);
-int blmparse(char *comline, int nkeys, MKeyWd *keywords, REAL *REALparam,
+int blMparse(char *comline, int nkeys, MKeyWd *keywords, REAL *REALparam,
           char **strparam, int *nparams);
-int blmatch(char *comstring, char *string2, int *nletters);
+int blMatch(char *comstring, char *string2, int *nletters);
 int blGetString(char *command, char *strparam);
 int blGetParam(char  *command, REAL *value, int *nletters);
 

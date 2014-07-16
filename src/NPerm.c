@@ -81,7 +81,7 @@
 */
 ULONG blNPerm(int n, int r)
 {
-   return(blfactdiv(n,(n-r)));
+   return(blFactdiv(n,(n-r)));
 }
 
 

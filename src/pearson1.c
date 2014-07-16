@@ -69,7 +69,7 @@
 
 
 /************************************************************************/
-/*>REAL blpearson1(REAL *x, REAL *y, int NItem)
+/*>REAL blPearson1(REAL *x, REAL *y, int NItem)
    --------------------------------------------
 *//**
 
@@ -86,7 +86,7 @@
             Biology 2 ed. Norman TJ Bailey. Publ. Unibooks 1981  By: RM
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-REAL blpearson1(REAL *x, REAL *y, int NItem)
+REAL blPearson1(REAL *x, REAL *y, int NItem)
 {
    REAL SumX,
         SumY,

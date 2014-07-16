@@ -112,7 +112,7 @@ static char    sBlank        = BLANK;
 */
 
 /************************************************************************/
-/*>void *blsafemalloc(int nbytes)
+/*>void *blSafemalloc(int nbytes)
    ------------------------------
 *//**
 
@@ -122,7 +122,7 @@ static char    sBlank        = BLANK;
 -  23.06.95 Original    By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-void *blsafemalloc(int nbytes)
+void *blSafemalloc(int nbytes)
 {
    MEMLIST        *p;
    static BOOL    FirstCall = TRUE;
@@ -212,7 +212,7 @@ shortened to the LSB.\n");
 }
 
 /************************************************************************/
-/*>void blsafefree(void *ptr)
+/*>void blSafefree(void *ptr)
    --------------------------
 *//**
 
@@ -223,7 +223,7 @@ shortened to the LSB.\n");
 -  27.02.98 Added cast to ptr
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL blsafefree(void *ptr)
+BOOL blSafefree(void *ptr)
 {
    MEMLIST *p;
    int     i,
@@ -290,7 +290,7 @@ BOOL blsafefree(void *ptr)
 }
 
 /************************************************************************/
-/*>void blsafeleaks(void)
+/*>void blSafeleaks(void)
    ----------------------
 *//**
 
@@ -299,7 +299,7 @@ BOOL blsafefree(void *ptr)
 -  03.07.06  Original   By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-void blsafeleaks(void)
+void blSafeleaks(void)
 {
    MEMLIST *p;
    for(p=sSafeMemList; p!=NULL; NEXT(p))

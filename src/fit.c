@@ -84,7 +84,7 @@
 static void qikfit(REAL umat[3][3], REAL rm[3][3], BOOL column);
 
 /************************************************************************/
-/*>BOOL blmatfit(COOR *x1, COOR *x2, REAL rm[3][3], int n,
+/*>BOOL blMatfit(COOR *x1, COOR *x2, REAL rm[3][3], int n,
                REAL *wt1, BOOL column)
    -------------------------------------------------------
 *//**
@@ -113,7 +113,7 @@ static void qikfit(REAL umat[3][3], REAL rm[3][3], BOOL column);
 -  07.07.14 Use bl prefix for functions By: CTP
 
 */
-BOOL blmatfit(COOR    *x1,        /* First coord array    */
+BOOL blMatfit(COOR    *x1,        /* First coord array    */
               COOR    *x2,        /* Second coord array   */
               REAL    rm[3][3],   /* Rotation matrix      */
               int     n,          /* Number of points     */

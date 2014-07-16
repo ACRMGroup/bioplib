@@ -119,7 +119,7 @@ BOOL gBioplibSeqNucleicAcid = FALSE;
 
 
 /************************************************************************/
-/*>char blthrone(char *three)
+/*>char blThrone(char *three)
    --------------------------
 *//**
 
@@ -134,7 +134,7 @@ BOOL gBioplibSeqNucleicAcid = FALSE;
 -  25.07.95 Added handling of gBioplibSeqNucleicAcid
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-char blthrone(char *three)
+char blThrone(char *three)
 {
    int j;
 
@@ -155,7 +155,7 @@ char blthrone(char *three)
 
 
 /************************************************************************/
-/*>char blthronex(char *three)
+/*>char blThronex(char *three)
    ---------------------------
 *//**
 
@@ -169,7 +169,7 @@ char blthrone(char *three)
 -  25.07.95 Added handling of gBioplibSeqNucleicAcid
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-char blthronex(char *three)
+char blThronex(char *three)
 {
    int j;
 
@@ -187,7 +187,7 @@ char blthronex(char *three)
 
 
 /************************************************************************/
-/*>char *blonethr(char one)
+/*>char *blOnethr(char one)
    ------------------------
 *//**
 
@@ -204,7 +204,7 @@ char blthronex(char *three)
             decrementing!
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-char *blonethr(char one)
+char *blOnethr(char one)
 {
    int j;
 

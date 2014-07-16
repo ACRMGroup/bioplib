@@ -93,7 +93,7 @@ static BOOL sDoPaging    = FALSE,
 */
 
 /************************************************************************/
-/*>blscreen(char *string)
+/*>blScreen(char *string)
    ----------------------
 *//**
 
@@ -112,7 +112,7 @@ static BOOL sDoPaging    = FALSE,
             into GetKybdString()
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-void blscreen(char *string)
+void blScreen(char *string)
 {
    if(sDoPaging && sInteractive)
    {
@@ -127,7 +127,7 @@ void blscreen(char *string)
             if(!sWindowMode)
                printf("\n");
 
-            blprompt("More...");
+            blPrompt("More...");
             blGetKybdString(dummy, 80);
          }
       }
@@ -155,7 +155,7 @@ void blscreen(char *string)
 }
 
 /************************************************************************/
-/*>blprompt(char *string)
+/*>blPrompt(char *string)
    ----------------------
 *//**
 
@@ -174,7 +174,7 @@ void blscreen(char *string)
 -  15.03.94 Now sets up string and just calls RePrompt()
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-void blprompt(char *string)
+void blPrompt(char *string)
 {
    if(string[strlen(string)-1] == '.')
       sprintf(sPromptString,"%s ",string);

@@ -91,7 +91,7 @@
 
 
 /************************************************************************/
-/*>int blcountchar(char *string, char ch)
+/*>int blCountchar(char *string, char ch)
    --------------------------------------
 *//**
 
@@ -104,7 +104,7 @@
 -  17.07.95 Original    By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-int blcountchar(char *string, char ch)
+int blCountchar(char *string, char ch)
 {
    char *chp;
    int  count = 0;

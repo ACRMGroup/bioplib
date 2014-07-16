@@ -68,7 +68,7 @@
 
 
 /************************************************************************/
-/*>ULONG blfactorial(int n)
+/*>ULONG blFactorial(int n)
    ------------------------
 *//**
 
@@ -78,7 +78,7 @@
 -  09.09.96 Original   By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-ULONG blfactorial(int n)
+ULONG blFactorial(int n)
 {
    int i;
    ULONG ret  = 1L,

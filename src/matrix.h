@@ -74,7 +74,7 @@
 
 void blMatMult3_33(VEC3F vecin, REAL matin[3][3], VEC3F *vecout);
 void blMatMult33_33(REAL a[3][3], REAL b[3][3], REAL out[3][3]);
-void blinvert33(REAL s[3][3], REAL ss[3][3]);
+void blInvert33(REAL s[3][3], REAL ss[3][3]);
 void blCreateRotMat(char direction, REAL angle, REAL matrix[3][3]);
 REAL blVecDist(REAL *a, REAL *b, int len);
 

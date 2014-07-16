@@ -76,7 +76,7 @@
 
 
 /************************************************************************/
-/*>void blinvert33(REAL s[3][3], REAL ss[3][3])
+/*>void blInvert33(REAL s[3][3], REAL ss[3][3])
    --------------------------------------------
 *//**
 
@@ -91,7 +91,7 @@
 -  12.09.02 Fixed SERIOUS bug! Was basically rubbish before!
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-void blinvert33(REAL s[3][3],
+void blInvert33(REAL s[3][3],
                 REAL ss[3][3])
 {
    int   i,  j,

@@ -108,7 +108,7 @@ extern int errno;
 */
 
 /************************************************************************/
-/*>char *blfgetsany(FILE *fp)
+/*>char *blFgetsany(FILE *fp)
    --------------------------
 *//**
 
@@ -129,7 +129,7 @@ extern int errno;
 -  11.09.95 Original    By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-char *blfgetsany(FILE *fp)
+char *blFgetsany(FILE *fp)
 {
    int  bufflen = MAXBUFF,
         buffpos = 0,

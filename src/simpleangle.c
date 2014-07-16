@@ -70,7 +70,7 @@
 
 
 /************************************************************************/
-/*>REAL blsimpleangle(REAL ang)
+/*>REAL blSimpleangle(REAL ang)
    ----------------------------
 *//**
 
@@ -84,7 +84,7 @@
 -  16.06.93 Changed float to REAL
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-REAL blsimpleangle(REAL ang)
+REAL blSimpleangle(REAL ang)
 {
    /* Reduce to less than 360 degrees                                   */
    while(ang > 2*PI) ang -= 2*PI;

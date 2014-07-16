@@ -93,7 +93,7 @@
 
 
 /************************************************************************/
-/*>void blpadterm(char *string, int  length)
+/*>void blPadterm(char *string, int  length)
    -----------------------------------------
 *//**
 
@@ -105,7 +105,7 @@
 -  06.09.91 Original    By: ACRM   
 -  07.07.14 Use bl prefix for functions By: CTP
 */
-void blpadterm(char *string,
+void blPadterm(char *string,
                int  length)
 {
    int i;

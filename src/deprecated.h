@@ -408,8 +408,8 @@
 
 #define doReadPDB(fpin, natom, AllAtoms, OccRank, ModelNum)              \
 ({                                                                       \
-   DEPRECATED("doReadPDB()","bldoReadPDB()");                            \
-   bldoReadPDB(fpin, natom, AllAtoms, OccRank, ModelNum);                \
+   DEPRECATED("doReadPDB()","blDoReadPDB()");                            \
+   blDoReadPDB(fpin, natom, AllAtoms, OccRank, ModelNum);                \
 })
 
 #define FixAtomName(name, occup)                                         \
@@ -426,8 +426,8 @@
 
 #define doReadPDBML(fp, natom, AllAtoms, OccRank, ModelNum)              \
 ({                                                                       \
-   DEPRECATED("doReadPDBML()","bldoReadPDBML()");                        \
-   bldoReadPDBML(fp, natom, AllAtoms, OccRank, ModelNum);                \
+   DEPRECATED("doReadPDBML()","blDoReadPDBML()");                        \
+   blDoReadPDBML(fp, natom, AllAtoms, OccRank, ModelNum);                \
 })
 
 #define CheckFileFormatPDBML(fp)                                         \
@@ -1048,13 +1048,13 @@
 })
 #define pearson(x, y, NItem)                                             \
 ({                                                                       \
-   DEPRECATED("pearson()","blpearson()");                                \
-   blpearson(x, y, NItem);                                               \
+   DEPRECATED("pearson()","blPearson()");                                \
+   blPearson(x, y, NItem);                                               \
 })
 #define pearson1(x, y, NItem)                                            \
 ({                                                                       \
-   DEPRECATED("pearson1()","blpearson1()");                              \
-   blpearson1(x, y, NItem);                                              \
+   DEPRECATED("pearson1()","blPearson1()");                              \
+   blPearson1(x, y, NItem);                                              \
 })
 
 #define CrossProd3(Out, In1, In2)                                        \
@@ -1095,14 +1095,14 @@
 
 #define factorial(n)                                                     \
 ({                                                                       \
-   DEPRECATED("factorial()","blfactorial()");                            \
-   blfactorial(n);                                                       \
+   DEPRECATED("factorial()","blFactorial()");                            \
+   blFactorial(n);                                                       \
 })
 
 #define factdiv(n1, n2)                                                  \
 ({                                                                       \
-   DEPRECATED("factdiv()","blfactdiv()");                                \
-   blfactdiv(n1, n2);                                                    \
+   DEPRECATED("factdiv()","blFactdiv()");                                \
+   blFactdiv(n1, n2);                                                    \
 })
 
 #define NPerm(n, r)                                                      \
@@ -1122,14 +1122,14 @@
 
 #define screen(string)                                                   \
 ({                                                                       \
-   DEPRECATED("screen()","blscreen()");                                  \
-   blscreen(string);                                                     \
+   DEPRECATED("screen()","blScreen()");                                  \
+   blScreen(string);                                                     \
 })
 
 #define prompt(string)                                                   \
 ({                                                                       \
-   DEPRECATED("prompt()","blprompt()");                                  \
-   blprompt(string);                                                     \
+   DEPRECATED("prompt()","blPrompt()");                                  \
+   blPrompt(string);                                                     \
 })
 
 #define RePrompt()                                                       \
@@ -1255,20 +1255,20 @@
 
 #define angle(xi, yi, zi, xj, yj, zj, xk, yk, zk)                        \
 ({                                                                       \
-   DEPRECATED("angle()","blangle()");                                    \
-   blangle(xi, yi, zi, xj, yj, zj, xk, yk, zk);                          \
+   DEPRECATED("angle()","blAngle()");                                    \
+   blAngle(xi, yi, zi, xj, yj, zj, xk, yk, zk);                          \
 })
 
 #define phi(xi, yi, zi, xj, yj, zj, xk, yk, zk, xl, yl, zl)              \
 ({                                                                       \
-   DEPRECATED("phi()","blphi()");                                        \
-   blphi(xi, yi, zi, xj, yj, zj, xk, yk, zk, xl, yl, zl);                \
+   DEPRECATED("phi()","blPhi()");                                        \
+   blPhi(xi, yi, zi, xj, yj, zj, xk, yk, zk, xl, yl, zl);                \
 })
 
 #define simpleangle(ang)                                                 \
 ({                                                                       \
-   DEPRECATED("simpleangle()","blsimpleangle()");                        \
-   blsimpleangle(ang);                                                   \
+   DEPRECATED("simpleangle()","blSimpleangle()");                        \
+   blSimpleangle(ang);                                                   \
 })
 
 #define TrueAngle(opp, adj)                                              \
@@ -1344,16 +1344,16 @@
 
 #define ortho(cell, alpha, beta, gamma, amatrx, isw, ncode)              \
 ({                                                                       \
-   DEPRECATED("ortho()","blortho()");                                    \
-   blortho(cell, alpha, beta, gamma, amatrx, isw, ncode);                \
+   DEPRECATED("ortho()","blOrtho()");                                    \
+   blOrtho(cell, alpha, beta, gamma, amatrx, isw, ncode);                \
 })
 
 /* Defined in general.h */
 /*
 #define padterm(string, len)                                             \
 ({                                                                       \
-   DEPRECATED("padterm()","blpadterm()");                                \
-   blpadterm(string, len);                                               \
+   DEPRECATED("padterm()","blPadterm()");                                \
+   blPadterm(string, len);                                               \
 })
 */
 
@@ -1370,8 +1370,8 @@
 
 #define matfit(x1, x2, rm, n, wt1, column)                               \
 ({                                                                       \
-   DEPRECATED("matfit()","blmatfit()");                                  \
-   blmatfit(x1, x2, rm, n, wt1, column);                                 \
+   DEPRECATED("matfit()","blMatfit()");                                  \
+   blMatfit(x1, x2, rm, n, wt1, column);                                 \
 })
 
 
@@ -1418,8 +1418,8 @@
 
 #define chindex(string, ch)                                              \
 ({                                                                       \
-   DEPRECATED("chindex()","blchindex()");                                \
-   blchindex(string, ch);                                                \
+   DEPRECATED("chindex()","blChindex()");                                \
+   blChindex(string, ch);                                                \
 })
 
 #define Word(string1, string2)                                           \
@@ -1436,14 +1436,14 @@
 
 #define padterm(string, length)                                          \
 ({                                                                       \
-   DEPRECATED("padterm()","blpadterm()");                                \
-   blpadterm(string, length);                                            \
+   DEPRECATED("padterm()","blPadterm()");                                \
+   blPadterm(string, length);                                            \
 })
 
 #define padchar(string, length, ch)                                      \
 ({                                                                       \
-   DEPRECATED("padchar()","blpadchar()");                                \
-   blpadchar(string, length, ch);                                        \
+   DEPRECATED("padchar()","blPadchar()");                                \
+   blPadchar(string, length, ch);                                        \
 })
 
 #define CheckExtn(string, ext)                                           \
@@ -1454,8 +1454,8 @@
 
 #define ftostr(str, maxlen, x, precision)                                \
 ({                                                                       \
-   DEPRECATED("ftostr()","blftostr()");                                  \
-   blftostr(str, maxlen, x, precision);                                  \
+   DEPRECATED("ftostr()","blFtostr()");                                  \
+   blFtostr(str, maxlen, x, precision);                                  \
 })
 
 
@@ -1467,14 +1467,14 @@
 
 #define upstrcmp(word1, word2)                                           \
 ({                                                                       \
-   DEPRECATED("upstrcmp()","blupstrcmp()");                              \
-   blupstrcmp(word1, word2);                                             \
+   DEPRECATED("upstrcmp()","blUpstrcmp()");                              \
+   blUpstrcmp(word1, word2);                                             \
 })
 
 #define upstrncmp(word1, word2, ncomp)                                   \
 ({                                                                       \
-   DEPRECATED("upstrncmp()","blupstrncmp()");                            \
-   blupstrncmp(word1, word2, ncomp);                                     \
+   DEPRECATED("upstrncmp()","blUpstrncmp()");                            \
+   blUpstrncmp(word1, word2, ncomp);                                     \
 })
 
 #define GetWord(buffer, word, maxsize)                                   \
@@ -1497,20 +1497,20 @@
 
 #define countchar(string, ch)                                            \
 ({                                                                       \
-   DEPRECATED("countchar()","blcountchar()");                            \
-   blcountchar(string, ch);                                              \
+   DEPRECATED("countchar()","blCountchar()");                            \
+   blCountchar(string, ch);                                              \
 })
 
 #define fgetsany(fp)                                                     \
 ({                                                                       \
-   DEPRECATED("fgetsany()","blfgetsany()");                              \
-   blfgetsany(fp);                                                       \
+   DEPRECATED("fgetsany()","blFgetsany()");                              \
+   blFgetsany(fp);                                                       \
 })
 
 #define strcatalloc(instr, catstr)                                       \
 ({                                                                       \
-   DEPRECATED("strcatalloc()","blstrcatalloc()");                        \
-   blstrcatalloc(instr, catstr);                                         \
+   DEPRECATED("strcatalloc()","blStrcatalloc()");                        \
+   blStrcatalloc(instr, catstr);                                         \
 })
 
 
@@ -1586,8 +1586,8 @@
 
 #define getfield(buffer, start, width, str)                              \
 ({                                                                       \
-   DEPRECATED("getfield()","blgetfield()");                              \
-   blgetfield(buffer, start, width, str);                                \
+   DEPRECATED("getfield()","blGetfield()");                              \
+   blGetfield(buffer, start, width, str);                                \
 })
 
 
@@ -1715,8 +1715,8 @@
 
 #define invert33(s, ss)                                                  \
 ({                                                                       \
-   DEPRECATED("invert33()","blinvert33()");                              \
-   blinvert33(s, ss);                                                    \
+   DEPRECATED("invert33()","blInvert33()");                              \
+   blInvert33(s, ss);                                                    \
 })
 
 #define CreateRotMat(direction, angle, matrix)                           \
@@ -1737,20 +1737,20 @@
 
 #define parse(comline, nkeys, keywords, REALparam, strparam)             \
 ({                                                                       \
-   DEPRECATED("parse()","blparse()");                                    \
-   blparse(comline, nkeys, keywords, REALparam, strparam);               \
+   DEPRECATED("parse()","blParse()");                                    \
+   blParse(comline, nkeys, keywords, REALparam, strparam);               \
 })
 
 #define mparse(comline, nkeys, keywords, REALparam, strparam, nparams)   \
 ({                                                                       \
-   DEPRECATED("mparse()","blmparse()");                                  \
-   blmparse(comline, nkeys, keywords, REALparam, strparam, nparams);     \
+   DEPRECATED("mparse()","blMparse()");                                  \
+   blMparse(comline, nkeys, keywords, REALparam, strparam, nparams);     \
 })
 
 #define match(comstring, string2, nletters)                              \
 ({                                                                       \
-   DEPRECATED("match()","blmatch()");                                    \
-   blmatch(comstring, string2, nletters);                                \
+   DEPRECATED("match()","blMatch()");                                    \
+   blMatch(comstring, string2, nletters);                                \
 })
 
 #define GetString(command, strparam)                                     \
@@ -1973,20 +1973,20 @@
 
 #define throne(three)                                                    \
 ({                                                                       \
-   DEPRECATED("throne()","blthrone()");                                  \
-   blthrone(three);                                                      \
+   DEPRECATED("throne()","blThrone()");                                  \
+   blThrone(three);                                                      \
 })
 
 #define thronex(three)                                                   \
 ({                                                                       \
-   DEPRECATED("thronex()","blthronex()");                                \
-   blthronex(three);                                                     \
+   DEPRECATED("thronex()","blThronex()");                                \
+   blThronex(three);                                                     \
 })
 
 #define onethr(one)                                                      \
 ({                                                                       \
-   DEPRECATED("onethr()","blonethr()");                                  \
-   blonethr(one);                                                        \
+   DEPRECATED("onethr()","blOnethr()");                                  \
+   blOnethr(one);                                                        \
 })
 
 #define DoPDB2Seq(pdb, DoAsxGlx, ProtOnly, NoX)                          \
@@ -2021,14 +2021,14 @@
 
 #define align(seq1, length1, seq2, length2, verbose, identity, penalty, align1, align2, align_len)\
 ({                                                                       \
-   DEPRECATED("align()","blalign()");                                    \
-   blalign(seq1, length1, seq2, length2, verbose, identity, penalty, align1, align2, align_len);\
+   DEPRECATED("align()","blAlign()");                                    \
+   blAlign(seq1, length1, seq2, length2, verbose, identity, penalty, align1, align2, align_len);\
 })
 
 #define affinealign(seq1, length1, seq2, length2, verbose, identity, penalty, penext, align1, align2, align_len)\
 ({                                                                       \
-   DEPRECATED("affinealign()","blaffinealign()");                        \
-   blaffinealign(seq1, length1, seq2, length2, verbose, identity, penalty, penext, align1, align2, align_len);\
+   DEPRECATED("affinealign()","blAffinealign()");                        \
+   blAffinealign(seq1, length1, seq2, length2, verbose, identity, penalty, penext, align1, align2, align_len);\
 })
 
 #define CalcMDMScore(resa, resb)                                         \
@@ -2039,8 +2039,8 @@
 
 #define affinealignuc(seq1, length1, seq2, length2, verbose, identity, penalty, penext, align1, align2, align_len)\
 ({                                                                       \
-   DEPRECATED("affinealignuc()","blaffinealignuc()");                    \
-   blaffinealignuc(seq1, length1, seq2, length2, verbose, identity, penalty, penext, align1, align2, align_len);\
+   DEPRECATED("affinealignuc()","blAffinealignuc()");                    \
+   blAffinealignuc(seq1, length1, seq2, length2, verbose, identity, penalty, penext, align1, align2, align_len);\
 })
 
 #define CalcMDMScoreUC(resa, resb)                                       \
@@ -2116,20 +2116,20 @@
 
 #define safemalloc(nbytes)                                               \
 ({                                                                       \
-   DEPRECATED("blsafemalloc()","blblsafemalloc()");                      \
-   blsafemalloc(nbytes);                                                 \
+   DEPRECATED("blSafemalloc()","blBlsafemalloc()");                      \
+   blSafemalloc(nbytes);                                                 \
 })
 
 #define safefree(ptr)                                                    \
 ({                                                                       \
-   DEPRECATED("safefree()","blsafefree()");                              \
-   blsafefree(ptr);                                                      \
+   DEPRECATED("safefree()","blSafefree()");                              \
+   blSafefree(ptr);                                                      \
 })
 
 #define safeleaks()                                                      \
 ({                                                                       \
-   DEPRECATED("safeleaks()","blsafeleaks()");                            \
-   blsafeleaks();                                                        \
+   DEPRECATED("safeleaks()","blSafeleaks()");                            \
+   blSafeleaks();                                                        \
 })
 
 

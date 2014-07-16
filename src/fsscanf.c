@@ -325,7 +325,7 @@ int fsscanf(char *buffer, char *format, ...)
             /* If the input buffer ran out in this string, pad with 
                spaces and terminate.
             */
-            if(strlen(ptr) < width) blpadterm(ptr, width);
+            if(strlen(ptr) < width) blPadterm(ptr, width);
          }
          else                          /* Input buffer empty            */
          {

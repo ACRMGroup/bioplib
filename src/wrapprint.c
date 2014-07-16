@@ -126,7 +126,7 @@ BOOL blWrapString(char *in, char *out, int maxlen)
    /* See if the string has double inverted commas - if so we need
       to escape them, so increment the string length
    */
-   ndic = blcountchar(in, '"');
+   ndic = blCountchar(in, '"');
    len += ndic;
 
    /* Check that there is space for our padded string                   */

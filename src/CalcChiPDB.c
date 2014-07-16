@@ -136,7 +136,7 @@ REAL blCalcChi(PDB *pdb,
    }
    
    /* Calculate the torsion angle                                       */
-   chi = blphi(one->x,   one->y,   one->z,
+   chi = blPhi(one->x,   one->y,   one->z,
                two->x,   two->y,   two->z,
                three->x, three->y, three->z,
                four->x,  four->y,  four->z);
