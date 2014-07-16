@@ -3,12 +3,12 @@
 
    \file       safemem.c
    
-   \version    V1.2
-   \date       03.07.06
+   \version    V1.3
+   \date       07.07.14
    \brief      Safe malloc()/free() routines which check for array 
                overflow on free.
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1995-2006
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1995-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -73,6 +73,7 @@
 -  V1.0  23.06.95 Original
 -  V1.1  27.02.98 Added cast to ptr
 -  V1.2  03.07.06 Added 'ok' to the MEMLIST and added safeleaks()
+-  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes - Note we must *not* include safemem.h since we require the
@@ -111,16 +112,17 @@ static char    sBlank        = BLANK;
 */
 
 /************************************************************************/
-/*>void *safemalloc(int nbytes)
-   ----------------------------
+/*>void *blsafemalloc(int nbytes)
+   ------------------------------
 *//**
 
    Debugging version of malloc() which creates protection buffers each
    side of the requested memory block.
 
 -  23.06.95 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void *safemalloc(int nbytes)
+void *blsafemalloc(int nbytes)
 {
    MEMLIST        *p;
    static BOOL    FirstCall = TRUE;
@@ -210,8 +212,8 @@ shortened to the LSB.\n");
 }
 
 /************************************************************************/
-/*>void safefree(void *ptr)
-   ------------------------
+/*>void blsafefree(void *ptr)
+   --------------------------
 *//**
 
    Debugging version of free() which checks protection buffers each
@@ -219,8 +221,9 @@ shortened to the LSB.\n");
 
 -  23.06.95 Original    By: ACRM
 -  27.02.98 Added cast to ptr
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL safefree(void *ptr)
+BOOL blsafefree(void *ptr)
 {
    MEMLIST *p;
    int     i,
@@ -287,15 +290,16 @@ BOOL safefree(void *ptr)
 }
 
 /************************************************************************/
-/*>void safeleaks(void)
-   --------------------
+/*>void blsafeleaks(void)
+   ----------------------
 *//**
 
    Prints a list of any safemalloc()'d memory which was not freed
 
 -  03.07.06  Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void safeleaks(void)
+void blsafeleaks(void)
 {
    MEMLIST *p;
    for(p=sSafeMemList; p!=NULL; NEXT(p))

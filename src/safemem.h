@@ -3,12 +3,12 @@
 
    \file       safemem.h
    
-   \version    V1.0
-   \date       23.06.95
+   \version    V1.2
+   \date       07.07.14
    \brief      Safe malloc()/free() routines which check for array 
                overflow on free.
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1995
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1995-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -50,18 +50,20 @@
    =================
 -  V1.0  23.06.95 Original
 -  V1.1  03.07.06 Added safeleaks() prototype
+-  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 #ifndef _SAFEMEM_H
 #define _SAFEMEM_H
 
 /* Includes                                                             */
-#include "bioplib/SysDefs.h"
+#include "SysDefs.h"
+#include "deprecated.h"
 
 /* Prototypes                                                           */
-void *safemalloc(int nbytes);
-BOOL safefree(void *ptr);
-void safeleaks(void);
+void *blsafemalloc(int nbytes);
+BOOL blsafefree(void *ptr);
+void blsafeleaks(void);
 
 /* Undefine memory macros defined by macros.h                           */
 #ifdef _MACROS_H
@@ -74,15 +76,15 @@ void safeleaks(void);
 #endif
 
 /* Redefine macros to use safe versions of malloc()/free()              */
-#define INIT(x,y) do { x=(y *)safemalloc(sizeof(y));                     \
+#define INIT(x,y) do { x=(y *)blsafemalloc(sizeof(y));                   \
                     if(x != NULL) x->next = NULL; } while(0)
-#define INITPREV(x,y) do { x=(y *)safemalloc(sizeof(y));                 \
+#define INITPREV(x,y) do { x=(y *)blsafemalloc(sizeof(y));               \
                        if(x != NULL) {x->next = NULL; x->prev = NULL;} } \
                       while(0)
-#define ALLOCNEXT(x,y) do { (x)->next=(y *)safemalloc(sizeof(y));        \
+#define ALLOCNEXT(x,y) do { (x)->next=(y *)blsafemalloc(sizeof(y));      \
                          if((x)->next != NULL) { (x)->next->next=NULL; } \
                          NEXT(x); } while(0)
-#define ALLOCNEXTPREV(x,y) do { (x)->next=(y *)safemalloc(sizeof(y));    \
+#define ALLOCNEXTPREV(x,y) do { (x)->next=(y *)blsafemalloc(sizeof(y));  \
                              if((x)->next != NULL)                       \
                              { (x)->next->prev = (x);                    \
                                (x)->next->next=NULL; }                   \

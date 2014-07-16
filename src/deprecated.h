@@ -2110,6 +2110,29 @@
 #define PDBProt2SeqNoX(x)   blPDBProt2SeqNoX(x)
 #define PDBProt2SeqXNoX(x)  blPDBProt2SeqXNoX(x)
 
+
+/************************************************************************/
+/* Renamed functions: safemem.h                                         */
+
+#define safemalloc(nbytes)                                               \
+({                                                                       \
+   DEPRECATED("blsafemalloc()","blblsafemalloc()");                      \
+   blsafemalloc(nbytes);                                                 \
+})
+
+#define safefree(ptr)                                                    \
+({                                                                       \
+   DEPRECATED("safefree()","blsafefree()");                              \
+   blsafefree(ptr);                                                      \
+})
+
+#define safeleaks()                                                      \
+({                                                                       \
+   DEPRECATED("safeleaks()","blsafeleaks()");                            \
+   blsafeleaks();                                                        \
+})
+
+
 /************************************************************************/
 /* Globals
 */
