@@ -135,6 +135,7 @@
 -  V1.57 07.07.14 Rename functions with 'bl' prefix. By: CTP
 -  V1.58 17.07.14 Added access and radius to PDB structure. Also
                   added CREATEPDBEXTRAS() and FREEPDBEXTRAS()  By: ACRM
+-  V1.59 17.07.14 Added blSetElementSymbolFromAtomName() By: CTP
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -512,4 +513,5 @@ PDB *blStripWatersPDB(PDB *pdbin, int *natom);
 PDBSTRUCT *blAllocPDBStructure(PDB *pdb);
 PDB *blFindNextChain(PDB *pdb);
 void blFreePDBStructure(PDBSTRUCT *pdbstruct);
+void blSetElementSymbolFromAtomName(char *element, char * atom_name);
 #endif

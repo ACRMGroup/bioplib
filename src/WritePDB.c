@@ -3,8 +3,8 @@
 
    \file       WritePDB.c
    
-   \version    V1.13
-   \date       07.07.14
+   \version    V1.14
+   \date       17.07.14
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -74,6 +74,7 @@
                   By: CTP
 -  V1.13 07.07.14 Renamed functions to use bl prefix. Moved WritePDB() to 
                   deprecated.h By: CTP
+-  V1.13 17.07.14 Added blSetElementSymbolFromAtomName() By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -284,6 +285,7 @@ void blWritePDBRecordAtnam(FILE *fp,
 
 -  02.06.14 Original. By: CTP
 -  21.06.14 Renamed blWriteAsPDBML() and updated symbol handling. By: CTP
+-  17.07.14 Use blSetElementSymbolFromAtomName() By: CTP
 
 */
 void blWriteAsPDBML(FILE *fp, PDB  *pdb)
@@ -442,35 +444,10 @@ void blWriteAsPDBML(FILE *fp, PDB  *pdb)
       /* atom symbol */
       /* Note: Atomic symbol is not stored in PDB data structure.
                Value set is based on columns 13-14 of pdb-formated text 
-               file.  */
-      strncpy(buffer,p->atnam_raw,2);
-      buffer[2] = '\0';
-      KILLLEADSPACES(buffer_ptr,buffer);
-      
-      /* remove digits */
-      if(strlen(buffer_ptr) == 2 && isdigit(buffer[1]))
-      {
-         buffer[1] = '\0';
-      }
-      else if(strlen(buffer_ptr) == 2 && !isalpha(buffer[0]))
-      {
-         buffer_ptr += 1;
-      }
-
-      /* fix hydrogens and carbons */
-      if(strlen(buffer_ptr) == 2 && p->atnam_raw[3] != ' ' &&
-         (p->atnam_raw[0] == 'H' || p->atnam_raw[0] == 'C' ||
-          p->atnam_raw[0] == 'N' || p->atnam_raw[0] == 'O' ||
-          p->atnam_raw[0] == 'P'))
-      {
-            if(!isalpha(p->atnam_raw[2]) || !isalpha(p->atnam_raw[3]))
-            {
-               buffer[1] = '\0';
-            }
-      }
-
+               file.  */      
+      blSetElementSymbolFromAtomName(buffer,p->atnam_raw);
       node = xmlNewChild(atom_node, NULL, (xmlChar *) "type_symbol",
-                         (xmlChar *) buffer_ptr);
+                         (xmlChar *) buffer);
    }
 
    /* Write to doc file pointer */
@@ -481,4 +458,56 @@ void blWriteAsPDBML(FILE *fp, PDB  *pdb)
     xmlCleanupParser();
 
    return;
+}
+
+/************************************************************************/
+/*>void blSetElementSymbolFromAtomName(char *element, char * atom_name)
+   --------------------------------------------------------------------
+*//**
+
+   \param[out]    *element  Element symbol
+   \param[in]     *atom     Atom name
+
+   Set the element symbol (columns 77-78 of a pdb file) based on the 
+   atom name (columns 13-16 of a pdb file). 
+
+   The atom name is stored in the PDB data stucture as atnam_raw.
+
+-  17.07.14 Original. By: CTP
+
+*/
+void blSetElementSymbolFromAtomName(char *element, char * atom_name)
+{
+   char  buffer[] = "  ",
+         *buffer_ptr;
+
+   /* copy first two letters of atom name to buffer */
+   strncpy(buffer,atom_name,2);
+   buffer[2] = '\0';
+   KILLLEADSPACES(buffer_ptr,buffer);
+
+   /* remove digits */
+   if(strlen(buffer_ptr) == 2 && isdigit(buffer[1]))
+   {
+      buffer[1] = '\0';
+   }
+   else if(strlen(buffer_ptr) == 2 && !isalpha(buffer[0]))
+   {
+      buffer_ptr += 1;
+   }
+
+   /* fix hydrogens and carbons */
+   if(strlen(buffer_ptr) == 2 && atom_name[3] != ' ' &&
+      (atom_name[0] == 'H' || atom_name[0] == 'C' || 
+       atom_name[0] == 'N' || atom_name[0] == 'O' || 
+       atom_name[0] == 'P'))
+   {
+         if(!isalpha(atom_name[2]) || !isalpha(atom_name[3]))
+         {
+            buffer[1] = '\0';
+         }
+   }
+
+   /* copy atom symbol to element */
+   strcpy(element, buffer_ptr);
 }
