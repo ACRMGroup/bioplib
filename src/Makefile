@@ -78,7 +78,7 @@ TranslatePDB.o TrueSeqLen.o WriteCrystPDB.o WritePDB.o WrtCSSR.o \
 align.o fit.o hbond.o rsc.o throne.o FitNCaCPDB.o FindRawAtomInRes.o \
 WriteGromosPDB.o WholePDB.o GlyCB.o BuildAtomNeighbourPDBList.o \
 FindAtomWildcardInRes.o DupeResiduePDB.o StripWatersPDB.o aalist.o \
-StructurePDB.o FindHetatmResidue.o FindHetatmResidueSpec.o 
+StructurePDB.o FindHetatmResidue.o FindHetatmResidueSpec.o access.o
 
 
 # Static libraries - the default
