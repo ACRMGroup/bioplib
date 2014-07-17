@@ -3,8 +3,8 @@
 
    \file       openorpipe.c
    
-   \version    V1.9
-   \date       07.07.14
+   \version    V1.10
+   \date       17.07.14
    \brief      Open a file for writing unless the filename starts with
                a | in which case open as a pipe
    
@@ -59,6 +59,8 @@
 -  V1.7  17.03.09 popen() prototype now skipped for Windows.
 -  V1.8  02.04.09 Clean compile with NOPIPE defined
 -  V1.9  07.07.14 Use bl prefix for functions By: CTP
+-  V1.10 17.07.14 Added 'stdout' as a special file which maps to 
+                  standard output
 
 *************************************************************************/
 /* Includes
@@ -70,6 +72,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <string.h>
 #include "macros.h"
 
 /************************************************************************/
@@ -108,12 +111,16 @@ int  pclose(FILE *);
 -  18.08.98 Added case to popen() for SunOS
 -  28.01.05 Added NOPIPE define
 -  07.07.14 Use bl prefix for functions By: CTP
+-  17.07.14 Added special 'stdout' file By: ACRM
 */
 FILE *blOpenOrPipe(char *filename)
 {
    char *fnam;
    
    KILLLEADSPACES(fnam, filename);
+   if(!strcmp(fnam, "stdout"))
+      return(stdout);
+
 #ifdef NOPIPE
    return(fopen(fnam, "w"));
 #else
@@ -148,19 +155,25 @@ FILE *blOpenOrPipe(char *filename)
 -  28.01.05 Added NOPIPE define
 -  02.04.09 Moved 'int ret' to be in the #else
 -  07.07.14 Use bl prefix for functions By: CTP
+-  17.07.14 Added check that the file pointer isn't stdout By: ACRM
 */
 int blCloseOrPipe(FILE *fp)
 {
+   if(fp==stdout)
+      return(0);
+
 #ifdef NOPIPE
    return(fclose(fp));
 #else
-   int ret;
-
-   if((ret=pclose(fp)) == (-1))
-      return(fclose(fp));
-
-   signal(SIGPIPE, SIG_DFL);
-   return(ret);
+   {
+      int ret;
+      
+      if((ret=pclose(fp)) == (-1))
+         return(fclose(fp));
+      
+      signal(SIGPIPE, SIG_DFL);
+      return(ret);
+   }
 #endif
 }
 
