@@ -3,8 +3,8 @@
 
    \file       phi.c
    
-   \version    V1.6
-   \date       07.07.14
+   \version    V1.8
+   \date       17.07.14
    \brief      Calculate a torsion angle
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -48,6 +48,7 @@
    =================
 
 -  V1.7  07.07.14 Use bl prefix for functions By: CTP
+-  V1.8  17.07.14 Removed unused varables  By: ACRM
 
 *************************************************************************/
 /* Includes
@@ -93,6 +94,7 @@
 -  04.03.91 Original    By: ACRM
 -  16.06.93 Changed float to REAL
 -  07.07.14 Use bl prefix for functions By: CTP
+-  17.07.14 Removed unused variables  By: ACRM
 */
 REAL blPhi(REAL xi,
            REAL yi,
@@ -113,11 +115,8 @@ REAL blPhi(REAL xi,
         dxi,dyi,dzi,
         gxi,gyi,gzi,
         bi,bk,ct,
-        boi2,boj2,
-        z1,z2,ap,s,
-        bioj,bjoi;
-
-
+        z1,z2,ap,s;
+   
    /* Calculate the vectors C,B,C                                       */
    xij = xi - xj;
    yij = yi - yj;
@@ -151,15 +150,12 @@ REAL blPhi(REAL xi,
    bk = gxi * gxi + gyi * gyi + gzi * gzi;
    ct = dxi * gxi + dyi * gyi + dzi * gzi;
 
-   boi2 = 1./bi;
-   boj2 = 1./bk;
    bi   = (REAL)sqrt((double)bi);
    bk   = (REAL)sqrt((double)bk);
 
    z1   = 1./bi;
    z2   = 1./bk;
-   bioj = bi * z2;
-   bjoi = bk * z1;
+
    ct   = ct * z1 * z2;
    if (ct >  1.0)   ct = 1.0;
    if (ct < (-1.0)) ct = -1.0;

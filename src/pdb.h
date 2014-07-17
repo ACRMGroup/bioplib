@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.57
-   \date       07.07.14
+   \version    V1.58
+   \date       17.07.14
    \brief      Include file for pdb routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2014
@@ -133,6 +133,8 @@
                   blWriteWholePDBHeader() and blWriteWholePDBTrailer().
                   By: CTP
 -  V1.57 07.07.14 Rename functions with 'bl' prefix. By: CTP
+-  V1.58 17.07.14 Added access and radius to PDB structure. Also
+                  added CREATEPDBEXTRAS() and FREEPDBEXTRAS()  By: ACRM
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -175,7 +177,7 @@
 */
 typedef struct pdb_entry
 {
-   REAL x,y,z,occ,bval;
+   REAL x,y,z,occ,bval,access,radius;
    APTR extras;
    struct pdb_entry *next;
    int  atnum;
@@ -293,6 +295,26 @@ typedef struct
 
 #define CHAINMATCH(chain1,chain2) !strcmp(chain1,chain2)
 
+/* Called as CREATEPDBEXTRAS(pdb, EXTRATYPE)                            */
+#define CREATEPDBEXTRAS(x, y)                                   \
+   {  PDB *_cpe_p;                                              \
+      for(_cpe_p=(x); _cpe_p!=NULL; _cpe_p=_cpe_p->next){       \
+         _cpe_p->extras = (APTR)malloc(sizeof(y));              \
+      }                                                         \
+   }
+
+/* Called as FREEPDBEXTRAS(pdb)                                         */
+#define FREEPDBEXTRAS(x)                                        \
+   {  PDB *_fpe_p;                                              \
+      for(_fpe_p=(x); _fpe_p!=NULL; _fpe_p=_fpe_p->next){       \
+         if(_fpe_p->extras != NULL){                            \
+            free(_fpe_p->extras);                               \
+            _fpe_p->extras = NULL;                              \
+         }                                                      \
+      }                                                         \
+   }
+      
+
 
 /* These are the types returned by ResolPDB()                          */
 #define STRUCTURE_TYPE_UNKNOWN   0
@@ -328,6 +350,7 @@ typedef struct
 #define FORCEXML_PDB           1
 #define FORCEXML_XML           2
 
+/* For forcing writing in PDB or XML format                             */
 #define FORCEPDB gPDBXMLForce = FORCEXML_PDB
 #define FORCEXML gPDBXMLForce = FORCEXML_XML
 
