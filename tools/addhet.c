@@ -1,32 +1,33 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    addhet
-   File:       addhet.c
+   \file       addhet.c
    
-   Version:    V2.0
-   Date:       08.07.02
-   Function:   Add HETATMs back into a PDB file
+   \version    V2.1
+   \date       22.07.14
+   \brief      Add HETATMs back into a PDB file
    
-   Copyright:  (c) Dr. Andrew C. R. Martin 2002
-   Author:     Dr. Andrew C. R. Martin
-   Address:    Biomolecular Structure & Modelling Unit,
+   \copyright  (c) Dr. Andrew C. R. Martin 2002-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Biomolecular Structure & Modelling Unit,
                Department of Biochemistry & Molecular Biology,
                University College,
                Gower Street,
                London.
                WC1E 6BT.
-   EMail:      andrew@bioinf.org.uk
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
 
    The code may be modified as required, but any modifications must be
-   documented so that the person responsible can be identified. If someone
-   else breaks this code, I don't want to be blamed for code that does not
-   work! 
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -45,7 +46,9 @@
 
    Revision History:
    =================
-   08.07.02  V2.0    Version 2 original   By: ACRM
+-  V2.0  08.07.02    Version 2 original   By: ACRM
+-  V2.1  22.07.14    Renamed deprecated functions with bl prefix.
+                     Added doxygen annotation. By: CTP
 
 *************************************************************************/
 /* Includes */
@@ -114,11 +117,11 @@ domhet.pdb\n");
    }
    
    
-   if((pdbDomain =  ReadPDB(fp2, &natoms))!=NULL)
+   if((pdbDomain =  blReadPDB(fp2, &natoms))!=NULL)
    {
       DetermineBoundingBox(pdbDomain, &xmin, &xmax, &ymin, &ymax,  
                            &zmin, &zmax);
-      WritePDB(fp3, pdbDomain);
+      blWritePDB(fp3, pdbDomain);
       if((pdbHetatm=ReadPDBHetAtoms(fp1, &natoms))!=NULL)
       {
          PrintBoundedHets(fp3, pdbDomain, pdbHetatm, xmin, xmax, 
@@ -191,7 +194,7 @@ PDB *ReadPDBHetAtoms(FILE *fp1, int *natoms)
    int natoms2;
        *natoms = 0;
    
-   if((pdb = ReadPDB(fp1, &natoms2))!=NULL)
+   if((pdb = blReadPDB(fp1, &natoms2))!=NULL)
    {
       for(p=pdb; p!=NULL; NEXT(p))
       {
@@ -219,7 +222,7 @@ PDB *ReadPDBHetAtoms(FILE *fp1, int *natoms)
                /* ACRM-END 03.07.02                                    */
             }
             
-            CopyPDB(q, p);
+            blCopyPDB(q, p);
             (*natoms)++;
          }
       }
@@ -235,13 +238,15 @@ PDB *ReadPDBHetAtoms(FILE *fp1, int *natoms)
                          REAL ymin, REAL ymax, 
                          REAL zmin, REAL zmax)
    -----------------------------------------------------------
-   Input:   FILE   *fp3       File pointer for output
-            PDB    *pdb       PDB linked list of protein atoms
-            PDB    *pdbHetatm PDB linked list of HET atoms
+*//**
+   \param[in]      *fp3       File pointer for output
+   \param[in]      *pdb       PDB linked list of protein atoms
+   \param[in]      *pdbHetatm PDB linked list of HET atoms
 
    blah blah blah
 
-   08.07.02 Original By: ALC
+-  08.07.02 Original By: ALC
+-  22.07.14 Renamed deprecated functions with bl prefix. By: CTP
 */
 void PrintBoundedHets(FILE *fp3, PDB *pdb, PDB *pdbHetatm, 
                       REAL xmin, REAL xmax, 
@@ -261,7 +266,7 @@ void PrintBoundedHets(FILE *fp3, PDB *pdb, PDB *pdbHetatm,
    
    for(start=pdbHetatm; start!=NULL; start=stop)
    {
-      stop = FindNextResidue(start);
+      stop = blFindNextResidue(start);
       isNeighbour = FALSE;
       clash       = FALSE;
       isNonStdAA  = FALSE;
@@ -333,7 +338,7 @@ void PrintBoundedHets(FILE *fp3, PDB *pdb, PDB *pdbHetatm,
             {
                for(p=start; p!=stop; NEXT(p))
                {
-                  WritePDBRecord(fp3, p);
+                  blWritePDBRecord(fp3, p);
                }
             }
          }  /* Is not a non-standard AA group                          */

@@ -1,33 +1,34 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    fixchaininsert
-   File:       fixchaininsert.c
+   \file       fixchaininsert.c
    
-   Version:    V1.1
-   Date:       04.11.08
-   Function:   Look for examples where the chain name is in the insert
+   \version    V1.2
+   \date       22.07.14
+   \brief      Look for examples where the chain name is in the insert
                column (1mfa)
    
-   Copyright:  (c) UCL, Dr. Andrew C. R. Martin 1997-2008
-   Author:     Dr. Andrew C. R. Martin
-   Address:    Biomolecular Structure & Modelling Unit,
+   \copyright  (c) UCL, Dr. Andrew C. R. Martin 1997-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Biomolecular Structure & Modelling Unit,
                Department of Biochemistry & Molecular Biology,
                University College,
                Gower Street,
                London.
                WC1E 6BT.
-   EMail:      andrew@bioinf.org.uk
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
 
    The code may be modified as required, but any modifications must be
-   documented so that the person responsible can be identified. If someone
-   else breaks this code, I don't want to be blamed for code that does not
-   work! 
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -46,8 +47,10 @@
 
    Revision History:
    =================
-   V1.0  25.07.97 Original    By: ACRM
-   V1.1  04.11.08 Changed pdb.junk to pdb.record_type
+-  V1.0  25.07.97 Original    By: ACRM
+-  V1.1  04.11.08 Changed pdb.junk to pdb.record_type
+-  V1.2  22.07.14 Renamed deprecated functions with bl prefix.
+                  Added doxygen annotation. By: CTP
 
 *************************************************************************/
 /* Includes
@@ -84,10 +87,13 @@ void CheckChain(PDB *start, PDB *end);
 /************************************************************************/
 /*>int main(int argc, char **argv)
    -------------------------------
+*//**
+
    Main program for neighbour counting
 
-   05.07.94 Original    By: ACRM
-   24.08.94 Changed to call OpenStdFiles()
+-  05.07.94 Original    By: ACRM
+-  24.08.94 Changed to call OpenStdFiles()
+-  22.07.14 Renamed deprecated functions with bl prefix. By: CTP
 */
 int main(int argc, char **argv)
 {
@@ -100,12 +106,12 @@ int main(int argc, char **argv)
    
    if(ParseCmdLine(argc, argv, infile, outfile))
    {
-      if(OpenStdFiles(infile, outfile, &in, &out))
+      if(blOpenStdFiles(infile, outfile, &in, &out))
       {
-         if((pdb = ReadPDB(in,&natoms)) != NULL)
+         if((pdb = blReadPDB(in,&natoms)) != NULL)
          {
             CheckChainInsert(pdb);
-            WritePDB(out, pdb);
+            blWritePDB(out, pdb);
          }
          else
          {
@@ -124,15 +130,17 @@ int main(int argc, char **argv)
 /************************************************************************/
 /*>BOOL ParseCmdLine(int argc, char **argv, char *infile, char *outfile)
    ---------------------------------------------------------------------
-   Input:   int    argc         Argument count
-            char   **argv       Argument array
-   Output:  char   *infile      Input file (or blank string)
-            char   *outfile     Output file (or blank string)
-   Returns: BOOL                Success?
+*//**
+
+   \param[in]      argc         Argument count
+   \param[in]      **argv       Argument array
+   \param[out]     *infile      Input file (or blank string)
+   \param[out]     *outfile     Output file (or blank string)
+   \return                     Success?
 
    Parse the command line
    
-   25.07.97 Original    By: ACRM
+-  25.07.97 Original    By: ACRM
 */
 BOOL ParseCmdLine(int argc, char **argv, char *infile, char *outfile)
 {
@@ -180,11 +188,13 @@ BOOL ParseCmdLine(int argc, char **argv, char *infile, char *outfile)
 /************************************************************************/
 /*>void CheckChainInsert(PDB *pdb)
    -------------------------------
+*//**
+
    Splits the PDB linked list into chains and calls CheckChain() on each
    to look for the chain name in the insert column
 
-   25.07.97 Original   By: ACRM
-   03.11.08 Fixed pdb.junk to pdb.record_type
+-  25.07.97 Original   By: ACRM
+-  03.11.08 Fixed pdb.junk to pdb.record_type
 */
 void CheckChainInsert(PDB *pdb)
 {
@@ -234,9 +244,11 @@ void CheckChainInsert(PDB *pdb)
 /************************************************************************/
 /*>void CheckChain(PDB *start, PDB *end)
    -------------------------------------
+*//**
+
    Does the actual work of looking for the chain name in the insert column
 
-   25.07.97 Original   By: ACRM
+-  25.07.97 Original   By: ACRM
 */
 void CheckChain(PDB *start, PDB *end)
 {
@@ -266,13 +278,16 @@ void CheckChain(PDB *start, PDB *end)
 /************************************************************************/
 /*>void Usage(void)
    ----------------
+*//**
+
    Prints a usage message
 
-   25.07.97 Original    By: ACRM
+-  25.07.97 Original    By: ACRM
+-  22.07.14 V1.2 By: CTP
 */
 void Usage(void)
 {
-   fprintf(stderr,"\nFixChainInsert V1.1 (c) 1997-2008, Andrew C.R. \
+   fprintf(stderr,"\nFixChainInsert V1.2 (c) 1997-2014, Andrew C.R. \
 Martin, UCL\n");
 
    fprintf(stderr,"\nUsage: fixchaininsert [in.pdb [out.pdb]]\n");

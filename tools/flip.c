@@ -1,32 +1,33 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    flip
-   File:       flip.c
+   \file       flip.c
    
-   Version:    V1.0
-   Date:       08.11.96
-   Function:   Standardise equivalent atom labelling
+   \version    V1.1
+   \date       22.07.14
+   \brief      Standardise equivalent atom labelling
    
-   Copyright:  (c) Dr. Andrew C. R. Martin 1996
-   Author:     Dr. Andrew C. R. Martin
-   Address:    Biomolecular Structure & Modelling Unit,
+   \copyright  (c) Dr. Andrew C. R. Martin 1996-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Biomolecular Structure & Modelling Unit,
                Department of Biochemistry & Molecular Biology,
                University College,
                Gower Street,
                London.
                WC1E 6BT.
-   EMail:      andrew@bioinf.org.uk
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
 
    The code may be modified as required, but any modifications must be
-   documented so that the person responsible can be identified. If someone
-   else breaks this code, I don't want to be blamed for code that does not
-   work! 
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -45,6 +46,9 @@
 
    Revision History:
    =================
+   
+-  V1.1   22.07.14 Renamed deprecated functions with bl prefix.
+                  Added doxygen annotation. By: CTP
 
 *************************************************************************/
 /* Includes
@@ -94,9 +98,12 @@ void DoAFlip(PDB *atom4, PDB *atom4b, PDB *connect4, PDB *connect4b);
 /************************************************************************/
 /*>int main(int argc, char **argv)
    -------------------------------
+*//**
+
    Main program to flip sidechain equivalent atom naming
 
-   08.11.96 Original   By: ACRM
+-  08.11.96 Original   By: ACRM
+-  22.07.14 Renamed deprecated functions with bl prefix. By: CTP
 */
 int main(int argc, char **argv)
 {
@@ -110,12 +117,12 @@ int main(int argc, char **argv)
    
    if(ParseCmdLine(argc, argv, infile, outfile, &verbose, &quiet))
    {
-      if(OpenStdFiles(infile, outfile, &in, &out))
+      if(blOpenStdFiles(infile, outfile, &in, &out))
       {
-         if((pdb = ReadPDB(in,&natoms)) != NULL)
+         if((pdb = blReadPDB(in,&natoms)) != NULL)
          {
             DoFlipping(pdb,verbose,quiet);
-            WritePDB(out, pdb);
+            blWritePDB(out, pdb);
          }
          else
          {
@@ -135,17 +142,19 @@ int main(int argc, char **argv)
 /*>BOOL ParseCmdLine(int argc, char **argv, char *infile, char *outfile,
                      BOOL *verbose, BOOL *quiet)
    ---------------------------------------------------------------------
-   Input:   int    argc         Argument count
-            char   **argv       Argument array
-   Output:  char   *infile      Input file (or blank string)
-            char   *outfile     Output file (or blank string)
-            BOOL   *verbose     Report each flip made?
-            BOOL   *quiet       Don't report skipped residues
-   Returns: BOOL                Success?
+*//**
+
+   \param[in]      argc         Argument count
+   \param[in]      **argv       Argument array
+   \param[out]     *infile      Input file (or blank string)
+   \param[out]     *outfile     Output file (or blank string)
+   \param[out]     *verbose     Report each flip made?
+   \param[out]     *quiet       Don't report skipped residues
+   \return                      Success?
 
    Parse the command line
    
-   08.11.96 Original    By: ACRM
+-  08.11.96 Original    By: ACRM
 */
 BOOL ParseCmdLine(int argc, char **argv, char *infile, char *outfile,
                   BOOL *verbose, BOOL *quiet)
@@ -202,13 +211,16 @@ BOOL ParseCmdLine(int argc, char **argv, char *infile, char *outfile,
 /************************************************************************/
 /*>void Usage(void)
    ----------------
+*//**
+
    Prints a usage message
 
-   08.11.96 Original   By: ACRM
+-  08.11.96 Original   By: ACRM
+-  22.07.14 V1.1 By: CTP
 */
 void Usage(void)
 {
-   fprintf(stderr,"\nflip V1.0 (c) Dr. Andrew C.R. Martin, UCL\n");
+   fprintf(stderr,"\nflip V1.1 (c) 2014 Dr. Andrew C.R. Martin, UCL\n");
    fprintf(stderr,"\nUsage: flip [in.pdb [out.pdb]]\n");
 
    fprintf(stderr,"\nFlip is a rather crude and simple program for \
@@ -231,13 +243,16 @@ defined.\n\n");
 /************************************************************************/
 /*>void DoFlipping(PDB *pdb, BOOL verbose, BOOL quiet)
    ---------------------------------------------------
+*//**
+
    Does the main work of isolating residues and seeing if a flip needs
    to be made.
 
    Doesn't handle Leu or Val as these are not planar. However, the
    naming convention needs to be checked (not yet done).
 
-   08.11.96 Original   By: ACRM
+-  08.11.96 Original   By: ACRM
+-  22.07.14 Renamed deprecated functions with bl prefix. By: CTP
 */
 void DoFlipping(PDB *pdb, BOOL verbose, BOOL quiet)
 {
@@ -262,7 +277,7 @@ void DoFlipping(PDB *pdb, BOOL verbose, BOOL quiet)
    
    for(p=pdb; p!=NULL; p=end)
    {
-      end = FindNextResidue(p);
+      end = blFindNextResidue(p);
 
       /* Run through the list of residues which need treating           */
       for(res=0; torsions[res].resnam!=NULL; res++)
@@ -317,14 +332,14 @@ not processed.\n",p->resnam,p->chain[0],p->resnum,p->chain[0]);
             }
             
             /* Calculate the two torsions                               */
-            tor1 = phi(atom1->x,  atom1->y,  atom1->z,
-                       atom2->x,  atom2->y,  atom2->z,
-                       atom3->x,  atom3->y,  atom3->z,
-                       atom4->x,  atom4->y,  atom4->z);
-            tor2 = phi(atom1->x,  atom1->y,  atom1->z,
-                       atom2->x,  atom2->y,  atom2->z,
-                       atom3->x,  atom3->y,  atom3->z,
-                       atom4b->x, atom4b->y, atom4b->z);
+            tor1 = blPhi(atom1->x,  atom1->y,  atom1->z,
+                         atom2->x,  atom2->y,  atom2->z,
+                         atom3->x,  atom3->y,  atom3->z,
+                         atom4->x,  atom4->y,  atom4->z);
+            tor2 = blPhi(atom1->x,  atom1->y,  atom1->z,
+                         atom2->x,  atom2->y,  atom2->z,
+                         atom3->x,  atom3->y,  atom3->z,
+                         atom4b->x, atom4b->y, atom4b->z);
 
             /* See if we need to do a flip                              */
             if(ABS(tor2) < ABS(tor1))
@@ -343,9 +358,11 @@ not processed.\n",p->resnam,p->chain[0],p->resnum,p->chain[0]);
 /************************************************************************/
 /*>void DoAFlip(PDB *atom4, PDB *atom4b, PDB *connect4, PDB *connect4b)
    --------------------------------------------------------------------
+*//**
+
    Does the actual flip of atom names
 
-   08.11.96 Original   By: ACRM
+-  08.11.96 Original   By: ACRM
 */
 void DoAFlip(PDB *atom4, PDB *atom4b, PDB *connect4, PDB *connect4b)
 {
