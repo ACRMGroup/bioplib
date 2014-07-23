@@ -100,7 +100,8 @@ int main(int argc, char **argv)
           *resout = stdout,
           *fpRad  = NULL;
    int    natoms;
-   PDB    *pdb;
+   PDB    *pdb, 
+          *pdbAll;
    BOOL   doAccessibility = FALSE,
           noenv           = FALSE,
           noAtoms         = FALSE,
@@ -138,9 +139,18 @@ file\n");
       return(1);
    }
 
-   if((pdb = blReadPDB(in, &natoms))==NULL)
+   if((pdbAll = blReadPDB(in, &natoms))==NULL)
    {
       fprintf(stderr, "Error (solv): No atoms read from PDB file, %s\n",
+              infile);
+      return(1);
+   }
+
+   /* Strip waters                                                      */
+   if((pdb = blStripWatersPDB(pdbAll, &natoms))==NULL)
+   {
+      fprintf(stderr, "Error (solv): No memory to strip waters from \
+PDB file, %s\n",
               infile);
       return(1);
    }
