@@ -696,6 +696,7 @@ static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta,
    if(kount != num_ant)
    {
       ok = FALSE;
+
       if(firstres)
       {
          /* Check it's not the missing N in the first residue           */

@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.58
-   \date       17.07.14
+   \version    V1.60
+   \date       23.07.14
    \brief      Include file for pdb routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2014
@@ -136,6 +136,7 @@
 -  V1.58 17.07.14 Added access and radius to PDB structure. Also
                   added CREATEPDBEXTRAS() and FREEPDBEXTRAS()  By: ACRM
 -  V1.59 17.07.14 Added blSetElementSymbolFromAtomName() By: CTP
+-  V1.60 22.07.14 Added element and charge to PDB structure. By: ACRM
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -151,6 +152,19 @@
 
 #define MAXSTDAA    21       /* Number of standard amino acids (w/ PCA)*/
 #define MAXATINRES  14       /* Max number of atoms in a standard aa   */
+
+/* blATOMTYPE is unused at present, but gives the flexibility of
+   associating type information with each PDB record. 
+*/
+typedef struct _blAtomType
+{
+   REAL mass,
+        pol,
+        NEff,
+        vdwr;
+   char atomtype[8];
+}  blATOMTYPE;
+
 
 /* This is our main PDB structure used for the PDB linked lists.
 
@@ -178,8 +192,9 @@
 */
 typedef struct pdb_entry
 {
-   REAL x,y,z,occ,bval,access,radius;
+   REAL x,y,z,occ,bval,access,radius,charge;
    APTR extras;
+   blATOMTYPE *atomType;
    struct pdb_entry *next;
    int  atnum;
    int  resnum;
@@ -189,6 +204,7 @@ typedef struct pdb_entry
    char resnam[8];
    char insert[8];
    char chain[8];
+   char element[8];
    char altpos;
 }  PDB;
 

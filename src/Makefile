@@ -100,7 +100,7 @@ libbiops.so.$(BMAJOR).$(BMINOR) : $(OFILESB)
 	$(CC) -shared -fPIC -Wl,-soname,libbiops.so.$(BMAJOR) -o libbiops.so.$(BMAJOR).$(BMINOR) $? -lc
 
 # C compilation
-.c.o :
+.c.o : 
 	$(CC) $(COPT) -o $@ -c $<
 
 # Cleanup
