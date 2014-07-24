@@ -3,8 +3,8 @@
 
    \file       Macros.h
    
-   \version    V2.20
-   \date       07.07.14
+   \version    V2.21
+   \date       24.07.14
    \brief      Useful macros
    
    \copyright  SciTech Software 1991-2014
@@ -137,7 +137,7 @@
 -  V2.19 07.05.14 Moved DEPRECATED() to deprecated.h  By: CTP
 -  V2.20 07.07.14 Use bl prefix for functions - change padterm() to 
                   blPadterm() By: CTP
-
+-  V2.21 24.07.14 Initialize list pointers for DELETE macro. By: CTP
 *************************************************************************/
 #ifndef _MACROS_H
 #define _MACROS_H
@@ -213,13 +213,14 @@
 
 -  16.02.95 Original    By: ACRM
 -  10.04.08 Fixed position of break. By: CTP
+-  24.07.14 Initialize list pointers. By: CTP
 */
 #define DELETE(x, y, z)                                                  \
 do {                                                                     \
-   z *_delete_macro_p,                                                   \
+   z *_delete_macro_p = NULL,                                            \
      *_delete_macro_prev = NULL,                                         \
-     *_delete_macro_temp,                                                \
-     *_delete_macro_temp2;                                               \
+     *_delete_macro_temp = NULL,                                         \
+     *_delete_macro_temp2 = NULL;                                        \
    if((x)!=NULL && (y)!=NULL)                                            \
    {                                                                     \
       for(_delete_macro_p=(x);                                           \
