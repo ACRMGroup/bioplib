@@ -3,6 +3,9 @@
 # Define C compiler
 CC = gcc
 
+# Options for the C compiler
+COPT = -fPIC -ansi -Wall -pedantic -g -DGUNZIP_SUPPORT
+
 # Test code
 TEST_SRC = src/*.c
 #TEST_OBJ = src/*.o
@@ -25,6 +28,6 @@ DEP_OPT = -D BIOPLIB_DEPRECATED_QUIET
 
 # Compile tests            
 tests : 
-	$(CC) -o run_tests $(TEST_SRC) $(BIOP_OBJ) $(XML_OPT) $(DEP_OPT) -lcheck -lxml2
+	$(CC) $(COPT) -o run_tests $(TEST_SRC) $(BIOP_OBJ) $(XML_OPT) $(DEP_OPT) -lcheck -lxml2
 #clean : 
 #	rm -f run_tests $(TEST_OBJ)
