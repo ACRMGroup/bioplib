@@ -1,4 +1,4 @@
-// Include file for tests
+/* Include file for tests */
 
 #ifndef _PARSERESSPEC_H
 #define _PARSERESSPEC_H

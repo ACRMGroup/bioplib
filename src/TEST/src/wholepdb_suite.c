@@ -303,9 +303,9 @@ END_TEST
 Suite *wholepdb_suite(void)
 {
    Suite *s = suite_create("WholePDB");
+   TCase *tc_core = tcase_create("Core");
 
    /* Core test case */
-   TCase *tc_core = tcase_create("Core");
    tcase_add_checked_fixture(tc_core, 
                              wholepdb_setup, 
                              wholepdb_teardown);

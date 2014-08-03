@@ -31,7 +31,7 @@ void findzone_setup(void)
       return;
    }
    
-   pdb_in = ReadPDB(fp,&natom);
+   pdb_in = blReadPDB(fp,&natom);
    fclose(fp);
    
    if(pdb_in == NULL)
@@ -380,7 +380,6 @@ START_TEST(test_limit_08)
    /* Expected Output */
    expected_output     = TRUE;
    expected_start_atom =   31;
-//   expected_stop_atom  =   31;
    
 
    
@@ -393,58 +392,27 @@ START_TEST(test_limit_08)
    ck_assert(pdb_start        != NULL                );
    ck_assert(pdb_stop         == NULL                );
    ck_assert(pdb_start->atnum == expected_start_atom );
-//   ck_assert(pdb_stop->atnum  == expected_stop_atom  );
    
 }
 END_TEST
 
-
-/* wrapper test */
-START_TEST(test_wrapper_01)
-{
-   char startinsert_char,
-        stopinsert_char,
-        chain_char;
-   
-   /* Input */
-   start             =  1 ;
-   startinsert_char  = ' ';
-   stop              =  5 ;
-   stopinsert_char   = ' ';
-   chain_char        = 'A';
-   mode = ZONE_MODE_RESNUM;
-   
-   /* Expected Output */
-   expected_output     = TRUE;
-   expected_start_atom =    1;
-   expected_stop_atom  =   26;
-   
-   /* Run Test */
-   ck_assert_msg(pdb_in != NULL,"No pdb data found.");
-   output =  FindZonePDB(pdb_in, start, startinsert_char, stop, stopinsert_char, 
-                           chain_char, mode, &pdb_start, &pdb_stop);
-                           
-   ck_assert(output           == expected_output     );
-   ck_assert(pdb_start        != NULL                );
-   ck_assert(pdb_stop         != NULL                );
-   ck_assert(pdb_start->atnum == expected_start_atom );
-   ck_assert(pdb_stop->atnum  == expected_stop_atom  );   
-}
-END_TEST
 
 
 /* Create Suite */
 Suite *findzone_suite(void)
 {
-   Suite *s = suite_create("FindZonePDB");
-   
-   /* blFindZonePDB() */
-   TCase *tc_read = tcase_create("Read");
+   Suite *s        = suite_create("FindZonePDB");
+   TCase *tc_read  = tcase_create("Read");
+   TCase *tc_core  = tcase_create("Core");   
+   TCase *tc_limit = tcase_create("Limits");
+
+
+   /* Check read from test file */
    tcase_add_checked_fixture(tc_read, findzone_setup, findzone_teardown);
    tcase_add_test(tc_read, test_read_01);
    suite_add_tcase(s, tc_read);   
    
-   TCase *tc_core = tcase_create("Core");
+   /* Core test case */
    tcase_add_checked_fixture(tc_core, findzone_setup, findzone_teardown);
    tcase_add_test(tc_core, test_01);
    tcase_add_test(tc_core, test_02);
@@ -452,7 +420,7 @@ Suite *findzone_suite(void)
    tcase_add_test(tc_core, test_04);
    suite_add_tcase(s, tc_core);
 
-   TCase *tc_limit = tcase_create("Limits");
+   /* Limits test case */
    tcase_add_checked_fixture(tc_limit, findzone_setup, findzone_teardown);
    tcase_add_test(tc_limit, test_limit_01);
    tcase_add_test(tc_limit, test_limit_02);
@@ -463,11 +431,6 @@ Suite *findzone_suite(void)
    tcase_add_test(tc_limit, test_limit_07);
    tcase_add_test(tc_limit, test_limit_08);
    suite_add_tcase(s, tc_limit);
-
-   TCase *tc_wrap = tcase_create("Wrapper");
-   tcase_add_checked_fixture(tc_wrap, findzone_setup, findzone_teardown);
-   tcase_add_test(tc_wrap, test_wrapper_01);
-   suite_add_tcase(s, tc_wrap);
 
 
    return(s);

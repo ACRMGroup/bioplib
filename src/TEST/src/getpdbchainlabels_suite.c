@@ -50,10 +50,10 @@ END_TEST
 /* Create Suite */
 Suite *getpdbchainlabels_suite(void)
 {
-   Suite *s = suite_create("GetPDBChainLabels");
-   
-   /* blGetPDBChainLabels() */
+   Suite *s       = suite_create("GetPDBChainLabels");
    TCase *tc_core = tcase_create("Core");
+
+   /* blGetPDBChainLabels() */
    tcase_add_checked_fixture(tc_core, getpdbchainlabels_setup, 
                              getpdbchainlabels_teardown);
    tcase_add_test(tc_core, test_01);

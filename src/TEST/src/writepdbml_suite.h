@@ -1,4 +1,4 @@
-// Include file for tests
+/* Include file for tests */
 
 #ifndef _WRITEPDBML_H
 #define _WRITEPDBML_H

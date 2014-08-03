@@ -26,7 +26,7 @@ START_TEST(test_read_pdb)
    
    /* read test file */
    fp = fopen(filename,"r");
-   pdb = ReadPDB(fp, &natoms);
+   pdb = blReadPDB(fp, &natoms);
    fclose(fp);
 
    /* tests */
@@ -42,7 +42,7 @@ START_TEST(test_read_pdbml)
 
    /* read test file */
    fp = fopen(filename,"r");
-   pdb = ReadPDB(fp, &natoms);
+   pdb = blReadPDB(fp, &natoms);
    fclose(fp);
 
    /* tests */
@@ -59,7 +59,7 @@ START_TEST(test_read_pdb_data_01)
 
    /* read test file */
    fp = fopen(filename,"r");
-   pdb = ReadPDB(fp, &natoms);
+   pdb = blReadPDB(fp, &natoms);
    fclose(fp);
 
    /* check data */
@@ -86,7 +86,7 @@ START_TEST(test_read_pdb_data_02)
 
    /* read test file */
    fp = fopen(filename,"r");
-   pdb = ReadPDB(fp, &natoms);
+   pdb = blReadPDB(fp, &natoms);
    fclose(fp);
 
    /* check data */
@@ -113,7 +113,7 @@ START_TEST(test_read_pdb_data_03)
 
    /* read test file */
    fp = fopen(filename,"r");
-   pdb = ReadPDB(fp, &natoms);
+   pdb = blReadPDB(fp, &natoms);
    fclose(fp);
 
    /* check data */
@@ -140,7 +140,7 @@ START_TEST(test_read_pdb_data_04)
 
    /* read test file */
    fp = fopen(filename,"r");
-   pdb = ReadPDB(fp, &natoms);
+   pdb = blReadPDB(fp, &natoms);
    fclose(fp);
 
    /* check data */
@@ -168,7 +168,7 @@ START_TEST(test_read_pdb_data_05)
 
    /* read test file */
    fp = fopen(filename,"r");
-   pdb = ReadPDB(fp, &natoms);
+   pdb = blReadPDB(fp, &natoms);
    fclose(fp);
 
    /* check data */
@@ -196,7 +196,7 @@ START_TEST(test_read_pdb_data_06)
 
    /* read test file */
    fp = fopen(filename,"r");
-   pdb = ReadPDB(fp, &natoms);
+   pdb = blReadPDB(fp, &natoms);
    fclose(fp);
 
    /* check data */
@@ -226,7 +226,7 @@ START_TEST(test_read_pdbml_data_01)
 
    /* read test file */
    fp = fopen(filename,"r");
-   pdb = ReadPDB(fp, &natoms);
+   pdb = blReadPDB(fp, &natoms);
    fclose(fp);
 
    /* check data */
@@ -253,7 +253,7 @@ START_TEST(test_read_pdbml_data_02)
 
    /* read test file */
    fp = fopen(filename,"r");
-   pdb = ReadPDB(fp, &natoms);
+   pdb = blReadPDB(fp, &natoms);
    fclose(fp);
 
    /* check data */
@@ -280,7 +280,7 @@ START_TEST(test_read_pdbml_data_03)
 
    /* read test file */
    fp = fopen(filename,"r");
-   pdb = ReadPDB(fp, &natoms);
+   pdb = blReadPDB(fp, &natoms);
    fclose(fp);
 
    /* check data */
@@ -307,7 +307,7 @@ START_TEST(test_read_pdbml_data_04)
 
    /* read test file */
    fp = fopen(filename,"r");
-   pdb = ReadPDB(fp, &natoms);
+   pdb = blReadPDB(fp, &natoms);
    fclose(fp);
 
    /* check data */
@@ -335,7 +335,7 @@ START_TEST(test_read_pdbml_data_05)
 
    /* read test file */
    fp = fopen(filename,"r");
-   pdb = ReadPDB(fp, &natoms);
+   pdb = blReadPDB(fp, &natoms);
    fclose(fp);
 
    /* check data */
@@ -363,7 +363,7 @@ START_TEST(test_read_pdbml_data_06)
 
    /* read test file */
    fp = fopen(filename,"r");
-   pdb = ReadPDB(fp, &natoms);
+   pdb = blReadPDB(fp, &natoms);
    fclose(fp);
 
    /* check data */
@@ -388,17 +388,20 @@ END_TEST
 /* Create Suite */
 Suite *readpdbml_suite(void)
 {
-   Suite *s = suite_create("ReadPDBML");
+   Suite *s        = suite_create("ReadPDBML");
+   TCase *tc_core  = tcase_create("Core"),
+         *tc_pdb   = tcase_create("PDB"),
+         *tc_pdbml = tcase_create("PDBML");
+
 
    /* Core test case */
-   TCase *tc_core = tcase_create("Core");
    tcase_add_checked_fixture(tc_core, readpdbml_setup, 
                              readpdbml_teardown);
    tcase_add_test(tc_core, test_read_pdb);
    tcase_add_test(tc_core, test_read_pdbml);
    suite_add_tcase(s, tc_core);
    
-   TCase *tc_pdb = tcase_create("PDB");
+   /* Test PDB */
    tcase_add_checked_fixture(tc_pdb, readpdbml_setup, 
                              readpdbml_teardown);
    tcase_add_test(tc_pdb, test_read_pdb_data_01);
@@ -409,7 +412,7 @@ Suite *readpdbml_suite(void)
    tcase_add_test(tc_pdb, test_read_pdb_data_06);
    suite_add_tcase(s, tc_pdb);
    
-   TCase *tc_pdbml = tcase_create("PDBML");
+   /* Test PDBML */
    tcase_add_checked_fixture(tc_pdbml, readpdbml_setup, 
                              readpdbml_teardown);
    tcase_add_test(tc_pdbml, test_read_pdbml_data_01);

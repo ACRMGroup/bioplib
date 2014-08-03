@@ -1,4 +1,4 @@
-// Include file for tests
+/* Include file for tests */
 
 #ifndef _WHOLEPDB_H
 #define _WHOLEPDB_H

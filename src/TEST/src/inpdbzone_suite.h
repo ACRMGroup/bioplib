@@ -1,4 +1,4 @@
-// Include file for tests
+/* Include file for tests */
 
 #ifndef _INPDBZONE_H
 #define _INPDBZONE_H

@@ -490,156 +490,8 @@ START_TEST(test_single_resnum_08)
 }
 END_TEST
 
-/* Wrapper functions */
-
-/* InPDBZoneSpec() */
-START_TEST(test_wrapper_a_01)
-{
-   /* range */
-   single_letter_chain   = 'A';
-   resnum1               =  10;
-   single_letter_insert1 = ' ';
-   resnum2               =  20;
-   single_letter_insert2 = ' ';
-
-   /* pdb */
-   strcpy(pdb->chain, "A");
-   pdb->resnum =       15 ;
-   strcpy(pdb->insert," ");
-   
-   /* expected output */
-   expected_output =  TRUE;
-   
-   output = InPDBZone(pdb, single_letter_chain, 
-                      resnum1, single_letter_insert1, 
-                      resnum2, single_letter_insert2);
-   ck_assert( output == expected_output );
-}
-END_TEST
-
-START_TEST(test_wrapper_a_02)
-{
-   /* range */
-   single_letter_chain   = 'A';
-   resnum1               =  10;
-   single_letter_insert1 = 'A';
-   resnum2               =  20;
-   single_letter_insert2 = ' ';
-
-   /* pdb */
-   strcpy(pdb->chain, "A");
-   pdb->resnum =       10 ;
-   strcpy(pdb->insert," ");
-   
-   /* expected output */
-   expected_output = FALSE;
-   
-   output = InPDBZone(pdb, single_letter_chain, 
-                      resnum1, single_letter_insert1, 
-                      resnum2, single_letter_insert2);
-   ck_assert( output == expected_output );
-}
-END_TEST
-
-START_TEST(test_wrapper_a_03)
-{
-   /* range */
-   single_letter_chain   = 'A';
-   resnum1               =  10;
-   single_letter_insert1 = 'A';
-   resnum2               =  20;
-   single_letter_insert2 = ' ';
-
-   /* pdb */
-   strcpy(pdb->chain, "A");
-   pdb->resnum =       10 ;
-   strcpy(pdb->insert,"A");
-   
-   /* expected output */
-   expected_output =  TRUE;
-   
-   output = InPDBZone(pdb, single_letter_chain, 
-                      resnum1, single_letter_insert1, 
-                      resnum2, single_letter_insert2);
-   ck_assert( output == expected_output );
-}
-END_TEST
-
-START_TEST(test_wrapper_a_04)
-{
-   /* range */
-   single_letter_chain   = 'A';
-   resnum1               =  10;
-   single_letter_insert1 = ' ';
-   resnum2               =  20;
-   single_letter_insert2 = ' ';
-
-   /* pdb */
-   strcpy(pdb->chain, "A");
-   pdb->resnum =       20 ;
-   strcpy(pdb->insert,"A");
-   
-   /* expected output */
-   expected_output = FALSE;
-   
-   output = InPDBZone(pdb, single_letter_chain, 
-                      resnum1, single_letter_insert1, 
-                      resnum2, single_letter_insert2);
-   ck_assert( output == expected_output );
-}
-END_TEST
-
-START_TEST(test_wrapper_a_05)
-{
-   /* range */
-   single_letter_chain   = 'A';
-   resnum1               =  10;
-   single_letter_insert1 = ' ';
-   resnum2               =  20;
-   single_letter_insert2 = 'A';
-
-   /* pdb */
-   strcpy(pdb->chain, "A");
-   pdb->resnum =       20 ;
-   strcpy(pdb->insert,"A");
-   
-   /* expected output */
-   expected_output =  TRUE;
-   
-   output = InPDBZone(pdb, single_letter_chain, 
-                      resnum1, single_letter_insert1, 
-                      resnum2, single_letter_insert2);
-   ck_assert( output == expected_output );
-}
-END_TEST
-
-START_TEST(test_wrapper_a_06)
-{
-   /* range */
-   single_letter_chain   = 'A';
-   resnum1               =  10;
-   single_letter_insert1 = ' ';
-   resnum2               =  20;
-   single_letter_insert2 = ' ';
-
-   /* pdb */
-   strcpy(pdb->chain, "B");
-   pdb->resnum =       15 ;
-   strcpy(pdb->insert," ");
-   
-   /* expected output */
-   expected_output = FALSE;
-   
-   output = InPDBZone(pdb, single_letter_chain, 
-                      resnum1, single_letter_insert1, 
-                      resnum2, single_letter_insert2);
-   ck_assert( output == expected_output );
-}
-END_TEST
-
-
-/* InPDBZoneSpec() */
-START_TEST(test_wrapper_b_01)
+/* Wrapper function: blInPDBZoneSpec() */
+START_TEST(test_wrapper_01)
 {
    /* range */
    strcpy(resspec1, "A10");
@@ -653,12 +505,12 @@ START_TEST(test_wrapper_b_01)
    /* expected output */
    expected_output =  TRUE;
    
-   output = InPDBZoneSpec(pdb, resspec1, resspec2);
+   output = blInPDBZoneSpec(pdb, resspec1, resspec2);
    ck_assert( output == expected_output );
 }
 END_TEST
 
-START_TEST(test_wrapper_b_02)
+START_TEST(test_wrapper_02)
 {
    /* range */
    strcpy(resspec1, "A10");
@@ -672,12 +524,12 @@ START_TEST(test_wrapper_b_02)
    /* expected output */
    expected_output = FALSE;
    
-   output = InPDBZoneSpec(pdb, resspec1, resspec2);
+   output = blInPDBZoneSpec(pdb, resspec1, resspec2);
    ck_assert( output == expected_output );
 }
 END_TEST
 
-START_TEST(test_wrapper_b_03)
+START_TEST(test_wrapper_03)
 {
    /* range */
    strcpy(resspec1,   "*");
@@ -691,12 +543,12 @@ START_TEST(test_wrapper_b_03)
    /* expected output */
    expected_output = TRUE;
    
-   output = InPDBZoneSpec(pdb, resspec1, resspec2);
+   output = blInPDBZoneSpec(pdb, resspec1, resspec2);
    ck_assert( output == expected_output );
 }
 END_TEST
 
-START_TEST(test_wrapper_b_04)
+START_TEST(test_wrapper_04)
 {
    /* range */
    strcpy(resspec1,  "A*");
@@ -710,12 +562,12 @@ START_TEST(test_wrapper_b_04)
    /* expected output */
    expected_output = TRUE;
    
-   output = InPDBZoneSpec(pdb, resspec1, resspec2);
+   output = blInPDBZoneSpec(pdb, resspec1, resspec2);
    ck_assert( output == expected_output );
 }
 END_TEST
 
-START_TEST(test_wrapper_b_05)
+START_TEST(test_wrapper_05)
 {
    /* range */
    strcpy(resspec1,  ".*");
@@ -729,12 +581,12 @@ START_TEST(test_wrapper_b_05)
    /* expected output */
    expected_output = TRUE;
    
-   output = InPDBZoneSpec(pdb, resspec1, resspec2);
+   output = blInPDBZoneSpec(pdb, resspec1, resspec2);
    ck_assert( output == expected_output );
 }
 END_TEST
 
-START_TEST(test_wrapper_b_06)
+START_TEST(test_wrapper_06)
 {
    /* range */
    strcpy(resspec1, "A.*");
@@ -748,7 +600,7 @@ START_TEST(test_wrapper_b_06)
    /* expected output */
    expected_output = TRUE;
    
-   output = InPDBZoneSpec(pdb, resspec1, resspec2);
+   output = blInPDBZoneSpec(pdb, resspec1, resspec2);
    ck_assert( output == expected_output );
 }
 END_TEST
@@ -758,9 +610,13 @@ END_TEST
 Suite *inpdbzone_suite(void)
 {
    Suite *s = suite_create("InPDBZone");
-   
+   TCase *tc_core          = tcase_create("Core"),
+         *tc_single_resnum = tcase_create("Single_Resnum"),
+         *tc_wrapper       = tcase_create("Wrapper");
+
+
    /* blInPDBZone() */
-   TCase *tc_core = tcase_create("Core");
+   /* Core */
    tcase_add_checked_fixture(tc_core, inpdbzone_setup, 
                              inpdbzone_teardown);
    tcase_add_test(tc_core, test_01);
@@ -777,7 +633,7 @@ Suite *inpdbzone_suite(void)
    tcase_add_test(tc_core, test_12);
    suite_add_tcase(s, tc_core);
 
-   TCase *tc_single_resnum = tcase_create("Single_Resnum");
+   /* Single resnum */
    tcase_add_checked_fixture(tc_single_resnum, inpdbzone_setup, 
                              inpdbzone_teardown);
    tcase_add_test(tc_single_resnum, test_single_resnum_01);
@@ -790,28 +646,16 @@ Suite *inpdbzone_suite(void)
    tcase_add_test(tc_single_resnum, test_single_resnum_08);
    suite_add_tcase(s, tc_single_resnum);
 
-   /* InPDBZone() */
-   TCase *tc_wrap_a = tcase_create("Wrapper_A");
-   tcase_add_checked_fixture(tc_wrap_a, inpdbzone_setup, 
+   /* blInPDBZoneSpec() */
+   /* Wrapper */
+   tcase_add_checked_fixture(tc_wrapper, inpdbzone_setup, 
                              inpdbzone_teardown);
-   tcase_add_test(tc_wrap_a, test_wrapper_a_01);
-   tcase_add_test(tc_wrap_a, test_wrapper_a_02);
-   tcase_add_test(tc_wrap_a, test_wrapper_a_03);
-   tcase_add_test(tc_wrap_a, test_wrapper_a_04);
-   tcase_add_test(tc_wrap_a, test_wrapper_a_05);
-   tcase_add_test(tc_wrap_a, test_wrapper_a_06);   
-   suite_add_tcase(s, tc_wrap_a);
-   
-   /* InPDBZoneSpec() */
-   TCase *tc_wrap_b = tcase_create("Wrapper_B");
-   tcase_add_checked_fixture(tc_wrap_b, inpdbzone_setup, 
-                             inpdbzone_teardown);
-   tcase_add_test(tc_wrap_b, test_wrapper_b_01);
-   tcase_add_test(tc_wrap_b, test_wrapper_b_02);
-   tcase_add_test(tc_wrap_b, test_wrapper_b_03);
-   tcase_add_test(tc_wrap_b, test_wrapper_b_04);
-   tcase_add_test(tc_wrap_b, test_wrapper_b_05);
-   tcase_add_test(tc_wrap_b, test_wrapper_b_06);   
-   suite_add_tcase(s, tc_wrap_b);
+   tcase_add_test(tc_wrapper, test_wrapper_01);
+   tcase_add_test(tc_wrapper, test_wrapper_02);
+   tcase_add_test(tc_wrapper, test_wrapper_03);
+   tcase_add_test(tc_wrapper, test_wrapper_04);
+   tcase_add_test(tc_wrapper, test_wrapper_05);
+   tcase_add_test(tc_wrapper, test_wrapper_06);   
+   suite_add_tcase(s, tc_wrapper);
    return(s);
 }

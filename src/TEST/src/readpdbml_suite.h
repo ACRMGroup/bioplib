@@ -1,4 +1,4 @@
-// Include file for tests
+/* Include file for tests */
 
 #ifndef _READPDBML_H
 #define _READPDBML_H

@@ -119,10 +119,10 @@ START_TEST(test_write_pdb)
    ck_assert_msg(fp != NULL,                "Failed to open file.");
 
    /* read test file */
-   pdb_in = ReadPDB(fp, &natoms);
+   pdb_in = blReadPDB(fp, &natoms);
    
    /* check test file format */
-   pdbml_format = CheckFileFormatPDBML(fp);
+   pdbml_format = blCheckFileFormatPDBML(fp);
    fclose(fp);
 
    /* remove output file */
@@ -153,10 +153,10 @@ START_TEST(test_write_pdbml)
    ck_assert_msg(fp != NULL,                "Failed to open file.");
 
    /* read test file */
-   pdb_in = ReadPDB(fp, &natoms);
+   pdb_in = blReadPDB(fp, &natoms);
    
    /* check test file format */
-   pdbml_format = CheckFileFormatPDBML(fp);
+   pdbml_format = blCheckFileFormatPDBML(fp);
    fclose(fp);
 
    /* remove output file */
@@ -189,10 +189,10 @@ START_TEST(test_write_default_pdb_in)
    ck_assert_msg(fp != NULL,                "Failed to open file.");
 
    /* read test file */
-   pdb_in = ReadPDB(fp, &natoms);
+   pdb_in = blReadPDB(fp, &natoms);
    
    /* check test file format */
-   pdbml_format = CheckFileFormatPDBML(fp);
+   pdbml_format = blCheckFileFormatPDBML(fp);
    fclose(fp);
 
    /* remove output file */
@@ -224,10 +224,10 @@ START_TEST(test_write_default_pdbml_in)
    ck_assert_msg(fp != NULL,                "Failed to open file.");
 
    /* read test file */
-   pdb_in = ReadPDB(fp, &natoms);
+   pdb_in = blReadPDB(fp, &natoms);
    
    /* check test file format */
-   pdbml_format = CheckFileFormatPDBML(fp);
+   pdbml_format = blCheckFileFormatPDBML(fp);
    fclose(fp);
 
    /* remove output file */
@@ -760,10 +760,14 @@ END_TEST
 /* Create Suite */
 Suite *writepdbml_suite(void)
 {
-   Suite *s = suite_create("WritePDBML");
+   Suite *s         = suite_create("WritePDBML");
+   TCase *tc_core   = tcase_create("Core"),
+         *tc_format = tcase_create("Format"),
+         *tc_pdb    = tcase_create("PDB"),
+         *tc_pdbml  = tcase_create("PDBML");
+
 
    /* Core test case */
-   TCase *tc_core = tcase_create("Core");
    tcase_add_checked_fixture(tc_core, 
                              writepdbml_setup_default, 
                              writepdbml_teardown);
@@ -773,7 +777,7 @@ Suite *writepdbml_suite(void)
    tcase_add_test(tc_core, test_write_default_pdbml_in);
    suite_add_tcase(s, tc_core);
 
-   TCase *tc_format = tcase_create("Format");
+   /* Format test case */
    tcase_add_checked_fixture(tc_format, 
                              writepdbml_setup_default, 
                              writepdbml_teardown);
@@ -783,7 +787,7 @@ Suite *writepdbml_suite(void)
    tcase_add_test(tc_format, test_pdb_format_error_invalid);
    suite_add_tcase(s, tc_format);
 
-   TCase *tc_pdb = tcase_create("PDB");
+   /* PDB test case */
    tcase_add_checked_fixture(tc_pdb, writepdbml_setup_pdb, 
                              writepdbml_teardown);
    tcase_add_test(tc_pdb, test_write_pdb_data_01);
@@ -792,7 +796,7 @@ Suite *writepdbml_suite(void)
    tcase_add_test(tc_pdb, test_write_pdb_data_04);
    suite_add_tcase(s, tc_pdb);
    
-   TCase *tc_pdbml = tcase_create("PDBML");
+   /* PDB test case */
    tcase_add_checked_fixture(tc_pdbml, writepdbml_setup_pdbml, 
                              writepdbml_teardown);
    tcase_add_test(tc_pdbml, test_write_pdbml_data_01);
