@@ -56,7 +56,7 @@ array2.o chindex.o countchar.o factdiv.o factorial.o fgetsany.o \
 fsscanf.o ftostr.o help.o hpgl.o invert33.o openorpipe.o padchar.o \
 padterm.o parse.o pearson.o pearson1.o phi.o pldist.o plotting.o \
 ps.o safemem.o simpleangle.o strcatalloc.o upstrcmp.o upstrncmp.o \
-WindIO.o getfield.o array3.o justify.o wrapprint.o
+WindIO.o getfield.o array3.o justify.o wrapprint.o deprecated.o
 
 
 # Files for libbiop.a
