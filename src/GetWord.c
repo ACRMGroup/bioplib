@@ -3,8 +3,8 @@
 
    \file       GetWord.c
    
-   \version    V2.1
-   \date       07.07.14
+   \version    V2.2
+   \date       03.08.14
    \brief      Get a space delimited word from a string
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1995-2014
@@ -49,6 +49,7 @@
 -  V1.0  02.03.99 Original   By: ACRM
 -  V2.0  10.06.99 Complete rewrite to allow escaping of characters
 -  V2.1  07.07.14 Use bl prefix for functions By: CTP
+-  V2.2  08.03.14 Made doGetWord() a static function. By CTP
 
 *************************************************************************/
 /* Includes
@@ -68,12 +69,13 @@
 /************************************************************************/
 /* Prototypes
 */
-char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma);
+static char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma);
 
 
 /************************************************************************/
-/*>char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma)
-   -----------------------------------------------------------------
+/*>static char *doGetWord(char *buffer, char *word, int maxlen,
+                          BOOL comma)
+   ------------------------------------------------------------
 *//**
 
    \param[in]     *buffer     Input buffer to read words from
@@ -98,8 +100,9 @@ char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma);
       "\"" -> '"'     To get a double inverted comma
 
 -  10.06.99 Original   By: ACRM (based on code from Bioplib)
+-  03.08.14 Made static By: CTP
 */
-char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma)
+static char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma)
 {
    int  i, j;
    BOOL dic    = FALSE,
