@@ -97,6 +97,7 @@ char *blSimplifyText(char *string);
 
 /************************************************************************/
 /* Deprecated functions: plotting.h                                     */
+/** \cond deprecated                                                    */
 
 BOOL AMInitPlot(char *filename, char *title, int dest, REAL OutXSize, 
                 REAL OutYSize, REAL OutXOff, REAL OutYOff,
@@ -118,6 +119,7 @@ void AMEndPlot(int dest);
 int  PS2HPGLFont(char *font);
 char *SimplifyText(char *string);
 
+/* \endcond                                                             */
 /************************************************************************/
 
 #endif

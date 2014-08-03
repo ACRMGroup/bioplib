@@ -96,6 +96,7 @@ void blWriteCSSR(FILE *fp, CSSR *cssr, char *name, char *title);
 
 /************************************************************************/
 /* Deprecated functions: cssr.h                                         */
+/** \cond deprecated                                                    */
 
 CSSR *ReadCSSR(FILE *fp, int *natom, char *name, char *title);
 PDB *ReadCSSRasPDB(FILE *fp, int *natom);
@@ -107,6 +108,7 @@ void ortho(REAL cell[3], REAL alpha, REAL beta, REAL gamma,
            REAL amatrx[3][3], int isw, int ncode);
 void WriteCSSR(FILE *fp, CSSR *cssr, char *name, char *title);
 
+/* \endcond                                                             */
 /************************************************************************/
 
 #endif

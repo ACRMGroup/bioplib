@@ -535,6 +535,7 @@ void blSetElementSymbolFromAtomName(char *element, char * atom_name);
 
 /************************************************************************/
 /* Deprecated functions: pdb.h                                          */
+/** \cond deprecated                                                    */
 
 char *GetPDBChainLabels(PDB *pdb);
 PDB *ReadPDB(FILE *fp, int *natom);
@@ -667,6 +668,7 @@ PDB *FindNextChain(PDB *pdb);
 void FreePDBStructure(PDBSTRUCT *pdbstruct);
 void SetElementSymbolFromAtomName(char *element, char * atom_name);
 
+/* \endcond                                                             */
 /************************************************************************/
 
 #endif

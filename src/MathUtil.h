@@ -86,6 +86,7 @@ ULONG blNComb(int n, int r);
 
 /************************************************************************/
 /* Deprecated functions: MathUti.h                                      */
+/** \cond deprecated                                                    */
 
 void CalcSD(REAL val, int action, REAL *mean, REAL *SD);
 void CalcExtSD(REAL val, int action, REAL *Sx, REAL *SxSq, 
@@ -108,6 +109,7 @@ ULONG Factdiv(int n1, int n2);
 ULONG NPerm(int n, int r);
 ULONG NComb(int n, int r);
 
+/** \endcond                                                            */
 /************************************************************************/
 
 

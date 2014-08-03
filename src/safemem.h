@@ -68,10 +68,14 @@ void blSafeleaks(void);
 
 
 /************************************************************************/
-/* Deprecated functions: safemem.h                                        */
+/* Deprecated functions: safemem.h                                      */
+/** \cond deprecated                                                    */
+
 void *safemalloc(int nbytes);
 BOOL safefree(void *ptr);
 void safeleaks(void);
+
+/* \endcond                                                             */
 /************************************************************************/
 
 

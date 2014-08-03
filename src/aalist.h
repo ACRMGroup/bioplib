@@ -95,6 +95,7 @@ int blGetAAListLen(AA *aa);
 
 /************************************************************************/
 /* Deprecated functions: aalist.h                                       */
+/** \cond deprecated                                                    */
 
 AA *InsertNextResiduesInAAList(AA *a, char res, int nres);
 AA *InsertNextResidueInAAList(AA *a, char res);
@@ -108,6 +109,7 @@ void SetAAListFlagByResnum(AA *aa, int resnum);
 char *BuildFlagSeqFromAAList(AA *aa, char ch);
 int GetAAListLen(AA *aa);
 
+/** \endcond                                                            */
 /************************************************************************/
 
 #endif

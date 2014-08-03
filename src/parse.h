@@ -125,6 +125,7 @@ int blGetParam(char  *command, REAL *value, int *nletters);
 
 /************************************************************************/
 /* Deprecated functions: parse.h                                        */
+/** \cond deprecated                                                    */
 
 int parse(char *comline, int nkeys, KeyWd *keywords, REAL *REALparam,
           char **strparam);
@@ -134,6 +135,7 @@ int match(char *comstring, char *string2, int *nletters);
 int GetString(char *command, char *strparam);
 int GetParam(char  *command, REAL *value, int *nletters);
 
+/* \endcond                                                             */
 /************************************************************************/
 
 #endif

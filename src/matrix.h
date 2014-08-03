@@ -82,6 +82,7 @@ REAL blVecDist(REAL *a, REAL *b, int len);
 
 /************************************************************************/
 /* Deprecated functions: matrix.h                                       */
+/** \cond deprecated                                                    */
 
 void MatMult3_33(VEC3F vecin, REAL matin[3][3], VEC3F *vecout);
 void MatMult33_33(REAL a[3][3], REAL b[3][3], REAL out[3][3]);
@@ -89,6 +90,7 @@ void invert33(REAL s[3][3], REAL ss[3][3]);
 void CreateRotMat(char direction, REAL angle, REAL matrix[3][3]);
 REAL VecDist(REAL *a, REAL *b, int len);
 
+/* \endcond                                                             */
 /************************************************************************/
 
 #endif

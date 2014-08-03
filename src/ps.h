@@ -110,6 +110,7 @@ char *blPSCorrectCase(char *font);
 
 /************************************************************************/
 /* Deprecated functions: ps.h                                           */
+/** \cond deprecated                                                    */
 
 BOOL PSInit(char *FName, char *creator, char *AltFont);
 void PSThick(REAL thickness);
@@ -130,6 +131,7 @@ void PSShowText(char *text);
 void PSEnd(void);
 char *PSCorrectCase(char *font);
 
+/* \endcond                                                             */
 /************************************************************************/
 
 #endif

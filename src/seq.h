@@ -143,6 +143,7 @@ int blNumericAffineAlign(int *seq1, int length1, int *seq2, int length2,
 
 /************************************************************************/
 /* Deprecated macros: seq.h                                             */
+/** \cond deprecated                                                    */
 
 #define PDB2Seq(x)          blDoPDB2Seq((x), FALSE, FALSE, FALSE)
 #define PDB2SeqX(x)         blDoPDB2Seq((x), TRUE,  FALSE, FALSE)
@@ -156,6 +157,7 @@ int blNumericAffineAlign(int *seq1, int length1, int *seq2, int length2,
 
 /************************************************************************/
 /* Deprecated functions: seq.h                                          */
+
 char throne(char *three);
 char thronex(char *three);
 char *onethr(char one);
@@ -188,6 +190,8 @@ int NumericAffineAlign(int *seq1, int length1, int *seq2, int length2,
                        BOOL verbose, BOOL identity, int penalty,
                        int penext, int *align1, int *align2, 
                        int *align_len);
+
+/* \endcond                                                             */
 /************************************************************************/
 
 #endif

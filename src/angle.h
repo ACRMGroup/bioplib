@@ -90,6 +90,7 @@ BOOL blTorToCoor(VEC3F ant1, VEC3F ant2, VEC3F ant3,
 
 /************************************************************************/
 /* Deprecated functions: angle.h                                        */
+/** \cond deprecated                                                    */
 
 REAL angle(REAL xi, REAL yi, REAL zi, REAL xj, REAL yj, REAL zj,
            REAL xk, REAL yk, REAL zk);
@@ -101,6 +102,7 @@ BOOL TorToCoor(VEC3F ant1, VEC3F ant2, VEC3F ant3,
                  REAL bond, REAL theta, REAL torsion,
                  VEC3F *coords);
                  
+/** \endcond                                                            */
 /************************************************************************/
 
 #endif

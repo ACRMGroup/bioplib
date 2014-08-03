@@ -120,6 +120,7 @@ void blGetfield(char *buffer, int start, int width, char *str);
 
 /************************************************************************/
 /* Deprecated functions: general.h                                      */
+/** \cond deprecated                                                    */
 
 void StringToLower(char *string1, char *string2);
 void StringToUpper(char *string1, char *string2);
@@ -161,6 +162,7 @@ void RightJustify(char *string);
 char *GetWordNC(char *buffer, char *word, int maxlen);
 void getfield(char *buffer, int start, int width, char *str);
 
+/* \endcond                                                             */
 /************************************************************************/
 
 #endif

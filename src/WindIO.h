@@ -69,6 +69,7 @@ int blYorN(char deflt);
 
 /************************************************************************/
 /* Deprecated functions: WindIO.h                                       */
+/** \cond deprecated                                                    */
 
 void screen(char *string);
 void prompt(char *string);
@@ -80,6 +81,7 @@ void WindowMode(BOOL mode);
 void WindowInteractive(BOOL mode);
 int YorN(char deflt);
 
+/** \endcond                                                            */
 /************************************************************************/
 
 #endif

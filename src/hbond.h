@@ -83,12 +83,14 @@ int blIsMCAcceptorHBonded(PDB *res1, PDB *res2, int type);
 
 /************************************************************************/
 /* Deprecated functions: hbond.h                                        */
+/** \cond deprecated                                                    */
 
 int  IsHBonded(PDB *res1, PDB *res2, int type);
 BOOL ValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP);
 int IsMCDonorHBonded(PDB *res1, PDB *res2, int type);
 int IsMCAcceptorHBonded(PDB *res1, PDB *res2, int type);
 
+/* \endcond                                                             */
 /************************************************************************/
 
 #endif

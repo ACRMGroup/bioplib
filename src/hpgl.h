@@ -84,6 +84,7 @@ void blHPGLShowText(char *text, BOOL orientation, int XBase, int YBase);
 
 /************************************************************************/
 /* Deprecated functions: hpgl.h                                         */
+/** \cond deprecated                                                    */
 
 BOOL HPGLInit(char *filename, char *AltFont, REAL xmargin, REAL ymargin);
 void HPGLPen(int num);
@@ -101,6 +102,7 @@ void HPGLVText(REAL x, REAL y, REAL xoff, char *text, int TitleFont,
 void HPGLEnd(void);
 void HPGLShowText(char *text, BOOL orientation, int XBase, int YBase);
 
+/* \endcond                                                             */
 /************************************************************************/
 
 #endif

@@ -62,8 +62,12 @@ void blDoHelp(char *string, char *HelpFile);
 
 /************************************************************************/
 /* Deprecated functions: help.h                                         */
+/** \cond deprecated                                                    */
+
 void Help(char *string, char *HelpFile);
 void DoHelp(char *string, char *HelpFile);
+
+/* \endcond                                                             */
 /************************************************************************/
 
 #endif

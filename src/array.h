@@ -81,12 +81,14 @@ void blFreeArray3D(char ***array, int dim1, int dim2, int dim3);
 
 /************************************************************************/
 /* Deprecated functions: array.h                                        */
+/** \cond deprecated                                                    */
 
 char **Array2D(int size, int dim1, int dim2);
 void FreeArray2D(char **array, int dim1, int dim2);
 char ***Array3D(int size, int dim1, int dim2, int dim3);
 void FreeArray3D(char ***array, int dim1, int dim2, int dim3);
 
+/* \endcond                                                             */
 /************************************************************************/
 
 #endif

@@ -73,9 +73,11 @@ void blShowErrors(void *PrintRoutine(char *), BOOL Trace);
 
 /************************************************************************/
 /* Deprecated functions: ErrStack.h                                     */
+/** \cond deprecated                                                    */
 
 void StoreError(char *routine, char *error);
 void ShowErrors(void *PrintRoutine(char *), BOOL Trace);
 
+/** \endcond                                                            */
 /************************************************************************/
 #endif

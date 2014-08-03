@@ -81,11 +81,13 @@ BOOL blProbeBufferedFile(INBUFFER *bfp, char *string, int length);
 
 /************************************************************************/
 /* Deprecated functions: BuffInp.h                                      */
+/** \cond deprecated                                                    */
 
 INBUFFER *OpenBufferedFile(char *filename, int maxstr);
 BOOL ReadBufferedFile(INBUFFER *bfp, char *string, int length);
 BOOL ProbeBufferedFile(INBUFFER *bfp, char *string, int length);
 
+/** \endcond                                                            */
 /************************************************************************/
 
 #endif

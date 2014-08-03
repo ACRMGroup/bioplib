@@ -82,6 +82,12 @@
    compilation of the library or by setting an environment variable at 
    runtime.
 
+   \par Documentation
+   Doxygen is not set to document deprecated functions. To document 
+   deprecated functions, add "deprecated" to the ENABLED SECTIONS tag in
+   the Doxygen config file:
+   bioplib/doc/doxygen/Doxyfile
+
 **************************************************************************
 
    Revision History:
@@ -131,11 +137,14 @@
 
 
 /************************************************************************/
+/** \cond deprecated                                                    */
 
 
 /************************************************************************/
 /*>PDB *FindHetatmResidue(PDB *pdb, char chain, int resnum, char insert)
    ---------------------------------------------------------------------
+*//**
+
    Finds a pointer to the start of a residue in a PDB linked list, but
    requires the residue is a HETATM record.
    Uses char for chain and insert.
@@ -166,6 +175,8 @@ PDB *FindHetatmResidue(PDB *pdb, char chain, int resnum, char insert)
 /************************************************************************/
 /*>PDB *FindResidue(PDB *pdb, char chain, int resnum, char insert)
    ---------------------------------------------------------------
+*//**
+
    Finds a pointer to the start of a residue in a PDB linked list.
    Uses char for string and insert.
 
@@ -504,13 +515,15 @@ PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
    return(blReadPDBAtomsOccRank(fp, natom, OccRank));
 }
 
-PDB *doReadPDB(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank, int ModelNum)
+PDB *doReadPDB(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank,
+               int ModelNum)
 {
    DEPRECATED("doReadPDB()","blDoReadPDB()");
    return(blDoReadPDB(fp, natom, AllAtoms, OccRank, ModelNum));
 }
 
-PDB *doReadPDBML(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank, int ModelNum)
+PDB *doReadPDBML(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank,
+                 int ModelNum)
 {
    DEPRECATED("doReadPDBML()","blDoReadPDBML()");
    return(blDoReadPDBML(fp, natom, AllAtoms, OccRank, ModelNum));
@@ -756,7 +769,8 @@ BOOL KillSidechain(PDB *ResStart, PDB *NextRes, BOOL doCB)
    return(blKillSidechain(ResStart, NextRes, doCB));
 }
 
-void SetResnam(PDB *ResStart, PDB *NextRes, char *resnam, int resnum, char *insert, char *chain)
+void SetResnam(PDB *ResStart, PDB *NextRes, char *resnam, int resnum,
+               char *insert, char *chain)
 {
    DEPRECATED("SetResnam()","blSetResnam()");
    blSetResnam(ResStart, NextRes, resnam, resnum, insert, chain);
@@ -768,19 +782,22 @@ void ApplyMatrixPDB(PDB *pdb, REAL matrix[3][3])
    blApplyMatrixPDB(pdb, matrix);
 }
 
-BOOL GetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor, int *StrucType)
+BOOL GetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor,
+                 int *StrucType)
 {
    DEPRECATED("GetResolPDB()","blGetResolPDB()");
    return(blGetResolPDB(fp, resolution, RFactor, StrucType));
 }
 
-BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR, int *StrucType)
+BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
+              int *StrucType)
 {
    DEPRECATED("GetExptl()","blGetExptl()");
    return(blGetExptl(fp, resolution, RFactor, FreeR, StrucType));
 }
 
-BOOL GetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR, int *StrucType)
+BOOL GetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
+                 int *StrucType)
 {
    DEPRECATED("GetExptlOld()","blGetExptlOld()");
    return(blGetExptlOld(fp, resolution, RFactor, FreeR, StrucType));
@@ -810,16 +827,19 @@ BOOL ParseResSpec(char *spec, char *chain, int *resnum, char *insert)
    return(blParseResSpec(spec, chain, resnum, insert));
 }
 
-BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum, char *insert)
+BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum,
+                         char *insert)
 {
    DEPRECATED("ParseResSpecNoUpper()","blParseResSpecNoUpper()");
    return(blParseResSpecNoUpper(spec, chain, resnum, insert));
 }
 
-BOOL DoParseResSpec(char *spec, char *chain, int *resnum, char *insert, BOOL uppercaseresspec)
+BOOL DoParseResSpec(char *spec, char *chain, int *resnum, char *insert,
+                    BOOL uppercaseresspec)
 {
    DEPRECATED("DoParseResSpec()","blDoParseResSpec()");
-   return(blDoParseResSpec(spec, chain, resnum, insert, uppercaseresspec));
+   return(blDoParseResSpec(spec, chain, resnum, insert,
+                           uppercaseresspec));
 }
 
 BOOL RepSChain(PDB *pdb, char *sequence, char *ChiTable, char *RefCoords)
@@ -900,28 +920,37 @@ BOOL CopyPDBCoords(PDB *out, PDB *in)
    return(blCopyPDBCoords(out, in));
 }
 
-void CalcCellTrans(VEC3F UnitCell, VEC3F CellAngles, VEC3F *xtrans, VEC3F *ytrans, VEC3F *ztrans)
+void CalcCellTrans(VEC3F UnitCell, VEC3F CellAngles, VEC3F *xtrans,
+                   VEC3F *ytrans, VEC3F *ztrans)
 {
    DEPRECATED("CalcCellTrans()","blCalcCellTrans()");
    blCalcCellTrans(UnitCell, CellAngles, xtrans, ytrans, ztrans);
 }
 
-int GetCrystPDB(FILE *fp, VEC3F *UnitCell, VEC3F *CellAngles, char *spacegroup, REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4])
+int GetCrystPDB(FILE *fp, VEC3F *UnitCell, VEC3F *CellAngles,
+                char *spacegroup, REAL OrigMatrix[3][4],
+                REAL ScaleMatrix[3][4])
 {
    DEPRECATED("GetCrystPDB()","blGetCrystPDB()");
-   return(blGetCrystPDB(fp, UnitCell, CellAngles, spacegroup, OrigMatrix, ScaleMatrix));
+   return(blGetCrystPDB(fp, UnitCell, CellAngles, spacegroup, OrigMatrix,
+                        ScaleMatrix));
 }
 
-void WriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles, char *spacegroup, REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4])
+void WriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles, 
+                   char *spacegroup, REAL OrigMatrix[3][4],
+                   REAL ScaleMatrix[3][4])
 {
    DEPRECATED("WriteCrystPDB()","blWriteCrystPDB()");
-   blWriteCrystPDB(fp, UnitCell, CellAngles, spacegroup, OrigMatrix, ScaleMatrix);
+   blWriteCrystPDB(fp, UnitCell, CellAngles, spacegroup, OrigMatrix,
+                   ScaleMatrix);
 }
 
-PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1, char *chain2, int resnum2, char *insert2)
+PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
+                    char *chain2, int resnum2, char *insert2)
 {
    DEPRECATED("ExtractZonePDB()","blExtractZonePDB()");
-   return(blExtractZonePDB(inpdb, chain1, resnum1, insert1, chain2, resnum2, insert2));
+   return(blExtractZonePDB(inpdb, chain1, resnum1, insert1, chain2,
+                           resnum2, insert2));
 }
 
 PDB *FindAtomInRes(PDB *pdb, char *atnam)
@@ -954,7 +983,8 @@ BOOL LegalAtomSpec(char *spec)
    return(blLegalAtomSpec(spec));
 }
 
-BOOL RepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable, char *RefCoords)
+BOOL RepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
+                  char *RefCoords)
 {
    DEPRECATED("RepOneSChain()","blRepOneSChain()");
    return(blRepOneSChain(pdb, ResSpec, aa, ChiTable, RefCoords));
@@ -1329,7 +1359,8 @@ void CalcSD(REAL val, int action, REAL *mean, REAL *SD)
    blCalcSD(val, action, mean, SD);
 }
 
-void CalcExtSD(REAL val, int action, REAL *Sx, REAL *SxSq, int *NValues, REAL *mean, REAL *SD)
+void CalcExtSD(REAL val, int action, REAL *Sx, REAL *SxSq, int *NValues,
+               REAL *mean, REAL *SD)
 {
    DEPRECATED("CalcExtSD()","blCalcExtSD()");
    blCalcExtSD(val, action, Sx, SxSq, NValues, mean, SD);
@@ -1419,7 +1450,7 @@ ULONG NComb(int n, int r)
 
 
 /************************************************************************/
-/* Renamed functions: WindIO.h                                        */
+/* Renamed functions: WindIO.h                                          */
 
 void screen(char *string)
 {
@@ -1477,7 +1508,7 @@ int YorN(char deflt)
 
 
 /************************************************************************/
-/* Renamed functions: aalist.h                                        */
+/* Renamed functions: aalist.h                                          */
 
 AA *InsertNextResiduesInAAList(AA *a, char res, int nres)
 {
@@ -1549,15 +1580,17 @@ int GetAAListLen(AA *aa)
 
 
 /************************************************************************/
-/* Renamed functions: angle.h                                        */
+/* Renamed functions: angle.h                                           */
 
-REAL angle(REAL xi, REAL yi, REAL zi, REAL xj, REAL yj, REAL zj, REAL xk, REAL yk, REAL zk)
+REAL angle(REAL xi, REAL yi, REAL zi, REAL xj, REAL yj, REAL zj, REAL xk,
+           REAL yk, REAL zk)
 {
    DEPRECATED("Angle()","blAngle()");
    return(blAngle(xi, yi, zi, xj, yj, zj, xk, yk, zk));
 }
 
-REAL phi(REAL xi, REAL yi, REAL zi, REAL xj, REAL yj, REAL zj, REAL xk, REAL yk, REAL zk, REAL xl, REAL yl, REAL zl)
+REAL phi(REAL xi, REAL yi, REAL zi, REAL xj, REAL yj, REAL zj, REAL xk,
+         REAL yk, REAL zk, REAL xl, REAL yl, REAL zl)
 {
    DEPRECATED("Phi()","blPhi()");
    return(blPhi(xi, yi, zi, xj, yj, zj, xk, yk, zk, xl, yl, zl));
@@ -2249,3 +2282,6 @@ int NumericAffineAlign(int *seq1, int length1, int *seq2, int length2,
                                align_len));
 }
 
+
+/** \endcond                                                            */
+/************************************************************************/
