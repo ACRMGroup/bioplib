@@ -3,8 +3,8 @@
 
    \file       ErrStack.h
    
-   \version    V1.1
-   \date       07.07.14
+   \version    V1.2
+   \date       31.07.14
    \brief      Build and print an error stack for program failure.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
@@ -54,6 +54,8 @@
    =================
 -  V1.0  31.08.94 Original    By: ACRM
 -  V1.1  07.07.14 Use bl prefix for functions By: CTP
+-  V1.2  31.07.14 Updated deprecation: Removed deprecated.h and added 
+                  prototypes for renamed functions. By: CTP
 
 *************************************************************************/
 #ifndef _ERRSTACK_H
@@ -62,13 +64,18 @@
 /* Includes
 */
 #include "SysDefs.h"
-#include "deprecated.h"
 
 /************************************************************************/
 /* Prototypes
 */
 void blStoreError(char *routine, char *error);
 void blShowErrors(void *PrintRoutine(char *), BOOL Trace);
+
+/************************************************************************/
+/* Deprecated functions: ErrStack.h                                     */
+
+void StoreError(char *routine, char *error);
+void ShowErrors(void *PrintRoutine(char *), BOOL Trace);
 
 /************************************************************************/
 #endif

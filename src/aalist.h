@@ -3,8 +3,8 @@
 
    \file       aalist.h
    
-   \version    V3.1
-   \date       07.07.14
+   \version    V3.2
+   \date       31.07.14
    \brief      Include file for amino acid linked lists.
    
    \copyright  (c) UCL / Dr. Andrew C.R. Martin 2006-2014
@@ -50,6 +50,8 @@
 -  V3.0  06.11.08 Incorporated into ProFit V3 By: CTP
 -  V3.0  18.02.09 Moved to bioplib. By: CTP
 -  V3.1  07.07.14 Use bl prefix for functions By: CTP
+-  V3.2  31.07.14 Updated deprecation: Removed deprecated.h and added 
+                  prototypes for renamed functions. By: CTP
 
 *************************************************************************/
 #ifndef _AALIST_H
@@ -59,7 +61,6 @@
 /* Includes
 */
 #include "general.h"
-#include "deprecated.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -91,5 +92,22 @@ AA *blFindAAListItemByResnum(AA *aa, int resnum);
 void blSetAAListFlagByResnum(AA *aa, int resnum);
 char *blBuildFlagSeqFromAAList(AA *aa, char ch);
 int blGetAAListLen(AA *aa);
+
+/************************************************************************/
+/* Deprecated functions: aalist.h                                       */
+
+AA *InsertNextResiduesInAAList(AA *a, char res, int nres);
+AA *InsertNextResidueInAAList(AA *a, char res);
+char *BuildSeqFromAAList(AA *aa);
+AA *InsertResidueInAAListAt(AA *aa, char res, int pos);
+AA *InsertResiduesInAAListAt(AA *aa, char res, int nres, int pos);
+AA *BuildAAList(char *seq);
+int FindAAListOffsetByResnum(AA *aa, int resnum);
+AA *FindAAListItemByResnum(AA *aa, int resnum);
+void SetAAListFlagByResnum(AA *aa, int resnum);
+char *BuildFlagSeqFromAAList(AA *aa, char ch);
+int GetAAListLen(AA *aa);
+
+/************************************************************************/
 
 #endif

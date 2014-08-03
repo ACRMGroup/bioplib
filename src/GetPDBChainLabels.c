@@ -3,11 +3,11 @@
 
    \file       GetPDBChainLabels.c
    
-   \version    V1.11
-   \date       25.03.14
+   \version    V1.12
+   \date       31.07.14
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-6
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -59,6 +59,7 @@
 -  V1.10 08.10.99 Initialised some variables
 -  V1.11 25.03.14 Deprecated GetPDBChainLabels() and added replacement 
                   function blGetPDBChainLabels() By: CTP
+-  V1.12 31.07.14 Moved GetPDBChainLabels() to dperecated.c By: CTP
 
 *************************************************************************/
 /* Includes
@@ -79,77 +80,6 @@
 /************************************************************************/
 /* Prototypes
 */
-
-
-/************************************************************************/
-/*>char *GetPDBChainLabels(PDB *pdb)
-   ---------------------------------
-*//**
-
-   \param[in]     *pdb      PDB linked list
-   \return                     Allocated string containing chain labels
-                             NULL if unable to allocate memory
-
-   Scans a PDB linked list for chain names. Allocates memory for a 
-   string containing these labels which is returned.
-
-   N.B. You must free the allocated memory when you've finished with it!
-
--  25.07.95 Original    By: ACRM
--  25.03.14 Added deprecated message. By: CTP
--  07.05.14 Use DEPRECATED() macro. By: CTP
-*/
-char *GetPDBChainLabels(PDB *pdb)
-{
-   char *chains;
-   int  nchains   = 0,
-        maxchains = 16;
-   PDB  *p;
-
-   DEPRECATED("GetPDBChainLabels()","blGetPDBChainLabels()");
-   
-   /* Just return if linked list is NULL                                */
-   if(pdb==NULL)
-      return(NULL);
-
-   /* Allocate a chunk for storing the chains                           */
-   if((chains = (char *)malloc(maxchains * sizeof(char)))==NULL)
-      return(NULL);
-
-   /* Set up first chain label                                          */
-   chains[nchains] = pdb->chain[0];
-
-   /* Run through the linked list                                       */
-   for(p=pdb; p!=NULL; NEXT(p))
-   {
-      /* If chain label has changed                                     */
-      if(p->chain[0] != chains[nchains])
-      {
-         /* Increment chain count and reallocate memory if needed       */
-         if(++nchains == maxchains)
-         {
-            maxchains += 16;
-            if((chains = realloc(chains, maxchains * sizeof(char)))==NULL)
-               return(NULL);
-         }
-         /* Store this new chain label                                  */
-         chains[nchains] = p->chain[0];
-      }
-   }
-
-   /* Increment chain count and reallocate memory if needed             */
-   if(++nchains == maxchains)
-   {
-      maxchains += 16;
-      if((chains = realloc(chains, maxchains * sizeof(char)))==NULL)
-         return(NULL);
-   }
-
-   /* Terminate the chain list with a NUL character                     */
-   chains[nchains] = '\0';
-
-   return(chains);
-}
 
 
 /************************************************************************/

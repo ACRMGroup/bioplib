@@ -3,8 +3,8 @@
 
    \file       safemem.h
    
-   \version    V1.2
-   \date       07.07.14
+   \version    V1.3
+   \date       31.07.14
    \brief      Safe malloc()/free() routines which check for array 
                overflow on free.
    
@@ -51,6 +51,8 @@
 -  V1.0  23.06.95 Original
 -  V1.1  03.07.06 Added safeleaks() prototype
 -  V1.2  07.07.14 Use bl prefix for functions By: CTP
+-  V1.3  31.07.14 Updated deprecation: Removed deprecated.h and added 
+                  prototypes for renamed functions. By: CTP
 
 *************************************************************************/
 #ifndef _SAFEMEM_H
@@ -58,12 +60,21 @@
 
 /* Includes                                                             */
 #include "SysDefs.h"
-#include "deprecated.h"
 
 /* Prototypes                                                           */
 void *blSafemalloc(int nbytes);
 BOOL blSafefree(void *ptr);
 void blSafeleaks(void);
+
+
+/************************************************************************/
+/* Deprecated functions: safemem.h                                        */
+void *safemalloc(int nbytes);
+BOOL safefree(void *ptr);
+void safeleaks(void);
+/************************************************************************/
+
+
 
 /* Undefine memory macros defined by macros.h                           */
 #ifdef _MACROS_H

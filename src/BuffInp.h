@@ -3,8 +3,8 @@
 
    \file       BuffInp.h
    
-   \version    V1.1
-   \date       07.07.14
+   \version    V1.2
+   \date       31.07.14
    \brief      Header file for BuffInp.c
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
@@ -48,6 +48,8 @@
    =================
 
 -  V1.1  07.07.14 Use bl prefix for functions By: CTP
+-  V1.2  31.07.14 Updated deprecation: Removed deprecated.h and added 
+                  prototypes for renamed functions. By: CTP
 
 *************************************************************************/
 #ifndef _BUFFINPUT_H
@@ -58,7 +60,6 @@
 */
 #include <stdio.h>
 #include "SysDefs.h"
-#include "deprecated.h"
 
 /************************************************************************/
 /* Defines
@@ -77,5 +78,14 @@ typedef struct
 INBUFFER *blOpenBufferedFile(char *filename, int maxstr);
 BOOL blReadBufferedFile(INBUFFER *bfp, char *string, int length);
 BOOL blProbeBufferedFile(INBUFFER *bfp, char *string, int length);
+
+/************************************************************************/
+/* Deprecated functions: BuffInp.h                                      */
+
+INBUFFER *OpenBufferedFile(char *filename, int maxstr);
+BOOL ReadBufferedFile(INBUFFER *bfp, char *string, int length);
+BOOL ProbeBufferedFile(INBUFFER *bfp, char *string, int length);
+
+/************************************************************************/
 
 #endif

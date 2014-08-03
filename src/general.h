@@ -3,8 +3,8 @@
 
    \file       general.h
    
-   \version    V1.13
-   \date       07.07.14
+   \version    V1.14
+   \date       31.07.14
    \brief      Header file for general purpose routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
@@ -60,6 +60,8 @@
 -  V1.12 30.05.02 Added WrapString(), WrapPrint(), RightJustify(), 
                   GetWordNC() and getfield()
 -  V1.13 07.07.14 Use bl prefix for functions By: CTP
+-  V1.14 31.07.14 Updated deprecation: Removed deprecated.h and added 
+                  prototypes for renamed functions. By: CTP
 
 *************************************************************************/
 #ifndef _GENERAL_H
@@ -68,7 +70,6 @@
 #include <stdio.h>
 #include "SysDefs.h"
 #include "MathType.h"
-#include "deprecated.h"
 
 typedef struct _stringlist
 {
@@ -115,5 +116,51 @@ BOOL blWrapPrint(FILE *out, char *string);
 void blRightJustify(char *string);
 char *blGetWordNC(char *buffer, char *word, int maxlen);
 void blGetfield(char *buffer, int start, int width, char *str);
+
+
+/************************************************************************/
+/* Deprecated functions: general.h                                      */
+
+void StringToLower(char *string1, char *string2);
+void StringToUpper(char *string1, char *string2);
+char *KillLeadSpaces(char *string);
+void KillLine(FILE *fp);
+void SetExtn(char *File, char *Ext);
+int chindex(char *string, char ch);
+void Word(char *string1, char *string2);
+void WordN(char *string1, char *string2, int  MaxChar);
+void padterm(char *string, int length); /* defined in cssr.h */
+void padchar(char *string, int length, char ch);
+BOOL CheckExtn(char *string, char *ext);
+char *ftostr(char *str, int maxlen, REAL x, int precision);
+
+void GetFilestem(char *filename, char *stem);
+int upstrcmp(char *word1, char *word2);
+int upstrncmp(char *word1, char *word2, int ncomp);
+char *GetWord(char *buffer, char *word, int maxsize);
+BOOL OpenStdFiles(char *infile, char *outfile, FILE **in, FILE **out);
+FILE *OpenFile(char *filename, char *envvar, char *mode, BOOL *noenv);
+int countchar(char *string, char ch);
+char *fgetsany(FILE *fp);
+char *strcatalloc(char *instr, char *catstr);
+
+STRINGLIST *StoreString(STRINGLIST *StringList, char *string);
+BOOL InStringList(STRINGLIST *StringList, char *string);
+void FreeStringList(STRINGLIST *StringList);
+
+char *QueryStrStr(char *string, char *substring);
+
+void IndexReal(REAL *arrin, int *indx, int n);
+
+FILE *OpenOrPipe(char *filename);
+int CloseOrPipe(FILE *fp);
+
+BOOL WrapString(char *in, char *out, int maxlen);
+BOOL WrapPrint(FILE *out, char *string);
+void RightJustify(char *string);
+char *GetWordNC(char *buffer, char *word, int maxlen);
+void getfield(char *buffer, int start, int width, char *str);
+
+/************************************************************************/
 
 #endif

@@ -3,8 +3,8 @@
 
    \file       WindIO.h
    
-   \version    V1.4
-   \date       07.07.14
+   \version    V1.5
+   \date       31.07.14
    \brief      Header for window/normal interface routines
 
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -47,14 +47,16 @@
    Revision History:
    =================
 -  V1.4  07.07.14 Use bl prefix for functions By: CTP
+-  V1.5  31.07.14 Updated deprecation: Removed deprecated.h and added 
+                  prototypes for renamed functions. By: CTP
 
 *************************************************************************/
 #ifndef _WINDIO_H
 #define _WINDIO_H
 
 #include "SysDefs.h"
-#include "deprecated.h"
 
+/* Prototypes */
 void blScreen(char *string);
 void blPrompt(char *string);
 void blRePrompt(void);
@@ -64,5 +66,20 @@ void blPagingOff(void);
 void blWindowMode(BOOL mode);
 void blWindowInteractive(BOOL mode);
 int blYorN(char deflt);
+
+/************************************************************************/
+/* Deprecated functions: WindIO.h                                       */
+
+void screen(char *string);
+void prompt(char *string);
+void RePrompt(void);
+void GetKybdString(char *string, int maxlen);
+void PagingOn(void);
+void PagingOff(void);
+void WindowMode(BOOL mode);
+void WindowInteractive(BOOL mode);
+int YorN(char deflt);
+
+/************************************************************************/
 
 #endif

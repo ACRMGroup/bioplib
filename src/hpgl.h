@@ -3,8 +3,8 @@
 
    \file       hpgl.h
    
-   \version    V1.1
-   \date       07.07.14
+   \version    V1.2
+   \date       31.07.14
    \brief      Include file for hpgl
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
@@ -48,6 +48,8 @@
    =================
 -  V1.0  25.03.91 Original
 -  V1.1  07.07.14 Use bl prefix for functions By: CTP
+-  V1.2  31.07.14 Updated deprecation: Removed deprecated.h and added 
+                  prototypes for renamed functions. By: CTP
 
 *************************************************************************/
 #ifndef _HPGL_H
@@ -60,7 +62,6 @@
 
 #include "SysDefs.h"
 #include "MathType.h"
-#include "deprecated.h"
 
 /************************************************************************/
 /* Prototypes
@@ -80,5 +81,26 @@ void blHPGLVText(REAL x, REAL y, REAL xoff, char *text, int TitleFont,
                  REAL TitleSize, char *label, int LabelFont, REAL LabelSize);
 void blHPGLEnd(void);
 void blHPGLShowText(char *text, BOOL orientation, int XBase, int YBase);
+
+/************************************************************************/
+/* Deprecated functions: hpgl.h                                         */
+
+BOOL HPGLInit(char *filename, char *AltFont, REAL xmargin, REAL ymargin);
+void HPGLPen(int num);
+void HPGLMove(REAL x, REAL y);
+void HPGLDraw(REAL x, REAL y);
+void HPGLSetDash(int style);
+void HPGLFont(int font, REAL size);
+void HPGLLText(REAL x, REAL y, char *string);
+void HPGLCBText(REAL x, REAL y, REAL offset, char *text);
+void HPGLROffText(REAL x, REAL y, REAL offset, char *text);
+void HPGLLCText(REAL x, REAL y, char *text);
+void HPGLCTText(REAL x, REAL y, REAL offset, char *text);
+void HPGLVText(REAL x, REAL y, REAL xoff, char *text, int TitleFont, 
+               REAL TitleSize, char *label, int LabelFont, REAL LabelSize);
+void HPGLEnd(void);
+void HPGLShowText(char *text, BOOL orientation, int XBase, int YBase);
+
+/************************************************************************/
 
 #endif

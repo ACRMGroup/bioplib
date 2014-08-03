@@ -3,8 +3,8 @@
 
    \file       cssr.h
    
-   \version    V1.1
-   \date       07.07.14
+   \version    V1.2
+   \date       31.07.14
    \brief      Defines for CSSR handling
    
    \copyright  SciTech Software 1991-2014
@@ -48,6 +48,8 @@
    Revision History:
    =================
 -  V1.1  07.07.14 Use bl prefix for functions By: CTP
+-  V1.2  31.07.14 Updated deprecation: Removed deprecated.h and added 
+                  prototypes for renamed functions. By: CTP
 
 ***************************************************************************/
 #ifndef _CSSR_H
@@ -55,7 +57,6 @@
 
 #include "MathType.h"
 #include "pdb.h"
-#include "deprecated.h"
 
 struct cssr_entry
 {
@@ -92,5 +93,20 @@ void blOrtho(REAL cell[3], REAL alpha, REAL beta, REAL gamma,
            REAL amatrx[3][3], int isw, int ncode);
 /* void blPadterm(char *string, int len);*/ /* defined in general.h */
 void blWriteCSSR(FILE *fp, CSSR *cssr, char *name, char *title);
+
+/************************************************************************/
+/* Deprecated functions: cssr.h                                         */
+
+CSSR *ReadCSSR(FILE *fp, int *natom, char *name, char *title);
+PDB *ReadCSSRasPDB(FILE *fp, int *natom);
+void NormaliseCSSR(CSSR *cssr, REAL cell[3], REAL alpha, REAL beta,
+                   REAL gamma);
+void NormalisePDB(PDB *pdb, REAL cell[3], REAL alpha, REAL beta,
+                  REAL gamma);
+void ortho(REAL cell[3], REAL alpha, REAL beta, REAL gamma,
+           REAL amatrx[3][3], int isw, int ncode);
+void WriteCSSR(FILE *fp, CSSR *cssr, char *name, char *title);
+
+/************************************************************************/
 
 #endif
