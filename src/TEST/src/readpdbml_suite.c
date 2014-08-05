@@ -76,6 +76,8 @@ START_TEST(test_read_pdb_data_01)
    ck_assert(        pdb->occ ==       1.00);
    ck_assert(        pdb->altpos ==     ' ');
    ck_assert(        pdb->bval ==     20.00);
+   ck_assert_str_eq( pdb->element,      "C");
+   ck_assert(        pdb->charge ==       0);
 }
 END_TEST
 
@@ -103,6 +105,8 @@ START_TEST(test_read_pdb_data_02)
    ck_assert(        pdb->occ ==       1.00);
    ck_assert(        pdb->altpos ==     ' ');
    ck_assert(        pdb->bval ==     20.00);
+   ck_assert_str_eq( pdb->element,     "ZN");
+   ck_assert(        pdb->charge ==       0);
 }
 END_TEST
 
@@ -130,6 +134,8 @@ START_TEST(test_read_pdb_data_03)
    ck_assert(        pdb->occ ==       1.00);
    ck_assert(        pdb->altpos ==     ' ');
    ck_assert(        pdb->bval ==     20.00);
+   ck_assert_str_eq( pdb->element,      "C");
+   ck_assert(        pdb->charge ==       0);
 }
 END_TEST
 
@@ -157,6 +163,8 @@ START_TEST(test_read_pdb_data_04)
    ck_assert(        pdb->occ ==       0.75);
    ck_assert(        pdb->altpos ==     ' ');
    ck_assert(        pdb->bval ==     20.00);
+   ck_assert_str_eq( pdb->element,      "C");
+   ck_assert(        pdb->charge ==       0);
    ck_assert(        natoms ==            1);
 }
 END_TEST
@@ -185,6 +193,8 @@ START_TEST(test_read_pdb_data_05)
    ck_assert(        pdb->occ ==       0.75);
    ck_assert(        pdb->altpos ==     ' ');
    ck_assert(        pdb->bval ==     20.00);
+   ck_assert_str_eq( pdb->element,      "C");
+   ck_assert(        pdb->charge ==       0);
    ck_assert(        natoms ==            1);
 }
 END_TEST
@@ -213,9 +223,132 @@ START_TEST(test_read_pdb_data_06)
    ck_assert(        pdb->occ ==       0.50);
    ck_assert(        pdb->altpos ==     ' ');
    ck_assert(        pdb->bval ==     20.00);
+   ck_assert_str_eq( pdb->element,      "C");
+   ck_assert(        pdb->charge ==       0);
    ck_assert(        natoms ==            1);
 }
 END_TEST
+
+START_TEST(test_read_pdb_data_07)
+{
+   /* set filename */
+   char filename[] = "data/readpdbml_suite/test_heme_iron.pdb";
+
+   /* read test file */
+   fp = fopen(filename,"r");
+   pdb = blReadPDB(fp, &natoms);
+   fclose(fp);
+
+   /* check data */
+   ck_assert(        pdb->atnum ==        1);
+   ck_assert_str_eq( pdb->atnam,     "FE  ");
+   ck_assert_str_eq( pdb->atnam_raw, "FE  ");
+   ck_assert_str_eq( pdb->resnam,    "HEM ");
+   ck_assert_str_eq( pdb->chain,        "A");
+   ck_assert(        pdb->resnum ==       1);
+   ck_assert_str_eq( pdb->insert,       " ");
+   ck_assert(        pdb->x ==        1.000);
+   ck_assert(        pdb->y ==        2.000);
+   ck_assert(        pdb->z ==        3.000);
+   ck_assert(        pdb->occ ==       1.00);
+   ck_assert(        pdb->altpos ==     ' ');
+   ck_assert(        pdb->bval ==     20.00);
+   ck_assert_str_eq( pdb->element,     "FE");
+   ck_assert(        pdb->charge ==       3);
+   ck_assert(        natoms ==            1);
+}
+END_TEST
+
+START_TEST(test_read_pdb_data_08)
+{
+   /* set filename */
+   char filename[] = "data/readpdbml_suite/test_chloride.pdb";
+
+   /* read test file */
+   fp = fopen(filename,"r");
+   pdb = blReadPDB(fp, &natoms);
+   fclose(fp);
+
+   /* check data */
+   ck_assert(        pdb->atnum ==        1);
+   ck_assert_str_eq( pdb->atnam,     "CL  ");
+   ck_assert_str_eq( pdb->atnam_raw, "CL  ");
+   ck_assert_str_eq( pdb->resnam,    " CL ");
+   ck_assert_str_eq( pdb->chain,        "A");
+   ck_assert(        pdb->resnum ==       1);
+   ck_assert_str_eq( pdb->insert,       " ");
+   ck_assert(        pdb->x ==        1.000);
+   ck_assert(        pdb->y ==        2.000);
+   ck_assert(        pdb->z ==        3.000);
+   ck_assert(        pdb->occ ==       1.00);
+   ck_assert(        pdb->altpos ==     ' ');
+   ck_assert(        pdb->bval ==     20.00);
+   ck_assert_str_eq( pdb->element,     "CL");
+   ck_assert(        pdb->charge ==      -1);
+   ck_assert(        natoms ==            1);
+}
+END_TEST
+
+START_TEST(test_read_pdb_data_09)
+{
+   /* set filename */
+   char filename[] = "data/readpdbml_suite/test_heme_iron_truncated_entry_01.pdb";
+
+   /* read test file */
+   fp = fopen(filename,"r");
+   pdb = blReadPDB(fp, &natoms);
+   fclose(fp);
+
+   /* check data */
+   ck_assert(        pdb->atnum ==        1);
+   ck_assert_str_eq( pdb->atnam,     "FE  ");
+   ck_assert_str_eq( pdb->atnam_raw, "FE  ");
+   ck_assert_str_eq( pdb->resnam,    "HEM ");
+   ck_assert_str_eq( pdb->chain,        "A");
+   ck_assert(        pdb->resnum ==       1);
+   ck_assert_str_eq( pdb->insert,       " ");
+   ck_assert(        pdb->x ==        1.000);
+   ck_assert(        pdb->y ==        2.000);
+   ck_assert(        pdb->z ==        3.000);
+   ck_assert(        pdb->occ ==       1.00);
+   ck_assert(        pdb->altpos ==     ' ');
+   ck_assert(        pdb->bval ==     20.00);
+   ck_assert_str_eq( pdb->element,     "FE");
+   ck_assert(        pdb->charge ==       0);
+   ck_assert(        natoms ==            1);
+}
+END_TEST
+
+START_TEST(test_read_pdb_data_10)
+{
+   /* set filename */
+   char filename[] = "data/readpdbml_suite/test_heme_iron_truncated_entry_02.pdb";
+
+   /* read test file */
+   fp = fopen(filename,"r");
+   pdb = blReadPDB(fp, &natoms);
+   fclose(fp);
+
+   /* check data */
+   ck_assert(        pdb->atnum ==        1);
+   ck_assert_str_eq( pdb->atnam,     "FE  ");
+   ck_assert_str_eq( pdb->atnam_raw, "FE  ");
+   ck_assert_str_eq( pdb->resnam,    "HEM ");
+   ck_assert_str_eq( pdb->chain,        "A");
+   ck_assert(        pdb->resnum ==       1);
+   ck_assert_str_eq( pdb->insert,       " ");
+   ck_assert(        pdb->x ==        1.000);
+   ck_assert(        pdb->y ==        2.000);
+   ck_assert(        pdb->z ==        3.000);
+   ck_assert(        pdb->occ ==       1.00);
+   ck_assert(        pdb->altpos ==     ' ');
+   ck_assert(        pdb->bval ==     20.00);
+   ck_assert_str_eq( pdb->element,     "FE");
+   ck_assert(        pdb->charge ==       0);
+   ck_assert(        natoms ==            1);
+}
+END_TEST
+
 
 
 /* PDBML Tests */
@@ -243,6 +376,8 @@ START_TEST(test_read_pdbml_data_01)
    ck_assert(        pdb->occ ==       1.00);
    ck_assert(        pdb->altpos ==     ' ');
    ck_assert(        pdb->bval ==     20.00);
+   ck_assert_str_eq( pdb->element,      "C");
+   ck_assert(        pdb->charge ==       0);
 }
 END_TEST
 
@@ -270,6 +405,8 @@ START_TEST(test_read_pdbml_data_02)
    ck_assert(        pdb->occ ==       1.00);
    ck_assert(        pdb->altpos ==     ' ');
    ck_assert(        pdb->bval ==     20.00);
+   ck_assert_str_eq( pdb->element,     "ZN");
+   ck_assert(        pdb->charge ==       0);
 }
 END_TEST
 
@@ -297,6 +434,8 @@ START_TEST(test_read_pdbml_data_03)
    ck_assert(        pdb->occ ==       1.00);
    ck_assert(        pdb->altpos ==     ' ');
    ck_assert(        pdb->bval ==     20.00);
+   ck_assert_str_eq( pdb->element,      "C");
+   ck_assert(        pdb->charge ==       0);
 }
 END_TEST
 
@@ -324,6 +463,8 @@ START_TEST(test_read_pdbml_data_04)
    ck_assert(        pdb->occ ==       0.75);
    ck_assert(        pdb->altpos ==     ' ');
    ck_assert(        pdb->bval ==     20.00);
+   ck_assert_str_eq( pdb->element,      "C");
+   ck_assert(        pdb->charge ==       0);
    ck_assert(        natoms ==            1);
 }
 END_TEST
@@ -352,6 +493,8 @@ START_TEST(test_read_pdbml_data_05)
    ck_assert(        pdb->occ ==       0.75);
    ck_assert(        pdb->altpos ==     ' ');
    ck_assert(        pdb->bval ==     20.00);
+   ck_assert_str_eq( pdb->element,      "C");
+   ck_assert(        pdb->charge ==       0);
    ck_assert(        natoms ==            1);
 }
 END_TEST
@@ -380,6 +523,68 @@ START_TEST(test_read_pdbml_data_06)
    ck_assert(        pdb->occ ==       0.50);
    ck_assert(        pdb->altpos ==     ' ');
    ck_assert(        pdb->bval ==     20.00);
+   ck_assert_str_eq( pdb->element,      "C");
+   ck_assert(        pdb->charge ==       0);
+   ck_assert(        natoms ==            1);
+}
+END_TEST
+
+START_TEST(test_read_pdbml_data_07)
+{
+   /* set filename */
+   char filename[] = "data/readpdbml_suite/test_heme_iron.xml";
+
+   /* read test file */
+   fp = fopen(filename,"r");
+   pdb = blReadPDB(fp, &natoms);
+   fclose(fp);
+
+   /* check data */
+   ck_assert(        pdb->atnum ==        1);
+   ck_assert_str_eq( pdb->atnam,     "FE  ");
+   ck_assert_str_eq( pdb->atnam_raw, "FE  ");
+   ck_assert_str_eq( pdb->resnam,    "HEM ");
+   ck_assert_str_eq( pdb->chain,        "A");
+   ck_assert(        pdb->resnum ==       1);
+   ck_assert_str_eq( pdb->insert,       " ");
+   ck_assert(        pdb->x ==        1.000);
+   ck_assert(        pdb->y ==        2.000);
+   ck_assert(        pdb->z ==        3.000);
+   ck_assert(        pdb->occ ==       1.00);
+   ck_assert(        pdb->altpos ==     ' ');
+   ck_assert(        pdb->bval ==     20.00);
+   ck_assert_str_eq( pdb->element,     "FE");
+   ck_assert(        pdb->charge ==       3);
+   ck_assert(        natoms ==            1);
+}
+END_TEST
+
+START_TEST(test_read_pdbml_data_08)
+{
+   /* set filename */
+   char filename[] = "data/readpdbml_suite/test_chloride.xml";
+
+   /* read test file */
+   fp = fopen(filename,"r");
+   pdb = blReadPDB(fp, &natoms);
+   fclose(fp);
+
+   /* check data */
+   ck_assert(        pdb->atnum ==        1);
+   ck_assert_str_eq( pdb->atnam,     "CL  ");
+   ck_assert_str_eq( pdb->atnam_raw, "CL  ");
+   ck_assert_str_eq( pdb->resnam,    " CL ");
+   ck_assert_str_eq( pdb->chain,        "A");
+   ck_assert(        pdb->resnum ==       1);
+   ck_assert_str_eq( pdb->insert,       " ");
+   ck_assert(        pdb->x ==        1.000);
+   ck_assert(        pdb->y ==        2.000);
+   ck_assert(        pdb->z ==        3.000);
+   ck_assert(        pdb->occ ==       1.00);
+   ck_assert(        pdb->altpos ==     ' ');
+   ck_assert(        pdb->bval ==     20.00);
+   ck_assert_str_eq( pdb->element,     "CL");
+   ck_assert(        pdb->charge ==      -1);
    ck_assert(        natoms ==            1);
 }
 END_TEST
@@ -410,6 +615,10 @@ Suite *readpdbml_suite(void)
    tcase_add_test(tc_pdb, test_read_pdb_data_04);
    tcase_add_test(tc_pdb, test_read_pdb_data_05);
    tcase_add_test(tc_pdb, test_read_pdb_data_06);
+   tcase_add_test(tc_pdb, test_read_pdb_data_07);
+   tcase_add_test(tc_pdb, test_read_pdb_data_08);
+   tcase_add_test(tc_pdb, test_read_pdb_data_09);
+   tcase_add_test(tc_pdb, test_read_pdb_data_10);
    suite_add_tcase(s, tc_pdb);
    
    /* Test PDBML */
@@ -421,6 +630,8 @@ Suite *readpdbml_suite(void)
    tcase_add_test(tc_pdbml, test_read_pdbml_data_04);
    tcase_add_test(tc_pdbml, test_read_pdbml_data_05);
    tcase_add_test(tc_pdbml, test_read_pdbml_data_06);
+   tcase_add_test(tc_pdbml, test_read_pdbml_data_07);
+   tcase_add_test(tc_pdbml, test_read_pdbml_data_08);
    suite_add_tcase(s, tc_pdbml);
 
    return s;

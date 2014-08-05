@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.61
-   \date       31.07.14
+   \version    V1.62
+   \date       04.08.14
    \brief      Include file for pdb routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2014
@@ -139,6 +139,9 @@
 -  V1.60 22.07.14 Added element and charge to PDB structure. By: ACRM
 -  V1.61 31.07.14 Updated deprecation: Removed deprecated.h and added 
                   prototypes for renamed functions. By: CTP
+-  V1.62 04.08.14 Changed formal charge to int for PDB structure.
+                  Updated CLEAR_PDB() to set access, radius, charge,
+                  element and atomType. By: CTP
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -193,12 +196,13 @@ typedef struct _blAtomType
 */
 typedef struct pdb_entry
 {
-   REAL x,y,z,occ,bval,access,radius,charge;
+   REAL x,y,z,occ,bval,access,radius;
    APTR extras;
    blATOMTYPE *atomType;
    struct pdb_entry *next;
    int  atnum;
    int  resnum;
+   int  charge;
    char record_type[8];
    char atnam[8];
    char atnam_raw[8];
@@ -301,7 +305,12 @@ typedef struct
                      p->x = 0.0; p->y = 0.0; p->z = 0.0; \
                      p->altpos = ' '; \
                      p->occ = 0.0; p->bval = 0.0; \
-                     p->next = NULL
+                     p->next = NULL; \
+                     p->access = 0.0; \
+                     p->radius = 0.0; \
+                     p->charge = 0; \
+                     strcpy(p->element,"  "); \
+                     p->atomType = NULL
 
 #define ISWATER(z)   (!strncmp((z)->resnam,"HOH",3) || \
                       !strncmp((z)->resnam,"OH2",3) || \

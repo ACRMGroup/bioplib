@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V2.27
-   \date       07.07.14
+   \version    V2.28
+   \date       04.08.14
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2014
@@ -170,6 +170,9 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 -  V2.25 02.06.14 Updated doReadPDBML(). By: CTP
 -  V2.26 09.06.14 Set gPDBXML flag. By: CTP
 -  V2.27 07.07.14 Renaming of functions with "bl" prefix. By: CTP
+-  V2.28 04.08.14 blReadPDB() and blReadPDBML() get element and charge. 
+                  Added blProcessElementField() and blProcessChargeField()
+                  By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -207,6 +210,9 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
                                int NPartial, PDB **ppdb, PDB **pp, 
                                int *natom);
+static void blProcessElementField(char *element, char *element_field);
+static void blProcessChargeField(int *charge, char *charge_field);
+
 #if !defined(__APPLE__) && !defined(MS_WINDOWS)
 FILE *popen(char *, char *);
 #endif
@@ -445,12 +451,16 @@ PDB *blDoReadPDB(FILE *fpin,
             CurAtom[8],
             cmd[80],
             CurIns = ' ',
-            altpos;
+            altpos,
+            element_buff[4] = "",
+            charge_buff[4]  = "",
+            element[4]      = "";
    int      atnum,
             resnum,
             CurRes = 0,
             NPartial,
-            ModelCount = 1;
+            ModelCount = 1,
+            charge = 0;
    FILE     *fp = fpin;
    double   x,y,z,
             occ,
@@ -539,9 +549,9 @@ PDB *blDoReadPDB(FILE *fpin,
       if(!strncmp(buffer,"ENDMDL",6))
          gPDBMultiNMR   = TRUE;
       
-      if(fsscanf(buffer,"%6s%5d%1x%5s%4s%1s%4d%1s%3x%8lf%8lf%8lf%6lf%6lf",
+      if(fsscanf(buffer,"%6s%5d%1x%5s%4s%1s%4d%1s%3x%8lf%8lf%8lf%6lf%6lf%10x%2s%2s",
                  record_type,&atnum,atnambuff,resnam,chain,&resnum,insert,
-                 &x,&y,&z,&occ,&bval) != EOF)
+                 &x,&y,&z,&occ,&bval,element_buff,charge_buff) != EOF)
       {
          if((!strncmp(record_type,"ATOM  ",6)) || 
             (!strncmp(record_type,"HETATM",6) && AllAtoms))
@@ -560,6 +570,16 @@ PDB *blDoReadPDB(FILE *fpin,
             /* Fix the atom name accounting for start in column 13 or 14*/
             atnam = blFixAtomName(atnambuff, occ);
             
+            /* Set element and charge */
+            blProcessElementField(element, element_buff);
+            blProcessChargeField(&charge, charge_buff);
+            
+            /* Set element from atom name if not in input file */
+            if(strlen(element) == 0)
+            {
+               blSetElementSymbolFromAtomName(element, atnam_raw);
+            }
+
             /* Check for full occupancy. If occupancy is 0.0 assume that 
                it is actually fully occupied; the column just hasn't been
                filled in correctly
@@ -637,6 +657,7 @@ PDB *blDoReadPDB(FILE *fpin,
                p->occ    = (REAL)occ;
                p->bval   = (REAL)bval;
                p->altpos = altpos;    /* 03.06.05 Added this one        */
+               p->charge = charge;
                p->next   = NULL;
                strcpy(p->record_type, record_type);
                strcpy(p->atnam,       atnam);
@@ -644,6 +665,7 @@ PDB *blDoReadPDB(FILE *fpin,
                strcpy(p->resnam,      resnam);
                strcpy(p->chain,       chain);
                strcpy(p->insert,      insert);
+               strcpy(p->element,     element);
             }
             else   /* Partial occupancy                                 */
             {
@@ -691,6 +713,7 @@ PDB *blDoReadPDB(FILE *fpin,
                   multi[NPartial].z      = (REAL)z;
                   multi[NPartial].occ    = (REAL)occ;
                   multi[NPartial].bval   = (REAL)bval;
+                  multi[NPartial].charge = (REAL)charge;
                   multi[NPartial].next   = NULL;
                   strcpy(multi[NPartial].record_type, record_type);
                   strcpy(multi[NPartial].atnam,       atnam);
@@ -699,6 +722,7 @@ PDB *blDoReadPDB(FILE *fpin,
                   strcpy(multi[NPartial].resnam,      resnam);
                   strcpy(multi[NPartial].chain,       chain);
                   strcpy(multi[NPartial].insert,      insert);
+                  strcpy(multi[NPartial].element,     element);
                   /* 03.06.05 - added this line                         */
                   multi[NPartial].altpos = altpos;
                   
@@ -756,6 +780,7 @@ PDB *blDoReadPDB(FILE *fpin,
             lower occupancies of 0.0 are read properly and written back
             with their occupancy (0.0) rather than the next higher
             occupancy. Handles residues like 1zeh/B16
+-  04.08.14 Read charge and element. By: CTP
 */
 static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
                                int NPartial, PDB **ppdb, PDB **pp, 
@@ -829,6 +854,7 @@ static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
    (*pp)->z      = multi[IMaxOcc].z;
    (*pp)->occ    = MaxOcc;
    (*pp)->bval   = multi[IMaxOcc].bval;
+   (*pp)->charge = multi[IMaxOcc].charge;
    (*pp)->next   = NULL;
    /* 03.06.05 Added this line                                          */
    (*pp)->altpos = multi[IMaxOcc].altpos;
@@ -839,6 +865,7 @@ static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
    strcpy((*pp)->resnam,      multi[IMaxOcc].resnam);
    strcpy((*pp)->chain,       multi[IMaxOcc].chain);
    strcpy((*pp)->insert,      multi[IMaxOcc].insert);
+   strcpy((*pp)->element,     multi[IMaxOcc].element);
 
    /* Patch the atom name to remove the alternate letter                */
    if(strlen((*pp)->atnam) > 4)
@@ -1183,6 +1210,7 @@ pointer\n");
             omitted. By: CTP
 -  09.06.14 Set gPDBXML flag. By: CTP
 -  07.07.14 Renamed to blDoReadPDBML() By: CTP
+-  04.08.14 Read element and formal charge. By: CTP
 
 */
 PDB *blDoReadPDBML(FILE *fpin,
@@ -1210,7 +1238,6 @@ PDB *blDoReadPDBML(FILE *fpin,
    int     NPartial       =  0,
            model_number   =  0;
    char    store_atnam[8] = "",
-           atom_symbol[8] = "",
            pad_resnam[8]  = "";
        
 
@@ -1286,7 +1313,7 @@ PDB *blDoReadPDBML(FILE *fpin,
          strcpy(curr_pdb->atnam,   "");
          strcpy(curr_pdb->resnam,  "");
          strcpy(curr_pdb->insert, " ");
-         strcpy(atom_symbol,       "");
+         strcpy(curr_pdb->element, "");
 
          /* Scan atom node children */
          for(n = atom_node->children; n; n = n->next)
@@ -1358,7 +1385,7 @@ PDB *blDoReadPDBML(FILE *fpin,
             }
             else if(!strcmp((char *) n->name,"type_symbol"))
             {
-               strcpy(atom_symbol, (char *) content);
+               strcpy(curr_pdb->element, (char *) content);
             }
             else if(!strcmp((char *) n->name,"label_asym_id"))
             {
@@ -1389,7 +1416,13 @@ PDB *blDoReadPDBML(FILE *fpin,
                   curr_pdb->resnum = (REAL) content_lf;
                }
             }
- 
+            else if(!strcmp((char *) n->name,"pdbx_formal_charge"))
+            {
+               sscanf((char *) content,"%lf",&content_lf);
+               curr_pdb->charge = (int) content_lf;
+            }
+
+
             xmlFree(content);           
          }
          
@@ -1412,7 +1445,7 @@ PDB *blDoReadPDBML(FILE *fpin,
             /* copy 4-letter name atnam_raw */
             strcpy(curr_pdb->atnam_raw, curr_pdb->atnam);
          }
-         else if(strlen(atom_symbol) == 1)
+         else if(strlen(curr_pdb->element) == 1)
          {
             strcpy((curr_pdb->atnam_raw),               " ");
             strcpy((curr_pdb->atnam_raw)+1, curr_pdb->atnam);
@@ -1515,6 +1548,7 @@ PDB *blDoReadPDBML(FILE *fpin,
             multi[NPartial].z      = curr_pdb->z;
             multi[NPartial].occ    = curr_pdb->occ;
             multi[NPartial].bval   = curr_pdb->bval;
+            multi[NPartial].charge = curr_pdb->charge;
             multi[NPartial].next   = NULL;
             strcpy(multi[NPartial].record_type, curr_pdb->record_type);
             strcpy(multi[NPartial].atnam,       curr_pdb->atnam);
@@ -1522,6 +1556,7 @@ PDB *blDoReadPDBML(FILE *fpin,
             strcpy(multi[NPartial].resnam,      curr_pdb->resnam);
             strcpy(multi[NPartial].chain,       curr_pdb->chain);
             strcpy(multi[NPartial].insert,      curr_pdb->insert);
+            strcpy(multi[NPartial].element,     curr_pdb->element);
             multi[NPartial].altpos = curr_pdb->altpos; /* fix */
 
             /* Set global partial occupancy flag */
@@ -1621,4 +1656,66 @@ BOOL blCheckFileFormatPDBML(FILE *fp)
 
    rewind(fp);
    return found_xml && found_pdbx ? TRUE : FALSE ;
+}
+
+/************************************************************************/
+/*>static void blProcessElementField(char *element_field, char *element)
+   ---------------------------------------------------------------------
+*//**
+
+   \param[in]  element_field   Columns 77 to 78 of the ATOM/HETATM record 
+                               of pdb file.
+   \param[out] element         Element symbol.
+   
+   Get element symbol for ATOM/HETATM record.
+   
+-  04.08.14 Original By: CTP
+   
+*/
+static void blProcessElementField(char *element, char *element_field)
+{
+   char element_sym[4] = "";
+   char *element_ptr   = NULL;
+
+   /* Get element */
+   if(strlen(element_field) >= 2)
+   {
+      strncpy(element_sym, element_field, 2);
+      element_sym[2] = '\0';
+      KILLLEADSPACES(element_ptr, element_sym);
+      strcpy(element,element_ptr);
+   }
+
+   return;
+}
+
+/************************************************************************/
+/*>static void blProcessChargeField(char *element_charge, int *charge)
+   -------------------------------------------------------------------
+*//**
+
+   \param[in]  element_charge  Columns 79 to 80 of the ATOM/HETATM record 
+                               of pdb file.
+   \param[out] charge          Charge on the atom.
+   
+   Get formal charge for ATOM/HETATM record.
+
+-  04.08.14 Original By: CTP
+   
+*/
+static void blProcessChargeField(int *charge, char *charge_field)
+{
+   /* Get charge magnitude */
+   if(strlen(charge_field) >= 2 && isdigit(charge_field[0]))
+   {
+      *charge = charge_field[0] - '0';
+   }
+
+   /* Get charge sign */
+   if(strlen(charge_field) >= 2 && charge_field[1] == '-')
+   {
+      *charge = *charge * -1;
+   }
+
+   return;
 }
