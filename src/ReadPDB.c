@@ -170,7 +170,8 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 -  V2.25 02.06.14 Updated doReadPDBML(). By: CTP
 -  V2.26 09.06.14 Set gPDBXML flag. By: CTP
 -  V2.27 07.07.14 Renaming of functions with "bl" prefix. By: CTP
--  V2.28 04.08.14 blReadPDB() and blReadPDBML() get element and charge. 
+-  V2.28 04.08.14 blReadPDB() and blReadPDBML() get element and charge.
+                  Set access and radius to 0.0. Set atomType to NULL.
                   Added blProcessElementField() and blProcessChargeField()
                   By: CTP
 
@@ -658,6 +659,9 @@ PDB *blDoReadPDB(FILE *fpin,
                p->bval   = (REAL)bval;
                p->altpos = altpos;    /* 03.06.05 Added this one        */
                p->charge = charge;
+               p->access = 0.0;
+               p->radius = 0.0;
+               p->atomType = NULL;
                p->next   = NULL;
                strcpy(p->record_type, record_type);
                strcpy(p->atnam,       atnam);
@@ -713,7 +717,10 @@ PDB *blDoReadPDB(FILE *fpin,
                   multi[NPartial].z      = (REAL)z;
                   multi[NPartial].occ    = (REAL)occ;
                   multi[NPartial].bval   = (REAL)bval;
-                  multi[NPartial].charge = (REAL)charge;
+                  multi[NPartial].charge = charge;
+                  multi[NPartial].access = 0.0;
+                  multi[NPartial].radius = 0.0;
+                  multi[NPartial].atomType = NULL;
                   multi[NPartial].next   = NULL;
                   strcpy(multi[NPartial].record_type, record_type);
                   strcpy(multi[NPartial].atnam,       atnam);
@@ -855,6 +862,9 @@ static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
    (*pp)->occ    = MaxOcc;
    (*pp)->bval   = multi[IMaxOcc].bval;
    (*pp)->charge = multi[IMaxOcc].charge;
+   (*pp)->access = multi[IMaxOcc].access;
+   (*pp)->radius = multi[IMaxOcc].radius;
+   (*pp)->atomType = NULL;
    (*pp)->next   = NULL;
    /* 03.06.05 Added this line                                          */
    (*pp)->altpos = multi[IMaxOcc].altpos;
@@ -1314,6 +1324,9 @@ PDB *blDoReadPDBML(FILE *fpin,
          strcpy(curr_pdb->resnam,  "");
          strcpy(curr_pdb->insert, " ");
          strcpy(curr_pdb->element, "");
+         curr_pdb->access = 0.0;
+         curr_pdb->radius = 0.0;
+         curr_pdb->atomType = NULL;
 
          /* Scan atom node children */
          for(n = atom_node->children; n; n = n->next)
@@ -1549,6 +1562,9 @@ PDB *blDoReadPDBML(FILE *fpin,
             multi[NPartial].occ    = curr_pdb->occ;
             multi[NPartial].bval   = curr_pdb->bval;
             multi[NPartial].charge = curr_pdb->charge;
+            multi[NPartial].access = curr_pdb->access;
+            multi[NPartial].radius = curr_pdb->radius;
+            multi[NPartial].atomType = NULL;
             multi[NPartial].next   = NULL;
             strcpy(multi[NPartial].record_type, curr_pdb->record_type);
             strcpy(multi[NPartial].atnam,       curr_pdb->atnam);
