@@ -1,4 +1,54 @@
 /************************************************************************/
+/**
+
+   \file       main.c
+   
+   \version    V0.1
+   \date       06.08.14
+   \brief      Demonstration of tag pinting code
+   
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
+               
+**************************************************************************
+
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
+   according to the conditions laid out in the accompanying file
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
+
+   The code may not be sold commercially or included as part of a 
+   commercial product except as described in the file COPYING.DOC.
+
+**************************************************************************
+
+   Description:
+   ============
+
+
+**************************************************************************
+
+   Usage:
+   ======
+
+**************************************************************************
+
+   Revision History:
+   =================
+-  V0.1  06.08.14 Preliminary code
+
+*************************************************************************/
 /* Includes
 */
 #include <stdio.h>
@@ -16,7 +66,6 @@
 /* Prototypes
 */
 int main(int argc, char **argv);
-REAL testReal_GetAccess(PDB *p);
 int testInt(PDB *p);
 char *testString_GetResID(PDB *p);
 
@@ -30,7 +79,8 @@ int main(int argc, char **argv)
 {
    FILE *fp;
    
-   INIT_PDBTAGVAR(&testReal_GetAccess,  PDBTAGVAR_REAL,   "pdbx_accessibility");
+   blPDBAddXMLAccessTag();
+   
    INIT_PDBTAGVAR(&testInt,             PDBTAGVAR_INT,    "test_int");
    INIT_PDBTAGVAR(&testString_GetResID, PDBTAGVAR_STRING, "pdbx_resid");
 
@@ -59,11 +109,6 @@ int main(int argc, char **argv)
    return(0);
 }
 
-/************************************************************************/
-REAL testReal_GetAccess(PDB *p)
-{
-   return(p->access);
-}
 /************************************************************************/
 int testInt(PDB *p)
 {
