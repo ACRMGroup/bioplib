@@ -56,7 +56,7 @@ array2.o chindex.o countchar.o factdiv.o factorial.o fgetsany.o \
 fsscanf.o ftostr.o help.o hpgl.o invert33.o openorpipe.o padchar.o \
 padterm.o parse.o pearson.o pearson1.o phi.o pldist.o plotting.o \
 ps.o safemem.o simpleangle.o strcatalloc.o upstrcmp.o upstrncmp.o \
-WindIO.o getfield.o array3.o justify.o wrapprint.o deprecated.o
+WindIO.o getfield.o array3.o justify.o wrapprint.o deprecatedGen.o
 
 
 # Files for libbiop.a
@@ -78,7 +78,8 @@ TranslatePDB.o TrueSeqLen.o WriteCrystPDB.o WritePDB.o WrtCSSR.o \
 align.o fit.o hbond.o rsc.o throne.o FitNCaCPDB.o FindRawAtomInRes.o \
 WriteGromosPDB.o WholePDB.o GlyCB.o BuildAtomNeighbourPDBList.o \
 FindAtomWildcardInRes.o DupeResiduePDB.o StripWatersPDB.o aalist.o \
-StructurePDB.o FindHetatmResidue.o FindHetatmResidueSpec.o access.o
+StructurePDB.o FindHetatmResidue.o FindHetatmResidueSpec.o access.o \
+deprecatedBiop.o
 
 
 # Static libraries - the default
