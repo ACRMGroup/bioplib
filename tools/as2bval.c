@@ -3,8 +3,8 @@
 
    \file       as2bval.c
    
-   \version    V1.6
-   \date       22.07.14
+   \version    V1.7
+   \date       15.08.14
    \brief      Sum B-vals over each residue and replace with the
                summed or average value
    
@@ -57,6 +57,7 @@
                   different
 -  V1.6  22.07.14 Renamed deprecated functions with bl prefix.
                   Added doxygen annotation. By: CTP
+-  V1.7  15.08.14 Updated ReadSolv() to use CLEAR_PDB(). By: CTP
 
 *************************************************************************/
 /* Includes
@@ -242,6 +243,7 @@ and radius in the\n");
 
 -  05.07.94 Original based on doReadPDB()   By: ACRM
 -  03.06.05 FixAtomName() now needs the occupancy
+-  15.08.14 Updated to use CLEAR_PDB(). By: CTP
 */
 PDB *ReadSolv(FILE *fp, int *natom)
 {
@@ -297,7 +299,10 @@ PDB *ReadSolv(FILE *fp, int *natom)
          
          /* Increment the number of atoms                               */
          (*natom)++;
-         
+
+         /* Clear PDB                                                   */
+         CLEAR_PDB(p);
+
          /* Store the information read                                  */
          p->atnum  = atnum;
          p->resnum = resnum;

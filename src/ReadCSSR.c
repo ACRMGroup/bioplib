@@ -3,8 +3,8 @@
 
    \file       ReadCSSR.c
    
-   \version    V1.6
-   \date       07.07.14
+   \version    V1.7
+   \date       15.08.14
    \brief      Read a CSSR file
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
@@ -133,6 +133,7 @@
 -  V1.4  27.07.93 Changed I/O to double precision
 -  V1.5  30.05.02 Changed PDB field from 'junk' to 'record_type'
 -  V1.6  07.07.14 Use bl prefix for functions By: CTP
+-  V1.7  15.08.14 Updated blReadCSSRasPDB() to use CLEAR_PDB() By: CTP
 
 *************************************************************************/
 /* Includes
@@ -327,6 +328,7 @@ CSSR *blReadCSSR(FILE  *fp,
 -  13.07.93 Returns NULL if allocation failed
 -  27.07.93 Changed I/O to double precision
 -  07.07.14 Use bl prefix for functions By: CTP
+-  15.08.14 Use CLEAR_PDB() By: CTP
 */
 PDB *blReadCSSRasPDB(FILE  *fp,
                    int   *natom)
@@ -417,6 +419,9 @@ PDB *blReadCSSRasPDB(FILE  *fp,
          return(NULL);
       }
 
+      /* Clear pdb                                                      */
+      CLEAR_PDB(p);
+      
       sscanf(buffer,"%d%s%lf%lf%lf%d%d%d%d%d%d%d%d",&p->atnum,
                                                      p->atnam,
                                                     &p->x,

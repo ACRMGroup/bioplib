@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V2.28
-   \date       04.08.14
+   \version    V2.29
+   \date       15.08.14
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2014
@@ -174,6 +174,8 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                   Set access and radius to 0.0. Set atomType to NULL.
                   Added blProcessElementField() and blProcessChargeField()
                   By: CTP
+-  V2.29 15.08.14 Updated blDoReadPDB() and blDoReadPDBML() to use 
+                  CLEAR_PDB().  By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -434,6 +436,8 @@ PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
 -  02.06.14 V2.25 Updated doReadPDBML(). By: CTP
 -  09.06.14 V2.26 Set gPDBXML flag. By: CTP
 -  07.07.14 V2.27 Renamed to blDoReadPDB() By: CTP
+-  15.08.14 V2.29 Use CLEAR_PDB() to set default values. By: CTP
+
 */
 PDB *blDoReadPDB(FILE *fpin,
                  int  *natom,
@@ -650,6 +654,7 @@ PDB *blDoReadPDB(FILE *fpin,
                (*natom)++;
                
                /* Store the information read                            */
+               CLEAR_PDB(p);
                p->atnum  = atnum;
                p->resnum = resnum;
                p->x      = (REAL)x;
@@ -710,6 +715,7 @@ PDB *blDoReadPDB(FILE *fpin,
                if(NPartial < MAXPARTIAL)
                {
                   /* Store the partial atom data                        */
+                  CLEAR_PDB((multi + NPartial));
                   multi[NPartial].atnum  = atnum;
                   multi[NPartial].resnum = resnum;
                   multi[NPartial].x      = (REAL)x;
@@ -1221,6 +1227,7 @@ pointer\n");
 -  09.06.14 Set gPDBXML flag. By: CTP
 -  07.07.14 Renamed to blDoReadPDBML() By: CTP
 -  04.08.14 Read element and formal charge. By: CTP
+-  15.08.14 Use CLEAR_PDB() to set default values. By: CTP
 
 */
 PDB *blDoReadPDBML(FILE *fpin,
@@ -1318,15 +1325,13 @@ PDB *blDoReadPDBML(FILE *fpin,
          }
 
          /* Set default values */
-         curr_pdb->resnum = 0;
+         CLEAR_PDB(curr_pdb);
          strcpy(curr_pdb->chain,   "");
          strcpy(curr_pdb->atnam,   "");
          strcpy(curr_pdb->resnam,  "");
          strcpy(curr_pdb->insert, " ");
          strcpy(curr_pdb->element, "");
-         curr_pdb->access = 0.0;
-         curr_pdb->radius = 0.0;
-         curr_pdb->atomType = NULL;
+
 
          /* Scan atom node children */
          for(n = atom_node->children; n; n = n->next)

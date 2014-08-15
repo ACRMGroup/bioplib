@@ -3,8 +3,8 @@
 
    \file       rsc.c
    
-   \version    V1.12
-   \date       07.07.14
+   \version    V1.13
+   \date       15.08.14
    \brief      Modify sequence of a PDB linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2005
@@ -70,6 +70,7 @@
                   occ/bval
 -  V1.11 03.06.05 Added altpos
 -  V1.12 07.07.14 Use bl prefix for functions By: CTP
+-  V1.13 15.08.14 Updated ReadRefCoords() to use CLEAR_PDB() By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -989,6 +990,7 @@ Cleanup:
 -  09.02.05 Sets atnam_raw
             Sets default occ/bval to 1.0 and 20.0
 -  03.06.05 Sets altpos
+-  05.08.14 Use CLEAR_PDB() to set default values. By: CTP
 */
 static PDB *ReadRefCoords(FILE *fp,
                           char seq)
@@ -1029,6 +1031,8 @@ static PDB *ReadRefCoords(FILE *fp,
             return(NULL);
          }
          
+         /* Clear PDB                                                   */
+         CLEAR_PDB(p);
          
          /* Copy the first 6 charcters into RECORD_TYPE                 */
          strncpy(p->record_type,ptr,6);
