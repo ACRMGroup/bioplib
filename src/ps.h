@@ -3,8 +3,8 @@
 
    \file       ps.h
    
-   \version    V1.13
-   \date       31.07.14
+   \version    V1.14
+   \date       14.08.14
    \brief      Include file for PostScript routine
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -56,6 +56,8 @@
 -  V1.12 07.07.14 Use bl prefix for functions By: CTP
 -  V1.13 31.07.14 Updated deprecation: Removed deprecated.h and added 
                   prototypes for renamed functions. By: CTP
+-  V1.14 14.08.14 Moved deprecated function prototypes to deprecated.h 
+                  By: CTP
 
 *************************************************************************/
 #ifndef _PS_H
@@ -109,29 +111,10 @@ void blPSEnd(void);
 char *blPSCorrectCase(char *font);
 
 /************************************************************************/
-/* Deprecated functions: ps.h                                           */
-/** \cond deprecated                                                    */
-
-BOOL PSInit(char *FName, char *creator, char *AltFont);
-void PSThick(REAL thickness);
-void PSMove(REAL X, REAL Y);
-void PSDraw(REAL X, REAL Y);
-void PSSetDash(char *linepatt);
-void PSClearDash(void);
-void PSStroke(void);
-void PSFont(char *fontname, REAL size);
-void PSLText(REAL X, REAL Y, char *label);
-void PSCBText(REAL X, REAL Y, REAL Offset, char *label);
-void PSROffText(REAL X, REAL Y, REAL offset, char *label);
-void PSLCText(REAL X, REAL Y, char *label);
-void PSCTText(REAL X, REAL Y, REAL Offset, char *label);
-void PSVText(REAL x, REAL y, REAL xoff, char *text, char *font, REAL size,
-             char *label, char *lfont, REAL lsize);
-void PSShowText(char *text);
-void PSEnd(void);
-char *PSCorrectCase(char *font);
-
-/* \endcond                                                             */
+/* Include deprecated functions                                         */
+#define _PS_H_DEPRECATED
+# include "deprecated.h" 
 /************************************************************************/
+
 
 #endif

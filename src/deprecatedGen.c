@@ -3,8 +3,8 @@
 
    \file       deprecatedGen.c
    
-   \version    V1.1
-   \date       08.08.14
+   \version    V1.2
+   \date       14.08.14
    \brief      Source code for all deprecated functions.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014
@@ -40,34 +40,6 @@
    function names with the 'bl' prefix.(The 'bl' prefix was introduced in 
    July 2014.) 
 
-   Allows use of deprecated functions that took a single character for the
-   PDB chain identifier or insert value.
-
-   Prototypes for the deprecated functions are in their original header 
-   files:
-
--  pdb.h
--  general.h
--  BuffInp.h
--  ErrStack.h
--  MathUtil.h
--  WindIO.h
--  aalist.h
--  angle.h
--  array.h
--  cssr.h
--  fit.h
--  hbond.h
--  help.h
--  hpgl.h
--  matrix.h
--  parse.h
--  plotting.h
--  ps.h
--  safemem.h
--  seq.h
-
-
 
 **************************************************************************
 
@@ -95,25 +67,21 @@
 
 -  V1.0  31.07.14 Original By: CTP
 -  V1.1  08.08.14 Separated Biop and Gen deprecation  By: ACRM
+-  V1.2  14.08.14 Removed unnecessary includes. 
+                  Corrected safemem.h function names   By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include "deprecated.h"
-#include "macros.h"
 
-#include "pdb.h"
 #include "general.h"
 #include "BuffInp.h"
 #include "ErrStack.h"
 #include "MathUtil.h"
 #include "WindIO.h"
-#include "aalist.h"
 #include "angle.h"
 #include "array.h"
-#include "cssr.h"
-#include "fit.h"
-#include "hbond.h"
 #include "help.h"
 #include "hpgl.h"
 #include "matrix.h"
@@ -121,7 +89,7 @@
 #include "plotting.h"
 #include "ps.h"
 #include "safemem.h"
-#include "seq.h"
+
 
 /************************************************************************/
 /* Defines and macros
@@ -139,6 +107,8 @@
 
 /************************************************************************/
 /** \cond deprecated                                                    */
+/************************************************************************/
+/* Renamed functions: general.h                                         */
 
 
 void StringToLower(char *string1, char *string2)
@@ -567,7 +537,8 @@ REAL TrueAngle(REAL opp, REAL adj)
    return(blTrueAngle(opp, adj));
 }
 
-BOOL TorToCoor(VEC3F ant1, VEC3F ant2, VEC3F ant3, REAL bond, REAL theta, REAL torsion, VEC3F *coords)
+BOOL TorToCoor(VEC3F ant1, VEC3F ant2, VEC3F ant3, REAL bond, REAL theta,
+               REAL torsion, VEC3F *coords)
 {
    DEPRECATED("TorToCoor()","blTorToCoor()");
    return(blTorToCoor(ant1, ant2, ant3, bond, theta, torsion, coords));
@@ -577,7 +548,7 @@ BOOL TorToCoor(VEC3F ant1, VEC3F ant2, VEC3F ant3, REAL bond, REAL theta, REAL t
 
 
 /************************************************************************/
-/* Renamed functions: array.h                                        */
+/* Renamed functions: array.h                                           */
 
 char **Array2D(int size, int dim1, int dim2)
 {
@@ -608,7 +579,7 @@ void FreeArray3D(char ***array, int dim1, int dim2, int dim3)
 
 
 /************************************************************************/
-/* Renamed functions: help.h                                        */
+/* Renamed functions: help.h                                            */
 
 void Help(char *string, char *HelpFile)
 {
@@ -625,7 +596,7 @@ void DoHelp(char *string, char *HelpFile)
 
 
 /************************************************************************/
-/* Renamed functions: hpgl.h                                        */
+/* Renamed functions: hpgl.h                                            */
 
 BOOL HPGLInit(char *filename, char *AltFont, REAL xmargin, REAL ymargin)
 {
@@ -693,10 +664,12 @@ void HPGLCTText(REAL x, REAL y, REAL offset, char *text)
    blHPGLCTText(x, y, offset, text);
 }
 
-void HPGLVText(REAL x, REAL y, REAL xoff, char *text, int TitleFont, REAL TitleSize, char *label, int LabelFont, REAL LabelSize)
+void HPGLVText(REAL x, REAL y, REAL xoff, char *text, int TitleFont, 
+               REAL TitleSize, char *label, int LabelFont, REAL LabelSize)
 {
    DEPRECATED("HPGLVText()","blHPGLVText()");
-   blHPGLVText(x, y, xoff, text, TitleFont, TitleSize, label, LabelFont, LabelSize);
+   blHPGLVText(x, y, xoff, text, TitleFont, TitleSize, label, LabelFont, 
+               LabelSize);
 }
 
 void HPGLEnd(void)
@@ -714,7 +687,7 @@ void HPGLShowText(char *text, BOOL orientation, int XBase, int YBase)
 
 
 /************************************************************************/
-/* Renamed functions: matrix.h                                        */
+/* Renamed functions: matrix.h                                          */
 
 void MatMult3_33(VEC3F vecin, REAL matin[3][3], VEC3F *vecout)
 {
@@ -749,7 +722,7 @@ REAL VecDist(REAL *a, REAL *b, int len)
 
 
 /************************************************************************/
-/* Renamed functions: parse.h                                        */
+/* Renamed functions: parse.h                                           */
 
 int parse(char *comline, int nkeys, KeyWd *keywords, REAL *REALparam,
           char **strparam)
@@ -883,7 +856,7 @@ char *SimplifyText(char *string)
 
 
 /************************************************************************/
-/* Renamed functions: ps.h                                        */
+/* Renamed functions: ps.h                                              */
 
 BOOL PSInit(char *FName, char *creator, char *AltFont)
 {
@@ -991,29 +964,26 @@ char *PSCorrectCase(char *font)
 
 
 /************************************************************************/
-/* Renamed functions: safemem.h                                        */
+/* Renamed functions: safemem.h                                         */
 
 void *safemalloc(int nbytes)
 {
-   DEPRECATED("Safemalloc()","blSafemalloc()");
+   DEPRECATED("safemalloc()","blSafemalloc()");
    return(blSafemalloc(nbytes));
 }
 
 BOOL safefree(void *ptr)
 {
-   DEPRECATED("Safefree()","blSafefree()");
+   DEPRECATED("safefree()","blSafefree()");
    return(blSafefree(ptr));
 }
 
 void safeleaks(void)
 {
-   DEPRECATED("Safeleaks()","blSafeleaks()");
+   DEPRECATED("safeleaks()","blSafeleaks()");
    blSafeleaks();
 }
 
-
-
-
-
+/************************************************************************/
 /** \endcond                                                            */
 /************************************************************************/

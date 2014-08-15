@@ -3,8 +3,8 @@
 
    \file       hbond.h
    
-   \version    V1.2
-   \date       31.07.14
+   \version    V1.3
+   \date       14.08.14
    \brief      Header file for hbond determining code
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2014
@@ -50,6 +50,8 @@
 -  V1.1  07.07.14 Use bl prefix for functions By: CTP
 -  V1.2  31.07.14 Updated deprecation: Removed deprecated.h and added 
                   prototypes for renamed functions. By: CTP
+-  V1.3  14.08.14 Moved deprecated function prototypes to deprecated.h 
+                  By: CTP
 
 *************************************************************************/
 #ifndef _hbond_h
@@ -82,15 +84,10 @@ int blIsMCAcceptorHBonded(PDB *res1, PDB *res2, int type);
 
 
 /************************************************************************/
-/* Deprecated functions: hbond.h                                        */
-/** \cond deprecated                                                    */
-
-int  IsHBonded(PDB *res1, PDB *res2, int type);
-BOOL ValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP);
-int IsMCDonorHBonded(PDB *res1, PDB *res2, int type);
-int IsMCAcceptorHBonded(PDB *res1, PDB *res2, int type);
-
-/* \endcond                                                             */
+/* Include deprecated functions                                         */
+#define _hbond_h_deprecated
+#include "deprecated.h"
 /************************************************************************/
+
 
 #endif

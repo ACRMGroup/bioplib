@@ -3,8 +3,8 @@
 
    \file       array.h
    
-   \version    V1.7
-   \date       31.07.14
+   \version    V1.8
+   \date       14.08.14
    \brief      Include file for 2D/3D array functions
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
@@ -51,6 +51,8 @@
 -  V1.6  07.07.14 Use bl prefix for functions By: CTP
 -  V1.7  31.07.14 Updated deprecation: Removed deprecated.h and added 
                   prototypes for renamed functions. By: CTP
+-  V1.8  14.08.14 Moved deprecated function prototypes to deprecated.h 
+                  By: CTP
 
 *************************************************************************/
 /* Includes
@@ -80,15 +82,10 @@ char ***blArray3D(int size, int dim1, int dim2, int dim3);
 void blFreeArray3D(char ***array, int dim1, int dim2, int dim3);
 
 /************************************************************************/
-/* Deprecated functions: array.h                                        */
-/** \cond deprecated                                                    */
-
-char **Array2D(int size, int dim1, int dim2);
-void FreeArray2D(char **array, int dim1, int dim2);
-char ***Array3D(int size, int dim1, int dim2, int dim3);
-void FreeArray3D(char ***array, int dim1, int dim2, int dim3);
-
-/* \endcond                                                             */
+/* Include deprecated functions                                         */
+#define _ARRAY_H_DEPRECATED
+# include "deprecated.h" 
 /************************************************************************/
+
 
 #endif

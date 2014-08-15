@@ -3,8 +3,8 @@
 
    \file       parse.h
    
-   \version    V1.10
-   \date       31.07.14
+   \version    V1.11
+   \date       14.08.14
    \brief      Include file for the command parser
    
    \copyright  SciTech Software 1991-2014
@@ -57,6 +57,8 @@
 -  V1.9  07.07.14 Use bl prefix for functions By: CTP
 -  V1.10 31.07.14 Updated deprecation: Removed deprecated.h and added 
                   prototypes for renamed functions. By: CTP
+-  V1.11 14.08.14 Moved deprecated function prototypes to deprecated.h 
+                  By: CTP
 
 *************************************************************************/
 #ifndef _PARSE_H
@@ -124,18 +126,10 @@ int blGetParam(char  *command, REAL *value, int *nletters);
 
 
 /************************************************************************/
-/* Deprecated functions: parse.h                                        */
-/** \cond deprecated                                                    */
-
-int parse(char *comline, int nkeys, KeyWd *keywords, REAL *REALparam,
-          char **strparam);
-int mparse(char *comline, int nkeys, MKeyWd *keywords, REAL *REALparam,
-           char **strparam, int *nparams);
-int match(char *comstring, char *string2, int *nletters);
-int GetString(char *command, char *strparam);
-int GetParam(char  *command, REAL *value, int *nletters);
-
-/* \endcond                                                             */
+/* Include deprecated functions                                         */
+#define _PARSE_H_DEPRECATED
+# include "deprecated.h" 
 /************************************************************************/
+
 
 #endif

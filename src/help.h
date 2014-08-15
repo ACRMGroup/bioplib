@@ -3,8 +3,8 @@
 
    \file       help.h
    
-   \version    V1.2
-   \date       31.07.14
+   \version    V1.3
+   \date       14.08.14
    \brief      Include file for help functions
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -49,6 +49,8 @@
 -  V1.1  07.07.14 Use bl prefix for functions By: CTP
 -  V1.2  31.07.14 Updated deprecation: Removed deprecated.h and added 
                   prototypes for renamed functions. By: CTP
+-  V1.3  14.08.14 Moved deprecated function prototypes to deprecated.h 
+                  By: CTP
 
 *************************************************************************/
 #ifndef _HELP_H
@@ -61,13 +63,10 @@ void blHelp(char *string, char *HelpFile);
 void blDoHelp(char *string, char *HelpFile);
 
 /************************************************************************/
-/* Deprecated functions: help.h                                         */
-/** \cond deprecated                                                    */
-
-void Help(char *string, char *HelpFile);
-void DoHelp(char *string, char *HelpFile);
-
-/* \endcond                                                             */
+/* Include deprecated functions                                         */
+#define _HELP_H_DEPRECATED
+# include "deprecated.h" 
 /************************************************************************/
+
 
 #endif

@@ -3,8 +3,8 @@
 
    \file       fit.h
    
-   \version    V1.3
-   \date       31.07.14
+   \version    V1.4
+   \date       14.08.14
    \brief      Include file for least squares fitting
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -51,6 +51,8 @@
 -  V1.2  07.07.14 Use bl prefix for functions By: CTP
 -  V1.3  31.07.14 Updated deprecation: Removed deprecated.h and added 
                   prototypes for renamed functions. By: CTP
+-  V1.4  14.08.14 Moved deprecated function prototypes to deprecated.h 
+                  By: CTP
 
 *************************************************************************/
 #ifndef _FIT_H
@@ -64,14 +66,11 @@ BOOL blMatfit(COOR *x1, COOR *x2, REAL rm[3][3], int n, REAL *wt1,
               BOOL column);
 
 /************************************************************************/
-/* Deprecated functions: fit.h                                          */
-/** \cond deprecated                                                    */
-
-BOOL matfit(COOR *x1, COOR *x2, REAL rm[3][3], int n, REAL *wt1, 
-              BOOL column);
-
-/* \endcond                                                             */
+/* Include deprecated functions                                         */
+#define _FIT_H_DEPRECATED
+# include "deprecated.h" 
 /************************************************************************/
+
 
 #endif
 

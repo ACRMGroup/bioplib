@@ -40,33 +40,8 @@
    function names with the 'bl' prefix.(The 'bl' prefix was introduced in 
    July 2014.) 
 
-   Allows use of deprecated functions that took a single character for the
+   Allows use of deprecated functions that take a single character for the
    PDB chain identifier or insert value.
-
-   Prototypes for the deprecated functions are in their original header 
-   files:
-
--  pdb.h
--  general.h
--  BuffInp.h
--  ErrStack.h
--  MathUtil.h
--  WindIO.h
--  aalist.h
--  angle.h
--  array.h
--  cssr.h
--  fit.h
--  hbond.h
--  help.h
--  hpgl.h
--  matrix.h
--  parse.h
--  plotting.h
--  ps.h
--  safemem.h
--  seq.h
-
 
 
 **************************************************************************
@@ -95,33 +70,20 @@
 
 -  V1.0  31.07.14 Original By: CTP
 -  V1.1  08.08.14 Separated Biop and Gen deprecation  By: ACRM
+-  V1.2  14.08.14 Removed unnecessary includes.  By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include "deprecated.h"
-#include "macros.h"
 
 #include "pdb.h"
-#include "general.h"
-#include "BuffInp.h"
-#include "ErrStack.h"
-#include "MathUtil.h"
-#include "WindIO.h"
 #include "aalist.h"
-#include "angle.h"
-#include "array.h"
 #include "cssr.h"
 #include "fit.h"
 #include "hbond.h"
-#include "help.h"
-#include "hpgl.h"
-#include "matrix.h"
-#include "parse.h"
-#include "plotting.h"
-#include "ps.h"
-#include "safemem.h"
 #include "seq.h"
+
 
 /************************************************************************/
 /* Defines and macros

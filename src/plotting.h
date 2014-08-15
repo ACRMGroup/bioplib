@@ -3,8 +3,8 @@
 
    \file       plotting.h
    
-   \version    V1.2
-   \date       31.07.14
+   \version    V1.3
+   \date       14.08.14
    \brief      Include file for using plotting routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -50,6 +50,8 @@
 -  V1.1  07.07.14 Use bl prefix for functions By: CTP
 -  V1.2  31.07.14 Updated deprecation: Removed deprecated.h and added 
                   prototypes for renamed functions. By: CTP
+-  V1.3  14.08.14 Moved deprecated function prototypes to deprecated.h 
+                  By: CTP
 
 *************************************************************************/
 #ifndef _PLOTTING_H
@@ -96,30 +98,10 @@ int  blPS2HPGLFont(char *font);
 char *blSimplifyText(char *string);
 
 /************************************************************************/
-/* Deprecated functions: plotting.h                                     */
-/** \cond deprecated                                                    */
-
-BOOL AMInitPlot(char *filename, char *title, int dest, REAL OutXSize, 
-                REAL OutYSize, REAL OutXOff, REAL OutYOff,
-                char *AltFont, REAL xmargin, REAL ymargin,
-                REAL DataXMin, REAL DataYMin, REAL DataXMax,
-                REAL DataYMax);
-void AMSetPen(int dest, int pen);
-void AMMove(int dest, REAL x, REAL y);
-void AMDraw(int dest, REAL x, REAL y);
-void AMSetLineStyle(int dest, int style);
-void AMEndLine(int dest);
-void AMSetFont(int dest, char *PSFontName, REAL FontSize);
-void AMText(int dest, REAL x, REAL y, char *text);
-void AMCBText(int dest, REAL x, REAL y, char *text);
-void AMRText(int dest, REAL x, REAL y, REAL offset, char *text);
-void AMLCText(int dest, REAL x, REAL y, char *text);
-void AMCTText(int dest, REAL x, REAL y, REAL CTOffset, char *text);
-void AMEndPlot(int dest);
-int  PS2HPGLFont(char *font);
-char *SimplifyText(char *string);
-
-/* \endcond                                                             */
+/* Include deprecated functions                                         */
+#define _PLOTTING_H_DEPRECATED
+# include "deprecated.h" 
 /************************************************************************/
+
 
 #endif

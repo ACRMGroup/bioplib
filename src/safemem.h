@@ -3,8 +3,8 @@
 
    \file       safemem.h
    
-   \version    V1.3
-   \date       31.07.14
+   \version    V1.4
+   \date       14.08.14
    \brief      Safe malloc()/free() routines which check for array 
                overflow on free.
    
@@ -53,6 +53,9 @@
 -  V1.2  07.07.14 Use bl prefix for functions By: CTP
 -  V1.3  31.07.14 Updated deprecation: Removed deprecated.h and added 
                   prototypes for renamed functions. By: CTP
+-  V1.4  14.08.14 Moved deprecated function prototypes to deprecated.h 
+                  Use blSafefree instead of safefree for macros.
+                  By: CTP
 
 *************************************************************************/
 #ifndef _SAFEMEM_H
@@ -68,18 +71,13 @@ void blSafeleaks(void);
 
 
 /************************************************************************/
-/* Deprecated functions: safemem.h                                      */
-/** \cond deprecated                                                    */
-
-void *safemalloc(int nbytes);
-BOOL safefree(void *ptr);
-void safeleaks(void);
-
-/* \endcond                                                             */
+/* Include deprecated functions                                         */
+#define _SAFEMEM_H_DEPRECATED
+# include "deprecated.h" 
 /************************************************************************/
 
 
-
+/************************************************************************/
 /* Undefine memory macros defined by macros.h                           */
 #ifdef _MACROS_H
 #undef INIT
@@ -111,7 +109,7 @@ void safeleaks(void);
 #define FREELIST(y,z)   while((y)!=NULL)                                 \
                         {  z *_freelist_macro_q;                         \
                            _freelist_macro_q = (y)->next;                \
-                           safefree((char *)(y));                        \
+                           blSafefree((char *)(y));                      \
                            (y) = _freelist_macro_q;                      \
                         }
 #define ORDFREELIST(y,z)   while((y)!=NULL)                              \
@@ -149,14 +147,14 @@ do {                                                                     \
             if(_delete_macro_prev == NULL)                               \
             {                                                            \
                _delete_macro_temp = (x)->next;                           \
-               safefree(x);                                              \
+               blSafefree(x);                                            \
                (x) = _delete_macro_temp;                                 \
                break;                                                    \
             }                                                            \
             else                                                         \
             {                                                            \
                _delete_macro_prev->next = _delete_macro_p->next;         \
-               safefree(_delete_macro_p);                                \
+               blSafefree(_delete_macro_p);                              \
             }                                                            \
          }                                                               \
          _delete_macro_prev = _delete_macro_p;                           \

@@ -3,8 +3,8 @@
 
    \file       aalist.h
    
-   \version    V3.2
-   \date       31.07.14
+   \version    V3.3
+   \date       14.08.14
    \brief      Include file for amino acid linked lists.
    
    \copyright  (c) UCL / Dr. Andrew C.R. Martin 2006-2014
@@ -52,6 +52,8 @@
 -  V3.1  07.07.14 Use bl prefix for functions By: CTP
 -  V3.2  31.07.14 Updated deprecation: Removed deprecated.h and added 
                   prototypes for renamed functions. By: CTP
+-  V3.3  14.08.14 Moved deprecated function prototypes to deprecated.h 
+                  By: CTP
 
 *************************************************************************/
 #ifndef _AALIST_H
@@ -94,22 +96,10 @@ char *blBuildFlagSeqFromAAList(AA *aa, char ch);
 int blGetAAListLen(AA *aa);
 
 /************************************************************************/
-/* Deprecated functions: aalist.h                                       */
-/** \cond deprecated                                                    */
-
-AA *InsertNextResiduesInAAList(AA *a, char res, int nres);
-AA *InsertNextResidueInAAList(AA *a, char res);
-char *BuildSeqFromAAList(AA *aa);
-AA *InsertResidueInAAListAt(AA *aa, char res, int pos);
-AA *InsertResiduesInAAListAt(AA *aa, char res, int nres, int pos);
-AA *BuildAAList(char *seq);
-int FindAAListOffsetByResnum(AA *aa, int resnum);
-AA *FindAAListItemByResnum(AA *aa, int resnum);
-void SetAAListFlagByResnum(AA *aa, int resnum);
-char *BuildFlagSeqFromAAList(AA *aa, char ch);
-int GetAAListLen(AA *aa);
-
-/** \endcond                                                            */
+/* Include deprecated functions                                         */
+#define _AALIST_H_DEPRECATED
+# include "deprecated.h" 
 /************************************************************************/
+
 
 #endif
