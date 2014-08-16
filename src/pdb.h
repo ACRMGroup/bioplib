@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.63
-   \date       14.08.14
+   \version    V1.64
+   \date       16.08.14
    \brief      Include file for pdb routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2014
@@ -144,6 +144,8 @@
                   element and atomType. By: CTP
 -  V1.63 14.08.14 Moved deprecated function prototypes to deprecated.h 
                   By: CTP
+-  V1.64 16.08.14 Replaced charge with formal_charge and partial_charge 
+                  for PDB structure. By: CTP
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -198,13 +200,13 @@ typedef struct _blAtomType
 */
 typedef struct pdb_entry
 {
-   REAL x,y,z,occ,bval,access,radius;
+   REAL x,y,z,occ,bval,access,radius,partial_charge;
    APTR extras;
    blATOMTYPE *atomType;
    struct pdb_entry *next;
    int  atnum;
    int  resnum;
-   int  charge;
+   int  formal_charge;
    char record_type[8];
    char atnam[8];
    char atnam_raw[8];
@@ -310,7 +312,8 @@ typedef struct
                      p->next = NULL; \
                      p->access = 0.0; \
                      p->radius = 0.0; \
-                     p->charge = 0; \
+                     p->formal_charge  =   0; \
+                     p->partial_charge = 0.0; \
                      strcpy(p->element,"  "); \
                      p->atomType = NULL
 

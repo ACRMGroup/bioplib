@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V2.29
-   \date       15.08.14
+   \version    V2.30
+   \date       16.08.14
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2014
@@ -176,6 +176,8 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                   By: CTP
 -  V2.29 15.08.14 Updated blDoReadPDB() and blDoReadPDBML() to use 
                   CLEAR_PDB().  By: CTP
+-  V2.30 16.08.14 Replaced charge with formal_charge and partial_charge 
+                  for PDB structure. By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -437,6 +439,8 @@ PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
 -  09.06.14 V2.26 Set gPDBXML flag. By: CTP
 -  07.07.14 V2.27 Renamed to blDoReadPDB() By: CTP
 -  15.08.14 V2.29 Use CLEAR_PDB() to set default values. By: CTP
+-  16.08.14 V2.30 Replaced charge with formal_charge and partial_charge 
+                  for PDB structure. By: CTP
 
 */
 PDB *blDoReadPDB(FILE *fpin,
@@ -663,7 +667,8 @@ PDB *blDoReadPDB(FILE *fpin,
                p->occ    = (REAL)occ;
                p->bval   = (REAL)bval;
                p->altpos = altpos;    /* 03.06.05 Added this one        */
-               p->charge = charge;
+               p->formal_charge  = charge;
+               p->partial_charge = (REAL)charge;
                p->access = 0.0;
                p->radius = 0.0;
                p->atomType = NULL;
@@ -723,7 +728,8 @@ PDB *blDoReadPDB(FILE *fpin,
                   multi[NPartial].z      = (REAL)z;
                   multi[NPartial].occ    = (REAL)occ;
                   multi[NPartial].bval   = (REAL)bval;
-                  multi[NPartial].charge = charge;
+                  multi[NPartial].formal_charge = charge;
+                  multi[NPartial].partial_charge = (REAL)charge;
                   multi[NPartial].access = 0.0;
                   multi[NPartial].radius = 0.0;
                   multi[NPartial].atomType = NULL;
@@ -738,7 +744,7 @@ PDB *blDoReadPDB(FILE *fpin,
                   strcpy(multi[NPartial].element,     element);
                   /* 03.06.05 - added this line                         */
                   multi[NPartial].altpos = altpos;
-                  
+
                   NPartial++;
                }
             }
@@ -794,6 +800,8 @@ PDB *blDoReadPDB(FILE *fpin,
             with their occupancy (0.0) rather than the next higher
             occupancy. Handles residues like 1zeh/B16
 -  04.08.14 Read charge and element. By: CTP
+-  16.08.14 Read formal charge and set partial charge. By: CTP
+
 */
 static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
                                int NPartial, PDB **ppdb, PDB **pp, 
@@ -867,7 +875,8 @@ static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
    (*pp)->z      = multi[IMaxOcc].z;
    (*pp)->occ    = MaxOcc;
    (*pp)->bval   = multi[IMaxOcc].bval;
-   (*pp)->charge = multi[IMaxOcc].charge;
+   (*pp)->formal_charge = multi[IMaxOcc].formal_charge;
+   (*pp)->partial_charge = multi[IMaxOcc].partial_charge;
    (*pp)->access = multi[IMaxOcc].access;
    (*pp)->radius = multi[IMaxOcc].radius;
    (*pp)->atomType = NULL;
@@ -1228,6 +1237,8 @@ pointer\n");
 -  07.07.14 Renamed to blDoReadPDBML() By: CTP
 -  04.08.14 Read element and formal charge. By: CTP
 -  15.08.14 Use CLEAR_PDB() to set default values. By: CTP
+-  16.08.14 Read formal and partial charges. Use blCopyPDB() to copy data
+            for partial occupancy atoms. By: CTP
 
 */
 PDB *blDoReadPDBML(FILE *fpin,
@@ -1437,7 +1448,8 @@ PDB *blDoReadPDBML(FILE *fpin,
             else if(!strcmp((char *) n->name,"pdbx_formal_charge"))
             {
                sscanf((char *) content,"%lf",&content_lf);
-               curr_pdb->charge = (int) content_lf;
+               curr_pdb->formal_charge = (int) content_lf;
+               curr_pdb->partial_charge = (REAL) content_lf;
             }
 
 
@@ -1559,26 +1571,7 @@ PDB *blDoReadPDBML(FILE *fpin,
          if(curr_pdb->altpos != ' ' && NPartial < MAXPARTIAL)
          {
             /* Copy the partial atom data to storage */
-            multi[NPartial].atnum  = curr_pdb->atnum;
-            multi[NPartial].resnum = curr_pdb->resnum;
-            multi[NPartial].x      = curr_pdb->x;
-            multi[NPartial].y      = curr_pdb->y;
-            multi[NPartial].z      = curr_pdb->z;
-            multi[NPartial].occ    = curr_pdb->occ;
-            multi[NPartial].bval   = curr_pdb->bval;
-            multi[NPartial].charge = curr_pdb->charge;
-            multi[NPartial].access = curr_pdb->access;
-            multi[NPartial].radius = curr_pdb->radius;
-            multi[NPartial].atomType = NULL;
-            multi[NPartial].next   = NULL;
-            strcpy(multi[NPartial].record_type, curr_pdb->record_type);
-            strcpy(multi[NPartial].atnam,       curr_pdb->atnam);
-            strcpy(multi[NPartial].atnam_raw,   curr_pdb->atnam_raw);
-            strcpy(multi[NPartial].resnam,      curr_pdb->resnam);
-            strcpy(multi[NPartial].chain,       curr_pdb->chain);
-            strcpy(multi[NPartial].insert,      curr_pdb->insert);
-            strcpy(multi[NPartial].element,     curr_pdb->element);
-            multi[NPartial].altpos = curr_pdb->altpos; /* fix */
+            blCopyPDB(&multi[NPartial], curr_pdb);
 
             /* Set global partial occupancy flag */
             gPDBPartialOcc = TRUE;

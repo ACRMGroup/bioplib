@@ -3,8 +3,8 @@
 
    \file       readpdbml_suite.c
    
-   \version    V1.0
-   \date       05.08.14
+   \version    V1.1
+   \date       16.08.14
    \brief      Test suite for reading pdb and pdbml data from file.
 
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -48,6 +48,7 @@
    Revision History:
    =================
 -  V1.0  05.08.14 Original By: CTP
+-  V1.1  16.08.14 Test formal and partial charges. By: CTP
 
 *************************************************************************/
 
@@ -116,24 +117,25 @@ START_TEST(test_read_pdb_data_01)
    fclose(fp);
 
    /* check data */
-   ck_assert(        pdb->atnum ==        1);
-   ck_assert_str_eq( pdb->atnam,     "CA  ");
-   ck_assert_str_eq( pdb->atnam_raw, " CA ");
-   ck_assert_str_eq( pdb->resnam,    "ALA ");
-   ck_assert_str_eq( pdb->chain,        "A");
-   ck_assert(        pdb->resnum ==       1);
-   ck_assert_str_eq( pdb->insert,       " ");
-   ck_assert(        pdb->x ==        1.000);
-   ck_assert(        pdb->y ==        2.000);
-   ck_assert(        pdb->z ==        3.000);
-   ck_assert(        pdb->occ ==       1.00);
-   ck_assert(        pdb->altpos ==     ' ');
-   ck_assert(        pdb->bval ==     20.00);
-   ck_assert_str_eq( pdb->element,      "C");
-   ck_assert(        pdb->charge ==       0);
-   ck_assert(        pdb->access ==     0.0);
-   ck_assert(        pdb->radius ==     0.0);
-   ck_assert(        pdb->atomType ==  NULL);
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "CA  ");
+   ck_assert_str_eq( pdb->atnam_raw,      " CA ");
+   ck_assert_str_eq( pdb->resnam,         "ALA ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             1.000);
+   ck_assert(        pdb->y ==             2.000);
+   ck_assert(        pdb->z ==             3.000);
+   ck_assert(        pdb->occ ==            1.00);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,           "C");
+   ck_assert(        pdb->formal_charge ==     0);
+   ck_assert(        pdb->partial_charge ==  0.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
 }
 END_TEST
 
@@ -148,24 +150,25 @@ START_TEST(test_read_pdb_data_02)
    fclose(fp);
 
    /* check data */
-   ck_assert(        pdb->atnum ==        1);
-   ck_assert_str_eq( pdb->atnam,     "ZN  ");
-   ck_assert_str_eq( pdb->atnam_raw, "ZN  ");
-   ck_assert_str_eq( pdb->resnam,    " ZN ");
-   ck_assert_str_eq( pdb->chain,        "A");
-   ck_assert(        pdb->resnum ==       1);
-   ck_assert_str_eq( pdb->insert,       " ");
-   ck_assert(        pdb->x ==        1.000);
-   ck_assert(        pdb->y ==        2.000);
-   ck_assert(        pdb->z ==        3.000);
-   ck_assert(        pdb->occ ==       1.00);
-   ck_assert(        pdb->altpos ==     ' ');
-   ck_assert(        pdb->bval ==     20.00);
-   ck_assert_str_eq( pdb->element,     "ZN");
-   ck_assert(        pdb->charge ==       0);
-   ck_assert(        pdb->access ==     0.0);
-   ck_assert(        pdb->radius ==     0.0);
-   ck_assert(        pdb->atomType ==  NULL);
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "ZN  ");
+   ck_assert_str_eq( pdb->atnam_raw,      "ZN  ");
+   ck_assert_str_eq( pdb->resnam,         " ZN ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             1.000);
+   ck_assert(        pdb->y ==             2.000);
+   ck_assert(        pdb->z ==             3.000);
+   ck_assert(        pdb->occ ==            1.00);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,          "ZN");
+   ck_assert(        pdb->formal_charge ==     0);
+   ck_assert(        pdb->partial_charge ==  0.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
 }
 END_TEST
 
@@ -180,24 +183,25 @@ START_TEST(test_read_pdb_data_03)
    fclose(fp);
 
    /* check data */
-   ck_assert(        pdb->atnum ==        1);
-   ck_assert_str_eq( pdb->atnam,     "CA  ");
-   ck_assert_str_eq( pdb->atnam_raw, " CA ");
-   ck_assert_str_eq( pdb->resnam,    "ALA ");
-   ck_assert_str_eq( pdb->chain,        "A");
-   ck_assert(        pdb->resnum ==       1);
-   ck_assert_str_eq( pdb->insert,       "A");
-   ck_assert(        pdb->x ==        1.000);
-   ck_assert(        pdb->y ==        2.000);
-   ck_assert(        pdb->z ==        3.000);
-   ck_assert(        pdb->occ ==       1.00);
-   ck_assert(        pdb->altpos ==     ' ');
-   ck_assert(        pdb->bval ==     20.00);
-   ck_assert_str_eq( pdb->element,      "C");
-   ck_assert(        pdb->charge ==       0);
-   ck_assert(        pdb->access ==     0.0);
-   ck_assert(        pdb->radius ==     0.0);
-   ck_assert(        pdb->atomType ==  NULL);
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "CA  ");
+   ck_assert_str_eq( pdb->atnam_raw,      " CA ");
+   ck_assert_str_eq( pdb->resnam,         "ALA ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            "A");
+   ck_assert(        pdb->x ==             1.000);
+   ck_assert(        pdb->y ==             2.000);
+   ck_assert(        pdb->z ==             3.000);
+   ck_assert(        pdb->occ ==            1.00);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,           "C");
+   ck_assert(        pdb->formal_charge ==     0);
+   ck_assert(        pdb->partial_charge ==  0.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
 }
 END_TEST
 
@@ -212,25 +216,26 @@ START_TEST(test_read_pdb_data_04)
    fclose(fp);
 
    /* check data */
-   ck_assert(        pdb->atnum ==        1);
-   ck_assert_str_eq( pdb->atnam,     "CA  ");
-   ck_assert_str_eq( pdb->atnam_raw, " CA ");
-   ck_assert_str_eq( pdb->resnam,    "ALA ");
-   ck_assert_str_eq( pdb->chain,        "A");
-   ck_assert(        pdb->resnum ==       1);
-   ck_assert_str_eq( pdb->insert,       " ");
-   ck_assert(        pdb->x ==        1.000);
-   ck_assert(        pdb->y ==        2.000);
-   ck_assert(        pdb->z ==        3.000);
-   ck_assert(        pdb->occ ==       0.75);
-   ck_assert(        pdb->altpos ==     ' ');
-   ck_assert(        pdb->bval ==     20.00);
-   ck_assert_str_eq( pdb->element,      "C");
-   ck_assert(        pdb->charge ==       0);
-   ck_assert(        pdb->access ==     0.0);
-   ck_assert(        pdb->radius ==     0.0);
-   ck_assert(        pdb->atomType ==  NULL);
-   ck_assert(        natoms ==            1);
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "CA  ");
+   ck_assert_str_eq( pdb->atnam_raw,      " CA ");
+   ck_assert_str_eq( pdb->resnam,         "ALA ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             1.000);
+   ck_assert(        pdb->y ==             2.000);
+   ck_assert(        pdb->z ==             3.000);
+   ck_assert(        pdb->occ ==            0.75);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,           "C");
+   ck_assert(        pdb->formal_charge ==     0);
+   ck_assert(        pdb->partial_charge ==  0.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        natoms ==                 1);
 }
 END_TEST
 
@@ -245,25 +250,26 @@ START_TEST(test_read_pdb_data_05)
    fclose(fp);
 
    /* check data */
-   ck_assert(        pdb->atnum ==        1);
-   ck_assert_str_eq( pdb->atnam,     "CA  ");
-   ck_assert_str_eq( pdb->atnam_raw, " CA ");
-   ck_assert_str_eq( pdb->resnam,    "ALA ");
-   ck_assert_str_eq( pdb->chain,        "A");
-   ck_assert(        pdb->resnum ==       1);
-   ck_assert_str_eq( pdb->insert,       " ");
-   ck_assert(        pdb->x ==        4.000);
-   ck_assert(        pdb->y ==        5.000);
-   ck_assert(        pdb->z ==        6.000);
-   ck_assert(        pdb->occ ==       0.75);
-   ck_assert(        pdb->altpos ==     ' ');
-   ck_assert(        pdb->bval ==     20.00);
-   ck_assert_str_eq( pdb->element,      "C");
-   ck_assert(        pdb->charge ==       0);
-   ck_assert(        pdb->access ==     0.0);
-   ck_assert(        pdb->radius ==     0.0);
-   ck_assert(        pdb->atomType ==  NULL);
-   ck_assert(        natoms ==            1);
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "CA  ");
+   ck_assert_str_eq( pdb->atnam_raw,      " CA ");
+   ck_assert_str_eq( pdb->resnam,         "ALA ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             4.000);
+   ck_assert(        pdb->y ==             5.000);
+   ck_assert(        pdb->z ==             6.000);
+   ck_assert(        pdb->occ ==            0.75);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,           "C");
+   ck_assert(        pdb->formal_charge ==     0);
+   ck_assert(        pdb->partial_charge ==  0.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        natoms ==                 1);
 }
 END_TEST
 
@@ -278,25 +284,26 @@ START_TEST(test_read_pdb_data_06)
    fclose(fp);
 
    /* check data */
-   ck_assert(        pdb->atnum ==        1);
-   ck_assert_str_eq( pdb->atnam,     "CA  ");
-   ck_assert_str_eq( pdb->atnam_raw, " CA ");
-   ck_assert_str_eq( pdb->resnam,    "ALA ");
-   ck_assert_str_eq( pdb->chain,        "A");
-   ck_assert(        pdb->resnum ==       1);
-   ck_assert_str_eq( pdb->insert,       " ");
-   ck_assert(        pdb->x ==        4.000);
-   ck_assert(        pdb->y ==        5.000);
-   ck_assert(        pdb->z ==        6.000);
-   ck_assert(        pdb->occ ==       0.50);
-   ck_assert(        pdb->altpos ==     ' ');
-   ck_assert(        pdb->bval ==     20.00);
-   ck_assert_str_eq( pdb->element,      "C");
-   ck_assert(        pdb->charge ==       0);
-   ck_assert(        pdb->access ==     0.0);
-   ck_assert(        pdb->radius ==     0.0);
-   ck_assert(        pdb->atomType ==  NULL);
-   ck_assert(        natoms ==            1);
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "CA  ");
+   ck_assert_str_eq( pdb->atnam_raw,      " CA ");
+   ck_assert_str_eq( pdb->resnam,         "ALA ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             4.000);
+   ck_assert(        pdb->y ==             5.000);
+   ck_assert(        pdb->z ==             6.000);
+   ck_assert(        pdb->occ ==            0.50);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,           "C");
+   ck_assert(        pdb->formal_charge ==     0);
+   ck_assert(        pdb->partial_charge ==  0.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        natoms ==                 1);
 }
 END_TEST
 
@@ -311,25 +318,26 @@ START_TEST(test_read_pdb_data_07)
    fclose(fp);
 
    /* check data */
-   ck_assert(        pdb->atnum ==        1);
-   ck_assert_str_eq( pdb->atnam,     "FE  ");
-   ck_assert_str_eq( pdb->atnam_raw, "FE  ");
-   ck_assert_str_eq( pdb->resnam,    "HEM ");
-   ck_assert_str_eq( pdb->chain,        "A");
-   ck_assert(        pdb->resnum ==       1);
-   ck_assert_str_eq( pdb->insert,       " ");
-   ck_assert(        pdb->x ==        1.000);
-   ck_assert(        pdb->y ==        2.000);
-   ck_assert(        pdb->z ==        3.000);
-   ck_assert(        pdb->occ ==       1.00);
-   ck_assert(        pdb->altpos ==     ' ');
-   ck_assert(        pdb->bval ==     20.00);
-   ck_assert_str_eq( pdb->element,     "FE");
-   ck_assert(        pdb->charge ==       3);
-   ck_assert(        pdb->access ==     0.0);
-   ck_assert(        pdb->radius ==     0.0);
-   ck_assert(        pdb->atomType ==  NULL);
-   ck_assert(        natoms ==            1);
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "FE  ");
+   ck_assert_str_eq( pdb->atnam_raw,      "FE  ");
+   ck_assert_str_eq( pdb->resnam,         "HEM ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             1.000);
+   ck_assert(        pdb->y ==             2.000);
+   ck_assert(        pdb->z ==             3.000);
+   ck_assert(        pdb->occ ==            1.00);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,          "FE");
+   ck_assert(        pdb->formal_charge ==     3);
+   ck_assert(        pdb->partial_charge ==  3.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        natoms ==                 1);
 }
 END_TEST
 
@@ -344,25 +352,26 @@ START_TEST(test_read_pdb_data_08)
    fclose(fp);
 
    /* check data */
-   ck_assert(        pdb->atnum ==        1);
-   ck_assert_str_eq( pdb->atnam,     "CL  ");
-   ck_assert_str_eq( pdb->atnam_raw, "CL  ");
-   ck_assert_str_eq( pdb->resnam,    " CL ");
-   ck_assert_str_eq( pdb->chain,        "A");
-   ck_assert(        pdb->resnum ==       1);
-   ck_assert_str_eq( pdb->insert,       " ");
-   ck_assert(        pdb->x ==        1.000);
-   ck_assert(        pdb->y ==        2.000);
-   ck_assert(        pdb->z ==        3.000);
-   ck_assert(        pdb->occ ==       1.00);
-   ck_assert(        pdb->altpos ==     ' ');
-   ck_assert(        pdb->bval ==     20.00);
-   ck_assert_str_eq( pdb->element,     "CL");
-   ck_assert(        pdb->charge ==      -1);
-   ck_assert(        pdb->access ==     0.0);
-   ck_assert(        pdb->radius ==     0.0);
-   ck_assert(        pdb->atomType ==  NULL);
-   ck_assert(        natoms ==            1);
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "CL  ");
+   ck_assert_str_eq( pdb->atnam_raw,      "CL  ");
+   ck_assert_str_eq( pdb->resnam,         " CL ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             1.000);
+   ck_assert(        pdb->y ==             2.000);
+   ck_assert(        pdb->z ==             3.000);
+   ck_assert(        pdb->occ ==            1.00);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,          "CL");
+   ck_assert(        pdb->formal_charge ==    -1);
+   ck_assert(        pdb->partial_charge == -1.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        natoms ==                 1);
 }
 END_TEST
 
@@ -377,25 +386,26 @@ START_TEST(test_read_pdb_data_09)
    fclose(fp);
 
    /* check data */
-   ck_assert(        pdb->atnum ==        1);
-   ck_assert_str_eq( pdb->atnam,     "FE  ");
-   ck_assert_str_eq( pdb->atnam_raw, "FE  ");
-   ck_assert_str_eq( pdb->resnam,    "HEM ");
-   ck_assert_str_eq( pdb->chain,        "A");
-   ck_assert(        pdb->resnum ==       1);
-   ck_assert_str_eq( pdb->insert,       " ");
-   ck_assert(        pdb->x ==        1.000);
-   ck_assert(        pdb->y ==        2.000);
-   ck_assert(        pdb->z ==        3.000);
-   ck_assert(        pdb->occ ==       1.00);
-   ck_assert(        pdb->altpos ==     ' ');
-   ck_assert(        pdb->bval ==     20.00);
-   ck_assert_str_eq( pdb->element,     "FE");
-   ck_assert(        pdb->charge ==       0);
-   ck_assert(        pdb->access ==     0.0);
-   ck_assert(        pdb->radius ==     0.0);
-   ck_assert(        pdb->atomType ==  NULL);
-   ck_assert(        natoms ==            1);
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "FE  ");
+   ck_assert_str_eq( pdb->atnam_raw,      "FE  ");
+   ck_assert_str_eq( pdb->resnam,         "HEM ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             1.000);
+   ck_assert(        pdb->y ==             2.000);
+   ck_assert(        pdb->z ==             3.000);
+   ck_assert(        pdb->occ ==            1.00);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,          "FE");
+   ck_assert(        pdb->formal_charge ==     0);
+   ck_assert(        pdb->partial_charge ==  0.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        natoms ==                 1);
 }
 END_TEST
 
@@ -410,25 +420,26 @@ START_TEST(test_read_pdb_data_10)
    fclose(fp);
 
    /* check data */
-   ck_assert(        pdb->atnum ==        1);
-   ck_assert_str_eq( pdb->atnam,     "FE  ");
-   ck_assert_str_eq( pdb->atnam_raw, "FE  ");
-   ck_assert_str_eq( pdb->resnam,    "HEM ");
-   ck_assert_str_eq( pdb->chain,        "A");
-   ck_assert(        pdb->resnum ==       1);
-   ck_assert_str_eq( pdb->insert,       " ");
-   ck_assert(        pdb->x ==        1.000);
-   ck_assert(        pdb->y ==        2.000);
-   ck_assert(        pdb->z ==        3.000);
-   ck_assert(        pdb->occ ==       1.00);
-   ck_assert(        pdb->altpos ==     ' ');
-   ck_assert(        pdb->bval ==     20.00);
-   ck_assert_str_eq( pdb->element,     "FE");
-   ck_assert(        pdb->charge ==       0);
-   ck_assert(        pdb->access ==     0.0);
-   ck_assert(        pdb->radius ==     0.0);
-   ck_assert(        pdb->atomType ==  NULL);
-   ck_assert(        natoms ==            1);
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "FE  ");
+   ck_assert_str_eq( pdb->atnam_raw,      "FE  ");
+   ck_assert_str_eq( pdb->resnam,         "HEM ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             1.000);
+   ck_assert(        pdb->y ==             2.000);
+   ck_assert(        pdb->z ==             3.000);
+   ck_assert(        pdb->occ ==            1.00);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,          "FE");
+   ck_assert(        pdb->formal_charge ==     0);
+   ck_assert(        pdb->partial_charge ==  0.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        natoms ==                 1);
 }
 END_TEST
 
@@ -446,24 +457,25 @@ START_TEST(test_read_pdbml_data_01)
    fclose(fp);
 
    /* check data */
-   ck_assert(        pdb->atnum ==        1);
-   ck_assert_str_eq( pdb->atnam,     "CA  ");
-   ck_assert_str_eq( pdb->atnam_raw, " CA ");
-   ck_assert_str_eq( pdb->resnam,    "ALA ");
-   ck_assert_str_eq( pdb->chain,        "A");
-   ck_assert(        pdb->resnum ==       1);
-   ck_assert_str_eq( pdb->insert,       " ");
-   ck_assert(        pdb->x ==        1.000);
-   ck_assert(        pdb->y ==        2.000);
-   ck_assert(        pdb->z ==        3.000);
-   ck_assert(        pdb->occ ==       1.00);
-   ck_assert(        pdb->altpos ==     ' ');
-   ck_assert(        pdb->bval ==     20.00);
-   ck_assert_str_eq( pdb->element,      "C");
-   ck_assert(        pdb->charge ==       0);
-   ck_assert(        pdb->access ==     0.0);
-   ck_assert(        pdb->radius ==     0.0);
-   ck_assert(        pdb->atomType ==  NULL);
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "CA  ");
+   ck_assert_str_eq( pdb->atnam_raw,      " CA ");
+   ck_assert_str_eq( pdb->resnam,         "ALA ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             1.000);
+   ck_assert(        pdb->y ==             2.000);
+   ck_assert(        pdb->z ==             3.000);
+   ck_assert(        pdb->occ ==            1.00);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,           "C");
+   ck_assert(        pdb->formal_charge ==     0);
+   ck_assert(        pdb->partial_charge ==  0.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
 }
 END_TEST
 
@@ -478,24 +490,25 @@ START_TEST(test_read_pdbml_data_02)
    fclose(fp);
 
    /* check data */
-   ck_assert(        pdb->atnum ==        1);
-   ck_assert_str_eq( pdb->atnam,     "ZN  ");
-   ck_assert_str_eq( pdb->atnam_raw, "ZN  ");
-   ck_assert_str_eq( pdb->resnam,    " ZN ");
-   ck_assert_str_eq( pdb->chain,        "A");
-   ck_assert(        pdb->resnum ==       1);
-   ck_assert_str_eq( pdb->insert,       " ");
-   ck_assert(        pdb->x ==        1.000);
-   ck_assert(        pdb->y ==        2.000);
-   ck_assert(        pdb->z ==        3.000);
-   ck_assert(        pdb->occ ==       1.00);
-   ck_assert(        pdb->altpos ==     ' ');
-   ck_assert(        pdb->bval ==     20.00);
-   ck_assert_str_eq( pdb->element,     "ZN");
-   ck_assert(        pdb->charge ==       0);
-   ck_assert(        pdb->access ==     0.0);
-   ck_assert(        pdb->radius ==     0.0);
-   ck_assert(        pdb->atomType ==  NULL);
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "ZN  ");
+   ck_assert_str_eq( pdb->atnam_raw,      "ZN  ");
+   ck_assert_str_eq( pdb->resnam,         " ZN ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             1.000);
+   ck_assert(        pdb->y ==             2.000);
+   ck_assert(        pdb->z ==             3.000);
+   ck_assert(        pdb->occ ==            1.00);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,          "ZN");
+   ck_assert(        pdb->formal_charge ==     0);
+   ck_assert(        pdb->partial_charge ==  0.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
 }
 END_TEST
 
@@ -510,24 +523,25 @@ START_TEST(test_read_pdbml_data_03)
    fclose(fp);
 
    /* check data */
-   ck_assert(        pdb->atnum ==        1);
-   ck_assert_str_eq( pdb->atnam,     "CA  ");
-   ck_assert_str_eq( pdb->atnam_raw, " CA ");
-   ck_assert_str_eq( pdb->resnam,    "ALA ");
-   ck_assert_str_eq( pdb->chain,        "A");
-   ck_assert(        pdb->resnum ==       1);
-   ck_assert_str_eq( pdb->insert,       "A");
-   ck_assert(        pdb->x ==        1.000);
-   ck_assert(        pdb->y ==        2.000);
-   ck_assert(        pdb->z ==        3.000);
-   ck_assert(        pdb->occ ==       1.00);
-   ck_assert(        pdb->altpos ==     ' ');
-   ck_assert(        pdb->bval ==     20.00);
-   ck_assert_str_eq( pdb->element,      "C");
-   ck_assert(        pdb->charge ==       0);
-   ck_assert(        pdb->access ==     0.0);
-   ck_assert(        pdb->radius ==     0.0);
-   ck_assert(        pdb->atomType ==  NULL);
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "CA  ");
+   ck_assert_str_eq( pdb->atnam_raw,      " CA ");
+   ck_assert_str_eq( pdb->resnam,         "ALA ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            "A");
+   ck_assert(        pdb->x ==             1.000);
+   ck_assert(        pdb->y ==             2.000);
+   ck_assert(        pdb->z ==             3.000);
+   ck_assert(        pdb->occ ==            1.00);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,           "C");
+   ck_assert(        pdb->formal_charge ==     0);
+   ck_assert(        pdb->partial_charge ==  0.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
 }
 END_TEST
 
@@ -542,25 +556,26 @@ START_TEST(test_read_pdbml_data_04)
    fclose(fp);
 
    /* check data */
-   ck_assert(        pdb->atnum ==        1);
-   ck_assert_str_eq( pdb->atnam,     "CA  ");
-   ck_assert_str_eq( pdb->atnam_raw, " CA ");
-   ck_assert_str_eq( pdb->resnam,    "ALA ");
-   ck_assert_str_eq( pdb->chain,        "A");
-   ck_assert(        pdb->resnum ==       1);
-   ck_assert_str_eq( pdb->insert,       " ");
-   ck_assert(        pdb->x ==        1.000);
-   ck_assert(        pdb->y ==        2.000);
-   ck_assert(        pdb->z ==        3.000);
-   ck_assert(        pdb->occ ==       0.75);
-   ck_assert(        pdb->altpos ==     ' ');
-   ck_assert(        pdb->bval ==     20.00);
-   ck_assert_str_eq( pdb->element,      "C");
-   ck_assert(        pdb->charge ==       0);
-   ck_assert(        pdb->access ==     0.0);
-   ck_assert(        pdb->radius ==     0.0);
-   ck_assert(        pdb->atomType ==  NULL);
-   ck_assert(        natoms ==            1);
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "CA  ");
+   ck_assert_str_eq( pdb->atnam_raw,      " CA ");
+   ck_assert_str_eq( pdb->resnam,         "ALA ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             1.000);
+   ck_assert(        pdb->y ==             2.000);
+   ck_assert(        pdb->z ==             3.000);
+   ck_assert(        pdb->occ ==            0.75);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,           "C");
+   ck_assert(        pdb->formal_charge ==     0);
+   ck_assert(        pdb->partial_charge ==  0.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        natoms ==                 1);
 }
 END_TEST
 
@@ -575,25 +590,26 @@ START_TEST(test_read_pdbml_data_05)
    fclose(fp);
 
    /* check data */
-   ck_assert(        pdb->atnum ==        1);
-   ck_assert_str_eq( pdb->atnam,     "CA  ");
-   ck_assert_str_eq( pdb->atnam_raw, " CA ");
-   ck_assert_str_eq( pdb->resnam,    "ALA ");
-   ck_assert_str_eq( pdb->chain,        "A");
-   ck_assert(        pdb->resnum ==       1);
-   ck_assert_str_eq( pdb->insert,       " ");
-   ck_assert(        pdb->x ==        4.000);
-   ck_assert(        pdb->y ==        5.000);
-   ck_assert(        pdb->z ==        6.000);
-   ck_assert(        pdb->occ ==       0.75);
-   ck_assert(        pdb->altpos ==     ' ');
-   ck_assert(        pdb->bval ==     20.00);
-   ck_assert_str_eq( pdb->element,      "C");
-   ck_assert(        pdb->charge ==       0);
-   ck_assert(        pdb->access ==     0.0);
-   ck_assert(        pdb->radius ==     0.0);
-   ck_assert(        pdb->atomType ==  NULL);
-   ck_assert(        natoms ==            1);
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "CA  ");
+   ck_assert_str_eq( pdb->atnam_raw,      " CA ");
+   ck_assert_str_eq( pdb->resnam,         "ALA ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             4.000);
+   ck_assert(        pdb->y ==             5.000);
+   ck_assert(        pdb->z ==             6.000);
+   ck_assert(        pdb->occ ==            0.75);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,           "C");
+   ck_assert(        pdb->formal_charge ==     0);
+   ck_assert(        pdb->partial_charge ==  0.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        natoms ==                 1);
 }
 END_TEST
 
@@ -608,25 +624,26 @@ START_TEST(test_read_pdbml_data_06)
    fclose(fp);
 
    /* check data */
-   ck_assert(        pdb->atnum ==        1);
-   ck_assert_str_eq( pdb->atnam,     "CA  ");
-   ck_assert_str_eq( pdb->atnam_raw, " CA ");
-   ck_assert_str_eq( pdb->resnam,    "ALA ");
-   ck_assert_str_eq( pdb->chain,        "A");
-   ck_assert(        pdb->resnum ==       1);
-   ck_assert_str_eq( pdb->insert,       " ");
-   ck_assert(        pdb->x ==        4.000);
-   ck_assert(        pdb->y ==        5.000);
-   ck_assert(        pdb->z ==        6.000);
-   ck_assert(        pdb->occ ==       0.50);
-   ck_assert(        pdb->altpos ==     ' ');
-   ck_assert(        pdb->bval ==     20.00);
-   ck_assert_str_eq( pdb->element,      "C");
-   ck_assert(        pdb->charge ==       0);
-   ck_assert(        pdb->access ==     0.0);
-   ck_assert(        pdb->radius ==     0.0);
-   ck_assert(        pdb->atomType ==  NULL);
-   ck_assert(        natoms ==            1);
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "CA  ");
+   ck_assert_str_eq( pdb->atnam_raw,      " CA ");
+   ck_assert_str_eq( pdb->resnam,         "ALA ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             4.000);
+   ck_assert(        pdb->y ==             5.000);
+   ck_assert(        pdb->z ==             6.000);
+   ck_assert(        pdb->occ ==            0.50);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,           "C");
+   ck_assert(        pdb->formal_charge ==     0);
+   ck_assert(        pdb->partial_charge ==  0.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        natoms ==                 1);
 }
 END_TEST
 
@@ -641,25 +658,26 @@ START_TEST(test_read_pdbml_data_07)
    fclose(fp);
 
    /* check data */
-   ck_assert(        pdb->atnum ==        1);
-   ck_assert_str_eq( pdb->atnam,     "FE  ");
-   ck_assert_str_eq( pdb->atnam_raw, "FE  ");
-   ck_assert_str_eq( pdb->resnam,    "HEM ");
-   ck_assert_str_eq( pdb->chain,        "A");
-   ck_assert(        pdb->resnum ==       1);
-   ck_assert_str_eq( pdb->insert,       " ");
-   ck_assert(        pdb->x ==        1.000);
-   ck_assert(        pdb->y ==        2.000);
-   ck_assert(        pdb->z ==        3.000);
-   ck_assert(        pdb->occ ==       1.00);
-   ck_assert(        pdb->altpos ==     ' ');
-   ck_assert(        pdb->bval ==     20.00);
-   ck_assert_str_eq( pdb->element,     "FE");
-   ck_assert(        pdb->charge ==       3);
-   ck_assert(        pdb->access ==     0.0);
-   ck_assert(        pdb->radius ==     0.0);
-   ck_assert(        pdb->atomType ==  NULL);
-   ck_assert(        natoms ==            1);
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "FE  ");
+   ck_assert_str_eq( pdb->atnam_raw,      "FE  ");
+   ck_assert_str_eq( pdb->resnam,         "HEM ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             1.000);
+   ck_assert(        pdb->y ==             2.000);
+   ck_assert(        pdb->z ==             3.000);
+   ck_assert(        pdb->occ ==            1.00);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,          "FE");
+   ck_assert(        pdb->formal_charge ==     3);
+   ck_assert(        pdb->partial_charge ==  3.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        natoms ==                 1);
 }
 END_TEST
 
@@ -674,25 +692,26 @@ START_TEST(test_read_pdbml_data_08)
    fclose(fp);
 
    /* check data */
-   ck_assert(        pdb->atnum ==        1);
-   ck_assert_str_eq( pdb->atnam,     "CL  ");
-   ck_assert_str_eq( pdb->atnam_raw, "CL  ");
-   ck_assert_str_eq( pdb->resnam,    " CL ");
-   ck_assert_str_eq( pdb->chain,        "A");
-   ck_assert(        pdb->resnum ==       1);
-   ck_assert_str_eq( pdb->insert,       " ");
-   ck_assert(        pdb->x ==        1.000);
-   ck_assert(        pdb->y ==        2.000);
-   ck_assert(        pdb->z ==        3.000);
-   ck_assert(        pdb->occ ==       1.00);
-   ck_assert(        pdb->altpos ==     ' ');
-   ck_assert(        pdb->bval ==     20.00);
-   ck_assert_str_eq( pdb->element,     "CL");
-   ck_assert(        pdb->charge ==      -1);
-   ck_assert(        pdb->access ==     0.0);
-   ck_assert(        pdb->radius ==     0.0);
-   ck_assert(        pdb->atomType ==  NULL);
-   ck_assert(        natoms ==            1);
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "CL  ");
+   ck_assert_str_eq( pdb->atnam_raw,      "CL  ");
+   ck_assert_str_eq( pdb->resnam,         " CL ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             1.000);
+   ck_assert(        pdb->y ==             2.000);
+   ck_assert(        pdb->z ==             3.000);
+   ck_assert(        pdb->occ ==            1.00);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,          "CL");
+   ck_assert(        pdb->formal_charge ==    -1);
+   ck_assert(        pdb->partial_charge == -1.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        natoms ==                 1);
 }
 END_TEST
 
