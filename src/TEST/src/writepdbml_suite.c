@@ -3,8 +3,8 @@
 
    \file       writepdbml_suite.c
    
-   \version    V1.0
-   \date       05.08.14
+   \version    V1.1
+   \date       16.08.14
    \brief      Test suite for writing pdb and pdbml data to file.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -48,6 +48,7 @@
    Revision History:
    =================
 -  V1.0  05.08.14 Original By: CTP
+-  V1.1  16.08.14 Test write charge and element to file. By: CTP
 
 *************************************************************************/
 
@@ -96,6 +97,9 @@ static void writepdbml_set_test_data(void)
    pdb_out->occ =                 1.00 ;
    pdb_out->altpos =               ' ' ;
    pdb_out->bval =               20.00 ;
+   strcpy(pdb_out->element,        "C");
+   pdb_out->formal_charge =          0 ;
+   pdb_out->partial_charge =       0.0 ;
    pdb_out->next =                NULL ;
 }
 
@@ -466,6 +470,100 @@ START_TEST(test_write_pdb_data_04)
    strcpy(pdb_out->atnam,         "ZN  ");
    strcpy(pdb_out->atnam_raw,     "ZN  ");
    strcpy(pdb_out->resnam,        " ZN ");
+   strcpy(pdb_out->element,         "ZN");
+
+   /* write test file */
+   fp = fopen(test_output_filename,"w");
+   blWritePDB(fp, pdb_out);
+   fclose(fp);
+
+   /* compare to example file */
+   strcat(test_example_filename, filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
+
+   /* remove output file */
+   remove(test_output_filename);
+  
+   /* return test result */
+   ck_assert_msg(files_identical, test_error_msg);
+}
+END_TEST
+
+START_TEST(test_write_pdb_data_05)
+{
+   /* set message and example file */
+   char test_error_msg[] = "Write element (pdb)";
+   char filename[]       = "test_alpha_carbon_element.pdb";
+
+   /* Update PDB */
+   strcpy(pdb_out->element,         "XX");
+
+   /* write test file */
+   fp = fopen(test_output_filename,"w");
+   blWritePDB(fp, pdb_out);
+   fclose(fp);
+
+   /* compare to example file */
+   strcat(test_example_filename, filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
+
+   /* remove output file */
+   remove(test_output_filename);
+  
+   /* return test result */
+   ck_assert_msg(files_identical, test_error_msg);
+}
+END_TEST
+
+
+/* PDB Ion */
+START_TEST(test_write_pdb_ion_data_01)
+{
+   /* set message and example file */
+   char test_error_msg[] = "Write chloride (pdb)";
+   char filename[]       = "test_chloride.pdb";
+
+   /* Update PDB */
+   strcpy(pdb_out->record_type, "HETATM");
+   strcpy(pdb_out->atnam,         "CL  ");
+   strcpy(pdb_out->atnam_raw,     "CL  ");
+   strcpy(pdb_out->resnam,        " CL ");
+   strcpy(pdb_out->element,         "CL");
+   pdb_out->formal_charge =           -1 ;
+
+   /* write test file */
+   fp = fopen(test_output_filename,"w");
+   blWritePDB(fp, pdb_out);
+   fclose(fp);
+
+   /* compare to example file */
+   strcat(test_example_filename, filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
+
+   /* remove output file */
+   remove(test_output_filename);
+  
+   /* return test result */
+   ck_assert_msg(files_identical, test_error_msg);
+}
+END_TEST
+
+START_TEST(test_write_pdb_ion_data_02)
+{
+   /* set message and example file */
+   char test_error_msg[] = "Write heme iron (pdb)";
+   char filename[]       = "test_heme_iron.pdb";
+
+   /* Update PDB */
+   strcpy(pdb_out->record_type, "HETATM");
+   strcpy(pdb_out->atnam,         "FE  ");
+   strcpy(pdb_out->atnam_raw,     "FE  ");
+   strcpy(pdb_out->resnam,        "HEM ");
+   strcpy(pdb_out->element,         "FE");
+   pdb_out->formal_charge =            3 ;
 
    /* write test file */
    fp = fopen(test_output_filename,"w");
@@ -576,6 +674,7 @@ START_TEST(test_write_pdbml_data_04)
    strcpy(pdb_out->atnam,         "ZN  ");
    strcpy(pdb_out->atnam_raw,     "ZN  ");
    strcpy(pdb_out->resnam,        " ZN ");
+   strcpy(pdb_out->element,         "ZN");
 
    /* write test file */
    fp = fopen(test_output_filename,"w");
@@ -635,6 +734,7 @@ START_TEST(test_write_pdbml_data_06)
    strcpy(pdb_out->atnam,         "HB2 ");
    strcpy(pdb_out->atnam_raw,     " HB2");
    strcpy(pdb_out->resnam,        "LEU ");
+   strcpy(pdb_out->element,         "  ");
    pdb_out->bval =                 0.00  ;
 
    /* write test file */
@@ -665,6 +765,7 @@ START_TEST(test_write_pdbml_data_07)
    strcpy(pdb_out->atnam,         "HG  ");
    strcpy(pdb_out->atnam_raw,     " HG ");
    strcpy(pdb_out->resnam,        "LEU ");
+   strcpy(pdb_out->element,         "  ");
    pdb_out->bval =                 0.00  ;
    
    /* write test file */
@@ -686,7 +787,6 @@ START_TEST(test_write_pdbml_data_07)
 END_TEST
 
 
-/* NEED FIX CODE Gives -HD- */
 START_TEST(test_write_pdbml_data_08)
 {
    /* set message and example file */
@@ -697,6 +797,7 @@ START_TEST(test_write_pdbml_data_08)
    strcpy(pdb_out->atnam,         "HD11");
    strcpy(pdb_out->atnam_raw,     "HD11");
    strcpy(pdb_out->resnam,        "LEU ");
+   strcpy(pdb_out->element,         "  ");
    pdb_out->bval =                 0.00  ;
    
    /* write test file */
@@ -727,6 +828,7 @@ START_TEST(test_write_pdbml_data_09)
    strcpy(pdb_out->atnam,         "HO3'");
    strcpy(pdb_out->atnam_raw,     "HO3'");
    strcpy(pdb_out->resnam,        " DG ");
+   strcpy(pdb_out->element,         "  ");
    pdb_out->bval =                 0.00  ;
 
 
@@ -759,6 +861,7 @@ START_TEST(test_write_pdbml_data_10)
    strcpy(pdb_out->atnam,         "HG  ");
    strcpy(pdb_out->atnam_raw,     "HG  ");
    strcpy(pdb_out->resnam,        " HG ");
+   strcpy(pdb_out->element,         "  ");
 
 
    /* write test file */
@@ -790,6 +893,7 @@ START_TEST(test_write_pdbml_data_11)
    strcpy(pdb_out->atnam,         "CD21");
    strcpy(pdb_out->atnam_raw,     "CD21");
    strcpy(pdb_out->resnam,        "1ZK ");
+   strcpy(pdb_out->element,         "  ");
 
 
    /* write test file */
@@ -810,14 +914,111 @@ START_TEST(test_write_pdbml_data_11)
 }
 END_TEST
 
+START_TEST(test_write_pdbml_data_12)
+{
+   /* set message and example file */
+   char test_error_msg[] = "Write element (pdbml)";
+   char filename[]       = "test_alpha_carbon_element.xml";
+
+   /* Update PDB */
+   strcpy(pdb_out->element,         "XX");
+
+
+   /* write test file */
+   fp = fopen(test_output_filename,"w");
+   blWritePDB(fp, pdb_out);
+   fclose(fp);
+
+   /* compare to example file */
+   strcat(test_example_filename, filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
+
+   /* remove output file */
+   remove(test_output_filename);
+  
+   /* return test result */
+   ck_assert_msg(files_identical, test_error_msg);
+}
+END_TEST
+
+
+/* PDBML Ion */
+START_TEST(test_write_pdbml_ion_data_01)
+{
+   /* set message and example file */
+   char test_error_msg[] = "Write chloride (pdbml)";
+   char filename[]       = "test_chloride.xml";
+
+   /* Update PDB */
+   strcpy(pdb_out->record_type, "HETATM");
+   strcpy(pdb_out->atnam,         "CL  ");
+   strcpy(pdb_out->atnam_raw,     "CL  ");
+   strcpy(pdb_out->resnam,        " CL ");
+   strcpy(pdb_out->element,         "CL");
+   pdb_out->formal_charge =           -1 ;
+
+   /* write test file */
+   fp = fopen(test_output_filename,"w");
+   blWritePDB(fp, pdb_out);
+   fclose(fp);
+
+   /* compare to example file */
+   strcat(test_example_filename, filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
+
+   /* remove output file */
+   remove(test_output_filename);
+  
+   /* return test result */
+   ck_assert_msg(files_identical, test_error_msg);
+}
+END_TEST
+
+START_TEST(test_write_pdbml_ion_data_02)
+{
+   /* set message and example file */
+   char test_error_msg[] = "Write heme iron (pdbml)";
+   char filename[]       = "test_heme_iron.xml";
+
+   /* Update PDB */
+   strcpy(pdb_out->record_type, "HETATM");
+   strcpy(pdb_out->atnam,         "FE  ");
+   strcpy(pdb_out->atnam_raw,     "FE  ");
+   strcpy(pdb_out->resnam,        "HEM ");
+   strcpy(pdb_out->element,         "FE");
+   pdb_out->formal_charge =            3 ;
+
+   /* write test file */
+   fp = fopen(test_output_filename,"w");
+   blWritePDB(fp, pdb_out);
+   fclose(fp);
+
+   /* compare to example file */
+   strcat(test_example_filename, filename);
+   files_identical = writepdbml_compare_files(test_example_filename, 
+                                              test_output_filename);
+
+   /* remove output file */
+   remove(test_output_filename);
+  
+   /* return test result */
+   ck_assert_msg(files_identical, test_error_msg);
+}
+END_TEST
+
+
 /* Create Suite */
 Suite *writepdbml_suite(void)
 {
-   Suite *s         = suite_create("WritePDBML");
-   TCase *tc_core   = tcase_create("Core"),
-         *tc_format = tcase_create("Format"),
-         *tc_pdb    = tcase_create("PDB"),
-         *tc_pdbml  = tcase_create("PDBML");
+   Suite *s            = suite_create("WritePDBML");
+   TCase *tc_core      = tcase_create("Core"),
+         *tc_format    = tcase_create("Format"),
+         *tc_pdb       = tcase_create("PDB"),
+         *tc_pdb_ion   = tcase_create("PDB_ion"),
+         *tc_pdbml     = tcase_create("PDBML"),
+         *tc_pdbml_ion = tcase_create("PDBML_ion");
 
 
    /* Core test case */
@@ -847,9 +1048,17 @@ Suite *writepdbml_suite(void)
    tcase_add_test(tc_pdb, test_write_pdb_data_02);
    tcase_add_test(tc_pdb, test_write_pdb_data_03);
    tcase_add_test(tc_pdb, test_write_pdb_data_04);
+   tcase_add_test(tc_pdb, test_write_pdb_data_05);
    suite_add_tcase(s, tc_pdb);
    
-   /* PDB test case */
+   /* PDB_ion test case */
+   tcase_add_checked_fixture(tc_pdb_ion, writepdbml_setup_pdb, 
+                             writepdbml_teardown);
+   tcase_add_test(tc_pdb_ion, test_write_pdb_ion_data_01);
+   tcase_add_test(tc_pdb_ion, test_write_pdb_ion_data_02);
+   suite_add_tcase(s, tc_pdb_ion);
+
+   /* PDBML test case */
    tcase_add_checked_fixture(tc_pdbml, writepdbml_setup_pdbml, 
                              writepdbml_teardown);
    tcase_add_test(tc_pdbml, test_write_pdbml_data_01);
@@ -863,7 +1072,15 @@ Suite *writepdbml_suite(void)
    tcase_add_test(tc_pdbml, test_write_pdbml_data_09);
    tcase_add_test(tc_pdbml, test_write_pdbml_data_10);
    tcase_add_test(tc_pdbml, test_write_pdbml_data_11);
+   tcase_add_test(tc_pdbml, test_write_pdbml_data_12);
    suite_add_tcase(s, tc_pdbml);
+
+   /* PDBML_ion test case */
+   tcase_add_checked_fixture(tc_pdbml_ion, writepdbml_setup_pdbml, 
+                             writepdbml_teardown);
+   tcase_add_test(tc_pdbml_ion, test_write_pdbml_ion_data_01);
+   tcase_add_test(tc_pdbml_ion, test_write_pdbml_ion_data_02);
+   suite_add_tcase(s, tc_pdbml_ion);
 
    return s;
 }

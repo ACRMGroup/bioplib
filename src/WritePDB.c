@@ -3,8 +3,8 @@
 
    \file       WritePDB.c
    
-   \version    V1.14
-   \date       17.07.14
+   \version    V1.15
+   \date       16.08.14
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -74,7 +74,8 @@
                   By: CTP
 -  V1.13 07.07.14 Renamed functions to use bl prefix. Moved WritePDB() to 
                   deprecated.h By: CTP
--  V1.13 17.07.14 Added blSetElementSymbolFromAtomName() By: CTP
+-  V1.14 17.07.14 Added blSetElementSymbolFromAtomName() By: CTP
+-  V1.15 16.08.14 Added writing element and charge. By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -213,11 +214,22 @@ void blWriteAsPDB(FILE *fp,
 -  15.02.01 Modified to use atnam_raw
 -  03.06.05 Modified to use altpos
 -  07.07.14 Renamed to blWritePDBRecord() By: CTP
+-  16.08.14 Write element and formal charge.  By: CTP
 */
 void blWritePDBRecord(FILE *fp,
                       PDB  *pdb)
 {
-   fprintf(fp,"%-6s%5d %-4s%c%-4s%1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f\n",
+   char charge = ' ',
+        sign   = ' ';
+
+   if(pdb->formal_charge && ABS(pdb->formal_charge <= 8))
+   {
+      charge = (char)('0' + ABS(pdb->formal_charge));
+      sign   = pdb->formal_charge > 0 ? '+':'-';
+   }
+
+   fprintf(fp,"%-6s%5d %-4s%c%-4s%1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f\
+          %2s%c%c\n",
            pdb->record_type,
            pdb->atnum,
            pdb->atnam_raw,
@@ -230,7 +242,10 @@ void blWritePDBRecord(FILE *fp,
            pdb->y,
            pdb->z,
            pdb->occ,
-           pdb->bval);
+           pdb->bval,
+           pdb->element,
+           charge,
+           sign);
 }
 /************************************************************************/
 /*>void blWritePDBRecordAtnam(FILE *fp, PDB *pdb)
@@ -286,6 +301,7 @@ void blWritePDBRecordAtnam(FILE *fp,
 -  02.06.14 Original. By: CTP
 -  21.06.14 Renamed blWriteAsPDBML() and updated symbol handling. By: CTP
 -  17.07.14 Use blSetElementSymbolFromAtomName() By: CTP
+-  16.08.14 Use element and charge data. By: CTP
 
 */
 void blWriteAsPDBML(FILE *fp, PDB  *pdb)
@@ -441,13 +457,33 @@ void blWriteAsPDBML(FILE *fp, PDB  *pdb)
                          (xmlChar *) "pdbx_PDB_model_num",
                          (xmlChar *) "1");
 
+      /* formal charge */
+      /* Note: Formal charge node not included for neutral atoms */
+      if(p->formal_charge != 0)
+      {
+         sprintf(buffer,"%d", p->formal_charge);
+         node = xmlNewChild(atom_node, NULL, 
+                            (xmlChar *) "pdbx_formal_charge",
+                            (xmlChar *) buffer);
+      }
+
       /* atom symbol */
-      /* Note: Atomic symbol is not stored in PDB data structure.
-               Value set is based on columns 13-14 of pdb-formated text 
-               file.  */      
-      blSetElementSymbolFromAtomName(buffer,p->atnam_raw);
-      node = xmlNewChild(atom_node, NULL, (xmlChar *) "type_symbol",
-                         (xmlChar *) buffer);
+      /* Note: If the atomic symbol is not set in PDB data structure then
+               the value set is based on columns 13-14 of pdb-formated
+               text file.  */
+      sprintf(buffer,"%s", p->element);
+      KILLLEADSPACES(buffer_ptr,buffer);
+      if(strlen(buffer_ptr))
+      {
+         node = xmlNewChild(atom_node, NULL, (xmlChar *) "type_symbol",
+                            (xmlChar *) buffer_ptr);
+      }
+      else
+      {
+         blSetElementSymbolFromAtomName(buffer,p->atnam_raw);
+         node = xmlNewChild(atom_node, NULL, (xmlChar *) "type_symbol",
+                            (xmlChar *) buffer);
+      }
    }
 
    /* Write to doc file pointer */
