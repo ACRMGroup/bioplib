@@ -3,8 +3,8 @@
 
    \file       readpdbml_suite.c
    
-   \version    V1.1
-   \date       16.08.14
+   \version    V1.2
+   \date       18.08.14
    \brief      Test suite for reading pdb and pdbml data from file.
 
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -49,6 +49,8 @@
    =================
 -  V1.0  05.08.14 Original By: CTP
 -  V1.1  16.08.14 Test formal and partial charges. By: CTP
+-  V1.2  18.08.14 Check read pdb != NULL before checking any values in PDB
+                  data structure. By: CTP
 
 *************************************************************************/
 
@@ -117,6 +119,7 @@ START_TEST(test_read_pdb_data_01)
    fclose(fp);
 
    /* check data */
+   ck_assert(        pdb !=                 NULL);
    ck_assert(        pdb->atnum ==             1);
    ck_assert_str_eq( pdb->atnam,          "CA  ");
    ck_assert_str_eq( pdb->atnam_raw,      " CA ");
@@ -150,6 +153,7 @@ START_TEST(test_read_pdb_data_02)
    fclose(fp);
 
    /* check data */
+   ck_assert(        pdb !=                 NULL);
    ck_assert(        pdb->atnum ==             1);
    ck_assert_str_eq( pdb->atnam,          "ZN  ");
    ck_assert_str_eq( pdb->atnam_raw,      "ZN  ");
@@ -183,6 +187,7 @@ START_TEST(test_read_pdb_data_03)
    fclose(fp);
 
    /* check data */
+   ck_assert(        pdb !=                 NULL);
    ck_assert(        pdb->atnum ==             1);
    ck_assert_str_eq( pdb->atnam,          "CA  ");
    ck_assert_str_eq( pdb->atnam_raw,      " CA ");
@@ -216,6 +221,7 @@ START_TEST(test_read_pdb_data_04)
    fclose(fp);
 
    /* check data */
+   ck_assert(        pdb !=                 NULL);
    ck_assert(        pdb->atnum ==             1);
    ck_assert_str_eq( pdb->atnam,          "CA  ");
    ck_assert_str_eq( pdb->atnam_raw,      " CA ");
@@ -250,6 +256,7 @@ START_TEST(test_read_pdb_data_05)
    fclose(fp);
 
    /* check data */
+   ck_assert(        pdb !=                 NULL);
    ck_assert(        pdb->atnum ==             1);
    ck_assert_str_eq( pdb->atnam,          "CA  ");
    ck_assert_str_eq( pdb->atnam_raw,      " CA ");
@@ -284,6 +291,7 @@ START_TEST(test_read_pdb_data_06)
    fclose(fp);
 
    /* check data */
+   ck_assert(        pdb !=                 NULL);
    ck_assert(        pdb->atnum ==             1);
    ck_assert_str_eq( pdb->atnam,          "CA  ");
    ck_assert_str_eq( pdb->atnam_raw,      " CA ");
@@ -318,6 +326,7 @@ START_TEST(test_read_pdb_data_07)
    fclose(fp);
 
    /* check data */
+   ck_assert(        pdb !=                 NULL);
    ck_assert(        pdb->atnum ==             1);
    ck_assert_str_eq( pdb->atnam,          "FE  ");
    ck_assert_str_eq( pdb->atnam_raw,      "FE  ");
@@ -352,6 +361,7 @@ START_TEST(test_read_pdb_data_08)
    fclose(fp);
 
    /* check data */
+   ck_assert(        pdb !=                 NULL);
    ck_assert(        pdb->atnum ==             1);
    ck_assert_str_eq( pdb->atnam,          "CL  ");
    ck_assert_str_eq( pdb->atnam_raw,      "CL  ");
@@ -386,6 +396,7 @@ START_TEST(test_read_pdb_data_09)
    fclose(fp);
 
    /* check data */
+   ck_assert(        pdb !=                 NULL);
    ck_assert(        pdb->atnum ==             1);
    ck_assert_str_eq( pdb->atnam,          "FE  ");
    ck_assert_str_eq( pdb->atnam_raw,      "FE  ");
@@ -420,6 +431,7 @@ START_TEST(test_read_pdb_data_10)
    fclose(fp);
 
    /* check data */
+   ck_assert(        pdb !=                 NULL);
    ck_assert(        pdb->atnum ==             1);
    ck_assert_str_eq( pdb->atnam,          "FE  ");
    ck_assert_str_eq( pdb->atnam_raw,      "FE  ");
@@ -457,6 +469,7 @@ START_TEST(test_read_pdbml_data_01)
    fclose(fp);
 
    /* check data */
+   ck_assert(        pdb !=                 NULL);
    ck_assert(        pdb->atnum ==             1);
    ck_assert_str_eq( pdb->atnam,          "CA  ");
    ck_assert_str_eq( pdb->atnam_raw,      " CA ");
@@ -490,6 +503,7 @@ START_TEST(test_read_pdbml_data_02)
    fclose(fp);
 
    /* check data */
+   ck_assert(        pdb !=                 NULL);
    ck_assert(        pdb->atnum ==             1);
    ck_assert_str_eq( pdb->atnam,          "ZN  ");
    ck_assert_str_eq( pdb->atnam_raw,      "ZN  ");
@@ -523,6 +537,7 @@ START_TEST(test_read_pdbml_data_03)
    fclose(fp);
 
    /* check data */
+   ck_assert(        pdb !=                 NULL);
    ck_assert(        pdb->atnum ==             1);
    ck_assert_str_eq( pdb->atnam,          "CA  ");
    ck_assert_str_eq( pdb->atnam_raw,      " CA ");
@@ -556,6 +571,7 @@ START_TEST(test_read_pdbml_data_04)
    fclose(fp);
 
    /* check data */
+   ck_assert(        pdb !=                 NULL);
    ck_assert(        pdb->atnum ==             1);
    ck_assert_str_eq( pdb->atnam,          "CA  ");
    ck_assert_str_eq( pdb->atnam_raw,      " CA ");
@@ -590,6 +606,7 @@ START_TEST(test_read_pdbml_data_05)
    fclose(fp);
 
    /* check data */
+   ck_assert(        pdb !=                 NULL);
    ck_assert(        pdb->atnum ==             1);
    ck_assert_str_eq( pdb->atnam,          "CA  ");
    ck_assert_str_eq( pdb->atnam_raw,      " CA ");
@@ -624,6 +641,7 @@ START_TEST(test_read_pdbml_data_06)
    fclose(fp);
 
    /* check data */
+   ck_assert(        pdb !=                 NULL);
    ck_assert(        pdb->atnum ==             1);
    ck_assert_str_eq( pdb->atnam,          "CA  ");
    ck_assert_str_eq( pdb->atnam_raw,      " CA ");
@@ -658,6 +676,7 @@ START_TEST(test_read_pdbml_data_07)
    fclose(fp);
 
    /* check data */
+   ck_assert(        pdb !=                 NULL);
    ck_assert(        pdb->atnum ==             1);
    ck_assert_str_eq( pdb->atnam,          "FE  ");
    ck_assert_str_eq( pdb->atnam_raw,      "FE  ");
@@ -692,6 +711,7 @@ START_TEST(test_read_pdbml_data_08)
    fclose(fp);
 
    /* check data */
+   ck_assert(        pdb !=                 NULL);
    ck_assert(        pdb->atnum ==             1);
    ck_assert_str_eq( pdb->atnam,          "CL  ");
    ck_assert_str_eq( pdb->atnam_raw,      "CL  ");

@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V2.30
-   \date       16.08.14
+   \version    V2.31
+   \date       18.08.14
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2014
@@ -178,6 +178,8 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                   CLEAR_PDB().  By: CTP
 -  V2.30 16.08.14 Replaced charge with formal_charge and partial_charge 
                   for PDB structure. By: CTP
+-  V2.31 18.08.14 Added XML_SUPPORT option allowing compilation without 
+                  support for PDBML format. By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -195,8 +197,11 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 #include <stdlib.h>
 #include <ctype.h>
 #include <unistd.h>
+
+#ifdef XML_SUPPORT /* Required to read PDBML files                      */
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+#endif
 
 #include "SysDefs.h"
 #include "MathType.h"
@@ -441,6 +446,8 @@ PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
 -  15.08.14 V2.29 Use CLEAR_PDB() to set default values. By: CTP
 -  16.08.14 V2.30 Replaced charge with formal_charge and partial_charge 
                   for PDB structure. By: CTP
+-  18.08.14 V2.31 Added XML_SUPPORT option allowing BiopLib to be compiled
+                  without support for PDBML format. By: CTP
 
 */
 PDB *blDoReadPDB(FILE *fpin,
@@ -532,11 +539,22 @@ PDB *blDoReadPDB(FILE *fpin,
    /* Check file format */
    if(blCheckFileFormatPDBML(fp))
    {
+#ifdef XML_SUPPORT
+
       /* Parse PDBML-formatted PDB file */
       pdb = blDoReadPDBML(fp,natom,AllAtoms,OccRank,ModelNum);
       xmlCleanupParser();     /* free globals set by parser */
       if(cmd[0]) unlink(cmd); /* delete tmp file            */
       return( pdb );          /* return PDB list            */
+
+#else
+
+      /* PDBML format not supported. */
+      if(cmd[0]) unlink(cmd); /* delete tmp file            */
+      *natom = (-1);          /* Indicate error             */
+      return( NULL );         /* return NULL list           */
+
+#endif
    }
 
 
@@ -1239,6 +1257,8 @@ pointer\n");
 -  15.08.14 Use CLEAR_PDB() to set default values. By: CTP
 -  16.08.14 Read formal and partial charges. Use blCopyPDB() to copy data
             for partial occupancy atoms. By: CTP
+-  18.08.14 Added XML_SUPPORT option. Return error if XML_SUPPORT not 
+            defined By: CTP
 
 */
 PDB *blDoReadPDBML(FILE *fpin,
@@ -1247,6 +1267,15 @@ PDB *blDoReadPDBML(FILE *fpin,
                    int  OccRank,
                    int  ModelNum)
 {
+#ifndef XML_SUPPORT
+
+   /* PDBML format not supported.                                       */
+   *natom = (-1);
+   return( NULL );
+
+#else
+
+   /* Parse PDBML-formatted file.                                       */
    xmlParserCtxtPtr ctxt;
    xmlDoc  *document;
    xmlNode *root_node  = NULL, 
@@ -1631,6 +1660,8 @@ PDB *blDoReadPDBML(FILE *fpin,
     
    /* Return PDB linked list */
    return(pdb);
+
+#endif
 }
 
 

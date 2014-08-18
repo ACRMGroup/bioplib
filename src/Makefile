@@ -23,7 +23,7 @@ COPT = -fPIC -ansi -Wall -pedantic -g -DGUNZIP_SUPPORT
 # Include libxml2
 # Note: xml2-config is installed with libxml2
 #       Link to libxml2 with -lxml2
-COPT := $(COPT) $(shell xml2-config --cflags)
+COPT := $(COPT) -D XML_SUPPORT $(shell xml2-config --cflags)
 
 # Define the archive/library command here
 AR = ar r

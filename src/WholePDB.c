@@ -3,8 +3,8 @@
 
    \file       WholePDB.c
    
-   \version    V1.7
-   \date       07.07.14
+   \version    V1.8
+   \date       18.08.14
    \brief      
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014
@@ -55,6 +55,8 @@
 -  V1.6  06.07.14 Defined _XOPEN_SOURCE and __USE_XOPEN. Required for 
                   time.h on some linux systems. By: CTP
 -  V1.7  07.07.14 Use renamed functions with bl prefix. By: CTP
+-  V1.8  18.08.14 Added XML_SUPPORT option allowing compilation without 
+                  support for PDBML format. By: CTP
 
 *************************************************************************/
 /* Includes
@@ -66,12 +68,14 @@
 #include "macros.h"
 #include "general.h"
 #include "pdb.h"
+
+#ifdef XML_SUPPORT /* Required to read PDBML files                      */
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #define _XOPEN_SOURCE
 #define __USE_XOPEN
 #include <time.h>
-
+#endif
 
 /************************************************************************/
 /* Defines and macros
@@ -128,14 +132,21 @@ void blFreeWholePDB(WHOLEPDB *wpdb)
    Output in PDBML-format if flags set.
 
 -  21.06.14  Original   By: CTP
+-  18.08.14 Added XML_SUPPORT option. Return error if attempting to write 
+            PDBML format. By: CTP
 */
 BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
 {
    if((gPDBXMLForce == FORCEXML_XML) ||
       (gPDBXMLForce == FORCEXML_NOFORCE && gPDBXML == TRUE))
    {
+#ifdef XML_SUPPORT
       /* Write PDBML file (omitting header and footer data) */
       blWriteAsPDBML(fp, wpdb->pdb);
+#else
+      /* PDBML not supported */
+      return FALSE;
+#endif
    }
    else
    {
@@ -298,6 +309,9 @@ WHOLEPDB *blReadWholePDBAtoms(FILE *fpin)
 -  22.04.14 Handles PDBML format. By: CTP
 -  07.07.14 Use Renamed ReadPDB functions. Use blParseHeaderPDBML().
             Renamed to blDoReadWholePDB() By: CTP
+-  18.08.14 Added XML_SUPPORT option allowing BiopLib to be compiled
+            without support for PDBML format. By: CTP
+
 
    TODO FIXME!!!!! Move all this into doReadPDB so that we don't worry 
    about rewinding any more
@@ -366,6 +380,15 @@ static WHOLEPDB *blDoReadWholePDB(FILE *fpin, BOOL atomsonly)
    /* Check file format */
    pdbml_format = blCheckFileFormatPDBML(fp);
 
+#ifndef XML_SUPPORT
+   /* PDBML format not supported. */
+   if(pdbml_format)
+   {
+      free(wpdb);
+      return(NULL);
+   }
+#endif
+
    /* Read the header from the PDB file                                 */
    if(!pdbml_format)
    {
@@ -431,10 +454,19 @@ static WHOLEPDB *blDoReadWholePDB(FILE *fpin, BOOL atomsonly)
 
 -  22.04.14 Original. By: CTP
 -  07.07.14 Renamed to blParseHeaderPDBML() By: CTP
+-  18.08.14 Return NULL if XML not supported. By: CTP
 
 */
 static STRINGLIST *blParseHeaderPDBML(FILE *fpin)
 {
+#ifndef XML_SUPPORT
+
+   /* PDBML format not supported.                                       */
+   return NULL;
+
+#else
+
+   /* Parse PDBML header */
    xmlParserCtxtPtr ctxt;
    xmlDoc  *document;
    xmlNode *root_node = NULL, 
@@ -600,4 +632,6 @@ static STRINGLIST *blParseHeaderPDBML(FILE *fpin)
    wpdb_header->next = title_lines;
    
    return(wpdb_header);
+
+#endif
 }

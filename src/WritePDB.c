@@ -3,8 +3,8 @@
 
    \file       WritePDB.c
    
-   \version    V1.15
-   \date       16.08.14
+   \version    V1.16
+   \date       18.08.14
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -76,6 +76,8 @@
                   deprecated.h By: CTP
 -  V1.14 17.07.14 Added blSetElementSymbolFromAtomName() By: CTP
 -  V1.15 16.08.14 Added writing element and charge. By: CTP
+-  V1.16 18.08.14 Added XML_SUPPORT option allowing compilation without 
+                  support for PDBML format. By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -87,8 +89,11 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+
+#ifdef XML_SUPPORT /* Required to read PDBML files                      */
 #include <libxml/tree.h>
 #include <ctype.h>
+#endif
 
 #include "MathType.h"
 #include "pdb.h"
@@ -105,6 +110,8 @@
    Write a PDB linked list...
 
 -  21.06.14 Original By: CTP
+-  18.08.14 Added XML_SUPPORT option. Return error if attempting to write 
+            PDBML format. By: CTP
 */
 BOOL blWritePDB(FILE *fp,
                 PDB  *pdb)
@@ -112,8 +119,15 @@ BOOL blWritePDB(FILE *fp,
    if((gPDBXMLForce == FORCEXML_XML) ||
       (gPDBXMLForce == FORCEXML_NOFORCE && gPDBXML == TRUE))
    {
+
+#ifdef XML_SUPPORT
       /* Write PDBML file */
       blWriteAsPDBML(fp, pdb);
+#else
+      /* PDBML not supported */
+      return FALSE;
+#endif
+
    }
    else
    {
@@ -306,6 +320,14 @@ void blWritePDBRecordAtnam(FILE *fp,
 */
 void blWriteAsPDBML(FILE *fp, PDB  *pdb)
 {
+#ifndef XML_SUPPORT
+
+   /* PDBML format not supported. */
+   return;
+
+#else 
+
+   /* PDBML format supported */
    PDB         *p;
    xmlDocPtr   doc         = NULL;
    xmlNodePtr  root_node   = NULL, 
@@ -494,6 +516,8 @@ void blWriteAsPDBML(FILE *fp, PDB  *pdb)
     xmlCleanupParser();
 
    return;
+
+#endif
 }
 
 /************************************************************************/

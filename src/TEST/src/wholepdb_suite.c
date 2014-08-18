@@ -3,8 +3,8 @@
 
    \file       wholepdb_suite.c
    
-   \version    V1.0
-   \date       05.08.14
+   \version    V1.1
+   \date       18.08.14
    \brief      Test suite for whole pdb and pdbml.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -48,6 +48,7 @@
    Revision History:
    =================
 -  V1.0  05.08.14 Original By: CTP
+-  V1.1  18.08.14 Check if input file read for all tests. By: CTP
 
 *************************************************************************/
 
@@ -133,6 +134,7 @@ START_TEST(test_write_pdb_01)
    fp = fopen(test_input_filename,"r");
    wpdb = blReadWholePDB(fp);
    fclose(fp);
+   ck_assert_msg(wpdb != NULL, "Failed to read PDB file.");
 
    /* write output file */
    mkstemp(test_output_filename);
@@ -168,6 +170,7 @@ START_TEST(test_write_pdbml_01)
    fp = fopen(test_input_filename,"r");
    wpdb = blReadWholePDB(fp);
    fclose(fp);
+   ck_assert_msg(wpdb != NULL, "Failed to read PDB file.");
 
    /* write output file */
    mkstemp(test_output_filename);
@@ -225,6 +228,7 @@ START_TEST(test_write_pdb_02)
    fp = fopen(test_input_filename,"r");
    wpdb = blReadWholePDB(fp);
    fclose(fp);
+   ck_assert_msg(wpdb != NULL, "Failed to read PDB file.");
 
    /* write output file */
    mkstemp(test_output_filename);
@@ -260,6 +264,7 @@ START_TEST(test_write_pdbml_02)
    fp = fopen(test_input_filename,"r");
    wpdb = blReadWholePDB(fp);
    fclose(fp);
+   ck_assert_msg(wpdb != NULL, "Failed to read PDB file.");
 
    /* write output file */
    mkstemp(test_output_filename);
@@ -295,6 +300,7 @@ START_TEST(test_read_write_pdb)
    fp = fopen(test_input_filename,"r");
    wpdb = blReadWholePDB(fp);
    fclose(fp);
+   ck_assert_msg(wpdb != NULL, "Failed to read PDB file.");
 
    /* write output file */
    mkstemp(test_output_filename);
@@ -330,6 +336,7 @@ START_TEST(test_read_write_pdbml)
    fp = fopen(test_input_filename,"r");
    wpdb = blReadWholePDB(fp);
    fclose(fp);
+   ck_assert_msg(wpdb != NULL, "Failed to read PDB file.");
 
    /* write output file */
    mkstemp(test_output_filename);
