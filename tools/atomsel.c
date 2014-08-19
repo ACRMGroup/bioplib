@@ -3,8 +3,8 @@
 
    \file       atomsel.c
    
-   \version    V1.2
-   \date       22.07.14
+   \version    V1.3
+   \date       19.08.14
    \brief      Select atoms from a PDB file. Acts as filter
    
    \copyright  (c) Dr. Andrew C. R. Martin 1994-2014
@@ -50,6 +50,7 @@
 -  V1.1  24.08.94 Changed to call OpenStdFiles()
 -  V1.2  22.07.14 Renamed deprecated functions with bl prefix.
                   Added doxygen annotation. By: CTP
+-  V1.3  19.08.14 Removed unused variables in ParseCmdLine() By: CTP
 
 *************************************************************************/
 /* Includes
@@ -208,13 +209,11 @@ are not specified.\n\n");
    Parse the command line
 
 -  15.07.94 Original    By: ACRM
+-  19.08.14 Removed unused variables. By: CTP
 */
 BOOL ParseCmdLine(int argc, char **argv, ATOMTYPE **atoms, char *infile, 
                   char *outfile)
 {
-   char     buffer[80],
-            *chp,
-            *chq;
    ATOMTYPE *a;
    
 

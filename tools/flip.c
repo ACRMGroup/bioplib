@@ -3,8 +3,8 @@
 
    \file       flip.c
    
-   \version    V1.1
-   \date       22.07.14
+   \version    V1.2
+   \date       19.08.14
    \brief      Standardise equivalent atom labelling
    
    \copyright  (c) Dr. Andrew C. R. Martin 1996-2014
@@ -48,7 +48,8 @@
    =================
    
 -  V1.1   22.07.14 Renamed deprecated functions with bl prefix.
-                  Added doxygen annotation. By: CTP
+                   Added doxygen annotation. By: CTP
+-  V1.2   19.08.14 Removed unused variable in DoFlipping() By: CTP
 
 *************************************************************************/
 /* Includes
@@ -253,6 +254,7 @@ defined.\n\n");
 
 -  08.11.96 Original   By: ACRM
 -  22.07.14 Renamed deprecated functions with bl prefix. By: CTP
+-  19.08.14 Removed unused variable. By: CTP
 */
 void DoFlipping(PDB *pdb, BOOL verbose, BOOL quiet)
 {
@@ -260,7 +262,7 @@ void DoFlipping(PDB *pdb, BOOL verbose, BOOL quiet)
         *end,
         *atom1, *atom2, *atom3, *atom4, *atom4b,
         *connect4, *connect4b;
-   int  i, res;
+   int  res;
    REAL tor1, tor2;
    
    static TORSION torsions[] = 
