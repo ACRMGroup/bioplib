@@ -3,8 +3,8 @@
 
    \file       StripHPDB.c
    
-   \version    V1.8
-   \date       07.07.14
+   \version    V1.9
+   \date       19.08.14
    \brief      
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, University of Reading, 
@@ -59,6 +59,8 @@
 -  V1.6  26.07.95 Removed unused variables
 -  V1.7  16.10.96 Added SelectCaPDB()
 -  V1.8  07.07.14 Use bl prefix for functions By: CTP
+-  V1.9  19.08.14 Renamed blStripHPDBAsCopy() to blStripHPDBAsCopy() 
+                  By: CTP
 
 *************************************************************************/
 /* Includes
@@ -82,8 +84,8 @@
 
 
 /************************************************************************/
-/*>PDB *blStripHPDB(PDB *pdbin, int *natom)
-   ----------------------------------------
+/*>PDB *blStripHPDBAsCopy(PDB *pdbin, int *natom)
+   ----------------------------------------------
 *//**
 
    \param[in]     *pdbin      Input list
@@ -98,8 +100,9 @@
 -  01.11.94 Original based on SelAtomsPDB()   By: ACRM
 -  26.07.95 Removed unused variables
 -  07.07.14 Use bl prefix for functions By: CTP
+-  19.08.14 Renamed function to blStripHPDBAsCopy() By: CTP
 */
-PDB *blStripHPDB(PDB *pdbin, int *natom)
+PDB *blStripHPDBAsCopy(PDB *pdbin, int *natom)
 {
    PDB   *pdbout  = NULL,
          *p,

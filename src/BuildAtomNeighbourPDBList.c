@@ -3,8 +3,8 @@
 
    \file       BuildAtomNeighbourPDBList.c
    
-   \version    V1.3
-   \date       07.07.14
+   \version    V1.4
+   \date       19.08.14
    \brief      Build a new PDB linked list containing atos within a given
                distance of a specified residue
    
@@ -52,6 +52,8 @@
 -  V1.2  08.11.07 Moved out of mutmodel. Added check on memory allocation.
                   Uses occ rather than BVal as a flag
 -  V1.3  07.07.14 Use bl prefix for functions By: CTP
+-  V1.4  19.08.14 Renamed blBuildAtomNeighbourPDBListAsCopy to 
+                  blBuildAtomNeighbourPDBListAsCopy() By: CTP
 
 *************************************************************************/
 /* Includes
@@ -73,8 +75,9 @@
 */
 
 /************************************************************************/
-/*>PDB *blBuildAtomNeighbourPDBList(PDB *pdb, PDB *pRes, REAL NeighbDist)
-   ----------------------------------------------------------------------
+/*>PDB *blBuildAtomNeighbourPDBListAsCopy(PDB *pdb, PDB *pRes,
+                                          REAL NeighbDist)
+   -----------------------------------------------------------
 *//**
 
    \param[in]     *pdb        PDB linked list of whole structure
@@ -95,8 +98,11 @@
             Uses occ rather than BVal as a flag
             MOVED FROM MUTMODEL
 -  07.07.14 Use bl prefix for functions By: CTP
+-  19.08.14 Renamed function to blBuildAtomNeighbourPDBListAsCopy() 
+            By: CTP
 */
-PDB *blBuildAtomNeighbourPDBList(PDB *pdb, PDB *pRes, REAL NeighbDist)
+PDB *blBuildAtomNeighbourPDBListAsCopy(PDB *pdb, PDB *pRes, 
+                                       REAL NeighbDist)
 {
    PDB  *pdbN  = NULL,
         *prev  = NULL,

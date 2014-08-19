@@ -3,8 +3,8 @@
 
    \file       makepatch.c
    
-   \version    V1.8
-   \date       22.07.14
+   \version    V1.9
+   \date       19.08.14
    \brief      Build patches around a surface atom
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2009-2014
@@ -76,6 +76,8 @@
                   array. Was core dumping on very small PDB files
 -  V1.8 22.07.14  Renamed deprecated functions with bl prefix.
                   Added doxygen annotation. By: CTP
+-  V1.9 19.08.14  Added AsCopy suffix to call to blSelectAtomsPDB() 
+                  By: CTP
 
 *************************************************************************/
 /* Includes
@@ -147,6 +149,7 @@ void Usage(void);
 -  01.06.09  Original   By: ACRM
 -  02.06.09  Added -s command line option   By: Anja
 -  22.07.14 Renamed deprecated functions with bl prefix. By: CTP
+-  19.08.14 Added AsCopy suffix to call to blSelectAtomsPDB() By: CTP
 */
 int main(int argc, char **argv)
 {
@@ -191,7 +194,7 @@ file\n");
             V1.4 Changed to use 'extras' for the flag
          */
          SELECT(sel[0],"CA  ");
-         Calphas = blSelectAtomsPDB(pdb, 1, sel, &nCatom);
+         Calphas = blSelectAtomsPDBAsCopy(pdb, 1, sel, &nCatom);
          FlagSolvVecAngles(Calphas, CentreRes, nCatom);
  
          PADCHARMINTERM(CentreAtom, ' ', 4);

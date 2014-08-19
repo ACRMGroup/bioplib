@@ -3,8 +3,8 @@
 
    \file       FitCaPDB.c
    
-   \version    V1.5
-   \date       07.07.14
+   \version    V1.6
+   \date       19.08.14
    \brief      Fit two PDB linked lists. Also a weighted fit and support
                routines
    
@@ -58,6 +58,8 @@
 -  V1.4  28.01.09 Initialize RetVal - this randomly worked in 32bit but
                   broke in 64bit
 -  V1.5  07.07.14 Use bl prefix for functions By: CTP
+-  V1.6  19.08.14 Fixed calls to renamed function: 
+                  blSelectAtomsPDBAsCopy() By: CTP
 
 *************************************************************************/
 /* Includes
@@ -102,6 +104,7 @@
 -  14.03.96 Original based on FitPDB()   By: ACRM
 -  28.01.09 Initialize RetVal to TRUE!
 -  07.07.14 Use bl prefix for functions By: CTP
+-  19.08.14 Added AsCopy suffix to calls to blSelectAtomsPDB() By: CTP
 */
 BOOL blFitCaPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
 {
@@ -123,9 +126,11 @@ BOOL blFitCaPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
    SELECT(sel[0], "CA  ");
    if(sel[0]==NULL)
       return(FALSE);
-   if((ref_ca_pdb = blSelectAtomsPDB(ref_pdb, 1, sel, &natoms))==NULL)
+   if( (ref_ca_pdb = blSelectAtomsPDBAsCopy(ref_pdb, 1, sel, &natoms))
+       == NULL )
       RetVal = FALSE;
-   if((fit_ca_pdb = blSelectAtomsPDB(fit_pdb, 1, sel, &natoms))==NULL)
+   if( (fit_ca_pdb = blSelectAtomsPDBAsCopy(fit_pdb, 1, sel, &natoms))
+       == NULL )
       RetVal = FALSE;
    free(sel[0]);
    

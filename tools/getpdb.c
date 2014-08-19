@@ -3,8 +3,8 @@
 
    \file       GetPDB.c
    
-   \version    V1.4
-   \date       22.07.14
+   \version    V1.5
+   \date       19.08.14
    \brief      Extract a numbered zone from a PDB file
    
    \copyright  (c) Dr. Andrew C. R. Martin 1996-2014
@@ -57,7 +57,8 @@
 -  V1.3   28.08.13  Modified for new ParseResSpec()
 -  V1.4   22.07.14  Renamed deprecated functions with bl prefix.
                     Added doxygen annotation. By: CTP
-
+-  V1.5   19.08.14  Fixed call to renamed function: 
+                    blExtractZonePDBAsCopy() By: CTP
 *************************************************************************/
 /* Includes
 */
@@ -93,6 +94,8 @@ void Usage(void);
 -  22.07.96 Original    By: ACRM
 -  29.09.05 Modified for -l By: TL
 -  22.07.14 Renamed deprecated functions with bl prefix. By: CTP
+-  19.08.14 Added AsCopy suffix for call to blExtractZonePDBAsCopy() 
+            By: CTP
 */
 int main(int argc, char **argv)
 {
@@ -149,8 +152,8 @@ int main(int argc, char **argv)
                     Zone2);
             return(1);
          }
-         if((pdb = blExtractZonePDB(pdb, chain1, res1, insert1,
-                                         chain2, res2, insert2))==NULL)
+         if((pdb = blExtractZonePDBAsCopy(pdb, chain1, res1, insert1,
+                                          chain2, res2, insert2))==NULL)
          {
             fprintf(stderr,"getpdb: Zone not found (%s or %s)\n",
                     Zone1, Zone2);

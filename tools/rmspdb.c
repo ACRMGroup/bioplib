@@ -3,8 +3,8 @@
 
    \file       rmspdb.c
    
-   \version    V1.1
-   \date       22.07.14
+   \version    V1.2
+   \date       19.08.14
    \brief      Calculate RMS between 2 PDB files. Does no fitting.
    
    \copyright  (c) Dr. Andrew C. R. Martin 1994-2014
@@ -49,6 +49,8 @@
 
 -  V1.1  22.07.14 Renamed deprecated functions with bl prefix.
                   Added doxygen annotation. By: CTP
+-  V1.2  19.08.14 Added AsCopy suffix to calls to blSelectAtomsPDB() and 
+                  blStripHPDBAsCopy By: CTP
 
 *************************************************************************/
 /* Includes
@@ -171,6 +173,9 @@ int main(int argc, char **argv)
 
 -  01.11.94 Original    By: ACRM
 -  22.07.14 Renamed deprecated functions with bl prefix. By: CTP
+-  19.08.14 Added AsCopy suffix to calls to blSelectAtomsPDB() and 
+            blStripHPDBAsCopy By: CTP
+
 */
 BOOL SelectAndFixAtoms(PDB **pdb1, PDB **pdb2, int atoms)
 {
@@ -195,26 +200,26 @@ BOOL SelectAndFixAtoms(PDB **pdb1, PDB **pdb2, int atoms)
       pdbout2 = pdbin2;
       break;
    case ATOMS_NOH:
-      pdbout1 = blStripHPDB(pdbin1, &natoms1);
-      pdbout2 = blStripHPDB(pdbin2, &natoms2);
+      pdbout1 = blStripHPDBAsCopy(pdbin1, &natoms1);
+      pdbout2 = blStripHPDBAsCopy(pdbin2, &natoms2);
       FREELIST(pdbin1, PDB);
       FREELIST(pdbin2, PDB);
       break;
    case ATOMS_NCAC:
-      pdbout1 = blSelectAtomsPDB(pdbin1, 3, sel, &natoms1);
-      pdbout2 = blSelectAtomsPDB(pdbin2, 3, sel, &natoms2);
+      pdbout1 = blSelectAtomsPDBAsCopy(pdbin1, 3, sel, &natoms1);
+      pdbout2 = blSelectAtomsPDBAsCopy(pdbin2, 3, sel, &natoms2);
       FREELIST(pdbin1, PDB);
       FREELIST(pdbin2, PDB);
       break;
    case ATOMS_NCACO:
-      pdbout1 = blSelectAtomsPDB(pdbin1, 4, sel, &natoms1);
-      pdbout2 = blSelectAtomsPDB(pdbin2, 4, sel, &natoms2);
+      pdbout1 = blSelectAtomsPDBAsCopy(pdbin1, 4, sel, &natoms1);
+      pdbout2 = blSelectAtomsPDBAsCopy(pdbin2, 4, sel, &natoms2);
       FREELIST(pdbin1, PDB);
       FREELIST(pdbin2, PDB);
       break;
    case ATOMS_CA:
-      pdbout1 = blSelectAtomsPDB(pdbin1, 1, sel, &natoms1);
-      pdbout2 = blSelectAtomsPDB(pdbin2, 1, sel, &natoms2);
+      pdbout1 = blSelectAtomsPDBAsCopy(pdbin1, 1, sel, &natoms1);
+      pdbout2 = blSelectAtomsPDBAsCopy(pdbin2, 1, sel, &natoms2);
       FREELIST(pdbin1, PDB);
       FREELIST(pdbin2, PDB);
       break;

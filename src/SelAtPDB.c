@@ -3,8 +3,8 @@
 
    \file       SelAtPDB.c
    
-   \version    V1.9
-   \date       07.07.14
+   \version    V1.10
+   \date       19.08.14
    \brief      Select a subset of atom types from a PDB linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2014
@@ -83,6 +83,7 @@
 -  V1.7  16.10.96 Added SelectCaPDB()
 -  V1.8  04.02.09 SelectAtomsPDB(): Initialize q for fussy compliers
 -  V1.9  07.07.14 Use bl prefix for functions By: CTP
+-  V1.10 19.08.14 Renamed function to blSelectAtomsPDBAsCopy(). By: CTP
 
 *************************************************************************/
 /* Includes
@@ -111,8 +112,9 @@
 */
 
 /************************************************************************/
-/*>PDB *blSelectAtomsPDB(PDB *pdbin, int nsel, char **sel, int *natom)
-   -------------------------------------------------------------------
+/*>PDB *blSelectAtomsPDBAsCopy(PDB *pdbin, int nsel, char **sel,
+                               int *natom)
+   -------------------------------------------------------------
 *//**
 
    \param[in]     *pdbin      Input list
@@ -150,8 +152,9 @@
             chars.
 -  04.02.09 Initialize q for fussy compliers
 -  07.07.14 Use bl prefix for functions By: CTP
+-  19.08.14 Renamed function to blSelectAtomsPDBAsCopy(). By: CTP
 */
-PDB *blSelectAtomsPDB(PDB *pdbin, int nsel, char **sel, int *natom)
+PDB *blSelectAtomsPDBAsCopy(PDB *pdbin, int nsel, char **sel, int *natom)
 {
    PDB   *pdbout  = NULL,
          *p,

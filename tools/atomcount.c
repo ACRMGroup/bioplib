@@ -3,8 +3,8 @@
 
    \file       atomcount.c
    
-   \version    V1.3
-   \date       22.07.14
+   \version    V1.4
+   \date       19.08.14
    \brief      Count atoms neighbouring each atom in a PDB file
                Results output in B-val column
    
@@ -53,6 +53,8 @@
                   water by default (-w to keep them)
 -  V1.3  22.07.14 Renamed deprecated functions with bl prefix.
                   Added doxygen annotation. By: CTP
+-  V1.4  19.08.14 Fixed call to renamed function: blStripWatersPDBAsCopy()
+                  By: CTP
 
 *************************************************************************/
 /* Includes
@@ -107,6 +109,8 @@ BOOL ResSep(PDB *pdb, PDB *pr, PDB *qr);
 -  24.08.94 Changed to call OpenStdFiles()
 -  30.04.08 Now strips water by default - added option to keep them
 -  22.07.14 Renamed deprecated functions with bl prefix. By: CTP
+-  19.08.14 Fixed call to renamed function blStripWatersPDBAsCopy() 
+            By: CTP
 */
 int main(int argc, char **argv)
 {
@@ -135,7 +139,7 @@ int main(int argc, char **argv)
                PDB *pdb2;
                int natoms;
                
-               pdb2 = blStripWatersPDB(pdb, &natoms);
+               pdb2 = blStripWatersPDBAsCopy(pdb, &natoms);
                FREELIST(pdb, PDB);
                pdb = pdb2;
             }

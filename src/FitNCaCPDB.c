@@ -3,8 +3,8 @@
 
    \file       FitNCaCPDB.c
    
-   \version    V1.4
-   \date       07.07.14
+   \version    V1.5
+   \date       19.08.14
    \brief      Fit two PDB linked lists. Also a weighted fit and support
                routines
    
@@ -56,6 +56,8 @@
                   ApplyMatrixPDB() rather than RotatePDB() since the PDB
                   linked lists are already at the origin
 -  V1.4  07.07.14 Use bl prefix for functions By: CTP
+-  V1.5  19.08.14 Added AsCopy suffix to calls to blSelectAtomsPDB() 
+                  By: CTP
 
 *************************************************************************/
 /* Includes
@@ -99,6 +101,7 @@
 
 -  12.12.01 Original based on FitCaPDB()   By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP
+-  19.08.14 Added AsCopy suffix to calls to blSelectAtomsPDB() By: CTP
 */
 BOOL blFitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
 {
@@ -122,9 +125,11 @@ BOOL blFitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
    SELECT(sel[2], "C   ");
    if((sel[0]==NULL)||(sel[1]==NULL)||(sel[2]==NULL)||(sel[3]==NULL))
       return(FALSE);
-   if((ref_bb_pdb = blSelectAtomsPDB(ref_pdb, 3, sel, &natoms))==NULL)
+   if( (ref_bb_pdb = blSelectAtomsPDBAsCopy(ref_pdb, 3, sel, &natoms))
+       == NULL )
       RetVal = FALSE;
-   if((fit_bb_pdb = blSelectAtomsPDB(fit_pdb, 3, sel, &natoms))==NULL)
+   if( (fit_bb_pdb = blSelectAtomsPDBAsCopy(fit_pdb, 3, sel, &natoms))
+       == NULL )
       RetVal = FALSE;
    free(sel[0]);
    free(sel[1]);

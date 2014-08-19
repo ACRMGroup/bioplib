@@ -3,8 +3,8 @@
 
    \file       StripWatersPDB.c
    
-   \version    V1.1
-   \date       07.07.14
+   \version    V1.2
+   \date       19.08.14
    \brief      
    
    \copyright  (c) Dr. Andrew C. R. Martin, UCL, 2008-2014
@@ -48,6 +48,8 @@
    =================
 -  V1.0  30.04.08 Original based on StripHPDB()   By: ACRM
 -  V1.1  07.07.14 Use bl prefix for functions By: CTP
+-  V1.2  19.08.14 Renamed function blStripWatersPDB() to 
+                  blStripWatersPDBAsCopy() By: CTP
 
 *************************************************************************/
 /* Includes
@@ -71,8 +73,8 @@
 
 
 /************************************************************************/
-/*>PDB *blStripWatersPDB(PDB *pdbin, int *natom)
-   ---------------------------------------------
+/*>PDB *blStripWatersPDBAsCopy(PDB *pdbin, int *natom)
+   ---------------------------------------------------
 *//**
 
    \param[in]     *pdbin      Input list
@@ -85,8 +87,9 @@
         list is intact after the selection process
 
 -  30.04.08 Original based on StripHPDB()   By: ACRM
+-  19.08.14 Renamed function to blStripWatersPDBAsCopy() By: CTP
 */
-PDB *blStripWatersPDB(PDB *pdbin, int *natom)
+PDB *blStripWatersPDBAsCopy(PDB *pdbin, int *natom)
 {
    PDB   *pdbout  = NULL,
          *p,

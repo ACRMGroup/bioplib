@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.64
-   \date       16.08.14
+   \version    V1.65
+   \date       19.08.14
    \brief      Include file for pdb routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2014
@@ -146,6 +146,11 @@
                   By: CTP
 -  V1.64 16.08.14 Replaced charge with formal_charge and partial_charge 
                   for PDB structure. By: CTP
+-  V1.65 19.08.14 Renamed functions: blBuildAtomNeighbourPDBList(),
+                  blExtractZonePDB(), blSelectAtomsPDB(), blStripHPDB(),
+                  blStripWatersPDB() with AsCopy suffix indicating that
+                  functions return a new PDB list rather than alter their
+                  input PDB list.
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -456,8 +461,8 @@ BOOL blFindZonePDB(PDB *pdb, int start, char *startinsert, int stop,
 int blHAddPDB(FILE *fp, PDB *pdb);
 int blReadPGP(FILE *fp);
 FILE *blOpenPGPFile(char *pgpfile, BOOL AllHyd);
-PDB *blSelectAtomsPDB(PDB *pdbin, int nsel, char **sel, int *natom);
-PDB *blStripHPDB(PDB *pdbin, int *natom);
+PDB *blSelectAtomsPDBAsCopy(PDB *pdbin, int nsel, char **sel, int *natom);
+PDB *blStripHPDBAsCopy(PDB *pdbin, int *natom);
 SECSTRUC *blReadSecPDB(FILE *fp, int *nsec);
 void blRenumAtomsPDB(PDB *pdb);
 PDB *blFindEndPDB(PDB *start);
@@ -497,7 +502,7 @@ int blCalcTetraHCoords(PDB *nter, COOR *coor);
 int blAddNTerHs(PDB **ppdb, BOOL Charmm);
 char *blFNam2PDB(char *filename);
 PDB *blTermPDB(PDB *pdb, int length);
-char **blGetPDBChainLabels(PDB *pdb, int *nchains); /* DO NOT RENAME */
+char **blGetPDBChainLabels(PDB *pdb, int *nchains);
 PDB *blFindHetatmResidueSpec(PDB *pdb, char *resspec);
 PDB *blFindResidueSpec(PDB *pdb, char *resspec);
 PDB *blFindNextResidue(PDB *pdb);
@@ -511,8 +516,9 @@ int blGetCrystPDB(FILE *fp, VEC3F *UnitCell, VEC3F *CellAngles,
 void blWriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
                      char *spacegroup,
                      REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4]);
-PDB *blExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
-                      char *chain2, int resnum2, char *insert2);
+PDB *blExtractZonePDBAsCopy(PDB *inpdb, char *chain1, int resnum1, 
+                            char *insert1, char *chain2, int resnum2, 
+                            char *insert2);
 PDB *blFindResidue(PDB *pdb, char *chain, int resnum, char *insert);
 PDB *blFindHetatmResidue(PDB *pdb, char *chain, int resnum, char *insert);
 PDB *blFindAtomInRes(PDB *pdb, char *atnam);
@@ -536,10 +542,11 @@ BOOL blAddCBtoGly(PDB *pdb);
 BOOL blAddCBtoAllGly(PDB *pdb);
 PDB *blStripGlyCB(PDB *pdb);
 PDB *blRemoveAlternates(PDB *pdb);
-PDB *blBuildAtomNeighbourPDBList(PDB *pdb, PDB *pRes, REAL NeighbDist);
+PDB *blBuildAtomNeighbourPDBListAsCopy(PDB *pdb, PDB *pRes, 
+                                       REAL NeighbDist);
 PDB *blFindAtomWildcardInRes(PDB *pdb, char *pattern);
 PDB *blDupeResiduePDB(PDB *in);
-PDB *blStripWatersPDB(PDB *pdbin, int *natom);
+PDB *blStripWatersPDBAsCopy(PDB *pdbin, int *natom);
 PDBSTRUCT *blAllocPDBStructure(PDB *pdb);
 PDB *blFindNextChain(PDB *pdb);
 void blFreePDBStructure(PDBSTRUCT *pdbstruct);

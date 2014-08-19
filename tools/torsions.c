@@ -3,8 +3,8 @@
 
    \file       torsions.c
    
-   \version    V1.3
-   \date       22.07.14
+   \version    V1.4
+   \date       19.08.14
    \brief      Generate a complete set of backbone torsion angles for a 
                protein.
    
@@ -57,6 +57,8 @@
 -  V1.2  12.06.95 Added -c option for pseudo-CA torsions     
 -  V1.3  22.07.14 Renamed deprecated functions with bl prefix.
                   Added doxygen annotation. By: CTP
+-  V1.4  19.08.14 Added AsCopy suffix to call to blSelectAtomsPDB() 
+                  By: CTP
 
 *************************************************************************/
 /* Includes
@@ -100,6 +102,7 @@ void Usage(void);
 -  16.08.94 Added -m option
 -  12.06.95 Added -c option
 -  22.07.14 Renamed deprecated functions with bl prefix. By: CTP
+-  19.08.14 Added AsCopy suffix to call to blSelectAtomsPDB() By: CTP
 */
 int main(int argc, char **argv)
 {
@@ -196,7 +199,8 @@ int main(int argc, char **argv)
       SELECT(sel[2],"C   ");
    }
    
-   if((pdb = blSelectAtomsPDB(fullpdb,(CATorsions?1:3),sel,&natoms))==NULL)
+   if((pdb = blSelectAtomsPDBAsCopy(fullpdb,(CATorsions?1:3),sel,&natoms))
+      == NULL)
    {
       fprintf(stderr,"Unable to select backbone atoms from PDB \
 file (no memory?)\n");

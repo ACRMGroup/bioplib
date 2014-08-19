@@ -3,8 +3,8 @@
 
    \file       deprecatedBiop.c
    
-   \version    V1.1
-   \date       08.08.14
+   \version    V1.3
+   \date       19.08.14
    \brief      Source code for Biop deprecated functions.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014
@@ -71,6 +71,9 @@
 -  V1.0  31.07.14 Original By: CTP
 -  V1.1  08.08.14 Separated Biop and Gen deprecation  By: ACRM
 -  V1.2  14.08.14 Removed unnecessary includes.  By: CTP
+-  V1.3  19.08.14 Renamed functions: blBuildAtomNeighbourPDBList(),
+                  blExtractZonePDB(), blSelectAtomsPDB(), blStripHPDB(),
+                  blStripWatersPDB() with AsCopy suffix. By: CTP
 
 *************************************************************************/
 /* Includes
@@ -632,14 +635,14 @@ FILE *OpenPGPFile(char *pgpfile, BOOL AllHyd)
 
 PDB *SelectAtomsPDB(PDB *pdbin, int nsel, char **sel, int *natom)
 {
-   DEPRECATED("SelectAtomsPDB()","blSelectAtomsPDB()");
-   return(blSelectAtomsPDB(pdbin, nsel, sel, natom));
+   DEPRECATED("SelectAtomsPDB()","blSelectAtomsPDBAsCopy()");
+   return(blSelectAtomsPDBAsCopy(pdbin, nsel, sel, natom));
 }
 
 PDB *StripHPDB(PDB *pdbin, int *natom)
 {
-   DEPRECATED("StripHPDB()","blStripHPDB()");
-   return(blStripHPDB(pdbin, natom));
+   DEPRECATED("StripHPDB()","blStripHPDBAsCopy()");
+   return(blStripHPDBAsCopy(pdbin, natom));
 }
 
 SECSTRUC *ReadSecPDB(FILE *fp, int *nsec)
@@ -911,9 +914,9 @@ void WriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
 PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
                     char *chain2, int resnum2, char *insert2)
 {
-   DEPRECATED("ExtractZonePDB()","blExtractZonePDB()");
-   return(blExtractZonePDB(inpdb, chain1, resnum1, insert1, chain2,
-                           resnum2, insert2));
+   DEPRECATED("ExtractZonePDB()","blExtractZonePDBAsCopy()");
+   return(blExtractZonePDBAsCopy(inpdb, chain1, resnum1, insert1, chain2,
+                                 resnum2, insert2));
 }
 
 PDB *FindAtomInRes(PDB *pdb, char *atnam)
@@ -1021,8 +1024,9 @@ PDB *RemoveAlternates(PDB *pdb)
 
 PDB *BuildAtomNeighbourPDBList(PDB *pdb, PDB *pRes, REAL NeighbDist)
 {
-   DEPRECATED("BuildAtomNeighbourPDBList()","blBuildAtomNeighbourPDBList()");
-   return(blBuildAtomNeighbourPDBList(pdb, pRes, NeighbDist));
+   DEPRECATED("BuildAtomNeighbourPDBList()",
+              "blBuildAtomNeighbourPDBListAsCopy()");
+   return(blBuildAtomNeighbourPDBListAsCopy(pdb, pRes, NeighbDist));
 }
 
 PDB *FindAtomWildcardInRes(PDB *pdb, char *pattern)
@@ -1039,8 +1043,8 @@ PDB *DupeResiduePDB(PDB *in)
 
 PDB *StripWatersPDB(PDB *pdbin, int *natom)
 {
-   DEPRECATED("StripWatersPDB()","blStripWatersPDB()");
-   return(blStripWatersPDB(pdbin, natom));
+   DEPRECATED("StripWatersPDB()","blStripWatersPDBAsCopy()");
+   return(blStripWatersPDBAsCopy(pdbin, natom));
 }
 
 PDBSTRUCT *AllocPDBStructure(PDB *pdb)
