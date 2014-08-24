@@ -149,7 +149,8 @@
                    loading a new mobile structure.
    V3.1   31.03.09 Updated version number.
           24.08.14 Added ParseResSpecWrapper().
-                   Use updated BiopLib functions. By: CTP
+                   Use updated BiopLib functions.
+                   Added GetPDBChainLabelsWrapper(). By: CTP
 
 *************************************************************************/
 #define MAIN 
@@ -3000,7 +3001,8 @@ void ShowMatrix(void)
    05.09.08 Added reporting of gap penalties.
    07.11.08 Altered option to output to a file.
             Marked reference for multi fitting.
-   24.08.14 Use renamed BiopLib functions. By: CTP
+   24.08.14 Use renamed BiopLib functions. 
+            Use GetPDBChainLabelsWrapper() By: CTP
 */
 void ShowStatus(char *filename)
 {
@@ -3069,13 +3071,13 @@ void ShowStatus(char *filename)
             (gDoWeights==WEIGHT_INVBVAL?"Weighted by 1/B-value":
              "Normal (unweighted)")));
 
-   if(((chains = GetPDBChainLabels(gRefPDB)) != NULL) &&
+   if(((chains = GetPDBChainLabelsWrapper(gRefPDB)) != NULL) &&
       ((strlen(chains) > 1) || (chains[0] != ' ')))
       fprintf(fp,"   Reference structure Chains: %s\n",chains);
    if(chains != NULL)
       free(chains);
    
-   if(((chains = GetPDBChainLabels(gMobPDB[0])) != NULL) &&
+   if(((chains = GetPDBChainLabelsWrapper(gMobPDB[0])) != NULL) &&
       ((strlen(chains) > 1) || (chains[0] != ' ')))
       fprintf(fp,"   Mobile structure Chains:    %s\n",chains);
    if(chains != NULL)
@@ -6211,4 +6213,51 @@ BOOL ParseResSpecWrapper(char *spec, char *chain, int *resnum,
    *insert = insert_str[0];
 
    return return_value;
+}
+
+/************************************************************************/
+/*>char *GetPDBChainLabelsWrapper(PDB *pdb)
+   ----------------------------------------
+   
+   Wrapper function for blGetPDBChainLabels().
+   
+   The rewritten blGetPDBChainLabels() function returns an array of chains
+   allowing handling of multi-letter chains. This function returns string
+   of the single-letter chain labels similar to the original function.
+   
+   Note: The memory allocated for the return string needs to be freed.
+   
+   24.08.14 Original By: CTP
+
+*/
+char *GetPDBChainLabelsWrapper(PDB *pdb)
+{
+   char **chains, *chainstr;
+   int  i, nchains = 0;
+
+   /* Return if PDB linked list is empty                                */
+   if(pdb==NULL)
+      return(NULL);
+      
+   /* Get chains                                                        */
+   chains = blGetPDBChainLabels(pdb,&nchains);
+
+   /* Create chainstr                                                   */
+   if((chainstr = (char *)malloc((nchains + 1) * sizeof(char)))==NULL)
+      return(NULL);
+
+   for(i=0; i < nchains; i++)
+   {
+      chainstr[i] = chains[i][0];
+   }
+   chainstr[nchains] = '\0';
+
+   /* Free chains                                                       */
+   for(i=0; i < nchains; i++)
+   {
+      free(chains[i]);
+   }
+   free(chains);
+
+   return chainstr;
 }
