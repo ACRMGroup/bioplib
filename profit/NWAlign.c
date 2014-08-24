@@ -92,6 +92,7 @@
                   alignment.
    V3.0  13.01.08 Included output of fitting zones as PIR alignment.
    V3.1  31.03.09 Skipped for release.   
+         24.08.14 Use renamed BiopLib functions. By: CTP
 
 *************************************************************************/
 /* Includes
@@ -114,6 +115,7 @@
    16.07.08 Changed alignment function from align() to affinealign()
             to allow for inclusion of gap extension penalty, gGapPenExt.
             By: CTP
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 void NWAlign(int strucnum)
 {
@@ -132,7 +134,7 @@ void NWAlign(int strucnum)
 
    if(FirstCall)
    {
-      if(!ReadMDM(MDMFILE))
+      if(!blReadMDM(MDMFILE))
       {
          printf("   Error==> Unable to read mutation data matrix\n");
          return;
@@ -149,8 +151,8 @@ void NWAlign(int strucnum)
    }
 
    /* Check for numbers of chains                                       */
-   if((countchar(gRefSeq,'*') > 0) || 
-      (countchar(gMobSeq[strucnum],'*') > 0))
+   if((blCountchar(gRefSeq,'*') > 0) || 
+      (blCountchar(gMobSeq[strucnum],'*') > 0))
    {
       printf("   Error==> Structures must have only one chain for \
 alignment\n");
@@ -181,9 +183,9 @@ alignment\n");
                  FALSE, gGapPen, ref_align, mob_align, &align_len);
    */
 
-   score = affinealign(gRefSeq, ref_len, gMobSeq[strucnum], mob_len, 
-                       FALSE, FALSE, gGapPen, gGapPenExt, 
-                       ref_align, mob_align, &align_len);
+   score = blAffinealign(gRefSeq, ref_len, gMobSeq[strucnum], mob_len, 
+                         FALSE, FALSE, gGapPen, gGapPenExt, 
+                         ref_align, mob_align, &align_len);
 
 
    if(!score)
@@ -255,6 +257,7 @@ alignment\n");
             sequences. By: CTP
    03.12.08 Adapted to read multi-chain sequences.
    13.01.09 Tidied code.
+   24.08.14 Use renamed BiopLib functions. By: CTP
 
 */
 void ReadAlignment(char *alnfile)
@@ -279,7 +282,7 @@ void ReadAlignment(char *alnfile)
    }
    
    /* Read the first sequence from the file                             */
-   nchain = ReadPIR(fp, TRUE, seqa, MAXCHAIN, NULL, &punct, &error);
+   nchain = blReadPIR(fp, TRUE, seqa, MAXCHAIN, NULL, &punct, &error);
 
    /* No sequence found */
    if(nchain == 0)
@@ -322,7 +325,7 @@ void ReadAlignment(char *alnfile)
    }
 
    /* Read the second sequence from the file                            */
-   while((nchain = ReadPIR(fp, TRUE, seqb, MAXCHAIN, NULL, 
+   while((nchain = blReadPIR(fp, TRUE, seqb, MAXCHAIN, NULL, 
                            &punct, &error)))
    {
       /* Check sequence found */
@@ -705,6 +708,7 @@ BOOL VerifySequence(char *seqa, char *seqb)
    21.08.06 Original   By: ACRM
    17.06.08 Incorporated into ProFit with minor modification to ZONE 
             datatype By: CTP
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 BOOL BuildAlignment(char **seqs, ZONE *zones, char **alns, char **flagseq)
 {
@@ -715,9 +719,9 @@ BOOL BuildAlignment(char **seqs, ZONE *zones, char **alns, char **flagseq)
    ZONE *z;
    
    /* Build the sequences as linked lists                               */
-   if((aa[0] = BuildAAList(seqs[0]))==NULL)
+   if((aa[0] = blBuildAAList(seqs[0]))==NULL)
       return(FALSE);
-   if((aa[1] = BuildAAList(seqs[1]))==NULL)
+   if((aa[1] = blBuildAAList(seqs[1]))==NULL)
       return(FALSE);
    
    /* Cycle through the zones                                           */
@@ -726,9 +730,9 @@ BOOL BuildAlignment(char **seqs, ZONE *zones, char **alns, char **flagseq)
       /* Find the position in the linked list of the start or the 2
          equivalent zones
       */
-      if((idx[0] = FindAAListOffsetByResnum(aa[0], z->start1))==(-1))
+      if((idx[0] = blFindAAListOffsetByResnum(aa[0], z->start1))==(-1))
          return(FALSE);
-      if((idx[1] = FindAAListOffsetByResnum(aa[1], z->start2))==(-1))
+      if((idx[1] = blFindAAListOffsetByResnum(aa[1], z->start2))==(-1))
          return(FALSE);
 
       /* Determine the difference in the positions and make the appopriate
@@ -738,54 +742,54 @@ BOOL BuildAlignment(char **seqs, ZONE *zones, char **alns, char **flagseq)
       {
          diff = idx[0] - idx[1];
          if((aa[1] = 
-             InsertResiduesInAAListAt(aa[1], '-', diff, idx[1]-1))==NULL)
+             blInsertResiduesInAAListAt(aa[1],'-',diff,idx[1]-1)) == NULL)
             return(FALSE);
       }
       else
       {
          diff = idx[1] - idx[0];
          if((aa[0] = 
-             InsertResiduesInAAListAt(aa[0], '-', diff, idx[0]-1))==NULL)
+             blInsertResiduesInAAListAt(aa[0],'-',diff,idx[0]-1)) == NULL)
             return(FALSE);
       }
 
       /* Flag the aligned residues                                      */
       for(i=z->start1; i<=z->stop1; i++)
       {
-         SetAAListFlagByResnum(aa[0], i);
+         blSetAAListFlagByResnum(aa[0], i);
       }
       for(i=z->start2; i<=z->stop2; i++)
       {
-         SetAAListFlagByResnum(aa[1], i);
+         blSetAAListFlagByResnum(aa[1], i);
       }
    }
 
    /* Add inserts at the end of the shorter sequence                    */
-   len[0] = GetAAListLen(aa[0]);
-   len[1] = GetAAListLen(aa[1]);
+   len[0] = blGetAAListLen(aa[0]);
+   len[1] = blGetAAListLen(aa[1]);
    if(len[0] > len[1])
    {
       diff = len[0] - len[1];
       if((aa[1] = 
-          InsertResiduesInAAListAt(aa[1], '-', diff, len[1]))==NULL)
+          blInsertResiduesInAAListAt(aa[1], '-', diff, len[1]))==NULL)
          return(FALSE);
    }
    else
    {
       diff = len[1] - len[0];
       if((aa[0] = 
-          InsertResiduesInAAListAt(aa[0], '-', diff, len[0]))==NULL)
+          blInsertResiduesInAAListAt(aa[0], '-', diff, len[0]))==NULL)
          return(FALSE);
    }
 
    /* Convert the linked lists back into sequences                      */
-   if((alns[0] = BuildSeqFromAAList(aa[0]))==NULL)
+   if((alns[0] = blBuildSeqFromAAList(aa[0]))==NULL)
       return(FALSE);
-   if((alns[1] = BuildSeqFromAAList(aa[1]))==NULL)
+   if((alns[1] = blBuildSeqFromAAList(aa[1]))==NULL)
       return(FALSE);
 
    /* Build a sequence version of the flags to show aligned residues    */
-   if((*flagseq = BuildFlagSeqFromAAList(aa[0], '*'))==NULL)
+   if((*flagseq = blBuildFlagSeqFromAAList(aa[0], '*'))==NULL)
      return(FALSE);
 
    /* Free the linked lists                                             */
@@ -812,6 +816,7 @@ BOOL BuildAlignment(char **seqs, ZONE *zones, char **alns, char **flagseq)
    23.06.08 Modified to build alignment from residue A to residue B.
    25.11.08 Changed output format - unaligned residues are matched with 
             gaps.
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 BOOL BuildAlignmentAB(char **seqs_in, ZONE *zones, char **alns, 
                       char **flagseq, int *res)
@@ -836,9 +841,9 @@ BOOL BuildAlignmentAB(char **seqs_in, ZONE *zones, char **alns,
    TruncateSeq(seqs[1], seqs_in[1], res[2], res[3]);
   
    /* Build the sequences as linked lists                               */
-   if((aa[0] = BuildAAList(seqs[0]))==NULL)
+   if((aa[0] = blBuildAAList(seqs[0]))==NULL)
       return(FALSE);
-   if((aa[1] = BuildAAList(seqs[1]))==NULL)
+   if((aa[1] = blBuildAAList(seqs[1]))==NULL)
       return(FALSE);
 
    /* Run through the zones                                             */
@@ -855,10 +860,10 @@ BOOL BuildAlignmentAB(char **seqs_in, ZONE *zones, char **alns,
          equivalent zones
       */
       if((idx[0] = 
-          FindAAListOffsetByResnum(aa[0], z->start1 - res[0] + 1))==(-1))
+          blFindAAListOffsetByResnum(aa[0], z->start1 - res[0] + 1))==(-1))
          return(FALSE);
       if((idx[1] = 
-          FindAAListOffsetByResnum(aa[1], z->start2 - res[2] + 1))==(-1))
+          blFindAAListOffsetByResnum(aa[1], z->start2 - res[2] + 1))==(-1))
          return(FALSE);
       
       /* Determine the difference in the positions and make the appopriate
@@ -872,14 +877,14 @@ BOOL BuildAlignmentAB(char **seqs_in, ZONE *zones, char **alns,
       
       /* Insert into reference seq                                      */
       insert_len[0] = idx[1] - insert_idx - 1;
-      if((aa[0] = InsertResiduesInAAListAt(aa[0], '-', insert_len[0], 
-                                           idx[0]-1))==NULL)
+      if((aa[0] = blInsertResiduesInAAListAt(aa[0], '-', insert_len[0], 
+                                             idx[0]-1))==NULL)
          return(FALSE);
       
       /* Insert into mobile seq                                         */
       insert_len[1] = idx[0] - insert_idx - 1;
-      if((aa[1] = InsertResiduesInAAListAt(aa[1], '-', insert_len[1], 
-                                           insert_idx))==NULL)
+      if((aa[1] = blInsertResiduesInAAListAt(aa[1], '-', insert_len[1], 
+                                             insert_idx))==NULL)
          return(FALSE);
       
       /* Update insert start point                                      */
@@ -888,56 +893,56 @@ BOOL BuildAlignmentAB(char **seqs_in, ZONE *zones, char **alns,
       /* Flag the aligned residues                                      */
       for(i=z->start1 - res[0] + 1; i<=z->stop1 - res[0] + 1; i++)
       {
-         SetAAListFlagByResnum(aa[0], i);
+         blSetAAListFlagByResnum(aa[0], i);
       }
       
       for(i=z->start2 - res[2] + 1; i<=z->stop2 - res[2] + 1; i++)
       {
-         SetAAListFlagByResnum(aa[1], i);
+         blSetAAListFlagByResnum(aa[1], i);
       }
    }
    
    /* Deal with end of chains                                           */
-   len[0] = GetAAListLen(aa[0]);
-   len[1] = GetAAListLen(aa[1]);
+   len[0] = blGetAAListLen(aa[0]);
+   len[1] = blGetAAListLen(aa[1]);
    
    /* Find length to end of ref and mobile chains                       */
    insert_len[0] = len[1] - insert_idx;
    insert_len[1] = len[0] - insert_idx;
    
-   if((aa[0] = InsertResiduesInAAListAt(aa[0], '-', insert_len[0], 
-                                        len[0]))==NULL)
+   if((aa[0] = blInsertResiduesInAAListAt(aa[0], '-', insert_len[0], 
+                                          len[0]))==NULL)
       return(FALSE);
-   if((aa[1] = InsertResiduesInAAListAt(aa[1], '-', insert_len[1], 
-                                        insert_idx))==NULL)
+   if((aa[1] = blInsertResiduesInAAListAt(aa[1], '-', insert_len[1], 
+                                          insert_idx))==NULL)
       return(FALSE);
    
    /* Add inserts at the end of the shorter sequence                    */
-   len[0] = GetAAListLen(aa[0]);
-   len[1] = GetAAListLen(aa[1]);
+   len[0] = blGetAAListLen(aa[0]);
+   len[1] = blGetAAListLen(aa[1]);
    if(len[0] > len[1])
    {
       diff = len[0] - len[1];
       if((aa[1] = 
-          InsertResiduesInAAListAt(aa[1], '-', diff, len[1]))==NULL)
+          blInsertResiduesInAAListAt(aa[1], '-', diff, len[1]))==NULL)
          return(FALSE);
    }
    else
    {
       diff = len[1] - len[0];
       if((aa[0] = 
-          InsertResiduesInAAListAt(aa[0], '-', diff, len[0]))==NULL)
+          blInsertResiduesInAAListAt(aa[0], '-', diff, len[0]))==NULL)
          return(FALSE);
    }
    
    /* Convert the linked lists back into sequences                      */
-   if((alns[0] = BuildSeqFromAAList(aa[0]))==NULL)
+   if((alns[0] = blBuildSeqFromAAList(aa[0]))==NULL)
       return(FALSE);
-   if((alns[1] = BuildSeqFromAAList(aa[1]))==NULL)
+   if((alns[1] = blBuildSeqFromAAList(aa[1]))==NULL)
       return(FALSE);
    
    /* Build a sequence version of the flags to show aligned residues    */
-   if((*flagseq = BuildFlagSeqFromAAList(aa[0], '*'))==NULL)
+   if((*flagseq = blBuildFlagSeqFromAAList(aa[0], '*'))==NULL)
       return(FALSE);
    
    /* Free the linked lists                                             */
@@ -1116,6 +1121,7 @@ int TruncateSeq(char *outstring, char *instring, int start, int stop)
    10.09.08 Ensured sequentially numbered fitting zones had breaks
             between chains.
    14.01.09 Added output to file.
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 int AlignmentFromZones(char *filename, BOOL fasta)
 {
@@ -1152,7 +1158,7 @@ int AlignmentFromZones(char *filename, BOOL fasta)
    /* Open output file/pipe                                             */
    if(filename)
    {
-      if((fp=OpenOrPipe(filename))==NULL)
+      if((fp=blOpenOrPipe(filename))==NULL)
       {
          printf("   Warning: Unable to open output file\n");
          fp = stdout;
@@ -1257,7 +1263,7 @@ chain\n\n");
    
    /* Close output file/pipe                                            */
    if(fp != stdout)
-      CloseOrPipe(fp);
+      blCloseOrPipe(fp);
    
    if(chainlist[0]) FREELIST(chainlist[0],ZONE);
    if(chainlist[1]) FREELIST(chainlist[1],ZONE);
@@ -1365,6 +1371,7 @@ ZONE *AlignToZone(char *ref_align, char *mob_align,
 
    23.07.08 Original based on NWAlign()  By: CTP
    29.08.08 Added normalised score. 
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 void AlignChainStandard(int strucnum)
 {
@@ -1430,9 +1437,9 @@ void AlignChainStandard(int strucnum)
       ref_align = (char *)malloc((ref_len+mob_len)*sizeof(char));
       mob_align = (char *)malloc((ref_len+mob_len)*sizeof(char));
       
-      score = affinealign(ref_seq, ref_len, mob_seq, mob_len, FALSE, 
-                          FALSE, gGapPen, gGapPenExt, ref_align, 
-                          mob_align, &align_len);
+      score = blAffinealign(ref_seq, ref_len, mob_seq, mob_len, FALSE, 
+                            FALSE, gGapPen, gGapPenExt, ref_align, 
+                            mob_align, &align_len);
       
       ref_align[align_len] = '\0';
       mob_align[align_len] = '\0';
@@ -1487,6 +1494,7 @@ void AlignChainStandard(int strucnum)
 
    23.07.08 Original based on NWAlign()  By: CTP
    29.08.08 Added normalised score. 
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 void AlignWholeSequence(int strucnum)
 {
@@ -1511,9 +1519,9 @@ void AlignWholeSequence(int strucnum)
    ref_align = (char *)malloc((ref_len+mob_len)*sizeof(char));
    mob_align = (char *)malloc((ref_len+mob_len)*sizeof(char));
    
-   score = affinealign(ref_seq_all, ref_len, mob_seq_all, mob_len, 
-                       FALSE, FALSE, gGapPen, gGapPenExt, 
-                       ref_align, mob_align, &align_len);
+   score = blAffinealign(ref_seq_all, ref_len, mob_seq_all, mob_len, 
+                         FALSE, FALSE, gGapPen, gGapPenExt, 
+                         ref_align, mob_align, &align_len);
    
    ref_align[align_len] = '\0';
    mob_align[align_len] = '\0';
@@ -1557,6 +1565,7 @@ void AlignWholeSequence(int strucnum)
 
    23.07.08 Original based on NWAlign()  By: CTP
    29.08.08 Added normalised score. 
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 void AlignZone(ZONE *alignzone, int strucnum, BOOL append)
 {
@@ -1619,9 +1628,9 @@ void AlignZone(ZONE *alignzone, int strucnum, BOOL append)
    ref_align = (char *)malloc((ref_len+mob_len)*sizeof(char));
    mob_align = (char *)malloc((ref_len+mob_len)*sizeof(char));
 
-   score = affinealign(ref_seq, ref_len, mob_seq, mob_len, FALSE, FALSE, 
-                       gGapPen, gGapPenExt, ref_align, mob_align, 
-                       &align_len);
+   score = blAffinealign(ref_seq, ref_len, mob_seq, mob_len, FALSE, FALSE, 
+                         gGapPen, gGapPenExt, ref_align, mob_align, 
+                         &align_len);
 
    ref_align[align_len] = '\0';
    mob_align[align_len] = '\0';
@@ -1691,6 +1700,7 @@ void AlignZone(ZONE *alignzone, int strucnum, BOOL append)
 
    23.07.08 Original By: CTP
    30.10.08 Reset gFitted to FALSE
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 int AlignmentWrapper(int strucnum, char *command, BOOL append)
 {
@@ -1701,7 +1711,7 @@ int AlignmentWrapper(int strucnum, char *command, BOOL append)
    static int FirstCall = TRUE;
    if(FirstCall)
    {
-      if(!ReadMDM(MDMFILE))
+      if(!blReadMDM(MDMFILE))
       {
          printf("   Error==> Unable to read mutation data matrix\n");
          return(1);
@@ -1730,7 +1740,7 @@ int AlignmentWrapper(int strucnum, char *command, BOOL append)
       /* Do statandard align                                            */
       method = 0;
    }
-   else if(!upstrncmp(command,"WHOLE",5) || !strcmp(command,"*"))
+   else if(!blUpstrncmp(command,"WHOLE",5) || !strcmp(command,"*"))
    {
       /* Perform whole sequence comparison                              */
       method = 1;
@@ -1882,6 +1892,7 @@ BOOL CommonZones(void)
    29.01.09 Fixed bug in checking sequetial zones. (Only checked for 
             each individual chain) and added additional error checking at
             start of function.
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 int AlignmentFromZones_PIR(char *filename)
 {
@@ -1941,7 +1952,7 @@ int AlignmentFromZones_PIR(char *filename)
    /* Open output file/pipe                                             */
    if(filename)
    {
-      if((fp=OpenOrPipe(filename))==NULL)
+      if((fp=blOpenOrPipe(filename))==NULL)
       {
          printf("   Warning: Unable to open output file\n");
          fp = stdout;
@@ -1971,7 +1982,7 @@ int AlignmentFromZones_PIR(char *filename)
    
    /* Close output file/pipe                                            */
    if(fp != stdout)
-      CloseOrPipe(fp);
+      blCloseOrPipe(fp);
    
    /* Free Memory                                                       */
    for(i=0;i<gMultiCount+1;i++)
@@ -2046,6 +2057,7 @@ void PrintSequencePIR(FILE *fp, char *sequence, int width)
 
    13.01.09 Original By: CTP
    29.01.09 Fixed bug handling chain ends.
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 BOOL BuildMultiAlignment(char **seqs, char **alns)
 {
@@ -2066,7 +2078,7 @@ BOOL BuildMultiAlignment(char **seqs, char **alns)
    /* Convert sequences into AA lists                                   */
    for(i=0;i<=gMultiCount;i++)
    {
-      if((aa[i] = BuildAAList(seqs[i]))==NULL) 
+      if((aa[i] = blBuildAAList(seqs[i]))==NULL) 
          return(FALSE);
    }
    
@@ -2091,11 +2103,11 @@ BOOL BuildMultiAlignment(char **seqs, char **alns)
       for(z=gZoneList[mobile - 1]; z!=NULL; NEXT(z))
       {
          /* Find offset for reference                                   */
-         if((idx[0] = FindAAListOffsetByResnum(aa[0], z->start1))==(-1))
+         if((idx[0] = blFindAAListOffsetByResnum(aa[0], z->start1))==(-1))
             return(FALSE);
          
          /* Find Offset for current mobile                              */
-         if((idx[1] = FindAAListOffsetByResnum(aa[mobile], 
+         if((idx[1] = blFindAAListOffsetByResnum(aa[mobile], 
                                                z->start2))==(-1))
             return(FALSE);
          
@@ -2108,28 +2120,28 @@ BOOL BuildMultiAlignment(char **seqs, char **alns)
          /* Add Gap to Reference and Previous Mobiles                   */
          for(i=0;i<mobile;i++)
          {
-            if((aa[i] = InsertResiduesInAAListAt(aa[i], '-', 
-                                                 insert_len[0], 
-                                                 idx[0]-1))==NULL) 
+            if((aa[i] = blInsertResiduesInAAListAt(aa[i], '-', 
+                                                   insert_len[0], 
+                                                   idx[0]-1))==NULL) 
                return(FALSE);
          }
          
          /* Add Gap to Current Mobile                                   */
-         if((aa[mobile] = InsertResiduesInAAListAt(aa[mobile], '-', 
-                                                   insert_len[1],
-                                                   insert_idx))==NULL)
+         if((aa[mobile] = blInsertResiduesInAAListAt(aa[mobile], '-', 
+                                                     insert_len[1],
+                                                     insert_idx))==NULL)
          {
             return(FALSE);      
          }
          
          /* Update Insert Index                                         */
-         insert_idx = FindAAListOffsetByResnum(aa[0], z->stop1);
+         insert_idx = blFindAAListOffsetByResnum(aa[0], z->stop1);
          
          /* Insert gaps within zone.                                    */
          /* ------------------------                                    */
          
          /* Find start of zone                                          */
-         idx[0] = FindAAListOffsetByResnum(aa[0], z->start1); 
+         idx[0] = blFindAAListOffsetByResnum(aa[0], z->start1); 
          
          /* Set pointers for Ref and Mob sequences                      */
          ref_aa = aa[0];
@@ -2148,7 +2160,7 @@ BOOL BuildMultiAlignment(char **seqs, char **alns)
             if(ref_aa->res == '-')
             {
                AA *tmp_aa = NULL;
-               tmp_aa = InsertResidueInAAListAt(aa[mobile], '-', i-1);
+               tmp_aa = blInsertResidueInAAListAt(aa[mobile], '-', i-1);
                
                /* No memory                                             */
                if(!tmp_aa) return(FALSE);
@@ -2177,19 +2189,19 @@ BOOL BuildMultiAlignment(char **seqs, char **alns)
       /* ------------------------                                       */
       
       /* Find length of sequences                                       */
-      length_ref = GetAAListLen(aa[0]); 
-      length_mob = GetAAListLen(aa[mobile]); 
+      length_ref = blGetAAListLen(aa[0]); 
+      length_mob = blGetAAListLen(aa[mobile]); 
       
       /* Find Final Mobile Zone                                         */
       z=gZoneList[mobile - 1];
       LAST(z);
 
       /* Find offset for reference zones finish                         */
-      if((idx[0] = FindAAListOffsetByResnum(aa[0], z->stop1))==(-1))
+      if((idx[0] = blFindAAListOffsetByResnum(aa[0],z->stop1))==(-1))
          return(FALSE);
       
       /* Find Offset for current mobile zones finish                    */
-      if((idx[1] = FindAAListOffsetByResnum(aa[mobile], z->stop2))==(-1))
+      if((idx[1] = blFindAAListOffsetByResnum(aa[mobile],z->stop2))==(-1))
          return(FALSE);
       
       /* Insert Length for Reference Sequence Gap                       */
@@ -2199,14 +2211,14 @@ BOOL BuildMultiAlignment(char **seqs, char **alns)
       insert_len[1] = length_ref - idx[0];
       
       /* Add Gap to End of Reference                                    */
-      if((aa[0] = InsertResiduesInAAListAt(aa[0], '-', insert_len[0], 
-                                           length_ref))==NULL)
+      if((aa[0] = blInsertResiduesInAAListAt(aa[0], '-', insert_len[0], 
+                                             length_ref))==NULL)
          return(FALSE);
       
       /* Add Gap to Mobile                                              */
-      if((aa[mobile] = InsertResiduesInAAListAt(aa[mobile], '-', 
-                                                insert_len[1],
-                                                idx[1]))==NULL)
+      if((aa[mobile] = blInsertResiduesInAAListAt(aa[mobile], '-', 
+                                                  insert_len[1],
+                                                  idx[1]))==NULL)
          return(FALSE);
    }  /* End of mobiles loop                                            */
    
@@ -2214,18 +2226,18 @@ BOOL BuildMultiAlignment(char **seqs, char **alns)
    /* Add inserts at the end of the shorter sequences                   */
    for(i=0;i<gMultiCount+1;i++)
    {
-      len = GetAAListLen(aa[i]);
+      len = blGetAAListLen(aa[i]);
       max_len = (len > max_len) ? len : max_len;
    }
    
    for(i=0;i<gMultiCount+1;i++)
    {
-      len = GetAAListLen(aa[i]);
+      len = blGetAAListLen(aa[i]);
       
       if(max_len > len)
       {
-         if((aa[i] = InsertResiduesInAAListAt(aa[i], '-', max_len-len,
-                                              len))==NULL)
+         if((aa[i] = blInsertResiduesInAAListAt(aa[i], '-', max_len-len,
+                                                len))==NULL)
             return(FALSE);
       }
    }
@@ -2254,7 +2266,7 @@ BOOL BuildMultiAlignment(char **seqs, char **alns)
       {
          int index = 0;
          /* Find offset of chainbreak                                   */
-         if((index = FindAAListOffsetByResnum(aa[i], 
+         if((index = blFindAAListOffsetByResnum(aa[i], 
                                               chain->start1))==(-1))
             return(FALSE);
          
@@ -2268,7 +2280,7 @@ BOOL BuildMultiAlignment(char **seqs, char **alns)
                int curr_index = 0;
                /* Find current offset                                   */
                if((curr_index = 
-                   FindAAListOffsetByResnum(aa[j], z->start1))==(-1))
+                   blFindAAListOffsetByResnum(aa[j], z->start1))==(-1))
                   return(FALSE);
                
                if(curr_index == index) 
@@ -2285,15 +2297,15 @@ BOOL BuildMultiAlignment(char **seqs, char **alns)
                if(i == j)
                {
                   /* Add break                                          */
-                  if((aa[j] = InsertResiduesInAAListAt(aa[j],'*',1,
-                                                       index-1))==NULL) 
+                  if((aa[j] = blInsertResiduesInAAListAt(aa[j],'*',1,
+                                                         index-1))==NULL) 
                      return(FALSE);
                }
                else
                {
                   /* Add gap                                            */
-                  if((aa[j]=InsertResiduesInAAListAt(aa[j],'-',1,
-                                                     index-1))==NULL) 
+                  if((aa[j]=blInsertResiduesInAAListAt(aa[j],'-',1,
+                                                       index-1))==NULL) 
                      return(FALSE);
                }
             }             
@@ -2311,7 +2323,7 @@ BOOL BuildMultiAlignment(char **seqs, char **alns)
             /* Delete gap then insert break                             */
             DELETE(aa[i],aa_index,AA);
             
-            if((aa[i]=InsertResiduesInAAListAt(aa[i],'*',1,index-2))
+            if((aa[i]=blInsertResiduesInAAListAt(aa[i],'*',1,index-2))
                == NULL) 
                return(FALSE);
          }
@@ -2321,15 +2333,15 @@ BOOL BuildMultiAlignment(char **seqs, char **alns)
    /* Add Chainbreak to end of sequence                                 */
    for(i=0; i<gMultiCount+1;i++)
    {
-      len = GetAAListLen(aa[i]);
-      if((aa[i] = InsertResiduesInAAListAt(aa[i], '*',1, len))==NULL)
+      len = blGetAAListLen(aa[i]);
+      if((aa[i] = blInsertResiduesInAAListAt(aa[i], '*',1, len))==NULL)
          return(FALSE);
    }
    
    /* Convert the linked lists back into sequences                      */
    for(i=0;i<gMultiCount+1;i++)
    {
-      if((alns[i] = BuildSeqFromAAList(aa[i]))==NULL)
+      if((alns[i] = blBuildSeqFromAAList(aa[i]))==NULL)
          return(FALSE);
    }
    

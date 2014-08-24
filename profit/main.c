@@ -148,7 +148,8 @@
                    ReadStructure() to clear fitted coordinates when 
                    loading a new mobile structure.
    V3.1   31.03.09 Updated version number.
-          24.08.14 Added ParseResSpecWrapper(). By: CTP
+          24.08.14 Added ParseResSpecWrapper().
+                   Use updated BiopLib functions. By: CTP
 
 *************************************************************************/
 #define MAIN 
@@ -378,6 +379,7 @@ files\n");
    03.04.08 Added parameter to ShowRMS() By: CTP
    11.08.08 ShowRMS() turned-off when in quiet mode.
    13.03.09 Added temporary fix for atom type recognition.
+   24.08.14 Use renamed BiopLib functions. By: CTP
 
 */
 void SetRMSAtoms(char *command)
@@ -457,7 +459,7 @@ Only %d used\n",NUMTYPES);
    */
    for(atmnum=0; atmnum<NUMTYPES; atmnum++)
    {
-      if(!LegalAtomSpec(gRMSAtoms[atmnum]))
+      if(!blLegalAtomSpec(gRMSAtoms[atmnum]))
       {
          if(!gQuiet)
          {
@@ -537,6 +539,7 @@ all atoms.\n",
    22.04.08 Added handling of lowercase chain and inserts.
    11.08.08 ShowRMS() turned-off when in quiet mode.
    29.10.08 Fixed bug that gave segmentation fault with CLEAR.
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 void SetRMSZone(char *command)
 {
@@ -551,7 +554,7 @@ void SetRMSZone(char *command)
 
    
    /* See if this is clearing the zones                                 */
-   if(!upstrncmp(command,"CLEAR",5) || !strcmp(command,"*"))
+   if(!blUpstrncmp(command,"CLEAR",5) || !strcmp(command,"*"))
    {
       gUserRMSZone = FALSE;
       
@@ -670,6 +673,7 @@ structure when performing\n");
    28.03.08 Added gCZoneList[] By: CTP
    02.04.08 Added Header and Footer storage.
    02.04.08 Removed Header and Footer storage.
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 void Cleanup(void)
 {
@@ -717,7 +721,7 @@ void Cleanup(void)
    for(i=0; i<MAXSTRPARAM; i++)
       free(gStrParam[i]);
    
-   Help("Dummy","CLOSE");
+   blHelp("Dummy","CLOSE");
 }
 
 
@@ -778,6 +782,7 @@ void Die(char *message)
             mobile structure. Required for the NOFIT command which 
             (unlike the FIT command) does not update any existing fitted
             coordinates.
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 BOOL ReadStructure(int  structure,
                    char *filename,
@@ -809,7 +814,7 @@ BOOL ReadStructure(int  structure,
       if(gRefWPDB)
       {
          /* Free current WHOLEPDB.                                      */
-         FreeWholePDB(gRefWPDB);
+         blFreeWholePDB(gRefWPDB);
          gRefWPDB   = NULL;
          gRefPDB    = NULL;
          natoms     = 0;
@@ -834,9 +839,9 @@ BOOL ReadStructure(int  structure,
       else
       {
          if(gHetAtoms)
-            gRefWPDB = ReadWholePDB(fp);
+            gRefWPDB = blReadWholePDB(fp);
          else
-            gRefWPDB = ReadWholePDBAtoms(fp);
+            gRefWPDB = blReadWholePDBAtoms(fp);
          
          if(gOccRank > 1)
          {
@@ -845,12 +850,12 @@ BOOL ReadStructure(int  structure,
             rewind(fp);
             
             if(gHetAtoms)
-               gRefWPDB->pdb = ReadPDBOccRank(fp,&natoms,gOccRank);
+               gRefWPDB->pdb = blReadPDBOccRank(fp,&natoms,gOccRank);
             else 
-               gRefWPDB->pdb = ReadPDBAtomsOccRank(fp,&natoms,gOccRank);
+               gRefWPDB->pdb = blReadPDBAtomsOccRank(fp,&natoms,gOccRank);
          }
          
-         gRefWPDB->pdb = RemoveAlternates(gRefWPDB->pdb);
+         gRefWPDB->pdb = blRemoveAlternates(gRefWPDB->pdb);
          natoms     = gRefWPDB->natoms;
          gRefPDB    = gRefWPDB->pdb;
       }
@@ -929,7 +934,7 @@ insertions.\n");
       {
          if(gMobWPDB[i])
          {
-            FreeWholePDB(gMobWPDB[i]);
+            blFreeWholePDB(gMobWPDB[i]);
             gMobWPDB[i]   = NULL;
             gMobPDB[i]    = NULL;
             natoms        = 0;
@@ -956,9 +961,9 @@ insertions.\n");
       else
       {
          if(gHetAtoms)
-            gMobWPDB[strucnum]   = ReadWholePDB(fp);
+            gMobWPDB[strucnum]   = blReadWholePDB(fp);
          else 
-            gMobWPDB[strucnum]   = ReadWholePDBAtoms(fp);
+            gMobWPDB[strucnum]   = blReadWholePDBAtoms(fp);
          
          if(gOccRank > 1)
          {
@@ -968,14 +973,14 @@ insertions.\n");
             
             if(gHetAtoms)
                gMobWPDB[strucnum]->pdb = 
-                  ReadPDBOccRank(fp,&natoms,gOccRank);
+                  blReadPDBOccRank(fp,&natoms,gOccRank);
             else 
                gMobWPDB[strucnum]->pdb = 
-                  ReadPDBAtomsOccRank(fp,&natoms,gOccRank);
+                  blReadPDBAtomsOccRank(fp,&natoms,gOccRank);
          }
          
          gMobWPDB[strucnum]->pdb = 
-            RemoveAlternates(gMobWPDB[strucnum]->pdb);
+            blRemoveAlternates(gMobWPDB[strucnum]->pdb);
          natoms               = gMobWPDB[strucnum]->natoms;
          gMobPDB[strucnum]    = gMobWPDB[strucnum]->pdb;
       }
@@ -1240,6 +1245,7 @@ int InitParser(void)
    07.11.08 Changed STATUS to take optional output filename.
    14.11.08 Added GNU Readline Library support.
    14.01.09 Added Output to file for PRINTALIGN.
+   24.08.14 Use renamed BiopLib functions. By: CTP
 
 */
 int DoCommandLoop(FILE *script)
@@ -1297,7 +1303,7 @@ int DoCommandLoop(FILE *script)
       }
 
       /* Any line which starts with a # is echoed to the screen         */
-      ptr = KillLeadSpaces(comline);
+      ptr = blKillLeadSpaces(comline);
       if(ptr[0] == '#')
       {
          if(!gQuiet)
@@ -1308,17 +1314,17 @@ int DoCommandLoop(FILE *script)
       /* We need to check HELP outside the main parser as it has an 
          optional parameter (N.B. mparse() could now handle this)
       */
-      if(match(comline,"HELP",&nletters))
+      if(blMatch(comline,"HELP",&nletters))
       {
          if(nletters == 4)
          {
-            DoHelp(comline,HELPFILE);
+            blDoHelp(comline,HELPFILE);
             continue;
          }
       }
       
       /* Main parser                                                    */
-      switch(mparse(comline,NCOMM,gKeyWords,gNumParam,gStrParam,&NParam))
+      switch(blMparse(comline,NCOMM,gKeyWords,gNumParam,gStrParam,&NParam))
       {
       case PARSE_ERRC:
          printf("   Unrecognised keyword: %s\n",comline);
@@ -1378,7 +1384,7 @@ ITERATE is set.\n");
          {
             AlignmentWrapper(-1,gStrParam[0],FALSE);
          }
-         else if(NParam==2 && !upstrncmp(gStrParam[1],"APPEND",6))
+         else if(NParam==2 && !blUpstrncmp(gStrParam[1],"APPEND",6))
          {
             AlignmentWrapper(-1,gStrParam[0],TRUE);
          }
@@ -1397,7 +1403,7 @@ ITERATE is set.\n");
       case 9:  /* WRITE                                                 */
          if(NParam == 2)
          {
-            if(!upstrncmp(gStrParam[0],"REF", 3))
+            if(!blUpstrncmp(gStrParam[0],"REF", 3))
             {
                WriteCoordinates(gStrParam[1], -1);
             }
@@ -1504,11 +1510,11 @@ REFERENCE commands\n");
          {
             if(NParam == 2)
             {
-               if(!upstrncmp(gStrParam[1],"REF",3))
+               if(!blUpstrncmp(gStrParam[1],"REF",3))
                {
                   gUseBVal = 2;
                }
-               else if(!upstrncmp(gStrParam[1],"MOB",3))
+               else if(!blUpstrncmp(gStrParam[1],"MOB",3))
                {
                   gUseBVal = 3;
                }
@@ -1539,7 +1545,7 @@ Command ignored.\n",gStrParam[1]);
          ShowNFitted();
          break;
       case 27: /* ITERATE                                               */
-         if((NParam == 1) && !upstrncmp(gStrParam[0], "OFF",3))
+         if((NParam == 1) && !blUpstrncmp(gStrParam[0], "OFF",3))
          {
             gIterate = FALSE;
          }
@@ -1601,7 +1607,7 @@ only\n");
             ReadMulti(gStrParam[0], TRUE);
          break;
       case 29: /* QUIET                                                 */
-         if((NParam == 1) && !upstrncmp(gStrParam[0], "OFF",3))
+         if((NParam == 1) && !blUpstrncmp(gStrParam[0], "OFF",3))
          {
             gQuiet = FALSE;
          }
@@ -1621,7 +1627,7 @@ only\n");
          }
          break;
       case 31: /* LIMIT                                                 */
-         if((NParam == 1) && (!upstrncmp(gStrParam[0], "OFF",3)))
+         if((NParam == 1) && (!blUpstrncmp(gStrParam[0], "OFF",3)))
          {
             gLimit[0] = gLimit[1] = (-1);
             break;
@@ -1640,7 +1646,7 @@ only\n");
          break;
       case 32: /* CENTER & CENTRE                                       */
       case 33:
-         if((NParam == 1) && (!upstrncmp(gStrParam[0], "OFF",3)))
+         if((NParam == 1) && (!blUpstrncmp(gStrParam[0], "OFF",3)))
          {
             gCentre = FALSE;
          }
@@ -1663,7 +1669,7 @@ only\n");
          RunScript(gStrParam[0]);
          break;
       case 39: /* HEADER                                                */
-         if((NParam == 1) && !upstrncmp(gStrParam[0], "OFF",3))
+         if((NParam == 1) && !blUpstrncmp(gStrParam[0], "OFF",3))
          {
             gReadHeader = FALSE;
          }
@@ -1696,11 +1702,11 @@ only\n");
          
          break;
       case 41: /* DISTCUTOFF                                            */
-         if((NParam == 1) && !upstrncmp(gStrParam[0], "OFF",3))
+         if((NParam == 1) && !blUpstrncmp(gStrParam[0], "OFF",3))
          {
             gUseDistCutoff = FALSE;
          }
-         else if((NParam == 1) && !upstrncmp(gStrParam[0], "ON",2))
+         else if((NParam == 1) && !blUpstrncmp(gStrParam[0], "ON",2))
          {
             gUseDistCutoff = TRUE;
          }
@@ -1741,22 +1747,22 @@ included when the cutoff is set to zero.\n");
          /* Set Status                                                  */
          if(NParam)
          {
-            if(!upstrncmp(gStrParam[0],"ON", 2) || 
-               !upstrncmp(gStrParam[1],"ON", 2) ||
-               !upstrncmp(gStrParam[0],"ALL",3))
+            if(!blUpstrncmp(gStrParam[0],"ON", 2) || 
+               !blUpstrncmp(gStrParam[1],"ON", 2) ||
+               !blUpstrncmp(gStrParam[0],"ALL",3))
                gMatchSymAtoms = TRUE;
             
-            if(!upstrncmp(gStrParam[0],"OFF",3) ||
-               (!upstrncmp(gStrParam[0],"ALL",3) &&
-                !upstrncmp(gStrParam[1],"OFF",3)))
+            if(!blUpstrncmp(gStrParam[0],"OFF",3) ||
+               (!blUpstrncmp(gStrParam[0],"ALL",3) &&
+                !blUpstrncmp(gStrParam[1],"OFF",3)))
                gMatchSymAtoms = FALSE;
             
             for(i=0; i < SYMM_ATM_PAIRS; i++)
             {
-               if(!upstrncmp(gStrParam[0],gSymType[i][0],3) ||
-                  !upstrncmp(gStrParam[0],"ALL",3))
+               if(!blUpstrncmp(gStrParam[0],gSymType[i][0],3) ||
+                  !blUpstrncmp(gStrParam[0],"ALL",3))
                {
-                  if(!upstrncmp(gStrParam[1],"OFF",3))
+                  if(!blUpstrncmp(gStrParam[1],"OFF",3))
                      gSymType[i][3][0] = FALSE;
                   else
                      gSymType[i][3][0] = TRUE;
@@ -1793,12 +1799,12 @@ included when the cutoff is set to zero.\n");
          }
          
          /* Parameter FASTA prints a FASTA-formatted pairwise alignment */
-         if(NParam>=1 && !upstrncmp(gStrParam[0],"FASTA",5) && 
+         if(NParam>=1 && !blUpstrncmp(gStrParam[0],"FASTA",5) && 
             strlen(gStrParam[0]) == 5)
          {
             AlignmentFromZones((NParam == 2)?gStrParam[1]:NULL, TRUE);
          }
-         else if(NParam>=1 && !upstrncmp(gStrParam[0],"PIR",3) && 
+         else if(NParam>=1 && !blUpstrncmp(gStrParam[0],"PIR",3) && 
                  strlen(gStrParam[0]) == 3)
          {
             AlignmentFromZones_PIR((NParam == 2)?gStrParam[1]:NULL);
@@ -1809,7 +1815,7 @@ included when the cutoff is set to zero.\n");
          } 
          break;
       case 46: /* MULTREF                                               */
-         if(NParam==1 && !upstrncmp(gStrParam[0],"OFF",3))
+         if(NParam==1 && !blUpstrncmp(gStrParam[0],"OFF",3))
          {
             gMultiVsRef = FALSE;
             /* Reset reference to current multistructure reference */
@@ -1914,11 +1920,11 @@ structure.\n");
          break;
       case 51: /* WTAVERAGE                                             */
          
-         if(NParam==1 && !upstrncmp(gStrParam[0],"OFF",3))
+         if(NParam==1 && !blUpstrncmp(gStrParam[0],"OFF",3))
          {
             gWtAverage = FALSE;
          }
-         else if((NParam==1 && !upstrncmp(gStrParam[0],"ON",3)) ||
+         else if((NParam==1 && !blUpstrncmp(gStrParam[0],"ON",3)) ||
                  (NParam==0))
          {
             gWtAverage = TRUE;
@@ -1949,6 +1955,7 @@ structure.\n");
             Checks for legal wildcard specifications
             Improved out-of-bounds error checking
    13.03.09 Added temporary fix for atom type recognition.
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 void SetFitAtoms(char *command)
 {
@@ -2027,7 +2034,7 @@ Only %d used\n",NUMTYPES);
    */
    for(atmnum=0; atmnum<NUMTYPES; atmnum++)
    {
-      if(!LegalAtomSpec(gFitAtoms[atmnum]))
+      if(!blLegalAtomSpec(gFitAtoms[atmnum]))
       {
          if(!gQuiet)
          {
@@ -2096,6 +2103,7 @@ all atoms\n",
             zones for multi-structure now here instead of in ParseZone()
    11.04.08 Added warning for overlapping zones. By: CTP
    22.04.08 Added handling of lowercase chain and inserts.
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 void SetFitZone(char *command, int strucnum)
 {
@@ -2112,7 +2120,7 @@ void SetFitZone(char *command, int strucnum)
    snum = strucnum;
    
    /* See if this is clearing the zones                                 */
-   if(!gUserFitZone || !upstrncmp(command,"CLEAR",5) || 
+   if(!gUserFitZone || !blUpstrncmp(command,"CLEAR",5) || 
       !strcmp(command,"*"))
    {
       if(strucnum > (-1))
@@ -2135,7 +2143,7 @@ void SetFitZone(char *command, int strucnum)
          }
       }
       gUserFitZone = FALSE;
-      if(!upstrncmp(command,"CLEAR",5) || !strcmp(command,"*"))  
+      if(!blUpstrncmp(command,"CLEAR",5) || !strcmp(command,"*"))  
          return;
    }
 
@@ -2224,6 +2232,7 @@ structure when performing\n");
    14.03.08 Original based on SetFitZone() By: CTP
    22.04.08 Added handling of lowercase chain and inserts.
    11.02.09 Changed CLEAR to ALL.
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 void DelFitZone(char *command, int strucnum)
 {
@@ -2240,7 +2249,7 @@ void DelFitZone(char *command, int strucnum)
    snum = strucnum;
   
    /* Clear All Zones                                                   */
-   if(!gUserFitZone || !upstrncmp(command,"ALL",3) || 
+   if(!gUserFitZone || !blUpstrncmp(command,"ALL",3) || 
       !strcmp(command,"*"))
    {
       if(strucnum > (-1))
@@ -2263,7 +2272,7 @@ void DelFitZone(char *command, int strucnum)
          }
       }
       gUserFitZone = FALSE;
-      if(!upstrncmp(command,"ALL",3) || !strcmp(command,"*"))
+      if(!blUpstrncmp(command,"ALL",3) || !strcmp(command,"*"))
       {
          printf("   All zones cleared.\n");
          return;
@@ -2344,6 +2353,7 @@ structure when performing\n");
    17.03.08 Original based on DelFitZone() By: CTP
    22.04.08 Added handling of lowercase chain and inserts.
    11.02.09 Changed CLEAR to ALL.
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 void DelRMSZone(char *command, int strucnum)
 {
@@ -2360,7 +2370,7 @@ void DelRMSZone(char *command, int strucnum)
    snum = strucnum;
 
    /* Clear All Zones                                                   */
-   if(!upstrncmp(command,"ALL",3) || !strcmp(command,"*"))
+   if(!blUpstrncmp(command,"ALL",3) || !strcmp(command,"*"))
    {
       if(strucnum > (-1))
       {
@@ -2835,6 +2845,7 @@ int FindSeq(char *zonespec,
             gRefCofG. By: CTP
    11.11.08 Modified to give translation + rotation to gMultiRef.
    16.02.09 Modified rotation matrix inversion.
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 void ShowMatrix(void)
 {
@@ -2904,7 +2915,7 @@ void ShowMatrix(void)
       for(strucnum=0; strucnum<gMultiCount; strucnum++)
       {
          /* Calculate rotation matrix                                   */
-         MatMult33_33(gRotMat[strucnum],InvRotMat,ModRotMat);  
+         blMatMult33_33(gRotMat[strucnum],InvRotMat,ModRotMat);  
          printf("   Structure %d:\n", strucnum+1);
 
          if(gMultiVsRef)
@@ -2989,6 +3000,7 @@ void ShowMatrix(void)
    05.09.08 Added reporting of gap penalties.
    07.11.08 Altered option to output to a file.
             Marked reference for multi fitting.
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 void ShowStatus(char *filename)
 {
@@ -3014,7 +3026,7 @@ void ShowStatus(char *filename)
    /* Open output file/pipe                                             */
    if(filename)
    {
-      if((fp=OpenOrPipe(filename))==NULL)
+      if((fp=blOpenOrPipe(filename))==NULL)
       {
          printf("   Warning: Unable to open output file\n");
          fp = stdout;
@@ -3422,7 +3434,7 @@ SET\n\n");
    
    /* Close output file/pipe                                            */
    if(fp != stdout)
-      CloseOrPipe(fp);
+      blCloseOrPipe(fp);
 
    return;
 }
@@ -3571,6 +3583,7 @@ exceeded. Increase MAXSTRUC\n", MAXSTRUC);
    02.04.08 added calls to WritePDBHeader() and WritePDBFooter() By: CTP
    02.05.08 changed WritePDBHeader() and WritePDBFooter() calls to 
             calls to WriteWholePDBHeader() and WriteWholePDBTrailer()
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 void WriteCoordinates(char *filename, int strucnum)
 {
@@ -3601,7 +3614,7 @@ void WriteCoordinates(char *filename, int strucnum)
    */
    if(gCentre && (pdb!=NULL))
    {
-      if((pdbc = DupePDB(pdb))==NULL)
+      if((pdbc = blDupePDB(pdb))==NULL)
       {
          printf("   Error==> No memory for translating the reference \
 coordinates\n");
@@ -3612,7 +3625,7 @@ written.\n");
 
       /* Point pdb to this copy of the coordinates                      */
       pdb = pdbc;
-      TranslatePDB(pdb, CofG);
+      blTranslatePDB(pdb, CofG);
    }
    
    if(!gFitted || pdb == NULL)
@@ -3621,7 +3634,7 @@ written.\n");
    }
    else
    {
-      if((fp=OpenOrPipe(filename))==NULL)
+      if((fp=blOpenOrPipe(filename))==NULL)
       {
          printf("   Error==> Enable to open file for writing.\n");
       }
@@ -3630,14 +3643,14 @@ written.\n");
          printf("   Writing coordinates...\n");
          
          if(gReadHeader)
-            WriteWholePDBHeader(fp, wpdb);
+            blWriteWholePDBHeader(fp, wpdb);
 
-         WritePDB(fp, pdb);
+         blWritePDB(fp, pdb);
 
          if(gReadHeader)
-            WriteWholePDBTrailer(fp, wpdb);
+            blWriteWholePDBTrailer(fp, wpdb);
          
-         CloseOrPipe(fp);
+         blCloseOrPipe(fp);
       }
    }
 
@@ -3914,6 +3927,7 @@ records!\n");
 
    19.03.08 Original based on SetRMSZone()  By: CTP
    22.04.08 Added handling of lowercase chain and inserts.
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 void SetCentreResidue(char *command)
 {
@@ -3930,7 +3944,7 @@ void SetCentreResidue(char *command)
    char zone_command[20];
    
    /* See if this is clearing the zones                                 */
-   if(!upstrncmp(command,"CLEAR",5) || !strcmp(command,"*"))
+   if(!blUpstrncmp(command,"CLEAR",5) || !strcmp(command,"*"))
    {
       for(strucnum=0; strucnum<gMultiCount; strucnum++)
       {
@@ -5603,6 +5617,7 @@ int CopyPDBListToRef(int strucnum)
    function is called by the SETREF command and ALLVsAllRMS(). 
 
    20.10.08 Original By: CTP
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 int SetMobileToReference(int strucnum)
 {
@@ -5617,20 +5632,20 @@ int SetMobileToReference(int strucnum)
    {
       STRINGLIST *s = NULL;
       
-      if(gRefWPDB->header)  FreeStringList(gRefWPDB->header);
-      if(gRefWPDB->trailer) FreeStringList(gRefWPDB->trailer);
+      if(gRefWPDB->header)  blFreeStringList(gRefWPDB->header);
+      if(gRefWPDB->trailer) blFreeStringList(gRefWPDB->trailer);
       gRefWPDB->header  = NULL;
       gRefWPDB->trailer = NULL;
       
       for(s=gMobWPDB[strucnum]->header; s!=NULL; NEXT(s))
       {
-         gRefWPDB->header = StoreString(gRefWPDB->header, s->string);
+         gRefWPDB->header = blStoreString(gRefWPDB->header, s->string);
       }
       
       for(s=gMobWPDB[strucnum]->trailer; s!=NULL; NEXT(s))
       {
-         gMobWPDB[strucnum]->trailer = StoreString(gRefWPDB->trailer, 
-                                                   s->string);
+         gMobWPDB[strucnum]->trailer = blStoreString(gRefWPDB->trailer, 
+                                                     s->string);
       }
       
       gRefWPDB->natoms = 0;
@@ -5755,6 +5770,7 @@ int fit_order_cmp(const void *ptr_scoreA, const void *ptr_scoreB)
    07.11.08 Sets gMultiRef for automatic selection. Resets to gMultiRef
             after all vs all.
    25.11.08 Added error message under AllVsAll output.
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 int AllVsAllRMS(char *filename, BOOL print_tab, BOOL set_ref)
 {
@@ -5772,7 +5788,7 @@ int AllVsAllRMS(char *filename, BOOL print_tab, BOOL set_ref)
    /* Open Output File/Pipe                                             */
    if(filename)
    {
-      if((fp=OpenOrPipe(filename))==NULL)
+      if((fp=blOpenOrPipe(filename))==NULL)
       {
          printf("   Warning==> Uunable to open file: %s\n", filename);
          fp = stdout;
@@ -5890,7 +5906,7 @@ int AllVsAllRMS(char *filename, BOOL print_tab, BOOL set_ref)
    
    /* Close Output File/Pipe                                            */
    if(fp != stdout)
-      CloseOrPipe(fp);
+      blCloseOrPipe(fp);
    
    /* Free Memory                                                       */
    free(sortrms);

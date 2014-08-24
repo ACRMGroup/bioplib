@@ -94,6 +94,7 @@
    V3.0  06.11.08 Release Version
    V3.0  16.02.09 Rewrote CalculateRotationMatrix().
    V3.1  31.03.09 Skipped for release
+         24.08.14 Use renamed BiopLib functions. By: CTP
 
 *************************************************************************/
 /* Includes
@@ -465,6 +466,7 @@ void NoFitStructures(void)
    20.02.01 gMobCofG now an array
             RotMat now local and a copy made into gRotMat
    13.08.08 Modified to Fit, Rotate & Refit. By: CTP
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 BOOL DoFitting(int NCoor, int strucnum)
 {
@@ -491,8 +493,8 @@ BOOL DoFitting(int NCoor, int strucnum)
             gWeights[i] = (REAL)1.0 / gWeights[i];
       }
       
-      matfit(gRefCoor,gMobCoor[strucnum],RotMat,NCoor,
-             ((gDoWeights!=WEIGHT_NONE)?gWeights:NULL),0);
+      blMatfit(gRefCoor,gMobCoor[strucnum],RotMat,NCoor,
+               ((gDoWeights!=WEIGHT_NONE)?gWeights:NULL),0);
      
       /* If we used inverse B-values, invert the weights back again     */
       if(gDoWeights==WEIGHT_INVBVAL)      
@@ -526,18 +528,18 @@ structure.\n");
          }
          
          /* Copy the coordinates                                        */
-         CopyPDB(q, p);
+         blCopyPDB(q, p);
       }
       
       /* Now we can rotate the rotation list                            */
       CofG.x = -1.0 * gMobCofG[strucnum].x;
       CofG.y = -1.0 * gMobCofG[strucnum].y;
       CofG.z = -1.0 * gMobCofG[strucnum].z;
-      TranslatePDB(gFitPDB[strucnum], CofG);
+      blTranslatePDB(gFitPDB[strucnum], CofG);
 
-      ApplyMatrixPDB(gFitPDB[strucnum], RotMat);
+      blApplyMatrixPDB(gFitPDB[strucnum], RotMat);
 
-      TranslatePDB(gFitPDB[strucnum], gRefCofG);
+      blTranslatePDB(gFitPDB[strucnum], gRefCofG);
 
       /* Record a copy of the rotation matrix for display with the MATRIX
          command
@@ -589,8 +591,8 @@ structure.\n");
       ApplyMatrixCOOR(gMobCoor[strucnum], rotmat_repos, NCoor);
       
       /* Re-Fit                                                         */
-      matfit(gRefCoor,gMobCoor[strucnum],rotmat_refit,NCoor,
-             ((gDoWeights!=WEIGHT_NONE)?gWeights:NULL),0);
+      blMatfit(gRefCoor,gMobCoor[strucnum],rotmat_refit,NCoor,
+               ((gDoWeights!=WEIGHT_NONE)?gWeights:NULL),0);
       
       /* Calculate Final Matrix                                         */
       MatMult33_33(rotmat_repos,rotmat_refit,rotmat_final);
@@ -616,13 +618,13 @@ structure.\n");
          }
          
          /* Copy the coordinates                                        */
-         CopyPDB(q, p);
+         blCopyPDB(q, p);
       }
       
       /* Now we can rotate the rotation list                            */
-      TranslatePDB(ReFitPDB, CofG);
-      ApplyMatrixPDB(ReFitPDB, rotmat_final);      
-      TranslatePDB(ReFitPDB, gRefCofG);
+      blTranslatePDB(ReFitPDB, CofG);
+      blApplyMatrixPDB(ReFitPDB, rotmat_final);      
+      blTranslatePDB(ReFitPDB, gRefCofG);
       
       /* Calculate RMSD -B-                                             */
       SwapPDB = gFitPDB[strucnum];
@@ -673,6 +675,7 @@ structure.\n");
    29.10.08 Tidied code.
    11.11.08 Simplified function - function no longer resets to starting 
             structures.
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 BOOL DoNoFitting(int strucnum)
 {
@@ -732,7 +735,7 @@ BOOL DoNoFitting(int strucnum)
       }
       
       /* Copy the coordinates                                           */
-      CopyPDB(q, p);
+      blCopyPDB(q, p);
    }
    
    gFitted = TRUE; 
@@ -749,6 +752,7 @@ BOOL DoNoFitting(int strucnum)
    23.07.96 Calls AtomNameMatch() rather than strncmp; this handles
             wildcards in atom names
    15.02.01 Calls AtomNameRawMatch() instead of AtomNameMatch()
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 
 int ValidAtom(char *atnam, int mode)
@@ -770,13 +774,13 @@ int ValidAtom(char *atnam, int mode)
          {
             DefReturn = TRUE;
             ErrorWarn = TRUE;
-            if(AtomNameRawMatch(atnam,gFitAtoms[j],&ErrorWarn))
+            if(blAtomNameRawMatch(atnam,gFitAtoms[j],&ErrorWarn))
                return(FALSE);
          }
          else
          {
             ErrorWarn = TRUE;
-            if(AtomNameRawMatch(atnam,gFitAtoms[j],&ErrorWarn))
+            if(blAtomNameRawMatch(atnam,gFitAtoms[j],&ErrorWarn))
                return(TRUE);
          }
       }
@@ -795,13 +799,13 @@ int ValidAtom(char *atnam, int mode)
          {
             DefReturn = TRUE;
             ErrorWarn = TRUE;
-            if(AtomNameRawMatch(atnam,gRMSAtoms[j],&ErrorWarn))
+            if(blAtomNameRawMatch(atnam,gRMSAtoms[j],&ErrorWarn))
                return(FALSE);
          }
          else
          {
             ErrorWarn = TRUE;
-            if(AtomNameRawMatch(atnam,gRMSAtoms[j],&ErrorWarn))
+            if(blAtomNameRawMatch(atnam,gRMSAtoms[j],&ErrorWarn))
                return(TRUE);
          }
       }
@@ -1514,6 +1518,7 @@ void ShowNFitted(void)
    20.02.01 -999 for start or end of structure rather than -1
    03.04.08 Added parameter to ShowRMS() The parameter, ByAtm, turns on 
             printing of atom distances by CalcRMS(). By: CTP
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 REAL ShowRMS(BOOL ByRes, char *filename, int strucnum, 
              BOOL UpdateReference, BOOL ByAtm)
@@ -1528,7 +1533,7 @@ REAL ShowRMS(BOOL ByRes, char *filename, int strucnum,
    {
       if(filename)
       {
-         if((fp=OpenOrPipe(filename))==NULL)
+         if((fp=blOpenOrPipe(filename))==NULL)
          {
             printf("   Warning==> unable to open file for by-residue \
 RMS\n");
@@ -1613,7 +1618,7 @@ RMS\n");
       rmsd = CalcRMS(ByRes,fp, strucnum, UpdateReference, ByAtm);
 
       if(fp != stdout)
-         CloseOrPipe(fp);
+         blCloseOrPipe(fp);
    }
    else
    {
@@ -1671,6 +1676,7 @@ int CheckForConvergence(int NCoor, int strucnum)
    list using DP
 
    15.01.01 Original   By: ACRM
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 int UpdateFitArrays(int strucnum)
 {
@@ -1696,10 +1702,10 @@ int UpdateFitArrays(int strucnum)
       offset number
    */
    SELECT(sel[0],"CA  ");
-   RefCaPDB = SelectAtomsPDB(gRefPDB, 1, sel, &length1);
-   MobCaPDB = SelectAtomsPDB(gFitPDB[strucnum], 1, sel, &length2);
-   RefIndex = IndexPDB(RefCaPDB, &length1);
-   MobIndex = IndexPDB(MobCaPDB, &length2);
+   RefCaPDB = blSelectAtomsPDBAsCopy(gRefPDB, 1, sel, &length1);
+   MobCaPDB = blSelectAtomsPDBAsCopy(gFitPDB[strucnum], 1, sel, &length2);
+   RefIndex = blIndexPDB(RefCaPDB, &length1);
+   MobIndex = blIndexPDB(MobCaPDB, &length2);
    
    /* Allocate memory for alignment sequences                           */
    if((ref_align = (char *)malloc((length1+length2)*sizeof(char)))==
@@ -1778,6 +1784,7 @@ REAL Distance(PDB *p, PDB *q)
    of selecting closest distances
 
    15.01.01 Original   By: ACRM
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 REAL AlignOnCADistances(PDB **RefIndex, int length1, 
                         PDB **MobIndex, int length2,
@@ -1803,9 +1810,9 @@ REAL AlignOnCADistances(PDB **RefIndex, int length1,
    maxdim = MAX(length1, length2);
    
    /* Initialise the score matrix                                       */
-   if((matrix = (REAL **)Array2D(sizeof(REAL), maxdim, maxdim))==NULL)
+   if((matrix = (REAL **)blArray2D(sizeof(REAL), maxdim, maxdim))==NULL)
       return(0);
-   if((dirn   = (XY **)Array2D(sizeof(XY), maxdim, maxdim))==NULL)
+   if((dirn   = (XY **)blArray2D(sizeof(XY), maxdim, maxdim))==NULL)
       return(0);
       
    for(i=0;i<maxdim;i++)
@@ -2002,8 +2009,8 @@ REAL AlignOnCADistances(PDB **RefIndex, int length1,
    }
 #endif
     
-   FreeArray2D((char **)matrix, maxdim, maxdim);
-   FreeArray2D((char **)dirn,   maxdim, maxdim);
+   blFreeArray2D((char **)matrix, maxdim, maxdim);
+   blFreeArray2D((char **)dirn,   maxdim, maxdim);
     
    return(score);
 }
@@ -2031,6 +2038,7 @@ REAL AlignOnCADistances(PDB **RefIndex, int length1,
    Does the traceback to find the aligment.
 
    15.01.01 Original based on TraceBack()
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 REAL TraceBackDistMat(REAL **matrix, 
                       XY   **dirn,
@@ -2053,8 +2061,8 @@ REAL TraceBackDistMat(REAL **matrix,
    /* Now trace back to find the alignment                              */
    i            = BestI;
    j            = BestJ;
-   align1[ai]   = throne(RefIndex[i]->resnam);
-   align2[ai++] = throne(MobIndex[j]->resnam);
+   align1[ai]   = blThrone(RefIndex[i]->resnam);
+   align2[ai++] = blThrone(MobIndex[j]->resnam);
 
    while(i < length1-1 && j < length2-1)
    {
@@ -2075,7 +2083,7 @@ REAL TraceBackDistMat(REAL **matrix,
          j++;
          while((i < nextCell.x) && (i < length1-1))
          {
-            align1[ai] = throne(RefIndex[i++]->resnam);
+            align1[ai] = blThrone(RefIndex[i++]->resnam);
             align2[ai++] = '-';
          }
       }
@@ -2089,7 +2097,7 @@ REAL TraceBackDistMat(REAL **matrix,
          while((j < nextCell.y) && (j < length2-1))
          {
             align1[ai] = '-';
-            align2[ai++] = throne(MobIndex[j++]->resnam);
+            align2[ai++] = blThrone(MobIndex[j++]->resnam);
          }
       }
       else
@@ -2098,8 +2106,8 @@ REAL TraceBackDistMat(REAL **matrix,
          fprintf(stderr,"align.c/TraceBack() internal error\n");
       }
       
-      align1[ai]   = throne(RefIndex[i]->resnam);
-      align2[ai++] = throne(MobIndex[j]->resnam);
+      align1[ai]   = blThrone(RefIndex[i]->resnam);
+      align2[ai++] = blThrone(MobIndex[j]->resnam);
    }
 
    /* If one sequence finished first, fill in the end with insertions   */
@@ -2107,7 +2115,7 @@ REAL TraceBackDistMat(REAL **matrix,
    {
       for(j=i+1; j<length1; j++)
       {
-         align1[ai]   = throne(RefIndex[j]->resnam);
+         align1[ai]   = blThrone(RefIndex[j]->resnam);
          align2[ai++] = '-';
       }
    }
@@ -2116,7 +2124,7 @@ REAL TraceBackDistMat(REAL **matrix,
       for(i=j+1; i<length2; i++)
       {
          align1[ai]   = '-';
-         align2[ai++] = throne(MobIndex[i]->resnam);
+         align2[ai++] = blThrone(MobIndex[i]->resnam);
       }
    }
    
@@ -2147,6 +2155,7 @@ REAL TraceBackDistMat(REAL **matrix,
    alignment by putting in any starting - characters.
 
    15.01.01 Original based on SearchForBest()
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 int SearchForBestDistMat(REAL **matrix, 
                          int  length1, 
@@ -2180,7 +2189,7 @@ int SearchForBestDistMat(REAL **matrix,
       *BestJ = 0;
       for(i=0; i<*BestI; i++)
       {
-         align1[ai] = throne(RefIndex[i]->resnam);
+         align1[ai] = blThrone(RefIndex[i]->resnam);
          align2[ai++] = '-';
       }
    }
@@ -2191,7 +2200,7 @@ int SearchForBestDistMat(REAL **matrix,
       for(j=0; j<*BestJ; j++)
       {
          align1[ai] = '-';
-         align2[ai++] = throne(MobIndex[j]->resnam);
+         align2[ai++] = blThrone(MobIndex[j]->resnam);
       }
    }
    return(ai);
@@ -2991,6 +3000,7 @@ void SetSymmetricalAtomPAirs(void)
    Based on ApplyMatrixPDB() by ACRM.
 
    18.08.08 Original By: CTP
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 void ApplyMatrixCOOR(COOR *incoords,
                      REAL matrix[3][3],
@@ -3004,7 +3014,7 @@ void ApplyMatrixCOOR(COOR *incoords,
      if(incoords[i].x != 9999.0 && incoords[i].y != 9999.0 && 
         incoords[i].z != 9999.0)
      {
-        MatMult3_33(incoords[i],matrix,&outcoords);
+        blMatMult3_33(incoords[i],matrix,&outcoords);
         
         incoords[i].x = outcoords.x;
         incoords[i].y = outcoords.y;
@@ -3024,6 +3034,7 @@ void ApplyMatrixCOOR(COOR *incoords,
 
    18.08.08 Original By: CTP
    16.02.09 Rewritten as wrapper for bioplib function CreateRotMat()
+   24.08.14 Use renamed BiopLib functions. By: CTP
 */
 void CalculateRotationMatrix(REAL RotAngle, REAL Matrix[3][3])
 {
@@ -3031,7 +3042,7 @@ void CalculateRotationMatrix(REAL RotAngle, REAL Matrix[3][3])
    REAL psi = RotAngle * -1.0 * (PI/180.0); 
    
    /* Rotation Matrix                                                   */
-   CreateRotMat('z', psi, Matrix);
+   blCreateRotMat('z', psi, Matrix);
    return;
 }
 
