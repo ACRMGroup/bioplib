@@ -121,3 +121,8 @@ int TrimZones(void)
 ;
 int FitStructuresWrapper(void)
 ;
+BOOL ParseResSpecWrapper(char *spec, 
+                         char *chain, 
+                         int *resnum, 
+                         char *insert)
+;

@@ -148,6 +148,7 @@
                    ReadStructure() to clear fitted coordinates when 
                    loading a new mobile structure.
    V3.1   31.03.09 Updated version number.
+          24.08.14 Added ParseResSpecWrapper(). By: CTP
 
 *************************************************************************/
 #define MAIN 
@@ -2492,6 +2493,9 @@ SEQUENTIAL\n");
    20.02.01 -999 for start or end of structure rather than -1
    22.04.08 Set to use ParseResSpecNoUpper() allowing function to deal 
             with lowercase chain names and inserts.  By: CTP
+   24.08.14 Use wrapper for blParseResSPecNoUpper() function. 
+            blParseResSPecNoUpper() expects strings as parameters for 
+            chain and insert rather than pointers to single chars. By: CTP
 */
 int GetResSpec(char *resspec, int *resnum, char *chain, char *insert)
 {
@@ -2527,8 +2531,12 @@ int GetResSpec(char *resspec, int *resnum, char *chain, char *insert)
       return(0);
    }
 
-   if(!ParseResSpecNoUpper(buffer, chain, resnum, insert))
-      retval = 1;              /* Indicates an error                    */
+/* if(!ParseResSpecNoUpper(buffer, chain, resnum, insert))
+      retval = 1;            *//* Indicates an error                    */
+
+   /* Use ParseResSpecWrapper() instead of ParseResSpecNoUpper()        */
+   if(!ParseResSpecWrapper(buffer,chain,resnum,insert))
+      retval = 1; /* Indicates an error                                 */
 
    free(buffer);
    return(retval);
@@ -6156,4 +6164,35 @@ int FitStructuresWrapper(void)
    free(sortrms);
    
    return(0);
+}
+
+/************************************************************************/
+/*>BOOL ParseResSpecWrapper(char *spec, char *chain, int *resnum, 
+                            char *insert)
+   --------------------------------------------------------------
+   
+   Wrapper function for ParseResSpecNoUpper().
+   
+   The rewritten blParseResSpec() functions expect strings as parameters.
+   The parameters chain and insert are pointers to a single characters.
+   This function takes the chain and insert parameters and converts them
+   to strings.
+
+   24.08.14 Original By: CTP
+
+*/
+BOOL ParseResSpecWrapper(char *spec, char *chain, int *resnum, 
+                         char *insert)
+{
+   char chain_str[2]  =   " ",
+        insert_str[2] =   " ";
+   BOOL return_value  = FALSE;
+
+   return_value = blParseResSpecNoUpper(spec, chain_str, resnum, 
+                                        insert_str);
+
+   *chain  = chain_str[0];
+   *insert = insert_str[0];
+
+   return return_value;
 }
