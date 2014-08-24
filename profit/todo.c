@@ -3,11 +3,11 @@
    Program:    ProFit
    File:       todo.c
    
-   Version:    V3.1
-   Date:       31.03.09
+   Version:    V3.2
+   Date:       24.08.14
    Function:   Protein Fitting program. 
    
-   Copyright:  SciTech Software / UCL 1992-2009
+   Copyright:  SciTech Software / UCL 1992-2014
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -75,6 +75,7 @@
    V2.6  16.06.08 Skipped for release
    V3.0  06.11.08 Skipped for release
    V3.1  31.03.09 Skipped for release
+   V3.2  24.08.14 Skipped for release
 
 *************************************************************************/
 /* Includes

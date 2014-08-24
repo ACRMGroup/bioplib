@@ -3,11 +3,11 @@
    Program:    ProFit
    File:       main.c
    
-   Version:    V3.1
-   Date:       31.03.09
+   Version:    V3.2
+   Date:       24.08.14
    Function:   Protein Fitting program. Main routines.
    
-   Copyright:  SciTech Software / UCL 1992-2009
+   Copyright:  SciTech Software / UCL 1992-2014
    EMail:      andrew@bioinf.org.uk
                
 **************************************************************************
@@ -148,7 +148,7 @@
                    ReadStructure() to clear fitted coordinates when 
                    loading a new mobile structure.
    V3.1   31.03.09 Updated version number.
-          24.08.14 Added ParseResSpecWrapper().
+   V3.2   24.08.14 Added ParseResSpecWrapper().
                    Use updated BiopLib functions.
                    Added GetPDBChainLabelsWrapper(). By: CTP
 
@@ -192,6 +192,7 @@
    04.06.08 Version Working Copy
    03.11.08 Version 3.0
    31.03.09 Version 3.1
+   24.08.14 Version 3.2
 */
 void logo(void)
 {
@@ -203,12 +204,11 @@ void logo(void)
    printf("                  PP     rr     oo  oo FF     ii   tt\n");
    printf("                  PP     rr      oooo  FF      ii   ttt\n\n");
    printf("                      Protein Least Squares Fitting\n\n");
-   printf("                               Version 3.1\n\n");
-   /*printf("                                   3.0\n\n");*/
+   printf("                               Version 3.2\n\n");
    printf("      Copyright (c) Dr. Andrew C.R. Martin, SciTech Software \
-1992-2009\n");
+1992-2014\n");
    printf("              Copyright (c) Dr. Craig T. Porter, UCL \
-2008-2009\n\n");
+2008-2014\n\n");
 }
 
 

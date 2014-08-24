@@ -3,11 +3,11 @@
    Program:    ProFit
    File:       NWAlign.c
    
-   Version:    V3.1
-   Date:       31.03.09
+   Version:    V3.2
+   Date:       24.08.14
    Function:   Protein Fitting program. 
    
-   Copyright:  SciTech Software 1992-2009
+   Copyright:  SciTech Software 1992-2014
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -92,7 +92,7 @@
                   alignment.
    V3.0  13.01.08 Included output of fitting zones as PIR alignment.
    V3.1  31.03.09 Skipped for release.   
-         24.08.14 Use renamed BiopLib functions. By: CTP
+   V3.2  24.08.14 Use renamed BiopLib functions. By: CTP
 
 *************************************************************************/
 /* Includes

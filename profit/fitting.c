@@ -3,11 +3,11 @@
    Program:    ProFit
    File:       fitting.c
    
-   Version:    V3.1
-   Date:       31.03.09
+   Version:    V3.2
+   Date:       24.08.14
    Function:   Protein Fitting program. 
    
-   Copyright:  SciTech Software / UCL 1992-2009
+   Copyright:  SciTech Software / UCL 1992-2014
    Author:     Dr. Andrew C. R. Martin
    EMail:      andrew@bioinf.org.uk
                
@@ -94,7 +94,7 @@
    V3.0  06.11.08 Release Version
    V3.0  16.02.09 Rewrote CalculateRotationMatrix().
    V3.1  31.03.09 Skipped for release
-         24.08.14 Use renamed BiopLib functions.
+   V3.2  24.08.14 Use renamed BiopLib functions.
                   Added FindZonePDBWrapper() to allow distribution of
                   ProFit without installation of BiopLib. By: CTP
 
