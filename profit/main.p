@@ -126,3 +126,5 @@ BOOL ParseResSpecWrapper(char *spec,
                          int *resnum, 
                          char *insert)
 ;
+char *GetPDBChainLabelsWrapper(PDB *pdb)
+;
