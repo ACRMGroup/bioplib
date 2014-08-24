@@ -64,3 +64,7 @@ void NoFitStructures(void)
 ;
 BOOL DoNoFitting(int strucnum)
 ;
+BOOL FindZonePDBWrapper(PDB *pdb, int start, char startinsert, int stop, 
+                        char stopinsert, char chain, int mode, 
+                        PDB **pdb_start, PDB **pdb_stop)
+;

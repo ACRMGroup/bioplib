@@ -94,7 +94,9 @@
    V3.0  06.11.08 Release Version
    V3.0  16.02.09 Rewrote CalculateRotationMatrix().
    V3.1  31.03.09 Skipped for release
-         24.08.14 Use renamed BiopLib functions. By: CTP
+         24.08.14 Use renamed BiopLib functions.
+                  Added FindZonePDBWrapper() to allow distribution of
+                  ProFit without installation of BiopLib. By: CTP
 
 *************************************************************************/
 /* Includes
@@ -858,6 +860,7 @@ int ValidAtom(char *atnam, int mode)
    23.10.08 Added gWtAverage flag.
    07.11.08 Simple rms/distance calculations are against the mobile 
             structure indicated by gMultiRef.
+   24.08.14 Use FindZonePDBWrapper(). By: CTP
 */
 REAL CalcRMS(BOOL ByRes, FILE *fp, int strucnum, BOOL UpdateReference,
              BOOL ByAtm)
@@ -925,9 +928,9 @@ REAL CalcRMS(BOOL ByRes, FILE *fp, int strucnum, BOOL UpdateReference,
                         z->stop1, z->stopinsert1, z->chain1, z->mode, 
                         &ref_start, &ref_stop))
       */
-      if(!FindZonePDB(refpdblist, z->start1, z->startinsert1, 
-                      z->stop1, z->stopinsert1, z->chain1, z->mode, 
-                      &ref_start, &ref_stop))
+      if(!FindZonePDBWrapper(refpdblist, z->start1, z->startinsert1, 
+                             z->stop1, z->stopinsert1, z->chain1, z->mode,
+                             &ref_start, &ref_stop))
       {
          char zone1[64],
               zone2[64];
@@ -950,9 +953,9 @@ REAL CalcRMS(BOOL ByRes, FILE *fp, int strucnum, BOOL UpdateReference,
       }
 
       /* Mobile structure                                               */
-      if(!FindZonePDB(gFitPDB[strucnum], z->start2, z->startinsert2, 
-                      z->stop2, z->stopinsert2, z->chain2, z->mode, 
-                      &fit_start, &fit_stop))
+      if(!FindZonePDBWrapper(gFitPDB[strucnum], z->start2,
+                             z->startinsert2, z->stop2, z->stopinsert2, 
+                             z->chain2, z->mode, &fit_start, &fit_stop))
       {
          char zone1[64],
               zone2[64];
@@ -2246,6 +2249,7 @@ int SearchForBestDistMat(REAL **matrix,
    20.02.01 -999 for start or end of structure rather than -1
    18.03.08 added call to CentreOnZone() for setting centres of 
             geometry. By: CTP
+   24.08.14 Use FindZonePDBWrapper(). By: CTP
 */
 int CreateFitArrays(int strucnum)
 {
@@ -2313,9 +2317,9 @@ int CreateFitArrays(int strucnum)
    for(z=gZoneList[strucnum]; z!=NULL; NEXT(z))
    {
       /* Reference structure                                            */
-      if(!FindZonePDB(gRefPDB, z->start1, z->startinsert1, 
-                   z->stop1, z->stopinsert1, z->chain1, z->mode, 
-                   &ref_start, &ref_stop))
+      if(!FindZonePDBWrapper(gRefPDB, z->start1, z->startinsert1, 
+                             z->stop1, z->stopinsert1, z->chain1, z->mode,
+                             &ref_start, &ref_stop))
       {
          char zone1[64],
               zone2[64];
@@ -2338,9 +2342,9 @@ int CreateFitArrays(int strucnum)
       }
 
       /* Mobile structure                                               */
-      if(!FindZonePDB(gMobPDB[strucnum], z->start2, z->startinsert2, 
-                   z->stop2, z->stopinsert2, z->chain2, z->mode, 
-                   &mob_start, &mob_stop))
+      if(!FindZonePDBWrapper(gMobPDB[strucnum], z->start2, 
+                             z->startinsert2, z->stop2, z->stopinsert2,
+                             z->chain2, z->mode, &mob_start, &mob_stop))
       {
          char zone1[64],
               zone2[64];
@@ -2686,6 +2690,7 @@ reference atom %4s in mobile.\n",
    correspond to centres of user-defined zones.
 
    18.03.08 Original based on CreateFitArrays() By: CTP
+   24.08.14 Use FindZonePDBWrapper(). By: CTP
 */
 int CentreOnZone(int strucnum)
 {
@@ -2730,9 +2735,9 @@ int CentreOnZone(int strucnum)
    for(z=gCZoneList[strucnum]; z!=NULL; NEXT(z))
    {
       /* Reference structure                                            */
-      if(!FindZonePDB(gRefPDB, z->start1, z->startinsert1, 
-                      z->stop1, z->stopinsert1, z->chain1, z->mode, 
-                      &ref_start, &ref_stop))
+      if(!FindZonePDBWrapper(gRefPDB, z->start1, z->startinsert1, 
+                             z->stop1, z->stopinsert1, z->chain1, z->mode,
+                             &ref_start, &ref_stop))
       {
 
          /* Check ranges have been found                                */
@@ -2741,9 +2746,10 @@ int CentreOnZone(int strucnum)
       }
       
       /* Mobile structure                                               */
-      if(!FindZonePDB(gMobPDB[strucnum], z->start2, z->startinsert2, 
-                      z->stop2, z->stopinsert2, z->chain2, z->mode, 
-                      &mob_start, &mob_stop))
+      if(!FindZonePDBWrapper(gMobPDB[strucnum],
+                             z->start2, z->startinsert2, z->stop2, 
+                             z->stopinsert2, z->chain2, z->mode, 
+                             &mob_start, &mob_stop))
       {
          /* Check ranges have been found                                */
          printf("   Error==> Mobile centre residue not found.\n");
@@ -3364,6 +3370,45 @@ void FitStructuresInOrder(REAL sortorder[][2])
    }
 
    return;
+}
+
+/************************************************************************/
+/*>BOOL FindZonePDB(PDB *pdb, int start, char startinsert, int stop, 
+                    char stopinsert, char chain, int mode, 
+                    PDB **pdb_start, PDB **pdb_stop)
+   -------------------------------------------------------------
+
+   Finds pointers to the start and end of a zone in a PDB linked list. The
+   end is the atom *after* the specified zone
+
+   Wrapper function for blFindZonePDB(). The rewritten blFindZonePDB() 
+   function expect strings as parameters. This function takes the chain 
+   and insert parameters and converts them to strings.
+
+   24.08.14 Original based on FindZonePDB(). By: CTP
+
+*/
+BOOL FindZonePDBWrapper(PDB *pdb, int start, char startinsert, int stop, 
+                        char stopinsert, char chain, int mode, 
+                        PDB **pdb_start, PDB **pdb_stop)
+{
+   char startinsert_a[2] = " ",
+        stopinsert_a[2]  = " ",
+        chain_a[2]       = " ";
+        
+   strncpy(startinsert_a,&startinsert,1);
+   strncpy(stopinsert_a ,&stopinsert ,1);
+   strncpy(chain_a      ,&chain      ,1);
+   
+   return(blFindZonePDB(pdb,
+                        start,
+                        startinsert_a,
+                        stop,
+                        stopinsert_a,
+                        chain_a,
+                        mode,
+                        pdb_start,
+                        pdb_stop));
 }
 
 
