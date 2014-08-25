@@ -3,8 +3,8 @@
 
    \file       pdbtagvars.h
    
-   \version    V0.1
-   \date       06.08.14
+   \version    V0.2
+   \date       25.08.14
    \brief      Header file for associating XML tags with additional 
                variables in the PDB structure
    
@@ -48,8 +48,13 @@
    Revision History:
    =================
 -  V0.1  06.08.14 Preliminary code
+-  V0.2  25.08.14 Added blAddTagVariablesNodes() By: CTP
 
 *************************************************************************/
+/* Includes
+*/
+#include <libxml/tree.h>
+
 /* Defines and macros
 */
 #define MAXTAGNAME 360  /* Maximum length of an XML tag name            */
@@ -132,3 +137,4 @@ void blPDBAddXMLAccessTag(void);
 void blPrintTagVariables(PDB *p);
 void blPrintAllTagVariables(PDB *pdb);
 
+void blAddTagVariablesNodes(PDB *pdb, xmlNodePtr atom_node);

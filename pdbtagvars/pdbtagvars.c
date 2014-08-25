@@ -3,8 +3,8 @@
 
    \file       
    
-   \version    V0.1
-   \date       06.08.14
+   \version    V0.2
+   \date       25.08.14
    \brief      Code for associating XML tags with additional 
                variables in the PDB structure
    
@@ -48,6 +48,7 @@
    Revision History:
    =================
 -  V0.1  06.08.14 Preliminary code
+-  V0.2  25.08.14 Added blAddTagVariablesNodes() By: CTP
 
 *************************************************************************/
 /* Includes
@@ -174,3 +175,53 @@ void blPrintTagVariables(PDB *p)
 }
 
    
+/************************************************************************/
+/*>void blAddTagVariablesNodes(PDB *pdb, xmlNodePtr atom_node)
+   -----------------------------------------------------------
+*//**
+   \param[in]   PDB        *  Pointer to a PDB structure
+   \param[in]   atom_node  *  Pointer to an atom_site node
+
+   Adds child nodes with user-defined data to pdbml atom_site node.
+
+   Based on blPrintTagVariables().
+   
+-  25.08.14 Original   By: CTP
+*/
+void blAddTagVariablesNodes(PDB *pdb, xmlNodePtr atom_node)
+{
+   xmlNodePtr node = NULL;
+   char       xmltag_name[MAXTAGNAME],
+              xmltag_data[80];
+   int        i;
+
+   /* get functions for pdb list */
+   for(i=0; i<gNPDBTagFunctions; i++)
+   {
+      /* get tag name */
+      sprintf(xmltag_name,"%s",gPDBTagFunctions[i].tag);
+   
+      /* get tag data */
+      switch(gPDBTagFunctions[i].type)
+      {
+      case PDBTAGVAR_REAL:
+         sprintf(xmltag_data,"%f",
+                 (*gPDBTagFunctions[i].realFunction)(pdb));
+         break;
+      case PDBTAGVAR_INT:
+         sprintf(xmltag_data,"%d",
+                 (*gPDBTagFunctions[i].intFunction)(pdb));
+         break;
+      case PDBTAGVAR_STRING:
+         sprintf(xmltag_data,"%s",
+                 (*gPDBTagFunctions[i].stringFunction)(pdb));
+         break;
+      }
+
+      /* add child node */
+      node = xmlNewChild(atom_node, NULL, (xmlChar *) xmltag_name, 
+                         (xmlChar *) xmltag_data);
+   }
+
+   return;
+}
