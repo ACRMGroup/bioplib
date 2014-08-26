@@ -3,8 +3,8 @@
 
    \file       writepdbml_suite.c
    
-   \version    V1.1
-   \date       16.08.14
+   \version    V1.2
+   \date       26.08.14
    \brief      Test suite for writing pdb and pdbml data to file.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -49,6 +49,7 @@
    =================
 -  V1.0  05.08.14 Original By: CTP
 -  V1.1  16.08.14 Test write charge and element to file. By: CTP
+-  V1.2  26.08.14 Set ATOM record type to "ATOM  ". By: CTP
 
 *************************************************************************/
 
@@ -83,24 +84,24 @@ static void writepdbml_set_test_data(void)
 {
    /* Output PDB */
    pdb_out = (PDB *) malloc(sizeof(PDB));
-   strcpy(pdb_out->record_type, "ATOM");
-   pdb_out->atnum =                  1 ;
-   strcpy(pdb_out->atnam,       "CA  ");
-   strcpy(pdb_out->atnam_raw,   " CA ");
-   strcpy(pdb_out->resnam,      "ALA ");
-   strcpy(pdb_out->chain,          "A");
-   pdb_out->resnum =                 1 ;
-   strcpy(pdb_out->insert,         " ");
-   pdb_out->x =                  1.000 ;
-   pdb_out->y =                  2.000 ;
-   pdb_out->z =                  3.000 ;
-   pdb_out->occ =                 1.00 ;
-   pdb_out->altpos =               ' ' ;
-   pdb_out->bval =               20.00 ;
-   strcpy(pdb_out->element,        "C");
-   pdb_out->formal_charge =          0 ;
-   pdb_out->partial_charge =       0.0 ;
-   pdb_out->next =                NULL ;
+   strcpy(pdb_out->record_type, "ATOM  ");
+   pdb_out->atnum =                    1 ;
+   strcpy(pdb_out->atnam,         "CA  ");
+   strcpy(pdb_out->atnam_raw,     " CA ");
+   strcpy(pdb_out->resnam,        "ALA ");
+   strcpy(pdb_out->chain,            "A");
+   pdb_out->resnum =                   1 ;
+   strcpy(pdb_out->insert,           " ");
+   pdb_out->x =                    1.000 ;
+   pdb_out->y =                    2.000 ;
+   pdb_out->z =                    3.000 ;
+   pdb_out->occ =                   1.00 ;
+   pdb_out->altpos =                 ' ' ;
+   pdb_out->bval =                 20.00 ;
+   strcpy(pdb_out->element,          "C");
+   pdb_out->formal_charge =            0 ;
+   pdb_out->partial_charge =         0.0 ;
+   pdb_out->next =                  NULL ;
 }
 
 /* Setup And Teardown */

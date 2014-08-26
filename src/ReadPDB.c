@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V2.31
-   \date       18.08.14
+   \version    V2.32
+   \date       26.08.14
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2014
@@ -180,6 +180,7 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                   for PDB structure. By: CTP
 -  V2.31 18.08.14 Added XML_SUPPORT option allowing compilation without 
                   support for PDBML format. By: CTP
+-  V2.32 26.08.14 blDoReadPDBML() pads record type to six chars. By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -1259,6 +1260,7 @@ pointer\n");
             for partial occupancy atoms. By: CTP
 -  18.08.14 Added XML_SUPPORT option. Return error if XML_SUPPORT not 
             defined By: CTP
+-  26.08.14 Pad record_type to six characters. By: CTP
 
 */
 PDB *blDoReadPDBML(FILE *fpin,
@@ -1425,6 +1427,7 @@ PDB *blDoReadPDBML(FILE *fpin,
             else if(!strcmp((char *) n->name,"group_PDB"))
             {
               strcpy(curr_pdb->record_type, (char *) content);
+              PADMINTERM(curr_pdb->record_type, 6);
             }
             else if(!strcmp((char *) n->name,"occupancy"))
             {
@@ -1559,7 +1562,7 @@ PDB *blDoReadPDBML(FILE *fpin,
 
 
          /* Filter: All Atoms */
-         if(!AllAtoms && strcmp(curr_pdb->record_type, "ATOM"))
+         if(!AllAtoms && strncmp(curr_pdb->record_type, "ATOM  ", 6))
          {
             /* Free curr_pdb and skip atom */
             FREELIST(curr_pdb,PDB);
