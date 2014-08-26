@@ -1334,7 +1334,7 @@ int blZeroMDM(void)
 
 -  26.08.14 Original   By: ACRM
 */
-void blMDMScoreWeight(char resa, char resb, REAL weight)
+void blSetMDMScoreWeight(char resa, char resb, REAL weight)
 {
    int        i,j;
    static int NWarn = 0;
