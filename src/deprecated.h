@@ -3,8 +3,8 @@
 
    \file       deprecated.h
    
-   \version    v1.3
-   \date       14.08.14
+   \version    v1.4
+   \date       26.08.14
    \brief      Redirect calls to deprecated functions.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014
@@ -108,6 +108,8 @@
                   code to deprecated.c  By: CTP 
 -  V1.3  14.08.14 Moved deprecated function prototypes to deprecated.h 
                   By: CTP
+-  V1.4  26.08.14 Added blSetMDMScoreWeight() By: ACRM
+                  PDB2Seq macros give deprecation message. By: CTP
 
 *************************************************************************/
 #ifndef _DEPRECATED_H
@@ -682,16 +684,15 @@ void safeleaks(void);
 #ifdef _SEQ_H_DEPRECATED
 #undef _SEQ_H_DEPRECATED
 
-/*    ***CRAIG*** These won't give deprecation messages! ***CRAIG***    */
-#define PDB2Seq(x)          blDoPDB2Seq((x), FALSE, FALSE, FALSE)
-#define PDB2SeqX(x)         blDoPDB2Seq((x), TRUE,  FALSE, FALSE)
-#define PDB2SeqNoX(x)       blDoPDB2Seq((x), FALSE, FALSE, TRUE)
-#define PDB2SeqXNoX(x)      blDoPDB2Seq((x), TRUE,  FALSE, TRUE)
+#define PDB2Seq(x)          DoPDB2Seq((x), FALSE, FALSE, FALSE)
+#define PDB2SeqX(x)         DoPDB2Seq((x), TRUE,  FALSE, FALSE)
+#define PDB2SeqNoX(x)       DoPDB2Seq((x), FALSE, FALSE, TRUE)
+#define PDB2SeqXNoX(x)      DoPDB2Seq((x), TRUE,  FALSE, TRUE)
 
-#define PDBProt2Seq(x)      blDoPDB2Seq((x), FALSE, TRUE, FALSE)
-#define PDBProt2SeqX(x)     blDoPDB2Seq((x), TRUE,  TRUE, FALSE)
-#define PDBProt2SeqNoX(x)   blDoPDB2Seq((x), FALSE, TRUE, TRUE)
-#define PDBProt2SeqXNoX(x)  blDoPDB2Seq((x), TRUE,  TRUE, TRUE)
+#define PDBProt2Seq(x)      DoPDB2Seq((x), FALSE, TRUE, FALSE)
+#define PDBProt2SeqX(x)     DoPDB2Seq((x), TRUE,  TRUE, FALSE)
+#define PDBProt2SeqNoX(x)   DoPDB2Seq((x), FALSE, TRUE, TRUE)
+#define PDBProt2SeqXNoX(x)  DoPDB2Seq((x), TRUE,  TRUE, TRUE)
 
 /************************************************************************/
 /* Deprecated functions: seq.h                                          */

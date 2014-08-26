@@ -3,8 +3,8 @@
 
    \file       deprecatedBiop.c
    
-   \version    V1.3
-   \date       19.08.14
+   \version    V1.4
+   \date       26.08.14
    \brief      Source code for Biop deprecated functions.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014
@@ -74,6 +74,7 @@
 -  V1.3  19.08.14 Renamed functions: blBuildAtomNeighbourPDBList(),
                   blExtractZonePDB(), blSelectAtomsPDB(), blStripHPDB(),
                   blStripWatersPDB() with AsCopy suffix. By: CTP
+-  v1.4  26.08.14 Added blSetMDMScoreWeight() By: ACRM
 
 *************************************************************************/
 /* Includes
