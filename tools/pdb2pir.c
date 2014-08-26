@@ -3,8 +3,8 @@
 
    \file       pdb2pir.c
    
-   \version    V2.9
-   \date       22.07.14
+   \version    V2.10
+   \date       26.08.14
    \brief      Convert PDB to PIR sequence file
    
    \copyright  (c) Dr. Andrew C. R. Martin, UCL 1994-2014
@@ -68,7 +68,8 @@
                   now appear in lower case if -u not specified
 -  V2.9  22.07.14 Renamed deprecated functions with bl prefix.
                   Added doxygen annotation. By: CTP
-
+-  V2.10 26.08.14 Use renamed macros blPDB2SeqXNoX() and blPDB2SeqX(). 
+                  By: CTP
 *************************************************************************/
 /* Includes
 */
@@ -149,6 +150,7 @@ void LookupModres(char *orig, char *new, MODRES *modres);
 -  07.03.07 Calls ReadWholePDBAtoms()
 -  22.05.09 Added -i option
 -  22.07.14 Renamed deprecated functions with bl prefix. By: CTP
+-  26.08.14 Use renamed macros blPDB2SeqXNoX() and blPDB2SeqX(). By: CTP
 */
 int main(int argc, char **argv)
 {
@@ -300,7 +302,7 @@ int main(int argc, char **argv)
    {
       if(gDoNucleic)
       {
-         if((sequence = PDB2SeqXNoX(pdb))==NULL)
+         if((sequence = blPDB2SeqXNoX(pdb))==NULL)
          {
             fprintf(stderr,"Error: No memory for sequence data\n");
             return(1);
@@ -308,7 +310,7 @@ int main(int argc, char **argv)
       }
       else
       {
-         if((sequence = PDBProt2SeqXNoX(pdb))==NULL)
+         if((sequence = blPDBProt2SeqXNoX(pdb))==NULL)
          {
             fprintf(stderr,"Error: No memory for sequence data\n");
             return(1);
