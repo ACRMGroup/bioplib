@@ -77,7 +77,7 @@
 -  V3.3  07.04.09 Complete re-write of ReadMDM() so it can read BLAST
                   style matrix files as well as our own
 -  V3.4  07.07.14 Use bl prefix for functions By: CTP
--  V3.5  26.08.14 Added blWeightMDMScore() By: ACRM
+-  V3.5  26.08.14 Added blSetMDMScoreWeight() By: ACRM
 
 *************************************************************************/
 /* Includes
@@ -1322,8 +1322,8 @@ int blZeroMDM(void)
 }
 
 /************************************************************************/
-/*>void blWeightMDMScore(char resa, char resb, REAL weight)
-   --------------------------------------------------------
+/*>void blSetMDMScoreWeight(char resa, char resb, REAL weight)
+   -----------------------------------------------------------
 *//**
 
    \param[in]     resa      First residue
@@ -1334,7 +1334,7 @@ int blZeroMDM(void)
 
 -  26.08.14 Original   By: ACRM
 */
-void blWeightMDMScore(char resa, char resb, REAL weight)
+void blMDMScoreWeight(char resa, char resb, REAL weight)
 {
    int        i,j;
    static int NWarn = 0;

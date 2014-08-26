@@ -1377,10 +1377,10 @@ int NumericAffineAlign(int *seq1, int length1, int *seq2, int length2,
                                align_len));
 }
 
-void WeightMDMScore(char resa, char resb, REAL weight)
+void SetMDMScoreWeight(char resa, char resb, REAL weight)
 {
-   DEPRECATED("WeightMDMScore()","blWeightMDMScore()");
-   blWeightMDMScore(resa, resb, weight);
+   DEPRECATED("SetMDMScoreWeight()","blSetMDMScoreWeight()");
+   blSetMDMScoreWeight(resa, resb, weight);
 }
 
 /** \endcond                                                            */

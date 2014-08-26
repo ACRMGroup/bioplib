@@ -728,7 +728,7 @@ int NumericAffineAlign(int *seq1, int length1, int *seq2, int length2,
                        BOOL verbose, BOOL identity, int penalty,
                        int penext, int *align1, int *align2, 
                        int *align_len);
-void WeightMDMScore(char resa, char resb, REAL weight);
+void SetMDMScoreWeight(char resa, char resb, REAL weight);
 
 #endif
 

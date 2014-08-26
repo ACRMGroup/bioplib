@@ -65,7 +65,7 @@
                   macros. By: CTP
 -  V2.13 14.08.14 Moved deprecated function prototypes to deprecated.h 
                   By: CTP
--  V2.14 26.08.14 Added blWeightMDMScore()
+-  V2.14 26.08.14 Added blSetMDMScoreWeight()
 
 *************************************************************************/
 #ifndef _SEQ_H
@@ -141,7 +141,7 @@ int blNumericAffineAlign(int *seq1, int length1, int *seq2, int length2,
                          BOOL verbose, BOOL identity, int penalty,
                          int penext, int *align1, int *align2, 
                          int *align_len);
-void blWeightMDMScore(char resa, char resb, REAL weight);
+void blSetMDMScoreWeight(char resa, char resb, REAL weight);
 
 
 /************************************************************************/
