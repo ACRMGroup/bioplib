@@ -682,7 +682,7 @@ void safeleaks(void);
 #ifdef _SEQ_H_DEPRECATED
 #undef _SEQ_H_DEPRECATED
 
-
+/*    ***CRAIG*** These won't give deprecation messages! ***CRAIG***    */
 #define PDB2Seq(x)          blDoPDB2Seq((x), FALSE, FALSE, FALSE)
 #define PDB2SeqX(x)         blDoPDB2Seq((x), TRUE,  FALSE, FALSE)
 #define PDB2SeqNoX(x)       blDoPDB2Seq((x), FALSE, FALSE, TRUE)
@@ -728,6 +728,7 @@ int NumericAffineAlign(int *seq1, int length1, int *seq2, int length2,
                        BOOL verbose, BOOL identity, int penalty,
                        int penext, int *align1, int *align2, 
                        int *align_len);
+void WeightMDMScore(char resa, char resb, REAL weight);
 
 #endif
 

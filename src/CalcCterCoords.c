@@ -98,6 +98,7 @@
 
 -  15.07.90 Original
 -  07.07.14 Use bl prefix for functions By: CTP
+-  26.08.14 Removed unused d23  By: ACRM
 */
 BOOL blCalcCterCoords(PDB *p, PDB *ca_p, PDB *c_p, PDB *o_p)
 {
@@ -105,7 +106,7 @@ BOOL blCalcCterCoords(PDB *p, PDB *ca_p, PDB *c_p, PDB *o_p)
          alpha = 120.0*PI/180.0,
          cosa,  sina,  scalpr,
          x21,   y21,   z21,   d21,
-         x23,   y23,   z23,   d23,
+         x23,   y23,   z23,
          x32,   y32,   z32,
          xp23,  yp23,  zp23,  rp23,
          xh,    yh,    zh,
@@ -125,7 +126,6 @@ BOOL blCalcCterCoords(PDB *p, PDB *ca_p, PDB *c_p, PDB *o_p)
    x23 = c_p->x - o_p->x;
    y23 = c_p->y - o_p->y;
    z23 = c_p->z - o_p->z;
-   d23 = (REAL)sqrt((double)(x23*x23 + y23*y23 + z23*z23));
 
    cosa = (REAL)cos((double)alpha);
    sina = (REAL)sin((double)alpha);

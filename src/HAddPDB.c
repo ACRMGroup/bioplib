@@ -3,8 +3,8 @@
 
    \file       HAddPDB.c
    
-   \version    V2.17
-   \date       07.07.14
+   \version    V2.18
+   \date       26.08.14
    \brief      Add hydrogens to a PDB linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2014
@@ -118,6 +118,9 @@
                   from NULL pointer
 -  V2.16 20.03.14 Updated error message in GenH(). By: CTP
 -  V2.17 07.07.14 Use bl prefix for functions By: CTP
+-  V2.18 26.08.14 Moved use of ok variable into #ifdef SCREEN_INFO and
+                  cleaned up use of n and nt variables instead of literal
+                  strings
 
 *************************************************************************/
 /* Includes
@@ -567,6 +570,8 @@ preceeding the last residue\n");
 -  05.12.02 Added setting of atnam_raw
 -  03.06.05 Added setting of altpos
 -  07.07.14 Use bl prefix for functions By: CTP
+-  26.08.14 Used n and nt variables consistently instead of literal
+            strings. Moved all use of 'ok' variable into SCREEN_INFO
 */
 static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta, 
                   BOOL firstres)
@@ -596,10 +601,9 @@ static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta,
                   xv,yv,zv,
                   scalpr;
    int            kount = 0,
-                  num_ant,k,jj;
+                  num_ant,k;
    unsigned short nt_point;
-   BOOL           ok,
-                  Dummy;
+   BOOL           Dummy;
    PDB            *hlist,
                   *hlist_start = NULL;
 
@@ -630,13 +634,13 @@ static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta,
    {
       if(nt_point) 
       {
-         strcpy(sGNat[nt_point],"N   ");
+         strcpy(sGNat[nt_point],n);
          nt_point=0;
       }
 
       if(!strncmp(sGHName[1],sGNat[k],4))
       {
-         if(!strncmp(sGNat[k],"NT  ",4)) nt_point=k;
+         if(!strncmp(sGNat[k],nt,4)) nt_point=k;
          kount++;
          x1=sGX[k];
          y1=sGY[k];
@@ -650,7 +654,7 @@ static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta,
       }
       else if(!strncmp(sGHName[2],sGNat[k],4))
       {
-         if(!strncmp(sGNat[k],"NT  ",4)) nt_point=k;
+         if(!strncmp(sGNat[k],nt,4)) nt_point=k;
          kount++;
          x2=sGX[k];
          y2=sGY[k];
@@ -664,7 +668,7 @@ static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta,
       }
       else if(!strncmp(sGHName[3],sGNat[k],4))
       {
-         if(!strncmp(sGNat[k],"NT  ",4)) nt_point=k;
+         if(!strncmp(sGNat[k],nt,4)) nt_point=k;
          kount++;
          x3=sGX[k];
          y3=sGY[k];
@@ -678,7 +682,7 @@ static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta,
       }
       else if(!strncmp(sGHName[4],sGNat[k],4))
       {
-         if(!strncmp(sGNat[k],"NT  ",4)) nt_point=k;
+         if(!strncmp(sGNat[k],nt,4)) nt_point=k;
          kount++;
          x4=sGX[k];
          y4=sGY[k];
@@ -695,7 +699,9 @@ static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta,
    /* Check we found all the atoms we need for this PGP                 */
    if(kount != num_ant)
    {
-      ok = FALSE;
+#ifdef SCREEN_INFO
+      BOOL ok = FALSE;
+      int  jj;
 
       if(firstres)
       {
@@ -707,7 +713,6 @@ static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta,
          /* Check it's not just the NT                                  */
          for(jj=1;jj<=4;jj++) if(!strncmp(sGHName[jj],nt,4)) ok = TRUE;
       }
-#ifdef SCREEN_INFO
       if(!ok)
       {
          char buffer[160];

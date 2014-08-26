@@ -101,6 +101,7 @@
 -  23.08.94 Original    By: ACRM
 -  20.03.14 Updated error message. By: CTP
 -  07.07.14 Use bl prefix for functions By: CTP
+-  26.08.14 Removed unused r21 By: ACRM
 */
 int blCalcTetraHCoords(PDB *nter, COOR *coor)
 {
@@ -109,7 +110,7 @@ int blCalcTetraHCoords(PDB *nter, COOR *coor)
        *C  = NULL,
        *p,
        *end;
-   REAL x21,     y21,     z21,     r21,
+   REAL x21,     y21,     z21,     
         x32,     y32,     z32,     r32,
         xh,      yh,      zh,      scalpr,
         xp,      yp,      zp,
@@ -150,7 +151,6 @@ int blCalcTetraHCoords(PDB *nter, COOR *coor)
    x21 = CA->x - C->x;
    y21 = CA->y - C->y;
    z21 = CA->z - C->z;
-   r21 = (REAL)sqrt((double)(x21*x21 + y21*y21 + z21*z21));
 
    x32 = N->x - CA->x;
    y32 = N->y - CA->y;

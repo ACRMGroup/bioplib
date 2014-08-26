@@ -3,8 +3,8 @@
 
    \file       seq.h
    
-   \version    V2.13
-   \date       14.08.14
+   \version    V2.14
+   \date       26.08.14
    \brief      Header file for sequence handling
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
@@ -65,6 +65,7 @@
                   macros. By: CTP
 -  V2.13 14.08.14 Moved deprecated function prototypes to deprecated.h 
                   By: CTP
+-  V2.14 26.08.14 Added blWeightMDMScore()
 
 *************************************************************************/
 #ifndef _SEQ_H
@@ -140,7 +141,7 @@ int blNumericAffineAlign(int *seq1, int length1, int *seq2, int length2,
                          BOOL verbose, BOOL identity, int penalty,
                          int penext, int *align1, int *align2, 
                          int *align_len);
-
+void blWeightMDMScore(char resa, char resb, REAL weight);
 
 
 /************************************************************************/

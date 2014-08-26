@@ -3,8 +3,8 @@
 
    \file       align.c
    
-   \version    V3.4
-   \date       07.07.14
+   \version    V3.5
+   \date       26.08.14
    \brief      Perform Needleman & Wunsch sequence alignment
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -77,6 +77,7 @@
 -  V3.3  07.04.09 Complete re-write of ReadMDM() so it can read BLAST
                   style matrix files as well as our own
 -  V3.4  07.07.14 Use bl prefix for functions By: CTP
+-  V3.5  26.08.14 Added blWeightMDMScore() By: ACRM
 
 *************************************************************************/
 /* Includes
@@ -1320,7 +1321,65 @@ int blZeroMDM(void)
    return(MaxVal-MinVal);
 }
 
-               
+/************************************************************************/
+/*>void blWeightMDMScore(char resa, char resb, REAL weight)
+   --------------------------------------------------------
+*//**
+
+   \param[in]     resa      First residue
+   \param[in]     resb      Second residue
+   \param[in]     weight    Weight to apply
+
+   Apply a weight to a particular amino acid substitution
+
+-  26.08.14 Original   By: ACRM
+*/
+void blWeightMDMScore(char resa, char resb, REAL weight)
+{
+   int        i,j;
+   static int NWarn = 0;
+   BOOL       Warned = FALSE;
+
+   resa = (islower(resa)?toupper(resa):resa);
+   resb = (islower(resb)?toupper(resb):resb);
+
+   for(i=0;i<sMDMSize;i++)
+   {
+      if(resa==sMDM_AAList[i]) break;
+   }
+   if(i==sMDMSize) 
+   {
+      if(NWarn < 10)
+         printf("Residue %c not found in matrix\n",resa);
+      else if(NWarn == 10)
+         printf("More residues not found in matrix...\n");
+      Warned = TRUE;
+   }
+   for(j=0;j<sMDMSize;j++)
+   {
+      if(resb==sMDM_AAList[j]) break;
+   }
+   if(j==sMDMSize) 
+   {
+      if(NWarn < 10)
+         printf("Residue %c not found in matrix\n",resb);
+      else if(NWarn == 10)
+         printf("More residues not found in matrix...\n");
+      Warned = TRUE;
+   }
+   
+   if(Warned)
+   { 
+      NWarn++;
+      return;
+   }
+
+   sMDMScore[i][j] *= weight;
+   if(i != j)
+   {
+      sMDMScore[j][i] *= weight;
+   }
+}
             
       
 #ifdef DEMO   
