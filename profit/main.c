@@ -4,7 +4,7 @@
    File:       main.c
    
    Version:    V3.2
-   Date:       24.08.14
+   Date:       26.08.14
    Function:   Protein Fitting program. Main routines.
    
    Copyright:  SciTech Software / UCL 1992-2014
@@ -148,9 +148,12 @@
                    ReadStructure() to clear fitted coordinates when 
                    loading a new mobile structure.
    V3.1   31.03.09 Updated version number.
-   V3.2   24.08.14 Added ParseResSpecWrapper().
+   V3.2   26.08.14 Added ParseResSpecWrapper().
                    Use updated BiopLib functions.
-                   Added GetPDBChainLabelsWrapper(). By: CTP
+                   Added GetPDBChainLabelsWrapper().
+                   Use renamed macro blPDB2Seq.
+                   Added format string for fprintf calls in ShowStatus().
+                   By: CTP
 
 *************************************************************************/
 #define MAIN 
@@ -784,6 +787,7 @@ void Die(char *message)
             (unlike the FIT command) does not update any existing fitted
             coordinates.
    24.08.14 Use renamed BiopLib functions. By: CTP
+   26.08.14 Use renamed macro blPDB2Seq. By: CTP
 */
 BOOL ReadStructure(int  structure,
                    char *filename,
@@ -896,7 +900,7 @@ memory!\n");
 
       /* Convert to sequence                                            */
       if(gRefSeq != NULL) free(gRefSeq);
-      if((gRefSeq = PDB2Seq(gRefPDB))==NULL)
+      if((gRefSeq = blPDB2Seq(gRefPDB))==NULL)
          printf("   Error==> Unable to read sequence for reference \
 structure!\n");
       
@@ -1022,7 +1026,7 @@ memory!\n");
       
       /* Convert to sequence                                            */
       if(gMobSeq[strucnum] != NULL) free(gMobSeq[strucnum]);
-      if((gMobSeq[strucnum] = PDB2Seq(gMobPDB[strucnum]))==NULL)
+      if((gMobSeq[strucnum] = blPDB2Seq(gMobPDB[strucnum]))==NULL)
          printf("   Error==> Unable to read sequence for reference \
 structure!\n");
       
@@ -3003,6 +3007,7 @@ void ShowMatrix(void)
             Marked reference for multi fitting.
    24.08.14 Use renamed BiopLib functions. 
             Use GetPDBChainLabelsWrapper() By: CTP
+   26.08.14 Added format string for fprintf calls. By: CTP
 */
 void ShowStatus(char *filename)
 {
@@ -3121,7 +3126,7 @@ void ShowStatus(char *filename)
             sprintf(buffer, ", %s", atm);
          else
             sprintf(buffer, "%s",   atm);
-         fprintf(fp,buffer);
+         fprintf(fp,"%s",buffer);
       }
       fprintf(fp,"\n");
    }
@@ -3245,7 +3250,7 @@ interatomic distance\n");
                   sprintf(buffer, ", %s", atm);
                else
                   sprintf(buffer, "%s",   atm);
-               fprintf(fp,buffer);
+               fprintf(fp,"%s",buffer);
             }
             fprintf(fp,"\n");
          }
@@ -3270,7 +3275,7 @@ interatomic distance\n");
                   sprintf(buffer, ", %s", atm);
                else
                   sprintf(buffer, "%s",   atm);
-               fprintf(fp,buffer);
+               fprintf(fp,"%s",buffer);
             }
             fprintf(fp,"\n");
          }
@@ -3393,7 +3398,7 @@ SET\n\n");
          {
             buffer[j] = '\0';
             fprintf(fp,"\n   ");
-            fprintf(fp,buffer);
+            fprintf(fp,"%s",buffer);
             j=0;
          }
       }
@@ -3422,7 +3427,7 @@ SET\n\n");
             {
                buffer[j] = '\0';
                fprintf(fp,"\n   ");
-               fprintf(fp,buffer);
+               fprintf(fp,"%s",buffer);
                j=0;
             }
          }
@@ -5620,6 +5625,7 @@ int CopyPDBListToRef(int strucnum)
 
    20.10.08 Original By: CTP
    24.08.14 Use renamed BiopLib functions. By: CTP
+   26.08.14 Use renamed macro blPDB2Seq. By: CTP
 */
 int SetMobileToReference(int strucnum)
 {
@@ -5676,7 +5682,7 @@ memory!\n");
    
    /* Convert sequence                                                  */
    if(gRefSeq != NULL) free(gRefSeq);
-   if((gRefSeq = PDB2Seq(gRefPDB))==NULL)
+   if((gRefSeq = blPDB2Seq(gRefPDB))==NULL)
       printf("   Error==> Unable to read sequence for reference \
 structure!\n");
    

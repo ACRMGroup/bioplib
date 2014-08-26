@@ -4,7 +4,7 @@
    File:       NWAlign.c
    
    Version:    V3.2
-   Date:       24.08.14
+   Date:       26.08.14
    Function:   Protein Fitting program. 
    
    Copyright:  SciTech Software 1992-2014
@@ -92,7 +92,8 @@
                   alignment.
    V3.0  13.01.08 Included output of fitting zones as PIR alignment.
    V3.1  31.03.09 Skipped for release.   
-   V3.2  24.08.14 Use renamed BiopLib functions. By: CTP
+   V3.2  26.08.14 Use renamed BiopLib functions.
+                  Added format string for printf in NWAlign(). By: CTP
 
 *************************************************************************/
 /* Includes
@@ -116,6 +117,7 @@
             to allow for inclusion of gap extension penalty, gGapPenExt.
             By: CTP
    24.08.14 Use renamed BiopLib functions. By: CTP
+   26.08.14 Added format string to printf for aligned seq. By: CTP
 */
 void NWAlign(int strucnum)
 {
@@ -208,7 +210,7 @@ alignment\n");
          for(j=offset; j<60+offset; j++)
          {
             sprintf(buffer,"%c",mob_align[j]);
-            printf(buffer);
+            printf("%s",buffer);
          }
          printf("\n\n   ");
          offset += 60;

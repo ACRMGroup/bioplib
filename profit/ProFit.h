@@ -4,7 +4,7 @@
    File:       ProFit.h
    
    Version:    V3.2
-   Date:       24.08.14
+   Date:       26.08.14
    Function:   Protein Fitting program. Includes and defines.
    
    Copyright:  SciTech Software / UCL 1992-2014
@@ -112,7 +112,7 @@
    V3.0  18.02.09 Added #include for bioplib/aalist.h
    V3.0  04.02.09 Removed ROTATE_REFIT #define - Now compile option.
    V3.1  31.03.09 Skipped for release
-   V3.2  24.08.14 Skipped for release
+   V3.2  26.08.14 Skipped for release
 
 *************************************************************************/
 /* Includes
