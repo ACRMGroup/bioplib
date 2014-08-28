@@ -3,8 +3,8 @@
 
    \file       
    
-   \version    V0.2
-   \date       25.08.14
+   \version    V0.3
+   \date       28.08.14
    \brief      Code for associating XML tags with additional 
                variables in the PDB structure
    
@@ -49,6 +49,8 @@
    =================
 -  V0.1  06.08.14 Preliminary code
 -  V0.2  25.08.14 Added blAddTagVariablesNodes() By: CTP
+-  V0.3  28.08.14 Added blAddTagVariablesColumns() and updated 
+                  blAddTagVariablesNodes() By: CTP
 
 *************************************************************************/
 /* Includes
@@ -187,12 +189,14 @@ void blPrintTagVariables(PDB *p)
    Based on blPrintTagVariables().
    
 -  25.08.14 Original   By: CTP
+-  28.08.14 Added format for floating point and decimal data.
+            Added max length for xmltag_data string. By: CTP
 */
 void blAddTagVariablesNodes(PDB *pdb, xmlNodePtr atom_node)
 {
    xmlNodePtr node = NULL;
    char       xmltag_name[MAXTAGNAME],
-              xmltag_data[80];
+              xmltag_data[MAXTAGDATA];
    int        i;
 
    /* get functions for pdb list */
@@ -205,11 +209,11 @@ void blAddTagVariablesNodes(PDB *pdb, xmlNodePtr atom_node)
       switch(gPDBTagFunctions[i].type)
       {
       case PDBTAGVAR_REAL:
-         sprintf(xmltag_data,"%f",
+         sprintf(xmltag_data,"%8.3f",
                  (*gPDBTagFunctions[i].realFunction)(pdb));
          break;
       case PDBTAGVAR_INT:
-         sprintf(xmltag_data,"%d",
+         sprintf(xmltag_data,"%6d",
                  (*gPDBTagFunctions[i].intFunction)(pdb));
          break;
       case PDBTAGVAR_STRING:
@@ -225,3 +229,74 @@ void blAddTagVariablesNodes(PDB *pdb, xmlNodePtr atom_node)
 
    return;
 }
+
+/************************************************************************/
+/*>char *blAddTagVariablesCols(PDB *pdb)
+   -------------------------------------
+*//**
+   \param[in]   PDB  *  Pointer to a PDB structure
+
+   Adds columns with user-defined data to pdb-format output.
+   
+   Floating point data is formatted as "%8.3" and decimal data is 
+   formatted as "%d6".
+   
+   String data does not have a set column width giving the user the 
+   freedom to set the data format from the tag function.
+
+-  28.08.14 Original   By: CTP
+*/
+char *blAddTagVariablesCols(PDB *pdb)
+{
+   char *xmltag_string = NULL;
+   char xmltag_data[MAXTAGDATA];
+   int  i;
+
+   /* get function values for pdb atom */
+   for(i=0; i<gNPDBTagFunctions; i++)
+   {   
+      /* get tag data */
+      switch(gPDBTagFunctions[i].type)
+      {
+      case PDBTAGVAR_REAL:
+         sprintf(xmltag_data,"%8.3f",
+                 (*gPDBTagFunctions[i].realFunction)(pdb));
+         break;
+      case PDBTAGVAR_INT:
+         sprintf(xmltag_data,"%6d",
+                 (*gPDBTagFunctions[i].intFunction)(pdb));
+         break;
+      case PDBTAGVAR_STRING:
+         sprintf(xmltag_data,"%s",
+                 (*gPDBTagFunctions[i].stringFunction)(pdb));
+         break;
+      }
+
+      /* update xmltag_string with tag data */
+      if(!xmltag_string)
+      {
+         /* first tag: allocate memory and copy data */
+         if( (xmltag_string = (char *)malloc((strlen(xmltag_data) + 1)
+                                             * sizeof(char))) == NULL )
+         {
+            return(NULL);
+         }
+         strcpy(xmltag_string, xmltag_data);
+      }
+      else
+      {
+         /* next tag: realloc memory and append data */
+         if( (xmltag_string = realloc(xmltag_string,
+                                      (strlen(xmltag_string)
+                                       + strlen(xmltag_data) + 1)
+                                       * sizeof(char))) == NULL )
+         {
+            return(NULL);
+         }
+         strcat(xmltag_string, xmltag_data);
+      }
+   }
+
+   return xmltag_string;
+}
+

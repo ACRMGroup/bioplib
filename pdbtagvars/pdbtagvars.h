@@ -3,8 +3,8 @@
 
    \file       pdbtagvars.h
    
-   \version    V0.2
-   \date       25.08.14
+   \version    V0.3
+   \date       28.08.14
    \brief      Header file for associating XML tags with additional 
                variables in the PDB structure
    
@@ -49,6 +49,7 @@
    =================
 -  V0.1  06.08.14 Preliminary code
 -  V0.2  25.08.14 Added blAddTagVariablesNodes() By: CTP
+-  V0.3  28.08.14 Added blAddTagVariablesColumns() By: CTP
 
 *************************************************************************/
 /* Includes
@@ -58,6 +59,7 @@
 /* Defines and macros
 */
 #define MAXTAGNAME 360  /* Maximum length of an XML tag name            */
+#define MAXTAGDATA 360  /* Maximum length of an XML tag data string     */
 
 typedef struct 
 {
@@ -138,3 +140,4 @@ void blPrintTagVariables(PDB *p);
 void blPrintAllTagVariables(PDB *pdb);
 
 void blAddTagVariablesNodes(PDB *pdb, xmlNodePtr atom_node);
+char *blAddTagVariablesCols(PDB *pdb);

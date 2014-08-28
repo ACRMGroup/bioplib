@@ -3,8 +3,8 @@
 
    \file       main.c
    
-   \version    V0.2
-   \date       25.08.14
+   \version    V0.3
+   \date       28.08.14
    \brief      Demonstration of tag pinting code
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2014
@@ -48,6 +48,9 @@
    =================
 -  V0.1  06.08.14 Preliminary code
 -  V0.2  25.08.14 Added pdbml write function. By: CTP
+-  V0.3  28.08.14 Bugfix: added missing global and prototype.
+                  Added pdb write functions and option of output pdb or 
+                  pdbml. Removed gPDBTagWrite : CTP
 
 *************************************************************************/
 /* Includes
@@ -70,7 +73,10 @@ int main(int argc, char **argv);
 int testInt(PDB *p);
 char *testString_GetResID(PDB *p);
 
-
+void testWriteAsPDBML(FILE *fp, PDB  *pdb);
+void testWriteAsPDB(FILE *fp, PDB  *pdb);
+void testWritePDBRecord(FILE *fp, PDB  *pdb);
+                      
 /************************************************************************/
 /* Globals
 */
@@ -96,8 +102,16 @@ int main(int argc, char **argv)
          blPrintAllTagVariables(pdb);
          */
 
-         /* write pdbml file to stdout */
-         testWriteAsPDBML(stdout,pdb);
+         if(argc > 1 && !strcmp(argv[1], "pdbml"))
+         {
+            /* write pdbml file to stdout */
+            testWriteAsPDBML(stdout,pdb);
+         }
+         else
+         {
+            /* write pdb to stdout */
+            testWriteAsPDB(stdout, pdb);
+         }
          
          FREELIST(pdb, PDB);
       }
@@ -147,6 +161,8 @@ char *testString_GetResID(PDB *p)
    Tags are written if gPDBTagWrite is TRUE.
 
 -  25.08.14 Original. By: CTP
+-  28.08.14 Use gNPDBTagFunctions to control output of user-defined tags.
+            By: CTP
 
 */
 void testWriteAsPDBML(FILE *fp, PDB  *pdb)
@@ -333,7 +349,7 @@ void testWriteAsPDBML(FILE *fp, PDB  *pdb)
 
       /* NEW CODE */
       /* user-defined tags */
-      if(gPDBTagWrite && gNPDBTagFunctions)
+      if(gNPDBTagFunctions)
       {
          blAddTagVariablesNodes(p,atom_node);
       }
@@ -350,3 +366,89 @@ void testWriteAsPDBML(FILE *fp, PDB  *pdb)
 }
 
 
+/************************************************************************/
+/*>void blWriteAsPDB(FILE *fp, PDB *pdb)
+   -------------------------------------
+*//**
+
+   \param[in]     *fp   PDB file pointer to be written
+   \param[in]     *pdb  PDB linked list to write
+
+   Write a PDB linked list by calls to testWritePDBRecord()
+
+-  28.08.14 Based on blWriteAsPDB() but calls testWritePDBRecord() By: CTP
+*/
+void testWriteAsPDB(FILE *fp,
+                  PDB  *pdb)
+{
+   PDB   *p;
+   char  PrevChain[8];
+   
+   strcpy(PrevChain,pdb->chain);
+
+   for(p = pdb ; p ; NEXT(p))
+   {
+      if(!CHAINMATCH(PrevChain,p->chain))
+      {
+         /* Chain change, insert TER card                               */
+         fprintf(fp,"TER   \n");
+         strcpy(PrevChain,p->chain);
+      }
+      testWritePDBRecord(fp,p);
+   }
+   fprintf(fp,"TER   \n");
+}
+
+/************************************************************************/
+/*>void blWritePDBRecord(FILE *fp, PDB *pdb)
+   -----------------------------------------
+*//**
+
+   \param[in]     *fp     PDB file pointer to be written
+   \param[in]     *pdb    PDB linked list record to write
+
+   Write a PDB record with additional user-defined columns
+
+-  28.08.14 Original based on blWritePDBRecord() By: CTP
+*/
+void testWritePDBRecord(FILE *fp,
+                      PDB  *pdb)
+{
+   char charge = ' ',
+        sign   = ' ',
+        *tags  = NULL;
+
+   /* set charge */
+   if(pdb->formal_charge && ABS(pdb->formal_charge <= 8))
+   {
+      charge = (char)('0' + ABS(pdb->formal_charge));
+      sign   = pdb->formal_charge > 0 ? '+':'-';
+   }
+
+   /* set user-defined columns */
+   tags = gNPDBTagFunctions ? blAddTagVariablesCols(pdb) : "";
+
+   /* updated print statment */
+   fprintf(fp,"%-6s%5d %-4s%c%-4s%1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f\
+          %2s%c%c%s\n",
+           pdb->record_type,
+           pdb->atnum,
+           pdb->atnam_raw,
+           pdb->altpos,
+           pdb->resnam,
+           pdb->chain,
+           pdb->resnum,
+           pdb->insert,
+           pdb->x,
+           pdb->y,
+           pdb->z,
+           pdb->occ,
+           pdb->bval,
+           pdb->element,
+           charge,
+           sign,
+           tags);
+   
+   /* free user-defined columns memory */
+   if(gNPDBTagFunctions){ free(tags); }
+}
