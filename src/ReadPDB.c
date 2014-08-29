@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V2.32
-   \date       26.08.14
+   \version    V2.33
+   \date       29.08.14
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2014
@@ -192,6 +192,8 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 -  V2.31 18.08.14 Added XML_SUPPORT option allowing compilation without 
                   support for PDBML format. By: CTP
 -  V2.32 26.08.14 blDoReadPDBML() pads record type to six chars. By: CTP
+-  V2.33 29.08.14 Rewrote blCheckFileFormatPDBML() to take sample from 
+                  input steam then push sample back on stream. By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -225,6 +227,7 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 #define MAXPARTIAL 8
 #define SMALL      0.000001
 #define XML_BUFFER 1024
+#define XML_SAMPLE 512
 
 /************************************************************************/
 /* Prototypes
@@ -1684,9 +1687,8 @@ PDB *blDoReadPDBML(FILE *fpin,
    -------------------------------------
 *//**
 
-   \param[in]     *fp      A pointer to type FILE in which the
-                              .PDB file is stored.
-   \return                      File is in PDBML format;
+   \param[in]     *fp      A pointer to type FILE.
+   \return                 File is in PDBML format?
 
    Simple test to detect PDBML-formatted pdb file.
    
@@ -1696,24 +1698,45 @@ PDB *blDoReadPDBML(FILE *fpin,
    
 -  22.04.14 Original By: CTP
 -  07.07.14 Renamed to blCheckFileFormatPDBML() By: CTP
+-  29.08.14 Function re-written to take sample from the input stream then
+            reset the stream with ungetc. By: CTP
    
 */
 BOOL blCheckFileFormatPDBML(FILE *fp)
 {
-   char buffer[80];
-   int  i;
+   char buffer[XML_SAMPLE];
+   int  i, c;
    BOOL found_xml  = FALSE,
         found_pdbx = FALSE;
-   
-   rewind(fp);
-   for(i=0; i < 6; i++)
+
+   /* store sample from stream */
+   for(i = 0; i < (XML_SAMPLE - 1); i++)
    {
-      fgets(buffer,80,fp);
-      if(!strncmp(buffer,"<?xml ",6))            found_xml  = TRUE;
-      if(!strncmp(buffer,"<PDBx:datablock ",16)) found_pdbx = TRUE;
+      c = fgetc(fp);
+      if(c == EOF || feof(fp)) break;
+      buffer[i] = (char)c;      
+   }
+   buffer[i] = '\0'; /* terminate string */
+  
+   /* push sample back on stream */
+   for(i = strlen(buffer) - 1; i >= 0; i--)
+   {
+      ungetc(buffer[i], fp);
+   }
+   
+   /* check first line */
+   if(!strncmp(buffer,"<?xml ",6)) found_xml  = TRUE;
+   
+   /* check remaining lines */
+   for(i = 0; i < strlen(buffer); i++)
+   {
+      if(buffer[i] != '\n') continue;
+
+      i++;
+      if(!strncmp(&buffer[i],"<?xml ",6))            found_xml  = TRUE;
+      if(!strncmp(&buffer[i],"<PDBx:datablock ",16)) found_pdbx = TRUE;
    }
 
-   rewind(fp);
    return found_xml && found_pdbx ? TRUE : FALSE ;
 }
 

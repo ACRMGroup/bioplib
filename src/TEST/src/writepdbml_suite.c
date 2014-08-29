@@ -3,8 +3,8 @@
 
    \file       writepdbml_suite.c
    
-   \version    V1.2
-   \date       26.08.14
+   \version    V1.3
+   \date       29.08.14
    \brief      Test suite for writing pdb and pdbml data to file.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -50,6 +50,8 @@
 -  V1.0  05.08.14 Original By: CTP
 -  V1.1  16.08.14 Test write charge and element to file. By: CTP
 -  V1.2  26.08.14 Set ATOM record type to "ATOM  ". By: CTP
+-  V1.3  29.08.14 Check file format before reading as format check no 
+                  longer rewinds. By: CTP
 
 *************************************************************************/
 
@@ -176,11 +178,11 @@ START_TEST(test_write_pdb)
    fp = fopen(test_output_filename,"r");
    ck_assert_msg(fp != NULL,                "Failed to open file.");
 
-   /* read test file */
-   pdb_in = blReadPDB(fp, &natoms);
-   
    /* check test file format */
    pdbml_format = blCheckFileFormatPDBML(fp);
+
+   /* read test file */
+   pdb_in = blReadPDB(fp, &natoms);
    fclose(fp);
 
    /* remove output file */
@@ -209,12 +211,12 @@ START_TEST(test_write_pdbml)
    /* open test file */
    fp = fopen(test_output_filename,"r");
    ck_assert_msg(fp != NULL,                "Failed to open file.");
-
-   /* read test file */
-   pdb_in = blReadPDB(fp, &natoms);
    
    /* check test file format */
    pdbml_format = blCheckFileFormatPDBML(fp);
+
+   /* read test file */
+   pdb_in = blReadPDB(fp, &natoms);
    fclose(fp);
 
    /* remove output file */
@@ -246,11 +248,11 @@ START_TEST(test_write_default_pdb_in)
    fp = fopen(test_output_filename,"r");
    ck_assert_msg(fp != NULL,                "Failed to open file.");
 
-   /* read test file */
-   pdb_in = blReadPDB(fp, &natoms);
-   
    /* check test file format */
    pdbml_format = blCheckFileFormatPDBML(fp);
+
+   /* read test file */
+   pdb_in = blReadPDB(fp, &natoms);
    fclose(fp);
 
    /* remove output file */
@@ -281,11 +283,11 @@ START_TEST(test_write_default_pdbml_in)
    fp = fopen(test_output_filename,"r");
    ck_assert_msg(fp != NULL,                "Failed to open file.");
 
-   /* read test file */
-   pdb_in = blReadPDB(fp, &natoms);
-   
    /* check test file format */
    pdbml_format = blCheckFileFormatPDBML(fp);
+
+   /* read test file */
+   pdb_in = blReadPDB(fp, &natoms);
    fclose(fp);
 
    /* remove output file */
