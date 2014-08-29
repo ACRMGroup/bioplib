@@ -38,6 +38,7 @@
 
    A simple Needleman & Wunsch Dynamic Programming alignment of 2 
    sequences.  
+
    A window is not used so the routine may be a bit slow on long 
    sequences.
 
@@ -45,6 +46,7 @@
 
    Usage:
    ======
+
    First call ReadMDM() to read the mutation data matrix, then call
    align() to align the sequences.
 

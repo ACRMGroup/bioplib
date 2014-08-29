@@ -53,6 +53,7 @@
 
    Usage:
    ======
+
    First call NumericReadMDM() to read the mutation data matrix, then call
    NumericAffineAlign() to align the sequences.
 

@@ -44,7 +44,7 @@
    ======
    
 \code
-   sec = ReadSecPDB(fp,&nsec)
+   sec = blReadSecPDB(fp,&nsec)
 \endcode
 
    This routine reads the secondary structure informaton from the
@@ -57,9 +57,10 @@
    to which it applies. The form of the structure should be checked
    in pdb.h
 
-   Input:    fp    *FILE      Pointer to PDB file
-   Output:   nsec  *int       Number of sec struc regions identified
-   Returns:  sec   *SECSTRUC  Linked list of type SECSTRUC
+
+    Input:    fp    *FILE      Pointer to PDB file
+    Output:   nsec  *int       Number of sec struc regions identified
+    Returns:  sec   *SECSTRUC  Linked list of type SECSTRUC
 
 **************************************************************************
 

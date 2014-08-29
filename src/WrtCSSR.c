@@ -36,10 +36,11 @@
    Description:
    ============
 
-   WriteCSSR(fp,cssr,name,title)
-   -----------------------------
+   blWriteCSSR(fp,cssr,name,title)
+
    This subroutine will write a CSSR file from a linked list of structures 
    of type cssr_entry. 
+
    The strucure is set up by including the file "cssr.h". For details of 
    the structure, see this file.
 
@@ -47,7 +48,11 @@
 
    Usage:
    ======
+
+\code
    WriteCSSR(fp,cssr,name,title)
+\endcode
+
    \param[in]     *fp      A pointer to type FILE in which the
                               CSSR file is stored.
    \param[in]     *cssr    A pointer to the first allocated item of

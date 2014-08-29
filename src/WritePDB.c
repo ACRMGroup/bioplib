@@ -38,14 +38,18 @@
 
    This routine will write a .PDB file of any size from a linked list of 
    the protein structure. This list is contained in a linked set of 
-   structures of type pdb_entry. The strucure is set up by including the 
+   structures of type pdb_entry. The structure is set up by including the 
    file "pdb.h". For details of the structure, see this file.
 
 **************************************************************************
 
    Usage:
    ======
-   WritePDB(fp, pdb)
+
+\code
+   blWritePDB(fp, pdb)
+\endcode
+   
    \param[in]     *fp      A pointer to the file to write
    \param[in]     *pdb     The start of the PDB linked list.
 
@@ -525,8 +529,8 @@ void blWriteAsPDBML(FILE *fp, PDB  *pdb)
    --------------------------------------------------------------------
 *//**
 
-   \param[out]    *element  Element symbol
-   \param[in]     *atom     Atom name
+   \param[out]    *element       Element symbol
+   \param[in]     *atom_name     Atom name
 
    Set the element symbol (columns 77-78 of a pdb file) based on the 
    atom name (columns 13-16 of a pdb file). 

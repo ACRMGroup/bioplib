@@ -47,24 +47,28 @@
 
    Usage:
    ======
+
    blStoreError(char *routine, char *error)
-   ----------------------------------------
+
    The routine is called with the name of the routine at fault and the
    description of the fault.
 
    blShowErrors(void *PrintRoutine, BOOL Trace)
-   --------------------------------------------
+
    The routine is called with a pointer to the routine which is to
    do the actual error display and a flag to indicate whether the
    faulty routine names should be displyed. This is only of use if
    the user has access to the source code so should be used for
    debugging purposes only.
+
    If PrintRoutine is supplied as NULL, the simple PrintAnError()
    routine will be used which displays the error on stderr. More
    complex routines could, for example, show the error in a requester
    or output to a window.
+
    If a print routine is specified, the routine is called with:
-   ShowErrors(void *)MyRoutine, TRUE);
+
+   blShowErrors(void *)MyRoutine, TRUE);
 
 **************************************************************************
 

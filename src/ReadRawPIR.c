@@ -42,9 +42,11 @@
    Usage:
    ======
 
+\code
    int ReadRawPIR(FILE *fp, BOOL DoInsert, char **seqs, int maxchain, 
                   SEQINFO *seqinfo, BOOL *punct, BOOL *error)
-   ------------------------------------------------------------------
+\endcode
+
    As ReadPIR(), but reads punctuation characters without taking any
    special action. Used when punctuation characters have been used
    to indicate consensus sequence features.

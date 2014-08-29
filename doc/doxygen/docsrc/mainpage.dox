@@ -80,7 +80,7 @@ Example of usage
    PDB      *p    = NULL;
    
    fp_in = fopen("input_file.pdb","r");
-   wpdb = ReadWholePDB(fp_in, &natoms);
+   wpdb = blReadWholePDB(fp_in, &natoms);
    close(fp_in);
    
    for(p=wpdb->pdb; p != NULL; NEXT(p))
@@ -89,7 +89,7 @@ Example of usage
    }
 
    fp_out = fopen("output_file.pdb","w");
-   WriteWholePDB(fp_out, wpdb);
+   blWriteWholePDB(fp_out, wpdb);
    fclose(fp_out);
 \endcode
 

@@ -39,8 +39,10 @@
    Creates a 2D array where the first dimension is a set of pointers. This
    is better for passing into subroutines than the conventional C method
    of simply declaring:
+
       TYPE  matrix[10][10];
-   which, when passed to a fuunction, loses the concept of dimensions
+
+   which, when passed to a function, loses the concept of dimensions
    unless the matrix is explicitly defined with these dimension in the
    function.
    
@@ -53,9 +55,10 @@
    ======
    matrix = (TYPE **)Array2D(sizeof(TYPE), nrows, ncolumns);
    
-   e.g.
+\code
    matrix = (float **)Array2D(sizeof(float), 10, 10);
-   
+\endcode
+
    Returns NULL (having freed any allocated memory) if there is a problem.
 
 **************************************************************************

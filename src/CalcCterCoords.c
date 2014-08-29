@@ -43,7 +43,7 @@
    ======
 
    BOOL CalcCterCoords(PDB *p, PDB *ca_p, PDB *c_p, PDB *o_p)
-   ----------------------------------------------------------
+
    Calculates the coordinates for a second oxygen (p) given the
    3 antecedent atoms. Normally called from FixCterPDB()
 

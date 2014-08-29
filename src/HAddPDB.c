@@ -49,15 +49,21 @@
 
    Usage:
    ======
+
+\code
    nhyd = HAddPDB(fp,pdb)
-   \param[in]     *fp        File containing proton generation
-                                    parameters.
-   Input/Output:  PDB    *pdb       Linked list of protein structure.
+\endcode
+
+   \param[in]        *fp         File containing proton generation
+                                 parameters.
+   \param[in,out]    *pdb        Linked list of protein structure.
    \return                       Number of hydrogens added.
 
    The globally defined structure gHaddInfo gives information on the 
    number of each hydrogen type created. This structure is defined as
    follows:
+
+\code
    typdef struct
    {
       int   Total,      Total hydrogens
@@ -67,6 +73,8 @@
             T4,         Type 4 sp2 C-H's,>N-H
             T5;         Type 5 O-H's =N-H's
    }  HADDINFO;
+\endcode
+
    To examine these values in your code, reference the structure as:
    extern HADDINFO gHaddInfo;
 

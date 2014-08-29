@@ -45,7 +45,11 @@
 
    Usage:
    ======
-   WritePDB(fp, pdb)
+
+\code
+   blWriteGromosPDB(fp, pdb)
+\endcode
+
    \param[in]     *fp      A pointer to the file to write
    \param[in]     *pdb     The start of the PDB linked list.
 

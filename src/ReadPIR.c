@@ -42,18 +42,20 @@
    Usage:
    ======
 
-   int ReadPIR(FILE *fp, BOOL DoInsert, char **seqs, int maxchain, 
-               SEQINFO *seqinfo, BOOL *punct, BOOL *error)
-   ---------------------------------------------------------------
+\code
+   int blReadPIR(FILE *fp, BOOL DoInsert, char **seqs, int maxchain, 
+                 SEQINFO *seqinfo, BOOL *punct, BOOL *error)
+\endcode
+
    This version attempts to read any PIR file following the PIR 
    specifications. It also accepts a few non-standard features:
    lower case sequence, no star at end of last chain, dashes in the
    sequence to indicate insertions.
 
    See also:
-   int SimpleReadPIR(FILE *fp, int maxres, char **seqs)
-   int ReadRawPIR(FILE *fp, BOOL DoInsert, char **seqs, int maxchain, 
-                  SEQINFO *seqinfo, BOOL *punct, BOOL *error)
+   - int blSimpleReadPIR(FILE *fp, int maxres, char **seqs)
+   - int blReadRawPIR(FILE *fp, BOOL DoInsert, char **seqs, int maxchain, 
+                      SEQINFO *seqinfo, BOOL *punct, BOOL *error)
 
 **************************************************************************
 

@@ -41,25 +41,31 @@
 
    Usage:
    ======
-   pdbout = selectatoms(pdbin,nsel,sel,natom)
+
+\code
+   pdbout = blSelectatomsPDBAsCopy(pdbin,nsel,sel,natom)
+\endcode
 
    This routine takes a linked list of type PDB and returns a list
    containing only those atom types specfied in the sel array.
 
-   Input:   pdbin    *PDB      Input list
-   Input:   nsel     int       Number of atom types to keep
-   Input:   sel      **char    List of atom types to keep
-   Output:  natom    *int      Number of atoms kept
-   Returns: pdbout   *PDB      Output list
+   \param[in]   pdbin        Input list
+   \param[in]   nsel         Number of atom types to keep
+   \param[in]   sel          List of atom types to keep
+   \param[out]  natom        Number of atoms kept
+   \return                   PDB output list
 
    To set up the list of atoms to keep, define an array of pointers 
    to char:
    e.g.     char *sel[10]
+
    Then define the atoms in the list thus:
+
             SELECT(sel[0],"N   ");
             SELECT(sel[1],"CA  ");
             SELECT(sel[2],"C   ");
             SELECT(sel[3],"O   ");
+
    The SELECT macro returns a character pointer which will be NULL if
    the allocation it performs fails.
 

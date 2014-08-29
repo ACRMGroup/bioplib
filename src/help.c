@@ -43,20 +43,33 @@
 
    Usage:
    ======
-   DoHelp(string,helpfilename)   This is the normal entry point and should
-                                 be supplied with the complete command 
-                                 including the word `help'. If this is the
-                                 only word given, the routine will prompt
-                                 with Help> and give help on each word 
-                                 typed until return is hit to exit help. 
-                                 If help followed by a keyword is given, 
-                                 help only on that topic will be supplied.
 
-   Help(string,helpfilename)     Generates help from helpfilename on the 
-                                 topic named by string. If this is `help' 
-                                 or `?', available topics will be listed.
+\code
+   blDoHelp(string,helpfilename)
+\endcode
 
-   Help(NULL,"CLOSE")            Used to close the help file
+   This is the normal entry point and should
+   be supplied with the complete command 
+   including the word `help'. If this is the
+   only word given, the routine will prompt
+   with Help> and give help on each word 
+   typed until return is hit to exit help. 
+   If help followed by a keyword is given, 
+   help only on that topic will be supplied.
+
+\code
+   blHelp(string,helpfilename)
+\endcode
+
+   Generates help from helpfilename on the 
+   topic named by string. If this is `help' 
+   or `?', available topics will be listed.
+
+\code
+   blHelp(NULL,"CLOSE")
+\endcode
+
+   Used to close the help file
 
    Under Unix, the environment variable, HELPDIR should be set to
    specify the directory in which help files are stored.

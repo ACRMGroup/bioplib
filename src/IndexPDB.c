@@ -44,13 +44,16 @@
 
    Usage:
    ======
+
    pdb.h must be included before using this routine.
 
+\code
    PDB **indx,
        *pdb;
    int natom;
 
    indx = IndexPDB(pdb, &natom);
+\endcode
 
 **************************************************************************
 

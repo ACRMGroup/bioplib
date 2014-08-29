@@ -42,8 +42,9 @@
    Usage:
    ======
 
-   #include "bioplib/aalist.h" to define AA datatype.
 
+      #include "bioplib/aalist.h" to define AA datatype.
+ 
 **************************************************************************
 
    Revision History:

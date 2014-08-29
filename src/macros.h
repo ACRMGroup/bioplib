@@ -1,7 +1,7 @@
 /************************************************************************/
 /**
 
-   \file       Macros.h
+   \file       macros.h
    
    \version    V2.21
    \date       24.07.14
@@ -45,6 +45,8 @@
 
    Usage:
    ======
+
+\verbatim
    INIT(x,y)            Initialise list of name x and type y. 
                         Set x->next to NULL
    INITPREV(x,y)        Ditto, but also sets x->prev to NULL
@@ -89,6 +91,7 @@
    DEDOTIFY(str)        Replace '.' with ' ' in string
    FINDPREV(p, start, q) Set p to item in linked list start before q
    
+\endverbatim
 **************************************************************************
 
    Revision History:

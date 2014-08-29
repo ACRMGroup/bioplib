@@ -36,8 +36,10 @@
    Description:
    ============
 
+\code
    ReadCSSR(fp,cssr,natom,name,title)
-   ----------------------------------
+\endcode
+
    This subroutine will read a CSSR file of any size and form a linked list
    of the structure.
    This list is contained in a linked set of structures of type cssr_entry. 
@@ -49,25 +51,32 @@
    structure of type CSSR using the statement:
        CSSR *mycssr;
 
-
+\code
    ReadCSSRasPDB(fp,cssr,natom)
-   ----------------------------
+\endcode
+
    As ReadCSSR(), but reads the structure into a PDB type linked list.
    Atom connection information is ignored, and charges are placed into the
    B-val column.
 
+\code
    NormaliseCSSR(cssr,cell,alpha,beta,gamma)
-   -----------------------------------------
+\endcode
+
    Given the unit cell dimensions, converts CSSR to orthonormal 
    coordinates.
 
+\code
    NormalisePDB(pdb,cell,alpha,beta,gamma)
-   ---------------------------------------
+\endcode
+
    Given the unit cell dimensions, converts PDB to orthonormal 
    coordinates.
 
+\code
    ortho(cell,alpha,beta,gamma,amatrx,isw,ncode)
-   ---------------------------------------------
+\endcode
+
    Calculates the 3x3 matrix required to convert between fractional and
    orthonormal coordinates given the unit cell dimensions.
 
@@ -75,6 +84,7 @@
 
    Usage:
    ======
+
 \verbatim
    ReadCSSR(fp,cssr,natom,name,title)
    Input:   FILE     *fp      A pointer to type FILE in which the

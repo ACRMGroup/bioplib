@@ -36,19 +36,25 @@
    Description:
    ============
 
-   pdb = ReadPDB(fp,natom) - This subroutine will read a .PDB file
+\code
+   pdb = ReadPDB(fp,natom)
+\endcode
+
+   This subroutine will read a .PDB file
    of any size and form a linked list of the protein structure.
    This list is contained in a linked set of structures of type
-   pdb_entry. The strucure is set up by including the file
+   pdb_entry. The structure is set up by including the file
    "pdb.h". For details of the structure, see this file.
 
    To free the space created by this routine, call FREELIST(pdb,PDB).
 
    The parameters passed to the subroutine are:
-   fp    - A pointer to type FILE in which the .PDB file is stored.
-   pdb   - A pointer to type PDB.
-   natom - A pointer to type integer in which the number of atoms
-           found is stored.
+
+   -   fp    - A pointer to type FILE in which the .PDB file is stored.
+   -   pdb   - A pointer to type PDB.
+   -   natom - A pointer to type integer in which the number of atoms
+               found is stored.
+
 
    As of V2.3, the routine makes provision for partial occupancies. If 
    the occupancies are 1.0 or 0.0, the atoms are read verbatim. If not,
@@ -74,13 +80,18 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 
    Usage:
    ======
-   pdb = ReadPDB(fp,natom)
+
+\code
+   pdb = blReadPDB(fp,natom)
+\endcode
+
+   \param[in]      *fp      A pointer to type FILE in which the
+                            .PDB file is stored.
+
+   \param[out]     *natom   Number of atoms read.
    
-   Input:   FILE     *fp      A pointer to type FILE in which the
-                              .PDB file is stored.
-   Returns: PDB      *pdb     A pointer to the first allocated item of
-                              the PDB linked list
-   Output:  int      *natom   Number of atoms read.
+   \return         *pdb     A pointer to the first allocated item of
+                            the PDB linked list
 
 **************************************************************************
 

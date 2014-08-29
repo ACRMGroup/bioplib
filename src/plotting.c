@@ -38,6 +38,7 @@
 
    These functions provide a common interface to either PostScript or
    HPGL output.
+
    They simplified from a set written for the Amiga which also supports
    IFF-DR2D and Amiga screen output
 

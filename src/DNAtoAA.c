@@ -41,7 +41,9 @@
 
    Usage:
    ======
-   #include "bioplib/seq.h" to define prototype
+
+
+      #include "bioplib/seq.h" to define prototype
 
 **************************************************************************
 

@@ -43,7 +43,7 @@
    ======
 
    BOOL FixCterPDB(PDB *pdb, int style)
-   ------------------------------------
+
    Renames Cter oxygens in the required style (CTER_STYLE_STD,
    CTER_STYLE_GROMOS or CTER_STYLE_CHARMM) and generates a second
    oxygen if required. If the style is CHARMM an extra CTER residue

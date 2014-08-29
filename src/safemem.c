@@ -37,26 +37,28 @@
    Description:
    ============
 
-   safemalloc() and safefree() are provided as temporary debugging
+   blSafemalloc() and blSafefree() are provided as temporary debugging
    replacements for malloc() and free(). They maintain their own
    linked list of malloc()'d memory and allocate a `protection buffer'
    each side of the requested amount of memory. This is filled with a
    given pattern and, when safefree() is called, this buffer is
    checked to ensure the pattern is still present.
 
-   Unlike free(), safefree() is of type BOOL, returning TRUE if
+   Unlike free(), blSafefree() is of type BOOL, returning TRUE if
    an error occured.
 
-   SM_SIZE Environment Variable
+\par SM_SIZE Environment Variable
+
    The size of the buffer (default 256bytes each side) may be
    controlled by the environment variable SM_SIZE. If code continues
    to core dump, try increasing the value of SM_SIZE.
 
-   SM_FILL Environment Variable 
+\par SM_FILL Environment Variable
+
    The byte used for filling the protection buffers (default 255) is
    defined by the environment variable SM_FILL. If code which core
-   dumps with normal malloc()/free(), but not with safemalloc() /
-   safefree(), yet no error message is generated, the character which
+   dumps with normal malloc()/free(), but not with blSafemalloc() /
+   blSafefree(), yet no error message is generated, the character which
    is corrupting memory is probably the same as the fill character.
    Try modifying SM_FILL.
 

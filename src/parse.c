@@ -36,36 +36,52 @@
    Description:
    ============
 
-   parse() is a command line parser which will accept upper or
+   blParse() is a command line parser which will accept upper or
    lower case commands and abbreviations. Comment lines may be
    indicated using a !. The keyword structure array and returned
    string array are defined thus:
+\code
            KeyWd keywords[NCOMM];
            char  *strparam[MAXSTRPARAM];
+\endcode
+
    The returned REAL parameters are defined thus:
+\code
            REAL  floatparam[MAXFLOATPARAM];
+\endcode
+
    Space for the returned strings must be allocated thus:
+\code   
            strparam[n] = (char *)malloc(MAXSTRLEN * sizeof(char));
+\endcode
    and repeated for each parameter.
 
    The keyword list with type and numbers of returned parameters
    is constructed using the MAKEKEY macros:
+\code
            MAKEKEY(keywords[0],"RANGE",NUMBER,2);
            MAKEKEY(keywords[1],"STRING",STRING,1);
+\endcode
    Here, the keywords must be defined in upper case.
 
 
-   mparse() is used in the same way, but allows a variable number of
+   blMparse() is used in the same way, but allows a variable number of
    parameters for each keyword. Keywords are of type MKeyWd and are
    defined using the macro MAKEMKEY:
+\code
            MAKEMKEY(keywords[0],"RANGE",NUMBER,2,2);
            MAKEMKEY(keywords[1],"STRING",STRING,1,3);
+\endcode
 
 **************************************************************************
 
    Usage:
    ======
-   parse(comline,nkeys,keywords,floatparam,strparam)
+
+\code
+   blParse(comline,nkeys,keywords,floatparam,strparam)
+\endcode
+
    \param[in]     *comline       A command line string to parse
    \param[in]     nkeys          Number of keywords
    \param[in]     *keywords      Array of keyword structures
@@ -73,7 +89,10 @@
    \param[out]    **strparam     Array of pointers to returned strings
    \return                          Index of found command or error flag
 
-   mparse(comline,nkeys,keywords,floatparam,strparam,nparam)
+\code
+   blMparse(comline,nkeys,keywords,floatparam,strparam,nparam)
+\endcode
+
    \param[in]     *comline       A command line string to parse
    \param[in]     nkeys          Number of keywords
    \param[in]     *keywords      Array of keyword structures

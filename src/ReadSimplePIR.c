@@ -42,8 +42,10 @@
    Usage:
    ======
 
+\code
    int ReadSimplePIR(FILE *fp, int maxres, char **seqs)
-   ----------------------------------------------------
+\endcode
+
    This version (previously called ReadPIR()) is maintained only for
    compatibility with the old version. It will only read minimal 
    specification PIR files.

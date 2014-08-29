@@ -44,7 +44,7 @@
    ======
 
    int CalcTetraHCoords(PDB *nter, COOR *coor)
-   -------------------------------------------
+
    Calculate the coordinates for 3 tetrahedral hydrogens given a pointer
    to the residue onto which they are to be added. Normally called from
    AddNTerHs()

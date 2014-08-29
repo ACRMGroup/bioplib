@@ -1,4 +1,5 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
    \file       access.c
    
@@ -42,26 +43,32 @@
 
    Usage:
    ======
+\code   
    RESRAD *blSetAtomRadii(PDB *pdb, FILE *fpRad)
+\endcode
       Read the radius file and set the radii in the PDB linked list.
       Also returns the data from the radius file for use by
       blCalcResAccess()
-
+      
+\code
    BOOL blCalcAccess(PDB *pdb, int natoms, 
                      REAL integrationAccuracy, REAL probeRadius,
                      BOOL doAccessibility)
+\endcode
       Does the accessibilty calculations. integrationAccuracy can be set
       to zero to use the default value
 
+\code
    RESACCESS *blCalcResAccess(PDB *pdb, RESRAD *resrad)
+\endcode
       Calculates residue accessibility and relative accessibility
 
 **************************************************************************
 
    Revision History:
    =================
-   V1.0  21.04.99 Original   By: ACRM
-   V1.1  17.07.14 Extracted from XMAS code
+-  V1.0  21.04.99 Original   By: ACRM
+-  V1.1  17.07.14 Extracted from XMAS code
 
 *************************************************************************/
 /* Includes
@@ -163,8 +170,8 @@ static char *blGetElement(PDB *p);
 /*>static char *blGetElement(PDB *p)
    ---------------------------------
 *//**
-   \param[in]   PDB   *p   PDB structure pointer
-   \return      char  *    Element assignment
+   \param[in]   *p   PDB structure pointer
+   \return           Element assignment
 
    This will be replaced by Craig's routine in Bioplib
    Note: Atomic symbol is not stored in PDB data structure.
@@ -213,9 +220,9 @@ static char *blGetElement(PDB *p)
 /*>RESRAD *blSetAtomRadii(PDB *pdb, FILE *fpRad)
    ---------------------------------------------
 *//**
-   \param      PDB    *pdb       PDB linked list
-   \param[in]  FILE   *fpRad     Radius file pointer
-   \return     RESRAD *          Linked list of radius information
+   \param[in,out] *pdb       PDB linked list
+   \param[in]     *fpRad     Radius file pointer
+   \return                   Linked list of radius information
 
    Set atom radii from the radius file in the PDB linked list
    Returns the radius lookup information since it also contains the 
@@ -287,11 +294,12 @@ RESRAD *blSetAtomRadii(PDB *pdb, FILE *fpRad)
                      BOOL doAccessibility)
    --------------------------------------------------------------
 *//**
-   \param    PDB    *pdb                  PDB linked list
-   \param[i] int    natoms                Number of atoms
-   \param[i] REAL   integrationAccuracy   Integration accuracy
-   \param[i] REAL   probeRadius           Probe radius
-   \param[i] BOOL   doAccessibility       Accessibility or contact area
+   \param[in,out]    *pdb                  PDB linked list
+   \param[in]        natoms                Number of atoms
+   \param[in]        integrationAccuracy   Integration accuracy
+   \param[in]        probeRadius           Probe radius
+   \param[in]        doAccessibility       Accessibility or contact area
+   \return                                 Success
 
    Allocates arrays and calls routines to populate them, do the access
    calculations and populate into the PDB linked list
@@ -358,11 +366,11 @@ BOOL blCalcAccess(PDB *pdb, int natoms,
 /*>static void FillArrays(PDB *pdb, REAL *x, REAL *y, REAL *z, REAL *r)
    --------------------------------------------------------------------
 *//**
-   \param[in]   PDB   *pdb      PDB linked list
-   \param[out]  REAL  *x        X coordinate array
-   \param[out]  REAL  *y        Y coordinate array
-   \param[out]  REAL  *z        Z coordinate array
-   \param[out]  REAL  *r        radius array
+   \param[in]   *pdb      PDB linked list
+   \param[out]  *x        X coordinate array
+   \param[out]  *y        Y coordinate array
+   \param[out]  *z        Z coordinate array
+   \param[out]  *r        radius array
 
    Fills the coordinate and atom arrays from the PDB linked list
 
@@ -390,10 +398,10 @@ static void FillArrays(PDB *pdb, REAL *x, REAL *y, REAL *z, REAL *r)
 /*>static RESRAD *GetResidueRadii(RESRAD *resrad, char *resnam)
    --------------------------------------------------------------
 *//**
-   \param[in]   RESRAD   *resrad    Linked list of atom radii information
-   \param[in]   char     *resnam    Residue name we are looking for
-   \return      RESRAD   *          Pointer to information on this residue
-                                    (or NULL)
+   \param[in]   *resrad    Linked list of atom radii information
+   \param[in]   *resnam    Residue name we are looking for
+   \return                 Pointer to information on this residue
+                           (or NULL)
 
    Gets the radius information for the specified residue.
 
@@ -420,9 +428,9 @@ static RESRAD *GetResidueRadii(RESRAD *resrad, char *resnam)
 /*>static RESRAD *ReadRadiusFile(FILE *fpRad)
    -----------------------------------------
 *//**
-   \param[in]   FILE   *fpRad     Atom radius file pointer
-   \return      RESRAD *          Linked list of residue and atom radius
-                                  information
+   \param[in]   *fpRad    Atom radius file pointer
+   \return                Linked list of residue and atom radius
+                          information
 
    Reads the specified file into the linked list of atom radii for each
    residue type. The file also contains standard residue accessibility.
@@ -493,10 +501,10 @@ static RESRAD *ReadRadiusFile(FILE *fpRad)
 /*>static REAL GetStandardAccess(char *resnam, RESRAD *resrad)
    ------------------------------------------------------------
 *//**
-   \param[in]   char   *resnam  Residue name
-   \param[in]   RESRAD *resrad  Residue/atom radii and standard 
-                                accessibilities
-   \return REAL                 Standard accessibility for this residue
+   \param[in]   *resnam  Residue name
+   \param[in]   *resrad  Residue/atom radii and standard 
+                         accessibilities
+   \return               Standard accessibility for this residue
 
    Gets the standard accessibility for the specified residue type
 
@@ -522,8 +530,8 @@ static REAL GetStandardAccess(char *resnam, RESRAD *resrad)
 /*>static REAL DefaultRadius(char *element)
    ----------------------------------------
 *//**
-   \param[in]   char   *atnam      Element
-   \return      REAL               Default radius
+   \param[in]   *element   Element
+   \return                 Default radius
 
    Returns the default radius for a specified atom type
 
@@ -561,8 +569,8 @@ static REAL DefaultRadius(char *element)
 /*>static void SetPDBAccess(PDB *pdb, REAL *accessArray)
    -----------------------------------------------------
 *//**
-   \param       PDB   *pdb           PDB linked list
-   \param[in]   REAL  *accessArray   Accessibility information
+   \param       *pdb           PDB linked list
+   \param[in]   *accessArray   Accessibility information
 
    Puts accessibility information from the array into the PDB linked list.
 
@@ -586,9 +594,9 @@ static void SetPDBAccess(PDB *pdb, REAL *accessArray)
 /*>RESACCESS *blCalcResAccess(PDB *pdb, RESRAD *resrad)
    ----------------------------------------------
 *//**
-   \param       PDB    *pdb      PDB linked list
-   \param[in]   RESRAD *resrad   Linked list of atom radius information
-   \return      RESACCESS *      Linked list of residue accessibilities
+   \param[in,out] *pdb      PDB linked list
+   \param[in]     *resrad   Linked list of atom radius information
+   \return                  Linked list of residue accessibilities
 
    Calculates and populates the residue totals and relative values
    using standards stored in resrad
@@ -667,9 +675,9 @@ RESACCESS *blCalcResAccess(PDB *pdb, RESRAD *resrad)
                                 int *flag)
    -------------------------------------------------------------
 *//**
-   \param      REAL *endpoints    Arc endpoints for sorting
-   \param[in]  int  nEndpoints     Number of endpoints
-   \param[out] int  *flag Flagged endpoints
+   \param[in,out]    *endpoints     Arc endpoints for sorting
+   \param[in]        nEndpoints     Number of endpoints
+   \param[out]       *flag          Flagged endpoints
 
    Sorts the arc endpoints
 
@@ -818,17 +826,17 @@ jump90:
                             REAL *accessResults)
    --------------------------------------------------------------------
 *//**
-   \param[in]  int  numAtoms             Number of atoms
-   \param[in]  REAL integrationAccuracy  Integration accuracy
-   \param[in]  REAL probeRadius          Radius of probe atom
-   \param[in]  BOOL access               Do solvent accessibility
-                                         rather than contact surface
-   \param[in]  REAL *atomRadii           Array of atom radii
-   \param[in]  REAL *x                   Array of x coordinates
-   \param[in]  REAL *y                   Array of y coordinates
-   \param[in]  REAL *z                   Array of z coordinates
-   \param[out] REAL *accessResults       Array of accessibility results
-   \return     BOOL                      Success?
+   \param[in]   numAtoms             Number of atoms
+   \param[in]   integrationAccuracy  Integration accuracy
+   \param[in]   probeRadius          Radius of probe atom
+   \param[in]   access               Do solvent accessibility
+                                     rather than contact surface
+   \param[in]   *atomRadii           Array of atom radii
+   \param[in]   *x                   Array of x coordinates
+   \param[in]   *y                   Array of y coordinates
+   \param[in]   *z                   Array of z coordinates
+   \param[out]  *accessResults       Array of accessibility results
+   \return                           Success?
 
    Does the real work of calculating accessibility
 
