@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V2.33
-   \date       29.08.14
+   \version    V2.34
+   \date       31.08.14
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2014
@@ -194,6 +194,7 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 -  V2.32 26.08.14 blDoReadPDBML() pads record type to six chars. By: CTP
 -  V2.33 29.08.14 Rewrote blCheckFileFormatPDBML() to take sample from 
                   input steam then push sample back on stream. By: CTP
+-  V2.34 31.08.14 Fixed bug in blCheckFileFormatPDBML(). By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -1700,7 +1701,8 @@ PDB *blDoReadPDBML(FILE *fpin,
 -  07.07.14 Renamed to blCheckFileFormatPDBML() By: CTP
 -  29.08.14 Function re-written to take sample from the input stream then
             reset the stream with ungetc. By: CTP
-   
+-  31.08.14 Bugfix: Check for 'PDBx:datablock' tag skipped if blank line 
+            before xml tag. By: CTP
 */
 BOOL blCheckFileFormatPDBML(FILE *fp)
 {
@@ -1732,9 +1734,9 @@ BOOL blCheckFileFormatPDBML(FILE *fp)
    {
       if(buffer[i] != '\n') continue;
 
-      i++;
-      if(!strncmp(&buffer[i],"<?xml ",6))            found_xml  = TRUE;
-      if(!strncmp(&buffer[i],"<PDBx:datablock ",16)) found_pdbx = TRUE;
+      /*i++;*/
+      if(!strncmp(&buffer[i+1],"<?xml ",6))            found_xml  = TRUE;
+      if(!strncmp(&buffer[i+1],"<PDBx:datablock ",16)) found_pdbx = TRUE;
    }
 
    return found_xml && found_pdbx ? TRUE : FALSE ;

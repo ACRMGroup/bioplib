@@ -3,8 +3,8 @@
 
    \file       readpdbml_suite.c
    
-   \version    V1.3
-   \date       26.08.14
+   \version    V1.4
+   \date       31.08.14
    \brief      Test suite for reading pdb and pdbml data from file.
 
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -52,6 +52,8 @@
 -  V1.2  18.08.14 Check read pdb != NULL before checking any values in PDB
                   data structure. By: CTP
 -  V1.3  26.08.14 Check record_type. By: CTP
+-  V1.4  31.08.14 Added tests to catch bug in blCheckFileFormatPDBML().
+                  By: CTP
 
 *************************************************************************/
 
@@ -107,6 +109,64 @@ START_TEST(test_read_pdbml)
    ck_assert_int_eq(natoms, 1);
 }
 END_TEST
+
+START_TEST(test_check_pdbml_format_01)
+{
+   /* set filename and file format */
+   char filename[] = "data/readpdbml_suite/test_alpha_carbon.pdb";
+   BOOL pdbml_format = FALSE;
+   
+   /* read test file */
+   fp = fopen(filename,"r");
+   pdbml_format = blCheckFileFormatPDBML(fp);
+   pdb = blReadPDB(fp, &natoms);
+   fclose(fp);
+
+   /* tests */
+   ck_assert_msg(pdbml_format == FALSE, "Failed to check PDBML format.");
+   ck_assert_msg(pdb != NULL, "Failed to read PDB file.");
+   ck_assert_int_eq(natoms, 1);
+}
+END_TEST
+
+START_TEST(test_check_pdbml_format_02)
+{
+   /* set filename and file format */
+   char filename[] = "data/readpdbml_suite/test_alpha_carbon.xml";
+   BOOL pdbml_format = FALSE;
+   
+   /* read test file */
+   fp = fopen(filename,"r");
+   pdbml_format = blCheckFileFormatPDBML(fp);
+   pdb = blReadPDB(fp, &natoms);
+   fclose(fp);
+
+   /* tests */
+   ck_assert_msg(pdbml_format == TRUE, "Failed to check PDBML format.");
+   ck_assert_msg(pdb != NULL, "Failed to read PDBML file.");
+   ck_assert_int_eq(natoms, 1);
+}
+END_TEST
+
+START_TEST(test_check_pdbml_format_03)
+{
+   /* set filename */
+   char filename[] = "data/readpdbml_suite/test_alpha_carbon_format.xml";
+   BOOL pdbml_format = FALSE;
+
+   /* read test file */
+   fp = fopen(filename,"r");
+   pdbml_format = blCheckFileFormatPDBML(fp);
+   pdb = blReadPDB(fp, &natoms);
+   fclose(fp);
+
+   /* tests */
+   ck_assert_msg(pdbml_format == TRUE, "Failed to check PDBML format.");
+   ck_assert_msg(pdb != NULL, "Failed to read PDBML file.");
+   ck_assert_int_eq(natoms, 1);
+}
+END_TEST
+
 
 /* PDB Tests */
 START_TEST(test_read_pdb_data_01)
@@ -769,6 +829,9 @@ Suite *readpdbml_suite(void)
                              readpdbml_teardown);
    tcase_add_test(tc_core, test_read_pdb);
    tcase_add_test(tc_core, test_read_pdbml);
+   tcase_add_test(tc_core, test_check_pdbml_format_01);
+   tcase_add_test(tc_core, test_check_pdbml_format_02);
+   tcase_add_test(tc_core, test_check_pdbml_format_03);
    suite_add_tcase(s, tc_core);
    
    /* Test PDB */
