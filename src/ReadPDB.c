@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V2.34
-   \date       31.08.14
+   \version    V2.35
+   \date       09.09.14
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2014
@@ -195,6 +195,10 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 -  V2.33 29.08.14 Rewrote blCheckFileFormatPDBML() to take sample from 
                   input steam then push sample back on stream. By: CTP
 -  V2.34 31.08.14 Fixed bug in blCheckFileFormatPDBML(). By: CTP
+-  V2.35 09.09.14 Updated blCheckFileFormatPDBML() for non-unix systems.
+                  Decreased size of XML_SAMPLE.
+                  Reading of gzipped files with gunzip not supported for 
+                  MS Windows. By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -228,7 +232,7 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 #define MAXPARTIAL 8
 #define SMALL      0.000001
 #define XML_BUFFER 1024
-#define XML_SAMPLE 512
+#define XML_SAMPLE 256
 
 /************************************************************************/
 /* Prototypes
@@ -464,6 +468,8 @@ PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
                   for PDB structure. By: CTP
 -  18.08.14 V2.31 Added XML_SUPPORT option allowing BiopLib to be compiled
                   without support for PDBML format. By: CTP
+-  09.09.14 V2.35 Reading of gzipped files with gunzip not supported for 
+                  MS Windows. By: CTP
 
 */
 PDB *blDoReadPDB(FILE *fpin,
@@ -501,7 +507,7 @@ PDB *blDoReadPDB(FILE *fpin,
             *p,
             multi[MAXPARTIAL];   /* Temporary storage for partial occ   */
 
-#ifdef GUNZIP_SUPPORT
+#if defined(GUNZIP_SUPPORT) && !defined(MS_WINDOWS)
    int      signature[3],
             i,
             ch;
@@ -515,7 +521,7 @@ PDB *blDoReadPDB(FILE *fpin,
    cmd[0]         = '\0';
    gPDBXML        = FALSE;
 
-#ifdef GUNZIP_SUPPORT
+#if defined(GUNZIP_SUPPORT) && !defined(MS_WINDOWS)
    /* See whether this is a gzipped file                                */
    for(i=0; i<3; i++)
       signature[i] = fgetc(fpin);
@@ -1696,13 +1702,16 @@ PDB *blDoReadPDBML(FILE *fpin,
    Todo: Consider replacement with general function to detect file format
          for uncompressed file returning file type (eg pdb/pdbml/unknown).
    
-   
+
 -  22.04.14 Original By: CTP
 -  07.07.14 Renamed to blCheckFileFormatPDBML() By: CTP
 -  29.08.14 Function re-written to take sample from the input stream then
             reset the stream with ungetc. By: CTP
 -  31.08.14 Bugfix: Check for 'PDBx:datablock' tag skipped if blank line 
             before xml tag. By: CTP
+-  09.09.14 Use rewind() for DOS instead of pushing sample back on stream 
+            with ungetc(). By: CTP
+
 */
 BOOL blCheckFileFormatPDBML(FILE *fp)
 {
@@ -1719,13 +1728,18 @@ BOOL blCheckFileFormatPDBML(FILE *fp)
       buffer[i] = (char)c;      
    }
    buffer[i] = '\0'; /* terminate string */
-  
-   /* push sample back on stream */
+
+#ifndef NOPIPE
+   /* push sample back on input stream for unix */
    for(i = strlen(buffer) - 1; i >= 0; i--)
    {
       ungetc(buffer[i], fp);
    }
-   
+#else  
+   /* rewind file for non-unix operating systems */
+   rewind(fp);
+#endif
+
    /* check first line */
    if(!strncmp(buffer,"<?xml ",6)) found_xml  = TRUE;
    

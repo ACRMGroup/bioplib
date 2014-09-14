@@ -102,4 +102,25 @@
       <PDBx:type_symbol>C</PDBx:type_symbol>
     </PDBx:atom_site>
   </PDBx:atom_siteCategory>
+   <PDBx:entryCategory>
+      <PDBx:entry id="TEST"></PDBx:entry>
+   </PDBx:entryCategory>
+   <PDBx:structCategory>
+      <PDBx:struct entry_id="1CTP">
+         <PDBx:pdbx_descriptor>Descriptor text goes here</PDBx:pdbx_descriptor>
+         <PDBx:title>ALANINE - TEST FILE FOR WHOLE PDB (PDBML INPUT)</PDBx:title>
+      </PDBx:struct>
+   </PDBx:structCategory>
+   <PDBx:database_PDB_revCategory>
+      <PDBx:database_PDB_rev num="1">
+         <PDBx:date>1900-01-01</PDBx:date>
+         <PDBx:date_original>2014-09-10</PDBx:date_original>
+      </PDBx:database_PDB_rev>
+   </PDBx:database_PDB_revCategory>
+   <PDBx:struct_keywordsCategory>
+      <PDBx:struct_keywords entry_id="TEST">
+         <PDBx:pdbx_keywords>TEST FILE</PDBx:pdbx_keywords>
+         <PDBx:text>Text goes here</PDBx:text>
+      </PDBx:struct_keywords>
+   </PDBx:struct_keywordsCategory>
 </PDBx:datablock>

@@ -3,8 +3,8 @@
 
    \file       writepdbml_suite.c
    
-   \version    V1.3
-   \date       29.08.14
+   \version    V1.4
+   \date       12.09.14
    \brief      Test suite for writing pdb and pdbml data to file.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -52,14 +52,16 @@
 -  V1.2  26.08.14 Set ATOM record type to "ATOM  ". By: CTP
 -  V1.3  29.08.14 Check file format before reading as format check no 
                   longer rewinds. By: CTP
+-  V1.4  12.09.14 Update tests for MS Windows. By: CTP
 
 *************************************************************************/
 
 #include "writepdbml_suite.h"
 
 /* Globals */
-static char test_output_filename[]     = "/tmp/test-XXXXX",
-            test_example_filename[160] = "data/writepdbml_suite/";
+static char test_output_filename[]     = "tmp/test-XXXXX",
+            test_example_basename[]    = "data/writepdbml_suite/",
+            test_example_filename[160] = "";
 
 static FILE *fp               =             NULL;
 static PDB  *pdb_out          =             NULL,
@@ -73,10 +75,24 @@ static int  force_pdbml_flag  = FORCEXML_NOFORCE;
 static BOOL writepdbml_compare_files(char *filename_a, char *filename_b)
 {
    char command[120];
-   
-   /* set command */
+
+#ifndef MS_WINDOWS
+
+   /* compare files command */
    sprintf(command,"cmp %s %s > /dev/null", filename_a, filename_b);
-   
+
+#else   
+
+   /* convert output file format from dos to unix */
+   sprintf(command,"dos2unix -q %s", filename_b);
+   system(command);
+   strcpy(command,""); /* reset command */
+
+   /* compare files command */
+   sprintf(command,"cmp %s %s", filename_a, filename_b);
+
+#endif
+
    /* return TRUE if files match */
    return system(command) == 0 ? TRUE:FALSE;
 }
@@ -104,10 +120,18 @@ static void writepdbml_set_test_data(void)
    pdb_out->formal_charge =            0 ;
    pdb_out->partial_charge =         0.0 ;
    pdb_out->next =                  NULL ;
+
+   /* Copy base name to example file name */
+   strcpy(test_example_filename, test_example_basename);
+
+#ifndef MS_WINDOWS   
+   /* Set temp file name */
+   mkstemp(test_output_filename);
+#endif
 }
 
 /* Setup And Teardown */
-void writepdbml_setup_default(void)
+static void writepdbml_setup_default(void)
 {
    /* Set PDB/PDBML flags to default */
    force_pdbml_flag = gPDBXMLForce;
@@ -116,12 +140,9 @@ void writepdbml_setup_default(void)
    
    /* Set test data */
    writepdbml_set_test_data();
-
-   /* Set temp file name */
-   mkstemp(test_output_filename);
 }
 
-void writepdbml_setup_pdb(void)
+static void writepdbml_setup_pdb(void)
 {
    /* Set PDB/PDBML flags to force PDB */
    force_pdbml_flag = gPDBXMLForce;
@@ -130,12 +151,9 @@ void writepdbml_setup_pdb(void)
    
    /* Set test data */
    writepdbml_set_test_data();
-
-   /* Set temp file name */
-   mkstemp(test_output_filename);
 }
 
-void writepdbml_setup_pdbml(void)
+static void writepdbml_setup_pdbml(void)
 {
    /* Set PDB/PDBML flags to force PDBML */
    force_pdbml_flag = gPDBXMLForce;
@@ -144,12 +162,9 @@ void writepdbml_setup_pdbml(void)
    
    /* Set test data */
    writepdbml_set_test_data();
-
-   /* Set temp file name */
-   mkstemp(test_output_filename);
 }
 
-void writepdbml_teardown(void)
+static void writepdbml_teardown(void)
 {
    /* Reset PDB/PDBML flags */
    gPDBXML      = read_pdbml_flag;
@@ -169,7 +184,7 @@ START_TEST(test_write_pdb)
    /* set format */
    FORCEPDB;
    
-  /* write test file */
+   /* write test file */
    fp = fopen(test_output_filename,"w");
    blWritePDB(fp, pdb_out);
    fclose(fp);

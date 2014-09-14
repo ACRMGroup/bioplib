@@ -3,8 +3,8 @@
 
    \file       WholePDB.c
    
-   \version    V1.8
-   \date       18.08.14
+   \version    V1.9
+   \date       10.09.14
    \brief      
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014
@@ -57,6 +57,9 @@
 -  V1.7  07.07.14 Use renamed functions with bl prefix. By: CTP
 -  V1.8  18.08.14 Added XML_SUPPORT option allowing compilation without 
                   support for PDBML format. By: CTP
+-  V1.9  10.09.14 Added blSetPDBDateField(). Removed time.h.
+                  Reading of gzipped files with gunzip not supported for 
+                  MS Windows. By: CTP
 
 *************************************************************************/
 /* Includes
@@ -72,9 +75,6 @@
 #ifdef XML_SUPPORT /* Required to read PDBML files                      */
 #include <libxml/parser.h>
 #include <libxml/tree.h>
-#define _XOPEN_SOURCE
-#define __USE_XOPEN
-#include <time.h>
 #endif
 
 /************************************************************************/
@@ -92,6 +92,7 @@
 */
 static WHOLEPDB *blDoReadWholePDB(FILE *fpin, BOOL atomsonly);
 static STRINGLIST *blParseHeaderPDBML(FILE *fpin);
+static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date);
 
 #if !defined(__APPLE__) && !defined(MS_WINDOWS)
 FILE *popen(char *, char *);
@@ -311,7 +312,8 @@ WHOLEPDB *blReadWholePDBAtoms(FILE *fpin)
             Renamed to blDoReadWholePDB() By: CTP
 -  18.08.14 Added XML_SUPPORT option allowing BiopLib to be compiled
             without support for PDBML format. By: CTP
-
+-  10.09.14 Reading of gzipped files with gunzip not supported for 
+            MS Windows. By: CTP
 
    TODO FIXME!!!!! Move all this into doReadPDB so that we don't worry 
    about rewinding any more
@@ -323,7 +325,7 @@ static WHOLEPDB *blDoReadWholePDB(FILE *fpin, BOOL atomsonly)
    FILE     *fp = fpin;
    BOOL     pdbml_format = FALSE;
    
-#ifdef GUNZIP_SUPPORT
+#if defined(GUNZIP_SUPPORT) && !defined(MS_WINDOWS)
    int      signature[3],
             i,
             ch;
@@ -337,7 +339,7 @@ static WHOLEPDB *blDoReadWholePDB(FILE *fpin, BOOL atomsonly)
    wpdb->header  = NULL;
    wpdb->trailer = NULL;
    
-#ifdef GUNZIP_SUPPORT
+#if defined(GUNZIP_SUPPORT) && !defined(MS_WINDOWS)
    cmd[0] = '\0';
    
    /* See whether this is a gzipped file                                */
@@ -455,6 +457,7 @@ static WHOLEPDB *blDoReadWholePDB(FILE *fpin, BOOL atomsonly)
 -  22.04.14 Original. By: CTP
 -  07.07.14 Renamed to blParseHeaderPDBML() By: CTP
 -  18.08.14 Return NULL if XML not supported. By: CTP
+-  10.09.14 Use blSetPDBDateField() to set date field. By: CTP
 
 */
 static STRINGLIST *blParseHeaderPDBML(FILE *fpin)
@@ -491,8 +494,6 @@ static STRINGLIST *blParseHeaderPDBML(FILE *fpin)
        cut_to   = 0,
        nlines   = 0,
        i        = 0;
-
-   struct tm date = {0};
 
    
    /* Generate Document From Filehandle                                 */
@@ -541,9 +542,7 @@ static STRINGLIST *blParseHeaderPDBML(FILE *fpin)
                content = xmlNodeGetContent(n);
                
                /* convert date format */
-               strptime((char *) content,"%Y-%m-%d",&date);
-               strftime(date_field, sizeof(date_field), "%d-%b-%y", &date);
-               UPPER(date_field);
+               blSetPDBDateField(date_field, (char *)content);
                
                xmlFree(content);
             }
@@ -624,7 +623,7 @@ static STRINGLIST *blParseHeaderPDBML(FILE *fpin)
    {
       strcpy(header_field,"Converted from PDBML");
    }
-   sprintf(header_line, "HEADER    %-40s%9s   %4s\n",
+   sprintf(header_line, "HEADER    %-40s%9s   %4s              \n",
            header_field, date_field, pdb_field);
    
    /* Make Stringlist                                                   */
@@ -634,4 +633,49 @@ static STRINGLIST *blParseHeaderPDBML(FILE *fpin)
    return(wpdb_header);
 
 #endif
+}
+
+/************************************************************************/
+/*>static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date)
+   ---------------------------------------------------------------
+*//**
+
+   \param[out]    *pdb_date      PDB date string   'dd-MTH-yy'
+   \param[in]     *pdbml_date    PDBML date string 'yyyy-mm-dd'
+   \return                       Success?
+
+   Convert pdbml date format to pdb date format.
+
+-  10.09.14 Original. By: CTP
+
+*/
+static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date)
+{
+   char month_letter[12][4] = {"JAN","FEB","MAR","APR","MAY","JUN",
+                               "JUL","AUG","SEP","OCT","NOV","DEC"};
+   int day   = 0,
+       month = 0,
+       year  = 0,
+       items = 0;
+   
+   /* parse pdbml date */
+   items = sscanf(pdbml_date, "%4d-%2d-%2d", &year, &month, &day);
+
+   /* error check */   
+   if(items != 3 || 
+      year == 0 || month == 0 || day == 0 || 
+      day   < 1 || day > 31   ||
+      month < 1 || month > 12 ||
+      year  < 1900)
+   {
+      /* conversion failed */
+      strncpy(pdb_date, "         ", 10);
+      return FALSE;
+   }
+   
+   /* set pdb date */
+   sprintf(pdb_date, "%02d-%3s-%02d",
+           day, month_letter[month - 1], year % 100);
+
+   return TRUE;
 }

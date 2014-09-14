@@ -3,8 +3,8 @@
 
    \file       wholepdb_suite.c
    
-   \version    V1.1
-   \date       18.08.14
+   \version    V1.2
+   \date       12.09.14
    \brief      Test suite for whole pdb and pdbml.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -49,15 +49,17 @@
    =================
 -  V1.0  05.08.14 Original By: CTP
 -  V1.1  18.08.14 Check if input file read for all tests. By: CTP
+-  V1.2  12.09.14 Update tests for MS Windows. By: CTP
 
 *************************************************************************/
 
 #include "wholepdb_suite.h"
 
 /* Globals */
-static char test_output_filename[]     = "/tmp/test-XXXXX",
-            test_input_filename[160]   = "data/wholepdb_suite/",
-            test_example_filename[160] = "data/wholepdb_suite/";
+static char test_output_filename[]     = "tmp/test-XXXXX",
+            test_example_basename[]    = "data/wholepdb_suite/",
+            test_input_filename[160]   = "",
+            test_example_filename[160] = "";
 
 static FILE      *fp              =             NULL;
 static WHOLEPDB  *wpdb            =             NULL;
@@ -69,24 +71,42 @@ static int       force_pdbml_flag = FORCEXML_NOFORCE;
 static BOOL wholepdb_compare_files(char *filename_a, char *filename_b)
 {
    char command[120];
-   
-   /* set command */
+
+#ifndef MS_WINDOWS
+
+   /* compare files command */
    sprintf(command,"cmp %s %s > /dev/null", filename_a, filename_b);
-   
+
+#else   
+
+   /* convert output file format from dos to unix */
+   sprintf(command,"dos2unix -q %s", filename_b);
+   system(command);
+   strcpy(command,""); /* reset command */
+
+   /* compare files command */
+   sprintf(command,"cmp %s %s", filename_a, filename_b);
+
+#endif
+
    /* return TRUE if files match */
    return system(command) == 0 ? TRUE:FALSE;
 }
 
 /* Setup And Teardown */
-void wholepdb_setup(void)
+static void wholepdb_setup(void)
 {
    /* Set PDB/PDBML flags to default */
    force_pdbml_flag = gPDBXMLForce;
    read_pdbml_flag  = gPDBXML;
    gPDBXMLForce     = FORCEXML_NOFORCE;
+
+   /* Copy base name to input and example file name */
+   strcpy(test_example_filename, test_example_basename);
+   strcpy(test_input_filename,   test_example_basename);
 }
 
-void wholepdb_teardown(void)
+static void wholepdb_teardown(void)
 {
    /* Reset PDB/PDBML flags */
    gPDBXML      = read_pdbml_flag;
@@ -136,8 +156,12 @@ START_TEST(test_write_pdb_01)
    fclose(fp);
    ck_assert_msg(wpdb != NULL, "Failed to read PDB file.");
 
-   /* write output file */
+#ifndef MS_WINDOWS   
+   /* Set temp file name */
    mkstemp(test_output_filename);
+#endif
+
+   /* write output file */
    fp = fopen(test_output_filename,"w");
    blWriteWholePDB(fp, wpdb);
    fclose(fp);
@@ -172,8 +196,12 @@ START_TEST(test_write_pdbml_01)
    fclose(fp);
    ck_assert_msg(wpdb != NULL, "Failed to read PDB file.");
 
-   /* write output file */
+#ifndef MS_WINDOWS   
+   /* Set temp file name */
    mkstemp(test_output_filename);
+#endif
+
+   /* write output file */
    fp = fopen(test_output_filename,"w");
    blWriteWholePDB(fp, wpdb);
    fclose(fp);
@@ -230,8 +258,12 @@ START_TEST(test_write_pdb_02)
    fclose(fp);
    ck_assert_msg(wpdb != NULL, "Failed to read PDB file.");
 
-   /* write output file */
+#ifndef MS_WINDOWS   
+   /* Set temp file name */
    mkstemp(test_output_filename);
+#endif
+
+   /* write output file */
    fp = fopen(test_output_filename,"w");
    blWriteWholePDB(fp, wpdb);
    fclose(fp);
@@ -266,8 +298,12 @@ START_TEST(test_write_pdbml_02)
    fclose(fp);
    ck_assert_msg(wpdb != NULL, "Failed to read PDB file.");
 
-   /* write output file */
+#ifndef MS_WINDOWS   
+   /* Set temp file name */
    mkstemp(test_output_filename);
+#endif
+
+   /* write output file */
    fp = fopen(test_output_filename,"w");
    blWriteWholePDB(fp, wpdb);
    fclose(fp);
@@ -302,8 +338,12 @@ START_TEST(test_read_write_pdb)
    fclose(fp);
    ck_assert_msg(wpdb != NULL, "Failed to read PDB file.");
 
-   /* write output file */
+#ifndef MS_WINDOWS   
+   /* Set temp file name */
    mkstemp(test_output_filename);
+#endif
+
+   /* write output file */
    fp = fopen(test_output_filename,"w");
    blWriteWholePDB(fp, wpdb);
    fclose(fp);
@@ -338,8 +378,12 @@ START_TEST(test_read_write_pdbml)
    fclose(fp);
    ck_assert_msg(wpdb != NULL, "Failed to read PDB file.");
 
-   /* write output file */
+#ifndef MS_WINDOWS   
+   /* Set temp file name */
    mkstemp(test_output_filename);
+#endif
+
+   /* write output file */
    fp = fopen(test_output_filename,"w");
    blWriteWholePDB(fp, wpdb);
    fclose(fp);

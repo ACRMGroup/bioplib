@@ -3,8 +3,8 @@
 
    \file       writepdbml_suite.h
    
-   \version    V1.0
-   \date       05.08.14
+   \version    V1.1
+   \date       12.09.14
    \brief      Include file for WritePDBML test suite.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -48,6 +48,7 @@
    Revision History:
    =================
 -  V1.0  05.08.14 Original By: CTP
+-  V1.1  12.09.14 Updated tests for MS Windows By: CTP
 
 *************************************************************************/
 
@@ -58,6 +59,7 @@
 #include <stdlib.h>
 #include <check.h>
 #include <unistd.h>
+#include "../../port.h"
 
 /* Includes from source file */
 #include <stdio.h>
