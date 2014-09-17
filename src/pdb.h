@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.65
-   \date       19.08.14
+   \version    V1.66
+   \date       17.09.14
    \brief      Include file for pdb routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2014
@@ -151,6 +151,7 @@
                   blStripWatersPDB() with AsCopy suffix indicating that
                   functions return a new PDB list rather than alter their
                   input PDB list.
+-  V1.66 17.09.14 Commented the fields of the PDB structure
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -205,21 +206,25 @@ typedef struct _blAtomType
 */
 typedef struct pdb_entry
 {
-   REAL x,y,z,occ,bval,access,radius,partial_charge;
-   APTR extras;
-   blATOMTYPE *atomType;
-   struct pdb_entry *next;
-   int  atnum;
-   int  resnum;
-   int  formal_charge;
-   char record_type[8];
-   char atnam[8];
-   char atnam_raw[8];
-   char resnam[8];
-   char insert[8];
-   char chain[8];
-   char element[8];
-   char altpos;
+   REAL x, y, z,             /* Coordinates                             */
+        occ, bval,           /* Occupancy and B-value                   */
+        access, radius,      /* Accessibility and radius - populated by
+                                Bioplib routines                        */
+        partial_charge;      /* Reserved for future use                 */
+   APTR extras;              /* Pointer for users to add information    */
+   blATOMTYPE *atomType;     /* Reserved for future use                 */
+   struct pdb_entry *next;   /* Forward linked list                     */
+   int  atnum;               /* Atom number                             */
+   int  resnum;              /* Residue number                          */
+   int  formal_charge;       /* Formal charge - used in XML files       */
+   char record_type[8];      /* ATOM / HETATM                           */
+   char atnam[8];            /* Atom name, left justified               */
+   char atnam_raw[8];        /* Atom name as it appears in the PDB file */
+   char resnam[8];           /* Residue name                            */
+   char insert[8];           /* Numbering insert code                   */
+   char chain[8];            /* Chain label                             */
+   char element[8];          /* Element type                            */
+   char altpos;              /* Alternate position indicator            */
 }  PDB;
 
 typedef struct pdbresidue
