@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V2.35
-   \date       09.09.14
+   \version    V2.36
+   \date       29.09.14
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2014
@@ -199,6 +199,9 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                   Decreased size of XML_SAMPLE.
                   Reading of gzipped files with gunzip not supported for 
                   MS Windows. By: CTP
+-  V2.36 29.09.14 Allow single character check for filetype where ungetc()
+                  fails after pushback of single character. Updates to 
+                  blCheckFileFormatPDBML() and blDoReadPDB(). By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -470,6 +473,8 @@ PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
                   without support for PDBML format. By: CTP
 -  09.09.14 V2.35 Reading of gzipped files with gunzip not supported for 
                   MS Windows. By: CTP
+-  29.09.14 V2.36 Allow single character filetype check for gzipped files.
+                  By: CTP
 
 */
 PDB *blDoReadPDB(FILE *fpin,
@@ -509,8 +514,11 @@ PDB *blDoReadPDB(FILE *fpin,
 
 #if defined(GUNZIP_SUPPORT) && !defined(MS_WINDOWS)
    int      signature[3],
-            i,
             ch;
+   BOOL     gzipped_file = FALSE;
+#  ifndef SINGLE_CHAR_FILECHECK
+   int      i;
+#  endif
 #endif
 
    *natom         = 0;
@@ -523,6 +531,8 @@ PDB *blDoReadPDB(FILE *fpin,
 
 #if defined(GUNZIP_SUPPORT) && !defined(MS_WINDOWS)
    /* See whether this is a gzipped file                                */
+#  ifndef SINGLE_CHAR_FILECHECK
+   /* Default three character filetype check                            */
    for(i=0; i<3; i++)
       signature[i] = fgetc(fpin);
    for(i=2; i>=0; i--)
@@ -533,6 +543,17 @@ PDB *blDoReadPDB(FILE *fpin,
       ((signature[0] == (int)0x1F) &&    /* 05.06.07 compress           */
        (signature[1] == (int)0x9D) &&
        (signature[2] == (int)0x90)))
+   {
+      gzipped_file = TRUE;
+   }
+#  else
+   /* Single character filetype check                                   */
+   signature[0] = fgetc(fpin);
+   ungetc(signature[0], fpin);
+   if(signature[0] == (int)0x1F) gzipped_file = TRUE;
+#  endif
+
+   if(gzipped_file)
    {
       /* It is gzipped so we'll open gunzip as a pipe and send the data
          through that into a temporary file
@@ -1711,10 +1732,16 @@ PDB *blDoReadPDBML(FILE *fpin,
             before xml tag. By: CTP
 -  09.09.14 Use rewind() for DOS instead of pushing sample back on stream 
             with ungetc(). By: CTP
+-  29.09.14 Use single character check for pdbml files for Windows or 
+            systems where ungetc() fails after pushback of singe char. 
+            By: CTP
 
 */
 BOOL blCheckFileFormatPDBML(FILE *fp)
 {
+#if !defined(SINGLE_CHAR_FILECHECK) && !defined(MS_WINDOWS)
+
+   /* Default Filetype Check */
    char buffer[XML_SAMPLE];
    int  i, c;
    BOOL found_xml  = FALSE,
@@ -1729,16 +1756,11 @@ BOOL blCheckFileFormatPDBML(FILE *fp)
    }
    buffer[i] = '\0'; /* terminate string */
 
-#ifndef NOPIPE
-   /* push sample back on input stream for unix */
+   /* push sample back on input stream */
    for(i = strlen(buffer) - 1; i >= 0; i--)
    {
       ungetc(buffer[i], fp);
    }
-#else  
-   /* rewind file for non-unix operating systems */
-   rewind(fp);
-#endif
 
    /* check first line */
    if(!strncmp(buffer,"<?xml ",6)) found_xml  = TRUE;
@@ -1754,6 +1776,23 @@ BOOL blCheckFileFormatPDBML(FILE *fp)
    }
 
    return found_xml && found_pdbx ? TRUE : FALSE ;
+
+#else
+
+   /* Single Character Filetype Check */
+   int c;
+
+   /* get single char from input stream */
+   c = fgetc(fp);
+   if(c == EOF || feof(fp)) return FALSE;
+
+   /* pushback character */
+   ungetc(c, fp);
+
+   /* detect filetype */
+   return (char)c == '<' ? TRUE:FALSE;
+
+#endif 
 }
 
 /************************************************************************/

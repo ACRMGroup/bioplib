@@ -3,8 +3,8 @@
 
    \file       WholePDB.c
    
-   \version    V1.9
-   \date       10.09.14
+   \version    V1.10
+   \date       29.09.14
    \brief      
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014
@@ -60,6 +60,8 @@
 -  V1.9  10.09.14 Added blSetPDBDateField(). Removed time.h.
                   Reading of gzipped files with gunzip not supported for 
                   MS Windows. By: CTP
+-  V1.10 29.09.14 Allow single character filetype check for gzipped files.
+                  By: CTP
 
 *************************************************************************/
 /* Includes
@@ -314,6 +316,8 @@ WHOLEPDB *blReadWholePDBAtoms(FILE *fpin)
             without support for PDBML format. By: CTP
 -  10.09.14 Reading of gzipped files with gunzip not supported for 
             MS Windows. By: CTP
+-  29.09.14 Allow single character filetype check for gzipped files. 
+            By: CTP
 
    TODO FIXME!!!!! Move all this into doReadPDB so that we don't worry 
    about rewinding any more
@@ -327,9 +331,12 @@ static WHOLEPDB *blDoReadWholePDB(FILE *fpin, BOOL atomsonly)
    
 #if defined(GUNZIP_SUPPORT) && !defined(MS_WINDOWS)
    int      signature[3],
-            i,
             ch;
    char     cmd[80];
+   BOOL     gzipped_file = FALSE;
+#  ifndef SINGLE_CHAR_FILECHECK
+   int      i;
+#  endif
 #endif
 
    if((wpdb=(WHOLEPDB *)malloc(sizeof(WHOLEPDB)))==NULL)
@@ -343,6 +350,8 @@ static WHOLEPDB *blDoReadWholePDB(FILE *fpin, BOOL atomsonly)
    cmd[0] = '\0';
    
    /* See whether this is a gzipped file                                */
+#  ifndef SINGLE_CHAR_FILECHECK
+   /* Default three character filetype check                            */
    for(i=0; i<3; i++)
       signature[i] = fgetc(fpin);
    for(i=2; i>=0; i--)
@@ -353,6 +362,17 @@ static WHOLEPDB *blDoReadWholePDB(FILE *fpin, BOOL atomsonly)
       ((signature[0] == (int)0x1F) &&    /* 05.06.07 compress           */
        (signature[1] == (int)0x9D) &&
        (signature[2] == (int)0x90)))
+   {
+      gzipped_file = TRUE;
+   }
+#  else
+   /* Single character filetype check                                   */
+   signature[0] = fgetc(fpin);
+   ungetc(signature[0], fpin);
+   if(signature[0] == (int)0x1F) gzipped_file = TRUE;
+#  endif
+
+   if(gzipped_file)
    {
       /* It is gzipped so we'll open gunzip as a pipe and send the data
          through that into a temporary file

@@ -25,6 +25,14 @@ COPT = -fPIC -ansi -Wall -pedantic -g -DGUNZIP_SUPPORT
 #       Link to libxml2 with -lxml2
 COPT := $(COPT) -D XML_SUPPORT $(shell xml2-config --cflags)
 
+# Use single letter check for filetype
+# Only check first character of file when detecting file type (compressed
+# file or pdbml).
+# For systems were ungetc() fails after pushing back a single character to
+# the input stream.
+# Note: This option is not required for MS Windows.
+#COPT := $(COPT) -D SINGLE_CHAR_FILECHECK
+
 # Define the archive/library command here
 AR = ar r
 
