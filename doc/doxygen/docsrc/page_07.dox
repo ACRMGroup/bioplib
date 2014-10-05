@@ -1,0 +1,74 @@
+/**
+
+\page page_07 Sequence Functions
+\brief
+   Bioplib - Functions dealing with Sequence Data 
+
+Functions dealing with Sequence Data 
+
+Include the seq.h header file for sequence functions.
+
+\code
+   #include seq.h
+\endcode
+
+PDB linked lists can be converted to sequences using the blPDB2Seq() and related macros:
+
+- blPDB2Seq()  - converts PDB sequence to sequence string
+- blPDB2SeqX()  - converts PDB sequence to sequence string translating Asx and Glx as B and Z instead of X
+- blPDB2SeqNoX()  - converts PDB sequence to sequence string omitting any unknown residues (including Asx and Glx).
+- blPDB2SeqXNoX() - converts PDB sequence to sequence string omitting any unknown residues but translating translating Asx and Glx as B and Z.
+
+
+The macros below translate the PDB sequence for protein records only (No DNA):
+
+- blPDBProt2Seq()   - converts PDB sequence to sequence string
+- blPDBProt2SeqX()  - Translates Asx and Glx to B and Z.
+- blPDBProt2SeqNoX()  - Does not include unknown residues. 
+- blPDBProt2SeqXNoX() -  Does not include unknown residues but translates Asx and Glx.
+
+
+Alternatively, a PIR file can be read with:
+
+- blReadSimplePIR() - Read a PIR file containing multiple chains of up to maxres amino acids.
+- blReadPIR() - This is a PIR reader which should handle all legal PIR files and some (slightly) incorrect ones.
+- blReadRawPIR() -  Based on ReadPIR(), but reads all characters into the sequence arrays (i.e. all punctuation characters are read as is).
+
+Sequences can be split into individual chains with: 
+
+- blSplitSeq() - Splits sequences with * chain separators into individual chains.
+
+The following functions return sequence length:
+
+- blTrueSeqLen()  - Scans a 1-letter code sequence and calculate the length without '-' or ' ' residues.
+- blKnownSeqLen() - Scans a 1-letter code sequence and calculate the length without '-', ' ' or '?' residues.
+
+
+Translation between three-letter to one-letter amino acid residues can be accomplished with:
+
+- blThrone()  - Converts 3-letter code to 1-letter code. Handles ASX and GLX as X.
+- blThronex() - Converts 3-letter code to 1-letter code. Handles ASX and GLX as B and Z.
+- blOnethr()  - Converts 1-letter code to 3-letter code. Padded to 4 chars with a trailing space.
+
+Individual DNA codons can be converted to one letter amino acid residues with, DNAtoAA().
+
+
+Sequences can be aligned with the following functions:
+
+- blAffinealign() - Simple N&W alignment of two sequences incorporating an extension penalty.
+- blAffinealignuc() - Same as blAffinealign() but converts sequence to upper case before comparison.
+- blNumericAffineAlign() - Identical to blAffinealign() but uses integer arrays.
+
+
+The following functions deal with Mutation Data Matrices:
+
+- blReadMDM() - Read mutation data matrix into static global arrays.
+- blCalcMDMScore() - Calculate score from static globally stored mutation data matrix.
+- blCalcMDMScoreUC() - Same as CalcMDMScore() but upcases characters before comparison.
+- blZeroMDM() - Modifies all values in the MDM such that the minimum value is 0.
+- blNumericReadMDM() - Similar to blReadMDM() but doesn't read a symbol identifier line from the file. Symbols are numeric and start from 1.
+- blNumericCalcMDMScore() - Similar as CalcMDMScore() but takes integer parameters.
+- blSetMDMScoreWeight() - Apply a weight to a particular amino acid substitution.
+
+
+*/

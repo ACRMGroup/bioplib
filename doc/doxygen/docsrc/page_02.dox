@@ -1,0 +1,64 @@
+/**
+
+\page page_02 Reading and Writing Files
+\brief
+   Bioplib - Reading and writing PDB and PDBML files.
+
+BiopLib provides functions for reading and writing PDB files. The functions blReadPDB() and blWritePDB() will read and write the ATOM/HETATM records only. The functions ReadWholePDB() and WriteWholePDB() will include the header and trailer information from the PDB file.
+
+If the BiopLib library has been compiled with XML support then the above functions will also read and write PDBML formatted files. 
+
+
+Read Functions
+--------------
+
+-  blReadPDB()
+-  blReadWholePDB()
+
+
+blReadPDB() will select highest occupancy atom record for partial occupancy and first NMR model.
+
+_Additional read functions:_
+
+-  blReadPDBAll() - reads all ATOM and HETATM records and all partial occupancy records.
+-  blReadPDBAtom() - reads only ATOM records.
+-  blReadPDBOccRank() - reads atom and hetatm records with selected occupancy rank. Used for selecting lower occupancy conformations.
+-  blReadPDBAtomsOccRank() - read atom records with selected occupancy rank.
+-  blReadWholePDBAtoms() - reads only ATOM records.
+
+These functions will create a linked list of PDB data structures. With each node in the list corresponding to an ATOM or HETATM record and containing all the data for the record. The list can be manipulated within your program and output with the write functions below.
+
+
+Write Functions
+---------------
+
+-  blWritePDB()
+-  blWriteWholePDB()
+
+By default, the format of the file read (pdb/pdbml) is the format for output. Set format for output files with the macros: FORCEPDB or FORCEXML
+
+Additionally, single ATOM/HETATM records can be output with:
+
+-  blWritePDBRecord()
+
+
+Misc and Low Level Read/Write Functions
+---------------------------------------
+
+-  blDoReadPDB()
+-  blDoReadPDBML()
+-  blCheckFileFormatPDBML()
+-  blWriteAsPDB()
+-  blWriteAsPDBML()
+-  blFormatCheckWritePDB()
+-  blWriteWholePDBHeader()
+-  blWriteWholePDBTrailer()
+-  blWriteGromosPDB()
+-  blWriteGromosPDBRecord()
+-  blReportStructureType()
+-  blReadSeqresPDB()
+-  blReadSecPDB()
+-  blReadDisulphidesPDB()
+-  blFNam2PDB()
+
+*/

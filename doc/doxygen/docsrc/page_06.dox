@@ -1,0 +1,93 @@
+/**
+
+\page page_06 3D data and transformation of the PDB linked list.
+\brief
+   Bioplib - Functions for 3D data and transformation of PDB linked list.
+
+3D data and transformation of PDB linked list
+---------------------------------------------
+
+Obtain coordinates with:
+
+- blGetPDBCoor() Gets pdb atomic coordinates.
+- blGetCofGPDB() Finds centre of geometry for PDB list.
+- blGetCofGPDBRange() Finds centre of geometry for zone between start and end resides in list.
+- blGetCofGPDBSCRange() - Finds centre of geometry ignoring backbone coordinates.
+
+
+Find angles with: 
+
+- blAngle() - Get angle from coordinates (3 atoms).
+- blTrueAngle() - Get angle given the opp and adj values.
+- blPhi() - Get torsion angle from coordinates (4 atoms).
+- blTorToCoor() - Find coordinates of 4th atom given coordinates of 3 atoms and desired torsion angle.
+- blSimpleangle() - Convert from degrees to radians.
+
+Find neighbours with: 
+
+- blBuildAtomNeighbourPDBListAsCopy() - Returns a PDB linked list of atoms within cutoff distance of the residue of interest. 
+
+
+Transform linked list with:
+
+- blApplyMatrixPDB() applies a transformation matrix to pdb coordinates.
+
+- blOriginPDB() Translates a PDB linked list to the origin.
+- blRotatePDB() Applies a rotation matrix to PDB
+- blTranslatePDB() Applies a translation matrix to PDB linked list.
+
+Fit coordinates with:
+
+- blFitPDB() Fits coordinates of PDB linked lists with identical sequences.
+- blFitCaPDB() Performs fit on alpha carbons
+- blFitNCaCPDB() Performs fit on backbone atoms.
+- blFitCaCbPDB() Performs fit on alpha and beta carbons.
+
+- blCalcRMSPDB()  - Calculate the RMS deviation between two fitted PDB linked lists.
+
+Add and strip hydrogens and fix N and C-terminals with:
+
+- blHAddPDB() - This routine adds hydrogens to a PDB linked list.
+- blStripHPDBAsCopy() - Strips hydrogens from a PDB list. Returns a new list.
+- blCalcTetraHCoords() - Calculates coordinates for hydrogens.
+
+- blAddNTerHs() - Adds hydrogens onto the N-termini.
+- blFixCterPDB() - Renames C-terminal atoms in required style and calls blCalcCterCoords().
+- blCalcCterCoords() - Calculates the CTER OT2 coordinates.
+
+Strip waters with: 
+- blStripWatersPDBAsCopy() - Strips waters from a PDB list. Returns a new list.
+
+Manipulate sidechains with:
+
+- blCalcChi() - Calculates a sidechain torsion angle.
+- blSetChi() - Sets a sidechain torsion angle.
+
+- blKillSidechain() - Removes a sidechain.
+
+- blRepSChain() - Replace sidechains.
+- blRepOneSChain() - Replace a single sidechain.
+- blEndRepSChain() - Cleans up open files and memory used by the sidechain replacement routines.
+
+- blAddCBtoGly() - Adds a beta carbon to glycine. This is used when one needs to orientate a residue in a common frame of reference which makes use of the CB.
+- blAddCBtoAllGly() - Adds beta carbon to all glycines.
+- blStripGlyCB() - Removes a beta carbon from glycine.
+
+
+
+The following functions obtain resolution and R-factor information:
+
+- blGetResolPDB() - Obtains resolution and R-factor information out of a PDB file.
+- blGetExptl() - Obtains resolution and R-factor information out of a PDB file.
+- blGetExptlOld() - Obtains resolution and R-factor information out of a PDB file.
+
+
+The following functions deal with unit cell parameters:
+
+- blGetCrystPDB() - Read the crystal parameters (unit cell, spacegroup, origin and scale matrices) out of a PDB file.
+- blWriteCrystPDB() - Write crystal parameters (unit cell, space group, origin and scale matrices) to a PDB file.
+- blCalcCellTrans() - Calculates the offsets to apply in X, Y and Z directions for creating a crystal lattice from the unit cell parameters.
+
+
+
+*/
