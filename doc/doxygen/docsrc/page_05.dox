@@ -19,7 +19,7 @@ Functions for finding and selecting regions from PDB linked list
 -  blFindEndPDB() - Step along a PDB linked list from start until we find a different residue.
 
 -  blFindZonePDB() - Finds pointers to the start and end of a zone in a PDB linked list.
--  blInPDBZone() - Is atom within specifified zone?
+-  blInPDBZone() - Is atom within specified zone?
 
 -  blIndexPDB() - Creates an array of pointers to PDB from a linked list.
 
@@ -49,7 +49,7 @@ The functions below will parse a residue specification string. The residue speci
 -  blDoParseResSpec() - Parse residue specification (low level).
 -  blFindResidueSpec() - Finds a pointer to the start of a residue in a PDB linked list.
 -  blFindHetatmResidueSpec() - Finds a pointer to the start of a residue in a PDB linked list (Limited to hetatm records).
--  blInPDBZoneSpec() - Is atom within specifified zone?
+-  blInPDBZoneSpec() - Is atom within specified zone?
 
 
 

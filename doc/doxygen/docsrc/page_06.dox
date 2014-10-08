@@ -18,7 +18,7 @@ Obtain coordinates with:
 Find angles with: 
 
 - blAngle() - Get angle from coordinates (3 atoms).
-- blTrueAngle() - Get angle given the opp and adj values.
+- blTrueAngle() - Get angle given the opposite and adjacent values.
 - blPhi() - Get torsion angle from coordinates (4 atoms).
 - blTorToCoor() - Find coordinates of 4th atom given coordinates of 3 atoms and desired torsion angle.
 - blSimpleangle() - Convert from degrees to radians.

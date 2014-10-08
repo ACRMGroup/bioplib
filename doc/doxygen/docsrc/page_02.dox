@@ -21,7 +21,7 @@ blReadPDB() will select highest occupancy atom record for partial occupancy and 
 _Additional read functions:_
 
 -  blReadPDBAll() - reads all ATOM and HETATM records and all partial occupancy records.
--  blReadPDBAtom() - reads only ATOM records.
+-  blReadPDBAtoms() - reads only ATOM records.
 -  blReadPDBOccRank() - reads atom and hetatm records with selected occupancy rank. Used for selecting lower occupancy conformations.
 -  blReadPDBAtomsOccRank() - read atom records with selected occupancy rank.
 -  blReadWholePDBAtoms() - reads only ATOM records.

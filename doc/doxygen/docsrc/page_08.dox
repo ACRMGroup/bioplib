@@ -9,7 +9,7 @@ Header Files
 
 _Proteins and Sequences_
 
-Header files for data stuctures and protypes for handling proteins and sequences.
+Header files for data structures and prototypes for handling proteins and sequences.
 
 -  aalist.h     - Include file for amino acid linked lists.
 -  access.h     - Accessibility calculation code.
