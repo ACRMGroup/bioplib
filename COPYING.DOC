@@ -1,0 +1,30 @@
+                               BiopLib
+                               =======
+
+                 (c)1990-2014, Dr. Andrew C.R. Martin
+                           SciTech Software
+
+                                 and
+
+                      University College London
+       BSM Unit, Department of Biochemistry & Molecular Biology
+                           Darwin Building
+                             Gower Street
+                           London WC1E 6BT
+
+                 EMail:   andrew@bioinf.org.uk
+                          andrew.martin@ucl.ac.uk
+
+
+
+
+BiopLib is a library of routines for the manipulation of protein
+structure and sequence using the C programming language.
+
+
+
+BiopLib is licensed under the Gnu Public Licence Version 3.
+
+If you wish to use BiopLib in closed source commercial applications,
+you must contact the author for a commercial licence.
+
