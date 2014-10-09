@@ -46,7 +46,9 @@ Documentation for the BiopLib can be generated using Doxygen (www.doxygen.org). 
 
          make doxygen
 
-The output directory for doxygen is doc/doxygen/Documentation and contains documentation in LaTeX and HTML format.
+The output directories for doxygen are doc/doxygen/latex and doc/doxygen/html which contain documentation in LaTeX and HTML format. 
+
+The documentation uses markdown format which is supported by version 1.8.0 (or later) of Doxygen.
 
 If you are using a shell which supports aliases, set up an alias for the cc command to add the include directory to the include search path and the lib directory to the lib search path. Using the BASH shell and assuming you have installed the libraries and include files in the default location, the following will work:
 
