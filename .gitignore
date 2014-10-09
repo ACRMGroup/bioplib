@@ -18,3 +18,7 @@
 
 # Emacs backup files
 *.*~
+
+# Doxygen output
+doc/html
+doc/latex
