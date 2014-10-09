@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       ReadCSSR.c
+   \file       ReadCSSR.c
    
-   Version:    V1.5R
-   Date:       30.05.02
-   Function:   Read a CSSR file
+   \version    V1.7
+   \date       15.08.14
+   \brief      Read a CSSR file
    
-   Copyright:  (c) SciTech Software 1991-2002
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,8 +35,11 @@
 
    Description:
    ============
+
+\code
    ReadCSSR(fp,cssr,natom,name,title)
-   ----------------------------------
+\endcode
+
    This subroutine will read a CSSR file of any size and form a linked list
    of the structure.
    This list is contained in a linked set of structures of type cssr_entry. 
@@ -43,25 +51,32 @@
    structure of type CSSR using the statement:
        CSSR *mycssr;
 
-
+\code
    ReadCSSRasPDB(fp,cssr,natom)
-   ----------------------------
+\endcode
+
    As ReadCSSR(), but reads the structure into a PDB type linked list.
    Atom connection information is ignored, and charges are placed into the
    B-val column.
 
+\code
    NormaliseCSSR(cssr,cell,alpha,beta,gamma)
-   -----------------------------------------
+\endcode
+
    Given the unit cell dimensions, converts CSSR to orthonormal 
    coordinates.
 
+\code
    NormalisePDB(pdb,cell,alpha,beta,gamma)
-   ---------------------------------------
+\endcode
+
    Given the unit cell dimensions, converts PDB to orthonormal 
    coordinates.
 
+\code
    ortho(cell,alpha,beta,gamma,amatrx,isw,ncode)
-   ---------------------------------------------
+\endcode
+
    Calculates the 3x3 matrix required to convert between fractional and
    orthonormal coordinates given the unit cell dimensions.
 
@@ -69,6 +84,8 @@
 
    Usage:
    ======
+
+\verbatim
    ReadCSSR(fp,cssr,natom,name,title)
    Input:   FILE     *fp      A pointer to type FILE in which the
                               CSSR file is stored.
@@ -114,17 +131,19 @@
                               3: c || xo,          b* || zo
                               4: hex a & b || xo,  c* || zo
                               5: a* || xo,         c  || zo
-
+\endverbatim
 **************************************************************************
 
    Revision History:
    =================
-   V1.0  06.09.91 Original
-   V1.1  24.01.92 Fixed for reading files with blank link numbers.
-   V1.2  01.06.92 Documented and added FPU check
-   V1.3  10.06.93 Tidied for book
-   V1.4  27.07.93 Changed I/O to double precision
-   V1.5  30.05.02 Changed PDB field from 'junk' to 'record_type'
+-  V1.0  06.09.91 Original
+-  V1.1  24.01.92 Fixed for reading files with blank link numbers.
+-  V1.2  01.06.92 Documented and added FPU check
+-  V1.3  10.06.93 Tidied for book
+-  V1.4  27.07.93 Changed I/O to double precision
+-  V1.5  30.05.02 Changed PDB field from 'junk' to 'record_type'
+-  V1.6  07.07.14 Use bl prefix for functions By: CTP
+-  V1.7  15.08.14 Updated blReadCSSRasPDB() to use CLEAR_PDB() By: CTP
 
 *************************************************************************/
 /* Includes
@@ -155,27 +174,29 @@
 */
 
 /************************************************************************/
-/*>CSSR *ReadCSSR(FILE *fp, int *natom, char *name, char *title)
-   -------------------------------------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
-                              CSSR file is stored.
-            CSSR     *cssr    A pointer to the first allocated item of
-                              the CSSR linked list
-   Output:  int      *natom   Number of atoms read.
-            char     *name    The molecule's name.
-            char     *title   Title on the molecule.
+/*>CSSR *blReadCSSR(FILE *fp, int *natom, char *name, char *title)
+   ---------------------------------------------------------------
+*//**
+
+   \param[in]     *fp      A pointer to type FILE in which the
+                           CSSR file is stored.
+   \param[out]    *natom   Number of atoms read.
+   \param[out]    *name    The molecule's name.
+   \param[out]    *title   Title on the molecule.
+
    Read a CSSR file into a CSSR linked list
 
-   06.09.91 Original
-   24.01.92 Fixed for blank link columns (V1.1)
-   01.06.92 Documented
-   10.06.93 Returns TRUE or FALSE to indicate success
-   09.07.93 Changed allocation scheme. Now returns pointer to start of
+-  06.09.91 Original
+-  24.01.92 Fixed for blank link columns (V1.1)
+-  01.06.92 Documented
+-  10.06.93 Returns TRUE or FALSE to indicate success
+-  09.07.93 Changed allocation scheme. Now returns pointer to start of
             list. No need to call init_cssr
-   13.07.93 Returns NULL if allocation failed
-   27.07.93 Changed I/O to double precision
+-  13.07.93 Returns NULL if allocation failed
+-  27.07.93 Changed I/O to double precision
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-CSSR *ReadCSSR(FILE  *fp,
+CSSR *blReadCSSR(FILE  *fp,
                int   *natom,
                char  *name,
                char  *title)
@@ -291,30 +312,35 @@ CSSR *ReadCSSR(FILE  *fp,
    }
    
    /* Normalise if necessary                                            */
-   if(!orthonormal) NormaliseCSSR(cssr,cell,alpha,beta,gamma);
+   if(!orthonormal) blNormaliseCSSR(cssr,cell,alpha,beta,gamma);
    
    return(cssr);
 }
 
 /************************************************************************/
-/*>PDB *ReadCSSRasPDB(FILE *fp, int *natom)
-   ----------------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
-                              CSSR file is stored.
-   Output:  int      *natom   Number of atoms read.
-   Returns: PDB      *pdb     A pointer to the first allocated item of
-                              the PDB linked list
+/*>PDB *blReadCSSRasPDB(FILE *fp, int *natom)
+   ------------------------------------------
+*//**
+
+   \param[in]     *fp      A pointer to type FILE in which the
+                           CSSR file is stored.
+   \param[out]    *natom   Number of atoms read.
+   \return                 A pointer to the first allocated item of
+                           the PDB linked list
+
    Read a CSSR file into a PDB linked list
 
-   06.09.91 Original
-   01.06.92 Documented
-   10.06.93 Returns TRUE or FALSE to indicate success
-   09.07.93 Changed allocation scheme. Now returns pointer to start of
+-  06.09.91 Original
+-  01.06.92 Documented
+-  10.06.93 Returns TRUE or FALSE to indicate success
+-  09.07.93 Changed allocation scheme. Now returns pointer to start of
             list. No need to call init_pdb
-   13.07.93 Returns NULL if allocation failed
-   27.07.93 Changed I/O to double precision
+-  13.07.93 Returns NULL if allocation failed
+-  27.07.93 Changed I/O to double precision
+-  07.07.14 Use bl prefix for functions By: CTP
+-  15.08.14 Use CLEAR_PDB() By: CTP
 */
-PDB *ReadCSSRasPDB(FILE  *fp,
+PDB *blReadCSSRasPDB(FILE  *fp,
                    int   *natom)
 {
    char  buffer[160],
@@ -403,6 +429,9 @@ PDB *ReadCSSRasPDB(FILE  *fp,
          return(NULL);
       }
 
+      /* Clear pdb                                                      */
+      CLEAR_PDB(p);
+      
       sscanf(buffer,"%d%s%lf%lf%lf%d%d%d%d%d%d%d%d",&p->atnum,
                                                      p->atnam,
                                                     &p->x,
@@ -417,7 +446,7 @@ PDB *ReadCSSRasPDB(FILE  *fp,
                                                     &link[6],
                                                     &link[7]);
       strcpy(p->record_type,"ATOM   ");
-      padterm(p->atnam,4);
+      blPadterm(p->atnam,4);
       strcpy(p->resnam,"ATM ");
       strcpy(p->insert," ");
       strcpy(p->chain," ");
@@ -432,31 +461,35 @@ PDB *ReadCSSRasPDB(FILE  *fp,
    }
    
    /* Normalise if necessary                                            */
-   if(!orthonormal) NormalisePDB(pdb,cell,alpha,beta,gamma);
+   if(!orthonormal) blNormalisePDB(pdb,cell,alpha,beta,gamma);
    
    return(pdb);
 }
 
 /************************************************************************/
-/*>void NormaliseCSSR(CSSR *cssr, REAL cell[3], REAL alpha, 
-                      REAL beta, REAL gamma)
-   --------------------------------------------------------
-   I/O:     CSSR     *cssr    Pointer to CSSR linked list
-   Input:   REAL     cell[3]  Unit cell dimensions
-                     alpha    Unit cell angles
-                     beta
-                     gamma
+/*>void blNormaliseCSSR(CSSR *cssr, REAL cell[3], REAL alpha, 
+                        REAL beta, REAL gamma)
+   ----------------------------------------------------------
+*//**
+
+   \param[in,out] *cssr    Pointer to CSSR linked list
+   \param[in]     cell     Unit cell dimensions
+   \param[in]     alpha    Unit cell angles
+   \param[in]     beta
+   \param[in]     gamma
+
    Convert a CSSR linked list in fractional coordinates to orthonormal
 
-   06.09.91 Original
-   01.06.92 Documented
-   10.06.93 void return
+-  06.09.91 Original
+-  01.06.92 Documented
+-  10.06.93 void return
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void NormaliseCSSR(CSSR *cssr,
-                   REAL cell[3],
-                   REAL alpha,
-                   REAL beta,
-                   REAL gamma)
+void blNormaliseCSSR(CSSR *cssr,
+                     REAL cell[3],
+                     REAL alpha,
+                     REAL beta,
+                     REAL gamma)
 {
    int   ncode = 1,           /* Assume a* along X and c* || Z          */
          isw   = 0;           /* Fractional-->Orthonormal               */
@@ -464,7 +497,7 @@ void NormaliseCSSR(CSSR *cssr,
          tempx,tempy,tempz;   /* Used during matrix multiplication      */
    CSSR  *p;
    
-   ortho(cell,alpha,beta,gamma,matrix,isw,ncode);
+   blOrtho(cell,alpha,beta,gamma,matrix,isw,ncode);
    
    /* Now multiply the coordinates by the matrix                        */
    for(p=cssr;p;NEXT(p))
@@ -495,25 +528,29 @@ void NormaliseCSSR(CSSR *cssr,
 }
 
 /************************************************************************/
-/*>void NormalisePDB(PDB *pdb, REAL cell[3], REAL alpha,
+/*>void blNormalisePDB(PDB *pdb, REAL cell[3], REAL alpha,
                      REAL beta, REAL gamma)
-   -----------------------------------------------------
-   I/O:     PDB      *pdb     Pointer to PDB linked list
-   Input:   REAL     cell[3]  Unit cell dimensions
-                     alpha    Unit cell angles
-                     beta
-                     gamma
+   -------------------------------------------------------
+*//**
+
+   \param[in,out] *pdb     Pointer to PDB linked list
+   \param[in]     cell     Unit cell dimensions
+   \param[in]     alpha    Unit cell angles
+   \param[in]     beta
+   \param[in]     gamma
+
    Convert a PDB linked list in fractional cooridinates to orthonormal
 
-   06.09.91 Original
-   01.06.92 Documented
-   10.06.93 void return
+-  06.09.91 Original
+-  01.06.92 Documented
+-  10.06.93 void return
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void NormalisePDB(PDB   *pdb,
-                  REAL  cell[3],
-                  REAL  alpha,
-                  REAL  beta,
-                  REAL  gamma)
+void blNormalisePDB(PDB   *pdb,
+                    REAL  cell[3],
+                    REAL  alpha,
+                    REAL  beta,
+                    REAL  gamma)
 {
    int   ncode = 1,           /* Assume a* along X and c* || Z          */
          isw   = 0;           /* Fractional-->Orthonormal               */
@@ -521,7 +558,7 @@ void NormalisePDB(PDB   *pdb,
          tempx,tempy,tempz;   /* Used during matrix multiplication      */
    PDB   *p;
    
-   ortho(cell,alpha,beta,gamma,matrix,isw,ncode);
+   blOrtho(cell,alpha,beta,gamma,matrix,isw,ncode);
    
    /* Now multiply the coordinates by the matrix                        */
    for(p=pdb;p;NEXT(p))
@@ -544,21 +581,28 @@ void NormalisePDB(PDB   *pdb,
 }
 
 /************************************************************************/
-/*>void ortho(REAL cell[3], REAL alpha, REAL beta, REAL gamma,
-              REAL amatrx[3][3], int isw, int ncode)
+/*>void blOrtho(REAL cell[3], REAL alpha, REAL beta, REAL gamma,
+                REAL amatrx[3][3], int isw, int ncode)
    -----------------------------------------------------------
-   Input:   REAL     cell[3]  Unit cell dimensions
-                     alpha    Unit cell angles
-                     beta
-                     gamma
-   Output:  REAL     amatrx[3][3]   Returned conversion matrix
-   Input:   int      isw      0: Frac-->Ortho,  1: Ortho-->Frac
-            int      ncode    Orientation of reciprocal axes wrt true axes.
+*//**
+
+   \param[in]     cell     Unit cell dimensions
+   \param[in]     alpha    Unit cell angles
+   \param[in]     beta
+   \param[in]     gamma
+   \param[out]    amatrx   Returned conversion matrix
+   \param[in]     isw      0: Frac-->Ortho,  1: Ortho-->Frac
+   \param[in]     ncode    Orientation of reciprocal axes wrt true axes.
+   
+\verbatim   
+   ncode    Orientation of reciprocal axes wrt true axes.
+
                               1: a || xo,          c* || zo
                               2: b || xo,          a* || zo
                               3: c || xo,          b* || zo
                               4: hex a & b || xo,  c* || zo
                               5: a* || xo,         c  || zo
+\endverbatim
 
    Function to calculate a matrix which will convert between fractional and
    orthonormal coordinates given unit cell dimensions and angles.
@@ -566,17 +610,18 @@ void NormalisePDB(PDB   *pdb,
    
    See Rollett `Computing Methods in Crystallography' p.23
 
-   06.09.91 Original
-   01.06.92 Documented
-   10.06.93 void return
+-  06.09.91 Original
+-  01.06.92 Documented
+-  10.06.93 void return
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void ortho(REAL  cell[3],        /* Cell dimensions                     */
-           REAL  alpha,          /* Cell angles                         */
-           REAL  beta,
-           REAL  gamma,
-           REAL  amatrx[3][3],   /* Returned conversion matrix          */
-           int   isw,            /* 0: Frac-->Ortho,  1: Ortho-->Frac   */
-           int   ncode)          /* Orientation of reciprocal axes      */
+void blOrtho(REAL  cell[3],        /* Cell dimensions                     */
+             REAL  alpha,          /* Cell angles                         */
+             REAL  beta,
+             REAL  gamma,
+             REAL  amatrx[3][3],   /* Returned conversion matrix          */
+             int   isw,            /* 0: Frac-->Ortho,  1: Ortho-->Frac   */
+             int   ncode)          /* Orientation of reciprocal axes      */
 {
    REAL  ro[3][3],
          rf[3][3],
@@ -684,7 +729,7 @@ void ortho(REAL  cell[3],        /* Cell dimensions                     */
       break;
    }
 
-   invert33(ro,rf);
+   blInvert33(ro,rf);
    for(i=0;i<3;i++)
    {
       for(j=0;j<3;j++)

@@ -1,22 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       ReadRawPIR.c
+   \file       ReadRawPIR.c
    
-   Version:    V2.7
-   Date:       06.02.96
-   Function:   
+   \version    V2.8
+   \date       07.07.14
+   \brief      
    
-   Copyright:  (c) SciTech Software 1991-6
-   Author:     Dr. Andrew C. R. Martin
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -26,14 +36,17 @@
    Description:
    ============
 
+
 **************************************************************************
 
    Usage:
    ======
 
+\code
    int ReadRawPIR(FILE *fp, BOOL DoInsert, char **seqs, int maxchain, 
                   SEQINFO *seqinfo, BOOL *punct, BOOL *error)
-   ------------------------------------------------------------------
+\endcode
+
    As ReadPIR(), but reads punctuation characters without taking any
    special action. Used when punctuation characters have been used
    to indicate consensus sequence features.
@@ -42,17 +55,18 @@
 
    Revision History:
    =================
-   V1.0  01.06.92 Original
-   V2.0  08.03.94 Changed name of ReadPIR() to ReadSimplePIR()
+-  V1.0  01.06.92 Original
+-  V2.0  08.03.94 Changed name of ReadPIR() to ReadSimplePIR()
                   Added new ReadPIR().
-   V2.1  18.03.94 getc() -> fgetc()
-   V2.2  11.05.94 Changes to ReadPIR() for better compatibility with
+-  V2.1  18.03.94 getc() -> fgetc()
+-  V2.2  11.05.94 Changes to ReadPIR() for better compatibility with
                   PIR V38.0 and V39.0
-   V2.3  28.02.95 Added ReadRawPIR()
-   V2.4  13.03.95 Fixed bug in reading text lines in ReadRawPIR()
-   V2.5  26.07.95 Removed unused variables
-   V2.6  30.10.95 Cosmetic
-   V2.7  06.02.96 Removes trailing spaces from comment line
+-  V2.3  28.02.95 Added ReadRawPIR()
+-  V2.4  13.03.95 Fixed bug in reading text lines in ReadRawPIR()
+-  V2.5  26.07.95 Removed unused variables
+-  V2.6  30.10.95 Cosmetic
+-  V2.7  06.02.96 Removes trailing spaces from comment line
+-  V2.8  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -78,26 +92,28 @@
 
 
 /************************************************************************/
-/*>int ReadRawPIR(FILE *fp, char **seqs, int maxchain, BOOL upcase,
+/*>int blReadRawPIR(FILE *fp, char **seqs, int maxchain, BOOL upcase,
                   SEQINFO *seqinfo, BOOL *error)
    ------------------------------------------------------------------
-   Input:   FILE    *fp      File pointer
-            int     maxchain Max number of chains to read. This is the
+*//**
+
+   \param[in]     *fp      File pointer
+   \param[in]     maxchain Max number of chains to read. This is the
                              dimension of the seqs array.
                              N.B. THIS SHOULD BE AT LEAST 1 MORE THAN
                              THE EXPECTED MAXIMUM NUMBER OF SEQUENCES
-            BOOL    upcase   Should lower-case letters be upcased?
-   Output:  char    **seqs   Array of character pointers which will
+   \param[in]     upcase   Should lower-case letters be upcased?
+   \param[out]    **seqs   Array of character pointers which will
                              be filled in with sequence information.
                              Memory will be allocated for any sequence
                              length.
-            SEQINFO *seqinfo This structure will be filled in with
+   \param[out]    *seqinfo This structure will be filled in with
                              extra information about the sequence.
                              Header & title information and details
                              of any punctuation.
-            BOOL    *error   TRUE if an error occured (e.g. memory
+   \param[out]    *error   TRUE if an error occured (e.g. memory
                              allocation)
-   Returns: int              Number of chains in this sequence.
+   \return                      Number of chains in this sequence.
                              0 if file ended, or no valid sequence
                              entries found.
 
@@ -133,14 +149,14 @@
    Text lines: Text lines after an entry (beginning with R;, C;, A;, 
    N; or F;) are ignored.
 
-   28.02.95 Original based on ReadPIR()    By: ACRM
-   13.03.95 chpos++ had got moved wrongly when adapting from ReadPIR().
+-  28.02.95 Original based on ReadPIR()    By: ACRM
+-  13.03.95 chpos++ had got moved wrongly when adapting from ReadPIR().
             Put it back fixing handling of text lines.
-   26.07.95 Removed unused variables
-   06.02.96 Remove any trailing spaces
+-  26.07.95 Removed unused variables
+-  06.02.96 Remove any trailing spaces
 */
-int ReadRawPIR(FILE *fp, char **seqs, int maxchain, BOOL upcase,
-               SEQINFO *seqinfo, BOOL *error)
+int blReadRawPIR(FILE *fp, char **seqs, int maxchain, BOOL upcase,
+                 SEQINFO *seqinfo, BOOL *error)
 {
    int  ch,
         i,

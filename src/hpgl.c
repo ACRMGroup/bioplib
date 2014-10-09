@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       hpgl.c
+   \file       hpgl.c
    
-   Version:    V2.1R
-   Date:       01.03.94
-   Function:   HPGL plotting functions
+   \version    V2.2
+   \date       07.07.14
+   \brief      HPGL plotting functions
    
-   Copyright:  (c) SciTech Software 1991-4
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -40,10 +46,11 @@
 
    Revision History:
    =================
-   V1.0  25.03.91 Original
-   V1.1  28.05.92 ANSIed
-   V2.0  25.06.92 Modified for AMPlot2; floats->doubles
-   V2.1  27.07.93 Changed some missed float->double
+-  V1.0  25.03.91 Original
+-  V1.1  28.05.92 ANSIed
+-  V2.0  25.06.92 Modified for AMPlot2; floats->doubles
+-  V2.1  27.07.93 Changed some missed float->double
+-  V2.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -82,29 +89,38 @@ static FILE    *sHPGLFile = NULL;         /* Plot file                  */
 */
 
 /************************************************************************/
-/*>BOOL HPGLInit(char *filename, char *AltFont,
+/*>BOOL blHPGLInit(char *filename, char *AltFont,
                  REAL xmargin,   REAL ymargin)
-   --------------------------------------------
-   Input:   char  *filename   HPGL file name
-            char  *AltFont    Alternative font used for Greek characters
-            REAL  xmargin     Unprintable x margin
-            REAL  ymargin     Unprintable y margin
-   Globals: REAL  PSxpicsize  X picture size
-            REAL  PSypicsize  Y picture size
-            REAL  PSxoffset   X offset
-            REAL  PSyoffset   Y offset
-   Returns: BOOL              Success
+   ----------------------------------------------
+*//**
+
+   \param[in]     *filename   HPGL file name
+   \param[in]     *AltFont    Alternative font used for Greek characters
+   \param[in]     xmargin     Unprintable x margin
+   \param[in]     ymargin     Unprintable y margin
+   \return                      Success
 
    Initialise an HPGL plot. The parameters specify the unprintable margins
    on the output device.
-   25.06.92 Taken from MoG. Changed to support offsets. Added parameters.
-   29.06.92 Added initialisation of alternate font.
-   06.07.93 Added AltFont parameter
+
+   The plot is also affected by global variables:
+
+
+      PSxpicsize  X picture size
+      PSypicsize  Y picture size
+      PSxoffset   X offset
+      PSyoffset   Y offset
+
+
+-  25.06.92 Taken from MoG. Changed to support offsets. Added parameters.
+-  29.06.92 Added initialisation of alternate font.
+-  06.07.93 Added AltFont parameter
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL HPGLInit(char *filename,
-              char *AltFont,
-              REAL xmargin, 
-              REAL ymargin)
+BOOL blHPGLInit(char *filename,
+                char *AltFont,
+                REAL xmargin, 
+                REAL ymargin)
 {
    char        buffer[80];
    int         xoff,
@@ -113,7 +129,7 @@ BOOL HPGLInit(char *filename,
                
    if((sHPGLFile = fopen(filename,"w")) == NULL) return(FALSE);
    
-   HPGLAltFont = PS2HPGLFont(AltFont);
+   HPGLAltFont = blPS2HPGLFont(AltFont);
 
    xoff = (int)((PSxoffset - xmargin) * 1024);
    yoff = (int)((PSyoffset - ymargin) * 1024);
@@ -133,15 +149,18 @@ BOOL HPGLInit(char *filename,
 }
 
 /************************************************************************/
-/*>void HPGLPen(int num)
-   ---------------------
-   Input:   int  num      Pen number
+/*>void blHPGLPen(int num)
+   -----------------------
+*//**
+
+   \param[in]     num      Pen number
 
    Select a Pen
-   25.06.92 Taken from MoG
-   08.09.92 Changed to store pen first (having seen IntroCAD output)
+-  25.06.92 Taken from MoG
+-  08.09.92 Changed to store pen first (having seen IntroCAD output)
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLPen(int num)
+void blHPGLPen(int num)
 {
    char buffer[80];
    
@@ -150,16 +169,19 @@ void HPGLPen(int num)
 }
 
 /************************************************************************/
-/*>void HPGLMove(REAL x, REAL y)
-   -----------------------------
-   Input:   REAL   x     X position (0.0--1.0)
-            REAL   y     Y position (0.0--1.0)
+/*>void blHPGLMove(REAL x, REAL y)
+   -------------------------------
+*//**
+
+   \param[in]     x     X position (0.0--1.0)
+   \param[in]     y     Y position (0.0--1.0)
 
    Move on HPGL plot
-   25.06.92 Taken from MoG
+-  25.06.92 Taken from MoG
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLMove(REAL x,
-              REAL y)
+void blHPGLMove(REAL x,
+                REAL y)
 {
    char buffer[80];
    
@@ -168,16 +190,19 @@ void HPGLMove(REAL x,
 }
 
 /************************************************************************/
-/*>void HPGLDraw(REAL x, REAL y)
-   -----------------------------
-   Input:   REAL   x     X position (0.0--1.0)
-            REAL   y     Y position (0.0--1.0)
+/*>void blHPGLDraw(REAL x, REAL y)
+   -------------------------------
+*//**
+
+   \param[in]     x     X position (0.0--1.0)
+   \param[in]     y     Y position (0.0--1.0)
 
    Draw on HPGL plot
-   25.06.92 Taken from MoG
+-  25.06.92 Taken from MoG
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLDraw(REAL x,
-              REAL y)
+void blHPGLDraw(REAL x,
+                REAL y)
 {
    char buffer[80];
    
@@ -186,11 +211,15 @@ void HPGLDraw(REAL x,
 }
 
 /************************************************************************/
-/*>void HPGLSetDash(int style)
-   ---------------------------
-   Input:   int  style    Line style
+/*>void blHPGLSetDash(int style)
+   -----------------------------
+*//**
+
+   \param[in]     style    Line style
 
    Set the line style (may be printer dependent):
+
+
          0 Solid line
          1 ............
          2 -.-.-.-.-.-.
@@ -198,10 +227,11 @@ void HPGLDraw(REAL x,
          4 -..-..-..-..
          5 --.--.--.--.
 
-   25.06.92 Framework
-   26.06.92 Original
+-  25.06.92 Framework
+-  26.06.92 Original
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLSetDash(int style)
+void blHPGLSetDash(int style)
 {
    switch(style)
    {
@@ -227,19 +257,22 @@ void HPGLSetDash(int style)
 }
 
 /************************************************************************/
-/*>void HPGLFont(int font, REAL size)
-   ----------------------------------
-   Input:   int   font       Font number
-            REAL  size       Point size of font
+/*>void blHPGLFont(int font, REAL size)
+   ------------------------------------
+*//**
+
+   \param[in]     font       Font number
+   \param[in]     size       Point size of font
 
    Set font for HPGL plot
-   25.06.92 Taken from MoG
-   29.06.92 Corrected CA to CS and added SS. Changed to use global width
+-  25.06.92 Taken from MoG
+-  29.06.92 Corrected CA to CS and added SS. Changed to use global width
             and height variables. Altered width to 1/2.4 * height
-   27.07.93 Changed precision of floating i/o to double
+-  27.07.93 Changed precision of floating i/o to double
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLFont(int    font,
-              REAL   size)
+void blHPGLFont(int    font,
+                REAL   size)
 {
    char   buffer[80];
    REAL width;
@@ -265,19 +298,23 @@ void HPGLFont(int    font,
 }
 
 /************************************************************************/
-/*>void HPGLLText(REAL x, REAL y, char *string)
-   --------------------------------------------
-   Input:   REAL  x        X coordinate
-            REAL  y        Y coordinate
-            char  *string  Text to print
+/*>void blHPGLLText(REAL x, REAL y, char *string)
+   ----------------------------------------------
+*//**
+
+   \param[in]     x        X coordinate
+   \param[in]     y        Y coordinate
+   \param[in]     *string  Text to print
 
    Write left justified text on HPGL plot
-   25.06.92 Taken from MoG
-   29.06.92 Changed to use HPGLShowText().
+
+-  25.06.92 Taken from MoG
+-  29.06.92 Changed to use HPGLShowText().
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLLText(REAL x,
-               REAL y,
-               char *string)
+void blHPGLLText(REAL x,
+                 REAL y,
+                 char *string)
 {
    char buffer[80];
    
@@ -285,63 +322,29 @@ void HPGLLText(REAL x,
            (int)(10000.0 * x),(int)(10000.0 * y));
    fputs(buffer,sHPGLFile);
    
-   HPGLShowText(string,0,(int)(10000.0 * x),(int)(10000.0 * y));
+   blHPGLShowText(string,0,(int)(10000.0 * x),(int)(10000.0 * y));
 }
 
 /************************************************************************/
-/*>void HPGLCBText(REAL x, REAL y, REAL offset, char *text)
-   --------------------------------------------------------
-   Input:   REAL  x        X coordinate
-            REAL  y        Y coordinate
-            REAL  offset   Y-offset (multiplied by font height). 
+/*>void blHPGLCBText(REAL x, REAL y, REAL offset, char *text)
+   ----------------------------------------------------------
+*//**
+
+   \param[in]     x        X coordinate
+   \param[in]     y        Y coordinate
+   \param[in]     offset   Y-offset (multiplied by font height). 
                            Move text up by this amount
-            char  *string  Text to print
+   \param[in]     *text    Text to print
 
    Write centre-bottom justified text in HPGL
 
-   25.06.92 Framework
-   26.06.92 Original
-   29.06.92 Added SimplifyText(). Changed to use HPGLShowText().
-   06.07.92 Modified x-pos for wider font width
+-  25.06.92 Framework
+-  26.06.92 Original
+-  29.06.92 Added SimplifyText(). Changed to use HPGLShowText().
+-  06.07.92 Modified x-pos for wider font width
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLCBText(REAL x, 
-                REAL y, 
-                REAL offset, 
-                char *text)
-{
-   char     buffer[80];
-   int      xpos,
-            ypos;
-   
-   xpos = (int)(10000.0 * x);
-   xpos -= strlen(SimplifyText(text)) * sFontWidth / 2;
-   xpos += sFontWidth / 6;
-   
-   ypos = (int)(10000.0 * y);
-   ypos -= (int)(offset * sFontHeight);
-
-   sprintf(buffer,"PU;PA%d, %d;", xpos, ypos);
-   fputs(buffer,sHPGLFile);
-
-   HPGLShowText(text,0,xpos,ypos);
-}
-
-/************************************************************************/
-/*>void HPGLROffText(REAL x, REAL y, REAL offset, char *text)
-   ----------------------------------------------------------
-   Input:   REAL  x        X coordinate
-            REAL  y        Y coordinate
-            REAL  offset   Move left by this amount (pts)
-            char  *string  Text to print
-
-   Print right-justified text to HPGL
-
-   25.06.92 Framework
-   26.06.92 Original
-   29.06.92 Added SimplifyText(). Changed to use HPGLShowText().
-   06.07.92 Modified x-pos for wider font width
-*/
-void HPGLROffText(REAL x, 
+void blHPGLCBText(REAL x, 
                   REAL y, 
                   REAL offset, 
                   char *text)
@@ -350,10 +353,50 @@ void HPGLROffText(REAL x,
    int      xpos,
             ypos;
    
+   xpos = (int)(10000.0 * x);
+   xpos -= strlen(blSimplifyText(text)) * sFontWidth / 2;
+   xpos += sFontWidth / 6;
+   
+   ypos = (int)(10000.0 * y);
+   ypos -= (int)(offset * sFontHeight);
+
+   sprintf(buffer,"PU;PA%d, %d;", xpos, ypos);
+   fputs(buffer,sHPGLFile);
+
+   blHPGLShowText(text,0,xpos,ypos);
+}
+
+/************************************************************************/
+/*>void blHPGLROffText(REAL x, REAL y, REAL offset, char *text)
+   ------------------------------------------------------------
+*//**
+
+   \param[in]     x        X coordinate
+   \param[in]     y        Y coordinate
+   \param[in]     offset   Move left by this amount (pts)
+   \param[in]     *text    Text to print
+
+   Print right-justified text to HPGL
+
+-  25.06.92 Framework
+-  26.06.92 Original
+-  29.06.92 Added SimplifyText(). Changed to use HPGLShowText().
+-  06.07.92 Modified x-pos for wider font width
+-  07.07.14 Use bl prefix for functions By: CTP
+*/
+void blHPGLROffText(REAL x, 
+                    REAL y, 
+                    REAL offset, 
+                    char *text)
+{
+   char     buffer[80];
+   int      xpos,
+            ypos;
+   
    /* Base position                                                     */
    xpos = (int)(10000.0 * x);
    /* Right justify                                                     */
-   xpos -= (strlen(SimplifyText(text)) * sFontWidth);
+   xpos -= (strlen(blSimplifyText(text)) * sFontWidth);
    xpos += sFontWidth/6;
    /* Convert offset from pt to plotter units                           */
    xpos += (int)((offset * 10000.0) / (72.0 * PSxpicsize));
@@ -364,25 +407,28 @@ void HPGLROffText(REAL x,
    
    sprintf(buffer,"PU;PA%d, %d;\n", xpos, ypos);
    fputs(buffer,sHPGLFile);
-   HPGLShowText(text,0,xpos,ypos);
+   blHPGLShowText(text,0,xpos,ypos);
 }
 
 /************************************************************************/
-/*>void HPGLLCText(REAL x, REAL y, char *text)
-   -------------------------------------------
-   Input:   REAL  x        X coordinate
-            REAL  y        Y coordinate
-            char  *text    Text to print
+/*>void blHPGLLCText(REAL x, REAL y, char *text)
+   ---------------------------------------------
+*//**
+
+   \param[in]     x        X coordinate
+   \param[in]     y        Y coordinate
+   \param[in]     *text    Text to print
 
    Print left-centre justified text
    
-   25.06.92 Framework
-   26.06.92 Original
-   29.06.92 Changed to use HPGLShowText().
+-  25.06.92 Framework
+-  26.06.92 Original
+-  29.06.92 Changed to use HPGLShowText().
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLLCText(REAL x, 
-                REAL y, 
-                char *text)
+void blHPGLLCText(REAL x, 
+                  REAL y, 
+                  char *text)
 {
    char  buffer[80];
    int   xpos,
@@ -396,37 +442,40 @@ void HPGLLCText(REAL x,
    
    sprintf(buffer,"PU;PA%d, %d;", xpos, ypos);
    fputs(buffer,sHPGLFile);
-   HPGLShowText(text,0,xpos,ypos);
+   blHPGLShowText(text,0,xpos,ypos);
 }
 
 /************************************************************************/
-/*>void HPGLCTText(REAL x, REAL y, REAL offset, char *text)
-   --------------------------------------------------------
-   Input:   REAL  x        X coordinate
-            REAL  y        Y coordinate
-            REAL  offset   Y offset in points. Move text down by this.
-            char  *string  Text to print
+/*>void blHPGLCTText(REAL x, REAL y, REAL offset, char *text)
+   ----------------------------------------------------------
+*//**
+
+   \param[in]     x        X coordinate
+   \param[in]     y        Y coordinate
+   \param[in]     offset   Y offset in points. Move text down by this.
+   \param[in]     *text    Text to print
 
    Center Top justify text at x,y with y-offset in pts.
 
-   25.06.92 Framework
-   26.06.92 Original
-   29.06.92 Added SimplifyText(). Changed to use HPGLShowText().
-   01.07.92 Corrected y-positioning. Changed offset to be in pts rather
+-  25.06.92 Framework
+-  26.06.92 Original
+-  29.06.92 Added SimplifyText(). Changed to use HPGLShowText().
+-  01.07.92 Corrected y-positioning. Changed offset to be in pts rather
             than a multiplier of font size.
-   06.07.92 Modified x-pos for wider font width
+-  06.07.92 Modified x-pos for wider font width
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLCTText(REAL x, 
-                REAL y, 
-                REAL offset, 
-                char *text)
+void blHPGLCTText(REAL x, 
+                  REAL y, 
+                  REAL offset, 
+                  char *text)
 {
    char     buffer[80];
    int      xpos,
             ypos;
    
    xpos = (int)(10000.0 * x);
-   xpos -= (strlen(SimplifyText(text)) * sFontWidth / 2.0);
+   xpos -= (strlen(blSimplifyText(text)) * sFontWidth / 2.0);
    xpos += sFontWidth/6;
    
    ypos = (int)(10000.0 * y);
@@ -438,22 +487,24 @@ void HPGLCTText(REAL x,
    sprintf(buffer,"PU;PA%d, %d;\n", xpos, ypos);
    fputs(buffer,sHPGLFile);
    
-   HPGLShowText(text,0,xpos,ypos);
+   blHPGLShowText(text,0,xpos,ypos);
 }
 
 /************************************************************************/
-/*>void HPGLVText(REAL x, REAL y, REAL xoff, char *text, int TitleFont,
+/*>void blHPGLVText(REAL x, REAL y, REAL xoff, char *text, int TitleFont,
              REAL TitleSize, char *label, int LabelFont, REAL LabelSize)
-   ---------------------------------------------------------------------
-   Input:   REAL x            X coordinate (in data units)
-            REAL y            Y coordinate (in data units)
-            REAL xoff         X-offset in pts
-            char *text        Text to be written
-            char *TitleFont   Font in which to write it
-            REAL TitleSize    Size of font
-            char *label       Label to be used to calc x offset
-            char *LabelFont   Font of this label
-            REAL LabelSize    Size of this label
+   -----------------------------------------------------------------------
+*//**
+
+   \param[in]     x            X coordinate (in data units)
+   \param[in]     y            Y coordinate (in data units)
+   \param[in]     xoff         X-offset in pts
+   \param[in]     *text        Text to be written
+   \param[in]     *TitleFont   Font in which to write it
+   \param[in]     TitleSize    Size of font
+   \param[in]     *label       Label to be used to calc x offset
+   \param[in]     *LabelFont   Font of this label
+   \param[in]     LabelSize    Size of this label
 
    Write vertical text centred on x,y offset back along x by the size of
    label and by xoff in pts
@@ -464,20 +515,21 @@ void HPGLCTText(REAL x,
    it is a bug in the PLT: interpreter which requires this, or whether 
    it is standard HPGL. Define FIXVERT if it improves your output.
 
-   25.06.92 Framework
-   29.06.92 Original
-   06.07.92 Modified x-pos for wider font width
-   27.07.93 Changed precision of floating i/o to double
+-  25.06.92 Framework
+-  29.06.92 Original
+-  06.07.92 Modified x-pos for wider font width
+-  27.07.93 Changed precision of floating i/o to double
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLVText(REAL x, 
-               REAL y, 
-               REAL xoff, 
-               char *text, 
-               int  TitleFont, 
-               REAL TitleSize, 
-               char *label, 
-               int  LabelFont, 
-               REAL LabelSize)
+void blHPGLVText(REAL x, 
+                 REAL y, 
+                 REAL xoff, 
+                 char *text, 
+                 int  TitleFont, 
+                 REAL TitleSize, 
+                 char *label, 
+                 int  LabelFont, 
+                 REAL LabelSize)
 {
    REAL   LabelWidth;
    char   buffer[240];
@@ -490,7 +542,7 @@ void HPGLVText(REAL x,
 #endif
    
    /* Find size of label                                                */
-   LabelWidth  = strlen(SimplifyText(label)) * 
+   LabelWidth  = strlen(blSimplifyText(label)) * 
                  (LabelSize * 10000.0) / (2.0 * 72.0 * PSxpicsize);
    /* Convert offset from points to plotter units                       */
    xoff *= 10000.0 / (72.0 * PSxpicsize);
@@ -504,7 +556,7 @@ void HPGLVText(REAL x,
    x += xoff;
    
    /* Now find the y-start to centre the string vertically              */
-   y -= strlen(SimplifyText(text)) * sFontWidth / 2;
+   y -= strlen(blSimplifyText(text)) * sFontWidth / 2;
    y += sFontWidth/6;
    
 #ifdef FIXVERT
@@ -524,7 +576,7 @@ void HPGLVText(REAL x,
    /* Now output the text                                               */
    sprintf(buffer,"PU;PA%d,%d;DR0,1;",(int)x,(int)y);
    fputs(buffer,sHPGLFile);
-   HPGLShowText(text,1,(int)x,(int)y);
+   blHPGLShowText(text,1,(int)x,(int)y);
    fputs("DR;\n",sHPGLFile);
    
 #ifdef FIXVERT
@@ -534,35 +586,43 @@ void HPGLVText(REAL x,
 }
 
 /************************************************************************/
-/*>void HPGLEnd(void)
-   ------------------
+/*>void blHPGLEnd(void)
+   --------------------
+*//**
+
+
    Close the HPGL plot file
-   06.07.93 Original
+
+-  06.07.93 Original
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLEnd(void)
+void blHPGLEnd(void)
 {
    fclose(sHPGLFile);
 }
 
 /************************************************************************/
-/*>void HPGLShowText(char *text, BOOL orientation, int XBase, int YBase)
-   ---------------------------------------------------------------------
-   Input:   char  *text       Text to be displayed with control codes
-            int   orientation TRUE=vertical, FALSE=horizontal
-            int   XBase       Position at which to start (device coords)
-            int   XBase       Position at which to start (device coords)
+/*>void blHPGLShowText(char *text, BOOL orientation, int XBase, int YBase)
+   -----------------------------------------------------------------------
+*//**
+
+   \param[in]     *text       Text to be displayed with control codes
+   \param[in]     orientation TRUE=vertical, FALSE=horizontal
+   \param[in]     XBase       Position at which to start (device coords)
+   \param[in]     YBase       Position at which to start (device coords)
 
    Displays the text, raising or lowering as appropriate and selecting
    alternate font where required. Used by the various ...Text() routines.
 
-   29.06.92 Original based on PostScript version.
-   27.07.93 Changed precision of floating i/o to double
-   11.03.94 Changed orientation to BOOL
+-  29.06.92 Original based on PostScript version.
+-  27.07.93 Changed precision of floating i/o to double
+-  11.03.94 Changed orientation to BOOL
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void HPGLShowText(char *text, 
-                  BOOL orientation,
-                  int  XBase,
-                  int  YBase)
+void blHPGLShowText(char *text, 
+                    BOOL orientation,
+                    int  XBase,
+                    int  YBase)
 {
    char     buffer[MAXBUFF],
             OutBuff[MAXBUFF];

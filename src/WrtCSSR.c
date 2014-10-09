@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       WrtCSSR.c
+   \file       WrtCSSR.c
    
-   Version:    V1.3R
-   Date:       01.03.94
-   Function:   Write a CSSR file
+   \version    V1.4
+   \date       07.07.14
+   \brief      Write a CSSR file
    
-   Copyright:  (c) SciTech Software 1991-4
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,10 +35,12 @@
 
    Description:
    ============
-   WriteCSSR(fp,cssr,name,title)
-   -----------------------------
+
+   blWriteCSSR(fp,cssr,name,title)
+
    This subroutine will write a CSSR file from a linked list of structures 
    of type cssr_entry. 
+
    The strucure is set up by including the file "cssr.h". For details of 
    the structure, see this file.
 
@@ -41,23 +48,28 @@
 
    Usage:
    ======
+
+\code
    WriteCSSR(fp,cssr,name,title)
-   Input:   FILE     *fp      A pointer to type FILE in which the
+\endcode
+
+   \param[in]     *fp      A pointer to type FILE in which the
                               CSSR file is stored.
-            CSSR     *cssr    A pointer to the first allocated item of
+   \param[in]     *cssr    A pointer to the first allocated item of
                               the CSSR linked list
-            char     *name    The molecule's name.
-            char     *title   Title on the molecule.
+   \param[in]     *name    The molecule's name.
+   \param[in]     *title   Title on the molecule.
 
 **************************************************************************
 
    Revision History:
    =================
-   V1.0  22.09.91 Original
-   V1.1  01.06.92 Autodoc'd. Added FPU check.
-   V1.2  10.06.93 void return; float->REAL
-   V1.3  27.07.93 %f -> %lf
-   V1.3  01.03.94 %lf -> %f  (!)
+-  V1.0  22.09.91 Original
+-  V1.1  01.06.92 Autodoc'd. Added FPU check.
+-  V1.2  10.06.93 void return; float->REAL
+-  V1.3  27.07.93 %f -> %lf
+-  V1.3  01.03.94 %lf -> %f  (!)
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -87,27 +99,30 @@
 */
 
 /************************************************************************/
-/*>void WriteCSSR(FILE *fp, CSSR *cssr, char *name, char *title)
-   -------------------------------------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
+/*>void blWriteCSSR(FILE *fp, CSSR *cssr, char *name, char *title)
+   ---------------------------------------------------------------
+*//**
+
+   \param[in]     *fp      A pointer to type FILE in which the
                               CSSR file is stored.
-            CSSR     *cssr    A pointer to the first allocated item of
+   \param[in]     *cssr    A pointer to the first allocated item of
                               the CSSR linked list
-            char     *name    The molecule's name.
-            char     *title   Title on the molecule.
+   \param[in]     *name    The molecule's name.
+   \param[in]     *title   Title on the molecule.
 
    Write a CSSR file from a CSSR linked list.
 
-   22.09.91 Original
-   01.06.92 Autodoc'd
-   10.06.93 void return; float->REAL
-   27.07.93 %f -> %lf
-   01.03.94 %lf -> %f (!)
+-  22.09.91 Original
+-  01.06.92 Autodoc'd
+-  10.06.93 void return; float->REAL
+-  27.07.93 %f -> %lf
+-  01.03.94 %lf -> %f (!)
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void WriteCSSR(FILE  *fp,
-               CSSR  *cssr,
-               char  *name,
-               char  *title)
+void blWriteCSSR(FILE  *fp,
+                 CSSR  *cssr,
+                 char  *name,
+                 char  *title)
 {
    REAL  cell[3],
          alpha, beta, gamma;

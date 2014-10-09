@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       pdb.h
+   \file       pdb.h
    
-   Version:    V1.47
-   Date:       12.12.11
-   Function:   Include file for pdb routines
+   \version    V1.66
+   \date       17.09.14
+   \brief      Include file for pdb routines
    
-   Copyright:  (c) SciTech Software, UCL, Reading 1993-2011
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -34,76 +46,112 @@
 
    Revision History:
    =================
-   V1.0  04.11.88 Original
-   V1.1  22.03.90 Added Secondary structure routines
-   V1.2  28.03.90 Corrected field widths for V1.2 of ReadPDB
-   V1.3  04.05.90 Added clear_pdb()
-   V1.4  19.06.90 Changed SEC structure to correct chain and ins widths
-   V1.5  19.07.90 Added INITINDEX macro
-   V1.6  09.09.91 Added define so won't screw up if included twice
-   V1.7  22.09.91 Altered character sizes for alignment
-   V1.8  10.06.93 Changed to use REAL rather than float. Changed 
+-  V1.0  04.11.88 Original
+-  V1.1  22.03.90 Added Secondary structure routines
+-  V1.2  28.03.90 Corrected field widths for V1.2 of ReadPDB
+-  V1.3  04.05.90 Added clear_pdb()
+-  V1.4  19.06.90 Changed SEC structure to correct chain and ins widths
+-  V1.5  19.07.90 Added INITINDEX macro
+-  V1.6  09.09.91 Added define so won't screw up if included twice
+-  V1.7  22.09.91 Altered character sizes for alignment
+-  V1.8  10.06.93 Changed to use REAL rather than float. Changed 
                   order within structure
-   V1.9  22.02.94 Added MAXSTDAA and MAXATINRES definitions
-   V1.10 01.03.94 Added stuff for ResolPDB. Removed INIT_INDEX().
+-  V1.9  22.02.94 Added MAXSTDAA and MAXATINRES definitions
+-  V1.10 01.03.94 Added stuff for ResolPDB. Removed INIT_INDEX().
                   Added DISULPHIDE definition.
                   Added HADDINFO definition.
-   V1.11 18.03.94 Added prototypes for ReadPDBOccRank() and
+-  V1.11 18.03.94 Added prototypes for ReadPDBOccRank() and
                   ReadPDBAtomsOccRank()
                   Added gPDBPartialOcc
-   V1.12 23.05.94 Added FindNextChainPDB() prototype
-   V1.13 24.08.94 Added OpenPGPFile() prototype. Added prototypes for
+-  V1.12 23.05.94 Added FindNextChainPDB() prototype
+-  V1.13 24.08.94 Added OpenPGPFile() prototype. Added prototypes for
                   new version of FixPDB(). Added CTER styles
-   V1.14 03.10.94 Added FindCofGPDBRange(), FindCofGPDBSCRange(),
+-  V1.14 03.10.94 Added FindCofGPDBRange(), FindCofGPDBSCRange(),
                   ReadPDBALL()
-   V1.15 05.10.94 Changed KillSidechain()
-   V1.16 11.01.94 Added StripHPDB()
-   V1.17 06.03.95 doReadPDB() is now defined here rather than static
-   V1.18 17.07.95 ParseResSpec() is now a BOOL
-   V1.19 24.07.95 Added FNam2PDB(), TermPDB()
-   V1.20 25.07.95 Added GetPDBChainLabels()
-   V1.21 08.08.95 Added FindResidueSpec() and FindNextResidue()
-   V1.22 12.10.95 Added DupePDB(), CopyPDBCoords(), CalcCellTrans(),
+-  V1.15 05.10.94 Changed KillSidechain()
+-  V1.16 11.01.94 Added StripHPDB()
+-  V1.17 06.03.95 doReadPDB() is now defined here rather than static
+-  V1.18 17.07.95 ParseResSpec() is now a BOOL
+-  V1.19 24.07.95 Added FNam2PDB(), TermPDB()
+-  V1.20 25.07.95 Added GetPDBChainLabels()
+-  V1.21 08.08.95 Added FindResidueSpec() and FindNextResidue()
+-  V1.22 12.10.95 Added DupePDB(), CopyPDBCoords(), CalcCellTrans(),
                   GetCrystPDB(), WriteCrystPDB()
-   V1.23 10.01.96 Added ExtractZonePDB()
-   V1.24 08.02.96 Added FindResidue()
-   V1.25 14.03.96 Added FitCaPDB(), FindAtomInRes()
-   V1.26 18.06.96 Added InPDBZone() and ZONE_MODE_*. Modified prototype
+-  V1.23 10.01.96 Added ExtractZonePDB()
+-  V1.24 08.02.96 Added FindResidue()
+-  V1.25 14.03.96 Added FitCaPDB(), FindAtomInRes()
+-  V1.26 18.06.96 Added InPDBZone() and ZONE_MODE_*. Modified prototype
                   for FindZonePDB()
-   V1.27 23.07.96 Added AtomNameMatch() and LegalAtomSpec()
-   V1.28 12.08.96 Added RepOneSChain() and EndRepSChain()
-   V1.29 19.09.96 Added InPDBZoneSpec()
-   V1.30 14.10.96 Added ReadSeqresPDB();
-   V1.31 16.10.96 Added SelectCaPDB()
-   V1.32 18.08.98 Changed SEC to SECSTRUC 'cos of conflict in SunOS
+-  V1.27 23.07.96 Added AtomNameMatch() and LegalAtomSpec()
+-  V1.28 12.08.96 Added RepOneSChain() and EndRepSChain()
+-  V1.29 19.09.96 Added InPDBZoneSpec()
+-  V1.30 14.10.96 Added ReadSeqresPDB();
+-  V1.31 16.10.96 Added SelectCaPDB()
+-  V1.32 18.08.98 Changed SEC to SECSTRUC 'cos of conflict in SunOS
                   Also defines SEC macro if not defined to warn you to
                   change your code!
-   V1.33 28.04.99 Added GetExptl()
-   V1.34 15.02.01 Added atnam_raw[] to PDB
+-  V1.33 28.04.99 Added GetExptl()
+-  V1.34 15.02.01 Added atnam_raw[] to PDB
                   Added WriteGromosPDB(), WriteGromosPDBRecord(),
                         AtomNameRawMatch()
-   V1.35 12.12.01 Added FitNCaCPDB()
-   V1.36 30.05.02 Changed PDB field from 'junk' to 'record_type'
+-  V1.35 12.12.01 Added FitNCaCPDB()
+-  V1.36 30.05.02 Changed PDB field from 'junk' to 'record_type'
                   Added the WholePDB routines and definition
-   V1.37 03.06.05 Added altpos to PDB.
+-  V1.37 03.06.05 Added altpos to PDB.
                   Added altpos and atnam_raw to CLEAR_PDB
-   V1.38 22.09.05 Added WritePDBRecordAtnam()
-   V1.39 29.09.05 Added ParseResSpecNoUpper() and DoParseResSpec()  By: TL
-   V1.40 04.01.06 Added AddCBtiGly(), AddCBtoAllGly(), 
+-  V1.38 22.09.05 Added WritePDBRecordAtnam()
+-  V1.39 29.09.05 Added ParseResSpecNoUpper() and DoParseResSpec()  By: TL
+-  V1.40 04.01.06 Added AddCBtiGly(), AddCBtoAllGly(), 
                   StripGlyCB()      By: ACRM
-   V1.41 25.01.06 Added RemoveAlternates()
-   V1.42 08.11.07 Added BuildAtomNeighbourPDBList()
+-  V1.41 25.01.06 Added RemoveAlternates()
+-  V1.42 08.11.07 Added BuildAtomNeighbourPDBList()
                         FindAtomWildcardInRes()
                         DupeResiduePDB()
-   V1.43 30.04.08 Added StripWatersPDB() and ISWATER() macro
-   V1.44 01.06.09 Added extras field to PDB structure
-   V1.45 24.11.09 Added PDBSTRUCT, PDBCHAIN, PDBRESIDUE
+-  V1.43 30.04.08 Added StripWatersPDB() and ISWATER() macro
+-  V1.44 01.06.09 Added extras field to PDB structure
+-  V1.45 24.11.09 Added PDBSTRUCT, PDBCHAIN, PDBRESIDUE
                   AllocPDBStructure(), FindNextChain(),
                   FreePDBStructure()
-   V1.46 26.10.11 Added FindHetatmResidueSpec() and FindHetatmResidue()
-   V1.47 12.12.11 Added GetExptlOld()
+-  V1.46 26.10.11 Added FindHetatmResidueSpec() and FindHetatmResidue()
+-  V1.47 12.12.11 Added GetExptlOld()
                   Added ResportStructureType()
                   Added new STRUCTURE_TYPE_* defines
+-  V1.48 04.02.14 Added CHAINMATCH macro. By: CTP
+-  V1.49 24.02.14 Added BiopFindResidue(), BiopFindHetatmResidue() and 
+                        BiopInPDBZone(). By: CTP
+-  V1.50 20.03.14 Added blFindZonePDB(). By: CTP
+-  V1.51 25.03.14 Added blGetPDBChainLabels(). By: CTP
+-  V1.52 22.04.14 Added CheckFileFormatPDBML(FILE *fp). By: CTP
+-  V1.53 07.05.14 Added deprecated.h and removed definitions for 
+                  deprecated funtions: FindHetatmResidue(), FindResidue(),
+                  InPDBZone() and FindZonePDB(). By: CTP
+-  V1.54 02.06.14 Added WritePDBML() By: CTP
+-  V1.55 09.06.14 Added gPDBXML flag By: CTP
+-  V1.56 21.06.14 Added gPDBXMLForce flag and updated functions:
+                  blWritePDB(), blWriteAsPDB(), blWriteAsPDBML(), 
+                  blFormatCheckWritePDB(), blWriteWholePDB(), 
+                  blWriteWholePDBHeader() and blWriteWholePDBTrailer().
+                  By: CTP
+-  V1.57 07.07.14 Rename functions with 'bl' prefix. By: CTP
+-  V1.58 17.07.14 Added access and radius to PDB structure. Also
+                  added CREATEPDBEXTRAS() and FREEPDBEXTRAS()  By: ACRM
+-  V1.59 17.07.14 Added blSetElementSymbolFromAtomName() By: CTP
+-  V1.60 22.07.14 Added element and charge to PDB structure. By: ACRM
+-  V1.61 31.07.14 Updated deprecation: Removed deprecated.h and added 
+                  prototypes for renamed functions. By: CTP
+-  V1.62 04.08.14 Changed formal charge to int for PDB structure.
+                  Updated CLEAR_PDB() to set access, radius, charge,
+                  element and atomType. By: CTP
+-  V1.63 14.08.14 Moved deprecated function prototypes to deprecated.h 
+                  By: CTP
+-  V1.64 16.08.14 Replaced charge with formal_charge and partial_charge 
+                  for PDB structure. By: CTP
+-  V1.65 19.08.14 Renamed functions: blBuildAtomNeighbourPDBList(),
+                  blExtractZonePDB(), blSelectAtomsPDB(), blStripHPDB(),
+                  blStripWatersPDB() with AsCopy suffix indicating that
+                  functions return a new PDB list rather than alter their
+                  input PDB list.
+-  V1.66 17.09.14 Commented the fields of the PDB structure
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -118,6 +166,19 @@
 
 #define MAXSTDAA    21       /* Number of standard amino acids (w/ PCA)*/
 #define MAXATINRES  14       /* Max number of atoms in a standard aa   */
+
+/* blATOMTYPE is unused at present, but gives the flexibility of
+   associating type information with each PDB record. 
+*/
+typedef struct _blAtomType
+{
+   REAL mass,
+        pol,
+        NEff,
+        vdwr;
+   char atomtype[8];
+}  blATOMTYPE;
+
 
 /* This is our main PDB structure used for the PDB linked lists.
 
@@ -145,18 +206,25 @@
 */
 typedef struct pdb_entry
 {
-   REAL x,y,z,occ,bval;
-   APTR extras;
-   struct pdb_entry *next;
-   int  atnum;
-   int  resnum;
-   char record_type[8];
-   char atnam[8];
-   char atnam_raw[8];
-   char resnam[8];
-   char insert[8];
-   char chain[8];
-   char altpos;
+   REAL x, y, z,             /* Coordinates                             */
+        occ, bval,           /* Occupancy and B-value                   */
+        access, radius,      /* Accessibility and radius - populated by
+                                Bioplib routines                        */
+        partial_charge;      /* Reserved for future use                 */
+   APTR extras;              /* Pointer for users to add information    */
+   blATOMTYPE *atomType;     /* Reserved for future use                 */
+   struct pdb_entry *next;   /* Forward linked list                     */
+   int  atnum;               /* Atom number                             */
+   int  resnum;              /* Residue number                          */
+   int  formal_charge;       /* Formal charge - used in XML files       */
+   char record_type[8];      /* ATOM / HETATM                           */
+   char atnam[8];            /* Atom name, left justified               */
+   char atnam_raw[8];        /* Atom name as it appears in the PDB file */
+   char resnam[8];           /* Residue name                            */
+   char insert[8];           /* Numbering insert code                   */
+   char chain[8];            /* Chain label                             */
+   char element[8];          /* Element type                            */
+   char altpos;              /* Alternate position indicator            */
 }  PDB;
 
 typedef struct pdbresidue
@@ -251,7 +319,13 @@ typedef struct
                      p->x = 0.0; p->y = 0.0; p->z = 0.0; \
                      p->altpos = ' '; \
                      p->occ = 0.0; p->bval = 0.0; \
-                     p->next = NULL
+                     p->next = NULL; \
+                     p->access = 0.0; \
+                     p->radius = 0.0; \
+                     p->formal_charge  =   0; \
+                     p->partial_charge = 0.0; \
+                     strcpy(p->element,"  "); \
+                     p->atomType = NULL
 
 #define ISWATER(z)   (!strncmp((z)->resnam,"HOH",3) || \
                       !strncmp((z)->resnam,"OH2",3) || \
@@ -260,6 +334,28 @@ typedef struct
                       !strncmp((z)->resnam,"OD2",3) || \
                       !strncmp((z)->resnam,"ODD",3) || \
                       !strncmp((z)->resnam,"WAT",3))
+
+#define CHAINMATCH(chain1,chain2) !strcmp(chain1,chain2)
+
+/* Called as CREATEPDBEXTRAS(pdb, EXTRATYPE)                            */
+#define CREATEPDBEXTRAS(x, y)                                   \
+   {  PDB *_cpe_p;                                              \
+      for(_cpe_p=(x); _cpe_p!=NULL; _cpe_p=_cpe_p->next){       \
+         _cpe_p->extras = (APTR)malloc(sizeof(y));              \
+      }                                                         \
+   }
+
+/* Called as FREEPDBEXTRAS(pdb)                                         */
+#define FREEPDBEXTRAS(x)                                        \
+   {  PDB *_fpe_p;                                              \
+      for(_fpe_p=(x); _fpe_p!=NULL; _fpe_p=_fpe_p->next){       \
+         if(_fpe_p->extras != NULL){                            \
+            free(_fpe_p->extras);                               \
+            _fpe_p->extras = NULL;                              \
+         }                                                      \
+      }                                                         \
+   }
+      
 
 
 /* These are the types returned by ResolPDB()                          */
@@ -291,6 +387,14 @@ typedef struct
 #define ZONE_MODE_RESNUM       0
 #define ZONE_MODE_SEQUENTIAL   1
 
+/* Modes and macros for gPDBXMLForce                                    */
+#define FORCEXML_NOFORCE       0
+#define FORCEXML_PDB           1
+#define FORCEXML_XML           2
+
+/* For forcing writing in PDB or XML format                             */
+#define FORCEPDB gPDBXMLForce = FORCEXML_PDB
+#define FORCEXML gPDBXMLForce = FORCEXML_XML
 
 /************************************************************************/
 /* Globals
@@ -304,135 +408,160 @@ typedef struct
 #ifdef READPDB_MAIN
    BOOL gPDBPartialOcc;
    BOOL gPDBMultiNMR;
+   BOOL gPDBXML = FALSE;
 #else
    extern BOOL gPDBPartialOcc;
    extern BOOL gPDBMultiNMR;
+   extern BOOL gPDBXML;
+#endif
+
+#ifdef WRITEPDB_MAIN
+   int gPDBXMLForce = FORCEXML_NOFORCE;
+#else
+   extern int gPDBXMLForce;
 #endif
 
 /************************************************************************/
 /* Prototypes
 */
-PDB *ReadPDB(FILE *fp, int *natom);
-PDB *ReadPDBAll(FILE *fp, int *natom);
-PDB *ReadPDBAtoms(FILE *fp, int *natom);
-PDB *ReadPDBOccRank(FILE *fp, int *natom, int OccRank);
-PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank);
-PDB *doReadPDB(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank, 
-               int ModelNum);
-void WritePDB(FILE *fp, PDB *pdb);
-void WritePDBRecord(FILE *fp, PDB *pdb);
-void WritePDBRecordAtnam(FILE *fp, PDB  *pdb);
-void WriteGromosPDB(FILE *fp, PDB *pdb);
-void WriteGromosPDBRecord(FILE *fp, PDB *pdb);
-void GetCofGPDB(PDB   *pdb, VEC3F *cg);
-void GetCofGPDBRange(PDB *start, PDB *stop, VEC3F *cg);
-void GetCofGPDBSCRange(PDB *start, PDB *stop, VEC3F *cg);
-void OriginPDB(PDB *pdb);
-void RotatePDB(PDB  *pdb, REAL rm[3][3]);
-void TranslatePDB(PDB   *pdb, VEC3F tvect);
-BOOL FitPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3]);
-BOOL FitCaPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3]);
-BOOL FitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3]);
-BOOL FitCaCbPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3]);
-REAL CalcRMSPDB(PDB *pdb1, PDB *pdb2);
-int GetPDBCoor(PDB *pdb, COOR **coor);
-BOOL FindZonePDB(PDB *pdb, int start, char startinsert, int stop, char stopinsert,
-                 char chain, int mode, PDB **pdb_start, PDB **pdb_stop);
-int HAddPDB(FILE *fp, PDB *pdb);
-int ReadPGP(FILE *fp);
-FILE *OpenPGPFile(char *pgpfile, BOOL AllHyd);
-PDB *SelectAtomsPDB(PDB *pdbin, int nsel, char **sel, int *natom);
-PDB *StripHPDB(PDB *pdbin, int *natom);
-SECSTRUC *ReadSecPDB(FILE *fp, int *nsec);
-void RenumAtomsPDB(PDB *pdb);
-BOOL UnPackPDB(FILE *in, FILE *out);
-PDB *ReadPackedPDB(FILE *in, int *natom);
-BOOL PackPDB(FILE *in, FILE *out);
-void WritePackedResidue(FILE *out, PDB *start, PDB *end);
-PDB *FindEndPDB(PDB *start);
-PDB *FixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum);
-PDB *ShuffleResPDB(PDB *start, PDB *end, BOOL Pad);
-BOOL GetAtomTypes(char *resnam, char **AtomTypes);
-PDB *KillPDB(PDB *pdb, PDB *prev);
-void CopyPDB(PDB *out, PDB *in);
-BOOL MovePDB(PDB *move, PDB **from, PDB **to);
-PDB *AppendPDB(PDB *first, PDB *second);
-PDB *ShuffleBB(PDB *pdb);
-REAL CalcChi(PDB *pdb, int type);
-PDB *GetPDBByN(PDB *pdb, int n);
-void SetChi(PDB *pdb, PDB *next, REAL chi, int type);
-BOOL KillSidechain(PDB *ResStart, PDB *NextRes, BOOL doCB);
-void SetResnam(PDB *ResStart, PDB *NextRes, char *resnam, int resnum,   
-               char *insert, char *chain);
-void ApplyMatrixPDB(PDB *pdb, REAL matrix[3][3]);
-BOOL GetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor, 
-                 int *StrucType);
-BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
-              int *StrucType);
-BOOL GetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
-              int *StrucType);
-char *ReportStructureType(int type);
-PDB **IndexPDB(PDB *pdb, int *natom);
-DISULPHIDE *ReadDisulphidesPDB(FILE *fp, BOOL *error);
-BOOL ParseResSpec(char *spec, char *chain, int *resnum, char *insert);
-BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum, char *insert);
-BOOL DoParseResSpec(char *spec, char *chain, int *resnum, char *insert, 
-                    BOOL uppercaseresspec);
-BOOL RepSChain(PDB *pdb, char *sequence, char *ChiTable, char *RefCoords);
-PDB *FindNextChainPDB(PDB *pdb);
-BOOL FixCterPDB(PDB *pdb, int style);
-BOOL CalcCterCoords(PDB *p, PDB *ca_p, PDB *c_p, PDB *o_p);
-int CalcTetraHCoords(PDB *nter, COOR *coor);
-int AddNTerHs(PDB **ppdb, BOOL Charmm);
-char *FNam2PDB(char *filename);
-PDB *TermPDB(PDB *pdb, int length);
-char *GetPDBChainLabels(PDB *pdb);
-PDB *FindHetatmResidueSpec(PDB *pdb, char *resspec);
-PDB *FindResidueSpec(PDB *pdb, char *resspec);
-PDB *FindNextResidue(PDB *pdb);
-PDB *DupePDB(PDB *in);
-BOOL CopyPDBCoords(PDB *out, PDB *in);
-void CalcCellTrans(VEC3F UnitCell, VEC3F CellAngles, 
-                   VEC3F *xtrans, VEC3F *ytrans, VEC3F *ztrans);
-int GetCrystPDB(FILE *fp, VEC3F *UnitCell, VEC3F *CellAngles,
-                char *spacegroup,
-                REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4]);
-void WriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
-                   char *spacegroup,
-                   REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4]);
-PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
-                    char *chain2, int resnum2, char *insert2);
-PDB *FindResidue(PDB *pdb, char chain, int resnum, char insert);
-PDB *FindHetatmResidue(PDB *pdb, char chain, int resnum, char insert);
-PDB *FindAtomInRes(PDB *pdb, char *atnam);
-BOOL InPDBZone(PDB *p, char chain, int resnum1, char insert1, 
-               int resnum2, char insert2);
-BOOL InPDBZoneSpec(PDB *p, char *resspec1, char *resspec2);
-BOOL AtomNameMatch(char *atnam, char *spec, BOOL *ErrorWarn);
-BOOL AtomNameRawMatch(char *atnam, char *spec, BOOL *ErrorWarn);
-BOOL LegalAtomSpec(char *spec);
-BOOL RepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
-                  char *RefCoords);
-void EndRepSChain(void);
-char **ReadSeqresPDB(FILE *fp, int *nchains);
-PDB *SelectCaPDB(PDB *pdb);
-char *FixAtomName(char *name, REAL occup);
 
-void FreeWholePDB(WHOLEPDB *wpdb);
-void WriteWholePDB(FILE *fp, WHOLEPDB *wpdb);
-void WriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb);
-void WriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb);
-WHOLEPDB *ReadWholePDB(FILE *fpin);
-WHOLEPDB *ReadWholePDBAtoms(FILE *fpin);
-BOOL AddCBtoGly(PDB *pdb);
-BOOL AddCBtoAllGly(PDB *pdb);
-PDB *StripGlyCB(PDB *pdb);
-PDB *RemoveAlternates(PDB *pdb);
-PDB *BuildAtomNeighbourPDBList(PDB *pdb, PDB *pRes, REAL NeighbDist);
-PDB *FindAtomWildcardInRes(PDB *pdb, char *pattern);
-PDB *DupeResiduePDB(PDB *in);
-PDB *StripWatersPDB(PDB *pdbin, int *natom);
-PDBSTRUCT *AllocPDBStructure(PDB *pdb);
-PDB *FindNextChain(PDB *pdb);
-void FreePDBStructure(PDBSTRUCT *pdbstruct);
+PDB *blReadPDB(FILE *fp, int *natom);
+PDB *blReadPDBAll(FILE *fp, int *natom);
+PDB *blReadPDBAtoms(FILE *fp, int *natom);
+PDB *blReadPDBOccRank(FILE *fp, int *natom, int OccRank);
+PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank);
+PDB *blDoReadPDB(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank, 
+                 int ModelNum);
+PDB *blDoReadPDBML(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank, 
+                   int ModelNum);
+BOOL blCheckFileFormatPDBML(FILE *fp);
+
+BOOL blWritePDB(FILE *fp, PDB  *pdb);
+void blWriteAsPDB(FILE *fp, PDB  *pdb);
+void blWriteAsPDBML(FILE *fp, PDB  *pdb);
+BOOL blFormatCheckWritePDB(PDB *pdb);
+BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb);
+void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb);
+void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb);
+
+void blWritePDBRecord(FILE *fp, PDB *pdb);
+void blWritePDBRecordAtnam(FILE *fp, PDB  *pdb);
+void blWriteGromosPDB(FILE *fp, PDB *pdb);
+void blWriteGromosPDBRecord(FILE *fp, PDB *pdb);
+void blGetCofGPDB(PDB   *pdb, VEC3F *cg);
+void blGetCofGPDBRange(PDB *start, PDB *stop, VEC3F *cg);
+void blGetCofGPDBSCRange(PDB *start, PDB *stop, VEC3F *cg);
+void blOriginPDB(PDB *pdb);
+void blRotatePDB(PDB  *pdb, REAL rm[3][3]);
+void blTranslatePDB(PDB   *pdb, VEC3F tvect);
+BOOL blFitPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3]);
+BOOL blFitCaPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3]);
+BOOL blFitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3]);
+BOOL blFitCaCbPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3]);
+REAL blCalcRMSPDB(PDB *pdb1, PDB *pdb2);
+int blGetPDBCoor(PDB *pdb, COOR **coor);
+BOOL blFindZonePDB(PDB *pdb, int start, char *startinsert, int stop, 
+                   char *stopinsert, char *chain, int mode, 
+                   PDB **pdb_start, PDB **pdb_stop);
+int blHAddPDB(FILE *fp, PDB *pdb);
+int blReadPGP(FILE *fp);
+FILE *blOpenPGPFile(char *pgpfile, BOOL AllHyd);
+PDB *blSelectAtomsPDBAsCopy(PDB *pdbin, int nsel, char **sel, int *natom);
+PDB *blStripHPDBAsCopy(PDB *pdbin, int *natom);
+SECSTRUC *blReadSecPDB(FILE *fp, int *nsec);
+void blRenumAtomsPDB(PDB *pdb);
+PDB *blFindEndPDB(PDB *start);
+PDB *blFixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum);
+PDB *blShuffleResPDB(PDB *start, PDB *end, BOOL Pad);
+BOOL blGetAtomTypes(char *resnam, char **AtomTypes);
+PDB *blKillPDB(PDB *pdb, PDB *prev);
+void blCopyPDB(PDB *out, PDB *in);
+BOOL blMovePDB(PDB *move, PDB **from, PDB **to);
+PDB *blAppendPDB(PDB *first, PDB *second);
+PDB *blShuffleBB(PDB *pdb);
+REAL blCalcChi(PDB *pdb, int type);
+PDB *blGetPDBByN(PDB *pdb, int n);
+void blSetChi(PDB *pdb, PDB *next, REAL chi, int type);
+BOOL blKillSidechain(PDB *ResStart, PDB *NextRes, BOOL doCB);
+void blSetResnam(PDB *ResStart, PDB *NextRes, char *resnam, int resnum,   
+                 char *insert, char *chain);
+void blApplyMatrixPDB(PDB *pdb, REAL matrix[3][3]);
+BOOL blGetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor, 
+                 int *StrucType);
+BOOL blGetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
+              int *StrucType);
+BOOL blGetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
+              int *StrucType);
+char *blReportStructureType(int type);
+PDB **blIndexPDB(PDB *pdb, int *natom);
+DISULPHIDE *blReadDisulphidesPDB(FILE *fp, BOOL *error);
+BOOL blParseResSpec(char *spec, char *chain, int *resnum, char *insert);
+BOOL blParseResSpecNoUpper(char *spec, char *chain, int *resnum, char *insert);
+BOOL blDoParseResSpec(char *spec, char *chain, int *resnum, char *insert, 
+                      BOOL uppercaseresspec);
+BOOL blRepSChain(PDB *pdb, char *sequence, char *ChiTable, char *RefCoords);
+PDB *blFindNextChainPDB(PDB *pdb);
+BOOL blFixCterPDB(PDB *pdb, int style);
+BOOL blCalcCterCoords(PDB *p, PDB *ca_p, PDB *c_p, PDB *o_p);
+int blCalcTetraHCoords(PDB *nter, COOR *coor);
+int blAddNTerHs(PDB **ppdb, BOOL Charmm);
+char *blFNam2PDB(char *filename);
+PDB *blTermPDB(PDB *pdb, int length);
+char **blGetPDBChainLabels(PDB *pdb, int *nchains);
+PDB *blFindHetatmResidueSpec(PDB *pdb, char *resspec);
+PDB *blFindResidueSpec(PDB *pdb, char *resspec);
+PDB *blFindNextResidue(PDB *pdb);
+PDB *blDupePDB(PDB *in);
+BOOL blCopyPDBCoords(PDB *out, PDB *in);
+void blCalcCellTrans(VEC3F UnitCell, VEC3F CellAngles, 
+                     VEC3F *xtrans, VEC3F *ytrans, VEC3F *ztrans);
+int blGetCrystPDB(FILE *fp, VEC3F *UnitCell, VEC3F *CellAngles,
+                  char *spacegroup,
+                  REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4]);
+void blWriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
+                     char *spacegroup,
+                     REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4]);
+PDB *blExtractZonePDBAsCopy(PDB *inpdb, char *chain1, int resnum1, 
+                            char *insert1, char *chain2, int resnum2, 
+                            char *insert2);
+PDB *blFindResidue(PDB *pdb, char *chain, int resnum, char *insert);
+PDB *blFindHetatmResidue(PDB *pdb, char *chain, int resnum, char *insert);
+PDB *blFindAtomInRes(PDB *pdb, char *atnam);
+BOOL blInPDBZone(PDB *p, char *chain, int resnum1, char *insert1, 
+                 int resnum2, char *insert2);
+BOOL blInPDBZoneSpec(PDB *p, char *resspec1, char *resspec2);
+BOOL blAtomNameMatch(char *atnam, char *spec, BOOL *ErrorWarn);
+BOOL blAtomNameRawMatch(char *atnam, char *spec, BOOL *ErrorWarn);
+BOOL blLegalAtomSpec(char *spec);
+BOOL blRepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
+                    char *RefCoords);
+void blEndRepSChain(void);
+char **blReadSeqresPDB(FILE *fp, int *nchains);
+PDB *blSelectCaPDB(PDB *pdb);
+char *blFixAtomName(char *name, REAL occup);
+
+void blFreeWholePDB(WHOLEPDB *wpdb);
+WHOLEPDB *blReadWholePDB(FILE *fpin);
+WHOLEPDB *blReadWholePDBAtoms(FILE *fpin);
+BOOL blAddCBtoGly(PDB *pdb);
+BOOL blAddCBtoAllGly(PDB *pdb);
+PDB *blStripGlyCB(PDB *pdb);
+PDB *blRemoveAlternates(PDB *pdb);
+PDB *blBuildAtomNeighbourPDBListAsCopy(PDB *pdb, PDB *pRes, 
+                                       REAL NeighbDist);
+PDB *blFindAtomWildcardInRes(PDB *pdb, char *pattern);
+PDB *blDupeResiduePDB(PDB *in);
+PDB *blStripWatersPDBAsCopy(PDB *pdbin, int *natom);
+PDBSTRUCT *blAllocPDBStructure(PDB *pdb);
+PDB *blFindNextChain(PDB *pdb);
+void blFreePDBStructure(PDBSTRUCT *pdbstruct);
+void blSetElementSymbolFromAtomName(char *element, char * atom_name);
+
+
+/************************************************************************/
+/* Include deprecated functions                                         */
+#define _PDB_H_DEPRECATED
+#include "deprecated.h" 
+/************************************************************************/
+
 #endif

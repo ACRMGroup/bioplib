@@ -1,29 +1,34 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       BuffInp.c
+   \file       BuffInp.c
    
-   Version:    V1.1R
-   Date:       11.03.94
-   Function:   Read from a file a line at a time, allowing one to probe
+   \version    V1.2
+   \date       07.07.14
+   \brief      Read from a file a line at a time, allowing one to probe
                ahead and look at the contants of the next line without
                removing it from the input stream.
    
-   Copyright:  (c) SciTech Software 1994
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -32,6 +37,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -42,10 +48,11 @@
 
    Revision History:
    =================
-   V1.0  08.03.94 Original
-   V1.1  11.03.94 Changes to ReadBufferedFile() and ProbeBufferedFile()
+-  V1.0  08.03.94 Original
+-  V1.1  11.03.94 Changes to ReadBufferedFile() and ProbeBufferedFile()
                   to RePrompt() if reading from stdin when we get a 
                   blank line
+-  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -70,19 +77,22 @@
 */
 
 /************************************************************************/
-/*>INBUFFER OpenBufferedFile(char *filename, int maxstr)
-   -----------------------------------------------------
-   Input:   char     *filename   File name
-            int      maxstr      Max string length in file for buffering
-   Returns: INBUFFER *           Pointer to a buffered file
+/*>INBUFFER blOpenBufferedFile(char *filename, int maxstr)
+   -------------------------------------------------------
+*//**
+
+   \param[in]     *filename   File name
+   \param[in]     maxstr      Max string length in file for buffering
+   \return                    Pointer to a buffered file
 
    Open a file for buffered input. This allows probe-ahead to look at the
    contents of the next line without removing it from the input stream.
 
-   28.02.94 Original    By: ACRM
-   03.03.94 If filename is NULL, make file stdin
+-  28.02.94 Original    By: ACRM
+-  03.03.94 If filename is NULL, make file stdin
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-INBUFFER *OpenBufferedFile(char *filename, int maxstr)
+INBUFFER *blOpenBufferedFile(char *filename, int maxstr)
 {
    FILE     *fp;
    INBUFFER *BuffStruc = NULL;
@@ -109,23 +119,26 @@ INBUFFER *OpenBufferedFile(char *filename, int maxstr)
 }
 
 /************************************************************************/
-/*>BOOL ReadBufferedFile(INBUFFER *bfp, char *string, int length)
-   --------------------------------------------------------------
-   Input:   INBUFFER *bfp      Pointer to a buffered file structure
-            int      length    Size of output string
-   Output:  char     *string   Output string read from file
-   Returns: BOOL               TRUE: Successful read
+/*>BOOL blReadBufferedFile(INBUFFER *bfp, char *string, int length)
+   ----------------------------------------------------------------
+*//**
+
+   \param[in]     *bfp      Pointer to a buffered file structure
+   \param[in]     length    Size of output string
+   \param[out]    *string   Output string read from file
+   \return                       TRUE: Successful read
                                FALSE: End of file (or error)
 
    Reads a line from a buffered file (like fgets()).
    Blank lines in the file will be skipped.
 
-   28.02.94 Original    By: ACRM
-   07.03.94 Added code to skip blank lines
-   10.03.94 Added call to RePrompt() if we're reading from stdin and
+-  28.02.94 Original    By: ACRM
+-  07.03.94 Added code to skip blank lines
+-  10.03.94 Added call to RePrompt() if we're reading from stdin and
             we get a blank line
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL ReadBufferedFile(INBUFFER *bfp, char *string, int length)
+BOOL blReadBufferedFile(INBUFFER *bfp, char *string, int length)
 {
    int bufflen = 0;
    
@@ -147,7 +160,7 @@ BOOL ReadBufferedFile(INBUFFER *bfp, char *string, int length)
          }
 
          if(!bufflen && bfp->fp == stdin)
-            RePrompt();
+            blRePrompt();
       }
    }
    else
@@ -160,12 +173,14 @@ BOOL ReadBufferedFile(INBUFFER *bfp, char *string, int length)
 }
 
 /************************************************************************/
-/*>BOOL ProbeBufferedFile(INBUFFER *bfp, char *string, int length)
-   ---------------------------------------------------------------
-   Input:   INBUFFER *bfp      Pointer to a buffered file structure
-            int      length    Size of output string
-   Output:  char     *string   Output string read from file
-   Returns: BOOL               TRUE: Successful read
+/*>BOOL blProbeBufferedFile(INBUFFER *bfp, char *string, int length)
+   -----------------------------------------------------------------
+*//**
+
+   \param[in]     *bfp      Pointer to a buffered file structure
+   \param[in]     length    Size of output string
+   \param[out]    *string   Output string read from file
+   \return                       TRUE: Successful read
                                FALSE: End of file (or error)
 
    Read the next line from a buffered file without removing it from
@@ -174,11 +189,12 @@ BOOL ReadBufferedFile(INBUFFER *bfp, char *string, int length)
    but will remove the line from the input stream.
    Blank lines in the file will be skipped.
 
-   28.02.94 Original    By: ACRM
-   07.03.94 Added code to skip blank lines
-   10.03.94 Added call to RePrompt() after blank line
+-  28.02.94 Original    By: ACRM
+-  07.03.94 Added code to skip blank lines
+-  10.03.94 Added call to RePrompt() after blank line
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL ProbeBufferedFile(INBUFFER *bfp, char *string, int length)
+BOOL blProbeBufferedFile(INBUFFER *bfp, char *string, int length)
 {
    int bufflen = 0;
    
@@ -202,7 +218,7 @@ BOOL ProbeBufferedFile(INBUFFER *bfp, char *string, int length)
          }
 
          if(!bufflen && bfp->fp == stdin)
-            RePrompt();
+            blRePrompt();
       }
    }
 

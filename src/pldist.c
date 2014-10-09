@@ -1,35 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       pldist.c
+   \file       pldist.c
    
-   Version:    V1.0
-   Date:       16.11.99
-   Function:   Calculate distance from a point to a line
+   \version    V1.1
+   \date       07.07.14
+   \brief      Calculate distance from a point to a line
    
-   Copyright:  (c) University of Reading / Dr. Andrew C. R. Martin 1999
-   Author:     Dr. Andrew C. R. Martin
-   Address:    School of Animal and Microbial Sciences,
-               The University of Reading,
-               Whiteknights,
-               P.O. Box 228,
-               Reading RG6 6AJ.
-               England.
-   Phone:      +44 (0)118 987 5123 Extn. 7022
-   Fax:        +44 (0)118 931 0180
-   EMail:      a.c.r.martin@reading.ac.uk
-               andrew@stagleys.demon.co.uk
+   \copyright  (c) University of Reading / Dr. Andrew C. R. Martin 1999-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
 
    The code may be modified as required, but any modifications must be
-   documented so that the person responsible can be identified. If someone
-   else breaks this code, I don't want to be blamed for code that does not
-   work! 
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -38,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -48,6 +46,8 @@
 
    Revision History:
    =================
+
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -74,47 +74,49 @@
 */
 
 /************************************************************************/
-/*>REAL PointLineDistance(REAL Px, REAL Py, REAL Pz,
+/*>REAL blPointLineDistance(REAL Px, REAL Py, REAL Pz,
                           REAL P1x, REAL P1y, REAL P1z,
                           REAL P2x, REAL P2y, REAL P2z,
                           REAL *Rx, REAL *Ry, REAL *Rz,
                           REAL *frac)
-   ----------------------------------------------------
-   Input:    REAL   Px          Point x coordinate
-             REAL   Py          Point y coordinate
-             REAL   Pz          Point z coordinate
-             REAL   P1x         Line start x coordinate
-             REAL   P1y         Line start y coordinate
-             REAL   P1z         Line start z coordinate
-             REAL   P2x         Line end x coordinate
-             REAL   P2y         Line end y coordinate
-             REAL   P2z         Line end z coordinate
-    Output:  REAL   *Rx         Nearest point on line x coordinate
-             REAL   *Ry         Nearest point on line y coordinate
-             REAL   *Rz         Nearest point on line z coordinate
-             REAL   *frac       Fraction along P1-P2 of R
-    Returns: REAL               Distance from P to R
+   ------------------------------------------------------
+*//**
+   \param[in]     Px          Point x coordinate
+   \param[in]     Py          Point y coordinate
+   \param[in]     Pz          Point z coordinate
+   \param[in]     P1x         Line start x coordinate
+   \param[in]     P1y         Line start y coordinate
+   \param[in]     P1z         Line start z coordinate
+   \param[in]     P2x         Line end x coordinate
+   \param[in]     P2y         Line end y coordinate
+   \param[in]     P2z         Line end z coordinate
+   \param[out]    *Rx         Nearest point on line x coordinate
+   \param[out]    *Ry         Nearest point on line y coordinate
+   \param[out]    *Rz         Nearest point on line z coordinate
+   \param[out]    *frac       Fraction along P1-P2 of R
+   \return                       Distance from P to R
 
-    Calculates the shortest distance from a point P to a line between
-    points P1 and P2. This value is returned.
+   Calculates the shortest distance from a point P to a line between
+   points P1 and P2. This value is returned.
 
-    If the Rx,Ry,Rz pointers are all non-NULL, then the point on the
-    line nearest to P is output.
+   If the Rx,Ry,Rz pointers are all non-NULL, then the point on the
+   line nearest to P is output.
 
-    If the frac pointer is non-NULL then the fraction of R along the
-    P1-P2 vector is output. Thus:
-          R==P1 ==> frac=0
-          R==P2 ==> frac=1
-    Thus if (0<=frac<=1) then the point R is within the line segment
-    P1-P2
+   If the frac pointer is non-NULL then the fraction of R along the
+   P1-P2 vector is output. Thus:
+         R==P1 ==> frac=0
+         R==P2 ==> frac=1
+   Thus if (0<=frac<=1) then the point R is within the line segment
+   P1-P2
 
-    16.11.99 Original   By: ACRM
+-  16.11.99 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-REAL PointLineDistance(REAL Px, REAL Py, REAL Pz,
-                       REAL P1x, REAL P1y, REAL P1z,
-                       REAL P2x, REAL P2y, REAL P2z,
-                       REAL *Rx, REAL *Ry, REAL *Rz,
-                       REAL *frac)
+REAL blPointLineDistance(REAL Px, REAL Py, REAL Pz,
+                         REAL P1x, REAL P1y, REAL P1z,
+                         REAL P2x, REAL P2y, REAL P2z,
+                         REAL *Rx, REAL *Ry, REAL *Rz,
+                         REAL *frac)
 {
    VEC3F A, u, Q, PQ, PR, QP, QP2;
    REAL  alen, len, f;
@@ -221,10 +223,10 @@ int main(int argc, char **argv)
    P1x = 5;  P1y = 2;  P1z = 0;
    P2x = 10; P2y = 2;  P2z = 0;
    
-   d = PointLineDistance(Px, Py, Pz,
-                         P1x, P1y, P1z,
-                         P2x, P2y, P2z,
-                         &Rx, &Ry, &Rz, &f);
+   d = blPointLineDistance(Px, Py, Pz,
+                           P1x, P1y, P1z,
+                           P2x, P2y, P2z,
+                           &Rx, &Ry, &Rz, &f);
    
    printf("*** Distance is %f; Point R is %f %f %f; f is %f\n",
           d,Rx,Ry,Rz,f);

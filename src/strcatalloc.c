@@ -1,22 +1,31 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       strcatalloc.c
+   \file       strcatalloc.c
    
-   Version:    V1.1
-   Date:       11.07.00
-   Function:   
+   \version    V1.2
+   \date       07.07.14
    
-   Copyright:  (c) Dr. Andrew C. R. Martin, University of Reading, 2002
-   Author:     Dr. Andrew C. R. Martin
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002-14
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -25,6 +34,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -35,8 +45,9 @@
 
    Revision History:
    =================
-   V1.0  22.05.99 Original   By: ACRM
-   V1.1  11.07.00 Check that realloc succeeded
+-  V1.0  22.05.99 Original   By: ACRM
+-  V1.1  11.07.00 Check that realloc succeeded
+-  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -58,21 +69,24 @@
 
 
 /************************************************************************/
-/*>char *strcatalloc(char *instr, char *catstr)
-   --------------------------------------------
-   Input:   char    *instr    String to append to
-            char    *catstr   String to append
-   Returns: char    *         realloc'd version of instr with catstr
+/*>char *blStrcatalloc(char *instr, char *catstr)
+   ----------------------------------------------
+*//**
+
+   \param[in]     *instr    String to append to
+   \param[in]     *catstr   String to append
+   \return                      realloc'd version of instr with catstr
                               appended
 
    Like strcat() but uses a realloc() on instr to make space available.
 
-   22.05.99 Original   By: ACRM
-   16.06.99 Initialise outstr to NULL
-   25.08.99 Fixed bug where testing for NULL outstr instead of catstr
-   11.07.00 Check that realloc succeeded
+-  22.05.99 Original   By: ACRM
+-  16.06.99 Initialise outstr to NULL
+-  25.08.99 Fixed bug where testing for NULL outstr instead of catstr
+-  11.07.00 Check that realloc succeeded
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char *strcatalloc(char *instr, char *catstr)
+char *blStrcatalloc(char *instr, char *catstr)
 {
    int  totLen;
    char *outstr = NULL;

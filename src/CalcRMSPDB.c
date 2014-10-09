@@ -1,28 +1,33 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       CalcRMSPDB.c
+   \file       CalcRMSPDB.c
    
-   Version:    V1.3R
-   Date:       14.03.96
-   Function:   Fit two PDB linked lists. Also a weighted fit and support
+   \version    V1.4
+   \date       07.07.14
+   \brief      Fit two PDB linked lists. Also a weighted fit and support
                routines
    
-   Copyright:  (c) SciTech Software 1993-6
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-6
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -31,6 +36,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -41,14 +47,15 @@
 
    Revision History:
    =================
-   V1.0  01.03.94 Original release
-   V1.1  11.03.94 Fixed bug in calls to matfit(). Had not been changed 
+-  V1.0  01.03.94 Original release
+-  V1.1  11.03.94 Fixed bug in calls to matfit(). Had not been changed 
                   to reflect modification in MatMult3_33().
-   V1.2  14.03.94 Fixed FitPDB(); wasn't filling in the output matrix
-   V1.3  14.03.96 Added FitCaPDB()
+-  V1.2  14.03.94 Fixed FitPDB(); wasn't filling in the output matrix
+-  V1.3  14.03.96 Added FitCaPDB()
                   Changed FitPDB() and FitCaCbPDB() to use 
                   ApplyMatrixPDB() rather than RotatePDB() since the PDB
                   linked lists are already at the origin
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -76,19 +83,22 @@
 */
 
 /************************************************************************/
-/*>REAL CalcRMSPDB(PDB *pdb1, PDB *pdb2)
-   -------------------------------------
-   Input:   PDB  *pdb1   First PDB linked list
-            PDB  *pdb2   Second PDB linked list
-   Returns: REAL         RMS deviation
+/*>REAL blCalcRMSPDB(PDB *pdb1, PDB *pdb2)
+   ---------------------------------------
+*//**
+
+   \param[in]     *pdb1   First PDB linked list
+   \param[in]     *pdb2   Second PDB linked list
+   \return                 RMS deviation
 
    Calculate the RMS deviation between two fitted PDB linked lists. The
    two lists must contain equivalent structures (same atom types in same
    order). No checks are made on this.
 
-   11.03.94 Original    By: ACRM
+-  11.03.94 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-REAL CalcRMSPDB(PDB *pdb1, PDB *pdb2)
+REAL blCalcRMSPDB(PDB *pdb1, PDB *pdb2)
 {
    PDB *p, *q;
    int count = 0;

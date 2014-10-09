@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       fsscanf.c
+   \file       fsscanf.c
    
-   Version:    V1.3R
-   Date:       13.01.97
-   Function:   Read from a string using FORTRAN-like rigid formatting
+   \version    V1.4
+   \date       07.07.14
+   \brief      Read from a string using FORTRAN-like rigid formatting
    
-   Copyright:  (c) SciTech Software 1993-7
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,10 +35,13 @@
 
    Description:
    ============
+
    Hard formatted version of sscanf(). Implements FORTRAN-like file 
    reading.
  
    The only parsing characters recognised are:
+
+
       %<n>f    A single precision floating point number of width <n>
       %<n>lf   A double precision floating point number of width <n>
       %<n>d    An integer of width <n>
@@ -37,6 +51,7 @@
       %<n>s    A string of width <n>
       %c       A character (of width 1)
       %<n>x    <n> spaces (like FORTRAN).
+
    With the exception of the %c parser, the column width, <n>,
    *must* be specified.
 
@@ -51,6 +66,7 @@
    ======
    For example:
 
+\code
    double   DoubVar;
    int      IntVar;
    char     CharVar,
@@ -58,22 +74,23 @@
 
    fsscanf(buffer,"%8lf%5x%3d%c%3x%8s",
            &DoubVar,&IntVar,&CharVar,StringVar);
-
+\endcode
 
 **************************************************************************
 
    Revision History:
    =================
-   V1.0  17.06.93 Original    By: ACRM
-   V1.1  12.07.93 Added %u and %lu. Corrected %s and %c to blank rather 
+-  V1.0  17.06.93 Original    By: ACRM
+-  V1.1  12.07.93 Added %u and %lu. Corrected %s and %c to blank rather 
                   than NULL strings if buffer runs out. Pads string if 
                   buffer ran out in the middle. Takes \n in buffer as end 
                   of string.
-   V1.2  24.11.95 `value' was a fixed 40 character buffer. Now changed to
+-  V1.2  24.11.95 `value' was a fixed 40 character buffer. Now changed to
                   allocate a suitable number of characters as required.
-   V1.3  13.01.97 Now does the EOF return at the end of the routine
+-  V1.3  13.01.97 Now does the EOF return at the end of the routine
                   rather than at the beginning so that all the variable
                   get set to blank or zero first.
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -103,17 +120,21 @@
 /************************************************************************/
 /*>int fsscanf(char *buffer, char *format, ...)
    --------------------------------------------
-   Input:   char  *buffer    Buffer from which to read information
-            char  *format    Format string (like scanf() et al., but see
+*//**
+
+   \param[in]     *buffer    Buffer from which to read information
+   \param[in]     *format    Format string (like scanf() et al., but see
                              restrictions below)
-   Output:  ...              Scanned output variables
-   Returns: int              Number of values read (EOF if end of file or
+   \param[out]    ...        Scanned output variables
+   \return                   Number of values read (EOF if end of file or
                              no specifiers found in format string)
 
    Hard formatted version of sscanf(). Implements FORTRAN-like rigid
    column reading out of a string.
  
    The only parsing characters recognised are:
+
+
       %<n>f    A single precision floating point number of width <n>
       %<n>lf   A double precision floating point number of width <n>
       %<n>d    An integer of width <n>
@@ -123,24 +144,26 @@
       %<n>s    A string of width <n>
       %c       A character (of width 1)
       %<n>x    <n> spaces (like FORTRAN).
+
    With the exception of the %c parser, the column width, <n>,
    *must* be specified.
 
    Blank fields read as numbers are given a value of zero.
 
 
-   17.06.93 Original    By: ACRM
-   12.07.93 Added %u and %lu. Corrected %s and %c to blank rather than
+-  17.06.93 Original    By: ACRM
+-  12.07.93 Added %u and %lu. Corrected %s and %c to blank rather than
             NULL strings if buffer runs out. Pads string if buffer ran
             out in the middle. Takes \n in buffer as end of string.
-   24.11.95 `value' was a fixed 40 character buffer. Now changed to
+-  24.11.95 `value' was a fixed 40 character buffer. Now changed to
             allocate a suitable number of characters as required.
-   13.01.97 Previously if reading from a blank line the output variables
+-  13.01.97 Previously if reading from a blank line the output variables
             were unmodified since an EOF return was done immediately.
             Now the immediate EOF return only happens if the input
             buffer is a NULL variable and the EOF on blank string is
             moved to the end such that all output variables are set to 
             zero or blank before the EOF return.
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 int fsscanf(char *buffer, char *format, ...)
 {
@@ -302,7 +325,7 @@ int fsscanf(char *buffer, char *format, ...)
             /* If the input buffer ran out in this string, pad with 
                spaces and terminate.
             */
-            if(strlen(ptr) < width) padterm(ptr, width);
+            if(strlen(ptr) < width) blPadterm(ptr, width);
          }
          else                          /* Input buffer empty            */
          {

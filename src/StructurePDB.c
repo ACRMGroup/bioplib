@@ -1,32 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       StructurePDB.c
+   \file       StructurePDB.c
    
-   Version:    V1.1
-   Date:       19.05.10
-   Function:   Build a structured PDB representation
+   \version    V1.3
+   \date       07.07.14
+   \brief      Build a structured PDB representation
    
-   Copyright:  (c) UCL / Dr. Andrew C. R. Martin 2009-10
-   Author:     Dr. Andrew C. R. Martin
-   Address:    Biomolecular Structure & Modelling Unit,
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 2009-14
+   \author     Dr. Andrew C. R. Martin
+   \par
                Institute of Structural & Molecular Biology,
-               University College,
+               University College London,
                Gower Street,
                London.
                WC1E 6BT.
-   EMail:      andrew@bioinf.org.uk
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
 
    The code may be modified as required, but any modifications must be
-   documented so that the person responsible can be identified. If someone
-   else breaks this code, I don't want to be blamed for code that does not
-   work! 
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -35,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -45,8 +46,11 @@
 
    Revision History:
    =================
-   V1.0   24.11.09  Original
-   V1.1   19.05.10  PDBRESIDUE and PDBCHAIN are doubly linked lists
+-  V1.0   24.11.09  Original
+-  V1.1   19.05.10  PDBRESIDUE and PDBCHAIN are doubly linked lists
+-  V1.2   04.02.14  Use CHAINMATCH By: CTP
+-  V1.3   07.07.14  Use bl prefix for functions By: CTP
+
 *************************************************************************/
 /* Includes
 */
@@ -68,20 +72,23 @@
 
 
 /************************************************************************/
-/*>PDBSTRUCT *AllocPDBStructure(PDB *pdb)
-   --------------------------------------
-   Input:    PDB        *pdb    PDB linked list
-   Returns:  PDBSTRUCT  *       PDBSTRUCT structure containing chain
-                                linked list
+/*>PDBSTRUCT *blAllocPDBStructure(PDB *pdb)
+   ----------------------------------------
+*//**
+
+   \param[in]     *pdb    PDB linked list
+   \return                PDBSTRUCT structure containing chain
+                          linked list
 
    Takes a PDB linked list and converts it into a hierarchical structure
    of chains, residues and atoms
 
-   24.11.09  Original   By: ACRM
-   19.05.10  Correctly do doubly linked lists
-   02.06.10  Fixed some initializations!
+-  24.11.09  Original   By: ACRM
+-  19.05.10  Correctly do doubly linked lists
+-  02.06.10  Fixed some initializations!
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDBSTRUCT *AllocPDBStructure(PDB *pdb)
+PDBSTRUCT *blAllocPDBStructure(PDB *pdb)
 {
    PDB        *pdbc, *pdbr;
    PDB        *nextchain, *nextres;
@@ -100,7 +107,7 @@ PDBSTRUCT *AllocPDBStructure(PDB *pdb)
    /* Build the chain list                                              */
    for(pdbc=pdb; pdbc!=NULL; pdbc=nextchain)
    {
-      nextchain = FindNextChain(pdbc);
+      nextchain = blFindNextChain(pdbc);
 
       if(pdbstruct->chains == NULL)
       {
@@ -113,7 +120,7 @@ PDBSTRUCT *AllocPDBStructure(PDB *pdb)
       }
       if(chain == NULL)
       {
-         FreePDBStructure(pdbstruct);
+         blFreePDBStructure(pdbstruct);
          return(NULL);
       }
       
@@ -132,7 +139,7 @@ PDBSTRUCT *AllocPDBStructure(PDB *pdb)
          char resid[24];
          int  i, j;
          
-         nextres = FindNextResidue(pdbr);
+         nextres = blFindNextResidue(pdbr);
          
          if(chain->residues == NULL)
          {
@@ -145,7 +152,7 @@ PDBSTRUCT *AllocPDBStructure(PDB *pdb)
          }
          if(residue == NULL)
          {
-            FreePDBStructure(pdbstruct);
+            blFreePDBStructure(pdbstruct);
             return(NULL);
          }
          
@@ -178,17 +185,20 @@ PDBSTRUCT *AllocPDBStructure(PDB *pdb)
 }
 
 /************************************************************************/
-/*>void FreePDBStructure(PDBSTRUCT *pdbstruct)
-   -------------------------------------------
-   Input:    PDBSTRUCT  *       PDBSTRUCT structure containing chain
-                                linked list
+/*>void blFreePDBStructure(PDBSTRUCT *pdbstruct)
+   ---------------------------------------------
+*//**
+
+   \param[in]     *pdbstruct       PDBSTRUCT structure containing chain
+                                   linked list
 
    Frees memory used by the hierarchical description of a PDB structure.
    Note this does not free the underlying PDB linked list
 
-   24.11.09  Original   By: ACRM
+-  24.11.09  Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void FreePDBStructure(PDBSTRUCT *pdbstruct)
+void blFreePDBStructure(PDBSTRUCT *pdbstruct)
 {
    PDBCHAIN *chain = NULL;
 
@@ -206,27 +216,28 @@ void FreePDBStructure(PDBSTRUCT *pdbstruct)
 
 
 /************************************************************************/
-/*>PDB *FindNextChain(PDB *pdb)
-   ----------------------------
-   Input:    PDB        *pdb    PDB linked list
-   Returns:  PDB        *       Pointer to start of next chain
+/*>PDB *blFindNextChain(PDB *pdb)
+   ------------------------------
+*//**
+
+   \param[in]     *pdb    PDB linked list
+   \return                Pointer to start of next chain
 
    Takes a PDB linked list and find the start of the next chain. This is
    similar to another Bioplib routine which terminates the first chain,
    but this routines doesn't terminate.
 
-   24.11.09  Original   By: ACRM
+-  24.11.09  Original   By: ACRM
+-  04.02.14 Use CHAINMATCH By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *FindNextChain(PDB *pdb)
+PDB *blFindNextChain(PDB *pdb)
 {
    PDB  *p, *ret = NULL;
-   char chain;
-   
-   chain = pdb->chain[0];
    
    for(p=pdb; p!=NULL; NEXT(p))
    {
-      if((p->next == NULL) || (p->next->chain[0] != chain))
+      if((p->next == NULL) || !CHAINMATCH(p->next->chain,pdb->chain))
       {
          ret = p->next;
          break;
@@ -250,8 +261,8 @@ int main(int argc, char **argv)
    
    
    fp   = fopen(argv[1], "r");
-   pdb  = ReadPDB(fp, &natoms);
-   pdbs = AllocPDBStructure(pdb);
+   pdb  = blReadPDB(fp, &natoms);
+   pdbs = blAllocPDBStructure(pdb);
 
    for(chain=pdbs->chains; chain!=NULL; NEXT(chain))
    {
@@ -261,7 +272,7 @@ int main(int argc, char **argv)
          fprintf(stdout, "COMMENT: Residue %s\n", residue->resid);
          for(p=residue->start; p!=residue->stop; NEXT(p))
          {
-            WritePDBRecord(stdout, p);
+            blWritePDBRecord(stdout, p);
          }
       }
    }
@@ -271,11 +282,11 @@ int main(int argc, char **argv)
       fprintf(stdout,"COMMENT: Chain %s\n", chain->chain);
       for(p=chain->start; p!=chain->stop; NEXT(p))
       {
-         WritePDBRecord(stdout, p);
+         blWritePDBRecord(stdout, p);
       }
    }
 
-   FreePDBStructure(pdbs);
+   blFreePDBStructure(pdbs);
 
    return(0);
 }

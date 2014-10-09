@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       ErrStack.c
+   \file       ErrStack.c
    
-   Version:    V1.0R
-   Date:       31.08.94
-   Function:   Build and print an error stack for program failure.
+   \version    V1.1
+   \date       07.07.14
+   \brief      Build and print an error stack for program failure.
    
-   Copyright:  (c) SciTech Software 1994
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,6 +35,7 @@
 
    Description:
    ============
+
 
    This set of routines allows a stack of errors to be created. 
    When a program has a fatal error, the StoreError() routine is called
@@ -41,30 +47,35 @@
 
    Usage:
    ======
-   StoreError(char *routine, char *error)
-   --------------------------------------
+
+   blStoreError(char *routine, char *error)
+
    The routine is called with the name of the routine at fault and the
    description of the fault.
 
-   ShowErrors(void *PrintRoutine, BOOL Trace)
-   ------------------------------------------
+   blShowErrors(void *PrintRoutine, BOOL Trace)
+
    The routine is called with a pointer to the routine which is to
    do the actual error display and a flag to indicate whether the
    faulty routine names should be displyed. This is only of use if
    the user has access to the source code so should be used for
    debugging purposes only.
+
    If PrintRoutine is supplied as NULL, the simple PrintAnError()
    routine will be used which displays the error on stderr. More
    complex routines could, for example, show the error in a requester
    or output to a window.
+
    If a print routine is specified, the routine is called with:
-   ShowErrors(void *)MyRoutine, TRUE);
+
+   blShowErrors(void *)MyRoutine, TRUE);
 
 **************************************************************************
 
    Revision History:
    =================
-   V1.0  31.08.94 Original    By: ACRM
+-  V1.0  31.08.94 Original    By: ACRM
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -99,16 +110,19 @@ static ERRORSTACK *sErrorStack = NULL;
 static void PrintAnError(char *error);
 
 /************************************************************************/
-/*>void StoreError(char *routine, char *error)
-   -------------------------------------------
-   Input:   char *routine        Name of the routine generating the error
-            char *error          Description of the error
+/*>void blStoreError(char *routine, char *error)
+   ---------------------------------------------
+*//**
+
+   \param[in]     *routine        Name of the routine generating the error
+   \param[in]     *error          Description of the error
 
    Stores an error on the error stack.
 
-   31.08.94 Original    By: ACRM
+-  31.08.94 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void StoreError(char *routine, char *error)
+void blStoreError(char *routine, char *error)
 {
    static ERRORSTACK *p = NULL;
    
@@ -138,19 +152,22 @@ void StoreError(char *routine, char *error)
 }
 
 /************************************************************************/
-/*>void ShowErrors(void *PrintRoutine(char *), BOOL Trace)
-   -------------------------------------------------------
-   Input:   void  *PrintRoutine(char *)   The print routine or NULL
-            BOOL  Trace                   Flag to print routine names
+/*>void blShowErrors(void *PrintRoutine(char *), BOOL Trace)
+   ---------------------------------------------------------
+*//**
+
+   \param[in]     *PrintRoutine           The print routine or NULL
+   \param[in]     Trace                   Flag to print routine names
 
    Display the error stack using the supplied print routine or the
    simple default one if NULL is given.
 
-   31.08.94 Original    By: ACRM
-   06.09.94 No longer tries to set PrintRoutine if was NULL (strict ANSI
+-  31.08.94 Original    By: ACRM
+-  06.09.94 No longer tries to set PrintRoutine if was NULL (strict ANSI
             compliance)
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void ShowErrors(void *PrintRoutine(char *), BOOL Trace)
+void blShowErrors(void *PrintRoutine(char *), BOOL Trace)
 {
    ERRORSTACK *p;
    char       buffer[160];
@@ -172,12 +189,14 @@ void ShowErrors(void *PrintRoutine(char *), BOOL Trace)
 /************************************************************************/
 /*>static void PrintAnError(char *string)
    ---------------------------------------
-   Input:   char  *string        A string to be printed
+*//**
+
+   \param[in]     *string        A string to be printed
 
    A simple error printing routine used if NULL given as a parameter
    to ShowErrors()
 
-   31.08.94 Original    By: ACRM
+-  31.08.94 Original    By: ACRM
 */
 static void PrintAnError(char *string)
 {

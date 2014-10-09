@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       DupeResiduePDB.c
+   \file       DupeResiduePDB.c
    
-   Version:    V1.1
-   Date:       08.11.07
-   Function:   Create a new PDB linked list with a copy of a residue
+   \version    V1.2
+   \date       07.07.14
+   \brief      Create a new PDB linked list with a copy of a residue
    
-   Copyright:  (c) Dr. Andrew C. R. Martin, UCL, 1996-2007
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 1996-2007
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -34,8 +46,9 @@
 
    Revision History:
    =================
-   V1.0 27.08.96 Original from mutmodel  By: ACRM
-   V1.1 08.11.07 Initialize p and q; Moved into bioplib
+-  V1.0 27.08.96 Original from mutmodel  By: ACRM
+-  V1.1 08.11.07 Initialize p and q; Moved into bioplib
+-  V1.2 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -57,20 +70,23 @@
 */
 
 /************************************************************************/
-/*>PDB *DupeResiduePDB(PDB *in)
+/*>PDB *blDupeResiduePDB(PDB *in)
    ----------------------------
-   Input:   PDB  *in     PDB linked list pointing to residue to duplicate
-   Returns: PDB  *       Duplicate linked list of residue at `in'
-                         (NULL if allocation fails)
+*//**
+
+   \param[in]     *in     PDB linked list pointing to residue to duplicate
+   \return                Duplicate linked list of residue at `in'
+                          (NULL if allocation fails)
 
    Makes a duplicate PDB linked list of just the residue pointed to by
    `in'
 
-   27.08.96 Original   By: ACRM
-   08.11.07 Initialize p and q
+-  27.08.96 Original   By: ACRM
+-  08.11.07 Initialize p and q
             Moved into bioplib
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *DupeResiduePDB(PDB *in)
+PDB *blDupeResiduePDB(PDB *in)
 {
    PDB *pNext,
        *out = NULL,
@@ -78,7 +94,7 @@ PDB *DupeResiduePDB(PDB *in)
        *q = NULL;
    
    /* Find the next residue                                             */
-   pNext = FindNextResidue(in);
+   pNext = blFindNextResidue(in);
 
    for(p=in; p!=pNext; NEXT(p))
    {
@@ -97,7 +113,7 @@ PDB *DupeResiduePDB(PDB *in)
          return(NULL);
       }
       
-      CopyPDB(q, p);
+      blCopyPDB(q, p);
    }
    
    return(out);

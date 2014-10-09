@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       DistPtVect.c
+   \file       DistPtVect.c
    
-   Version:    V1.2
-   Date:       06.10.98
-   Function:   General maths/stats/vector functions
+   \version    V1.3
+   \date       07.07.14
+   \brief      General maths/stats/vector functions
    
-   Copyright:  (c) SciTech Software 1996-8
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -40,9 +46,10 @@
 
    Revision History:
    =================
-   V1.0  29.01.96 Original   By: ACRM
-   V1.1  18.06.96 Added vector routines
-   V1.2  06.10.98 Added VecAdd3()
+-  V1.0  29.01.96 Original   By: ACRM
+-  V1.1  18.06.96 Added vector routines
+-  V1.2  06.10.98 Added VecAdd3()
+-  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -64,19 +71,22 @@
 */
 
 /************************************************************************/
-/*>REAL DistPtVect(VEC3F Point, VEC3F End1, VEC3F End2)
-   ----------------------------------------------------
-   Input:   VEC3F   Point     The coordinates of a point
-            VEC3F   End1      Coordinates of one end of vector
-            VEC3F   End2      Coordinates of other end of vector
-   Returns: REAL              The distance from pt to line
+/*>REAL blDistPtVect(VEC3F Point, VEC3F End1, VEC3F End2)
+   ------------------------------------------------------
+*//**
+
+   \param[in]     Point     The coordinates of a point
+   \param[in]     End1      Coordinates of one end of vector
+   \param[in]     End2      Coordinates of other end of vector
+   \return                  The distance from pt to line
 
    Calculate the distance from a point to a vector described by two
    end points
 
-   18.06.96 Original   By: ACRM
+-  18.06.96 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-REAL DistPtVect(VEC3F Point, VEC3F End1, VEC3F End2)
+REAL blDistPtVect(VEC3F Point, VEC3F End1, VEC3F End2)
 {
    VEC3F Vec,
          UVec,
@@ -85,10 +95,10 @@ REAL DistPtVect(VEC3F Point, VEC3F End1, VEC3F End2)
    REAL  len;
    
    /* Find the vector from End1 to End2                                 */
-   VecSub3(&Vec, End2, End1);
+   blVecSub3(&Vec, End2, End1);
 
    /* Find the length of this vector                                    */
-   len = VecLen3(Vec);
+   len = blVecLen3(Vec);
 
    /* Now calculate the unit vector                                     */
    UVec.x = Vec.x / len;
@@ -103,8 +113,8 @@ REAL DistPtVect(VEC3F Point, VEC3F End1, VEC3F End2)
    PQVec.z = End1.z - Point.z;
 
    /* PRVect is the cross product of PQVect with the unit vector        */
-   CrossProd3(&PRVec, PQVec, UVec);
+   blCrossProd3(&PRVec, PQVec, UVec);
 
    /* The length we want is the length of this vector                   */
-   return(VecLen3(PRVec));
+   return(blVecLen3(PRVec));
 }

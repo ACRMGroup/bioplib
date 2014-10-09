@@ -1,35 +1,41 @@
-/***************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       cssr.h
+   \file       cssr.h
    
-   Version:    V1.0R
-   Date:       09.09.91
-   Function:   Defines for CSSR handling
+   \version    V1.3
+   \date       14.08.14
+   \brief      Defines for CSSR handling
    
-   Copyright:  SciTech Software 1991
-   Author:     Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  SciTech Software 1991-2014
+   \author     Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
+               
+**************************************************************************
 
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
+   according to the conditions laid out in the accompanying file
+   COPYING.DOC.
 
-****************************************************************************
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
-   This program is not in the public domain, but it may be freely copied
-   and distributed for no charge providing this header is included.
+   The code may not be sold commercially or included as part of a 
+   commercial product except as described in the file COPYING.DOC.
 
-   providing it is made clear that this program is free and that the source
-   code is provided with the program.
-
-****************************************************************************
+**************************************************************************
 
    Description:
    ============
+
    Structure definitions for ReadCSSR()
 
 ****************************************************************************
@@ -41,6 +47,11 @@
 
    Revision History:
    =================
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
+-  V1.2  31.07.14 Updated deprecation: Removed deprecated.h and added 
+                  prototypes for renamed functions. By: CTP
+-  V1.3  14.08.14 Moved deprecated function prototypes to deprecated.h 
+                  By: CTP
 
 ***************************************************************************/
 #ifndef _CSSR_H
@@ -74,15 +85,22 @@ typedef struct cssr_entry CSSR;
 /************************************************************************/
 /* Prototypes
 */
-CSSR *ReadCSSR(FILE *fp, int *natom, char *name, char *title);
-PDB *ReadCSSRasPDB(FILE *fp, int *natom);
-void NormaliseCSSR(CSSR *cssr, REAL cell[3], REAL alpha, REAL beta,
-                   REAL gamma);
-void NormalisePDB(PDB *pdb, REAL cell[3], REAL alpha, REAL beta,
-                  REAL gamma);
-void ortho(REAL cell[3], REAL alpha, REAL beta, REAL gamma,
+CSSR *blReadCSSR(FILE *fp, int *natom, char *name, char *title);
+PDB *blReadCSSRasPDB(FILE *fp, int *natom);
+void blNormaliseCSSR(CSSR *cssr, REAL cell[3], REAL alpha, REAL beta,
+                     REAL gamma);
+void blNormalisePDB(PDB *pdb, REAL cell[3], REAL alpha, REAL beta,
+                    REAL gamma);
+void blOrtho(REAL cell[3], REAL alpha, REAL beta, REAL gamma,
            REAL amatrx[3][3], int isw, int ncode);
-void padterm(char *string, int len);
-void WriteCSSR(FILE *fp, CSSR *cssr, char *name, char *title);
+/* void blPadterm(char *string, int len);*/ /* defined in general.h */
+void blWriteCSSR(FILE *fp, CSSR *cssr, char *name, char *title);
+
+/************************************************************************/
+/* Include deprecated functions                                         */
+#define _CSSR_H_DEPRECATED
+#include "deprecated.h"
+/************************************************************************/
+
 
 #endif

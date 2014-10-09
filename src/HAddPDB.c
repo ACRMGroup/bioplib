@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       HAddPDB.c
+   \file       HAddPDB.c
    
-   Version:    V2.16R
-   Date:       24.01.06
-   Function:   Add hydrogens to a PDB linked list
+   \version    V2.18
+   \date       26.08.14
+   \brief      Add hydrogens to a PDB linked list
    
-   Copyright:  (c) SciTech Software 1990-2006
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
    Routine to add hydrogens to a protein linked list of type PDB.
    The routine allocates space for the new atoms and inserts them
    into the list at the appropriate positions within the residues.
@@ -37,15 +49,21 @@
 
    Usage:
    ======
+
+\code
    nhyd = HAddPDB(fp,pdb)
-   Input:         FILE   *fp        File containing proton generation
-                                    parameters.
-   Input/Output:  PDB    *pdb       Linked list of protein structure.
-   Returns:       int               Number of hydrogens added.
+\endcode
+
+   \param[in]        *fp         File containing proton generation
+                                 parameters.
+   \param[in,out]    *pdb        Linked list of protein structure.
+   \return                       Number of hydrogens added.
 
    The globally defined structure gHaddInfo gives information on the 
    number of each hydrogen type created. This structure is defined as
    follows:
+
+\code
    typdef struct
    {
       int   Total,      Total hydrogens
@@ -55,6 +73,8 @@
             T4,         Type 4 sp2 C-H's,>N-H
             T5;         Type 5 O-H's =N-H's
    }  HADDINFO;
+\endcode
+
    To examine these values in your code, reference the structure as:
    extern HADDINFO gHaddInfo;
 
@@ -62,17 +82,17 @@
 
    Revision History:
    =================
-   V2.0  16.05.90 AddH is changed to insert each set of atoms for each 
+-  V2.0  16.05.90 AddH is changed to insert each set of atoms for each 
                   PGP, on the fly, rather than building a complete list 
                   of hydrogens and then merging the two lists. This allows
                   us to get round the problem of missing atoms, since 
                   there will be no merging error.
 
-   V2.1  24.05.90 Returns the number fo hydrogens added. Also fixes bug 
+-  V2.1  24.05.90 Returns the number fo hydrogens added. Also fixes bug 
                   relating to number of type 2 and type 3 H's added.
                   Doesn't work under UNIX!
 
-   V2.2  15.07.91 A few bits of tidying up:
+-  V2.2  15.07.91 A few bits of tidying up:
                   >  Now uses macros.h rather than defining macros itself. 
                   >  Arrays now changed so should fix alignment problems 
                      under UNIX. 
@@ -87,23 +107,28 @@
                   >  Bug fix for type 3's
                   Currently untested under UNIX.
 
-   V2.3  27.07.93 Changed to use fsscanf() and I/O precision is double
-   V2.4  08.03.94 Changed static variable names and added casts on
+-  V2.3  27.07.93 Changed to use fsscanf() and I/O precision is double
+-  V2.4  08.03.94 Changed static variable names and added casts on
                   maths functions. Added Dummy atom handling in makeh().
                   A few other bits of tidying.
-   V2.5  23.08.94 Added OpenPGPFile() routine
-   V2.6  01.09.94 Fixed bug in some compilers in ReadPGP()
-   V2.7  26.01.96 Wasn't handling insert codes in PDB.
-   V2.8  24.05.99 Fixed two memory leaks in makeh()
+-  V2.5  23.08.94 Added OpenPGPFile() routine
+-  V2.6  01.09.94 Fixed bug in some compilers in ReadPGP()
+-  V2.7  26.01.96 Wasn't handling insert codes in PDB.
+-  V2.8  24.05.99 Fixed two memory leaks in makeh()
                   Also skips HETATMs in GenH()
-   V2.9  30.05.02 Changed PDB field from 'junk' to 'record_type'
-   V2.10 05.12.02 Correctly sets the atnam_raw field
-   V2.11 27.03.03 Fixed severe memory leak in AddH()
-   V2.12 03.06.05 Added altpos
-   V2.13 28.07.05 Added conditionals for msdos and Mac OS/X
-   V2.14 28.11.05 No longer exits if previous C is missing
-   V2.15 24.01.06 Fixed error message in GenH() which could try to print 
+-  V2.9  30.05.02 Changed PDB field from 'junk' to 'record_type'
+-  V2.10 05.12.02 Correctly sets the atnam_raw field
+-  V2.11 27.03.03 Fixed severe memory leak in AddH()
+-  V2.12 03.06.05 Added altpos
+-  V2.13 28.07.05 Added conditionals for msdos and Mac OS/X
+-  V2.14 28.11.05 No longer exits if previous C is missing
+-  V2.15 24.01.06 Fixed error message in GenH() which could try to print 
                   from NULL pointer
+-  V2.16 20.03.14 Updated error message in GenH(). By: CTP
+-  V2.17 07.07.14 Use bl prefix for functions By: CTP
+-  V2.18 26.08.14 Moved use of ok variable into #ifdef SCREEN_INFO and
+                  cleaned up use of n and nt variables instead of literal
+                  strings
 
 *************************************************************************/
 /* Includes
@@ -173,11 +198,14 @@ static void SetRawAtnam(char *out, char *in);
 static PDB  *StripDummyH(PDB *pdb, int *nhyd);
 
 /************************************************************************/
-/*>int HAddPDB(FILE *fp, PDB  *pdb)
-   --------------------------------
-   Input:   FILE     *fp       File pointer to PGP file
-   I/O:     PDB      *pdb      PDB Linked list to which Hs are added
-   Returns: int                Number of Hs added. 0 if error.
+/*>int blHAddPDB(FILE *fp, PDB  *pdb)
+   ----------------------------------
+*//**
+
+   \param[in]     *fp       File pointer to PGP file
+   \param[in,out] *pdb      PDB Linked list to which Hs are added
+   \return                        Number of Hs added. 0 if error.
+
    Globals: HADDINFO gHaddInfo Information on Hs added
 
    This routine adds hydrogens to a PDB linked list. Performs all
@@ -188,13 +216,14 @@ static PDB  *StripDummyH(PDB *pdb, int *nhyd);
    may be used for this purpose if CHARMM/CONGEN style hydrogens are
    required.
 
-   16.05.90 Original    By: ACRM
-   04.01.94 Changed check on return=NULL to 0
-   08.03.94 Only reads PGP on first call. err_flag changed to BOOL.
-   28.11.05 Removes any dummy hydrogens added because there were
+-  16.05.90 Original    By: ACRM
+-  04.01.94 Changed check on return=NULL to 0
+-  08.03.94 Only reads PGP on first call. err_flag changed to BOOL.
+-  28.11.05 Removes any dummy hydrogens added because there were
             missing atoms
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int HAddPDB(FILE *fp, PDB  *pdb)
+int blHAddPDB(FILE *fp, PDB  *pdb)
 {
    PDB            *p;
    int            nhydrogens,
@@ -207,7 +236,7 @@ int HAddPDB(FILE *fp, PDB  *pdb)
    {
       /* Read the parameter file                                        */
       FirstCall = FALSE;
-      ReadPGP(fp);
+      blReadPGP(fp);
    }
 
    /* Generate the hydrogens                                            */
@@ -225,10 +254,12 @@ int HAddPDB(FILE *fp, PDB  *pdb)
 }
 
 /************************************************************************/
-/*>int ReadPGP(FILE *fp)
-   ---------------------
-   Input:   FILE *fp  Pointer to PGP file.
-   Returns: int       Number of parameters read.
+/*>int blReadPGP(FILE *fp)
+   -----------------------
+*//**
+
+   \param[in]     *fp  Pointer to PGP file.
+   \return               Number of parameters read.
 
    Read a proton generation parameter file. All data are placed in static
    arrays used by the hydrogen adding routines.
@@ -236,12 +267,13 @@ int HAddPDB(FILE *fp, PDB  *pdb)
    It is only necessary to call this routine explicitly if the PGP file
    is changed between calls to HAddPDB() and thus needs re-reading.
 
-   16.05.90 Original    By: ACRM
-   27.07.93 Changed to use fsscanf()
-   01.03.94 Changed static variable names
-   01.09.94 Moved n++ out of the fsscanf()
+-  16.05.90 Original    By: ACRM
+-  27.07.93 Changed to use fsscanf()
+-  01.03.94 Changed static variable names
+-  01.09.94 Moved n++ out of the fsscanf()
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int ReadPGP(FILE *fp)
+int blReadPGP(FILE *fp)
 {
    char  buffer[160];
    int   n=0;
@@ -285,20 +317,23 @@ int ReadPGP(FILE *fp)
 /************************************************************************/
 /*>static int GenH(PDB *pdb, BOOL *err_flag)
    -----------------------------------------
-   I/O:     PDB  *pdb      PDB Linked to which Hs are added
-            BOOL *err_flag Error flag
-   Returns: int            Number of hydrogens added (0 if error)
+*//**
+
+   \param[in,out] *pdb      PDB Linked to which Hs are added
+   \param[in,out] *err_flag Error flag
+   \return                    Number of hydrogens added (0 if error)
 
    Does the actual work of generating a set of hydrogens
 
-   16.05.90 Original    By: ACRM
-   01.03.94 Changed static variable names
-   08.03.94 Changed err_flag to BOOL
-   26.01.96 Added check on insert code as well as resnum
-   28.11.05 Modified such that a missing preceeding C no longer causes
+-  16.05.90 Original    By: ACRM
+-  01.03.94 Changed static variable names
+-  08.03.94 Changed err_flag to BOOL
+-  26.01.96 Added check on insert code as well as resnum
+-  28.11.05 Modified such that a missing preceeding C no longer causes
             the routine to exit
-   24.01.06 Fixed error message which could try to print from NULL 
+-  24.01.06 Fixed error message which could try to print from NULL 
             pointer
+-  20.03.14 Updated error message. By: CTP
 */
 static int GenH(PDB *pdb, BOOL *err_flag)
 {
@@ -470,7 +505,7 @@ in residue %d\n\n",p->resnum);
             if(p!=NULL)
             {
                fprintf(stderr,"Warning=> genh() found no carbonyl carbon \
-preceeding residue %c%d%c\n", p->chain[0], p->resnum, p->insert[0]);
+preceeding residue %s%d%s\n", p->chain, p->resnum, p->insert);
             }
             else
             {
@@ -518,13 +553,15 @@ preceeding the last residue\n");
 /*>static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta, 
                      BOOL firstres)
    -----------------------------------------------------------------
-   Input:   int  HType    Hydrogen type number
-            REAL BondLen  Length of the bond to the added hydrogen
-            REAL alpha    The first angle defining the H coordinate
-            REAL beta     The second angle defining the H coordinate
-            REAL firstres If set, don't add a planar hydrogen as it's 
+*//**
+
+   \param[in]     HType    Hydrogen type number
+   \param[in]     BondLen  Length of the bond to the added hydrogen
+   \param[in]     alpha    The first angle defining the H coordinate
+   \param[in]     beta     The second angle defining the H coordinate
+   \param[in]     firstres If set, don't add a planar hydrogen as it's 
                           the first residue of a chain
-   Returns: PDB *         Pointer to linked list of created hydrogens.
+   \return                   Pointer to linked list of created hydrogens.
                           NULL if memory allocation fails or this is the 
                           Nter N where we don't require a planar H or
                           all atoms have been done.
@@ -533,13 +570,16 @@ preceeding the last residue\n");
    in static external variables. A linked list containing the 
    appropriate number of Hs is returned.
 
-   16.05.90 Original    By: ACRM
-   08.03.94 Added code to handle dummy atom positions (All occurences
+-  16.05.90 Original    By: ACRM
+-  08.03.94 Added code to handle dummy atom positions (All occurences
             of variable `Dummy'). Made assigned character strings static.
-   26.01.96 Now stores insert codes into hlist
-   24.05.99 Fixed two memory leaks
-   05.12.02 Added setting of atnam_raw
-   03.06.05 Added setting of altpos
+-  26.01.96 Now stores insert codes into hlist
+-  24.05.99 Fixed two memory leaks
+-  05.12.02 Added setting of atnam_raw
+-  03.06.05 Added setting of altpos
+-  07.07.14 Use bl prefix for functions By: CTP
+-  26.08.14 Used n and nt variables consistently instead of literal
+            strings. Moved all use of 'ok' variable into SCREEN_INFO
 */
 static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta, 
                   BOOL firstres)
@@ -569,10 +609,9 @@ static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta,
                   xv,yv,zv,
                   scalpr;
    int            kount = 0,
-                  num_ant,k,jj;
+                  num_ant,k;
    unsigned short nt_point;
-   BOOL           ok,
-                  Dummy;
+   BOOL           Dummy;
    PDB            *hlist,
                   *hlist_start = NULL;
 
@@ -603,13 +642,13 @@ static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta,
    {
       if(nt_point) 
       {
-         strcpy(sGNat[nt_point],"N   ");
+         strcpy(sGNat[nt_point],n);
          nt_point=0;
       }
 
       if(!strncmp(sGHName[1],sGNat[k],4))
       {
-         if(!strncmp(sGNat[k],"NT  ",4)) nt_point=k;
+         if(!strncmp(sGNat[k],nt,4)) nt_point=k;
          kount++;
          x1=sGX[k];
          y1=sGY[k];
@@ -623,7 +662,7 @@ static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta,
       }
       else if(!strncmp(sGHName[2],sGNat[k],4))
       {
-         if(!strncmp(sGNat[k],"NT  ",4)) nt_point=k;
+         if(!strncmp(sGNat[k],nt,4)) nt_point=k;
          kount++;
          x2=sGX[k];
          y2=sGY[k];
@@ -637,7 +676,7 @@ static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta,
       }
       else if(!strncmp(sGHName[3],sGNat[k],4))
       {
-         if(!strncmp(sGNat[k],"NT  ",4)) nt_point=k;
+         if(!strncmp(sGNat[k],nt,4)) nt_point=k;
          kount++;
          x3=sGX[k];
          y3=sGY[k];
@@ -651,7 +690,7 @@ static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta,
       }
       else if(!strncmp(sGHName[4],sGNat[k],4))
       {
-         if(!strncmp(sGNat[k],"NT  ",4)) nt_point=k;
+         if(!strncmp(sGNat[k],nt,4)) nt_point=k;
          kount++;
          x4=sGX[k];
          y4=sGY[k];
@@ -668,7 +707,10 @@ static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta,
    /* Check we found all the atoms we need for this PGP                 */
    if(kount != num_ant)
    {
-      ok = FALSE;
+#ifdef SCREEN_INFO
+      BOOL ok = FALSE;
+      int  jj;
+
       if(firstres)
       {
          /* Check it's not the missing N in the first residue           */
@@ -679,7 +721,6 @@ static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta,
          /* Check it's not just the NT                                  */
          for(jj=1;jj<=4;jj++) if(!strncmp(sGHName[jj],nt,4)) ok = TRUE;
       }
-#ifdef SCREEN_INFO
       if(!ok)
       {
          char buffer[160];
@@ -747,7 +788,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 
       hlist->resnum=sNo;
       hlist->insert[0]=sIns;              /* 26.01.96                   */
-      padterm(hlist->insert,4);
+      blPadterm(hlist->insert,4);
       strcpy(hlist->atnam,sGHName[5]);
       SetRawAtnam(hlist->atnam_raw, sGHName[5]);   /* 05.12.02          */
       hlist->altpos = ' ';                         /* 03.06.05          */
@@ -818,7 +859,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 
          hlist->resnum=sNo;
          hlist->insert[0]=sIns;           /* 26.01.96                   */
-         padterm(hlist->insert,4);
+         blPadterm(hlist->insert,4);
          strcpy(hlist->atnam,sGHName[4]);
          SetRawAtnam(hlist->atnam_raw, sGHName[4]);   /* 05.12.02       */
          hlist->altpos = ' ';                         /* 03.06.05       */
@@ -839,7 +880,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 
          hlist->resnum=sNo;
          hlist->insert[0]=sIns;           /* 26.01.96                   */
-         padterm(hlist->insert,4);
+         blPadterm(hlist->insert,4);
          strcpy(hlist->atnam,sGHName[5]);
          SetRawAtnam(hlist->atnam_raw, sGHName[5]);   /* 05.12.02       */
          hlist->altpos = ' ';                         /* 03.06.05       */
@@ -920,7 +961,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 
             hlist->resnum=sNo;
             hlist->insert[0]=sIns;        /* 26.01.96                   */
-            padterm(hlist->insert,4);
+            blPadterm(hlist->insert,4);
             strcpy(hlist->atnam,sGHName[4]);
             SetRawAtnam(hlist->atnam_raw, sGHName[4]);   /* 05.12.02    */
             hlist->altpos = ' ';                         /* 03.06.05    */
@@ -941,7 +982,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 
             hlist->resnum=sNo;
             hlist->insert[0]=sIns;        /* 26.01.96                   */
-            padterm(hlist->insert,4);
+            blPadterm(hlist->insert,4);
             strcpy(hlist->atnam,sGHName[5]);
             SetRawAtnam(hlist->atnam_raw, sGHName[5]);   /* 05.12.02    */
             hlist->altpos = ' ';                         /* 03.06.05    */
@@ -962,7 +1003,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 
             hlist->resnum=sNo;
             hlist->insert[0]=sIns;        /* 26.01.96                   */
-            padterm(hlist->insert,4);
+            blPadterm(hlist->insert,4);
             strcpy(hlist->atnam,sGHName[6]);
             SetRawAtnam(hlist->atnam_raw, sGHName[6]);   /* 05.12.02    */
             hlist->altpos = ' ';                         /* 03.06.05    */
@@ -1003,7 +1044,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 
             hlist->resnum=sNo; 
             hlist->insert[0]=sIns;        /* 26.01.96                   */
-            padterm(hlist->insert,4);
+            blPadterm(hlist->insert,4);
             strcpy(hlist->atnam,sGHName[4]);
             SetRawAtnam(hlist->atnam_raw, sGHName[4]);   /* 05.12.02    */
             hlist->altpos = ' ';                         /* 03.06.05    */
@@ -1060,7 +1101,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 
          hlist->resnum=sNo;
          hlist->insert[0]=sIns;           /* 26.01.96                   */
-         padterm(hlist->insert,4);
+         blPadterm(hlist->insert,4);
          strcpy(hlist->atnam,sGHName[4]);
          SetRawAtnam(hlist->atnam_raw, sGHName[4]);   /* 05.12.02       */
          hlist->altpos = ' ';                         /* 03.06.05       */
@@ -1089,19 +1130,21 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 /************************************************************************/
 /*>static BOOL AddH(PDB *hlist, PDB **position, int HType)
    -------------------------------------------------------
-   Input:   PDB  *hlist       Linked list of hydrogens to be merged
-            PDB  **position   Array of PDB pointers for atoms in this
+*//**
+
+   \param[in]     *hlist       Linked list of hydrogens to be merged
+   \param[in]     **position   Array of PDB pointers for atoms in this
                               residue
-            int  HType        Hydrogen type
-   Returns: BOOL              Success?
+   \param[in]     HType        Hydrogen type
+   \return                      Success?
 
    AddH() merges a list of hydrogens for this atom into the main pdb 
    structure list. Returns FALSE if the procedure failed.
 
-   16.05.90 Original    By: ACRM
-   05.12.02 Added setting of atnam_raw
-   27.03.03 Fixed memory leak - free the hlist when finished
-   03.06.05 Added setting of altpos
+-  16.05.90 Original    By: ACRM
+-  05.12.02 Added setting of atnam_raw
+-  27.03.03 Fixed memory leak - free the hlist when finished
+-  03.06.05 Added setting of altpos
 */
 static BOOL AddH(PDB *hlist, PDB **position, int HType)
 {
@@ -1225,18 +1268,21 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
 }
 
 /************************************************************************/
-/*>FILE *OpenPGPFile(char *pgpfile, BOOL AllHyd)
-   ---------------------------------------------
-   Input:   char   *pgpfile       Name of a PGP file or NULL
-            BOOL   AllHyd         If name of PGP not specified, this
+/*>FILE *blOpenPGPFile(char *pgpfile, BOOL AllHyd)
+   -----------------------------------------------
+*//**
+
+   \param[in]     *pgpfile       Name of a PGP file or NULL
+   \param[in]     AllHyd         If name of PGP not specified, this
                                   flag specified whether all or explicit
                                   hydrogen file required
-   Returns: FILE   *              File pointer
+   \return                          File pointer
 
-   23.08.94 Original    By: ACRM
-   28.07.05 Added conditionals for msdos and Mac OS/X
+-  23.08.94 Original    By: ACRM
+-  28.07.05 Added conditionals for msdos and Mac OS/X
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-FILE *OpenPGPFile(char *pgpfile, BOOL AllHyd)
+FILE *blOpenPGPFile(char *pgpfile, BOOL AllHyd)
 {
    char *datadir,
         buffer[160],
@@ -1295,8 +1341,10 @@ been set.\n",DATAENV);
 /************************************************************************/
 /*>static void SetRawAtnam(char *out, char *in)
    --------------------------------------------
-   Input:     char    *in    Input string
-   Output:    chat    *out   Output string
+*//**
+
+   \param[in]     *in    Input string
+   \param[out]    *out   Output string
 
    Copies the input atom name (a 4-character name) and outputs it to
    a 4-character name starting with a space if the input wtring had
@@ -1304,7 +1352,7 @@ been set.\n",DATAENV);
    last character is moved to the front of the string. This creates
    hydrogen atom names in 'raw' format
 
-   05.12.02 Original   By: ACRM
+-  05.12.02 Original   By: ACRM
 */
 static void SetRawAtnam(char *out, char *in)
 {
@@ -1332,13 +1380,15 @@ static void SetRawAtnam(char *out, char *in)
 /************************************************************************/
 /*>static PDB *StripDummyH(PDB *pdb, int *nhyd)
    --------------------------------------------
-   Input:   PDB    *pdb      Start of PDB linked list
-   I/O:     int    *nhyd     Number of hydrogens
-   Returns: PDB    *         New PDB linked list
+*//**
+
+   \param[in]     *pdb      Start of PDB linked list
+   \param[in,out] *nhyd     Number of hydrogens
+   \return                      New PDB linked list
 
    Strips any dummy hydrogens
 
-   28.11.05 Original   By: ACRM
+-  28.11.05 Original   By: ACRM
 */
 static PDB *StripDummyH(PDB *pdb, int *nhyd)
 {

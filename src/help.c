@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       help.c
+   \file       help.c
    
-   Version:    V1.3R
-   Date:       18.01.95
-   Function:   Provides a simple file-based command line help utility
+   \version    V1.4
+   \date       07.07.14
+   \brief      Provides a simple file-based command line help utility
    
-   Copyright:  (c) SciTech Software 1992-5
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,6 +35,7 @@
 
    Description:
    ============
+
    A pair of routines for handling a help facility. All screen/keyboard
    I/O is via screen() and GetKybdString() routines.
 
@@ -37,20 +43,33 @@
 
    Usage:
    ======
-   DoHelp(string,helpfilename)   This is the normal entry point and should
-                                 be supplied with the complete command 
-                                 including the word `help'. If this is the
-                                 only word given, the routine will prompt
-                                 with Help> and give help on each word 
-                                 typed until return is hit to exit help. 
-                                 If help followed by a keyword is given, 
-                                 help only on that topic will be supplied.
 
-   Help(string,helpfilename)     Generates help from helpfilename on the 
-                                 topic named by string. If this is `help' 
-                                 or `?', available topics will be listed.
+\code
+   blDoHelp(string,helpfilename)
+\endcode
 
-   Help(NULL,"CLOSE")            Used to close the help file
+   This is the normal entry point and should
+   be supplied with the complete command 
+   including the word `help'. If this is the
+   only word given, the routine will prompt
+   with Help> and give help on each word 
+   typed until return is hit to exit help. 
+   If help followed by a keyword is given, 
+   help only on that topic will be supplied.
+
+\code
+   blHelp(string,helpfilename)
+\endcode
+
+   Generates help from helpfilename on the 
+   topic named by string. If this is `help' 
+   or `?', available topics will be listed.
+
+\code
+   blHelp(NULL,"CLOSE")
+\endcode
+
+   Used to close the help file
 
    Under Unix, the environment variable, HELPDIR should be set to
    specify the directory in which help files are stored.
@@ -62,15 +81,16 @@
 
    Revision History:
    =================
-   V1.0  29.09.92 Original
-   V1.1  12.08.93 Returns correctly if help file not found
-   V1.2  04.01.94 Changed DoHelp() to fix problem with compilers which
+-  V1.0  29.09.92 Original
+-  V1.1  12.08.93 Returns correctly if help file not found
+-  V1.2  04.01.94 Changed DoHelp() to fix problem with compilers which
                   don't let you write to strings defined in double 
                   inverted commas and never assigned to a variable.
                   Added getenv call for Unix support
-   V1.3  18.01.95 Help() changed to call OpenFile() rather than handling 
+-  V1.3  18.01.95 Help() changed to call OpenFile() rather than handling 
                   alternative directory internally. Consequently assign 
                   or envvar is called HELPDIR.
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -102,11 +122,13 @@
 */
 
 /************************************************************************/
-/*>void Help(char *string, char *HelpFile)
-   ---------------------------------------
-   Input:   char  *string     Topic on which to provide help. If "help" or
+/*>void blHelp(char *string, char *HelpFile)
+   -----------------------------------------
+*//**
+
+   \param[in]     *string     Topic on which to provide help. If "help" or
                               "?" then list all topics
-            char  *HelpFile   Name of help file, or "CLOSE" to close the
+   \param[in]     *HelpFile   Name of help file, or "CLOSE" to close the
                               help file
 
    Generates help from a help file on the topic named by string. If 
@@ -124,18 +146,19 @@
    specified by the #define HELPENV (normally HELPDIR) will be searched 
    for the help file if not found in the local directory.
    
-   25.09.92 Original
-   28.09.92 Added HELP
-   29.09.92 Changed to file-based version
-   07.10.92 Added paging support
-   12.08.93 Correctly returns if help file not found
-   05.01.94 Handles getenv() call for Unix
-   11.03.94 Resets FirstCall to TRUE when file is closed
-   18.01.95 Calls OpenFile() rather than handling alternative directory
+-  25.09.92 Original
+-  28.09.92 Added HELP
+-  29.09.92 Changed to file-based version
+-  07.10.92 Added paging support
+-  12.08.93 Correctly returns if help file not found
+-  05.01.94 Handles getenv() call for Unix
+-  11.03.94 Resets FirstCall to TRUE when file is closed
+-  18.01.95 Calls OpenFile() rather than handling alternative directory
             internally. Consequently assign or envvar is called HELPDIR.
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void Help(char *string,
-          char *HelpFile)
+void blHelp(char *string,
+            char *HelpFile)
 {
    int         nletters,
                buffpos,
@@ -160,12 +183,12 @@ void Help(char *string,
    {
       BOOL NoEnv;
 
-      if((fp=OpenFile(HelpFile, HELPENV, "r", &NoEnv))==NULL)
+      if((fp=blOpenFile(HelpFile, HELPENV, "r", &NoEnv))==NULL)
       {
-         screen("   Error==> Unable to open help file.\n");
+         blScreen("   Error==> Unable to open help file.\n");
          sprintf(FileBuff,"            The %s environment variable \
 or assign has not been set.\n",HELPENV);
-         screen(FileBuff);
+         blScreen(FileBuff);
          return;
       }
 
@@ -176,7 +199,7 @@ or assign has not been set.\n",HELPENV);
    rewind(fp);
 
    /* If asking from general help, display known commands               */
-   if(match(string,"HELP",&nletters) || string[0] == '?')
+   if(blMatch(string,"HELP",&nletters) || string[0] == '?')
    {
       /* Search the file for keywords, echoing them to the screen       */
       buffpos = 0;
@@ -190,9 +213,9 @@ or assign has not been set.\n",HELPENV);
             {
                buffer[buffpos] = '\0';
 
-               screen("   ");
-               screen(buffer);
-               screen("\n");
+               blScreen("   ");
+               blScreen(buffer);
+               blScreen("\n");
                buffpos = 0;
             }
             for(i=1; i<strlen(FileBuff); i++)
@@ -208,15 +231,15 @@ or assign has not been set.\n",HELPENV);
       {
          buffer[buffpos] = '\0';
 
-         screen("   ");
-         screen(buffer);
-         screen("\n");
+         blScreen("   ");
+         blScreen(buffer);
+         blScreen("\n");
       }
    }
    else  /* Asking for help on a specific subject                       */
    {
       Found = FALSE;
-      PagingOn();
+      blPagingOn();
       
       while(fgets(FileBuff, BUFFLEN, fp))
       {
@@ -225,7 +248,7 @@ or assign has not been set.\n",HELPENV);
          {
             ptr = FileBuff+1;
             UPPER(ptr);
-            if(match(string,ptr,&nletters))
+            if(blMatch(string,ptr,&nletters))
             {
                Found = TRUE;
                while(fgets(FileBuff, BUFFLEN, fp))
@@ -233,29 +256,31 @@ or assign has not been set.\n",HELPENV);
                   TERMINATE(FileBuff);
                   if(FileBuff[0] == '#') break;
 
-                  screen(FileBuff);
-                  screen("\n");
+                  blScreen(FileBuff);
+                  blScreen("\n");
                }
             }
          }
       }
       if(!Found)
       {
-         screen("   Sorry, no help on '");
-         screen(string);
-         screen("'\n");
+         blScreen("   Sorry, no help on '");
+         blScreen(string);
+         blScreen("'\n");
       }
-      PagingOff();
+      blPagingOff();
    }
 }
 
 /************************************************************************/
-/*>void DoHelp(char *string, char *HelpFile)
-   -----------------------------------------
-   Input:   char  *string   String on which to give help, must include
+/*>void blDoHelp(char *string, char *HelpFile)
+   -------------------------------------------
+*//**
+
+   \param[in]     *string   String on which to give help, must include
                             the word "help". If given on its own, sits
                             in a loop prompting for help.
-            char  *HelpFile The help file to search
+   \param[in]     *HelpFile The help file to search
 
    Handles help facility.
    This is the normal entry point and should be supplied with the 
@@ -269,15 +294,16 @@ or assign has not been set.\n",HELPENV);
    help followed by a keyword is given, help only on that topic will be 
    supplied.
    
-   25.09.92 Original
-   28.09.92 Changed to call Help("Help")
-   02.10.92 Added GetKybdString() rather than gets() 
-   04.01.94 Changed to fix problem with compilers which
+-  25.09.92 Original
+-  28.09.92 Changed to call Help("Help")
+-  02.10.92 Added GetKybdString() rather than gets() 
+-  04.01.94 Changed to fix problem with compilers which
             don't let you write to strings defined in double 
             inverted commas and never assigned to a variable
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void DoHelp(char *string,
-            char *HelpFile)
+void blDoHelp(char *string,
+              char *HelpFile)
 {
    int   i;
    char  *str,
@@ -298,24 +324,24 @@ void DoHelp(char *string,
    else
    {
       /* No keyword was specified, so give help on help                 */
-      Help("Help",HelpFile);
+      blHelp("Help",HelpFile);
    }
    
    
    if(str)  /* If specified, just give help on the keyword              */
    {
-      Help(str,HelpFile);
+      blHelp(str,HelpFile);
    }
    else     /* Sit in a loop handling each keyword                      */
    {
       for(;;)
       {
-         prompt("Help");
-         GetKybdString(buffer, 160);
+         blPrompt("Help");
+         blGetKybdString(buffer, 160);
 
          TERMINATE(buffer);
          if(buffer[0])
-            Help(buffer,HelpFile);
+            blHelp(buffer,HelpFile);
          else
             break;
       }

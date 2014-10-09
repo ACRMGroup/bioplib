@@ -1,29 +1,33 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       safemem.h
+   \file       safemem.h
    
-   Version:    V1.0
-   Date:       23.06.95
-   Function:   Safe malloc()/free() routines which check for array 
+   \version    V1.4
+   \date       14.08.14
+   \brief      Safe malloc()/free() routines which check for array 
                overflow on free.
    
-   Copyright:  (c) SciTech Software 1995
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   Fax:        +44 (0) 1372 813069
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1995-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -32,6 +36,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -43,21 +48,36 @@
 
    Revision History:
    =================
-   V1.0  23.06.95 Original
-   V1.1  03.07.06 Added safeleaks() prototype
+-  V1.0  23.06.95 Original
+-  V1.1  03.07.06 Added safeleaks() prototype
+-  V1.2  07.07.14 Use bl prefix for functions By: CTP
+-  V1.3  31.07.14 Updated deprecation: Removed deprecated.h and added 
+                  prototypes for renamed functions. By: CTP
+-  V1.4  14.08.14 Moved deprecated function prototypes to deprecated.h 
+                  Use blSafefree instead of safefree for macros.
+                  By: CTP
 
 *************************************************************************/
 #ifndef _SAFEMEM_H
 #define _SAFEMEM_H
 
 /* Includes                                                             */
-#include "bioplib/SysDefs.h"
+#include "SysDefs.h"
 
 /* Prototypes                                                           */
-void *safemalloc(int nbytes);
-BOOL safefree(void *ptr);
-void safeleaks(void);
+void *blSafemalloc(int nbytes);
+BOOL blSafefree(void *ptr);
+void blSafeleaks(void);
 
+
+/************************************************************************/
+/* Include deprecated functions                                         */
+#define _SAFEMEM_H_DEPRECATED
+# include "deprecated.h" 
+/************************************************************************/
+
+
+/************************************************************************/
 /* Undefine memory macros defined by macros.h                           */
 #ifdef _MACROS_H
 #undef INIT
@@ -69,15 +89,15 @@ void safeleaks(void);
 #endif
 
 /* Redefine macros to use safe versions of malloc()/free()              */
-#define INIT(x,y) do { x=(y *)safemalloc(sizeof(y));                     \
+#define INIT(x,y) do { x=(y *)blSafemalloc(sizeof(y));                   \
                     if(x != NULL) x->next = NULL; } while(0)
-#define INITPREV(x,y) do { x=(y *)safemalloc(sizeof(y));                 \
+#define INITPREV(x,y) do { x=(y *)blSafemalloc(sizeof(y));               \
                        if(x != NULL) {x->next = NULL; x->prev = NULL;} } \
                       while(0)
-#define ALLOCNEXT(x,y) do { (x)->next=(y *)safemalloc(sizeof(y));        \
+#define ALLOCNEXT(x,y) do { (x)->next=(y *)blSafemalloc(sizeof(y));      \
                          if((x)->next != NULL) { (x)->next->next=NULL; } \
                          NEXT(x); } while(0)
-#define ALLOCNEXTPREV(x,y) do { (x)->next=(y *)safemalloc(sizeof(y));    \
+#define ALLOCNEXTPREV(x,y) do { (x)->next=(y *)blSafemalloc(sizeof(y));  \
                              if((x)->next != NULL)                       \
                              { (x)->next->prev = (x);                    \
                                (x)->next->next=NULL; }                   \
@@ -89,7 +109,7 @@ void safeleaks(void);
 #define FREELIST(y,z)   while((y)!=NULL)                                 \
                         {  z *_freelist_macro_q;                         \
                            _freelist_macro_q = (y)->next;                \
-                           safefree((char *)(y));                        \
+                           blSafefree((char *)(y));                      \
                            (y) = _freelist_macro_q;                      \
                         }
 #define ORDFREELIST(y,z)   while((y)!=NULL)                              \
@@ -107,7 +127,7 @@ void safeleaks(void);
    as item->next). One can therefore simply call the routine N time
    to delete N items. If start or item is NULL, does nothing
 
-   16.02.95 Original    By: ACRM
+-  16.02.95 Original    By: ACRM
 */
 #define DELETE(x, y, z)                                                  \
 do {                                                                     \
@@ -127,14 +147,14 @@ do {                                                                     \
             if(_delete_macro_prev == NULL)                               \
             {                                                            \
                _delete_macro_temp = (x)->next;                           \
-               safefree(x);                                              \
+               blSafefree(x);                                            \
                (x) = _delete_macro_temp;                                 \
                break;                                                    \
             }                                                            \
             else                                                         \
             {                                                            \
                _delete_macro_prev->next = _delete_macro_p->next;         \
-               safefree(_delete_macro_p);                                \
+               blSafefree(_delete_macro_p);                              \
             }                                                            \
          }                                                               \
          _delete_macro_prev = _delete_macro_p;                           \

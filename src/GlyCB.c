@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       GlyCB.c
+   \file       GlyCB.c
    
-   Version:    V1.0
-   Date:       04.01.06
-   Function:   Add C-beta atoms to glycines as pseudo-atoms for use
+   \version    V1.1
+   \date       07.07.14
+   \brief      Add C-beta atoms to glycines as pseudo-atoms for use
                in orientating residues
-   Copyright:  (c) Dr. Andrew C. R. Martin, UCL, 2006
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 2006-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
    Based on the code from HAddPDB.c adds a C-beta to one or all glycine
    residues.
 
@@ -36,7 +48,8 @@
 
    Revision History:
    =================
-   04.01.06 V1.0   Original  By: ACRM
+-  04.01.06 V1.0   Original  By: ACRM
+-  07.07.14 V1.1   Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -66,17 +79,20 @@
 */
 
 /************************************************************************/
-/*>BOOL AddCBtoGly(PDB *pdb)
-   -------------------------
-   I/O:      PDB   *pdb     The PDB linked list for a Glycine
-   Returns:  BOOL           Success?
+/*>BOOL blAddCBtoGly(PDB *pdb)
+   ---------------------------
+*//**
+
+   \param[in,out] *pdb     The PDB linked list for a Glycine
+   \return                   Success?
 
    Adds a CB atom to a glycine. This is used when one needs to orientate
    a residue in a common frame of reference which makes use of the CB.
 
-   04.01.06 Original   By: ACRM
+-  04.01.06 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL AddCBtoGly(PDB *pdb)
+BOOL blAddCBtoGly(PDB *pdb)
 {
    PDB *n       = NULL,
        *ca      = NULL,
@@ -99,14 +115,14 @@ BOOL AddCBtoGly(PDB *pdb)
    if(strncmp(pdb->resnam, "GLY", 3))
       return(FALSE);
    
-   if((n  = FindAtomInRes(pdb, "N"))==NULL)
+   if((n  = blFindAtomInRes(pdb, "N"))==NULL)
       return(FALSE);
       
-   if((ca = FindAtomInRes(pdb, "CA"))==NULL)
+   if((ca = blFindAtomInRes(pdb, "CA"))==NULL)
       return(FALSE);
-   if((c  = FindAtomInRes(pdb, "C"))==NULL)
+   if((c  = blFindAtomInRes(pdb, "C"))==NULL)
       return(FALSE);
-   if((o  = FindAtomInRes(pdb, "O"))==NULL)
+   if((o  = blFindAtomInRes(pdb, "O"))==NULL)
       return(FALSE);
 
    x1 = n->x;
@@ -166,7 +182,7 @@ BOOL AddCBtoGly(PDB *pdb)
    {
       return(FALSE);
    }
-   CopyPDB(cb,o);
+   blCopyPDB(cb,o);
    /* Put it into the linked list after the backbone oxygen             */
    cb->next = o->next;
    o->next = cb;
@@ -189,26 +205,29 @@ BOOL AddCBtoGly(PDB *pdb)
 
 
 /************************************************************************/
-/*>BOOL AddCBtoAllGly(PDB *pdb)
-   ----------------------------
-   I/O:      PDB   *pdb     The PDB linked list
-   Returns:  BOOL           Success?
+/*>BOOL blAddCBtoAllGly(PDB *pdb)
+   ------------------------------
+*//**
+
+   \param[in,out] *pdb     The PDB linked list
+   \return                   Success?
 
    Adds a CB atom to all glycines in a PDB linked list. This is used 
    when one needs to orientate a residue in a common frame of reference 
    which makes use of the CB.
 
-   04.01.06 Original   By: ACRM
+-  04.01.06 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL AddCBtoAllGly(PDB *pdb)
+BOOL blAddCBtoAllGly(PDB *pdb)
 {
    PDB *p;
    
-   for(p=pdb; p!=NULL; p=FindNextResidue(p))
+   for(p=pdb; p!=NULL; p=blFindNextResidue(p))
    {
       if(!strncmp(p->resnam, "GLY", 3))
       {
-         if(!AddCBtoGly(p))
+         if(!blAddCBtoGly(p))
             return(FALSE);
       }
    }
@@ -217,19 +236,22 @@ BOOL AddCBtoAllGly(PDB *pdb)
 
 
 /************************************************************************/
-/*>PDB *StripGlyCB(PDB *pdb)
-   -------------------------
-   I/O:      PDB   *pdb     The PDB linked list
-   Returns:  PDB   *        The modified linked list
+/*>PDB *blStripGlyCB(PDB *pdb)
+   ---------------------------
+*//**
+
+   \param[in,out] *pdb     The PDB linked list
+   \return                    The modified linked list
 
    Removes all Glycine CB pseudo-atoms added by AddGlyCB()
    The linked list is modified in-place, but the return value
    should be used in case the very first item in the linked list
    is a Gly-CB which will be removed by the code.
 
-   04.01.06 Original   By: ACRM
+-  04.01.06 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *StripGlyCB(PDB *pdb)
+PDB *blStripGlyCB(PDB *pdb)
 {
    PDB *p,
        *prev = NULL;

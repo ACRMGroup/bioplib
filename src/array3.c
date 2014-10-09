@@ -1,44 +1,47 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       array3.c
+   \file       array3.c
    
-   Version:    V1.0R
-   Date:       30.50.02
-   Function:   Allocate and free 3D arrays
+   \version    V1.1
+   \date       07.07.14
+   \brief      Allocate and free 3D arrays
    
-   Copyright:  (c) Dr. Andrew C. R. Martin, University of Reading, 2002
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-               +44 (0) 7973 431635
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002-14
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
- 
-   CVS Tags:
-   =========
- 
-   Last modified by:    $Author: martin $
-   Tag:                 $Name:  $
-   Revision:            $Revision: 1.1 $
- 
-**************************************************************************
 
-   This code is copyright solely of Dr. Andrew C. R. Martin.
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
+   according to the conditions laid out in the accompanying file
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
+
+   The code may not be sold commercially or included as part of a 
+   commercial product except as described in the file COPYING.DOC.
 
 **************************************************************************
 
    Description:
    ============
+
    Creates a 3D array where the first dimension is a set of pointers. This
    is better for passing into subroutines than the conventional C method
    of simply declaring:
+
       TYPE  matrix[10][10][10];
+
    which, when passed to a fuunction, loses the concept of dimensions
    unless the matrix is explicitly defined with these dimension in the
    function.
@@ -52,21 +55,25 @@
    ======
    matrix = (TYPE ***)Array3D(sizeof(TYPE), nrows, ncolumns, nplanes);
    
-   e.g.
+\code
    matrix = (float **)Array3D(sizeof(float), 10, 10, 10);
-   
+\endcode
+
    Returns NULL (having freed any allocated memory) if there is a problem.
 
 **************************************************************************
 
    Revision History:
    =================
-   V1.0  30.05.02 Original
+-  V1.0  30.05.02 Original
+-  V1.1  07.07.14 Include array.h. Remove FreeArray3D() prototype. 
+         Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
 */
 #include <stdlib.h>
+#include "array.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -83,24 +90,27 @@
 /************************************************************************/
 /* Prototypes
 */
-void FreeArray3D(char ***array, int dim1, int dim2, int dim3);
+
 
 /************************************************************************/
-/*>char ***Array3D(int size, int dim1, int dim2, int dim3)
-   -------------------------------------------------------
-   Input:   int   size    Size of an array element
-            int   dim1    First dimension (number of rows)
-            int   dim2    Second dimension (number of columns)
-            int   dim3    Third dimension (number of planes)
-   Returns: char  ***     Array of pointers. Must be cast to required 
+/*>char ***blArray3D(int size, int dim1, int dim2, int dim3)
+   ---------------------------------------------------------
+*//**
+
+   \param[in]     size    Size of an array element
+   \param[in]     dim1    First dimension (number of rows)
+   \param[in]     dim2    Second dimension (number of columns)
+   \param[in]     dim3    Third dimension (number of planes)
+   \return                Array of pointers. Must be cast to required 
                           type
 
    Create a 3D array of elements of size `size' with dimensions `dim1' 
    rows by `dim2' columns by `dim3' planes
 
-   30.05.02 Original
+-  30.05.02 Original
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char ***Array3D(int size, int dim1, int dim2, int dim3)
+char ***blArray3D(int size, int dim1, int dim2, int dim3)
 {
    char  ***array  = NULL;
    int   i, j;
@@ -134,25 +144,28 @@ char ***Array3D(int size, int dim1, int dim2, int dim3)
    return(array);
    
 badexit:
-   FreeArray3D(array, dim1, dim2, dim3);
+   blFreeArray3D(array, dim1, dim2, dim3);
 
    return(NULL);
 }
 
 /************************************************************************/
-/*>void FreeArray3D(char ***array, int dim1, int dim2, int dim3)
-   -------------------------------------------------------------
-   Input:   char  ***   Array of pointers to be freed
-            int   dim1  First dimension (number of rows)
-            int   dim2  Second dimension (number of columns)
-            int   dim3  Third dimension (number of planes)
+/*>void blFreeArray3D(char ***array, int dim1, int dim2, int dim3)
+   ---------------------------------------------------------------
+*//**
+
+   \param[in]     array Array of pointers to be freed
+   \param[in]     dim1  First dimension (number of rows)
+   \param[in]     dim2  Second dimension (number of columns)
+   \param[in]     dim3  Third dimension (number of planes)
 
    Frees a 3D array with dimensions `dim1' rows by `dim2' columns by
    `dim3' planes.
 
-   30.05.02 Original
+-  30.05.02 Original
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void FreeArray3D(char ***array, int dim1, int dim2, int dim3)
+void blFreeArray3D(char ***array, int dim1, int dim2, int dim3)
 {
    int   i, j;
    

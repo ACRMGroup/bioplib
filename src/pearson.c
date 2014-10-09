@@ -1,22 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       pearson.c
+   \file       pearson.c
    
-   Version:    V1.2
-   Date:       06.10.98
-   Function:   
+   \version    V1.3
+   \date       07.07.14
+   \brief      
    
-   Copyright:  (c) Dr. Andrew C. R. Martin, UCL, 1996-8
-   Author:     Dr. Andrew C. R. Martin
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 1996-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -25,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -35,7 +46,9 @@
 
    Revision History:
    =================
-   V1.0  29.01.96 Original   By: ACRM
+-  V1.0  29.01.96 Original   By: ACRM
+-  V1.3  07.07.14 Use bl prefix for functions By: CTP
+
 
 *************************************************************************/
 /* Includes
@@ -58,18 +71,22 @@
 
 
 /************************************************************************/
-/*>REAL pearson(REAL *x, REAL *y, int NItem)
-   -----------------------------------------
-   Input:   REAL  *x     Array of x items
-            REAL  *x     Array of y items
-            int   NItem  Number of items
-   Returns: REAL         Pearson correlation coefficient
+/*>REAL blPearson(REAL *x, REAL *y, int NItem)
+   -------------------------------------------
+*//**
+
+   \param[in]     *x     Array of x items
+   \param[in]     *y     Array of y items
+   \param[in]     NItem  Number of items
+   \return                 Pearson correlation coefficient
 
    This version makes 2 passes through the data
 
-   15.07.94 Original    By: ACRM
+-  15.07.94 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
+
 */
-REAL pearson(REAL *x, REAL *y, int NItem)
+REAL blPearson(REAL *x, REAL *y, int NItem)
 {
    REAL MeanX,
         MeanY,

@@ -1,0 +1,34 @@
+/**
+
+\page page_04 Manipulating the PDB linked list.
+\brief
+   Bioplib - Functions manipulating the contents of the PDB linked list.
+
+Manipulation of PDB Linked List
+-------------------------------
+
+ATOM records within the PDB linked list can be manipulated with the following functions and macros.
+
+Macros for the creation and deletion of PDB linked lists include:
+ 
+- INIT() - Initiate a new linked lis
+- ALLOCNEXT() - Add a record to the linked list.
+- DELETE() - Deletes a record form the linked list.
+- FREELIST() Free memory for whole linked list.
+- NEXT() Finds next record in linked list allowing construction of a for loop to step through a linked list. (eg for(p=pdb; p != NULL; NEXT(p)){})
+- LAST() finds last record in linked list.
+
+
+The contents of PDB linked lists can be manipulated with the following functions:
+
+- blCopyPDB() Copies PDB record (a single atom).
+- blDupePDB() Duplicates a PDB linked list.
+- blDupeResiduePDB() Duplicates a single residue.
+- blKillPDB() Deletes an atom from the linked list and relinks the list.
+ 
+- blMovePDB() Moves atom record from one linked list to another
+- blAppendPDB() appends a linked list to another linked list.
+ 
+
+
+*/

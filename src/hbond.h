@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       hbond.h
+   \file       hbond.h
    
-   Version:    V1.0
-   Date:       26.01.96
-   Function:   Header file for hbond determining code
+   \version    V1.3
+   \date       14.08.14
+   \brief      Header file for hbond determining code
    
-   Copyright:  (c) SciTech Software 1996
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -40,7 +46,12 @@
 
    Revision History:
    =================
-   V1.0  26.01.96 Original    By: ACRM
+-  V1.0  26.01.96 Original    By: ACRM
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
+-  V1.2  31.07.14 Updated deprecation: Removed deprecated.h and added 
+                  prototypes for renamed functions. By: CTP
+-  V1.3  14.08.14 Moved deprecated function prototypes to deprecated.h 
+                  By: CTP
 
 *************************************************************************/
 #ifndef _hbond_h
@@ -66,10 +77,17 @@
 /************************************************************************/
 /* Prototypes
 */
-int  IsHBonded(PDB *res1, PDB *res2, int type);
-BOOL ValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP);
-int IsMCDonorHBonded(PDB *res1, PDB *res2, int type);
-int IsMCAcceptorHBonded(PDB *res1, PDB *res2, int type);
+int  blIsHBonded(PDB *res1, PDB *res2, int type);
+BOOL blValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP);
+int blIsMCDonorHBonded(PDB *res1, PDB *res2, int type);
+int blIsMCAcceptorHBonded(PDB *res1, PDB *res2, int type);
+
+
+/************************************************************************/
+/* Include deprecated functions                                         */
+#define _hbond_h_deprecated
+#include "deprecated.h"
+/************************************************************************/
 
 
 #endif

@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       SelAtPDB.c
+   \file       SelAtPDB.c
    
-   Version:    V1.8
-   Date:       03.20.09
-   Function:   Select a subset of atom types from a PDB linked list
+   \version    V1.10
+   \date       19.08.14
+   \brief      Select a subset of atom types from a PDB linked list
    
-   Copyright:  (c) SciTech Software 1990-2009
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -25,29 +36,36 @@
    Description:
    ============
 
+
 **************************************************************************
 
    Usage:
    ======
-   pdbout = selectatoms(pdbin,nsel,sel,natom)
+
+\code
+   pdbout = blSelectatomsPDBAsCopy(pdbin,nsel,sel,natom)
+\endcode
 
    This routine takes a linked list of type PDB and returns a list
    containing only those atom types specfied in the sel array.
 
-   Input:   pdbin    *PDB      Input list
-            nsel     int       Number of atom types to keep
-            sel      **char    List of atom types to keep
-   Output:  natom    *int      Number of atoms kept
-   Returns: pdbout   *PDB      Output list
+   \param[in]   pdbin        Input list
+   \param[in]   nsel         Number of atom types to keep
+   \param[in]   sel          List of atom types to keep
+   \param[out]  natom        Number of atoms kept
+   \return                   PDB output list
 
    To set up the list of atoms to keep, define an array of pointers 
    to char:
    e.g.     char *sel[10]
+
    Then define the atoms in the list thus:
+
             SELECT(sel[0],"N   ");
             SELECT(sel[1],"CA  ");
             SELECT(sel[2],"C   ");
             SELECT(sel[3],"O   ");
+
    The SELECT macro returns a character pointer which will be NULL if
    the allocation it performs fails.
 
@@ -58,18 +76,20 @@
 
    Revision History:
    =================
-   V1.0  01.03.90 Original   By: ACRM
-   V1.1  28.03.90 Modified to match new version of pdb.h
-   V1.2  24.05.90 Fixed so the variables passed in as sel[] don't 
+-  V1.0  01.03.90 Original   By: ACRM
+-  V1.1  28.03.90 Modified to match new version of pdb.h
+-  V1.2  24.05.90 Fixed so the variables passed in as sel[] don't 
                   *have* to be 4 chars.
-   V1.3  17.05.93 Modified for book. Returns BOOL.
-   V1.4  09.07.93 Modified to return PDB pointer. Changed allocation 
+-  V1.3  17.05.93 Modified for book. Returns BOOL.
+-  V1.4  09.07.93 Modified to return PDB pointer. Changed allocation 
                   scheme. Changed back to sel[] variables *must* be 4
                   chars.
-   V1.5  01.11.94 Added HStripPDB()
-   V1.6  26.07.95 Removed unused variables
-   V1.7  16.10.96 Added SelectCaPDB()
-   V1.8  04.02.09 SelectAtomsPDB(): Initialize q for fussy compliers
+-  V1.5  01.11.94 Added HStripPDB()
+-  V1.6  26.07.95 Removed unused variables
+-  V1.7  16.10.96 Added SelectCaPDB()
+-  V1.8  04.02.09 SelectAtomsPDB(): Initialize q for fussy compliers
+-  V1.9  07.07.14 Use bl prefix for functions By: CTP
+-  V1.10 19.08.14 Renamed function to blSelectAtomsPDBAsCopy(). By: CTP
 
 *************************************************************************/
 /* Includes
@@ -98,13 +118,16 @@
 */
 
 /************************************************************************/
-/*>PDB *SelectAtomsPDB(PDB *pdbin, int nsel, char **sel, int *natom)
-   -----------------------------------------------------------------
-   Input:   pdbin    *PDB      Input list
-            nsel     int       Number of atom types to keep
-            sel      **char    List of atom types to keep
-   Output:  natom    *int      Number of atoms kept
-   Returns:          *PDB      Output list
+/*>PDB *blSelectAtomsPDBAsCopy(PDB *pdbin, int nsel, char **sel,
+                               int *natom)
+   -------------------------------------------------------------
+*//**
+
+   \param[in]     *pdbin      Input list
+   \param[in]     nsel        Number of atom types to keep
+   \param[in]     **sel       List of atom types to keep
+   \param[out]    *natom      Number of atoms kept
+   \return                    Output list
 
    Take a PDB linked list and returns a list containing only those atom 
    types specified in the sel array.
@@ -113,26 +136,31 @@
    to char:
    e.g.     char *sel[10]
    Then define the atoms in the list thus:
+
+
             SELECT(sel[0],"N   ");
             SELECT(sel[1],"CA  ");
             SELECT(sel[2],"C   ");
             SELECT(sel[3],"O   ");
+
    Ensure the spaces are used!!
 
    N.B. The routine is non-destructive; i.e. the original PDB linked 
         list is intact after the selection process
 
-   01.03.90 Original    By: ACRM
-   28.03.90 Modified to match new version of pdb.h
-   24.05.90 Fixed so the variables passed in as sel[] don't 
+-  01.03.90 Original    By: ACRM
+-  28.03.90 Modified to match new version of pdb.h
+-  24.05.90 Fixed so the variables passed in as sel[] don't 
             *have* to be 4 chars.
-   17.05.93 Modified for book. Returns BOOL.
-   09.07.93 Modified to return PDB pointer. Changed allocation 
+-  17.05.93 Modified for book. Returns BOOL.
+-  09.07.93 Modified to return PDB pointer. Changed allocation 
             scheme. Changed back to sel[] variables *must* be 4
             chars.
-   04.02.09 Initialize q for fussy compliers
+-  04.02.09 Initialize q for fussy compliers
+-  07.07.14 Use bl prefix for functions By: CTP
+-  19.08.14 Renamed function to blSelectAtomsPDBAsCopy(). By: CTP
 */
-PDB *SelectAtomsPDB(PDB *pdbin, int nsel, char **sel, int *natom)
+PDB *blSelectAtomsPDBAsCopy(PDB *pdbin, int nsel, char **sel, int *natom)
 {
    PDB   *pdbout  = NULL,
          *p,
@@ -173,7 +201,7 @@ PDB *SelectAtomsPDB(PDB *pdbin, int nsel, char **sel, int *natom)
             (*natom)++;
             
             /* Copy the record to the output list (sets ->next to NULL) */
-            CopyPDB(q, p);
+            blCopyPDB(q, p);
             
             break;
          }

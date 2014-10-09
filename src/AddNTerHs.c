@@ -1,22 +1,33 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       AddNTerHs.c
+   \file       AddNTerHs.c
    
-   Version:    V1.6R
-   Date:       03.06.05
-   Function:   Routines to add N-terminal hydrogens and C-terminal
+   \version    V1.8
+   \date       07.07.14
+   \brief      Routines to add N-terminal hydrogens and C-terminal
                oxygens.
    
-   Copyright:  (c) SciTech Software 1994-2006
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -26,13 +37,14 @@
    Description:
    ============
 
+
 **************************************************************************
 
    Usage:
    ======
 
    int AddNTerHs(PDB **ppdb, BOOL Charmm)
-   --------------------------------------
+
    This routine is used to generate a set of N-terminal hydrogens.
    By default GROMOS naming is used; the Charmm flag changes this to
    Charmm format in which case an extra NTER residue will be created.
@@ -43,14 +55,16 @@
 
    Revision History:
    =================
-   V1.0  24.08.94 Original    By: ACRM
-   V1.1  05.10.94 Removed unused variables
-   V1.2  12.11.96 If any of the antecedant coordinates are undefined, set
+-  V1.0  24.08.94 Original    By: ACRM
+-  V1.1  05.10.94 Removed unused variables
+-  V1.2  12.11.96 If any of the antecedant coordinates are undefined, set
                   the terminal oxygen to NULL coordinates
-   V1.3  13.11.96 Also checks for missing CA,C and O1 records
-   V1.4  30.05.02 Changed PDB field from 'junk' to 'record_type'
-   V1.5  06.02.03 Handles atnam_raw
-   V1.6  03.06.05 Handles altpos
+-  V1.3  13.11.96 Also checks for missing CA,C and O1 records
+-  V1.4  30.05.02 Changed PDB field from 'junk' to 'record_type'
+-  V1.5  06.02.03 Handles atnam_raw
+-  V1.6  03.06.05 Handles altpos
+-  V1.7  04.02.14 Use CHAINMATCH By: CTP
+-  V1.8  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -80,27 +94,31 @@ static int doAddGromosNTer(PDB **ppdb, PDB *nter);
 static int doAddCharmmNTer(PDB **ppdb, PDB *nter);
 
 /************************************************************************/
-/*>int AddNTerHs(PDB **ppdb, BOOL Charmm)
-   --------------------------------------
-   I/O:     PDB   **pdb      Pointer to pointer to PDB linked list
-   Input:   BOOL  Charmm     Do Charmm style Nter
-   Returns: int              Number of hydrogens added
+/*>int blAddNTerHs(PDB **ppdb, BOOL Charmm)
+   ----------------------------------------
+*//**
+
+   \param[in,out] **ppdb      Pointer to pointer to PDB linked list
+   \param[in]     Charmm      Do Charmm style Nter
+   \return                    Number of hydrogens added
 
    Adds hydrogens onto the N-termini
 
-   23.08.94 Original    By: ACRM
+-  23.08.94 Original    By: ACRM
+-  04.02.14 Use CHAINMATCH By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int AddNTerHs(PDB **ppdb, BOOL Charmm)
+int blAddNTerHs(PDB **ppdb, BOOL Charmm)
 {
    PDB  *p;
-   char chain = '-';
+   char chain[8] = "-";
    int  nhyd  = 0;
    
    for(p = *ppdb; p!=NULL; NEXT(p))
    {
-      if(p->chain[0] != chain)
+      if(!CHAINMATCH(p->chain,chain))
       {
-         chain = p->chain[0];
+         strcpy(chain,p->chain);
 
          /* Kill the H if there is one. Makes the (safe...) assumption 
             that the H won't be the first atom (i.e. ignore the return)
@@ -120,12 +138,14 @@ int AddNTerHs(PDB **ppdb, BOOL Charmm)
 /************************************************************************/
 /*>static PDB *KillNTerH(PDB *pdb)
    -------------------------------
-   I/O:     PDB    *pdb      PDB linked list
-   Returns: PDB    *         New start of linked list
+*//**
+
+   \param[in,out] *pdb      PDB linked list
+   \return                  New start of linked list
 
    Remove the backbone hydrogen from Nter residue
 
-   23.08.94 Original    By: ACRM
+-  23.08.94 Original    By: ACRM
 */
 static PDB *KillNTerH(PDB *pdb)
 {
@@ -133,7 +153,7 @@ static PDB *KillNTerH(PDB *pdb)
        *end,
        *prev = NULL;
 
-   end = FindEndPDB(pdb);
+   end = blFindEndPDB(pdb);
    
    for(p=pdb; p!=end; NEXT(p))
    {
@@ -159,17 +179,19 @@ static PDB *KillNTerH(PDB *pdb)
 /************************************************************************/
 /*>static int doAddGromosNTer(PDB **ppdb, PDB *nter)
    -------------------------------------------------
-   I/O:     PDB   **pdb      Pointer to pointer to PDB linked list
-   Input:   PDB   *nter      Pointer to an N-terminus
-   Returns: int              Number of Hs added (0 if error)
+*//**
+
+   \param[in,out] **ppdb     Pointer to pointer to PDB linked list
+   \param[in]     *nter      Pointer to an N-terminus
+   \return                   Number of Hs added (0 if error)
 
    Does the actual work of adding the hydrogens onto an N terminus
 
-   23.08.94 Original    By: ACRM
-   24.08.94 Set B-values of Hs to 20.0
-   05.10.94 Removed unused variables
-   06.02.03 Handles atnam_raw
-   03.06.05 Handles altpos
+-  23.08.94 Original    By: ACRM
+-  24.08.94 Set B-values of Hs to 20.0
+-  05.10.94 Removed unused variables
+-  06.02.03 Handles atnam_raw
+-  03.06.05 Handles altpos
 */
 static int doAddGromosNTer(PDB **ppdb, PDB *nter)
 {
@@ -183,7 +205,7 @@ static int doAddGromosNTer(PDB **ppdb, PDB *nter)
       for(prev = *ppdb; prev->next != nter; NEXT(prev));
    }
 
-   if(CalcTetraHCoords(nter, coor))
+   if(blCalcTetraHCoords(nter, coor))
    {
       /* Initialise some space to store the 3 extra hydrogens           */
       INIT(H1, PDB);
@@ -192,9 +214,9 @@ static int doAddGromosNTer(PDB **ppdb, PDB *nter)
       if(H1==NULL || H2==NULL || H3==NULL) return(0);
       
       /* Initialise the hydrogens with the res info, etc.               */
-      CopyPDB(H1, nter);
-      CopyPDB(H2, nter);
-      CopyPDB(H3, nter);
+      blCopyPDB(H1, nter);
+      blCopyPDB(H2, nter);
+      blCopyPDB(H3, nter);
       H1->bval = H2->bval = H3->bval = (REAL)20.0;
 
       /* Link these extra records into the linked list                  */
@@ -239,17 +261,19 @@ static int doAddGromosNTer(PDB **ppdb, PDB *nter)
 /************************************************************************/
 /*>static int doAddCharmmNTer(PDB **ppdb, PDB *nter)
    -------------------------------------------------
-   I/O:     PDB   **pdb      Pointer to pointer to PDB linked list
-   Input:   PDB   *nter      Pointer to an N-terminus
-   Returns: int              Number of Hs added (0 if error)
+*//**
+
+   \param[in,out] **ppdb     Pointer to pointer to PDB linked list
+   \param[in]     *nter      Pointer to an N-terminus
+   \return                   Number of Hs added (0 if error)
 
    Does the actual work of adding the hydrogens onto an N terminus
 
-   23.08.94 Original    By: ACRM
-   24.08.94 Set B-values of H3 to 20.0
-   05.10.94 Removed unused variables
-   06.02.03 Handles atnam_raw
-   03.06.05 Handles altpos
+-  23.08.94 Original    By: ACRM
+-  24.08.94 Set B-values of H3 to 20.0
+-  05.10.94 Removed unused variables
+-  06.02.03 Handles atnam_raw
+-  03.06.05 Handles altpos
 */
 static int doAddCharmmNTer(PDB **ppdb, PDB *nter)
 {
@@ -263,7 +287,7 @@ static int doAddCharmmNTer(PDB **ppdb, PDB *nter)
       for(prev = *ppdb; prev->next != nter; NEXT(prev));
    }
 
-   if(CalcTetraHCoords(nter, coor))
+   if(blCalcTetraHCoords(nter, coor))
    {
       /* Initialise some space to store the 3 extra hydrogens           */
       INIT(H1, PDB);
@@ -296,7 +320,7 @@ static int doAddCharmmNTer(PDB **ppdb, PDB *nter)
       strcpy(H2->insert,      " ");
       H2->altpos = ' ';                   /* 03.06.05                   */
 
-      CopyPDB(H3, nter);
+      blCopyPDB(H3, nter);
       strcpy(H3->atnam,  "HT3 ");
       strcpy(H3->atnam_raw,   " HT3");
       H3->bval   = 20.0;

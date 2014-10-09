@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       FixCterPDB.c
+   \file       FixCterPDB.c
    
-   Version:    V1.5R
-   Date:       03.06.05
-   Function:   Routine to add C-terminal oxygens.
+   \version    V1.7
+   \date       07.07.14
+   \brief      Routine to add C-terminal oxygens.
    
-   Copyright:  (c) SciTech Software 1994-2005
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -25,13 +36,14 @@
    Description:
    ============
 
+
 **************************************************************************
 
    Usage:
    ======
 
    BOOL FixCterPDB(PDB *pdb, int style)
-   ------------------------------------
+
    Renames Cter oxygens in the required style (CTER_STYLE_STD,
    CTER_STYLE_GROMOS or CTER_STYLE_CHARMM) and generates a second
    oxygen if required. If the style is CHARMM an extra CTER residue
@@ -41,13 +53,15 @@
 
    Revision History:
    =================
-   V1.0  24.08.94 Original    By: ACRM
-   V1.1  05.10.94 Removed unused variables
-   V1.2  12.11.96 If any of the antecedant coordinates are undefined, set
+-  V1.0  24.08.94 Original    By: ACRM
+-  V1.1  05.10.94 Removed unused variables
+-  V1.2  12.11.96 If any of the antecedant coordinates are undefined, set
                   the terminal oxygen to NULL coordinates
-   V1.3  13.11.96 Also checks for missing CA,C and O1 records
-   V1.4  06.02.03 Handles atnam_raw
-   V1.5  03.06.05 Handles altpos
+-  V1.3  13.11.96 Also checks for missing CA,C and O1 records
+-  V1.4  06.02.03 Handles atnam_raw
+-  V1.5  03.06.05 Handles altpos
+-  V1.6  04.02.14 Use CHAINMATCH By: CTP
+-  V1.7  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -77,28 +91,32 @@ static void StandardiseCTers(PDB *pdb);
 static BOOL SetCterStyle(PDB *start, PDB *end, int style);
 
 /************************************************************************/
-/*>BOOL FixCterPDB(PDB *pdb, int style)
-   ------------------------------------
-   I/O:     PDB  *pdb   PDB linked list to modify
-   Input:   int  style  CTER_STYLE_STD, CTER_STYLE_GROMOS or 
+/*>BOOL blFixCterPDB(PDB *pdb, int style)
+   --------------------------------------
+*//**
+
+   \param[in,out] *pdb   PDB linked list to modify
+   \param[in]     style  CTER_STYLE_STD, CTER_STYLE_GROMOS or 
                         CTER_STYLE_CHARMM
-   Returns: BOOL        Memory allocation OK?
+   \return                Memory allocation OK?
 
    Renames C-ter atoms in required style and calls CalcCterCoords()
    as required to calculate coordinates ans splices them in.
    The input PDB linked list may have standard, CHARMM or GROMOS
    style.
 
-   24.08.94 Original    By: ACRM
-   05.10.94 Removed unused variables
-   12.11.96 If any of the antecedant coordinates are undefined, set
+-  24.08.94 Original    By: ACRM
+-  05.10.94 Removed unused variables
+-  12.11.96 If any of the antecedant coordinates are undefined, set
             the terminal oxygen to NULL coordinates
-   13.11.96 Added check on finding CA,C and O1
+-  13.11.96 Added check on finding CA,C and O1
             If no C or O1 present, OXT not added
-   06.02.03 Handles atnam_raw
-   03.06.05 Handles altpos
+-  06.02.03 Handles atnam_raw
+-  03.06.05 Handles altpos
+-  04.02.14 Use CHAINMATCH By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL FixCterPDB(PDB *pdb, int style)
+BOOL blFixCterPDB(PDB *pdb, int style)
 {
    PDB   *p,
          *start,
@@ -115,9 +133,9 @@ BOOL FixCterPDB(PDB *pdb, int style)
    start = pdb;
    while(start != NULL)
    {
-      end = FindEndPDB(start);
+      end = blFindEndPDB(start);
       
-      if(end==NULL || end->chain[0] != start->chain[0])
+      if(end==NULL || !CHAINMATCH(end->chain,start->chain))
       {
          /* We're in a c-ter residue; find the atoms                    */
          CA = C = O1 = O2 = NULL;
@@ -144,11 +162,11 @@ BOOL FixCterPDB(PDB *pdb, int style)
             INIT(O2, PDB);
             CLEAR_PDB(O2);
             if(O1 != NULL) 
-               CopyPDB(O2, O1);
+               blCopyPDB(O2, O1);
             else if(CA != NULL)
-               CopyPDB(O2, CA);
+               blCopyPDB(O2, CA);
             else if(C != NULL)
-               CopyPDB(O2, C);
+               blCopyPDB(O2, C);
                
             O2->bval = 20.0;
             strcpy(O2->atnam,"OXT ");
@@ -171,7 +189,7 @@ BOOL FixCterPDB(PDB *pdb, int style)
             }
             else
             {
-               if(!CalcCterCoords(O2,CA,C,O1))
+               if(!blCalcCterCoords(O2,CA,C,O1))
                   return(FALSE);
             }
 
@@ -206,15 +224,19 @@ BOOL FixCterPDB(PDB *pdb, int style)
 /************************************************************************/
 /*>static void StandardiseCTers(PDB *pdb)
    --------------------------------------
-   I/O:     PDB     *pdb      PDB linked list to standardise
+*//**
+
+   \param[in,out] *pdb      PDB linked list to standardise
 
    Runs through a PDB linked list and corrects the C-terminal residues
    to the standard PDB style. Removes CTER residue names, but does
    not generate and missing Oxygens.
 
-   24.08.94 Original    By: ACRM
-   06.02.03 Handles atnam_raw
-   03.06.05 Handles altpos
+-  24.08.94 Original    By: ACRM
+-  06.02.03 Handles atnam_raw
+-  03.06.05 Handles altpos
+-  04.02.14 Use CHAINMATCH By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 static void StandardiseCTers(PDB *pdb)
 {
@@ -228,13 +250,13 @@ static void StandardiseCTers(PDB *pdb)
    start = pdb;
    while(start != NULL)
    {
-      end = FindEndPDB(start);
+      end = blFindEndPDB(start);
 
       /* If it's a c-terminal residue or the one before CTER,
          fix the names of the oxygens
       */
-      if(end==NULL                        || 
-         end->chain[0] != start->chain[0] ||
+      if(end==NULL                            || 
+         !CHAINMATCH(end->chain,start->chain) ||
          !strncmp(end->resnam,"CTER",4))
       {
          O1 = O2 = NULL;
@@ -292,18 +314,20 @@ static void StandardiseCTers(PDB *pdb)
 /************************************************************************/
 /*>static BOOL SetCterStyle(PDB *start, PDB *end, int style)
    ---------------------------------------------------------
-   I/O:     PDB   *start     Start of PDB linked list for c-ter residue
-   Input:   PDB   *end       End of PDB linked list for c-ter residue
-            int   style      CTER_STYLE_STD, CTER_STYLE_GROMOS or 
+*//**
+
+   \param[in,out] *start     Start of PDB linked list for c-ter residue
+   \param[in]     *end       End of PDB linked list for c-ter residue
+   \param[in]     style      CTER_STYLE_STD, CTER_STYLE_GROMOS or 
                              CTER_STYLE_CHARMM
-   Returns: BOOL             Success?
+   \return                     Success?
 
    For a c-terminal or CTER residue, sets the required style for the
    two oxygens.
 
-   24.08.94 Original    By: ACRM
-   06.02.03 Handles atnam_raw
-   03.06.05 Handles altpos
+-  24.08.94 Original    By: ACRM
+-  06.02.03 Handles atnam_raw
+-  03.06.05 Handles altpos
 */
 static BOOL SetCterStyle(PDB *start, PDB *end, int style)
 {

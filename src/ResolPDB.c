@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       ResolPDB.c
+   \file       ResolPDB.c
    
-   Version:    V1.6R
-   Date:       30.05.02
-   Function:   Get resolution and R-factor information out of a PDB file
+   \version    V1.8
+   \date       07.07.14
+   \brief      Get resolution and R-factor information out of a PDB file
    
-   Copyright:  (c) UCL / Dr. Andrew C.R. Martin, 1994-2002
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C.R. Martin, 1994-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -31,34 +36,38 @@
    Description:
    ============
 
+
 **************************************************************************
 
    Usage:
    ======
+
    See documentation for details
 
 **************************************************************************
 
    Revision History:
    =================
-   V1.0  28.02.94 Original
-   V1.1  18.03.94 Removed extraneous printf() statement
-   V1.2  17.07.96 Added check for EXPERIMENT TYPE : THEORETICAL MODEL
+-  V1.0  28.02.94 Original
+-  V1.1  18.03.94 Removed extraneous printf() statement
+-  V1.2  17.07.96 Added check for EXPERIMENT TYPE : THEORETICAL MODEL
                   Fixed bug in searching for MODEL or NMR info
-   V1.3  27.06.97 Added handing of RESOLUTION records which point you
+-  V1.3  27.06.97 Added handing of RESOLUTION records which point you
                   to another record for the experiment type.
                   Fixed EXPERIMENT TYPE to look for NMR as well
                   Looks for EXPDTA NMR record
-   V1.4  23.03.98 Added check that RESOLUTION record is in a REMARK 2
-   V1.5  08.02.99 GetResolPDB() now a wrapper to GetExptl() which
+-  V1.4  23.03.98 Added check that RESOLUTION record is in a REMARK 2
+-  V1.5  08.02.99 GetResolPDB() now a wrapper to GetExptl() which
                   now parses structured REMARK3 blocks and also returns
                   the Free R. Initialise some variables to 0.0
-   V1.6  30.05.02 Incorporated changes from Inpharmatica - now finds
+-  V1.6  30.05.02 Incorporated changes from Inpharmatica - now finds
                   Electron diffraction as an experimental type. Handles
                   files without REMARK 2 correctly
-   V1.7  13.12.12 Complete re-implementation of GetExptl() for remediated
+-  V1.7  13.12.12 Complete re-implementation of GetExptl() for remediated
                   PDB files. Old version for old PDB files available as
                   GetExptlOld()
+-  V1.8  07.07.14 Use bl prefix for functions By: CTP
+
 
 *************************************************************************/
 /* Includes
@@ -88,18 +97,20 @@ static BOOL FindNextNumber(char *buffer, FILE *fp, int nlines, int nskip,
 
 
 /************************************************************************/
-/*>BOOL GetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor,
+/*>BOOL blGetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor,
                     int *StrucType)
-   -----------------------------------------------------------
-   Input:   FILE *fp           PDB file pointer
-   Output:  REAL *resolution   The resolution (0.0 if not applicable)
-            REAL *RFactor      The R-factor (0.0 if not found)
-            REAL *StrucType    Structure type:
+   -------------------------------------------------------------
+*//**
+
+   \param[in]     *fp           PDB file pointer
+   \param[out]    *resolution   The resolution (0.0 if not applicable)
+   \param[out]    *RFactor      The R-factor (0.0 if not found)
+   \param[out]    *StrucType    Structure type:
                                STRUCTURE_TYPE_XTAL
                                STRUCTURE_TYPE_NMR
                                STRUCTURE_TYPE_MODEL
                                STRUCTURE_TYPE_UNKNOWN
-   Returns: BOOL               TRUE if resolution found (even if not
+   \return                       TRUE if resolution found (even if not
                                applicable)
 
    This routine attempts to obtain resolution and R-factor information
@@ -125,41 +136,44 @@ static BOOL FindNextNumber(char *buffer, FILE *fp, int nlines, int nskip,
    this situation. In these cases, we lose the R-factor information.
    This occurs in approx 3.5% of the 1XXX PDB entries.
 
-   25.02.94 Original   By: ACRM
-   28.02.94 Added " R = " and check that VALUE wasn't B-VALUE
-   17.07.96 Added check for EXPERIMENT TYPE : THEORETICAL MODEL
+-  25.02.94 Original   By: ACRM
+-  28.02.94 Added " R = " and check that VALUE wasn't B-VALUE
+-  17.07.96 Added check for EXPERIMENT TYPE : THEORETICAL MODEL
             Also fixed bug in searching REMARK record
-   27.06.97 Added handing of RESOLUTION records which point you to 
+-  27.06.97 Added handing of RESOLUTION records which point you to 
             another record for the experiment type.
             Fixed some calls to FindNextNumber() which were checking
             an 80 character width
             Fixed EXPERIMENT TYPE to look for NMR as well
             Looks for EXPDTA NMR record
-   23.03.98 Added check that RESOLUTION record is in a REMARK 2
-   08.02.99 Now a wrapper to GetExptl() which also returns FreeR
+-  23.03.98 Added check that RESOLUTION record is in a REMARK 2
+-  08.02.99 Now a wrapper to GetExptl() which also returns FreeR
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL GetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor, 
-                 int *StrucType)
+BOOL blGetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor, 
+                   int *StrucType)
 {
    REAL FreeR;
    
-   return(GetExptl(fp, resolution, RFactor, &FreeR, StrucType));
+   return(blGetExptl(fp, resolution, RFactor, &FreeR, StrucType));
 }
 
 /************************************************************************/
-/*>BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
-                 int *StrucType)
-   ---------------------------------------------------------------------
-   Input:   FILE *fp           PDB file pointer
-   Output:  REAL *resolution   The resolution (0.0 if not applicable)
-            REAL *RFactor      The R-factor (0.0 if not found)
-            REAL *FreeR        The Free R-factor (0.0 if not found)
-            REAL *StrucType    Structure type:
+/*>BOOL blGetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
+                   int *StrucType)
+   -----------------------------------------------------------------------
+*//**
+
+   \param[in]     *fp           PDB file pointer
+   \param[out]    *resolution   The resolution (0.0 if not applicable)
+   \param[out]    *RFactor      The R-factor (0.0 if not found)
+   \param[out]    *FreeR        The Free R-factor (0.0 if not found)
+   \param[out]    *StrucType    Structure type:
                                STRUCTURE_TYPE_XTAL
                                STRUCTURE_TYPE_NMR
                                STRUCTURE_TYPE_MODEL
                                STRUCTURE_TYPE_UNKNOWN
-   Returns: BOOL               TRUE if resolution found (even if not
+   \return                       TRUE if resolution found (even if not
                                applicable)
 
    This routine attempts to obtain resolution and R-factor information
@@ -168,7 +182,7 @@ BOOL GetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor,
    found. Resolution-not-applicable structures then have the resolution
    set to zero.
 
-   12.12.11 Original   By: ACRM
+-  12.12.11 Original   By: ACRM
             New implementation for remediated PDB files.
             The old version is available as GetExptlOld() which handles
             old format files.
@@ -176,8 +190,9 @@ BOOL GetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor,
             first is used
             If multiple R-factors are provided in different sections, 
             then the first one is returned.
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
+BOOL blGetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
               int *StrucType)
 {
    char *ptr,
@@ -210,7 +225,7 @@ BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
          int  remarkType = 0;
          
          /* See which REMARK type it is                                 */
-         ptr = GetWord(buffer+6, word, 80);
+         ptr = blGetWord(buffer+6, word, 80);
          if(sscanf(word, "%d", &remarkType))
          {
             switch(remarkType)
@@ -218,10 +233,10 @@ BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
             case 2:
                if(*resolution == 0.0)
                {
-                  ptr = GetWord(ptr, word, 80);
+                  ptr = blGetWord(ptr, word, 80);
                   if(!strncmp(word, "RESOLUTION", 10))
                   {
-                     ptr = GetWord(ptr, word, 80);
+                     ptr = blGetWord(ptr, word, 80);
                      if(!sscanf(word, "%lf", resolution))
                      {
                         *resolution = 0.0;
@@ -344,7 +359,34 @@ BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
 }
 
 /************************************************************************/
-char *ReportStructureType(int StrucType)
+/*>char *blReportStructureType(int StrucType)
+   ------------------------------------------
+*//**
+
+   \param[in]     StrucType    Stucture type returned by ResolPDB()
+   \return                     Stucture type description.
+
+   Returns structure description.
+
+
+      STRUCTURE_TYPE_UNKNOWN     Unknown
+      STRUCTURE_TYPE_XTAL        X-ray crystal structure
+      STRUCTURE_TYPE_NMR         NMR
+      STRUCTURE_TYPE_MODEL       Model
+      STRUCTURE_TYPE_ELECTDIFF   Electron Diffraction
+      STRUCTURE_TYPE_FIBER       Fiber Diffraction
+      STRUCTURE_TYPE_SSNMR       Solid State NMR
+      STRUCTURE_TYPE_NEUTRON     Neutron Scattering
+      STRUCTURE_TYPE_EM          Electron Miscroscopy
+      STRUCTURE_TYPE_SOLSCAT     Solution Scattering
+      STRUCTURE_TYPE_IR          Infra-red Spectroscopy
+      STRUCTURE_TYPE_POWDER      Powder Diffraction
+      STRUCTURE_TYPE_FRET        Fluorescence Transfer
+
+
+-  07.07.14 Use bl prefix for functions By: CTP
+*/
+char *blReportStructureType(int StrucType)
 {
    switch(StrucType)
    {
@@ -424,12 +466,12 @@ static BOOL HasText(char *ptr, char *hasWords, char *notWords)
    
    
    /* Step through the words we must have                               */
-   while((h=GetWord(h, word1, 80))!=NULL)
+   while((h=blGetWord(h, word1, 80))!=NULL)
    {
       nRequired++;
       /* Step through the words in our string                           */
       p = ptr;
-      while((p=GetWord(p, word2, 80))!=NULL)
+      while((p=blGetWord(p, word2, 80))!=NULL)
       {
          if(!strcmp(word1, word2))
          {
@@ -449,11 +491,11 @@ static BOOL HasText(char *ptr, char *hasWords, char *notWords)
       there any we must NOT have? 
       Step through the words we must not have 
    */
-   while((n=GetWord(n, word1, 80))!=NULL)
+   while((n=blGetWord(n, word1, 80))!=NULL)
    {
       /* Step through the words in our string                           */
       p = ptr;
-      while((p=GetWord(p, word2, 80))!=NULL)
+      while((p=blGetWord(p, word2, 80))!=NULL)
       {
          /* Return false if we have a match                             */
          if(!strcmp(word1, word2))
@@ -537,19 +579,21 @@ static int SetStrucType(char *ptr)
 
 
 /************************************************************************/
-/*>BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
-                 int *StrucType)
-   ---------------------------------------------------------------------
-   Input:   FILE *fp           PDB file pointer
-   Output:  REAL *resolution   The resolution (0.0 if not applicable)
-            REAL *RFactor      The R-factor (0.0 if not found)
-            REAL *FreeR        The Free R-factor (0.0 if not found)
-            REAL *StrucType    Structure type:
+/*>BOOL blGetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, 
+                      REAL *FreeR, int *StrucType)
+   -------------------------------------------------------------
+*//**
+
+   \param[in]     *fp           PDB file pointer
+   \param[out]    *resolution   The resolution (0.0 if not applicable)
+   \param[out]    *RFactor      The R-factor (0.0 if not found)
+   \param[out]    *FreeR        The Free R-factor (0.0 if not found)
+   \param[out]    *StrucType    Structure type:
                                STRUCTURE_TYPE_XTAL
                                STRUCTURE_TYPE_NMR
                                STRUCTURE_TYPE_MODEL
                                STRUCTURE_TYPE_UNKNOWN
-   Returns: BOOL               TRUE if resolution found (even if not
+   \return                       TRUE if resolution found (even if not
                                applicable)
 
    This routine attempts to obtain resolution and R-factor information
@@ -575,29 +619,30 @@ static int SetStrucType(char *ptr)
    this situation. In these cases, we lose the R-factor information.
    This occurs in approx 3.5% of the 1XXX PDB entries.
 
-   25.02.94 Original   By: ACRM
-   28.02.94 Added " R = " and check that VALUE wasn't B-VALUE
-   17.07.96 Added check for EXPERIMENT TYPE : THEORETICAL MODEL
+-  25.02.94 Original   By: ACRM
+-  28.02.94 Added " R = " and check that VALUE wasn't B-VALUE
+-  17.07.96 Added check for EXPERIMENT TYPE : THEORETICAL MODEL
             Also fixed bug in searching REMARK record
-   27.06.97 Added handing of RESOLUTION records which point you to 
+-  27.06.97 Added handing of RESOLUTION records which point you to 
             another record for the experiment type.
             Fixed some calls to FindNextNumber() which were checking
             an 80 character width
             Fixed EXPERIMENT TYPE to look for NMR as well
             Looks for EXPDTA NMR record
-   23.03.98 Added check that RESOLUTION record is in a REMARK 2
-   08.03.99 Renamed to GetExptl() from GetResolPDB() and added
+-  23.03.98 Added check that RESOLUTION record is in a REMARK 2
+-  08.03.99 Renamed to GetExptl() from GetResolPDB() and added
             FreeR parameter. GetResolPDB() is now a wrapper to this
             routine.
             Added additional pass which looks for the structured
             REMARK 3 records
-   28.04.99 Initialise FindRefRecord et al. to zero
-   18.06.99 Added other strings to the valid structured block for pass 0
+-  28.04.99 Initialise FindRefRecord et al. to zero
+-  18.06.99 Added other strings to the valid structured block for pass 0
             Added check for -ve R-factor
-   08.09.99 Now takes the first FREE R-factor followed by 17 spaces
+-  08.09.99 Now takes the first FREE R-factor followed by 17 spaces
             rather than the last
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL GetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
+BOOL blGetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
                  int *StrucType)
 {
    BOOL ResNotApplic   = FALSE,  /* Found resolution not applicable     */
@@ -940,6 +985,8 @@ BOOL GetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
 /*>static BOOL FindNextNumber(char *buffer, FILE *fp, int nlines, 
                               int nskip, int ncheck, REAL *value)
    --------------------------------------------------------------
+*//**
+
    Find the next number which occurs in the file within nlines lines.
    First looks through the character buffer given to the routine. If this
    fails looks at the next lines in the file itself. Extra lines are
@@ -948,21 +995,21 @@ BOOL GetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
    each new line which is read from the file. This does *not* apply to
    the initial character buffer.
 
-   Input:   char *buffer Pointer to buffer to search first
-            FILE *fp     Pointer to file to find additional lines in
-            int  nlines  Number of additional lines to scan
-            int  nskip   Skip this many characters at the start of
+   \param[in]     *buffer Pointer to buffer to search first
+   \param[in]     *fp     Pointer to file to find additional lines in
+   \param[in]     nlines  Number of additional lines to scan
+   \param[in]     nskip   Skip this many characters at the start of
                          each new line
-            int  ncheck  Check only this many characters from each new
+   \param[in]     ncheck  Check only this many characters from each new
                          line
-   Output:  REAL *value  The value which we find
-   Returns: BOOL         Success/failure.
+   \param[out]    *value  The value which we find
+   \return                 Success/failure.
 
-   25.02.94 Original   By: ACRM
-   28.02.94 Terminates at trailing decimal place
-   27.06.97 Fixed potential bug when number of lines to read ahead set
+-  25.02.94 Original   By: ACRM
+-  28.02.94 Terminates at trailing decimal place
+-  27.06.97 Fixed potential bug when number of lines to read ahead set
             to 0 was still reading characters
-   07.09.99 Added check for i > 0 in FindNextNumber when examining 
+-  07.09.99 Added check for i > 0 in FindNextNumber when examining 
             valbuff[i-1] By: MJP
 */
 static BOOL FindNextNumber(char *buffer, FILE *fp, int nlines, int nskip,
@@ -1077,7 +1124,7 @@ int main(int argc, char **argv)
    printf("Resol:     %f\n",resol);
    printf("RFactor:   %f\n",RFactor);
    printf("Free R:    %f\n",FreeR);
-   printf("StrucType: %s\n", ReportStructureType(StrucType));
+   printf("StrucType: %s\n", blReportStructureType(StrucType));
    
    return(0);
 }

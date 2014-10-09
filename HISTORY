@@ -39,3 +39,14 @@ V2.0.10 Changes to DupeResiduePDB.c FindAtomWildcardInRes.c
 V2.0.11 Changes to StripWatersPDB.c ReadPDB.c array3.c
 --------------------------------------------------------------------
 V2.1.1  Added StructurePDB()
+--------------------------------------------------------------------
+V3.0   Added support for multi-character chain names and pdbml format. 
+       PDBML support requires the Libxml2 library, http://xmlsoft.org.
+       Renamed BiopLib functions adding a prefix, 'bl'. 
+       Deprecated functions that accepted or returned the chain label as a
+       single character and function names without the 'bl' prefix are 
+       supported. 
+       Documentation for BiopLib is generated using Doxygen (version 1.8.0
+       or later), http://www.doxygen.org.
+       Unit tests added for new features. Unit tests require the check 
+       library, http://check.sourceforge.net.

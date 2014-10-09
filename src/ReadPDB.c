@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       ReadPDB.c
+   \file       ReadPDB.c
    
-   Version:    V2.22
-   Date:       21.12.11
-   Function:   Read coordinates from a PDB file 
+   \version    V2.36
+   \date       29.09.14
+   \brief      Read coordinates from a PDB file 
    
-   Copyright:  (c) SciTech Software 1988-2011
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,19 +35,26 @@
 
    Description:
    ============
-   pdb = ReadPDB(fp,natom) - This subroutine will read a .PDB file
+
+\code
+   pdb = ReadPDB(fp,natom)
+\endcode
+
+   This subroutine will read a .PDB file
    of any size and form a linked list of the protein structure.
    This list is contained in a linked set of structures of type
-   pdb_entry. The strucure is set up by including the file
+   pdb_entry. The structure is set up by including the file
    "pdb.h". For details of the structure, see this file.
 
    To free the space created by this routine, call FREELIST(pdb,PDB).
 
    The parameters passed to the subroutine are:
-   fp    - A pointer to type FILE in which the .PDB file is stored.
-   pdb   - A pointer to type PDB.
-   natom - A pointer to type integer in which the number of atoms
-           found is stored.
+
+   -   fp    - A pointer to type FILE in which the .PDB file is stored.
+   -   pdb   - A pointer to type PDB.
+   -   natom - A pointer to type integer in which the number of atoms
+               found is stored.
+
 
    As of V2.3, the routine makes provision for partial occupancies. If 
    the occupancies are 1.0 or 0.0, the atoms are read verbatim. If not,
@@ -62,22 +80,27 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 
    Usage:
    ======
-   pdb = ReadPDB(fp,natom)
+
+\code
+   pdb = blReadPDB(fp,natom)
+\endcode
+
+   \param[in]      *fp      A pointer to type FILE in which the
+                            .PDB file is stored.
+
+   \param[out]     *natom   Number of atoms read.
    
-   Input:   FILE     *fp      A pointer to type FILE in which the
-                              .PDB file is stored.
-   Returns: PDB      *pdb     A pointer to the first allocated item of
-                              the PDB linked list
-   Output:  int      *natom   Number of atoms read.
+   \return         *pdb     A pointer to the first allocated item of
+                            the PDB linked list
 
 **************************************************************************
 
    Revision History:
    =================
-   V1.0  04.11.88 Original
-   V1.1  07.02.89 Now ignores any records from the .PDB file which 
+-  V1.0  04.11.88 Original
+-  V1.1  07.02.89 Now ignores any records from the .PDB file which 
                   don't start with ATOM or HETATM.
-   V1.2  28.03.90 Some fields altered to match the exact specifications 
+-  V1.2  28.03.90 Some fields altered to match the exact specifications 
                   of the PDB. The only differences from the standard 
                   are:
                   1. The residue name is 4 characters rather than 3 
@@ -87,23 +110,23 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                      standard's `alternate' field. These two 
                      differences from the standard reflect the common
                      usage.
-   V1.2a 28.06.90 Buffer size increased to 85 chars.
-   V1.2b 15.02.91 Simply changed comment header to match new standard.
-   V1.3  07.01.92 Corrected small bug in while() loop. Now ignores 
+-  V1.2a 28.06.90 Buffer size increased to 85 chars.
+-  V1.2b 15.02.91 Simply changed comment header to match new standard.
+-  V1.3  07.01.92 Corrected small bug in while() loop. Now ignores 
                   blank lines properly
-   V1.4  11.05.92 Added check on EOF in while() loop and memset() of 
+-  V1.4  11.05.92 Added check on EOF in while() loop and memset() of 
                   buffer. ANSIfied.
-   V1.5  01.06.92 Documented for autodoc
-   V1.7  01.10.92 Changed to use fgets()
-   V1.6  19.06.92 Corrected use of stdlib
-   V1.8  08.12.92 SAS/C V6 now defines atof() in stdlib
-   V1.9  10.06.93 Returns TRUE or FALSE rather than exiting on failure
-   V2.0  17.06.93 Rewritten to use fsscanf()
-   V2.1  08.07.93 Modified to give ReadPDB() and ReadPDBAtoms()
-   V2.2  09.07.93 Modified to return the PDB pointer rather than a BOOL.
+-  V1.5  01.06.92 Documented for autodoc
+-  V1.7  01.10.92 Changed to use fgets()
+-  V1.6  19.06.92 Corrected use of stdlib
+-  V1.8  08.12.92 SAS/C V6 now defines atof() in stdlib
+-  V1.9  10.06.93 Returns TRUE or FALSE rather than exiting on failure
+-  V2.0  17.06.93 Rewritten to use fsscanf()
+-  V2.1  08.07.93 Modified to give ReadPDB() and ReadPDBAtoms()
+-  V2.2  09.07.93 Modified to return the PDB pointer rather than a BOOL.
                   There is now no need to initialise the structure first.
                   Rewrote allocation scheme.
-   V2.3  17.03.94 Handles partial occupancies. If occupancies are not
+-  V2.3  17.03.94 Handles partial occupancies. If occupancies are not
                   1.0 or 0.0, the normal routine now reads only the 
                   highest occupancy atoms and corrects the atoms names 
                   to remove alternative labels. This behaviour can be 
@@ -116,42 +139,69 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                   very rare.
                   Added ReadPDBOccRank() & ReadPDBAtomsOccRank()
                   Sets gPDBPartialOcc flag.
-   V2.4  06.04.94 With atom names which start in column 13, now checks
+-  V2.4  06.04.94 With atom names which start in column 13, now checks
                   if the first character is a digit. If so, moves it
                   to the end of the atom name. Thus, 1HH1 becomes HH11
                   and 2HH1 becomes HH12.
-   V2.5  04.10.94 Fixed partial occ when resnum changes as well as atom
+-  V2.5  04.10.94 Fixed partial occ when resnum changes as well as atom
                   name. Fixed bug when MAXPARTIAL exceeded.
-   V2.6  03.11.94 Simply Corrected description. No code changes
-   V2.7  06.03.95 Now reads just the first NMR model by default
+-  V2.6  03.11.94 Simply Corrected description. No code changes
+-  V2.7  06.03.95 Now reads just the first NMR model by default
                   doReadPDB() no longer static
                   Sets gPDBMultiNMR if ENDMDL records found.
-   V2.8  13.01.97 Added check on return from fsscanf. Blank lines used
+-  V2.8  13.01.97 Added check on return from fsscanf. Blank lines used
                   to result in duplication of the previous line since
                   fsscanf() does not reset the variables on receiving
                   a blank line. Also fixed in fsscanf().
-   V2.9  25.02.98 Added transparent reading of gzipped PDB files if
+-  V2.9  25.02.98 Added transparent reading of gzipped PDB files if
                   GUNZIP_SUPPORT is defined
-   V2.10 18.08.98 Added cast to popen() for SunOS
-   V2.11 08.10.99 Initialised some variables
-   V2.12 15.02.01 Added atnam_raw into PDB structure
-   V2.13 30.05.02 Changed PDB field from 'junk' to 'record_type'
-   V2.14 27.04.05 Fixed bug in atnam_raw for multiple occupancies
-   V2.15 03.06.05 Added altpos field to PDB structure. The massaged atom
+-  V2.10 18.08.98 Added cast to popen() for SunOS
+-  V2.11 08.10.99 Initialised some variables
+-  V2.12 15.02.01 Added atnam_raw into PDB structure
+-  V2.13 30.05.02 Changed PDB field from 'junk' to 'record_type'
+-  V2.14 27.04.05 Fixed bug in atnam_raw for multiple occupancies
+-  V2.15 03.06.05 Added altpos field to PDB structure. The massaged atom
                   name no longer contains the alternate indicator and
                   atnam_raw has only the atom name with altpos having the
                   alternate indicator (as it should!)
-   V2.16 14.10.05 Fixed a problem in StoreOccRankAtom() when a lower
+-  V2.16 14.10.05 Fixed a problem in StoreOccRankAtom() when a lower
                   occupancy atom has (erroneously) been set to occupancy
                   of zero and you want to pull out that atom
-   V2.17 25.01.06 Added calls to RemoveAlternates()
-   V2.18 03.02.06 Added prototypes for popen() and pclose()
-   V2.19 05.06.07 Added support for Unix compress'd files
-   V2.20 29.06.07 popen() and pclose() prototypes now skipped for MAC OSX
+-  V2.17 25.01.06 Added calls to RemoveAlternates()
+-  V2.18 03.02.06 Added prototypes for popen() and pclose()
+-  V2.19 05.06.07 Added support for Unix compress'd files
+-  V2.20 29.06.07 popen() and pclose() prototypes now skipped for MAC OSX
                   which defines them differently
-   V2.21 17.03.09 popen() prototype skipped for Windows. By: CTP
-   V2.22 21.12.11 doReadPDB() modified for cases where atoms are single
+-  V2.21 17.03.09 popen() prototype skipped for Windows. By: CTP
+-  V2.22 21.12.11 doReadPDB() modified for cases where atoms are single
                   occupancy but occupancy is < 1.0
+-  V2.23 04.02.14 Use CHAINMATCH macro. By: CTP
+-  V2.24 22.04.14 Added PDBML parsing with doReadPDBML() and 
+                  CheckFileFormatPDBML(). By CTP
+-  V2.25 02.06.14 Updated doReadPDBML(). By: CTP
+-  V2.26 09.06.14 Set gPDBXML flag. By: CTP
+-  V2.27 07.07.14 Renaming of functions with "bl" prefix. By: CTP
+-  V2.28 04.08.14 blReadPDB() and blReadPDBML() get element and charge.
+                  Set access and radius to 0.0. Set atomType to NULL.
+                  Added blProcessElementField() and blProcessChargeField()
+                  By: CTP
+-  V2.29 15.08.14 Updated blDoReadPDB() and blDoReadPDBML() to use 
+                  CLEAR_PDB().  By: CTP
+-  V2.30 16.08.14 Replaced charge with formal_charge and partial_charge 
+                  for PDB structure. By: CTP
+-  V2.31 18.08.14 Added XML_SUPPORT option allowing compilation without 
+                  support for PDBML format. By: CTP
+-  V2.32 26.08.14 blDoReadPDBML() pads record type to six chars. By: CTP
+-  V2.33 29.08.14 Rewrote blCheckFileFormatPDBML() to take sample from 
+                  input steam then push sample back on stream. By: CTP
+-  V2.34 31.08.14 Fixed bug in blCheckFileFormatPDBML(). By: CTP
+-  V2.35 09.09.14 Updated blCheckFileFormatPDBML() for non-unix systems.
+                  Decreased size of XML_SAMPLE.
+                  Reading of gzipped files with gunzip not supported for 
+                  MS Windows. By: CTP
+-  V2.36 29.09.14 Allow single character check for filetype where ungetc()
+                  fails after pushback of single character. Updates to 
+                  blCheckFileFormatPDBML() and blDoReadPDB(). By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -170,6 +220,11 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 #include <ctype.h>
 #include <unistd.h>
 
+#ifdef XML_SUPPORT /* Required to read PDBML files                      */
+#include <libxml/parser.h>
+#include <libxml/tree.h>
+#endif
+
 #include "SysDefs.h"
 #include "MathType.h"
 #include "pdb.h"
@@ -179,13 +234,18 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 
 #define MAXPARTIAL 8
 #define SMALL      0.000001
+#define XML_BUFFER 1024
+#define XML_SAMPLE 256
 
 /************************************************************************/
 /* Prototypes
 */
-static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
-                             int NPartial, PDB **ppdb, PDB **pp, 
-                             int *natom);
+static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
+                               int NPartial, PDB **ppdb, PDB **pp, 
+                               int *natom);
+static void blProcessElementField(char *element, char *element_field);
+static void blProcessChargeField(int *charge, char *charge_field);
+
 #if !defined(__APPLE__) && !defined(MS_WINDOWS)
 FILE *popen(char *, char *);
 #endif
@@ -194,203 +254,234 @@ int  pclose(FILE *);
 #endif
 
 /************************************************************************/
-/*>PDB *ReadPDB(FILE *fp, int *natom)
-   ----------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
-                              .PDB file is stored.
-   Output:  int      *natom   Number of atoms read. -1 if error.
-   Returns: PDB      *pdb     A pointer to the first allocated item of
-                              the PDB linked list
+/*>PDB *blReadPDB(FILE *fp, int *natom)
+   ------------------------------------
+*//**
+
+   \param[in]     *fp      A pointer to type FILE in which the
+                           .PDB file is stored.
+   \param[out]    *natom   Number of atoms read. -1 if error.
+   \return                 A pointer to the first allocated item of
+                           the PDB linked list
 
    Reads a PDB file into a PDB linked list
 
-   08.07.93 Written as entry for doReadPDB()
-   09.07.93 Modified to return pointer to PDB
-   17.03.94 Modified to handle OccRank
-   06.03.95 Added value for NMR model to read (1 = first)
-   25.01.06 Added call to RemoveAlternates() - this deals with odd
+-  08.07.93 Written as entry for doReadPDB()
+-  09.07.93 Modified to return pointer to PDB
+-  17.03.94 Modified to handle OccRank
+-  06.03.95 Added value for NMR model to read (1 = first)
+-  25.01.06 Added call to RemoveAlternates() - this deals with odd
             cases where alternate atom positions don't appear where
             they should!
-   25.01.06 Added call to RemoveAlternates(). This deals with odd uses
+-  25.01.06 Added call to RemoveAlternates(). This deals with odd uses
             of multiple occupancies like 3pga and the instance where
             the alternates are all grouped at the end of the file.
+-  07.07.14 Renamed to blReadPDB() By: CTP
 */
-PDB *ReadPDB(FILE *fp,
-             int  *natom)
+PDB *blReadPDB(FILE *fp,
+               int  *natom)
 {
    PDB *pdb;
-   pdb = doReadPDB(fp, natom, TRUE, 1, 1);
-   pdb = RemoveAlternates(pdb);
+   pdb = blDoReadPDB(fp, natom, TRUE, 1, 1);
+   pdb = blRemoveAlternates(pdb);
    return(pdb);
 }
 
 /************************************************************************/
-/*>PDB *ReadPDBAll(FILE *fp, int *natom)
-   -------------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
-                              .PDB file is stored.
-   Output:  int      *natom   Number of atoms read. -1 if error.
-   Returns: PDB      *pdb     A pointer to the first allocated item of
-                              the PDB linked list
+/*>PDB *blReadPDBAll(FILE *fp, int *natom)
+   ---------------------------------------
+*//**
+
+   \param[in]     *fp      A pointer to type FILE in which the
+                           .PDB file is stored.
+   \param[out]    *natom   Number of atoms read. -1 if error.
+   \return                 A pointer to the first allocated item of
+                           the PDB linked list
 
    Reads a PDB file into a PDB linked list. Reads all partial occupancy
    atoms. Reads both ATOM and HETATM records.
 
-   04.10.94 Original    By: ACRM
-   06.03.95 Added value for NMR model to read (0 = all)   
+-  04.10.94 Original    By: ACRM
+-  06.03.95 Added value for NMR model to read (0 = all)   
+-  07.07.14 Renamed to blReadPDBAll() By: CTP
 */
-PDB *ReadPDBAll(FILE *fp,
+PDB *blReadPDBAll(FILE *fp,
              int  *natom)
 {
-   return(doReadPDB(fp, natom, TRUE, 0, 0));
+   return(blDoReadPDB(fp, natom, TRUE, 0, 0));
 }
 
 /************************************************************************/
-/*>PDB *ReadPDBAtoms(FILE *fp, int *natom)
-   ---------------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
-                              .PDB file is stored.
-   Output:  int      *natom   Number of atoms read. -1 if error.
-   Returns: PDB      *pdb     A pointer to the first allocated item of
-                              the PDB linked list
+/*>PDB *blReadPDBAtoms(FILE *fp, int *natom)
+   -----------------------------------------
+*//**
+
+   \param[in]     *fp      A pointer to type FILE in which the
+                           .PDB file is stored.
+   \param[out]    *natom   Number of atoms read. -1 if error.
+   \return                 A pointer to the first allocated item of
+                           the PDB linked list
 
    Reads a PDB file into a PDB linked list. Atoms only (no HETATM cards).
 
-   08.07.93 Written as entry for doReadPDB()
-   09.07.93 Modified to return pointer to PDB
-   17.03.94 Modified to handle OccRank
-   06.03.95 Added value for NMR model to read (1 = first)
-   25.01.06 Added call to RemoveAlternates(). This deals with odd uses
+-  08.07.93 Written as entry for doReadPDB()
+-  09.07.93 Modified to return pointer to PDB
+-  17.03.94 Modified to handle OccRank
+-  06.03.95 Added value for NMR model to read (1 = first)
+-  25.01.06 Added call to RemoveAlternates(). This deals with odd uses
             of multiple occupancies like 3pga and the instance where
             the alternates are all grouped at the end of the file.
+-  07.07.14 Renamed to blReadPDBAtoms() By: CTP
 */
-PDB *ReadPDBAtoms(FILE *fp,
-                  int  *natom)
+PDB *blReadPDBAtoms(FILE *fp,
+                    int  *natom)
 {
    PDB *pdb;
-   pdb = doReadPDB(fp, natom, FALSE, 1, 1);
-   pdb = RemoveAlternates(pdb);
+   pdb = blDoReadPDB(fp, natom, FALSE, 1, 1);
+   pdb = blRemoveAlternates(pdb);
    return(pdb);
 }
 
 /************************************************************************/
-/*>PDB *ReadPDBOccRank(FILE *fp, int *natom, int OccRank)
-   ------------------------------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
-                              .PDB file is stored.
-            int      OccRank  Occupancy ranking (>=1)
-   Output:  int      *natom   Number of atoms read. -1 if error.
-   Returns: PDB      *pdb     A pointer to the first allocated item of
-                              the PDB linked list
+/*>PDB *blReadPDBOccRank(FILE *fp, int *natom, int OccRank)
+   --------------------------------------------------------
+*//**
+
+   \param[in]     *fp      A pointer to type FILE in which the
+                           .PDB file is stored.
+   \param[in]     OccRank  Occupancy ranking (>=1)
+   \param[out]    *natom   Number of atoms read. -1 if error.
+   \return                 A pointer to the first allocated item of
+                           the PDB linked list
 
    Reads a PDB file into a PDB linked list selecting the OccRank'th
    highest occupancy atoms
 
-   17.03.94 Original    By: ACRM
-   06.03.95 Added value for NMR model to read (1 = first)
+-  17.03.94 Original    By: ACRM
+-  06.03.95 Added value for NMR model to read (1 = first)
+-  07.07.14 Renamed to blDoReadPDB() By: CTP
 */
-PDB *ReadPDBOccRank(FILE *fp, int *natom, int OccRank)
+PDB *blReadPDBOccRank(FILE *fp, int *natom, int OccRank)
 {
-   return(doReadPDB(fp, natom, TRUE, OccRank, 1));
+   return(blDoReadPDB(fp, natom, TRUE, OccRank, 1));
 }
 
 /************************************************************************/
-/*>PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
-   -----------------------------------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
-                              .PDB file is stored.
-            int      OccRank  Occupancy ranking (>=1)
-   Output:  int      *natom   Number of atoms read. -1 if error.
-   Returns: PDB      *pdb     A pointer to the first allocated item of
-                              the PDB linked list
+/*>PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
+   -------------------------------------------------------------
+*//**
+
+   \param[in]     *fp      A pointer to type FILE in which the
+                           .PDB file is stored.
+   \param[in]     OccRank  Occupancy ranking (>=1)
+   \param[out]    *natom   Number of atoms read. -1 if error.
+   \return                 A pointer to the first allocated item of
+                           the PDB linked list
 
    Reads a PDB file into a PDB linked list ignoring HETATM records
    and selecting the OccRank'th highest occupancy atoms
 
-   17.03.94 Original    By: ACRM
-   06.03.95 Added value for NMR model to read (1 = first)
+-  17.03.94 Original    By: ACRM
+-  06.03.95 Added value for NMR model to read (1 = first)
+-  07.07.14 Renamed to blReadPDBAtomsOccRank() By: CTP
 */
-PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
+PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
 {
-   return(doReadPDB(fp, natom, FALSE, OccRank, 1));
+   return(blDoReadPDB(fp, natom, FALSE, OccRank, 1));
 }
 
 /************************************************************************/
-/*>PDB *doReadPDB(FILE *fp, int *natom, BOOL AllAtoms, int OccRank,
-                  int ModelNum)
-   ----------------------------------------------------------------
-   Input:   FILE     *fp      A pointer to type FILE in which the
-                              .PDB file is stored.
-            BOOL     AllAtoms TRUE:  ATOM & HETATM records
-                              FALSE: ATOM records only
-            int      OccRank  Occupancy ranking
-            int      ModelNum NMR Model number (0 = all)
-   Output:  int      *natom   Number of atoms read. -1 if error.
-   Returns: PDB      *pdb     A pointer to the first allocated item of
-                              the PDB linked list
+/*>PDB *blDoReadPDB(FILE *fpin, int *natom, BOOL AllAtoms, int OccRank,
+                    int ModelNum)
+   --------------------------------------------------------------------
+*//**
+
+   \param[in]     *fpin    A pointer to type FILE in which the
+                           .PDB file is stored.
+   \param[in]     AllAtoms TRUE:  ATOM & HETATM records
+                           FALSE: ATOM records only
+   \param[in]     OccRank  Occupancy ranking
+   \param[in]     ModelNum NMR Model number (0 = all)
+   \param[out]    *natom   Number of atoms read. -1 if error.
+   \return                 A pointer to the first allocated item of
+                           the PDB linked list
 
    Reads a PDB file into a PDB linked list. The OccRank value indicates
    occupancy ranking to read for partial occupancy atoms.
    If any partial occupancy atoms are read the global flag 
    gPDBPartialOcc is set to TRUE.
 
-   04.11.88 V1.0  Original
-   07.02.89 V1.1  Ignore records which aren't ATOM or HETATM
-   28.03.90 V1.2  Altered field widths to match PDB standard better
+-  04.11.88 V1.0  Original
+-  07.02.89 V1.1  Ignore records which aren't ATOM or HETATM
+-  28.03.90 V1.2  Altered field widths to match PDB standard better
                   See notes above for deviations
-   28.06.90 V1.2a Buffer size increased to 85 chars.
-   15.02.91 V1.2b Changed comment header to match new standard.
-   07.01.92 V1.3  Ignores blank lines properly
-   11.05.92 V1.4  Check on EOF in while() loop, memset() buffer. 
+-  28.06.90 V1.2a Buffer size increased to 85 chars.
+-  15.02.91 V1.2b Changed comment header to match new standard.
+-  07.01.92 V1.3  Ignores blank lines properly
+-  11.05.92 V1.4  Check on EOF in while() loop, memset() buffer. 
                   ANSIed.
-   01.06.92 V1.5  Documented for autodoc
-   19.06.92 V1.6  Corrected use of stdlib
-   01.10.92 V1.7  Changed to use fgets()
-   10.06.93 V1.9  Returns 0 on failure rather than exiting
+-  01.06.92 V1.5  Documented for autodoc
+-  19.06.92 V1.6  Corrected use of stdlib
+-  01.10.92 V1.7  Changed to use fgets()
+-  10.06.93 V1.9  Returns 0 on failure rather than exiting
                   Replaced SIZE with sizeof(PDB) directly
-   17.06.93 V2.0  Rewritten to use fsscanf()
-   08.07.93 V2.1  Split from ReadPDB()
-   09.07.93 V2.2  Modified to return pointer to PDB. Rewrote allocation
+-  17.06.93 V2.0  Rewritten to use fsscanf()
+-  08.07.93 V2.1  Split from ReadPDB()
+-  09.07.93 V2.2  Modified to return pointer to PDB. Rewrote allocation
                   scheme.
-   17.03.94 V2.3  Handles partial occupancies
+-  17.03.94 V2.3  Handles partial occupancies
                   Sets natom to -1 if there was an error to distinguish 
                   from no atoms.
                   Handles atom names which start in column 13 rather
                   than column 14. This is allowed in the standard, but
                   very rare.
                   Sets flag for partials.
-   06.04.94 V2.4  Atom names starting in column 13 have their first
+-  06.04.94 V2.4  Atom names starting in column 13 have their first
                   character moved to the end if it is a digit.
-   03.10.94 V2.5  Check residue number as well as atom name when running
+-  03.10.94 V2.5  Check residue number as well as atom name when running
                   through alternative atoms for partial occupancy
                   Moved increment of NPartial, so only done if there
                   is space in the array. If OccRank is 0, all atoms are
                   read regardless of occupancy.
-   06.03.95 V2.7  Added value for NMR model to read (0 = all)
+-  06.03.95 V2.7  Added value for NMR model to read (0 = all)
                   No longer static. Sets gPDBMultiNMR if ENDMDL records
                   found.
-   13.01.97 V2.8  Added check on return from fsscanf. Blank lines used
+-  13.01.97 V2.8  Added check on return from fsscanf. Blank lines used
                   to result in duplication of the previous line since
                   fsscanf() does not reset the variables on receiving
                   a blank line. Also fixed in fsscanf().
-   25.02.98 V2.9  Added code to read gzipped PDB files transparently
+-  25.02.98 V2.9  Added code to read gzipped PDB files transparently
                   when GUNZIP_SUPPORT is defined
-   17.08.98 V2.10 Added case to popen() for SunOS
-   08.10.99 V2.11 Initialise CurIns and CurRes
-   15.02.01 V2.12 Added atnam_raw
-   27.04.05 V2.14 Added another atnam_raw for multiple occupancies
-   03.06.05 V2.15 Added altpos
-   14.10.05 V2.16 Modified detection of partial occupancy. handles
+-  17.08.98 V2.10 Added case to popen() for SunOS
+-  08.10.99 V2.11 Initialise CurIns and CurRes
+-  15.02.01 V2.12 Added atnam_raw
+-  27.04.05 V2.14 Added another atnam_raw for multiple occupancies
+-  03.06.05 V2.15 Added altpos
+-  14.10.05 V2.16 Modified detection of partial occupancy. handles
                   residues like 1zeh/B16 where a lower partial is
                   erroneously set to zero
-   05.06.07 V2.19 Added support for Unix compress'd files
-   21.12.11 V2.22 Modified for cases of single occupancy < 1.0
+-  05.06.07 V2.19 Added support for Unix compress'd files
+-  21.12.11 V2.22 Modified for cases of single occupancy < 1.0
+-  22.04.14 V2.24 Call doReadPDBML() for PDBML-formatted PDB file. By: CTP
+-  02.06.14 V2.25 Updated doReadPDBML(). By: CTP
+-  09.06.14 V2.26 Set gPDBXML flag. By: CTP
+-  07.07.14 V2.27 Renamed to blDoReadPDB() By: CTP
+-  15.08.14 V2.29 Use CLEAR_PDB() to set default values. By: CTP
+-  16.08.14 V2.30 Replaced charge with formal_charge and partial_charge 
+                  for PDB structure. By: CTP
+-  18.08.14 V2.31 Added XML_SUPPORT option allowing BiopLib to be compiled
+                  without support for PDBML format. By: CTP
+-  09.09.14 V2.35 Reading of gzipped files with gunzip not supported for 
+                  MS Windows. By: CTP
+-  29.09.14 V2.36 Allow single character filetype check for gzipped files.
+                  By: CTP
+
 */
-PDB *doReadPDB(FILE *fpin,
-               int  *natom,
-               BOOL AllAtoms,
-               int  OccRank,
-               int  ModelNum)
+PDB *blDoReadPDB(FILE *fpin,
+                 int  *natom,
+                 BOOL AllAtoms,
+                 int  OccRank,
+                 int  ModelNum)
 {
    char     record_type[8],
             atnambuff[8],
@@ -403,12 +494,16 @@ PDB *doReadPDB(FILE *fpin,
             CurAtom[8],
             cmd[80],
             CurIns = ' ',
-            altpos;
+            altpos,
+            element_buff[4] = "",
+            charge_buff[4]  = "",
+            element[4]      = "";
    int      atnum,
             resnum,
             CurRes = 0,
             NPartial,
-            ModelCount = 1;
+            ModelCount = 1,
+            charge = 0;
    FILE     *fp = fpin;
    double   x,y,z,
             occ,
@@ -417,10 +512,13 @@ PDB *doReadPDB(FILE *fpin,
             *p,
             multi[MAXPARTIAL];   /* Temporary storage for partial occ   */
 
-#ifdef GUNZIP_SUPPORT
+#if defined(GUNZIP_SUPPORT) && !defined(MS_WINDOWS)
    int      signature[3],
-            i,
             ch;
+   BOOL     gzipped_file = FALSE;
+#  ifndef SINGLE_CHAR_FILECHECK
+   int      i;
+#  endif
 #endif
 
    *natom         = 0;
@@ -429,9 +527,12 @@ PDB *doReadPDB(FILE *fpin,
    gPDBPartialOcc = FALSE;
    gPDBMultiNMR   = FALSE;
    cmd[0]         = '\0';
+   gPDBXML        = FALSE;
 
-#ifdef GUNZIP_SUPPORT
+#if defined(GUNZIP_SUPPORT) && !defined(MS_WINDOWS)
    /* See whether this is a gzipped file                                */
+#  ifndef SINGLE_CHAR_FILECHECK
+   /* Default three character filetype check                            */
    for(i=0; i<3; i++)
       signature[i] = fgetc(fpin);
    for(i=2; i>=0; i--)
@@ -442,6 +543,17 @@ PDB *doReadPDB(FILE *fpin,
       ((signature[0] == (int)0x1F) &&    /* 05.06.07 compress           */
        (signature[1] == (int)0x9D) &&
        (signature[2] == (int)0x90)))
+   {
+      gzipped_file = TRUE;
+   }
+#  else
+   /* Single character filetype check                                   */
+   signature[0] = fgetc(fpin);
+   ungetc(signature[0], fpin);
+   if(signature[0] == (int)0x1F) gzipped_file = TRUE;
+#  endif
+
+   if(gzipped_file)
    {
       /* It is gzipped so we'll open gunzip as a pipe and send the data
          through that into a temporary file
@@ -466,6 +578,29 @@ PDB *doReadPDB(FILE *fpin,
    }
 #endif   
 
+
+   /* Check file format */
+   if(blCheckFileFormatPDBML(fp))
+   {
+#ifdef XML_SUPPORT
+
+      /* Parse PDBML-formatted PDB file */
+      pdb = blDoReadPDBML(fp,natom,AllAtoms,OccRank,ModelNum);
+      xmlCleanupParser();     /* free globals set by parser */
+      if(cmd[0]) unlink(cmd); /* delete tmp file            */
+      return( pdb );          /* return PDB list            */
+
+#else
+
+      /* PDBML format not supported. */
+      if(cmd[0]) unlink(cmd); /* delete tmp file            */
+      *natom = (-1);          /* Indicate error             */
+      return( NULL );         /* return NULL list           */
+
+#endif
+   }
+
+
    while(fgets(buffer,159,fp))
    {
       if(ModelNum != 0)          /* We are interested in model numbers  */
@@ -484,9 +619,9 @@ PDB *doReadPDB(FILE *fpin,
       if(!strncmp(buffer,"ENDMDL",6))
          gPDBMultiNMR   = TRUE;
       
-      if(fsscanf(buffer,"%6s%5d%1x%5s%4s%1s%4d%1s%3x%8lf%8lf%8lf%6lf%6lf",
+      if(fsscanf(buffer,"%6s%5d%1x%5s%4s%1s%4d%1s%3x%8lf%8lf%8lf%6lf%6lf%10x%2s%2s",
                  record_type,&atnum,atnambuff,resnam,chain,&resnum,insert,
-                 &x,&y,&z,&occ,&bval) != EOF)
+                 &x,&y,&z,&occ,&bval,element_buff,charge_buff) != EOF)
       {
          if((!strncmp(record_type,"ATOM  ",6)) || 
             (!strncmp(record_type,"HETATM",6) && AllAtoms))
@@ -503,8 +638,18 @@ PDB *doReadPDB(FILE *fpin,
             altpos = atnambuff[4];
 
             /* Fix the atom name accounting for start in column 13 or 14*/
-            atnam = FixAtomName(atnambuff, occ);
+            atnam = blFixAtomName(atnambuff, occ);
             
+            /* Set element and charge */
+            blProcessElementField(element, element_buff);
+            blProcessChargeField(&charge, charge_buff);
+            
+            /* Set element from atom name if not in input file */
+            if(strlen(element) == 0)
+            {
+               blSetElementSymbolFromAtomName(element, atnam_raw);
+            }
+
             /* Check for full occupancy. If occupancy is 0.0 assume that 
                it is actually fully occupied; the column just hasn't been
                filled in correctly
@@ -537,8 +682,8 @@ PDB *doReadPDB(FILE *fpin,
                
                if(NPartial != 0)
                {
-                  if(!StoreOccRankAtom(OccRank,multi,NPartial,&pdb,&p,
-                                       natom))
+                  if(!blStoreOccRankAtom(OccRank,multi,NPartial,&pdb,&p,
+                                         natom))
                   {
                      if(pdb != NULL) FREELIST(pdb, PDB);
                      *natom = (-1);
@@ -574,6 +719,7 @@ PDB *doReadPDB(FILE *fpin,
                (*natom)++;
                
                /* Store the information read                            */
+               CLEAR_PDB(p);
                p->atnum  = atnum;
                p->resnum = resnum;
                p->x      = (REAL)x;
@@ -582,6 +728,11 @@ PDB *doReadPDB(FILE *fpin,
                p->occ    = (REAL)occ;
                p->bval   = (REAL)bval;
                p->altpos = altpos;    /* 03.06.05 Added this one        */
+               p->formal_charge  = charge;
+               p->partial_charge = (REAL)charge;
+               p->access = 0.0;
+               p->radius = 0.0;
+               p->atomType = NULL;
                p->next   = NULL;
                strcpy(p->record_type, record_type);
                strcpy(p->atnam,       atnam);
@@ -589,6 +740,7 @@ PDB *doReadPDB(FILE *fpin,
                strcpy(p->resnam,      resnam);
                strcpy(p->chain,       chain);
                strcpy(p->insert,      insert);
+               strcpy(p->element,     element);
             }
             else   /* Partial occupancy                                 */
             {
@@ -610,8 +762,8 @@ PDB *doReadPDB(FILE *fpin,
                   /* Atom name has changed 
                      Select and store the OccRank highest occupancy atom
                      */
-                  if(!StoreOccRankAtom(OccRank,multi,NPartial,&pdb,&p,
-                                       natom))
+                  if(!blStoreOccRankAtom(OccRank,multi,NPartial,&pdb,&p,
+                                         natom))
                   {
                      if(pdb != NULL) FREELIST(pdb, PDB);
                      *natom = (-1);
@@ -629,6 +781,7 @@ PDB *doReadPDB(FILE *fpin,
                if(NPartial < MAXPARTIAL)
                {
                   /* Store the partial atom data                        */
+                  CLEAR_PDB((multi + NPartial));
                   multi[NPartial].atnum  = atnum;
                   multi[NPartial].resnum = resnum;
                   multi[NPartial].x      = (REAL)x;
@@ -636,6 +789,11 @@ PDB *doReadPDB(FILE *fpin,
                   multi[NPartial].z      = (REAL)z;
                   multi[NPartial].occ    = (REAL)occ;
                   multi[NPartial].bval   = (REAL)bval;
+                  multi[NPartial].formal_charge = charge;
+                  multi[NPartial].partial_charge = (REAL)charge;
+                  multi[NPartial].access = 0.0;
+                  multi[NPartial].radius = 0.0;
+                  multi[NPartial].atomType = NULL;
                   multi[NPartial].next   = NULL;
                   strcpy(multi[NPartial].record_type, record_type);
                   strcpy(multi[NPartial].atnam,       atnam);
@@ -644,9 +802,10 @@ PDB *doReadPDB(FILE *fpin,
                   strcpy(multi[NPartial].resnam,      resnam);
                   strcpy(multi[NPartial].chain,       chain);
                   strcpy(multi[NPartial].insert,      insert);
+                  strcpy(multi[NPartial].element,     element);
                   /* 03.06.05 - added this line                         */
                   multi[NPartial].altpos = altpos;
-                  
+
                   NPartial++;
                }
             }
@@ -656,7 +815,7 @@ PDB *doReadPDB(FILE *fpin,
 
    if(NPartial != 0)
    {
-      if(!StoreOccRankAtom(OccRank,multi,NPartial,&pdb,&p,natom))
+      if(!blStoreOccRankAtom(OccRank,multi,NPartial,&pdb,&p,natom))
       {
          if(pdb != NULL) FREELIST(pdb, PDB);
          *natom = (-1);
@@ -672,18 +831,20 @@ PDB *doReadPDB(FILE *fpin,
 }
 
 /************************************************************************/
-/*>static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
-                                int NPartial, PDB **ppdb, PDB **pp, 
-                                int *natom)
-   ----------------------------------------------------------------
-   Input:   int  OccRank     Occupancy ranking required (>=1)
-            PDB  multi[]     Array of PDB records for alternative atom
+/*>static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
+                                  int NPartial, PDB **ppdb, PDB **pp, 
+                                  int *natom)
+   ------------------------------------------------------------------
+*//**
+
+   \param[in]     OccRank     Occupancy ranking required (>=1)
+   \param[in]     multi[]     Array of PDB records for alternative atom
                              positions
-            int  NPartial    Number of items in multi array
-   I/O:     PDB  **ppdb      Start of PDB linked list (or NULL)
-            PDB  **pp        Current position in PDB linked list (or NULL)
-            int  *natom      Number of atoms read
-   Returns: BOOL             Memory allocation success
+   \param[in]     NPartial    Number of items in multi array
+   \param[in,out] **ppdb      Start of PDB linked list (or NULL)
+   \param[in,out] **pp        Current position in PDB linked list (or NULL)
+   \param[in,out] *natom      Number of atoms read
+   \return                     Memory allocation success
 
    Takes an array of PDB records which represent alternative atom 
    positions for an atom. Select the OccRank'th highest occupancy and
@@ -691,18 +852,21 @@ PDB *doReadPDB(FILE *fpin,
 
    To be called by doReadPDB().
 
-   17.03.94 Original    By: ACRM
-   08.10.99 Initialise IMaxOcc and MaxOcc
-   27.04.05 Added atnam_raw
-   03.06.05 Added altpos
-   14.10.05 Modified the flag value from 0.0 to -1.0 so that erroneous
+-  17.03.94 Original    By: ACRM
+-  08.10.99 Initialise IMaxOcc and MaxOcc
+-  27.04.05 Added atnam_raw
+-  03.06.05 Added altpos
+-  14.10.05 Modified the flag value from 0.0 to -1.0 so that erroneous
             lower occupancies of 0.0 are read properly and written back
             with their occupancy (0.0) rather than the next higher
             occupancy. Handles residues like 1zeh/B16
+-  04.08.14 Read charge and element. By: CTP
+-  16.08.14 Read formal charge and set partial charge. By: CTP
+
 */
-static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
-                             int NPartial, PDB **ppdb, PDB **pp, 
-                             int *natom)
+static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
+                               int NPartial, PDB **ppdb, PDB **pp, 
+                               int *natom)
 {
    int  i,
         j,
@@ -772,6 +936,11 @@ static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
    (*pp)->z      = multi[IMaxOcc].z;
    (*pp)->occ    = MaxOcc;
    (*pp)->bval   = multi[IMaxOcc].bval;
+   (*pp)->formal_charge = multi[IMaxOcc].formal_charge;
+   (*pp)->partial_charge = multi[IMaxOcc].partial_charge;
+   (*pp)->access = multi[IMaxOcc].access;
+   (*pp)->radius = multi[IMaxOcc].radius;
+   (*pp)->atomType = NULL;
    (*pp)->next   = NULL;
    /* 03.06.05 Added this line                                          */
    (*pp)->altpos = multi[IMaxOcc].altpos;
@@ -782,6 +951,7 @@ static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
    strcpy((*pp)->resnam,      multi[IMaxOcc].resnam);
    strcpy((*pp)->chain,       multi[IMaxOcc].chain);
    strcpy((*pp)->insert,      multi[IMaxOcc].insert);
+   strcpy((*pp)->element,     multi[IMaxOcc].element);
 
    /* Patch the atom name to remove the alternate letter                */
    if(strlen((*pp)->atnam) > 4)
@@ -793,19 +963,21 @@ static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
 }
 
 /************************************************************************/
-/*>char *FixAtomName(char *name, REAL occup)
-   -----------------------------------------
-   Input:   char  *name     Atom name read from file
-            REAL  occup     Occupancy to allow fixing of partial occupancy
+/*>char *blFixAtomName(char *name, REAL occup)
+   -------------------------------------------
+*//**
+
+   \param[in]     *name     Atom name read from file
+   \param[in]     occup     Occupancy to allow fixing of partial occupancy
                             atom names
-   Returns: char  *         Fixed atom name (pointer into name)
+   \return                  Fixed atom name (pointer into name)
 
    Fixes an atom name by removing leading spaces, or moving a leading
    digit to the end of the string. Used by doReadPDB()
 
-   06.04.94 Original    By: ACRM
-   01.03.01 No longer static
-   03.06.05 The name passed in has always contained the column which is
+-  06.04.94 Original    By: ACRM
+-  01.03.01 No longer static
+-  03.06.05 The name passed in has always contained the column which is
             officially the alternate atom position indicator, but is 
             used by some programs as part of the atom name. Thus the
             properly constructed variable coming into the routine should
@@ -816,11 +988,11 @@ static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
             position (e.g. ' CA A' -> ' CA  ') or if there is a 
             character in the first position (e.g. '1HG1A' -> '1HG1 ')
             or if the occupancy is not zero/one
-
             NOTE!!! To support this, the routine now has a second 
             parameter: REAL occup
+-  07.07.14 Renamed to blFixAtomName() By: CTP
 */
-char *FixAtomName(char *name, REAL occup)
+char *blFixAtomName(char *name, REAL occup)
 {
    char *newname;
    int  len;
@@ -850,7 +1022,7 @@ char *FixAtomName(char *name, REAL occup)
       /* If the first character is a digit, move it to the end          */
       if(isdigit(name[0]))
       {
-         if((len = chindex(name,' ')) == (-1))
+         if((len = blChindex(name,' ')) == (-1))
          {
             /* We didn't find a space in the name, so add the character
                onto the end of the string and re-terminate
@@ -874,18 +1046,24 @@ char *FixAtomName(char *name, REAL occup)
 }
 
 /************************************************************************/
-/*>PDB *RemoveAlternates(PDB *pdb)
-   -------------------------------
-   I/O:       PDB     *pdb       PDB 
-   Returns:   PDB *              Ammended linked list (in case start has
-                                 changed)
+/*>PDB *blRemoveAlternates(PDB *pdb)
+   ---------------------------------
+*//**
+
+   \param[in,out] *pdb       PDB 
+   \return                   Ammended linked list (in case start has
+                             changed)
 
    Remove alternate atoms - we keep only the highest occupancy or the 
    first if there are more than one the same.
 
-   25.01.05 Original based on code written for Inpharmatica   By: ACRM
+-  25.01.05 Original based on code written for Inpharmatica   By: ACRM
+-  04.02.14 Use CHAINMATCH macro. By: CTP
+-  07.07.14 Renamed to blRemoveAlternates() Use blWritePDBRecord()
+            Use bl prefix for functions By: CTP
+
 */
-PDB *RemoveAlternates(PDB *pdb)
+PDB *blRemoveAlternates(PDB *pdb)
 {
    PDB   *p, 
          *q, 
@@ -905,7 +1083,7 @@ PDB *RemoveAlternates(PDB *pdb)
    r_prev=NULL;
    for(p=pdb; p!=NULL; p=q)
    {
-      q=FindNextResidue(p);
+      q=blFindNextResidue(p);
       
       /* Step through atoms                                             */
       for(r=p; r!=q; NEXT(r))
@@ -914,7 +1092,7 @@ PDB *RemoveAlternates(PDB *pdb)
          {
 #ifdef DEBUG
             fprintf(stderr,"\n\nAlt pos found for record:\n");
-            WritePDBRecord(stderr, r);
+            blWritePDBRecord(stderr, r);
 #endif
             /* We have an alternate, store it and search for the other 
                ones  
@@ -934,7 +1112,7 @@ PDB *RemoveAlternates(PDB *pdb)
                      alts[altCount++] = s;
 #ifdef DEBUG
                      fprintf(stderr,"Partner atom found in res:\n");
-                     WritePDBRecord(stderr, s);
+                     blWritePDBRecord(stderr, s);
 #endif
                   }
                   else
@@ -965,7 +1143,7 @@ Increase MAXPARTIAL in ReadPDB.c\n", s->chain[0],
                {
                   if((s->resnum    == alts[0]->resnum) &&
                      (s->insert[0] == alts[0]->insert[0]) &&
-                     (s->chain[0]  == alts[0]->chain[0]) &&
+                     CHAINMATCH(s->chain,alts[0]->chain) &&
                      !strcmp(s->atnam_raw, alts[0]->atnam_raw))
                   {
                      if(altCount < MAXPARTIAL)
@@ -974,7 +1152,7 @@ Increase MAXPARTIAL in ReadPDB.c\n", s->chain[0],
 #ifdef DEBUG
                         fprintf(stderr,"Partner found outside \
 residue:\n");
-                        WritePDBRecord(stderr, s);
+                        blWritePDBRecord(stderr, s);
 #endif
                      }
                      else
@@ -1031,7 +1209,7 @@ flag\n\n");
                   {
 #ifdef DEBUG
                      fprintf(stderr,"Highest occupancy selected:\n");
-                     WritePDBRecord(stderr, alts[i]);
+                     blWritePDBRecord(stderr, alts[i]);
 #endif
                      alts[i]->altpos = ' ';
                   }
@@ -1066,7 +1244,7 @@ pointer\n");
                      /* Delete the alternate we don't need              */
 #ifdef DEBUG
                      fprintf(stderr,"Deleting Alt pos record:\n");
-                     WritePDBRecord(stderr, alts[i]);
+                     blWritePDBRecord(stderr, alts[i]);
 #endif
                      
                      FINDPREV(a_prev, pdb, alts[i]);
@@ -1085,3 +1263,596 @@ pointer\n");
    return(pdb);
 }
 
+
+
+/************************************************************************/
+/*>PDB *blDoReadPDBML(FILE *fp, int *natom, BOOL AllAtoms, int OccRank,
+                      int ModelNum)
+   --------------------------------------------------------------------
+*//**
+
+   \param[in]     *fpin    A pointer to type FILE in which the
+                           .PDB file is stored.
+   \param[in]     AllAtoms TRUE:  ATOM & HETATM records
+                           FALSE: ATOM records only
+   \param[in]     OccRank  Occupancy ranking
+   \param[in]     ModelNum NMR Model number (0 = all)
+   \param[out]    *natom   Number of atoms read. -1 if error.
+   \return                 A pointer to the first allocated item of
+                           the PDB linked list
+
+   Reads a PDBML-formatted PDB file into a PDB linked list.
+   
+   The OccRank value indicates occupancy ranking  to read for partial 
+   occupancy atoms. If any partial occupancy atoms are read the global 
+   flag gPDBPartialOcc is set to TRUE.
+   
+   The global multiple-models flag is set to true if more than one model 
+   is found.
+
+-  22.04.14 Original By: CTP
+-  02.06.14 Updated setting atnam_raw and parsing data from PDB atom site 
+            labels (label_seq_id, etc.) if author-defined labels are 
+            omitted. By: CTP
+-  09.06.14 Set gPDBXML flag. By: CTP
+-  07.07.14 Renamed to blDoReadPDBML() By: CTP
+-  04.08.14 Read element and formal charge. By: CTP
+-  15.08.14 Use CLEAR_PDB() to set default values. By: CTP
+-  16.08.14 Read formal and partial charges. Use blCopyPDB() to copy data
+            for partial occupancy atoms. By: CTP
+-  18.08.14 Added XML_SUPPORT option. Return error if XML_SUPPORT not 
+            defined By: CTP
+-  26.08.14 Pad record_type to six characters. By: CTP
+
+*/
+PDB *blDoReadPDBML(FILE *fpin,
+                   int  *natom,
+                   BOOL AllAtoms,
+                   int  OccRank,
+                   int  ModelNum)
+{
+#ifndef XML_SUPPORT
+
+   /* PDBML format not supported.                                       */
+   *natom = (-1);
+   return( NULL );
+
+#else
+
+   /* Parse PDBML-formatted file.                                       */
+   xmlParserCtxtPtr ctxt;
+   xmlDoc  *document;
+   xmlNode *root_node  = NULL, 
+           *sites_node = NULL, 
+           *atom_node  = NULL, 
+           *n          = NULL;
+   int     size_t;
+   char    xml_buffer[XML_BUFFER];
+   xmlChar *content;
+   double  content_lf;
+
+   PDB     *pdb      = NULL,
+           *curr_pdb = NULL,
+           *end_pdb  = NULL,
+           multi[MAXPARTIAL];
+
+   int     NPartial       =  0,
+           model_number   =  0;
+   char    store_atnam[8] = "",
+           pad_resnam[8]  = "";
+       
+
+   /* Zero natoms and reset flags */
+   gPDBXML        = TRUE;  /* global PDBML-fornmat flag     */
+   gPDBPartialOcc = FALSE; /* global partial occupancy flag */
+   gPDBMultiNMR   = FALSE; /* global multiple models flag   */
+   *natom = 0;             /* atoms stored                  */
+
+
+   /* Generate Document From Filehandle */
+   size_t = fread(xml_buffer, 1, XML_BUFFER, fpin);
+   ctxt = xmlCreatePushParserCtxt(NULL, NULL, xml_buffer, size_t, "file");
+   while ((size_t = fread(xml_buffer, 1, XML_BUFFER, fpin)) > 0) 
+   {
+      xmlParseChunk(ctxt, xml_buffer, size_t, 0);
+   }
+   xmlParseChunk(ctxt, xml_buffer, 0, 1);
+   document = ctxt->myDoc;
+   xmlFreeParserCtxt(ctxt);
+   
+   if(document == NULL)
+   {
+      /* Error: Failed to parse file */
+      *natom = -1;
+      return(NULL);
+   }
+   
+
+   /* Parse Document Tree */
+   root_node = xmlDocGetRootElement(document);   
+   for(n = root_node->children; n; n = n->next)
+   {
+      /* Find Atom Sites Node */
+      if(!strcmp("atom_siteCategory",(char *) n->name))
+      {
+         /* Found Atom Sites */
+         sites_node = n;
+         break;
+      }
+   }
+   
+   if(sites_node == NULL)
+   {
+      /* Error: Failed to find atom sites */
+      xmlFreeDoc(document);
+      *natom = -1;
+      return(NULL);
+   }
+
+
+   /* Scan through atom nodes and populate PDB list. */
+   for(atom_node = sites_node->children; atom_node; 
+       atom_node = atom_node->next)
+   {
+      if(!strcmp("atom_site",(char *) atom_node->name))
+      {
+         /* Current PDB */
+         INIT(curr_pdb,PDB);
+         
+         if(curr_pdb == NULL)
+         {
+            /* Error: Failed to store atom in pdb list */
+            xmlFreeDoc(document);
+            if(pdb != NULL) FREELIST(pdb,PDB);
+            *natom = -1;
+            return(NULL);
+         }
+
+         /* Set default values */
+         CLEAR_PDB(curr_pdb);
+         strcpy(curr_pdb->chain,   "");
+         strcpy(curr_pdb->atnam,   "");
+         strcpy(curr_pdb->resnam,  "");
+         strcpy(curr_pdb->insert, " ");
+         strcpy(curr_pdb->element, "");
+
+
+         /* Scan atom node children */
+         for(n = atom_node->children; n; n = n->next)
+         {
+            if(n->type != XML_ELEMENT_NODE){ continue; }
+            content = xmlNodeGetContent(n);
+
+            /* Set PDB values*/
+            if(!strcmp((char *) n->name,"B_iso_or_equiv"))
+            {
+               sscanf((char *) content,"%lf",&content_lf);
+               curr_pdb->bval = (REAL) content_lf;
+            }
+            else if(!strcmp((char *) n->name,"Cartn_x"))
+            {
+               sscanf((char *) content,"%lf",&content_lf);
+               curr_pdb->x = (REAL) content_lf;
+            }
+            else if(!strcmp((char *) n->name,"Cartn_y"))
+            {
+               sscanf((char *) content,"%lf",&content_lf);
+               curr_pdb->y = (REAL) content_lf;
+            }
+            else if(!strcmp((char *) n->name,"Cartn_z"))
+            {
+               sscanf((char *) content,"%lf",&content_lf);
+               curr_pdb->z = (REAL) content_lf;
+            }
+            else if(!strcmp((char *) n->name,"auth_asym_id"))
+            {
+               strcpy(curr_pdb->chain, (char *) content);
+            }
+            else if(!strcmp((char *) n->name,"auth_atom_id"))
+            {
+               strcpy(curr_pdb->atnam, (char *) content);
+            }
+            else if(!strcmp((char *) n->name,"auth_comp_id"))
+            {
+               strcpy(curr_pdb->resnam, (char *) content);
+            }
+            else if(!strcmp((char *) n->name,"auth_seq_id"))
+            {
+               sscanf((char *) content,"%lf",&content_lf);
+               curr_pdb->resnum = (REAL) content_lf;
+            }
+            else if(!strcmp((char *) n->name,"pdbx_PDB_ins_code"))
+            {
+               /* set insertion code */
+               strcpy(curr_pdb->insert, (char *) content);
+            }
+            else if(!strcmp((char *) n->name,"group_PDB"))
+            {
+              strcpy(curr_pdb->record_type, (char *) content);
+              PADMINTERM(curr_pdb->record_type, 6);
+            }
+            else if(!strcmp((char *) n->name,"occupancy"))
+            {
+               sscanf((char *) content,"%lf",&content_lf);
+               curr_pdb->occ = (REAL) content_lf;
+            }
+            else if(!strcmp((char *) n->name,"label_alt_id"))
+            {
+               /* Use strlen as test for alt position */
+               curr_pdb->altpos = strlen((char *)content) ? content[0]:' ';
+            }
+            else if(!strcmp((char *) n->name,"pdbx_PDB_model_num"))
+            {
+               sscanf((char *) content,"%lf",&content_lf);
+               model_number = (int) content_lf;
+            }
+            else if(!strcmp((char *) n->name,"type_symbol"))
+            {
+               strcpy(curr_pdb->element, (char *) content);
+            }
+            else if(!strcmp((char *) n->name,"label_asym_id"))
+            {
+               if(strlen(curr_pdb->chain) == 0)
+               {
+                  strcpy(curr_pdb->chain, (char *) content);
+               }
+            }
+            else if(!strcmp((char *) n->name,"label_atom_id"))
+            {
+               if(strlen(curr_pdb->atnam) == 0)
+               {
+                  strcpy(curr_pdb->atnam, (char *) content);
+               }
+            }
+            else if(!strcmp((char *) n->name,"label_comp_id"))
+            {
+               if(strlen(curr_pdb->resnam) == 0)
+               {
+                  strcpy(curr_pdb->resnam, (char *) content);
+               }
+            }
+            else if(!strcmp((char *) n->name,"label_seq_id"))
+            {
+               if(curr_pdb->resnum == 0 && strlen((char *) content) > 0)
+               {
+                  sscanf((char *) content,"%lf",&content_lf);
+                  curr_pdb->resnum = (REAL) content_lf;
+               }
+            }
+            else if(!strcmp((char *) n->name,"pdbx_formal_charge"))
+            {
+               sscanf((char *) content,"%lf",&content_lf);
+               curr_pdb->formal_charge = (int) content_lf;
+               curr_pdb->partial_charge = (REAL) content_lf;
+            }
+
+
+            xmlFree(content);           
+         }
+         
+         /* Set raw atom name */
+         /* Note: The text pdb format uses columns 13-16 to store the atom
+                  name. By convention, columns 13-14 contain the 
+                  right-justified element symbol for the atom.
+                  
+                  The raw atom name is equivalent to colums 13-16 of a
+                  pdb-formatted text file .                             */
+
+         if(strlen(curr_pdb->atnam) == 1)
+         {
+            /* copy 1-letter name atnam_raw */
+            strcpy((curr_pdb->atnam_raw),               " ");
+            strcpy((curr_pdb->atnam_raw)+1, curr_pdb->atnam);
+         }
+         if(strlen(curr_pdb->atnam) == 4)
+         {
+            /* copy 4-letter name atnam_raw */
+            strcpy(curr_pdb->atnam_raw, curr_pdb->atnam);
+         }
+         else if(strlen(curr_pdb->element) == 1)
+         {
+            strcpy((curr_pdb->atnam_raw),               " ");
+            strcpy((curr_pdb->atnam_raw)+1, curr_pdb->atnam);
+         }
+         else
+         {
+            strcpy(curr_pdb->atnam_raw, curr_pdb->atnam);
+         }
+         
+         /* Pad atom names to 4 characters */
+         PADMINTERM(curr_pdb->atnam,     4);
+         PADMINTERM(curr_pdb->atnam_raw, 4);
+         
+         /* Pad Residue Name */
+         /* Note: The text pdb format uses columns 18-20 to store the 
+                  residue name (right-justified).
+                  
+                  curr_pdb->resnam is is equivalent to colums 18-21 of a
+                  pdb-formatted text file.                              */
+         sprintf(pad_resnam,"%3s",curr_pdb->resnam);
+         PADMINTERM(pad_resnam, 4);
+         strcpy(curr_pdb->resnam, pad_resnam);         
+         
+         /* Set chain to " " if not already set */
+         if(strlen(curr_pdb->chain) == 0)
+         {
+            strcpy(curr_pdb->chain, " ");
+         }
+
+         /* Set multi-model flag */
+         if(model_number > 1)
+         {
+            gPDBMultiNMR = TRUE;
+         }
+
+         /* Filter: Model Number */
+         if(model_number != ModelNum)
+         {
+            /* Free curr_pdb */
+            FREELIST(curr_pdb,PDB);
+            curr_pdb = NULL;
+            
+            if(model_number > ModelNum)
+            {
+               break; /* skip rest of tree */
+            }
+            else
+            {
+               continue; /* filter */
+            }
+         }
+
+
+         /* Filter: All Atoms */
+         if(!AllAtoms && strncmp(curr_pdb->record_type, "ATOM  ", 6))
+         {
+            /* Free curr_pdb and skip atom */
+            FREELIST(curr_pdb,PDB);
+            curr_pdb = NULL;
+            continue; /* filter */
+         }
+
+
+         /* Add partial occ atom from temp storage to output PDB list */
+         if(NPartial != 0 && strcmp(curr_pdb->atnam,store_atnam))
+         {
+            /* Store atom */
+            if( blStoreOccRankAtom(OccRank,multi,NPartial,&pdb,&end_pdb,
+                                   natom) )
+            {
+               LAST(end_pdb);
+               NPartial = 0;
+            }
+            else
+            {
+               /* Error: Failed to store partial occ atom */
+               xmlFreeDoc(document);
+               if(curr_pdb != NULL) FREELIST(curr_pdb,PDB);
+               if(pdb      != NULL) FREELIST(pdb,     PDB);
+               *natom = -1;
+               return(NULL);
+            }
+         }
+
+
+         /* Set atom number */
+         /* Note: Cannot use atom site id for atom number so base atnum on
+                  number of atoms stored */
+         curr_pdb->atnum = *natom + 1;
+         
+         
+         /* Add partial occupancy atom to temp storage */
+         if(curr_pdb->altpos != ' ' && NPartial < MAXPARTIAL)
+         {
+            /* Copy the partial atom data to storage */
+            blCopyPDB(&multi[NPartial], curr_pdb);
+
+            /* Set global partial occupancy flag */
+            gPDBPartialOcc = TRUE;
+            
+            /* Store current atom name */
+            strcpy(store_atnam,curr_pdb->atnam);
+            NPartial++;
+
+            /* Free curr_pdb and continue */
+            FREELIST(curr_pdb,PDB);
+            curr_pdb = NULL;
+            continue;
+         }
+
+         
+         /* Store Atom */
+         if(pdb == NULL)
+         {
+            pdb      = curr_pdb;
+            end_pdb  = curr_pdb;
+            curr_pdb = NULL;
+            *natom   = 1;
+         }
+         else
+         {
+            end_pdb->next = curr_pdb;
+            end_pdb       = curr_pdb;
+            curr_pdb      = NULL;
+            (*natom)++;
+         }
+      }
+   }
+      
+   /* Free document */
+   xmlFreeDoc(document);
+
+   /* Store final atom (if partial occupancy) */   
+   if(NPartial != 0)
+   {
+      if(!blStoreOccRankAtom(OccRank,multi,NPartial,&pdb,&end_pdb,natom))
+      {
+         /* Error: Failed to store atom in pdb list */
+         if(pdb != NULL) FREELIST(pdb,PDB);
+         *natom = -1;
+         return(NULL);
+      }
+      
+   }
+   
+   /* Check atoms have been stored */
+   if(pdb == NULL || *natom == 0)
+   {
+      /* Error: pdb list empty or no atoms stored */
+      if(pdb != NULL) FREELIST(pdb,PDB);
+      *natom = -1;
+   }
+    
+   /* Return PDB linked list */
+   return(pdb);
+
+#endif
+}
+
+
+/************************************************************************/
+/*>BOOL blCheckFileFormatPDBML(FILE *fp)
+   -------------------------------------
+*//**
+
+   \param[in]     *fp      A pointer to type FILE.
+   \return                 File is in PDBML format?
+
+   Simple test to detect PDBML-formatted pdb file.
+   
+   Todo: Consider replacement with general function to detect file format
+         for uncompressed file returning file type (eg pdb/pdbml/unknown).
+   
+
+-  22.04.14 Original By: CTP
+-  07.07.14 Renamed to blCheckFileFormatPDBML() By: CTP
+-  29.08.14 Function re-written to take sample from the input stream then
+            reset the stream with ungetc. By: CTP
+-  31.08.14 Bugfix: Check for 'PDBx:datablock' tag skipped if blank line 
+            before xml tag. By: CTP
+-  09.09.14 Use rewind() for DOS instead of pushing sample back on stream 
+            with ungetc(). By: CTP
+-  29.09.14 Use single character check for pdbml files for Windows or 
+            systems where ungetc() fails after pushback of singe char. 
+            By: CTP
+
+*/
+BOOL blCheckFileFormatPDBML(FILE *fp)
+{
+#if !defined(SINGLE_CHAR_FILECHECK) && !defined(MS_WINDOWS)
+
+   /* Default Filetype Check */
+   char buffer[XML_SAMPLE];
+   int  i, c;
+   BOOL found_xml  = FALSE,
+        found_pdbx = FALSE;
+
+   /* store sample from stream */
+   for(i = 0; i < (XML_SAMPLE - 1); i++)
+   {
+      c = fgetc(fp);
+      if(c == EOF || feof(fp)) break;
+      buffer[i] = (char)c;      
+   }
+   buffer[i] = '\0'; /* terminate string */
+
+   /* push sample back on input stream */
+   for(i = strlen(buffer) - 1; i >= 0; i--)
+   {
+      ungetc(buffer[i], fp);
+   }
+
+   /* check first line */
+   if(!strncmp(buffer,"<?xml ",6)) found_xml  = TRUE;
+   
+   /* check remaining lines */
+   for(i = 0; i < strlen(buffer); i++)
+   {
+      if(buffer[i] != '\n') continue;
+
+      /*i++;*/
+      if(!strncmp(&buffer[i+1],"<?xml ",6))            found_xml  = TRUE;
+      if(!strncmp(&buffer[i+1],"<PDBx:datablock ",16)) found_pdbx = TRUE;
+   }
+
+   return found_xml && found_pdbx ? TRUE : FALSE ;
+
+#else
+
+   /* Single Character Filetype Check */
+   int c;
+
+   /* get single char from input stream */
+   c = fgetc(fp);
+   if(c == EOF || feof(fp)) return FALSE;
+
+   /* pushback character */
+   ungetc(c, fp);
+
+   /* detect filetype */
+   return (char)c == '<' ? TRUE:FALSE;
+
+#endif 
+}
+
+/************************************************************************/
+/*>static void blProcessElementField(char *element_field, char *element)
+   ---------------------------------------------------------------------
+*//**
+
+   \param[in]  element_field   Columns 77 to 78 of the ATOM/HETATM record 
+                               of pdb file.
+   \param[out] element         Element symbol.
+   
+   Get element symbol for ATOM/HETATM record.
+   
+-  04.08.14 Original By: CTP
+   
+*/
+static void blProcessElementField(char *element, char *element_field)
+{
+   char element_sym[4] = "";
+   char *element_ptr   = NULL;
+
+   /* Get element */
+   if(strlen(element_field) >= 2)
+   {
+      strncpy(element_sym, element_field, 2);
+      element_sym[2] = '\0';
+      KILLLEADSPACES(element_ptr, element_sym);
+      strcpy(element,element_ptr);
+   }
+
+   return;
+}
+
+/************************************************************************/
+/*>static void blProcessChargeField(char *element_charge, int *charge)
+   -------------------------------------------------------------------
+*//**
+
+   \param[in]  element_charge  Columns 79 to 80 of the ATOM/HETATM record 
+                               of pdb file.
+   \param[out] charge          Charge on the atom.
+   
+   Get formal charge for ATOM/HETATM record.
+
+-  04.08.14 Original By: CTP
+   
+*/
+static void blProcessChargeField(int *charge, char *charge_field)
+{
+   /* Get charge magnitude */
+   if(strlen(charge_field) >= 2 && isdigit(charge_field[0]))
+   {
+      *charge = charge_field[0] - '0';
+   }
+
+   /* Get charge sign */
+   if(strlen(charge_field) >= 2 && charge_field[1] == '-')
+   {
+      *charge = *charge * -1;
+   }
+
+   return;
+}

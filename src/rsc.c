@@ -1,26 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       rsc.c
+   \file       rsc.c
    
-   Version:    V1.11R
-   Date:       03.06.05
-   Function:   Modify sequence of a PDB linked list
+   \version    V1.13
+   \date       15.08.14
+   \brief      Modify sequence of a PDB linked list
    
-   Copyright:  (c) SciTech Software 1992-2005
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2005
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -29,6 +35,7 @@
 
    Description:
    ============
+
    Takes a PDB linked list and replaces sidechains
 
 **************************************************************************
@@ -43,25 +50,27 @@
 
    Revision History:
    =================
-   V1.0  12.05.92 Original
-   V1.1  09.07.93 Simplified and improved memory allocation checking
-   V1.2  11.03.94 RepSChain() now returns BOOL
-   V1.3  14.03.94 RepSChain() now returns TRUE for success and FALSE for
+-  V1.0  12.05.92 Original
+-  V1.1  09.07.93 Simplified and improved memory allocation checking
+-  V1.2  11.03.94 RepSChain() now returns BOOL
+-  V1.3  14.03.94 RepSChain() now returns TRUE for success and FALSE for
                   failure. THIS IS INCOMPATIBLE WITH PREVIOUS VERSIONS
                   which returned 0 for success.
                   Error messages are now placed in gRSCError rather than
                   being printed.
-   V1.4  19.05.94 Fixed bug resulting from change in RotatePDB(); now
+-  V1.4  19.05.94 Fixed bug resulting from change in RotatePDB(); now
                   calls ApplyMatrixPDB() instead
-   V1.5  05.10.94 Modified for KillSidechain() returning BOOL
-   V1.6  09.11.94 Modified to use OpenFile() fo open the data files
-   V1.7  12.08.96 Added RepOneSChain() and EndRepSChain() and a few
+-  V1.5  05.10.94 Modified for KillSidechain() returning BOOL
+-  V1.6  09.11.94 Modified to use OpenFile() fo open the data files
+-  V1.7  12.08.96 Added RepOneSChain() and EndRepSChain() and a few
                   internal changes to RepSChain()
-   V1.8  15.08.96 Removed unused variables from RepOneSChain()
-   V1.9  30.05.02 Changed PDB field from 'junk' to 'record_type'
-   V1.10 09.02.05 Fixed to handle atnam_raw and sensible defaults for
+-  V1.8  15.08.96 Removed unused variables from RepOneSChain()
+-  V1.9  30.05.02 Changed PDB field from 'junk' to 'record_type'
+-  V1.10 09.02.05 Fixed to handle atnam_raw and sensible defaults for
                   occ/bval
-   V1.11 03.06.05 Added altpos
+-  V1.11 03.06.05 Added altpos
+-  V1.12 07.07.14 Use bl prefix for functions By: CTP
+-  V1.13 15.08.14 Updated ReadRefCoords() to use CLEAR_PDB() By: CTP
 
 *************************************************************************/
 /* Defines required for includes
@@ -120,35 +129,38 @@ static PDB *FixTorsions(PDB *pdb, PDB *ResStart, PDB *NextRes,
                         int **chitab);
 
 /************************************************************************/
-/*>BOOL RepSChain(PDB *pdb, char *sequence, char *ChiTable,
+/*>BOOL blRepSChain(PDB *pdb, char *sequence, char *ChiTable,
                   char *RefCoords)
-   --------------------------------------------------------
-   I/O:     PDB   *pdb        PDB linked list to modify
-   Input:   char  *sequence   The 1-letter code required for the structure
-            char  *ChiTable   The equivalent Chi table
-            char  *RefCoords  The reference coordinates file
-   Returns: BOOL              Success?
+   ----------------------------------------------------------
+*//**
+
+   \param[in,out] *pdb        PDB linked list to modify
+   \param[in]     *sequence   The 1-letter code required for the structure
+   \param[in]     *ChiTable   The equivalent Chi table
+   \param[in]     *RefCoords  The reference coordinates file
+   \return                      Success?
 
    Replace sidechains. Takes a PDB linked list and a 1-letter code 
    sequence and replaces the sidechains. Also requires filenames of the 
    two datafiles. DEL residues in the pdb linked list will be skipped 
    as will -'s in the sequence
    
-   12.05.92 Original
-   14.05.92 Corrected handling of matching DEL and -
-   21.06.93 Changed to allocate chitab using Array2D
-   14.03.94 Changed logic of return value. Now places error messages in
+-  12.05.92 Original
+-  14.05.92 Corrected handling of matching DEL and -
+-  21.06.93 Changed to allocate chitab using Array2D
+-  14.03.94 Changed logic of return value. Now places error messages in
             gRSCError.
-   09.11.94 Uses OpenFile() to look in $(DATADIR) is the file wasn't
+-  09.11.94 Uses OpenFile() to look in $(DATADIR) is the file wasn't
             found as specified.
-   12.08.96 Made static variables external to this routine as they are
+-  12.08.96 Made static variables external to this routine as they are
             shared by RepOneSChain(). sChiTab was being allocated on every
             call instead of just the first one.
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL RepSChain(PDB  *pdb,           /* PDB linked list                  */
-               char *sequence,      /* Sequence 1-letter code           */
-               char *ChiTable,      /* Equivalent torsion table filename*/
-               char *RefCoords)     /* Reference coordinate filename    */
+BOOL blRepSChain(PDB  *pdb,         /* PDB linked list                  */
+                 char *sequence,    /* Sequence 1-letter code           */
+                 char *ChiTable,    /* Equivalent torsion table filename*/
+                 char *RefCoords)   /* Reference coordinate filename    */
 {
    int   resnum;                    /* Current residue number           */
    char  insert[8],                 /* Current insert code              */
@@ -163,12 +175,12 @@ BOOL RepSChain(PDB  *pdb,           /* PDB linked list                  */
       FILE  *fp_ChiTable;
 
       /* Allocate 2D array for equivalent torsions                      */
-      if((sChiTab = (int **)Array2D(sizeof(int), NUMAAKNOWN, NUMAAKNOWN)) 
+      if((sChiTab = (int **)blArray2D(sizeof(int), NUMAAKNOWN, NUMAAKNOWN)) 
          == NULL)
          return(FALSE);
    
       /* Open files                                                     */
-      if((fp_ChiTable = OpenFile(ChiTable,"DATADIR","r",&noenv)) == NULL)
+      if((fp_ChiTable = blOpenFile(ChiTable,"DATADIR","r",&noenv)) == NULL)
       {
          if(noenv)
          {
@@ -182,7 +194,7 @@ BOOL RepSChain(PDB  *pdb,           /* PDB linked list                  */
          return(FALSE);
       }
 
-      if((sFp_RefCoords = OpenFile(RefCoords,"DATADIR","r",&noenv)) == 
+      if((sFp_RefCoords = blOpenFile(RefCoords,"DATADIR","r",&noenv)) == 
          NULL)
       {
          if(noenv)
@@ -230,7 +242,7 @@ BOOL RepSChain(PDB  *pdb,           /* PDB linked list                  */
       else     /* Not a DEL, see if it needs replacing                  */
       {
          /* If there is a sequence mismatch, replace the residue        */
-         if(*seq != throne(p->resnam))
+         if(*seq != blThrone(p->resnam))
             p = DoReplace(ResStart,NextRes,*seq,sChiTab,sFp_RefCoords);
          if(p == NULL) return(FALSE);
 
@@ -239,23 +251,25 @@ BOOL RepSChain(PDB  *pdb,           /* PDB linked list                  */
       }
    }
    
-   RenumAtomsPDB(pdb);
+   blRenumAtomsPDB(pdb);
    
    return(TRUE);
 }
 
 
 /************************************************************************/
-/*>BOOL RepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
+/*>BOOL blRepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
                      char *RefCoords)
-   -------------------------------------------------------------------
-   I/O:     PDB   *pdb        PDB linked list to modify
-   Input:   char  *resspec    Residue spec for residue to replace in the
+   ---------------------------------------------------------------------
+*//**
+
+   \param[in,out] *pdb        PDB linked list to modify
+   \param[in]     *ResSpec    Residue spec for residue to replace in the
                               format [c]nnn[i]
-            char  aa          The 1-letter code for the new sidechain
-            char  *ChiTable   The equivalent Chi table
-            char  *RefCoords  The reference coordinates file
-   Returns: BOOL              Success?
+   \param[in]     aa          The 1-letter code for the new sidechain
+   \param[in]     *ChiTable   The equivalent Chi table
+   \param[in]     *RefCoords  The reference coordinates file
+   \return                      Success?
 
    Replace a single sidechain. Takes a PDB linked list, a residues
    specfication (in the form [c]nnn[i] where [c] is an optional chain
@@ -264,10 +278,11 @@ BOOL RepSChain(PDB  *pdb,           /* PDB linked list                  */
    maximum overlap replacement of the sidechain. Also requires filenames 
    of the two datafiles.
    
-   12.08.96 Original based on RepSChain()
-   15.08.96 Removed unused variables
+-  12.08.96 Original based on RepSChain()
+-  15.08.96 Removed unused variables
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL RepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
+BOOL blRepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
                   char *RefCoords)
 {
    PDB   *ResStart,                 /* Start of residue                 */
@@ -279,12 +294,12 @@ BOOL RepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
       FILE  *fp_ChiTable;
 
       /* Allocate 2D array for equivalent torsions                      */
-      if((sChiTab = (int **)Array2D(sizeof(int), NUMAAKNOWN, NUMAAKNOWN)) 
+      if((sChiTab = (int **)blArray2D(sizeof(int), NUMAAKNOWN, NUMAAKNOWN)) 
          == NULL)
          return(FALSE);
    
       /* Open files                                                     */
-      if((fp_ChiTable = OpenFile(ChiTable,"DATADIR","r",&noenv)) == NULL)
+      if((fp_ChiTable = blOpenFile(ChiTable,"DATADIR","r",&noenv)) == NULL)
       {
          if(noenv)
          {
@@ -298,7 +313,7 @@ BOOL RepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
          return(FALSE);
       }
 
-      if((sFp_RefCoords = OpenFile(RefCoords,"DATADIR","r",&noenv)) == 
+      if((sFp_RefCoords = blOpenFile(RefCoords,"DATADIR","r",&noenv)) == 
          NULL)
       {
          if(noenv)
@@ -323,15 +338,15 @@ BOOL RepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
    }
    
    /* Find the specified residue and the one following                  */
-   if((ResStart = FindResidueSpec(pdb, ResSpec))==NULL)
+   if((ResStart = blFindResidueSpec(pdb, ResSpec))==NULL)
    {
       sprintf(gRSCError,"Residue specification not in PDB list\n");
       return(FALSE);
    }
-   NextRes = FindNextResidue(ResStart);
+   NextRes = blFindNextResidue(ResStart);
    
    /* If there is a sequence mismatch, replace the residue              */
-   if(aa != throne(ResStart->resnam))
+   if(aa != blThrone(ResStart->resnam))
    {
       if(DoReplace(ResStart, NextRes, aa, sChiTab, sFp_RefCoords) == 
          NULL) 
@@ -340,21 +355,24 @@ BOOL RepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
       }
    }
    
-   RenumAtomsPDB(pdb);
+   blRenumAtomsPDB(pdb);
    
    return(TRUE);
 }
 
 
 /************************************************************************/
-/*>void EndRepSChain(void)
-   -----------------------
+/*>void blEndRepSChain(void)
+   -------------------------
+*//**
+
    Cleans up open files and memory used by the sidechain replacement
    routines.
 
-   12.08.96 Original   By: ACRM
+-  12.08.96 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void EndRepSChain(void)
+void blEndRepSChain(void)
 {
    if(!sFirstCall)
    {
@@ -368,7 +386,7 @@ void EndRepSChain(void)
 
       if(sChiTab != NULL)
       {
-         FreeArray2D((char **)sChiTab, NUMAAKNOWN, NUMAAKNOWN);
+         blFreeArray2D((char **)sChiTab, NUMAAKNOWN, NUMAAKNOWN);
          sChiTab = NULL;
       }
    }
@@ -379,18 +397,20 @@ void EndRepSChain(void)
 /*>static PDB *DoReplace(PDB  *ResStart, PDB  *NextRes, char seq, 
                   int  **chitab, FILE *fp_RefCoords)
    --------------------------------------------------------------
-   I/O:     PDB  *ResStart        Pointer to start of residue
-   Input:   PDB  *NextRes         Pointer to start of next res
-            char seq              1-letter code for this aa
-            int  **chitab         Equivalent chis
-            FILE *fp_RefCoords    Reference coordinate file
-   Returns: PDB  *                If OK, Pointer to end of replaced 
+*//**
+
+   \param[in,out] *ResStart        Pointer to start of residue
+   \param[in]     *NextRes         Pointer to start of next res
+   \param[in]     seq              1-letter code for this aa
+   \param[in]     **chitab         Equivalent chis
+   \param[in]     *fp_RefCoords    Reference coordinate file
+   \return                           If OK, Pointer to end of replaced 
                                   residue; NULL if error.
    
    Main dispatch routine for replacing one residue with another.
 
-   12.05.92 Original
-   21.06.93 Changed to use Array2D allocated chitab 
+-  12.05.92 Original
+-  21.06.93 Changed to use Array2D allocated chitab 
 */
 static PDB *DoReplace(PDB  *ResStart,  /* Pointer to start of residue   */
                       PDB  *NextRes,   /* Pointer to start of next res  */
@@ -402,7 +422,7 @@ static PDB *DoReplace(PDB  *ResStart,  /* Pointer to start of residue   */
    PDB   *p;
    
    /* Check we need to do a replacement                                 */
-   if(seq == throne(ResStart->resnam)) return(NULL);
+   if(seq == blThrone(ResStart->resnam)) return(NULL);
    
    if(!strncmp(ResStart->resnam,"GLY",3)) /* Replace Gly with X         */
       retval = ReplaceGly(ResStart,NextRes,seq,fp_RefCoords);
@@ -425,15 +445,18 @@ static PDB *DoReplace(PDB  *ResStart,  /* Pointer to start of residue   */
 /************************************************************************/
 /*>static int ReplaceWithGly(PDB *ResStart, PDB *NextRes)
    ------------------------------------------------------
-   I/O:     PDB  *ResStart   Start of residue to be modified
-   Input:   PDB  *NextRes    Pointer to start of next residue
-   Returns: int              0: OK, 1: error
+*//**
+
+   \param[in,out] *ResStart   Start of residue to be modified
+   \param[in]     *NextRes    Pointer to start of next residue
+   \return                      0: OK, 1: error
 
    Replace residue X with Gly. This is simply a case of trimming the 
    sidechain and changing the residue name.
    
-   12.05.92 Original
-   05.10.94 Changed for BOOL return from KillSidechain()
+-  12.05.92 Original
+-  05.10.94 Changed for BOOL return from KillSidechain()
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 static int ReplaceWithGly(PDB *ResStart,  /* Start of res               */
                           PDB *NextRes)   /* Start of next res          */
@@ -441,11 +464,11 @@ static int ReplaceWithGly(PDB *ResStart,  /* Start of res               */
    BOOL  retval;
    
    /* Kill sidechain. Third parameter is a flag to kill CB              */
-   retval = KillSidechain(ResStart,NextRes,TRUE);
+   retval = blKillSidechain(ResStart,NextRes,TRUE);
    
    /* If OK, set the residue name                                       */
-   if(retval) SetResnam(ResStart,NextRes,"GLY ",ResStart->resnum,
-                        ResStart->insert,ResStart->chain);
+   if(retval) blSetResnam(ResStart,NextRes,"GLY ",ResStart->resnum,
+                          ResStart->insert,ResStart->chain);
    
    return(retval?0:1);
 }
@@ -454,15 +477,18 @@ static int ReplaceWithGly(PDB *ResStart,  /* Start of res               */
 /************************************************************************/
 /*>static int ReplaceWithAla(PDB *ResStart, PDB *NextRes)
    ------------------------------------------------------
-   I/O:     PDB  *ResStart   Start of residue to be modified
-   Input:   PDB  *NextRes    Pointer to start of next residue
-   Returns: int              0: OK, 1: error
+*//**
+
+   \param[in,out] *ResStart   Start of residue to be modified
+   \param[in]     *NextRes    Pointer to start of next residue
+   \return                      0: OK, 1: error
 
    Replace residue X with Ala. This is simply a case of trimming the 
    sidechain and changing the residue name.
    
-   12.05.92 Original
-   05.10.94 Changed for BOOL return from KillSidechain()
+-  12.05.92 Original
+-  05.10.94 Changed for BOOL return from KillSidechain()
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 static int ReplaceWithAla(PDB *ResStart,  /* Start of residue           */
                           PDB *NextRes)   /* Start of next residue      */
@@ -470,11 +496,11 @@ static int ReplaceWithAla(PDB *ResStart,  /* Start of residue           */
    BOOL retval;
    
    /* Kill sidechain. Third parameter is a flag not to kill CB          */
-   retval = KillSidechain(ResStart,NextRes,FALSE);
+   retval = blKillSidechain(ResStart,NextRes,FALSE);
    
    /* If OK, set the residue name                                       */
-   if(retval) SetResnam(ResStart,NextRes,"ALA ",ResStart->resnum,
-                        ResStart->insert,ResStart->chain);
+   if(retval) blSetResnam(ResStart,NextRes,"ALA ",ResStart->resnum,
+                          ResStart->insert,ResStart->chain);
    
    return(retval?0:1);
 }
@@ -484,17 +510,20 @@ static int ReplaceWithAla(PDB *ResStart,  /* Start of residue           */
 /*>static int ReplaceGly(PDB *ResStart, PDB *NextRes, char seq,
                          FILE *fp_RefCoords)
    ------------------------------------------------------------
-   I/O:     PDB  *ResStart     Start of residue to be modified
-   Input:   PDB  *NextRes      Pointer to start of next residue
-            char seq           1-letter code for replacement residue
-            FILE *fp_RefCoords Reference coordinate file pointer
-   Returns: int                0: OK, 1: error
+*//**
+
+   \param[in,out] *ResStart     Start of residue to be modified
+   \param[in]     *NextRes      Pointer to start of next residue
+   \param[in]     seq           1-letter code for replacement residue
+   \param[in]     *fp_RefCoords Reference coordinate file pointer
+   \return                        0: OK, 1: error
 
    Replace a Gly with another residue type.
    
-   12.05.92 Original
-   21.06.93 Changed for new version of onethr(). Removed unused param.
-   09.07.93 Simplified allocation checking
+-  12.05.92 Original
+-  21.06.93 Changed for new version of onethr(). Removed unused param.
+-  09.07.93 Simplified allocation checking
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 static int ReplaceGly(PDB  *ResStart,
                       PDB  *NextRes,
@@ -510,7 +539,7 @@ static int ReplaceGly(PDB  *ResStart,
          *parent_mc = NULL;         /* Parent mainchain                 */
    char  *three;                    /* Three letter code                */
    
-   three = onethr(seq);
+   three = blOnethr(seq);
    
    /* Read the required residue type out of the reference coordinate file.
       Returns NULL if unable to allocate memory, or residue not found.
@@ -550,7 +579,7 @@ static int ReplaceGly(PDB  *ResStart,
          }
 
          
-         CopyPDB(q,p);                       /* Copy PDB item           */
+         blCopyPDB(q,p);                       /* Copy PDB item           */
       }
    }
    if(natoms != 3)                           /* Atoms missing           */
@@ -587,7 +616,7 @@ static int ReplaceGly(PDB  *ResStart,
             goto Cleanup;
          }
          
-         CopyPDB(q,p);                       /* Copy PDB item           */
+         blCopyPDB(q,p);                       /* Copy PDB item           */
       }
    }
    if(natoms != 3)                           /* Atoms missing           */
@@ -609,8 +638,8 @@ static int ReplaceGly(PDB  *ResStart,
    if(InsertSC(reference, ResStart, NextRes, TRUE))
       retval = 1;
    
-   if(retval == 0) SetResnam(ResStart,NextRes,three,ResStart->resnum,
-                             ResStart->insert,ResStart->chain);
+   if(retval == 0) blSetResnam(ResStart,NextRes,three,ResStart->resnum,
+                               ResStart->insert,ResStart->chain);
 
 Cleanup:
    if(reference != NULL)   FREELIST(reference, PDB);
@@ -624,9 +653,11 @@ Cleanup:
 /************************************************************************/
 /*>static int FitByFragment(PDB *destination, PDB *fragment, PDB *mobile)
    ----------------------------------------------------------------------
-   Input:   PDB *destination       Fragment we're fitting to
-            PDB *fragment          Part of mobile to fit
-   I/O:     PDB *mobile            Whole section to move
+*//**
+
+   \param[in]     *destination       Fragment we're fitting to
+   \param[in]     *fragment          Part of mobile to fit
+   \param[in,out] *mobile            Whole section to move
    Returns  int                    0:OK, 1:Error
 
    Calculate the best fit for moving fragment onto destination. Then move
@@ -634,8 +665,9 @@ Cleanup:
    onto another (destination) then move the whole amino acid (mobile) to 
    overlap the mainchains.
    
-   12.05.92 Original
-   19.05.94 Calls ApplyMatrixPDB() rather than RotatePDB()
+-  12.05.92 Original
+-  19.05.94 Calls ApplyMatrixPDB() rather than RotatePDB()
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 static int FitByFragment(PDB *destination, /* Fragment we're fitting to */
                          PDB *fragment,    /* Part of mobile to fit     */
@@ -646,16 +678,16 @@ static int FitByFragment(PDB *destination, /* Fragment we're fitting to */
    REAL  rm[3][3];                     /* Rotation matrix from fitting  */
 
    /* Correct the atom order for the PDB lists                          */
-   destination = ShuffleBB(destination);
-   fragment    = ShuffleBB(fragment);
-   mobile      = ShuffleBB(mobile);
+   destination = blShuffleBB(destination);
+   fragment    = blShuffleBB(fragment);
+   mobile      = blShuffleBB(mobile);
 
    /* Get CofG of fragment and destination                              */
-   GetCofGPDB(fragment,    &cg_fragment);
-   GetCofGPDB(destination, &cg_destination);
+   blGetCofGPDB(fragment,    &cg_fragment);
+   blGetCofGPDB(destination, &cg_destination);
    
    /* Fit the fragment to the destination                               */
-   if(!FitCaCbPDB(destination, fragment, rm))
+   if(!blFitCaCbPDB(destination, fragment, rm))
       return(1);
    
    /* Negate the vector for the fragment CofG so we can translate
@@ -666,15 +698,15 @@ static int FitByFragment(PDB *destination, /* Fragment we're fitting to */
    cg_fragment.z = -cg_fragment.z;
    
    /* Move mobile so the CofG of fragment is at the origin              */
-   TranslatePDB(mobile, cg_fragment);
+   blTranslatePDB(mobile, cg_fragment);
    
    /* RotatePDB mobile onto the destination                             */
-   ApplyMatrixPDB(mobile, rm);
+   blApplyMatrixPDB(mobile, rm);
    
    /* TranslatePDB mobile back to coincide fragments and 
       destination CofG 
    */
-   TranslatePDB(mobile, cg_destination);
+   blTranslatePDB(mobile, cg_destination);
    
    return(0);
 }
@@ -684,19 +716,21 @@ static int FitByFragment(PDB *destination, /* Fragment we're fitting to */
 /*>static int InsertSC(PDB *insert, PDB *ResStart, PDB *NextRes, 
                        BOOL doCB)
    -------------------------------------------------------------
-   Input:   PDB   *insert    PDB linked list to insert
-            PDB   *ResStart  Start of residue
-            PDB   *NextRes   Start of next residue
-            BOOL  doCB       TRUE: CB will be inserted
+*//**
+
+   \param[in]     *insert    PDB linked list to insert
+   \param[in]     *ResStart  Start of residue
+   \param[in]     *NextRes   Start of next residue
+   \param[in]     doCB       TRUE: CB will be inserted
                              FALSE: CB not inserted
-   Returns: int              0 if OK, 1 if error.
+   \return                      0 if OK, 1 if error.
 
    Inserts the sidechain from insert into the PDB linked list just before
    NextRes. Fresh allocations are made for the copy.
    
-   12.05.92 Original
-   19.06.92 Added num char param to strncmp()!
-   11.03.94 Changed doCB to BOOL
+-  12.05.92 Original
+-  19.06.92 Added num char param to strncmp()!
+-  11.03.94 Changed doCB to BOOL
 */
 static int InsertSC(PDB  *insert, 
                     PDB  *ResStart,
@@ -717,7 +751,7 @@ static int InsertSC(PDB  *insert,
          if(!strncmp(p->atnam,"CB  ",4))
          {
             if(prev == NULL) return(1);   /* No b/b atom before s/c     */
-            KillPDB(p, prev);
+            blKillPDB(p, prev);
             break;
          }
          prev = p;
@@ -740,7 +774,7 @@ static int InsertSC(PDB  *insert,
       {
          ALLOCNEXT(start, PDB);
          if(start == NULL) return(1);
-         CopyPDB(start, p);
+         blCopyPDB(start, p);
       }
       
       /* Insert the CB if required                                      */
@@ -748,7 +782,7 @@ static int InsertSC(PDB  *insert,
       {
          ALLOCNEXT(start, PDB);
          if(start == NULL) return(1);
-         CopyPDB(start, p);
+         blCopyPDB(start, p);
       }
    }
    
@@ -763,20 +797,23 @@ static int InsertSC(PDB  *insert,
 /*>static int Replace(PDB *ResStart, PDB *NextRes, char seq,
                       int **chitab, FILE *fp_RefCoords)
    ---------------------------------------------------------
-   I/O:     PDB  *ResStart     Start of residue to be modified
-   Input:   PDB  *NextRes      Pointer to start of next residue
-            char seq           1-letter code for replacement residue
-            int  **chitab      Equivalent chi table
-            FILE *fp_RefCoords Reference coordinate file pointer
-   Returns: int                0: OK, 1: error
+*//**
+
+   \param[in,out] *ResStart     Start of residue to be modified
+   \param[in]     *NextRes      Pointer to start of next residue
+   \param[in]     seq           1-letter code for replacement residue
+   \param[in]     **chitab      Equivalent chi table
+   \param[in]     *fp_RefCoords Reference coordinate file pointer
+   \return                        0: OK, 1: error
 
    Replace a non-Gly with another residue type.
    
-   12.05.92 Original
-   21.06.93 Changed for new version of onethr()
-   21.06.93 Changed to use Array2D allocated chitab 
-   09.07.93 Simplified allocation checking
-   05.10.94 Changed for BOOL return from KillSidechain()
+-  12.05.92 Original
+-  21.06.93 Changed for new version of onethr()
+-  21.06.93 Changed to use Array2D allocated chitab 
+-  09.07.93 Simplified allocation checking
+-  05.10.94 Changed for BOOL return from KillSidechain()
+-  07.07.14 Use bl prefix for functions By: CTP
 */
 static int Replace(PDB  *ResStart,
                    PDB  *NextRes,
@@ -793,7 +830,7 @@ static int Replace(PDB  *ResStart,
          *parent_mc = NULL;         /* Parent mainchain                 */
    char  *three;                    /* Three letter code                */
    
-   three = onethr(seq);
+   three = blOnethr(seq);
    
    /* Read the required residue type out of the reference coordinate file.
       Returns NULL if unable to allocate memory, or residue not found.
@@ -833,7 +870,7 @@ static int Replace(PDB  *ResStart,
             goto Cleanup;
          }
          
-         CopyPDB(q,p);                       /* Copy PDB item           */
+         blCopyPDB(q,p);                     /* Copy PDB item           */
       }
    }
    if(natoms != 4)                           /* Atoms missing           */
@@ -844,7 +881,7 @@ static int Replace(PDB  *ResStart,
 
 #ifdef DEBUG
    printf("Parent mainchain:\n");
-   WritePDB(stdout, parent_mc);
+   blWritePDB(stdout, parent_mc);
 #endif   
    
    /* Build a PDB linked list from the reference N, CA, C, CB           */
@@ -875,7 +912,7 @@ static int Replace(PDB  *ResStart,
             goto Cleanup;
          }
          
-         CopyPDB(q,p);                       /* Copy PDB item           */
+         blCopyPDB(q,p);                       /* Copy PDB item           */
       }
    }
    if(natoms != 4)                           /* Atoms missing           */
@@ -886,7 +923,7 @@ static int Replace(PDB  *ResStart,
 
 #ifdef DEBUG
    printf("Reference mainchain:\n");
-   WritePDB(stdout, ref_mc);
+   blWritePDB(stdout, ref_mc);
 #endif   
    
    /* Move the reference aa by fitting on the atoms stored in _mc       */
@@ -898,7 +935,7 @@ static int Replace(PDB  *ResStart,
 
 #ifdef DEBUG
    printf("Reference structure after fitting to parent:\n");
-   WritePDB(stdout, reference);
+   blWritePDB(stdout, reference);
 #endif   
    
    /* Fix the s/c torsion angles to match those in the parent. This may
@@ -908,11 +945,11 @@ static int Replace(PDB  *ResStart,
    
 #ifdef DEBUG
    printf("Reference structure matching torsions:\n");
-   WritePDB(stdout, reference);
+   blWritePDB(stdout, reference);
 #endif   
    
    /* Kill sidechain. Third parameter is a flag kill CB                 */
-   retval = ((KillSidechain(ResStart,NextRes,TRUE)) ? 0 : 1);
+   retval = ((blKillSidechain(ResStart,NextRes,TRUE)) ? 0 : 1);
 
    /* Now insert the s/c into the main linked list, last parameter is a
       flag to insert the CB
@@ -920,8 +957,8 @@ static int Replace(PDB  *ResStart,
    if(InsertSC(reference, ResStart, NextRes, TRUE))
       retval = 1;
    
-   if(retval == 0) SetResnam(ResStart,NextRes,three,ResStart->resnum,
-                             ResStart->insert,ResStart->chain);
+   if(retval == 0) blSetResnam(ResStart,NextRes,three,ResStart->resnum,
+                               ResStart->insert,ResStart->chain);
    
 Cleanup:
    if(reference != NULL)   FREELIST(reference, PDB);
@@ -935,22 +972,25 @@ Cleanup:
 /************************************************************************/
 /*>static PDB *ReadRefCoords(FILE *fp, char seq)
    ---------------------------------------------
-   Input:   FILE  *fp     Reference PDB file pointer
-            char  seq     Residue for which to search
-   Returns: PDB   *       PDB linked list containing residue information
+*//**
+
+   \param[in]     *fp     Reference PDB file pointer
+   \param[in]     seq     Residue for which to search
+   \return                   PDB linked list containing residue information
 
    Reads the sidechain reference file (fp) to find residue type seq, then
    reads in the data for that sidechain into a PDB linked list which is 
    then returned.
    Returns NULL if there is a problem;
 
-   12.05.92 Original
-   21.06.93 Changed for new version of onethr()
-   09.07.93 Corrected check on allocations
-   04.01.94 Corrected string assignments of NULL to '\0'
-   09.02.05 Sets atnam_raw
+-  12.05.92 Original
+-  21.06.93 Changed for new version of onethr()
+-  09.07.93 Corrected check on allocations
+-  04.01.94 Corrected string assignments of NULL to '\0'
+-  09.02.05 Sets atnam_raw
             Sets default occ/bval to 1.0 and 20.0
-   03.06.05 Sets altpos
+-  03.06.05 Sets altpos
+-  05.08.14 Use CLEAR_PDB() to set default values. By: CTP
 */
 static PDB *ReadRefCoords(FILE *fp,
                           char seq)
@@ -964,7 +1004,7 @@ static PDB *ReadRefCoords(FILE *fp,
    
    rewind(fp);
    
-   three = onethr(seq);
+   three = blOnethr(seq);
 
    /* Get lines from the file                                           */
    while(fgets(buffer, MAXBUFF, fp))
@@ -991,6 +1031,8 @@ static PDB *ReadRefCoords(FILE *fp,
             return(NULL);
          }
          
+         /* Clear PDB                                                   */
+         CLEAR_PDB(p);
          
          /* Copy the first 6 charcters into RECORD_TYPE                 */
          strncpy(p->record_type,ptr,6);
@@ -1076,13 +1118,15 @@ static PDB *ReadRefCoords(FILE *fp,
 /************************************************************************/
 /*>static void ReadChiTable(FILE *fp, int **chitab)
    ------------------------------------------------
-   Input:   FILE  *fp        Equivalent Chi table file pointer
-   Output:  int   **chitab   Equivalent chi table.
+*//**
+
+   \param[in]     *fp        Equivalent Chi table file pointer
+   \param[out]    **chitab   Equivalent chi table.
 
    Read the chi table and creates the chitab array.
    
-   13.05.92 Original
-   21.06.93 Changed to use Array2D allocated chitab 
+-  13.05.92 Original
+-  21.06.93 Changed to use Array2D allocated chitab 
 */
 static void ReadChiTable(FILE *fp,
                          int  **chitab)
@@ -1118,11 +1162,13 @@ static void ReadChiTable(FILE *fp,
 /************************************************************************/
 /*>static int FindChiIndex(char *resnam)
    -------------------------------------
-   Input:   char  *resnam     Residue name
-   Returns: int               Pointer into Chi table
+*//**
+
+   \param[in]     *resnam     Residue name
+   \return                       Pointer into Chi table
 
    Find the index into the Chi table for a residue name
-   13.05.92 Original
+-  13.05.92 Original
 */
 static int FindChiIndex(char *resnam)
 {
@@ -1157,20 +1203,22 @@ static int FindChiIndex(char *resnam)
 /*>static PDB *FixTorsions(PDB *pdb, PDB *ResStart, PDB *NextRes, 
                            int **chitab)
    --------------------------------------------------------------
-   I/O:     PDB  *pdb         Linked list to fix torsions
-   Input:   PDB  *ResStart    Beginning of reference frag
-            PDB  *NextRes     Start of next residue
-            int  **chitab     Equivalent chis table
-   Returns: PDB  *            Start of residue. Normally same as input
+*//**
+
+   \param[in,out] *pdb         Linked list to fix torsions
+   \param[in]     *ResStart    Beginning of reference frag
+   \param[in]     *NextRes     Start of next residue
+   \param[in]     **chitab     Equivalent chis table
+   \return                       Start of residue. Normally same as input
                               ResStart, but may differ as backbone
                               order will be corrected.
    
    Take the equivalent torsion angle between ResStart and NextRes and 
    apply them to pdb.
    
-   13.05.92 Original
-   21.06.93 Changed to use Array2D allocated chitab 
-   09.02.05 Chain name was getting set to last one in pdb
+-  13.05.92 Original
+-  21.06.93 Changed to use Array2D allocated chitab 
+-  09.02.05 Chain name was getting set to last one in pdb
 */
 static PDB *FixTorsions(PDB *pdb,      /* Linked list to fix torsions   */
                         PDB *ResStart, /* Beginning of reference frag   */
@@ -1187,7 +1235,7 @@ static PDB *FixTorsions(PDB *pdb,      /* Linked list to fix torsions   */
    strcpy(chain, ResStart->chain);
    
    /* Correct the atom order of pdb and ResStart                        */
-   ResStart = ShuffleBB(ResStart);
+   ResStart = blShuffleBB(ResStart);
 
    /* 09.02.05 Fix the chain name                                       */
    for(p=ResStart; p!=NextRes; NEXT(p))
@@ -1207,8 +1255,8 @@ static PDB *FixTorsions(PDB *pdb,      /* Linked list to fix torsions   */
    /* For each of the chis                                              */
    for(j=0;j<nchi;j++)
    {
-      ParentChi = CalcChi(ResStart, j);
-      SetChi(pdb, NULL, ParentChi, j);
+      ParentChi = blCalcChi(ResStart, j);
+      blSetChi(pdb, NULL, ParentChi, j);
    }
    
    return(ResStart);

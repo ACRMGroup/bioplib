@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       RotPDB.c
+   \file       RotPDB.c
    
-   Version:    V1.0R
-   Date:       August 1993
-   Function:   Rotate a PDB linked list
+   \version    V1.1
+   \date       August 1993
+   \brief      Rotate a PDB linked list
    
-   Copyright:  (c) SciTech Software 1993
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,6 +35,7 @@
 
    Description:
    ============
+
    Rotate a PDB linked list. Moves the structure to the origin first,
    applies the rotation and moves back from the origin.
 
@@ -66,28 +72,31 @@
 
 
 /************************************************************************/
-/*>void RotatePDB(PDB *pdb, REAL matrix[3][3])
-   -------------------------------------------
-   I/O:    PDB   *pdb          PDB linked list to rotate
-   Input:  REAL  matrix[3][3]  Rotation matrix
+/*>void blRotatePDB(PDB *pdb, REAL matrix[3][3])
+   ---------------------------------------------
+*//**
+
+   \param[in,out] *pdb          PDB linked list to rotate
+   \param[in]     matrix        Rotation matrix
 
    Rotates a PDB linked list using ApplyMatrixPDB() which ignores 
    coordinates of 9999.0. The structure is moved to the origin, the 
    matrix is applied and the structure is moved back.
 
-   30.09.92 Original
-   01.10.92 Added check on NULL coordinates
-   22.07.93 Moves to origin first; calls ApplyMatrixPDB() to do the work
+-  30.09.92 Original
+-  01.10.92 Added check on NULL coordinates
+-  22.07.93 Moves to origin first; calls ApplyMatrixPDB() to do the work
+-  07.07.14 Renamed to blRotatePDB(). Use bl prefix for functions. By: CTP
 */
-void RotatePDB(PDB *pdb, REAL matrix[3][3])
+void blRotatePDB(PDB *pdb, REAL matrix[3][3])
 {
    VEC3F CofG;
          
-   GetCofGPDB(pdb, &CofG);
-   OriginPDB(pdb);
+   blGetCofGPDB(pdb, &CofG);
+   blOriginPDB(pdb);
    
-   ApplyMatrixPDB(pdb, matrix);
+   blApplyMatrixPDB(pdb, matrix);
    
-   TranslatePDB(pdb, CofG);
+   blTranslatePDB(pdb, CofG);
 }
 

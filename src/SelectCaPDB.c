@@ -1,22 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       SelectCaPDB.c
+   \file       SelectCaPDB.c
    
-   Version:    V1.7
-   Date:       16.10.96
-   Function:   
+   \version    V1.8
+   \date       07.07.14
+   \brief      
    
-   Copyright:  (c) SciTech Software 1990-6
-   Author:     Dr. Andrew C. R. Martin
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -25,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -35,17 +46,18 @@
 
    Revision History:
    =================
-   V1.0  01.03.90 Original   By: ACRM
-   V1.1  28.03.90 Modified to match new version of pdb.h
-   V1.2  24.05.90 Fixed so the variables passed in as sel[] don't 
+-  V1.0  01.03.90 Original   By: ACRM
+-  V1.1  28.03.90 Modified to match new version of pdb.h
+-  V1.2  24.05.90 Fixed so the variables passed in as sel[] don't 
                   *have* to be 4 chars.
-   V1.3  17.05.93 Modified for book. Returns BOOL.
-   V1.4  09.07.93 Modified to return PDB pointer. Changed allocation 
+-  V1.3  17.05.93 Modified for book. Returns BOOL.
+-  V1.4  09.07.93 Modified to return PDB pointer. Changed allocation 
                   scheme. Changed back to sel[] variables *must* be 4
                   chars.
-   V1.5  01.11.94 Added HStripPDB()
-   V1.6  26.07.95 Removed unused variables
-   V1.7  16.10.96 Added SelectCaPDB()
+-  V1.5  01.11.94 Added HStripPDB()
+-  V1.6  26.07.95 Removed unused variables
+-  V1.7  16.10.96 Added SelectCaPDB()
+-  V1.8  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -71,10 +83,12 @@
 
 
 /************************************************************************/
-/*>PDB *SelectCaPDB(PDB *pdb)
-   --------------------------
-   Input:   PDB  *pdb     A PDB linked list
-   Output:  PDB  *        The linked list reduced to CA atoms only
+/*>PDB *blSelectCaPDB(PDB *pdb)
+   ----------------------------
+*//**
+
+   \param[in]     *pdb     A PDB linked list
+   \param[out]    *        The linked list reduced to CA atoms only
 
    Reduce a PDB linked list to CA atoms only. Returns the reduced PDB
    linked list. Note that the input linked list is modified (storage for
@@ -95,10 +109,11 @@
         the original PDB linked list is NOT intact after the 
         selection process.
 
-   15.10.96 Original   By: ACRM
-   11.01.02 Added check on pdb!=NULL in case there are no CAs (DNA etc)
+-  15.10.96 Original   By: ACRM
+-  11.01.02 Added check on pdb!=NULL in case there are no CAs (DNA etc)
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *SelectCaPDB(PDB *pdb)
+PDB *blSelectCaPDB(PDB *pdb)
 {
    PDB *p, *prev;
 

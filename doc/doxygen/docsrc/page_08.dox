@@ -1,0 +1,55 @@
+/**
+
+\page page_08 Header Files
+\brief
+   Bioplib - List of header files used by BiopLib 
+
+Header Files
+------------
+
+_Proteins and Sequences_
+
+Header files for data structures and prototypes for handling proteins and sequences.
+
+-  aalist.h     - Include file for amino acid linked lists.
+-  access.h     - Accessibility calculation code.
+-  angle.h      - Include file for angle functions.
+-  array.h      - Include file for 2D/3D array functions.
+-  hbond.h      - Header file for hbond determining code.
+-  pdb.h        - Include file for pdb routines.
+-  seq.h        - Header file for sequence handling.
+
+
+_General Purpose_
+
+Useful general functions.
+
+-  fsscanf.h    - Hard formatted version of sscanf(). Implements FORTRAN-like rigid column reading out of a string.
+-  general.h    - Header file for general purpose routines.
+-  macros.h     - Useful macros.
+-  help.h       - Include file for help functions.
+-  hpgl.h       - Include file for hpgl.
+-  parse.h      - Include file for the command parser.
+-  plotting.h   - Include file for using plotting routines. 
+
+
+_Support_
+
+Low level. Definitions and prototypes used by the files above.
+
+-  BuffInp.h    - Read from a file a line at a time allowing looking ahead to the contents of the next line.
+-  ErrStack.h   - Build and print an error stack for program failure.
+-  MathType.h   - Type definitions for maths.
+-  MathUtil.h   - Prototypes, etc. for maths utility routines.
+-  SysDefs.h    - System-type variable type definitions.
+-  WindIO.h     - Header for window/normal interface routines.
+-  cssr.h       - Defines for CSSR handling.
+-  deprecated.h - Redirect calls to deprecated functions.
+-  fit.h        - Include file for least squares fitting.
+-  matrix.h     - Include file for matrix operations.
+-  port.h       - Port-specific defines to allow us to use things like popen() in a clean compile.
+-  ps.h         - Include file for PostScript routine.
+-  safemem.h    - Safe malloc()/free() routines which check for array overflow on free.
+
+
+*/

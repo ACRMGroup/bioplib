@@ -1,28 +1,33 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       FitNCaCPDB.c
+   \file       FitNCaCPDB.c
    
-   Version:    V1.3R
-   Date:       14.03.96
-   Function:   Fit two PDB linked lists. Also a weighted fit and support
+   \version    V1.5
+   \date       19.08.14
+   \brief      Fit two PDB linked lists. Also a weighted fit and support
                routines
    
-   Copyright:  (c) SciTech Software 1993-6
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-6
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -31,6 +36,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -41,14 +47,17 @@
 
    Revision History:
    =================
-   V1.0  01.03.94 Original release
-   V1.1  11.03.94 Fixed bug in calls to matfit(). Had not been changed 
+-  V1.0  01.03.94 Original release
+-  V1.1  11.03.94 Fixed bug in calls to matfit(). Had not been changed 
                   to reflect modification in MatMult3_33().
-   V1.2  14.03.94 Fixed FitPDB(); wasn't filling in the output matrix
-   V1.3  14.03.96 Added FitCaPDB()
+-  V1.2  14.03.94 Fixed FitPDB(); wasn't filling in the output matrix
+-  V1.3  14.03.96 Added FitCaPDB()
                   Changed FitPDB() and FitCaCbPDB() to use 
                   ApplyMatrixPDB() rather than RotatePDB() since the PDB
                   linked lists are already at the origin
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
+-  V1.5  19.08.14 Added AsCopy suffix to calls to blSelectAtomsPDB() 
+                  By: CTP
 
 *************************************************************************/
 /* Includes
@@ -76,21 +85,25 @@
 */
 
 /************************************************************************/
-/*>BOOL FitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
-   ----------------------------------------------------------
-   Input:   PDB  *ref_pdb     Reference PDB linked list
-   I/O:     PDB  *fit_pdb     Mobile PDB linked list
-   Output:  REAL rm[3][3]     Rotation matrix (May be input as NULL).
-   Returns: BOOL              Success
+/*>BOOL blFitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
+   ------------------------------------------------------------
+*//**
+
+   \param[in]     *ref_pdb     Reference PDB linked list
+   \param[in,out] *fit_pdb     Mobile PDB linked list
+   \param[out]    rm           Rotation matrix (May be input as NULL).
+   \return                     Success
 
    Fits two PDB linked lists using only the CA atoms. 
 
    Actually fits fit_pdb onto ref_pdb and also returns the rotation 
    matrix. This may be NULL if these data are not required.
 
-   12.12.01 Original based on FitCaPDB()   By: ACRM
+-  12.12.01 Original based on FitCaPDB()   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
+-  19.08.14 Added AsCopy suffix to calls to blSelectAtomsPDB() By: CTP
 */
-BOOL FitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
+BOOL blFitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
 {
    REAL  RotMat[3][3];
    COOR  *ref_coor   = NULL,
@@ -112,9 +125,11 @@ BOOL FitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
    SELECT(sel[2], "C   ");
    if((sel[0]==NULL)||(sel[1]==NULL)||(sel[2]==NULL)||(sel[3]==NULL))
       return(FALSE);
-   if((ref_bb_pdb = SelectAtomsPDB(ref_pdb, 3, sel, &natoms))==NULL)
+   if( (ref_bb_pdb = blSelectAtomsPDBAsCopy(ref_pdb, 3, sel, &natoms))
+       == NULL )
       RetVal = FALSE;
-   if((fit_bb_pdb = SelectAtomsPDB(fit_pdb, 3, sel, &natoms))==NULL)
+   if( (fit_bb_pdb = blSelectAtomsPDBAsCopy(fit_pdb, 3, sel, &natoms))
+       == NULL )
       RetVal = FALSE;
    free(sel[0]);
    free(sel[1]);
@@ -124,16 +139,16 @@ BOOL FitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
    if(RetVal)
    {
       /* Get the CofG of the BB structures and the original mobile      */
-      GetCofGPDB(ref_bb_pdb, &ref_bb_CofG);
-      GetCofGPDB(fit_bb_pdb, &fit_bb_CofG);
+      blGetCofGPDB(ref_bb_pdb, &ref_bb_CofG);
+      blGetCofGPDB(fit_bb_pdb, &fit_bb_CofG);
       
       /* Move them both to the origin                                   */
-      OriginPDB(ref_bb_pdb);
-      OriginPDB(fit_bb_pdb);
+      blOriginPDB(ref_bb_pdb);
+      blOriginPDB(fit_bb_pdb);
       
       /* Create coordinate arrays, checking numbers match               */
-      NCoor = GetPDBCoor(ref_bb_pdb, &ref_coor);
-      if(GetPDBCoor(fit_bb_pdb, &fit_coor) != NCoor)
+      NCoor = blGetPDBCoor(ref_bb_pdb, &ref_coor);
+      if(blGetPDBCoor(fit_bb_pdb, &fit_coor) != NCoor)
       {
          RetVal = FALSE;
       }
@@ -147,7 +162,7 @@ BOOL FitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
          else
          {
             /* Everything OK, go ahead with the fitting                 */
-            if(!matfit(ref_coor,fit_coor,RotMat,NCoor,NULL,FALSE))
+            if(!blMatfit(ref_coor,fit_coor,RotMat,NCoor,NULL,FALSE))
             {
                RetVal = FALSE;
             }
@@ -157,9 +172,9 @@ BOOL FitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
                tvect.x = (-fit_bb_CofG.x);
                tvect.y = (-fit_bb_CofG.y);
                tvect.z = (-fit_bb_CofG.z);
-               TranslatePDB(fit_pdb, tvect);
-               ApplyMatrixPDB(fit_pdb, RotMat);
-               TranslatePDB(fit_pdb, ref_bb_CofG);
+               blTranslatePDB(fit_pdb, tvect);
+               blApplyMatrixPDB(fit_pdb, RotMat);
+               blTranslatePDB(fit_pdb, ref_bb_CofG);
             }
          }
       }

@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       ps.h
+   \file       ps.h
    
-   Version:    V1.11R
-   Date:       23.06.94
-   Function:   Include file for PostScript routine
+   \version    V1.14
+   \date       14.08.14
+   \brief      Include file for PostScript routine
    
-   Copyright:  (c) SciTech Software 1993-4
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,7 +35,9 @@
 
    Description:
    ============
+
    Include file for using with PSRoutines.c
+
    Variables are defined only from the main program. Otherwise they
    are referenced as external.
 
@@ -43,10 +50,15 @@
 
    Revision History:
    =================
-   V1.0  06.02.91 Original
-   V1.7  25.02.91 Fixed prototypes and definition of PSFile.
-   V1.10 07.05.92 Changed all prototypes to doubles
-   V1.11 23.06.94 Made gPSFile a global
+-  V1.0  06.02.91 Original
+-  V1.7  25.02.91 Fixed prototypes and definition of PSFile.
+-  V1.10 07.05.92 Changed all prototypes to doubles
+-  V1.11 23.06.94 Made gPSFile a global
+-  V1.12 07.07.14 Use bl prefix for functions By: CTP
+-  V1.13 31.07.14 Updated deprecation: Removed deprecated.h and added 
+                  prototypes for renamed functions. By: CTP
+-  V1.14 14.08.14 Moved deprecated function prototypes to deprecated.h 
+                  By: CTP
 
 *************************************************************************/
 #ifndef _PS_H
@@ -80,23 +92,30 @@
 /************************************************************************/
 /* Prototypes
 */
-BOOL PSInit(char *FName, char *creator, char *AltFont);
-void PSThick(REAL thickness);
-void PSMove(REAL X, REAL Y);
-void PSDraw(REAL X, REAL Y);
-void PSSetDash(char *linepatt);
-void PSClearDash(void);
-void PSStroke(void);
-void PSFont(char *fontname, REAL size);
-void PSLText(REAL X, REAL Y, char *label);
-void PSCBText(REAL X, REAL Y, REAL Offset, char *label);
-void PSROffText(REAL X, REAL Y, REAL offset, char *label);
-void PSLCText(REAL X, REAL Y, char *label);
-void PSCTText(REAL X, REAL Y, REAL Offset, char *label);
-void PSVText(REAL x, REAL y, REAL xoff, char *text, char *font, REAL size,
+BOOL blPSInit(char *FName, char *creator, char *AltFont);
+void blPSThick(REAL thickness);
+void blPSMove(REAL X, REAL Y);
+void blPSDraw(REAL X, REAL Y);
+void blPSSetDash(char *linepatt);
+void blPSClearDash(void);
+void blPSStroke(void);
+void blPSFont(char *fontname, REAL size);
+void blPSLText(REAL X, REAL Y, char *label);
+void blPSCBText(REAL X, REAL Y, REAL Offset, char *label);
+void blPSROffText(REAL X, REAL Y, REAL offset, char *label);
+void blPSLCText(REAL X, REAL Y, char *label);
+void blPSCTText(REAL X, REAL Y, REAL Offset, char *label);
+void blPSVText(REAL x, REAL y, REAL xoff, char *text, char *font, REAL size,
              char *label, char *lfont, REAL lsize);
-void PSShowText(char *text);
-void PSEnd(void);
-char *PSCorrectCase(char *font);
+void blPSShowText(char *text);
+void blPSEnd(void);
+char *blPSCorrectCase(char *font);
+
+/************************************************************************/
+/* Include deprecated functions                                         */
+#define _PS_H_DEPRECATED
+# include "deprecated.h" 
+/************************************************************************/
+
 
 #endif

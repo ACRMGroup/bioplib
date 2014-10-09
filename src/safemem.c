@@ -1,22 +1,33 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       safemem.c
+   \file       safemem.c
    
-   Version:    V1.2
-   Date:       03.07.06
-   Function:   Safe malloc()/free() routines which check for array 
+   \version    V1.3
+   \date       07.07.14
+   \brief      Safe malloc()/free() routines which check for array 
                overflow on free.
    
-   Copyright:  (c) SciTech Software 1995-2006
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1995-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -25,26 +36,29 @@
 
    Description:
    ============
-   safemalloc() and safefree() are provided as temporary debugging
+
+   blSafemalloc() and blSafefree() are provided as temporary debugging
    replacements for malloc() and free(). They maintain their own
    linked list of malloc()'d memory and allocate a `protection buffer'
    each side of the requested amount of memory. This is filled with a
    given pattern and, when safefree() is called, this buffer is
    checked to ensure the pattern is still present.
 
-   Unlike free(), safefree() is of type BOOL, returning TRUE if
+   Unlike free(), blSafefree() is of type BOOL, returning TRUE if
    an error occured.
 
-   SM_SIZE Environment Variable
+\par SM_SIZE Environment Variable
+
    The size of the buffer (default 256bytes each side) may be
    controlled by the environment variable SM_SIZE. If code continues
    to core dump, try increasing the value of SM_SIZE.
 
-   SM_FILL Environment Variable 
+\par SM_FILL Environment Variable
+
    The byte used for filling the protection buffers (default 255) is
    defined by the environment variable SM_FILL. If code which core
-   dumps with normal malloc()/free(), but not with safemalloc() /
-   safefree(), yet no error message is generated, the character which
+   dumps with normal malloc()/free(), but not with blSafemalloc() /
+   blSafefree(), yet no error message is generated, the character which
    is corrupting memory is probably the same as the fill character.
    Try modifying SM_FILL.
 
@@ -58,9 +72,10 @@
 
    Revision History:
    =================
-   V1.0  23.06.95 Original
-   V1.1  27.02.98 Added cast to ptr
-   V1.2  03.07.06 Added 'ok' to the MEMLIST and added safeleaks()
+-  V1.0  23.06.95 Original
+-  V1.1  27.02.98 Added cast to ptr
+-  V1.2  03.07.06 Added 'ok' to the MEMLIST and added safeleaks()
+-  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes - Note we must *not* include safemem.h since we require the
@@ -99,14 +114,17 @@ static char    sBlank        = BLANK;
 */
 
 /************************************************************************/
-/*>void *safemalloc(int nbytes)
-   ----------------------------
+/*>void *blSafemalloc(int nbytes)
+   ------------------------------
+*//**
+
    Debugging version of malloc() which creates protection buffers each
    side of the requested memory block.
 
-   23.06.95 Original    By: ACRM
+-  23.06.95 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void *safemalloc(int nbytes)
+void *blSafemalloc(int nbytes)
 {
    MEMLIST        *p;
    static BOOL    FirstCall = TRUE;
@@ -196,15 +214,18 @@ shortened to the LSB.\n");
 }
 
 /************************************************************************/
-/*>void safefree(void *ptr)
-   ------------------------
+/*>void blSafefree(void *ptr)
+   --------------------------
+*//**
+
    Debugging version of free() which checks protection buffers each
    side of the requested memory block.
 
-   23.06.95 Original    By: ACRM
-   27.02.98 Added cast to ptr
+-  23.06.95 Original    By: ACRM
+-  27.02.98 Added cast to ptr
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL safefree(void *ptr)
+BOOL blSafefree(void *ptr)
 {
    MEMLIST *p;
    int     i,
@@ -271,13 +292,16 @@ BOOL safefree(void *ptr)
 }
 
 /************************************************************************/
-/*>void safeleaks(void)
-   --------------------
+/*>void blSafeleaks(void)
+   ----------------------
+*//**
+
    Prints a list of any safemalloc()'d memory which was not freed
 
-   03.07.06  Original   By: ACRM
+-  03.07.06  Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void safeleaks(void)
+void blSafeleaks(void)
 {
    MEMLIST *p;
    for(p=sSafeMemList; p!=NULL; NEXT(p))

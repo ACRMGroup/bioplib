@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       SysDefs.h
+   \file       SysDefs.h
    
-   Version:    V1.2R
-   Date:       01.02.96
-   Function:   System-type variable type definitions
+   \version    V1.2R
+   \date       01.02.96
+   \brief      System-type variable type definitions
    
-   Copyright:  (c) SciTech Software 1993-6
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-6
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -34,9 +46,9 @@
 
    Revision History:
    =================
-   V1.0  01.03.94 Original    By: ACRM
-   V1.1  02.08.95 Added UCHAR
-   V1.2  01.02.96 Added UBYTE
+-  V1.0  01.03.94 Original    By: ACRM
+-  V1.1  02.08.95 Added UCHAR
+-  V1.2  01.02.96 Added UBYTE
 
 *************************************************************************/
 #ifndef _SYSDEFS_H

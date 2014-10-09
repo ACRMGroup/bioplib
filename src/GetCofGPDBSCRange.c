@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       GetCofGPDBSCRange.c
+   \file       GetCofGPDBSCRange.c
    
-   Version:    V1.1R
-   Date:       03.10.94
-   Function:   Find CofG of a PDB linked list
+   \version    V1.2
+   \date       07.07.14
+   \brief      Find CofG of a PDB linked list
    
-   Copyright:  (c) SciTech Software 1992-4
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-4
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -40,9 +46,10 @@
 
    Revision History:
    =================
-   V1.0  01.10.92 Original
-   V1.1  03.10.94 Added GetCofGPDBRange(), FindCofGPDBSCRange() and 
+-  V1.0  01.10.92 Original
+-  V1.1  03.10.94 Added GetCofGPDBRange(), FindCofGPDBSCRange() and 
                   fixed NULL coord search in GetCofGPDB()
+-  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -67,19 +74,21 @@
 
 
 /************************************************************************/
-/*>void GetCofGPDBSCRange(PDB *start, PDB *stop, VEC3F *cg)
-   --------------------------------------------------------
-   Input:    PDB   *start     Start of region of interest in PDB list
-             PDB   *stop      Beginning of next residue
-   Output:   VEC3F *cg        Centre of geometry of specified region
+/*>void blGetCofGPDBSCRange(PDB *start, PDB *stop, VEC3F *cg)
+   ----------------------------------------------------------
+*//**
+
+   \param[in]     *start     Start of region of interest in PDB list
+   \param[in]     *stop      Beginning of next residue
+   \param[out]    *cg        Centre of geometry of specified region
 
    Find CofG of a range in a PDB linked list, ignoring NULL coordinates
    (specified as all coords==9999.000) and backbone (N,CA,C,O).
    For Glycine, returns the CA coordinates.
 
-   03.10.94 Original    By: ACRM
+-  03.10.94 Original    By: ACRM
 */
-void GetCofGPDBSCRange(PDB *start, PDB *stop, VEC3F *cg)
+void blGetCofGPDBSCRange(PDB *start, PDB *stop, VEC3F *cg)
 {
    int natom;
    PDB *p, *ca;

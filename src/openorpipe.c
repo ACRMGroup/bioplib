@@ -1,22 +1,33 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       openorpipe.c
+   \file       openorpipe.c
    
-   Version:    V1.8
-   Date:       02.04.09
-   Function:   Open a file for writing unless the filename starts with
+   \version    V1.10
+   \date       17.07.14
+   \brief      Open a file for writing unless the filename starts with
                a | in which case open as a pipe
    
-   Copyright:  (c) SciTech Software 1997-2009
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1997-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -25,6 +36,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -35,17 +47,20 @@
 
    Revision History:
    =================
-   V1.0  26.05.97 Original   By: ACRM
-   V1.1  26.06.97 Added calls to signal()
-   V1.2  27.02.98 Uses port.h
-   V1.3  18.08.98 Added cast to popen() for SunOS
-   V1.4  28.01.04 Added NOPIPE define. Allows compilation on systems
+-  V1.0  26.05.97 Original   By: ACRM
+-  V1.1  26.06.97 Added calls to signal()
+-  V1.2  27.02.98 Uses port.h
+-  V1.3  18.08.98 Added cast to popen() for SunOS
+-  V1.4  28.01.04 Added NOPIPE define. Allows compilation on systems
                   which don't support unix pipes
-   V1.5  03.02.06 Added prototypes for popen() and pclose()
-   V1.6  29.06.07 popen() and pclose() prototypes now skipped for MAC OSX
+-  V1.5  03.02.06 Added prototypes for popen() and pclose()
+-  V1.6  29.06.07 popen() and pclose() prototypes now skipped for MAC OSX
                   which defines them differently
-   V1.7  17.03.09 popen() prototype now skipped for Windows.
-   V1.8  02.04.09 Clean compile with NOPIPE defined
+-  V1.7  17.03.09 popen() prototype now skipped for Windows.
+-  V1.8  02.04.09 Clean compile with NOPIPE defined
+-  V1.9  07.07.14 Use bl prefix for functions By: CTP
+-  V1.10 17.07.14 Added 'stdout' as a special file which maps to 
+                  standard output
 
 *************************************************************************/
 /* Includes
@@ -57,6 +72,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <string.h>
 #include "macros.h"
 
 /************************************************************************/
@@ -78,26 +94,33 @@ int  pclose(FILE *);
 #endif
 
 /************************************************************************/
-/*>FILE *OpenOrPipe(char *filename)
-   --------------------------------
-   Input:   char  *filename     A file or pipe to be opened
-   Returns: FILE  *             A file pointer
+/*>FILE *blOpenOrPipe(char *filename)
+   ----------------------------------
+*//**
+
+   \param[in]     *filename     A file or pipe to be opened
+   \return                        A file pointer
 
    Opens a file for writing unless the filename begins with a | in which
    case it is opened as a pipe.
 
    Broken pipe signals are ignored.
 
-   26.05.97 Original   By: ACRM
-   26.06.97 Added call to signal()
-   18.08.98 Added case to popen() for SunOS
-   28.01.05 Added NOPIPE define
+-  26.05.97 Original   By: ACRM
+-  26.06.97 Added call to signal()
+-  18.08.98 Added case to popen() for SunOS
+-  28.01.05 Added NOPIPE define
+-  07.07.14 Use bl prefix for functions By: CTP
+-  17.07.14 Added special 'stdout' file By: ACRM
 */
-FILE *OpenOrPipe(char *filename)
+FILE *blOpenOrPipe(char *filename)
 {
    char *fnam;
    
    KILLLEADSPACES(fnam, filename);
+   if(!strcmp(fnam, "stdout"))
+      return(stdout);
+
 #ifdef NOPIPE
    return(fopen(fnam, "w"));
 #else
@@ -116,32 +139,41 @@ FILE *OpenOrPipe(char *filename)
 }
 
 /************************************************************************/
-/*>int CloseOrPipe(FILE *fp)
-   -------------------------
-   Input:   FILE  *fp        File pointer to be closed
-   Returns: int              Error code (as for fclose())
+/*>int blCloseOrPipe(FILE *fp)
+   ---------------------------
+*//**
+
+   \param[in]     *fp        File pointer to be closed
+   \return                      Error code (as for fclose())
 
    Attempts to close a file pointer as a pipe. If it isn't associated 
    with a pipe (i.e. popen returns (-1)), tries again to close it as
    a normal file.
 
-   26.05.97 Original   By: ACRM
-   26.06.97 Added call to signal()
-   28.01.05 Added NOPIPE define
-   02.04.09 Moved 'int ret' to be in the #else
+-  26.05.97 Original   By: ACRM
+-  26.06.97 Added call to signal()
+-  28.01.05 Added NOPIPE define
+-  02.04.09 Moved 'int ret' to be in the #else
+-  07.07.14 Use bl prefix for functions By: CTP
+-  17.07.14 Added check that the file pointer isn't stdout By: ACRM
 */
-int CloseOrPipe(FILE *fp)
+int blCloseOrPipe(FILE *fp)
 {
+   if(fp==stdout)
+      return(0);
+
 #ifdef NOPIPE
    return(fclose(fp));
 #else
-   int ret;
-
-   if((ret=pclose(fp)) == (-1))
-      return(fclose(fp));
-
-   signal(SIGPIPE, SIG_DFL);
-   return(ret);
+   {
+      int ret;
+      
+      if((ret=pclose(fp)) == (-1))
+         return(fclose(fp));
+      
+      signal(SIGPIPE, SIG_DFL);
+      return(ret);
+   }
 #endif
 }
 

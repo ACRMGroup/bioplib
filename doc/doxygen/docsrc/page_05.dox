@@ -1,0 +1,56 @@
+/**
+
+\page page_05 Selecting from PDB linked list.
+\brief
+   Bioplib - Functions selecting atoms and residues from the PDB linked list.
+
+
+
+
+Functions for finding and selecting regions from PDB linked list
+----------------------------------------------------------------
+
+-  blFindResidue() - Finds a pointer to the start of a residue in a PDB linked list.
+-  blFindHetatmResidue() - Finds a pointer to the start of a residue in a PDB linked list (Limited to hetatm records).
+-  blFindNextChainPDB() - Find next chain in list.
+-  blGetPDBChainLabels() - Get array of chain labels.
+-  blFindNextResidue() - Find start of next residue.
+-  blFindNextChain() - Find next chain.
+-  blFindEndPDB() - Step along a PDB linked list from start until we find a different residue.
+
+-  blFindZonePDB() - Finds pointers to the start and end of a zone in a PDB linked list.
+-  blInPDBZone() - Is atom within specified zone?
+
+-  blIndexPDB() - Creates an array of pointers to PDB from a linked list.
+
+-  blSelectAtomsPDBAsCopy() - Take a PDB linked list and returns a list containing only those atom types specified.
+-  blSelectCaPDB() - Select alpha carbons.
+-  blFixOrderPDB() - Runs through a PDB linked list and corrects the atom order to match the N,CA,C,O,s/c standard.
+-  blGetAtomTypes() - Fill in atom types for a given residue.
+-  blGetPDBByN() - Find Nth item in linked list.
+-  blAtomNameMatch() - Does atom name match?
+-  blAtomNameRawMatch() - Does atom name match?
+-  blFindAtomInRes() - Find atom within specified residue.
+-  blFindAtomWildcardInRes() - Find atom using wildcard specification.
+ 
+Residue specification string
+----------------------------
+
+The functions below will parse a residue specification string. The residue specification string is in the form, [c][.]num[i] where 'c' is the chain label 'num' is the residue number and 'i' is the insertion code. The chain label and insert code are optional. The chain label can be separated from the residue number with a period allowing of numerical or multi-letter chain ids. For example:
+
+      A10
+      A.10A
+      1.10
+      Light.10
+
+-  blParseResSpec() - Parse residue specification.
+-  blParseResSpecNoUpper() - Parse residue specification (no change in case).
+-  blLegalAtomSpec() - Is specification string legal?
+-  blDoParseResSpec() - Parse residue specification (low level).
+-  blFindResidueSpec() - Finds a pointer to the start of a residue in a PDB linked list.
+-  blFindHetatmResidueSpec() - Finds a pointer to the start of a residue in a PDB linked list (Limited to hetatm records).
+-  blInPDBZoneSpec() - Is atom within specified zone?
+
+
+
+*/

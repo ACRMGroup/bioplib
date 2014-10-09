@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PDBx:datablock xmlns:PDBx="null" xmlns:xsi="null">
+  <PDBx:atom_siteCategory>
+    <PDBx:atom_site id="1">
+      <PDBx:B_iso_or_equiv>0.00</PDBx:B_iso_or_equiv>
+      <PDBx:Cartn_x>1.000</PDBx:Cartn_x>
+      <PDBx:Cartn_y>2.000</PDBx:Cartn_y>
+      <PDBx:Cartn_z>3.000</PDBx:Cartn_z>
+      <PDBx:auth_asym_id>A</PDBx:auth_asym_id>
+      <PDBx:auth_atom_id>HO3'</PDBx:auth_atom_id>
+      <PDBx:auth_comp_id>DG</PDBx:auth_comp_id>
+      <PDBx:auth_seq_id>1</PDBx:auth_seq_id>
+      <PDBx:group_PDB>ATOM</PDBx:group_PDB>
+      <PDBx:label_alt_id xsi:nil="true"/>
+      <PDBx:label_asym_id>A</PDBx:label_asym_id>
+      <PDBx:label_atom_id>HO3'</PDBx:label_atom_id>
+      <PDBx:label_comp_id>DG</PDBx:label_comp_id>
+      <PDBx:label_entity_id>1</PDBx:label_entity_id>
+      <PDBx:label_seq_id>1</PDBx:label_seq_id>
+      <PDBx:occupancy>1.00</PDBx:occupancy>
+      <PDBx:pdbx_PDB_model_num>1</PDBx:pdbx_PDB_model_num>
+      <PDBx:type_symbol>H</PDBx:type_symbol>
+    </PDBx:atom_site>
+  </PDBx:atom_siteCategory>
+</PDBx:datablock>

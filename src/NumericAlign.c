@@ -1,23 +1,37 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       NumericAlign.c
+   \file       NumericAlign.c
    
-   Version:    V1.2
-   Date:       06.02.03
-   Function:   Perform Needleman & Wunsch sequence alignment on two
+   \version    V1.3
+   \date       07.07.14
+   \brief      Perform Needleman & Wunsch sequence alignment on two
                sequences encoded as numeric symbols.
    
-   Copyright:  (c) SciTech Software / University of Reading 1993-2003
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@stagleys.demon.co.uk, a.c.r.martin@reading.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin / University of Reading 1993-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
+**************************************************************************
+
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
+   according to the conditions laid out in the accompanying file
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
+
+   The code may not be sold commercially or included as part of a 
+   commercial product except as described in the file COPYING.DOC.
+
 **************************************************************************
 
    Note, the code herein is very heavily based on code written by Dr. 
@@ -27,17 +41,9 @@
    than as character arrays was modified from the original version(s)
    while employed at Reading University.
 
-   This program is not in the public domain, but it may be copied
-   according to the conditions laid out in the accompanying file
-   COPYING.DOC
-
-   The code may not be sold commercially or included as part of a 
-   commercial product except as described in the file COPYING.DOC.
-
-**************************************************************************
-
    Description:
    ============
+
    A simple Needleman & Wunsch Dynamic Programming alignment of 2 
    sequences encoded as numeric symbols.  
    A window is not used so the routine may be a bit slow on long 
@@ -47,6 +53,7 @@
 
    Usage:
    ======
+
    First call NumericReadMDM() to read the mutation data matrix, then call
    NumericAffineAlign() to align the sequences.
 
@@ -54,11 +61,12 @@
 
    Revision History:
    =================
-   V1.0  08.03.00 A modified version of align.c V2.12 written by ACRM
+-  V1.0  08.03.00 A modified version of align.c V2.12 written by ACRM
                   from 19.06.90 to 06.03.00
-   V1.1  28.09.00 Fixed bug at end of alignment if one sequence finishes
+-  V1.1  28.09.00 Fixed bug at end of alignment if one sequence finishes
                   first
-   V1.2  06.02.03 Fixed for new version of GetWord()
+-  V1.2  06.02.03 Fixed for new version of GetWord()
+-  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 
 *************************************************************************/
@@ -100,6 +108,7 @@ static int  **sMDMScore;
 static int  sMDMSize = 0;
 
 /************************************************************************/
+/*
 BOOL NumericReadMDM(char *mdmfile);
 int NumericCalcMDMScore(int resa, int resb);
 int NumericAffineAlign(int  *seq1, 
@@ -113,6 +122,7 @@ int NumericAffineAlign(int  *seq1,
                        int *align1, 
                        int *align2,
                        int  *align_len);
+*/
 
 /************************************************************************/
 /* Prototypes
@@ -133,16 +143,17 @@ static int  NumericTraceBack(int **matrix, XY **dirn, int length1,
                                    int *seq1, int *seq2, int *align1, 
                                    int *align2)
    ----------------------------------------------------------------
-   Input:   int  **matrix   N&W matrix
-            int  length1    Length of first sequence
-            int  length2    Length of second sequence
-            int  *BestI     x position of highest score
-            int  *BestJ     y position of highest score
-            int  *seq1      First sequence
-            int  *seq2      Second sequence
-   Output:  int  *align1    First sequence with end aligned correctly
-            int  *align2    Second sequence with end aligned correctly
-   Returns: int             Alignment length thus far
+*//**
+   \param[in]     **matrix   N&W matrix
+   \param[in]     length1    Length of first sequence
+   \param[in]     length2    Length of second sequence
+   \param[in]     *BestI     x position of highest score
+   \param[in]     *BestJ     y position of highest score
+   \param[in]     *seq1      First sequence
+   \param[in]     *seq2      Second sequence
+   \param[out]    *align1    First sequence with end aligned correctly
+   \param[out]    *align2    Second sequence with end aligned correctly
+   \return                     Alignment length thus far
 
    Searches the outside of the matrix for the best score and starts the
    alignment by putting in any starting 0s as insertion symbols.
@@ -150,7 +161,7 @@ static int  NumericTraceBack(int **matrix, XY **dirn, int length1,
    Identical to align.c/SearchForBest(), but uses int arrays rather than
    characters
 
-   08.03.00 Original based on align.c/SearchForBest() 08.10.92 By: ACRM
+-  08.03.00 Original based on align.c/SearchForBest() 08.10.92 By: ACRM
 */
 static int NumericSearchForBest(int  **matrix, 
                                 int  length1, 
@@ -205,10 +216,12 @@ static int NumericSearchForBest(int  **matrix,
 
 
 /************************************************************************/
-/*>BOOL NumericReadMDM(char *mdmfile)
-   ----------------------------------
-   Input:   char  *mdmfile    Mutation data matrix filename
-   Returns: BOOL              Success?
+/*>BOOL blNumericReadMDM(char *mdmfile)
+   ------------------------------------
+*//**
+
+   \param[in]     *mdmfile    Mutation data matrix filename
+   \return                      Success?
    
    Read mutation data matrix into static global arrays. The matrix may
    have comments at the start introduced with a ! in the first column.
@@ -221,10 +234,11 @@ static int NumericSearchForBest(int  **matrix,
    as the symbols are numeric and always start from 1 (0 is used as
    the insert character)
 
-   08.03.00 Original based on align.c/ReadMDM() 26.07.95 By: ACRM
-   06.02.03 Fixed for new version of GetWord()
+-  08.03.00 Original based on align.c/ReadMDM() 26.07.95 By: ACRM
+-  06.02.03 Fixed for new version of GetWord()
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL NumericReadMDM(char *mdmfile)
+BOOL blNumericReadMDM(char *mdmfile)
 {
    FILE *mdm = NULL;
    int  i, j;
@@ -233,7 +247,7 @@ BOOL NumericReadMDM(char *mdmfile)
         *p;
    BOOL noenv;
 
-   if((mdm=OpenFile(mdmfile, DATAENV, "r", &noenv))==NULL)
+   if((mdm=blOpenFile(mdmfile, DATAENV, "r", &noenv))==NULL)
    {
       return(FALSE);
    }
@@ -249,11 +263,11 @@ BOOL NumericReadMDM(char *mdmfile)
 
    /* See how many fields there are in the buffer                       */
    for(p = buffer, sMDMSize = 0; p!=NULL; sMDMSize++)
-      p = GetWord(p, word, 16);
+      p = blGetWord(p, word, 16);
 
 
    /* Allocate memory for the MDM and the AA List                       */
-   if((sMDMScore = (int **)Array2D(sizeof(int),sMDMSize,sMDMSize))==NULL)
+   if((sMDMScore = (int **)blArray2D(sizeof(int),sMDMSize,sMDMSize))==NULL)
       return(FALSE);
 
    /* Fill the matrix with zeros                                        */
@@ -272,12 +286,12 @@ BOOL NumericReadMDM(char *mdmfile)
       KILLLEADSPACES(p, buffer);
       if(strlen(p))
       {
-         GetWord(buffer, word, 16);
+         blGetWord(buffer, word, 16);
          if(sscanf(word,"%d",&j))    /* A row of numbers                */
          {
             for(p = buffer, j = 0; p!=NULL && j<sMDMSize; j++)
             {
-               p = GetWord(p, word, 16);
+               p = blGetWord(p, word, 16);
                sscanf(word,"%d",&(sMDMScore[i][j]));
             }
             i++;
@@ -291,11 +305,13 @@ BOOL NumericReadMDM(char *mdmfile)
 }
 
 /************************************************************************/
-/*>int NumericCalcMDMScore(int resa, int resb)
-   -------------------------------------------
-   Input:   int    resa      First token  
-            int    resb      Second token  
-   Returns: int              score
+/*>int blNumericCalcMDMScore(int resa, int resb)
+   ---------------------------------------------
+*//**
+
+   \param[in]     resa      First token  
+   \param[in]     resb      Second token  
+   \return                      score
 
    Calculate score from static globally stored mutation data matrix
 
@@ -303,9 +319,10 @@ BOOL NumericReadMDM(char *mdmfile)
    array and takes integer parameters. These are used as direct lookups
    into the score array rather than being searched.
 
-   08.03.00 Original based on align.c/CalcMDMScore() 11.07.96 By: ACRM
+-  08.03.00 Original based on align.c/CalcMDMScore() 11.07.96 By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int NumericCalcMDMScore(int resa, int resb)
+int blNumericCalcMDMScore(int resa, int resb)
 {
    int        i,j;
    static int NWarn = 0;
@@ -341,23 +358,24 @@ int NumericCalcMDMScore(int resa, int resb)
 }                               
 
 /************************************************************************/
-/*>int NumericAffineAlign(int *seq1, int length1, int *seq2, int length2, 
-                          BOOL verbose, BOOL identity, int penalty, 
-                          int penext, int *align1, int *align2, 
-                          int *align_len)
+/*>int blNumericAffineAlign(int *seq1, int length1, int *seq2, int length2, 
+                            BOOL verbose, BOOL identity, int penalty, 
+                            int penext, int *align1, int *align2, 
+                            int *align_len)
    ---------------------------------------------------------------------
-   Input:   int   *seq1         First sequence of tokens
-            int   length1       First sequence length
-            int   *seq2         Second sequence of tokens
-            int   length2       Second sequence length
-            BOOL  verbose       Display N&W matrix
-            BOOL  identity      Use identity matrix
-            int   penalty       Gap insertion penalty value
-            int   penext        Extension penalty
-   Output:  int   *align1       Sequence 1 aligned
-            int   *align2       Sequence 2 aligned
-            int   *align_len    Alignment length
-   Returns: int                 Alignment score (0 on error)
+*//**
+   \param[in]     *seq1         First sequence of tokens
+   \param[in]     length1       First sequence length
+   \param[in]     *seq2         Second sequence of tokens
+   \param[in]     length2       Second sequence length
+   \param[in]     verbose       Display N&W matrix
+   \param[in]     identity      Use identity matrix
+   \param[in]     penalty       Gap insertion penalty value
+   \param[in]     penext        Extension penalty
+   \param[out]    *align1       Sequence 1 aligned
+   \param[out]    *align2       Sequence 2 aligned
+   \param[out]    *align_len    Alignment length
+   \return                         Alignment score (0 on error)
             
    Perform simple N&W alignment of seq1 and seq2. No window is used, so
    will be slow for long sequences.
@@ -371,19 +389,20 @@ int NumericCalcMDMScore(int resa, int resb)
 
    Identical to align.c/affinealign(), but uses integer arrays
 
-   08.03.00 Original based on align.c/affinealign() 06.03.00 By: ACRM
+-  08.03.00 Original based on align.c/affinealign() 06.03.00 By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-int NumericAffineAlign(int  *seq1, 
-                       int  length1, 
-                       int  *seq2, 
-                       int  length2, 
-                       BOOL verbose, 
-                       BOOL identity, 
-                       int  penalty, 
-                       int  penext,
-                       int  *align1, 
-                       int  *align2,
-                       int  *align_len)
+int blNumericAffineAlign(int  *seq1, 
+                         int  length1, 
+                         int  *seq2, 
+                         int  length2, 
+                         BOOL verbose, 
+                         BOOL identity, 
+                         int  penalty, 
+                         int  penext,
+                         int  *align1, 
+                         int  *align2,
+                         int  *align_len)
 {
    XY    **dirn   = NULL;
    int   **matrix = NULL,
@@ -400,9 +419,9 @@ int NumericAffineAlign(int  *seq1,
    maxdim = MAX(length1, length2);
    
    /* Initialise the score matrix                                       */
-   if((matrix = (int **)Array2D(sizeof(int), maxdim, maxdim))==NULL)
+   if((matrix = (int **)blArray2D(sizeof(int), maxdim, maxdim))==NULL)
       return(0);
-   if((dirn   = (XY **)Array2D(sizeof(XY), maxdim, maxdim))==NULL)
+   if((dirn   = (XY **)blArray2D(sizeof(XY), maxdim, maxdim))==NULL)
       return(0);
       
    for(i=0;i<maxdim;i++)
@@ -424,8 +443,8 @@ int NumericAffineAlign(int  *seq1,
       }
       else
       {
-         matrix[length1-1][j] = NumericCalcMDMScore(seq1[length1-1], 
-                                                    seq2[j]);
+         matrix[length1-1][j] = blNumericCalcMDMScore(seq1[length1-1], 
+                                                      seq2[j]);
       }
    }
 
@@ -438,8 +457,8 @@ int NumericAffineAlign(int  *seq1,
       }
       else
       {
-         matrix[i][length2-1] = NumericCalcMDMScore(seq1[i], 
-                                                    seq2[length2-1]);
+         matrix[i][length2-1] = blNumericCalcMDMScore(seq1[i], 
+                                                      seq2[length2-1]);
       }
    }
 
@@ -522,7 +541,7 @@ int NumericAffineAlign(int  *seq1,
          }
          else
          {
-            matrix[i1][j] += NumericCalcMDMScore(seq1[i1],seq2[j]);
+            matrix[i1][j] += blNumericCalcMDMScore(seq1[i1],seq2[j]);
          }
       }
 
@@ -596,7 +615,7 @@ int NumericAffineAlign(int  *seq1,
          }
          else
          {
-            matrix[i][j1] += NumericCalcMDMScore(seq1[i],seq2[j1]);
+            matrix[i][j1] += blNumericCalcMDMScore(seq1[i],seq2[j1]);
          }
       }
    } 
@@ -627,8 +646,8 @@ int NumericAffineAlign(int  *seq1,
       }
    }
     
-   FreeArray2D((char **)matrix, maxdim, maxdim);
-   FreeArray2D((char **)dirn,   maxdim, maxdim);
+   blFreeArray2D((char **)matrix, maxdim, maxdim);
+   blFreeArray2D((char **)dirn,   maxdim, maxdim);
     
    return(score);
 }
@@ -639,23 +658,24 @@ int NumericAffineAlign(int  *seq1,
                                int *seq1, int *seq2, int *align1, 
                                int *align2, int *align_len)
    ----------------------------------------------------------------
-   Input:   int  **matrix   N&W matrix
-            XY   **dirn     Direction Matrix
-            int  length1    Length of first sequence
-            int  length2    Length of second sequence
-            int  *seq1      First sequence
-            int  *seq2      Second sequence
-   Output:  int  *align1    First sequence aligned
-            int  *align2    Second sequence aligned
-            int  *align_len Aligned sequence length
-   Returns: int             Alignment score
+*//**
+   \param[in]     **matrix   N&W matrix
+   \param[in]     **dirn     Direction Matrix
+   \param[in]     length1    Length of first sequence
+   \param[in]     length2    Length of second sequence
+   \param[in]     *seq1      First sequence
+   \param[in]     *seq2      Second sequence
+   \param[out]    *align1    First sequence aligned
+   \param[out]    *align2    Second sequence aligned
+   \param[out]    *align_len Aligned sequence length
+   \return                     Alignment score
 
    Does the traceback to find the aligment.
 
    Identical to align.c/TraceBack(), but uses integer arrays.
 
-   08.03.00 Original based on align.c/TraceBack() 06.03.00 By: ACRM
-   28.09.00 Fixed bug at end of alignment if one sequence finishes
+-  08.03.00 Original based on align.c/TraceBack() 06.03.00 By: ACRM
+-  28.09.00 Fixed bug at end of alignment if one sequence finishes
             first
 */
 static int NumericTraceBack(int  **matrix, 

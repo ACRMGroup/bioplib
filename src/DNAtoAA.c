@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       DNAtoAA.c
+   \file       DNAtoAA.c
    
-   Version:    V1.0R
-   Date:       11.05.94
-   Function:   Convert DNA codons to amino acid 1-letter code
+   \version    V1.1
+   \date       07.07.14
+   \brief      Convert DNA codons to amino acid 1-letter code
    
-   Copyright:  (c) SciTech Software 1994
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -31,16 +36,21 @@
    Description:
    ============
 
+
 **************************************************************************
 
    Usage:
    ======
-   #include "bioplib/seq.h" to define prototype
+
+
+      #include "bioplib/seq.h" to define prototype
 
 **************************************************************************
 
    Revision History:
    =================
+   
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -73,18 +83,21 @@ static char *sAACode[4][4] =
 */
 
 /************************************************************************/
-/*>char DNAtoAA(char *dna)
-   -----------------------
-   Input:   char  *dna        DNA/RNA codon
-   Returns: char              1-letter amino acid code (X=termination)
+/*>char blDNAtoAA(char *dna)
+   -------------------------
+*//**
+
+   \param[in]     *dna        DNA/RNA codon
+   \return                    1-letter amino acid code (X=termination)
 
    Converts a nucleic acid codon to the 1-letter amino acid equivalent.
    Termination codons are returned as X. No special action is taken
    for initiation codons.
 
-   18.04.94 Original    By: ACRM
+-  18.04.94 Original    By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char DNAtoAA(char *dna)
+char blDNAtoAA(char *dna)
 {
    char buffer[8], *p;
    int idx1, idx2, idx3;

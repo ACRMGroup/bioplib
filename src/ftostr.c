@@ -1,13 +1,13 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       ftostr.c
+   \file       ftostr.c
    
-   Version:    V1.3R
-   Date:       03.06.05
-   Function:   Convert a REAL to a string
+   \version    V1.4
+   \date       07.07.14
+   \brief      Convert a REAL to a string
    
-   Copyright:  (c) SciTech Software 1991-2005
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
    EMail:      andrew@bioinf.org.uk
 
 **************************************************************************
@@ -21,8 +21,33 @@
 
 **************************************************************************
 
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
+               
+**************************************************************************
+
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
+   according to the conditions laid out in the accompanying file
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
+
+   The code may not be sold commercially or included as part of a 
+   commercial product except as described in the file COPYING.DOC.
+
+**************************************************************************
+
    Description:
    ============
+
    Convert a REAL to a string
 
 **************************************************************************
@@ -34,10 +59,11 @@
 
    Revision History:
    =================
-   V1.0  22.11.95 Original - Routines from general.c
-   V1.1  09.10.97 Fixed inconsistent handling of %.0f between C libs
-   V1.2  14.11.97 Another fix to same
-   V1.3  03.06.05 Tidied up to stop warnings under GCC 3.2.2
+-  V1.0  22.11.95 Original - Routines from general.c
+-  V1.1  09.10.97 Fixed inconsistent handling of %.0f between C libs
+-  V1.2  14.11.97 Another fix to same
+-  V1.3  03.06.05 Tidied up to stop warnings under GCC 3.2.2
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -64,36 +90,39 @@
 */
 
 /************************************************************************/
-/*>char *ftostr(char *str, int maxlen, REAL x, int precision)
-   ----------------------------------------------------------
-   Output:  char  *str       String version of number
-   Input:   int   maxlen     Max length for f-form. Switches to e-form
+/*>char *blFtostr(char *str, int maxlen, REAL x, int precision)
+   ------------------------------------------------------------
+*//**
+
+   \param[out]    *str       String version of number
+   \param[in]     maxlen     Max length for f-form. Switches to e-form
                              if exceeded
-            REAL  x          Number to convert
-            int   precision  Number of decimal places
+   \param[in]     x          Number to convert
+   \param[in]     precision  Number of decimal places
                              If negative, use e-form rather than f-form
-   Returns: char  *          Same as str
+   \return                     Same as str
 
    Convert a REAL to a string using precision decimal places. If 
    precision is negative, use e-form, otherwise use f-form. This is used
    to generate precisely formatted string versions of numbers for
    applications where the appearance of a numeric value is important.
 
-   01.07.92 Original
-   07.07.92 Changed to stop value of -0.0
-   24.07.92 Added maxlen parameter. If the f-form will exceed this number
+-  01.07.92 Original
+-  07.07.92 Changed to stop value of -0.0
+-  24.07.92 Added maxlen parameter. If the f-form will exceed this number
             of characters we switch to e-form autmatically
-   28.07.92 If precision -ve, is never < maxlen-5
-   27.07.93 Changed to double precision I/O
-   09.10.97 If precision is 0 prints as an integer since C libraries
+-  28.07.92 If precision -ve, is never < maxlen-5
+-  27.07.93 Changed to double precision I/O
+-  09.10.97 If precision is 0 prints as an integer since C libraries
             handle "%.0f" inconsistently
-   14.11.97 Oops, had forgotten to fix this in the check for e-form
-   03.06.05 Tidied up some loops to stop warnings under GCC 3.2.2
+-  14.11.97 Oops, had forgotten to fix this in the check for e-form
+-  03.06.05 Tidied up some loops to stop warnings under GCC 3.2.2
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char *ftostr(char  *str,
-             int   maxlen,
-             REAL  x,
-             int   precision)
+char *blFtostr(char  *str,
+               int   maxlen,
+               REAL  x,
+               int   precision)
 {
    char   fmt[8],
           *ptr;

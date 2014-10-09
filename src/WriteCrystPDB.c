@@ -1,22 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       WriteCrystPDB.c
+   \file       WriteCrystPDB.c
    
-   Version:    V1.0
-   Date:       12.10.95
-   Function:   
+   \version    V1.1
+   \date       07.07.14
+   \brief      
    
-   Copyright:  (c) SciTech Software 1993-1995
-   Author:     Dr. Andrew C. R. Martin
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -25,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -35,7 +46,8 @@
 
    Revision History:
    =================
-   V1.0R 12.10.05 Original
+-  V1.0R 12.10.05 Original
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -58,24 +70,27 @@
 
 
 /************************************************************************/
-/*>void WriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
+/*>void blWriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
                       char *spacegroup,
                       REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4])
-   -----------------------------------------------------------------
-   Input:   FILE    *fp            Output file pointet
-            VEC3F   UnitCell       The unit cell dimensions
-            VEC3F   CellAngles     The unit cell angles
-            char    *spacegroup    The crystal's space group
-            REAL    OrigMatrix     The origin matrix
-            REAL    ScaleMatrix    The scale matrix
+   -------------------------------------------------------------------
+*//**
+
+   \param[in]     *fp            Output file pointet
+   \param[in]     UnitCell       The unit cell dimensions
+   \param[in]     CellAngles     The unit cell angles
+   \param[in]     *spacegroup    The crystal's space group
+   \param[in]     OrigMatrix     The origin matrix
+   \param[in]     ScaleMatrix    The scale matrix
 
    Write crystal parameters (unit cell, space group, origin and scale
    matrices) to a PDB file.
 
-   12.10.95 Original    By: ACRM
-   17.10.95 Corrected %lf to %f in fprintf()s
+-  12.10.95 Original    By: ACRM
+-  17.10.95 Corrected %lf to %f in fprintf()s
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void WriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
+void blWriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
                    char *spacegroup,
                    REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4])
 {

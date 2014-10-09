@@ -1,22 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       wrapprint.c
+   \file       wrapprint.c
    
-   Version:    V1.0
-   Date:       30.05.02
-   Function:   
+   \version    V1.2
+   \date       07.07.14
+   \brief      
    
-   Copyright:  (c) Dr. Andrew C. R. Martin, University of Reading, 2002
-   Author:     Dr. Andrew C. R. Martin
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002-14
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -25,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -35,6 +46,7 @@
 
    Revision History:
    =================
+-  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -58,21 +70,24 @@
 */
 
 /************************************************************************/
-/*>BOOL WrapString(char *in, char *out, int maxlen)
-   ------------------------------------------------
-   Input:     char    *in      Input string
-              int     maxlen   Max length of output string
-   Output:    char    *out     Output wrapped string
-   Returns:   BOOL             Output string was long enough
+/*>BOOL blWrapString(char *in, char *out, int maxlen)
+   --------------------------------------------------
+*//**
+
+   \param[in]     *in      Input string
+   \param[in]     maxlen   Max length of output string
+   \param[out]    *out     Output wrapped string
+   \return                     Output string was long enough
 
    Wraps a string with double inverted commas if it contains spaces
    and escapes any contained double inverted commas with a backslash.
    If the output string wasn't big enough, then the routine just
    returns FALSE without copying anything into the output string.
 
-   30.05.02 Original   By: ACRM
+-  30.05.02 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL WrapString(char *in, char *out, int maxlen)
+BOOL blWrapString(char *in, char *out, int maxlen)
 {
    int  len,
         ndic,
@@ -111,7 +126,7 @@ BOOL WrapString(char *in, char *out, int maxlen)
    /* See if the string has double inverted commas - if so we need
       to escape them, so increment the string length
    */
-   ndic = countchar(in, '"');
+   ndic = blCountchar(in, '"');
    len += ndic;
 
    /* Check that there is space for our padded string                   */
@@ -156,20 +171,23 @@ BOOL WrapString(char *in, char *out, int maxlen)
 }
 
 /************************************************************************/
-/*>BOOL WrapPrint(FILE *out, char *string)
-   ---------------------------------------
-   Input:     FILE    *out     Output file pointer
-              char    *string  String to be printed
-   Returns:   BOOL             OK?
+/*>BOOL blWrapPrint(FILE *out, char *string)
+   -----------------------------------------
+*//**
+
+   \param[in]     *out     Output file pointer
+   \param[in]     *string  String to be printed
+   \return                     OK?
 
    Wraps a string with double inverted commas if it contains spaces
    and escapes any contained double inverted commas with a backslash.
    Allocates memory for temporary storage of the wrapped string.
    Returns FALSE if this memory allocation failed.
 
-   30.05.02 Original   By: ACRM
+-  30.05.02 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL WrapPrint(FILE *out, char *string)
+BOOL blWrapPrint(FILE *out, char *string)
 {
    int len;
    char *buffer;
@@ -181,7 +199,7 @@ BOOL WrapPrint(FILE *out, char *string)
    if((buffer=(char *)malloc(len*sizeof(char)))==NULL)
       return(FALSE);
    
-   if(!WrapString(string, buffer, len))
+   if(!blWrapString(string, buffer, len))
    {
       free(buffer);
       return(FALSE);

@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       GetWord.c
+   \file       GetWord.c
    
-   Version:    V2.0
-   Date:       10.06.99
-   Function:   Get a space delimited word from a string
+   \version    V2.2
+   \date       03.08.14
+   \brief      Get a space delimited word from a string
    
-   Copyright:  (c) SciTech Software 1995
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1995-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -40,8 +46,10 @@
 
    Revision History:
    =================
-   V1.0  02.03.99 Original   By: ACRM
-   V2.0  10.06.99 Complete rewrite to allow escaping of characters
+-  V1.0  02.03.99 Original   By: ACRM
+-  V2.0  10.06.99 Complete rewrite to allow escaping of characters
+-  V2.1  07.07.14 Use bl prefix for functions By: CTP
+-  V2.2  08.03.14 Made doGetWord() a static function. By CTP
 
 *************************************************************************/
 /* Includes
@@ -61,17 +69,20 @@
 /************************************************************************/
 /* Prototypes
 */
-char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma);
+static char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma);
 
 
 /************************************************************************/
-/*>char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma)
-   -----------------------------------------------------------------
-   Input:   char    *buffer     Input buffer to read words from
-            int     maxlen      Max length of output word
-            BOOL    comma       Treat commas like white space?
-   Output:  char    *word       Word read from buffer
-   Returns: char    *           Pointer to start of next word in buffer
+/*>static char *doGetWord(char *buffer, char *word, int maxlen,
+                          BOOL comma)
+   ------------------------------------------------------------
+*//**
+
+   \param[in]     *buffer     Input buffer to read words from
+   \param[in]     maxlen      Max length of output word
+   \param[in]     comma       Treat commas like white space?
+   \param[out]    *word       Word read from buffer
+   \return                        Pointer to start of next word in buffer
                                 or NULL
 
    This code is designed to be called from GetWord() or GetWordNC()
@@ -88,9 +99,10 @@ char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma);
                       string in double inverted commas)
       "\"" -> '"'     To get a double inverted comma
 
-   10.06.99 Original   By: ACRM (based on code from Bioplib)
+-  10.06.99 Original   By: ACRM (based on code from Bioplib)
+-  03.08.14 Made static By: CTP
 */
-char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma)
+static char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma)
 {
    int  i, j;
    BOOL dic    = FALSE,
@@ -203,12 +215,14 @@ char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma)
 }
 
 /************************************************************************/
-/*>char *GetWord(char *buffer, char *word, int maxlen)
-   ---------------------------------------------------
-   Input:   char    *buffer     Input buffer to read words from
-            int     maxlen      Max length of output word
-   Output:  char    *word       Word read from buffer
-   Returns: char    *           Pointer to start of next word in buffer
+/*>char *blGetWord(char *buffer, char *word, int maxlen)
+   -----------------------------------------------------
+*//**
+
+   \param[in]     *buffer     Input buffer to read words from
+   \param[in]     maxlen      Max length of output word
+   \param[out]    *word       Word read from buffer
+   \return                        Pointer to start of next word in buffer
                                 or NULL
 
    This code is a wrapper to doGetWord()
@@ -223,20 +237,23 @@ char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma)
                       string in double inverted commas)
       "\"" -> '"'     To get a double inverted comma
 
-   10.06.99 Original   By: ACRM
+-  10.06.99 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char *GetWord(char *buffer, char *word, int maxlen)
+char *blGetWord(char *buffer, char *word, int maxlen)
 {
    return(doGetWord(buffer, word, maxlen, TRUE));
 }
 
 /************************************************************************/
-/*>char *GetWordNC(char *buffer, char *word, int maxlen)
-   -----------------------------------------------------
-   Input:   char    *buffer     Input buffer to read words from
-            int     maxlen      Max length of output word
-   Output:  char    *word       Word read from buffer
-   Returns: char    *           Pointer to start of next word in buffer
+/*>char *blGetWordNC(char *buffer, char *word, int maxlen)
+   -------------------------------------------------------
+*//**
+
+   \param[in]     *buffer     Input buffer to read words from
+   \param[in]     maxlen      Max length of output word
+   \param[out]    *word       Word read from buffer
+   \return                        Pointer to start of next word in buffer
                                 or NULL
 
    This code is a wrapper to doGetWord()
@@ -252,9 +269,10 @@ char *GetWord(char *buffer, char *word, int maxlen)
                       string in double inverted commas)
       "\"" -> '"'     To get a double inverted comma
 
-   10.06.99 Original By: ACRM
+-  10.06.99 Original By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char *GetWordNC(char *buffer, char *word, int maxlen)
+char *blGetWordNC(char *buffer, char *word, int maxlen)
 {
    return(doGetWord(buffer, word, maxlen, FALSE));
 }

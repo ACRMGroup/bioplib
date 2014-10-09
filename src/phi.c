@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       phi.c
+   \file       phi.c
    
-   Version:    V1.5
-   Date:       27.03.95
-   Function:   Calculate a torsion angle
+   \version    V1.8
+   \date       17.07.14
+   \brief      Calculate a torsion angle
    
-   Copyright:  (c) SciTech Software 1993-5
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -34,6 +46,9 @@
 
    Revision History:
    =================
+
+-  V1.7  07.07.14 Use bl prefix for functions By: CTP
+-  V1.8  17.07.14 Removed unused varables  By: ACRM
 
 *************************************************************************/
 /* Includes
@@ -55,32 +70,44 @@
 
 
 /************************************************************************/
-/*>REAL phi(REAL xi,REAL yi,REAL zi,REAL xj,REAL yj,REAL zj,
-            REAL xk,REAL yk,REAL zk,REAL xl,REAL yl,REAL zl)
+/*>REAL blPhi(REAL xi,REAL yi,REAL zi,REAL xj,REAL yj,REAL zj,
+              REAL xk,REAL yk,REAL zk,REAL xl,REAL yl,REAL zl)
    ---------------------------------------------------------
-   Input:   REAL    xi,yi,zi    Input coordinates
-                    xj,yj,zj
-                    xk,yk,zk
-                    xl,yl,zl
-   Returns: REAL                The torsion angle between the 4 atoms
+*//**
+
+   \param[in]     xi          Input coordinate
+   \param[in]     yi          Input coordinate
+   \param[in]     zi          Input coordinate
+   \param[in]     xj          Input coordinate
+   \param[in]     yj          Input coordinate
+   \param[in]     zj          Input coordinate
+   \param[in]     xk          Input coordinate
+   \param[in]     yk          Input coordinate
+   \param[in]     zk          Input coordinate
+   \param[in]     xl          Input coordinate
+   \param[in]     yl          Input coordinate
+   \param[in]     zl          Input coordinate
+   \return                    The torsion angle between the 4 atoms
 
    Calculates the torsion angle described by 4 sets of coordinates.
 
-   04.03.91 Original    By: ACRM
-   16.06.93 Changed float to REAL
+-  04.03.91 Original    By: ACRM
+-  16.06.93 Changed float to REAL
+-  07.07.14 Use bl prefix for functions By: CTP
+-  17.07.14 Removed unused variables  By: ACRM
 */
-REAL phi(REAL xi,
-         REAL yi,
-         REAL zi,
-         REAL xj,
-         REAL yj,
-         REAL zj,
-         REAL xk,
-         REAL yk,
-         REAL zk,
-         REAL xl,
-         REAL yl,
-         REAL zl)
+REAL blPhi(REAL xi,
+           REAL yi,
+           REAL zi,
+           REAL xj,
+           REAL yj,
+           REAL zj,
+           REAL xk,
+           REAL yk,
+           REAL zk,
+           REAL xl,
+           REAL yl,
+           REAL zl)
 {
    REAL xij,yij,zij,
         xkj,ykj,zkj,
@@ -88,11 +115,8 @@ REAL phi(REAL xi,
         dxi,dyi,dzi,
         gxi,gyi,gzi,
         bi,bk,ct,
-        boi2,boj2,
-        z1,z2,ap,s,
-        bioj,bjoi;
-
-
+        z1,z2,ap,s;
+   
    /* Calculate the vectors C,B,C                                       */
    xij = xi - xj;
    yij = yi - yj;
@@ -126,15 +150,12 @@ REAL phi(REAL xi,
    bk = gxi * gxi + gyi * gyi + gzi * gzi;
    ct = dxi * gxi + dyi * gyi + dzi * gzi;
 
-   boi2 = 1./bi;
-   boj2 = 1./bk;
    bi   = (REAL)sqrt((double)bi);
    bk   = (REAL)sqrt((double)bk);
 
    z1   = 1./bi;
    z2   = 1./bk;
-   bioj = bi * z2;
-   bjoi = bk * z1;
+
    ct   = ct * z1 * z2;
    if (ct >  1.0)   ct = 1.0;
    if (ct < (-1.0)) ct = -1.0;

@@ -1,22 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       NComb.c
+   \file       NComb.c
    
-   Version:    V1.0
-   Date:       10.09.96
-   Function:   
+   \version    V1.1
+   \date       07.07.14
+   \brief      
    
-   Copyright:  (c) SciTech Software 1996
-   Author:     Dr. Andrew C. R. Martin
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -25,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -35,7 +46,9 @@
 
    Revision History:
    =================
-   V1.0  10.09.96 Original
+-  V1.0  10.09.96 Original
+-  V1.1  07.07.14 Use bl prefix for functions By: CTP
+
 
 *************************************************************************/
 /* Includes
@@ -57,17 +70,20 @@
 
 
 /************************************************************************/
-/*>ULONG NComb(int n, int r)
-   -------------------------
+/*>ULONG blNComb(int n, int r)
+   ---------------------------
+*//**
+
    Calculates number of combinations of n items in r groups
    Returns 0 if a numeric overflow occurs.
    
-   09.09.96 Original   By: ACRM
+-  09.09.96 Original   By: ACRM
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-ULONG NComb(int n, int r)
+ULONG blNComb(int n, int r)
 {
    ULONG f;
-   f = factorial(r);
+   f = blFactorial(r);
    
-   return((f>0L)?(NPerm(n,r)/factorial(r)):0L);
+   return((f>0L)?(blNPerm(n,r)/blFactorial(r)):0L);
 }

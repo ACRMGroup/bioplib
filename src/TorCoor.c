@@ -1,21 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       TorCoor.c
+   \file       TorCoor.c
    
-   Version:    V1.0
-   Date:       08.07.96
-   Function:   Calculate cartesian coordinates from torsion angle
+   \version    V1.1
+   \date       07.07.14
+   \brief      Calculate cartesian coordinates from torsion angle
    
-   Copyright:  (c) SciTech Software 1989-96
-   Author:     Dr. Andrew C. R. Martin
-   EMail:      andrew@bioinf.org.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1989-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -24,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -58,29 +70,32 @@
 */
 
 /************************************************************************/
-/*>BOOL TorToCoor(VEC3F ant1, VEC3F ant2, VEC3F ant3, 
-                  REAL bond, REAL theta, REAL torsion,
-                  VEC3F *coords)
-   ---------------------------------------------------
-   Input:   VEC3F     ant1      First antecedent atom coordinates
-            VEC3F     ant2      Second antecedent atom coordinates
-            VEC3F     ant3      Third antecedent atom coordinates
-            REAL      bond      Bond length from ant3 to new atom
-            REAL      theta     Bond angle ant2-ant3-new
-            REAL      torsion   Torsion angle ant1-ant2-ant3-new
-   Output:  VEC3F     *coords   Coordinates of new atom
-   Returns: BOOL                TRUE if distance between atoms 2 and 3
+/*>BOOL blTorToCoor(VEC3F ant1, VEC3F ant2, VEC3F ant3, 
+                    REAL bond, REAL theta, REAL torsion,
+                    VEC3F *coords)
+   -----------------------------------------------------
+*//**
+
+   \param[in]     ant1      First antecedent atom coordinates
+   \param[in]     ant2      Second antecedent atom coordinates
+   \param[in]     ant3      Third antecedent atom coordinates
+   \param[in]     bond      Bond length from ant3 to new atom
+   \param[in]     theta     Bond angle ant2-ant3-new
+   \param[in]     torsion   Torsion angle ant1-ant2-ant3-new
+   \param[out]    *coords   Coordinates of new atom
+   \return                        TRUE if distance between atoms 2 and 3
                                 is < ETA (1.07e-7)
 
    Calculates cartesian coordinates for an atom given the coordinates of
    three antecedant atoms and the bond length, angle and torsion angle
 
-   08.07.96 Original By: ACRM based on FORTRAN code adapted from Bob
+-  08.07.96 Original By: ACRM based on FORTRAN code adapted from Bob
             Bruccoleri's code from CONGEN.
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL TorToCoor(VEC3F ant1, VEC3F ant2, VEC3F ant3, 
-               REAL bond, REAL theta, REAL torsion,
-               VEC3F *coords)
+BOOL blTorToCoor(VEC3F ant1, VEC3F ant2, VEC3F ant3, 
+                 REAL bond, REAL theta, REAL torsion,
+                 VEC3F *coords)
 {
    REAL x1,  y1,  z1,
         x2,  y2,  z2,

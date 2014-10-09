@@ -1,32 +1,33 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    CountPDB
-   File:       countpdb.c
+   \file       countpdb.c
    
-   Version:    V1.2
-   Date:       30.05.02
-   Function:   Count residues and atoms in a PDB file
+   \version    V1.3
+   \date       22.07.14
+   \brief      Count residues and atoms in a PDB file
    
-   Copyright:  (c) Dr. Andrew C. R. Martin 1994-2002
-   Author:     Dr. Andrew C. R. Martin
-   Address:    Biomolecular Structure & Modelling Unit,
+   \copyright  (c) Dr. Andrew C. R. Martin 1994-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Biomolecular Structure & Modelling Unit,
                Department of Biochemistry & Molecular Biology,
                University College,
                Gower Street,
                London.
                WC1E 6BT.
-   EMail:      andrew@bioinf.org.uk
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
 
    The code may be modified as required, but any modifications must be
-   documented so that the person responsible can be identified. If someone
-   else breaks this code, I don't want to be blamed for code that does not
-   work! 
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -45,9 +46,11 @@
 
    Revision History:
    =================
-   V1.0  16.08.94 Original
-   V1.1  24.08.94 Changed to call OpenStdFiles()
-   V1.2  30.05.02 Changed PDB field from 'junk' to 'record_type'
+-  V1.0  16.08.94 Original
+-  V1.1  24.08.94 Changed to call OpenStdFiles()
+-  V1.2  30.05.02 Changed PDB field from 'junk' to 'record_type'
+-  V1.3  22.07.14 Renamed deprecated functions with bl prefix.
+                  Added doxygen annotation. By: CTP
 
 *************************************************************************/
 /* Includes
@@ -83,10 +86,13 @@ void DoCount(PDB *pdb, int *nchain, int *nres, int *natom, int *nhyd,
 /************************************************************************/
 /*>int main(int argc, char **argv)
    -------------------------------
+*//**
+
    Main program for counting residues & atoms
 
-   16.08.94 Original    By: ACRM
-   24.08.94 Changed to call OpenStdFiles()
+-  16.08.94 Original    By: ACRM
+-  24.08.94 Changed to call OpenStdFiles()
+-  22.07.14 Renamed deprecated functions with bl prefix. By: CTP
 */
 int main(int argc, char **argv)
 {
@@ -99,9 +105,9 @@ int main(int argc, char **argv)
         
    if(ParseCmdLine(argc, argv, infile, outfile))
    {
-      if(OpenStdFiles(infile, outfile, &in, &out))
+      if(blOpenStdFiles(infile, outfile, &in, &out))
       {
-         if((pdb=ReadPDB(in, &natom))==NULL)
+         if((pdb=blReadPDB(in, &natom))==NULL)
          {
             fprintf(stderr,"No atoms read from input file\n");
          }
@@ -130,15 +136,17 @@ Total Hydrogens: %d\n", nchain, nres, natom, nhet, nhyd);
 /************************************************************************/
 /*>BOOL ParseCmdLine(int argc, char **argv, char *infile, char *outfile)
    ----------------------------------------------------------------------
-   Input:   int    argc        Argument count
-            char   **argv      Argument array
-   Output:  char   *infile     Input filename (or blank string)
-            char   *outfile    Output filename (or blank string)
-   Returns: BOOL               Success
+*//**
+
+   \param[in]      argc        Argument count
+   \param[in]      **argv      Argument array
+   \param[out]     *infile     Input filename (or blank string)
+   \param[out]     *outfile    Output filename (or blank string)
+   \return                     Success
 
    Parse the command line
 
-   16.08.94 Original    By: ACRM
+-  16.08.94 Original    By: ACRM
 */
 BOOL ParseCmdLine(int argc, char **argv, char *infile, char *outfile)
 {
@@ -188,13 +196,16 @@ BOOL ParseCmdLine(int argc, char **argv, char *infile, char *outfile)
 /************************************************************************/
 /*>void Usage(void)
    ----------------
+*//**
+
    Print a usage message
 
-   16.08.94 Original    By: ACRM
+-  16.08.94 Original    By: ACRM
+-  22.07.14 V1.3 By: CTP
 */
 void Usage(void)
 {
-   fprintf(stderr,"\nCountPDB V1.2 (c) 1994-2002 Dr. Andrew C.R. Martin, \
+   fprintf(stderr,"\nCountPDB V1.3 (c) 1994-2014 Dr. Andrew C.R. Martin, \
 UCL\n");
    fprintf(stderr,"Freely distributable if no profit is made\n\n");
    fprintf(stderr,"Usage: countpdb [<infile>] [<outfile>]\n\n");
@@ -207,9 +218,11 @@ used.\n");
 /*>void DoCount(PDB *pdb, int *nchain, int *nres, int *natom, int *nhyd,
                 int *nhet)
    ---------------------------------------------------------------------
+*//**
+
    Does the actual work of counting 
 
-   16.08.94 Original    By: ACRM
+-  16.08.94 Original    By: ACRM
 */
 void DoCount(PDB *pdb, int *nchain, int *nres, int *natom, int *nhyd,
              int *nhet)

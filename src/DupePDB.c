@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       DupePDB.c
+   \file       DupePDB.c
    
-   Version:    V1.10R
-   Date:       08.10.99
-   Function:   PDB linked list manipulation
+   \version    V1.11
+   \date       07.07.14
+   \brief      PDB linked list manipulation
    
-   Copyright:  (c) SciTech Software 1992-6
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      andrew@stagleys.demon.co.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-6
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,6 +35,7 @@
 
    Description:
    ============
+
 
 **************************************************************************
 
@@ -40,17 +46,18 @@
 
    Revision History:
    =================
-   V1.0  22.02.94 Original release
-   V1.1  23.05.94 Added FindNextChainPDB()
-   V1.2  05.10.94 KillSidechain() uses BOOL rather than int
-   V1.3  24.07.95 Added TermPDB()
-   V1.4  25.07.95 Added GetPDBChainLabels()
-   V1.5  26.09.95 Fixed bug in TermPDB()
-   V1.6  12.10.95 Added DupePDB(), CopyPDBCoords()
-   V1.7  23.10.95 Moved FindResidueSpec() to ParseRes.c
-   V1.8  10.01.96 Added ExtractZonePDB()
-   V1.9  14.03.96 Added FindAtomInRes()
-   V1.10 08.10.99 Initialised some variables
+-  V1.0  22.02.94 Original release
+-  V1.1  23.05.94 Added FindNextChainPDB()
+-  V1.2  05.10.94 KillSidechain() uses BOOL rather than int
+-  V1.3  24.07.95 Added TermPDB()
+-  V1.4  25.07.95 Added GetPDBChainLabels()
+-  V1.5  26.09.95 Fixed bug in TermPDB()
+-  V1.6  12.10.95 Added DupePDB(), CopyPDBCoords()
+-  V1.7  23.10.95 Moved FindResidueSpec() to ParseRes.c
+-  V1.8  10.01.96 Added ExtractZonePDB()
+-  V1.9  14.03.96 Added FindAtomInRes()
+-  V1.10 08.10.99 Initialised some variables
+-  V1.11 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -77,19 +84,22 @@
 */
 
 /************************************************************************/
-/*>PDB *DupePDB(PDB *in)
-   ---------------------
-   Input:   PDB    *in     Input PDB linked list
-   Returns: PDB    *       Duplicated PDB linked list
-                           (NULL on allocation failure)
+/*>PDB *blDupePDB(PDB *in)
+   -----------------------
+*//**
+
+   \param[in]     *in     Input PDB linked list
+   \return                Duplicated PDB linked list
+                          (NULL on allocation failure)
 
    Duplicates a PDB linked list. Allocates new linked list with identical
    data.
 
-   11.10.95 Original   By: ACRM
-   08.10.99 Initialise q to NULL
+-  11.10.95 Original   By: ACRM
+-  08.10.99 Initialise q to NULL
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-PDB *DupePDB(PDB *in)
+PDB *blDupePDB(PDB *in)
 {
    PDB *out = NULL,
        *p, *q = NULL;
@@ -111,7 +121,7 @@ PDB *DupePDB(PDB *in)
          return(NULL);
       }
       
-      CopyPDB(q, p);
+      blCopyPDB(q, p);
    }
    
    return(out);

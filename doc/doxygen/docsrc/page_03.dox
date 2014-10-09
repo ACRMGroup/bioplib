@@ -1,0 +1,99 @@
+/**
+
+\page page_03 The PDB Data Structure
+\brief
+   Bioplib - The PDB Data Structure and Linked Lists.
+
+
+The PDB Data Structure
+----------------------
+
+The main data structure used by bioplib is the PDB linked list. 
+
+\code
+
+   typedef struct pdb_entry
+   {
+      REAL x, y, z,             /* Coordinates                             */
+           occ, bval,           /* Occupancy and B-value                   */
+           access, radius,      /* Accessibility and radius - populated by
+                                   Bioplib routines                        */
+           partial_charge;      /* Reserved for future use                 */
+      APTR extras;              /* Pointer for users to add information    */
+      blATOMTYPE *atomType;     /* Reserved for future use                 */
+      struct pdb_entry *next;   /* Forward linked list                     */
+      int  atnum;               /* Atom number                             */
+      int  resnum;              /* Residue number                          */
+      int  formal_charge;       /* Formal charge - used in XML files       */
+      char record_type[8];      /* ATOM / HETATM                           */
+      char atnam[8];            /* Atom name, left justified               */
+      char atnam_raw[8];        /* Atom name as it appears in the PDB file */
+      char resnam[8];           /* Residue name                            */
+      char insert[8];           /* Numbering insert code                   */
+      char chain[8];            /* Chain label                             */
+      char element[8];          /* Element type                            */
+      char altpos;              /* Alternate position indicator            */
+   }  PDB;
+
+\endcode
+
+The PDB data structure contains the data for each ATOM or HETATM record in the PDB file. The structure contains a link to the next atom in the list and the following data corresponding to the fields in the ATOM/HETATM record in a PDB file:
+
+
+- record_type - Record Type (ATOM/HETATM)
+- atnum - Atom serial number.
+- atnam - Atom name.
+- altpos - Alternate location indicator.
+- resnam - Residue name.
+- chain - Chain identifier.
+- resnum - Residue sequence number.
+- insert - Code for insertion of residues.
+- x - X Coordinate in Angstroms.  
+- y - Y Coordinate in Angstroms.  
+- z - Z Coordinate in Angstroms.  
+- occ - Occupancy.
+- bval - Temperature factor.
+- element - Element symbol.
+- formal_charge - Charge on the atom.
+
+The structure contains a link to the next node in the linked list: 
+
+- next - Next ATOM/HETATM record in list.
+
+
+Additionally the following values are included:
+
+- access - Solvent accessibility.
+- radius - Atom radius for solvent accessibility calculations.
+- partial_charge - Partial charge
+
+
+
+
+The extras field is used to attach additional data structure or array to each atom record. For example:
+
+\code
+
+   typedef struct
+   {
+      REAL angle;
+      BOOL flag;
+   }  EXTRAS;
+   PDB *p;
+
+   for(p=pdb; p!=NULL; NEXT(p))
+   {
+      if((p->extras = (APTR)malloc(sizeof(EXTRAS)))==NULL)
+         return(FALSE);
+   }
+
+   for(p=pdb; p!=NULL; NEXT(p))
+   {
+      ((EXTRAS *)p->extras)->flag = FALSE;
+      ((EXTRAS *)p->extras)->angle = (REAL)0.0;
+   }
+
+\endcode
+
+
+*/

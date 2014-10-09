@@ -1,28 +1,33 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       RdSecPDB.c
+   \file       RdSecPDB.c
    
-   Version:    V1.3R
-   Date:       18.08.98
-   Function:   Read secondary structure information from the HELIX, TURN
+   \version    V1.4
+   \date       07.07.14
+   \brief      Read secondary structure information from the HELIX, TURN
                and SHEET records in a PDB file
    
-   Copyright:  (c) SciTech Software 1990-8
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -32,11 +37,15 @@
    Description:
    ============
 
+
 **************************************************************************
 
    Usage:
    ======
-   sec = ReadSecPDB(fp,&nsec)
+   
+\code
+   sec = blReadSecPDB(fp,&nsec)
+\endcode
 
    This routine reads the secondary structure informaton from the
    header of a .PDB file. It reads from file fp and creates a linked
@@ -48,19 +57,21 @@
    to which it applies. The form of the structure should be checked
    in pdb.h
 
-   Input:    fp    *FILE      Pointer to PDB file
-   Output:   nsec  *int       Number of sec struc regions identified
-   Returns:  sec   *SECSTRUC  Linked list of type SECSTRUC
+
+    Input:    fp    *FILE      Pointer to PDB file
+    Output:   nsec  *int       Number of sec struc regions identified
+    Returns:  sec   *SECSTRUC  Linked list of type SECSTRUC
 
 **************************************************************************
 
    Revision History:
    =================
-   V1.0  22.03.90 Original
-   V1.1  20.06.90 Would crash if no secondary structure found---fixed.
-   V1.2  09.07.93 Changed allocation scheme. Returns pointer to SECSTRUC.
+-  V1.0  22.03.90 Original
+-  V1.1  20.06.90 Would crash if no secondary structure found---fixed.
+-  V1.2  09.07.93 Changed allocation scheme. Returns pointer to SECSTRUC.
                   No need to initialise this before calling
-   V1.3  18.08.98 Changed SEC to SECSTRUC 'cos of conflict in SunOS
+-  V1.3  18.08.98 Changed SEC to SECSTRUC 'cos of conflict in SunOS
+-  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -90,11 +101,13 @@
 */
 
 /************************************************************************/
-/*>SECSTRUC *ReadSecPDB(FILE *fp, int *nsec)
-   -----------------------------------------
-   Input:    fp    *FILE      Pointer to PDB file
-   Output:   nsec  *int       Number of sec struc regions identified
-   Returns:  sec   *SECSTRUC  Linked list of type SECSTRUC
+/*>SECSTRUC *blReadSecPDB(FILE *fp, int *nsec)
+   -------------------------------------------
+*//**
+
+   \param[in]     *fp      Pointer to PDB file
+   \param[out]    *nsec    Number of sec struc regions identified
+   \return                 Linked list of type SECSTRUC
 
    Reads secondary structure information from the header of a PDB file.
    Returns a pointer to a linked list of type SECSTRUC.
@@ -105,13 +118,14 @@
    to which it applies. The form of the structure should be checked
    in pdb.h
 
-   22.03.90 Original
-   20.06.90 Would crash if no secondary structure found---fixed.
-   09.07.93 Changed allocation scheme. Returns pointer to SECSTRUC.
+-  22.03.90 Original
+-  20.06.90 Would crash if no secondary structure found---fixed.
+-  09.07.93 Changed allocation scheme. Returns pointer to SECSTRUC.
             No need to initialise this before calling. Uses fsscanf()
-   18.08.98 Changed SEC to SECSTRUC 'cos of conflict in SunOS
+-  18.08.98 Changed SEC to SECSTRUC 'cos of conflict in SunOS
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-SECSTRUC *ReadSecPDB(FILE *fp, int *nsec)
+SECSTRUC *blReadSecPDB(FILE *fp, int *nsec)
 {
    int         class,
                res1,

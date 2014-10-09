@@ -1,28 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       fit.c
+   \file       fit.c
    
-   Version:    V1.5
-   Date:       03.04.09
-   Function:   Perform least squares fitting of coordinate sets
+   \version    V1.7
+   \date       17.07.14
+   \brief      Perform least squares fitting of coordinate sets
    
-   Copyright:  (c) SciTech Software 1993-7
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      amartin@stagleys.demon.co.uk
-               martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -31,6 +35,7 @@
 
    Description:
    ============
+
    This code performs least squares fitting of two coordinate set using
    the method of McLachlan as modified by Sutcliffe.
 
@@ -45,12 +50,14 @@
 
    Revision History:
    =================
-   V1.0  04.02.91 Original
-   V1.1  01.06.92 ANSIed and static'd
-   V1.2  08.12.92 Changed abs() to ABS() using macros.h. Includes stdio.h
-   V1.3  11.02.94 Changed column flag to BOOL
-   V1.4  03.06.97 Corrected documentation
-   V1.5  03.04.09 Initialize clep in qikfit() By: CTP
+-  V1.0  04.02.91 Original
+-  V1.1  01.06.92 ANSIed and static'd
+-  V1.2  08.12.92 Changed abs() to ABS() using macros.h. Includes stdio.h
+-  V1.3  11.02.94 Changed column flag to BOOL
+-  V1.4  03.06.97 Corrected documentation
+-  V1.5  03.04.09 Initialize clep in qikfit() By: CTP
+-  V1.6  07.07.14 Use bl prefix for functions By: CTP
+-  V1.7  17.07.14 Removed unused varables  By: ACRM
 
 *************************************************************************/
 /* Includes
@@ -78,18 +85,20 @@
 static void qikfit(REAL umat[3][3], REAL rm[3][3], BOOL column);
 
 /************************************************************************/
-/*>BOOL matfit(COOR *x1, COOR *x2, REAL rm[3][3], int n,
+/*>BOOL blMatfit(COOR *x1, COOR *x2, REAL rm[3][3], int n,
                REAL *wt1, BOOL column)
-   -----------------------------------------------------
-   Input:   COOR  *x1         First (fixed) array of coordinates
-            COOR  *x2         Second (mobile) array of coordinates
-            int   n           Number of coordinates
-            REAL  *wt1        Weight array or NULL
-            BOOL  column      TRUE: Output a column-wise matrix (as used
+   -------------------------------------------------------
+*//**
+
+   \param[in]     *x1         First (fixed) array of coordinates
+   \param[in]     *x2         Second (mobile) array of coordinates
+   \param[in]     n           Number of coordinates
+   \param[in]     *wt1        Weight array or NULL
+   \param[in]     column      TRUE: Output a column-wise matrix (as used
                                  by FRODO)
                               FALSE: Output a standard row-wise matrix.
-   Output:  REAL  rm[3][3]    Returned rotation matrix
-   Returns: BOOL              TRUE:  success
+   \param[out]    rm          Returned rotation matrix
+   \return                    TRUE:  success
                               FALSE: error
 
    Fit coordinate array x2 to x1 both centred around the origin and of 
@@ -97,18 +106,20 @@ static void qikfit(REAL umat[3][3], REAL rm[3][3], BOOL column);
    If column is set the matrix will be returned column-wise rather 
    than row-wise.
 
-   04.02.91 Original based on code by Mike Sutcliffe
-   01.06.92 ANSIed & doc'd
-   17.06.93 various changes for release (including parameters)
-   11.03.94 column changed to BOOL
-   25.11.02 Corrected header!
+-  04.02.91 Original based on code by Mike Sutcliffe
+-  01.06.92 ANSIed & doc'd
+-  17.06.93 various changes for release (including parameters)
+-  11.03.94 column changed to BOOL
+-  25.11.02 Corrected header!
+-  07.07.14 Use bl prefix for functions By: CTP
+
 */
-BOOL matfit(COOR    *x1,        /* First coord array    */
-            COOR    *x2,        /* Second coord array   */
-            REAL    rm[3][3],   /* Rotation matrix      */
-            int     n,          /* Number of points     */
-            REAL    *wt1,       /* Weight array         */
-            BOOL    column)     /* Column-wise output   */
+BOOL blMatfit(COOR    *x1,        /* First coord array    */
+              COOR    *x2,        /* Second coord array   */
+              REAL    rm[3][3],   /* Rotation matrix      */
+              int     n,          /* Number of points     */
+              REAL    *wt1,       /* Weight array         */
+              BOOL    column)     /* Column-wise output   */
 {
    int  i,j;
    REAL umat[3][3];
@@ -185,16 +196,19 @@ BOOL matfit(COOR    *x1,        /* First coord array    */
 /************************************************************************/
 /*>static void qikfit(REAL umat[3][3], REAL rm[3][3], BOOL column)
    ---------------------------------------------------------------
-   Input:   REAL  umat[3][3]     The U matrix
-            BOOL  column         TRUE: Create a column-wise matrix
+*//**
+
+   \param[in]     umat           The U matrix
+   \param[in]     column         TRUE: Create a column-wise matrix
                                  (other way round from normal).
-   Output:  REAL  rm[3][3]       The output rotation matrix
+   \param[out]    rm             The output rotation matrix
   
    Does the actual fitting for matfit().
-   04.02.91 Original based on code by Mike Sutcliffe
-   01.06.92 ANSIed & doc'd
-   11.03.94 column changed to BOOL
-   03.04.09 Initialize clep for fussy compliers. By: CTP
+-  04.02.91 Original based on code by Mike Sutcliffe
+-  01.06.92 ANSIed & doc'd
+-  11.03.94 column changed to BOOL
+-  03.04.09 Initialize clep for fussy compliers. By: CTP
+-  17.07.14 Removed unused variables  By: ACRM
 */
 static void qikfit(REAL  umat[3][3],
                    REAL  rm[3][3],
@@ -209,10 +223,9 @@ static void qikfit(REAL  umat[3][3],
          step[3],
          v[3],
          rtsum,rtsump,
-         rsum,
          stp,stcoup,
          ud,tr,ta,cs,sn,ac,
-         delta,deltap,
+         delta,
          gfac,
          cle,
          clep = 0.0;
@@ -262,7 +275,6 @@ static void qikfit(REAL  umat[3][3],
 
       /* Value of rtsum from previous step                              */
       rtsump = rtsum;
-      deltap = delta;
       clep   = cle;
       if(cle < SMALL) break;
 
@@ -354,8 +366,6 @@ static void qikfit(REAL  umat[3][3],
 
       /* Next cycle                                                     */
    }
-
-   rsum = rtsum;
 
    /* Copy rotation matrix for output                                   */
    if(column)

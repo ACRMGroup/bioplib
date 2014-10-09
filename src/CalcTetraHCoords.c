@@ -1,29 +1,33 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       CalcTertaHCoords.c
+   \file       CalcTetraHCoords.c
    
-   Version:    V1.3R
-   Date:       13.11.96
-   Function:   Routines to add N-terminal hydrogens and C-terminal
+   \version    V1.5
+   \date       07.07.14
+   \brief      Routines to add N-terminal hydrogens and C-terminal
                oxygens.
    
-   Copyright:  (c) SciTech Software 1994-6
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
-               andrew@stagleys.demon.co.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-6
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -33,13 +37,14 @@
    Description:
    ============
 
+
 **************************************************************************
 
    Usage:
    ======
 
    int CalcTetraHCoords(PDB *nter, COOR *coor)
-   -------------------------------------------
+
    Calculate the coordinates for 3 tetrahedral hydrogens given a pointer
    to the residue onto which they are to be added. Normally called from
    AddNTerHs()
@@ -48,11 +53,13 @@
 
    Revision History:
    =================
-   V1.0  24.08.94 Original    By: ACRM
-   V1.1  05.10.94 Removed unused variables
-   V1.2  12.11.96 If any of the antecedant coordinates are undefined, set
+-  V1.0  24.08.94 Original    By: ACRM
+-  V1.1  05.10.94 Removed unused variables
+-  V1.2  12.11.96 If any of the antecedant coordinates are undefined, set
                   the terminal oxygen to NULL coordinates
-   V1.3  13.11.96 Also checks for missing CA,C and O1 records
+-  V1.3  13.11.96 Also checks for missing CA,C and O1 records
+-  V1.4  20.03.14 Updated error message for CalcTetraHCoords(). By: CTP
+-  V1.5  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Includes
@@ -80,25 +87,30 @@
 */
 
 /************************************************************************/
-/*>int CalcTetraHCoords(PDB *nter, COOR *coor)
-   -------------------------------------------
-   Input:   PDB    *nter     Pointer to the N-terminus
-   Output:  COOR   *coor     Array of hydrogen coordinates
-   Returns: int              Number of hydrogens calculated (3)
-                             0 if antecedant atoms missing
+/*>int blCalcTetraHCoords(PDB *nter, COOR *coor)
+   ---------------------------------------------
+*//**
+
+   \param[in]     *nter     Pointer to the N-terminus
+   \param[out]    *coor     Array of hydrogen coordinates
+   \return                  Number of hydrogens calculated (3)
+                            0 if antecedant atoms missing
 
    Calculates coordinates for the extra hydrogens.
 
-   23.08.94 Original    By: ACRM
+-  23.08.94 Original    By: ACRM
+-  20.03.14 Updated error message. By: CTP
+-  07.07.14 Use bl prefix for functions By: CTP
+-  26.08.14 Removed unused r21 By: ACRM
 */
-int CalcTetraHCoords(PDB *nter, COOR *coor)
+int blCalcTetraHCoords(PDB *nter, COOR *coor)
 {
    PDB *N  = NULL,
        *CA = NULL,
        *C  = NULL,
        *p,
        *end;
-   REAL x21,     y21,     z21,     r21,
+   REAL x21,     y21,     z21,     
         x32,     y32,     z32,     r32,
         xh,      yh,      zh,      scalpr,
         xp,      yp,      zp,
@@ -114,7 +126,7 @@ int CalcTetraHCoords(PDB *nter, COOR *coor)
    BondLen = (REAL)1.08;
    sFac    = (REAL)(sqrt((double)3.0) * 0.5);
 
-   end = FindEndPDB(nter);
+   end = blFindEndPDB(nter);
 
    /* Search for the antecedant atom pointers                           */
    for(p=nter; p!= end; NEXT(p))
@@ -130,8 +142,8 @@ int CalcTetraHCoords(PDB *nter, COOR *coor)
    /* Check all were found                                              */
    if(N==NULL || CA==NULL || C==NULL)
    {
-      fprintf(stderr,"Atom N,CA or C missing from residue: %s %c%d%c\n",
-              p->resnam, p->chain[0], p->resnum, p->insert[0]);
+      fprintf(stderr,"Atom N,CA or C missing from residue: %s %s%d%s\n",
+              p->resnam, p->chain, p->resnum, p->insert);
       return(0);
    }
 
@@ -139,7 +151,6 @@ int CalcTetraHCoords(PDB *nter, COOR *coor)
    x21 = CA->x - C->x;
    y21 = CA->y - C->y;
    z21 = CA->z - C->z;
-   r21 = (REAL)sqrt((double)(x21*x21 + y21*y21 + z21*z21));
 
    x32 = N->x - CA->x;
    y32 = N->y - CA->y;

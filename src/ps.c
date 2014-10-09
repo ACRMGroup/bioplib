@@ -1,27 +1,32 @@
-/*************************************************************************
+/************************************************************************/
+/**
 
-   Program:    
-   File:       ps.c
+   \file       ps.c
    
-   Version:    V1.3R
-   Date:       22.06.94
-   Function:   PostScript plotting routines
+   \version    V1.5
+   \date       07.07.14
+   \brief      PostScript plotting routines
    
-   Copyright:  (c) SciTech Software 1993-4
-   Author:     Dr. Andrew C. R. Martin
-   Address:    SciTech Software
-               23, Stag Leys,
-               Ashtead,
-               Surrey,
-               KT21 2TD.
-   Phone:      +44 (0) 1372 275775
-   EMail:      martin@biochem.ucl.ac.uk
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
+   \author     Dr. Andrew C. R. Martin
+   \par
+               Institute of Structural & Molecular Biology,
+               University College London,
+               Gower Street,
+               London.
+               WC1E 6BT.
+   \par
+               andrew@bioinf.org.uk
+               andrew.martin@ucl.ac.uk
                
 **************************************************************************
 
-   This program is not in the public domain, but it may be copied
+   This code is NOT IN THE PUBLIC DOMAIN, but it may be copied
    according to the conditions laid out in the accompanying file
-   COPYING.DOC
+   COPYING.DOC.
+
+   The code may be modified as required, but any modifications must be
+   documented so that the person responsible can be identified.
 
    The code may not be sold commercially or included as part of a 
    commercial product except as described in the file COPYING.DOC.
@@ -30,6 +35,7 @@
 
    Description:
    ============
+
    These routines supply rudimentry PostScript support with
    simple commands from C.
 
@@ -52,10 +58,11 @@
 
    Revision History:
    =================
-   V1.0  22.11.90 Original
-   V1.1  06.07.93 Modified for book
-   V1.2  27.07.93 Changed I/O precision to double
-   V1.4  22.06.94 The file pointer is now global rather than static
+-  V1.0  22.11.90 Original
+-  V1.1  06.07.93 Modified for book
+-  V1.2  27.07.93 Changed I/O precision to double
+-  V1.4  22.06.94 The file pointer is now global rather than static
+-  V1.5  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
 /* Defines and macros
@@ -90,29 +97,32 @@ static REAL sTextHeight = 10.0;
 */
 
 /************************************************************************/
-/*>BOOL PSInit(char *FName, char *creator, char *AltFont)
-   ------------------------------------------------------
-   Input:   char *FName     PostScript filename
-            char *creator   Creator string
-            char *AltFont   Alternate font (normall greek style)
-   Returns: BOOL            Success?
+/*>BOOL blPSInit(char *FName, char *creator, char *AltFont)
+   --------------------------------------------------------
+*//**
+
+   \param[in]     *FName     PostScript filename
+   \param[in]     *creator   Creator string
+   \param[in]     *AltFont   Alternate font (normall greek style)
+   \return                    Success?
 
    Initialises the file writing the Prologue. The filename and creator
    are written into the Prologue and EPSFxoff and EPSFyoff are used to
    calculate the bounding box size for EPSF plots.
-   08.05.92 Added definitions of raise, lower and greek. New parameter
+-  08.05.92 Added definitions of raise, lower and greek. New parameter
             to specify name of alternate font.
-   23.06.92 Padded BoundingBox with spaces and setting of PSXMin, etc.
-   26.07.92 Correctly divide EPSFxoff and EPSFyoff by 72 when writing
+-  23.06.92 Padded BoundingBox with spaces and setting of PSXMin, etc.
+-  26.07.92 Correctly divide EPSFxoff and EPSFyoff by 72 when writing
             offsets in prologue.
-   15.09.92 Added support for Amiga reencoding. Starting dimensions
+-  15.09.92 Added support for Amiga reencoding. Starting dimensions
             for BoundingBox set to dimensions set by Paper.
-   06.07.93 Opens the file
-   27.07.93 Floating point precision -> double
+-  06.07.93 Opens the file
+-  27.07.93 Floating point precision -> double
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-BOOL PSInit(char    *FName,
-            char    *creator,
-            char    *AltFont)
+BOOL blPSInit(char    *FName,
+              char    *creator,
+              char    *AltFont)
 {
    struct tm   *time_struc;
    time_t      time_value;
@@ -219,106 +229,130 @@ BOOL PSInit(char    *FName,
 }
 
 /************************************************************************/
-/*>void PSThick(REAL thickness)
-   ----------------------------
-   Input:   REAL thickness     Line thickness
+/*>void blPSThick(REAL thickness)
+   ------------------------------
+*//**
+
+   \param[in]     thickness     Line thickness
 
    Set the line thickness
 
-   27.07.93 Floating point precision -> double
+-  27.07.93 Floating point precision -> double
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void PSThick(REAL thickness)
+void blPSThick(REAL thickness)
 {
    sprintf(sPSBuff,"%f setlinewidth\n",thickness);
    fputs(sPSBuff,gPSFile);
 }
 
 /************************************************************************/
-/*>void PSMove(REAL X, REAL Y)
-   ---------------------------
-   Input:   REAL  X     X coordinate
-            REAL  Y     Y coordinate
+/*>void blPSMove(REAL X, REAL Y)
+   -----------------------------
+*//**
+
+   \param[in]     X     X coordinate
+   \param[in]     Y     Y coordinate
 
    Move to X,Y
-   27.07.93 Floating point precision -> double
+-  27.07.93 Floating point precision -> double
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void PSMove(REAL X,
-            REAL Y)
+void blPSMove(REAL X,
+              REAL Y)
 {
    sprintf(sPSBuff,"%7.4f xunits %7.4f yunits moveto\n",X,Y);
    fputs(sPSBuff,gPSFile);
 }
 
 /************************************************************************/
-/*>void PSDraw(REAL X, REAL Y)
-   ---------------------------
-   Input:   REAL  X     X coordinate
-            REAL  Y     Y coordinate
+/*>void blPSDraw(REAL X, REAL Y)
+   -----------------------------
+*//**
+
+   \param[in]     X     X coordinate
+   \param[in]     Y     Y coordinate
 
    Draw to X,Y
-   27.07.93 Floating point precision -> double
+-  27.07.93 Floating point precision -> double
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void PSDraw(REAL X,
-            REAL Y)
+void blPSDraw(REAL X,
+              REAL Y)
 {
    sprintf(sPSBuff,"%7.4f xunits %7.4f yunits lineto\n",X,Y);
    fputs(sPSBuff,gPSFile);
 }
 
 /************************************************************************/
-/*>void PSSetDash(char *linepatt)
-   ------------------------------
-   Input:   char *linepatt    Line pattern (a string of numbers)
+/*>void blPSSetDash(char *linepatt)
+   --------------------------------
+*//**
+
+   \param[in]     *linepatt    Line pattern (a string of numbers)
 
    Set a line dash pattern which must be supplied as a string
+
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void PSSetDash(char *linepatt)
+void blPSSetDash(char *linepatt)
 {
    sprintf(sPSBuff,"[%s] 0 setdash\n",linepatt);
    fputs(sPSBuff,gPSFile);
 }
 
 /************************************************************************/
-/*>void PSClearDash(void)
-   ----------------------
+/*>void blPSClearDash(void)
+   ------------------------
+*//**
+
    Clear the dash pattern to a full line
-   30.06.92 Removed redundant sprintf()'s
+
+-  30.06.92 Removed redundant sprintf()'s
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void PSClearDash(void)
+void blPSClearDash(void)
 {
    fputs("[] 0 setdash\n",gPSFile);
 }
 
 /************************************************************************/
-/*>void PSStroke(void)
-   -------------------
+/*>void blPSStroke(void)
+   ---------------------
+*//**
+
    Actually draw what you've just done onto the paper
-   30.06.92 Removed redundant sprintf()'s
+
+-  30.06.92 Removed redundant sprintf()'s
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void PSStroke(void)
+void blPSStroke(void)
 {
    fputs("stroke\n",gPSFile);
 }
 
 /************************************************************************/
-/*>void PSFont(char *fontname, REAL size)
-   --------------------------------------
-   Input: char *fontname    Font to set
-          REAL size         Point size of font
+/*>void blPSFont(char *fontname, REAL size)
+   ----------------------------------------
+*//**
+
+   \param[in]     *fontname    Font to set
+   \param[in]     size         Point size of font
 
    Set the font and size
-   08.05.92 Changed to support raise and lower
-   23.06.92 Set sTextHeight
-   15.09.92 Changed to support Amiga reencoding
-   06.07.93 Removed Amiga reecncoding for general distribution
-   27.07.93 Floating point precision -> double
+-  08.05.92 Changed to support raise and lower
+-  23.06.92 Set sTextHeight
+-  15.09.92 Changed to support Amiga reencoding
+-  06.07.93 Removed Amiga reecncoding for general distribution
+-  27.07.93 Floating point precision -> double
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void PSFont(char  *fontname,
-            REAL  size)
+void blPSFont(char  *fontname,
+              REAL  size)
 {
    char font[80];
    
-   StringToUpper(fontname,font);
+   blStringToUpper(fontname,font);
 
    if(!strncmp(font,"TIMES",5))
    {
@@ -326,7 +360,7 @@ void PSFont(char  *fontname,
          strcpy(fontname+5,"-Roman\0");
    }
    
-   sprintf(sPSBuff,"/FontName /%s def\n",PSCorrectCase(fontname));
+   sprintf(sPSBuff,"/FontName /%s def\n",blPSCorrectCase(fontname));
    fputs(sPSBuff,gPSFile);
    sprintf(sPSBuff,"/sTextHeight %f def\n",size);
    fputs(sPSBuff,gPSFile);
@@ -337,20 +371,24 @@ void PSFont(char  *fontname,
 }
 
 /************************************************************************/
-/*>void PSLText(REAL X, REAL Y, char *label)
-   -----------------------------------------
-   Input:   REAL  X       X coordinate
-            REAL  Y       Y coordinate
-            char  *label  Text to be printed
+/*>void blPSLText(REAL X, REAL Y, char *label)
+   -------------------------------------------
+*//**
+
+   \param[in]     X       X coordinate
+   \param[in]     Y       Y coordinate
+   \param[in]     *label  Text to be printed
 
    Left justify text
-   30.06.92 Removed redundant sprintf()'s
-   15.09.92 Multiply string width by 0.65
-   27.07.93 Floating point precision -> double
+
+-  30.06.92 Removed redundant sprintf()'s
+-  15.09.92 Multiply string width by 0.65
+-  27.07.93 Floating point precision -> double
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void PSLText(REAL X,
-             REAL Y,
-             char *label)
+void blPSLText(REAL X,
+               REAL Y,
+               char *label)
 {
    /* Define the current line and position                              */
    sprintf(sPSBuff,"%7.4f xunits\n",X);
@@ -359,28 +397,32 @@ void PSLText(REAL X,
    fputs(sPSBuff,gPSFile);
    fputs("Line moveto\n",gPSFile);
    /* Put the text into the file and display                            */
-   PSShowText(label);
+   blPSShowText(label);
 }
    
 /************************************************************************/
-/*>void PSCBText(REAL X, REAL Y, REAL Offset, char *label)
-   -------------------------------------------------------
-   Input:   REAL  X       X coordinate
-            REAL  Y       Y coordinate
-            REAL  Offset  Y offset - multiple of font height. Moves up
+/*>void blPSCBText(REAL X, REAL Y, REAL Offset, char *label)
+   ---------------------------------------------------------
+*//**
+
+   \param[in]     X       X coordinate
+   \param[in]     Y       Y coordinate
+   \param[in]     Offset  Y offset - multiple of font height. Moves up
                           by this quantity
-            char  *label  Text to be printed
+   \param[in]     *label  Text to be printed
 
    Centers a piece of text with X,Y being the Coords of the BOTTOM centre 
    point
-   30.06.92 Removed redundant sprintf()'s
-   15.09.92 Multiply string width by 0.65
-   27.07.93 Floating point precision -> double
+
+-  30.06.92 Removed redundant sprintf()'s
+-  15.09.92 Multiply string width by 0.65
+-  27.07.93 Floating point precision -> double
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void PSCBText(REAL X,
-              REAL Y,
-              REAL Offset,
-              char *label)
+void blPSCBText(REAL X,
+                REAL Y,
+                REAL Offset,
+                char *label)
 {
    char  *buffer;
    
@@ -388,7 +430,7 @@ void PSCBText(REAL X,
    while(*buffer == ' ') buffer++;
    
    /* Put the string on the stack                                       */
-   sprintf(sPSBuff,"(%s)\n",SimplifyText(buffer));
+   sprintf(sPSBuff,"(%s)\n",blSimplifyText(buffer));
    fputs(sPSBuff,gPSFile);
    /* Define the current line                                           */
    sprintf(sPSBuff,
@@ -412,30 +454,33 @@ void PSCBText(REAL X,
               Offset);
       fputs(sPSBuff,gPSFile);
    }
-   PSShowText(buffer);
+   blPSShowText(buffer);
 }
 
 /************************************************************************/
-/*>void PSROffText(REAL X, REAL Y, REAL offset, char *label)
-   ---------------------------------------------------------
-   Input:   REAL  X       X coordinate
-            REAL  Y       Y coordinate
-            REAL  offset  X offset in points; text moved to the left by
+/*>void blPSROffText(REAL X, REAL Y, REAL offset, char *label)
+   -----------------------------------------------------------
+*//**
+
+   \param[in]     X       X coordinate
+   \param[in]     Y       Y coordinate
+   \param[in]     offset  X offset in points; text moved to the left by
                           this amount
-            char  *label  Text to be printed
+   \param[in]     *label  Text to be printed
 
    Right justify text with offset in device coordinates (points).
 
-   07.05.92 Original
-   30.06.92 Removed use of PSShowText(). This can't be used with the
+-  07.05.92 Original
+-  30.06.92 Removed use of PSShowText(). This can't be used with the
             current rightJustifyText
-   15.09.92 Multiply string width by 0.65
-   27.07.93 Floating point precision -> double
+-  15.09.92 Multiply string width by 0.65
+-  27.07.93 Floating point precision -> double
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void PSROffText(REAL X,
-                REAL Y,
-                REAL offset,
-                char *label)
+void blPSROffText(REAL X,
+                  REAL Y,
+                  REAL offset,
+                  char *label)
 {
    /* Define the current line                                           */
    sprintf(sPSBuff,"/Line %7.4f yunits sTextHeight 2 div sub 2 \
@@ -451,21 +496,25 @@ add def\n",Y);
 }
 
 /************************************************************************/
-/*>void PSLCText(REAL X, REAL Y, char *label)
-   ------------------------------------------
-   Input:   REAL  X       X coordinate
-            REAL  Y       Y coordinate
-            char  *label  Text to be printed
+/*>void blPSLCText(REAL X, REAL Y, char *label)
+   --------------------------------------------
+*//**
+
+   \param[in]     X       X coordinate
+   \param[in]     Y       Y coordinate
+   \param[in]     *label  Text to be printed
 
    Left justify text, centred on Y
-   08.05.92 Original
-   30.06.92 Removed redundant sprintf()'s
-   15.09.92 Multiply string width by 0.65
-   27.07.93 Floating point precision -> double
+
+-  08.05.92 Original
+-  30.06.92 Removed redundant sprintf()'s
+-  15.09.92 Multiply string width by 0.65
+-  27.07.93 Floating point precision -> double
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void PSLCText(REAL X,
-              REAL Y,
-              char *label)
+void blPSLCText(REAL X,
+                REAL Y,
+                char *label)
 {
    /* Define the current line and position                              */
    sprintf(sPSBuff,"%7.4f xunits\n",X);
@@ -475,31 +524,35 @@ add def\n",Y);
    fputs(sPSBuff,gPSFile);
    fputs("Line moveto\n",gPSFile);
    /* Put the text into the file and display                            */
-   PSShowText(label);
+   blPSShowText(label);
 }
 
 /************************************************************************/
-/*>void PSCTText(REAL X, REAL Y, REAL Offset, char *label)
-   -------------------------------------------------------
-   Input:   REAL  X       X coordinate
-            REAL  Y       Y coordinate
-            REAL  Offset  Y offset in points. Moves down by this quantity
-            char  *label  Text to be printed
+/*>void blPSCTText(REAL X, REAL Y, REAL Offset, char *label)
+   ---------------------------------------------------------
+*//**
+
+   \param[in]     X       X coordinate
+   \param[in]     Y       Y coordinate
+   \param[in]     Offset  Y offset in points. Moves down by this quantity
+   \param[in]     *label  Text to be printed
 
    Centers a piece of text with X,Y being the Coords of the TOP centre 
    point
-   26.06.92 Changed strlen() to use SimplifyText()
-   30.06.92 Removed redundant sprintf()'s
-   01.07.92 Changed Offset to be in pts rather than a multiplier of 
+
+-  26.06.92 Changed strlen() to use SimplifyText()
+-  30.06.92 Removed redundant sprintf()'s
+-  01.07.92 Changed Offset to be in pts rather than a multiplier of 
             font size.
-   27.07.92 Changed update limits to account better for descenders.
-   15.09.92 Multiply string width by 0.65
-   27.07.93 Floating point precision -> double
+-  27.07.92 Changed update limits to account better for descenders.
+-  15.09.92 Multiply string width by 0.65
+-  27.07.93 Floating point precision -> double
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void PSCTText(REAL X,
-              REAL Y,
-              REAL Offset,
-              char *label)
+void blPSCTText(REAL X,
+                REAL Y,
+                REAL Offset,
+                char *label)
 {
    char *buffer;
    
@@ -507,7 +560,7 @@ void PSCTText(REAL X,
    while(*buffer == ' ') buffer++;
    
    /* Put the string on the stack                                       */
-   sprintf(sPSBuff,"(%s)\n",SimplifyText(buffer));
+   sprintf(sPSBuff,"(%s)\n",blSimplifyText(buffer));
    fputs(sPSBuff,gPSFile);
    /* Define the current line                                           */
    sprintf(sPSBuff,
@@ -531,24 +584,26 @@ void PSCTText(REAL X,
       sprintf(sPSBuff,"Line %7.4f add moveto pop\n",Offset);
       fputs(sPSBuff,gPSFile);
    }
-   PSShowText(buffer);
+   blPSShowText(buffer);
 }
 
 
 /************************************************************************/
-/*>void PSVText(REAL x,       REAL y,        REAL xoff,
-                char *text,   char *font,    REAL size,
-                char *label,  char *lfont,   REAL lsize)
-   -----------------------------------------------------
-   Input:   REAL x        X coordinate (in data units)
-            REAL y        Y coordinate (in data units)
-            REAL xoff     X-offset in pts
-            char *text    Text to be written
-            char *font    Font in which to write it
-            REAL size     Size of font
-            char *label   Label to be used to calc x offset
-            char *lfont   Font of this label
-            REAL lsize    Size of this label
+/*>void blPSVText(REAL x,       REAL y,        REAL xoff,
+                  char *text,   char *font,    REAL size,
+                  char *label,  char *lfont,   REAL lsize)
+   -------------------------------------------------------
+*//**
+
+   \param[in]     x        X coordinate (in data units)
+   \param[in]     y        Y coordinate (in data units)
+   \param[in]     xoff     X-offset in pts
+   \param[in]     *text    Text to be written
+   \param[in]     *font    Font in which to write it
+   \param[in]     size     Size of font
+   \param[in]     *label   Label to be used to calc x offset
+   \param[in]     *lfont   Font of this label
+   \param[in]     lsize    Size of this label
 
    Write vertical text centred on x,y offset back along x by the size of
    label and by xoff in pts. Used, for example, to title the y-axis of
@@ -556,23 +611,24 @@ void PSCTText(REAL X,
    which to move the text back. Typically this would be the longest data
    label on the graph's Y-axis.
 
-   08.05.92 Original
-   30.06.92 Removed redundant sprintf()'s
-   15.09.92 Multiply string width by 0.65
-   27.07.93 Floating point precision -> double
+-  08.05.92 Original
+-  30.06.92 Removed redundant sprintf()'s
+-  15.09.92 Multiply string width by 0.65
+-  27.07.93 Floating point precision -> double
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void PSVText(REAL x,          /* Data coord position (to be offset)     */
-             REAL y,          /* Data coord position                    */
-             REAL xoff,       /* X-offset in pts                        */
-             char *text,      /* Text to be written                     */
-             char *font,      /* Font in which to write it              */
-             REAL size,       /* Size of font                           */
-             char *label,     /* Label to be used to calc x offset      */
-             char *lfont,     /* Font of this label                     */
-             REAL lsize)      /* Size of this label                     */
+void blPSVText(REAL x,          /* Data coord position (to be offset)     */
+               REAL y,          /* Data coord position                    */
+               REAL xoff,       /* X-offset in pts                        */
+               char *text,      /* Text to be written                     */
+               char *font,      /* Font in which to write it              */
+               REAL size,       /* Size of font                           */
+               char *label,     /* Label to be used to calc x offset      */
+               char *lfont,     /* Font of this label                     */
+               REAL lsize)      /* Size of this label                     */
 {
    /* Put the text on the stack                                         */
-   sprintf(sPSBuff,"(%s) dup\n",SimplifyText(text));
+   sprintf(sPSBuff,"(%s) dup\n",blSimplifyText(text));
    fputs(sPSBuff,gPSFile);
 
    /* Find the length of the string/2                                   */
@@ -583,7 +639,7 @@ void PSVText(REAL x,          /* Data coord position (to be offset)     */
    fputs(sPSBuff,gPSFile);
 
    /* Set font to the offset label font                                 */
-   PSFont(lfont, lsize);
+   blPSFont(lfont, lsize);
    
    /* Calculate the x-offset                                            */
    sprintf(sPSBuff,"%7.4g xunits (%s) stringwidth pop sub 5 sub %f \
@@ -591,25 +647,28 @@ add exch moveto\n",x,label,xoff);
    fputs(sPSBuff,gPSFile);
 
    /* Set font back                                                     */
-   PSFont(font, size);
+   blPSFont(font, size);
    
    /* Display the actual text                                           */
    fputs("pop 90 rotate ",gPSFile);
-   PSShowText(text);
+   blPSShowText(text);
    fputs(" -90 rotate\n",gPSFile);
 }
 
 /************************************************************************/
-/*>void PSShowText(char *text)
-   ---------------------------
-   Input:   char  *text    Text to be written
+/*>void blPSShowText(char *text)
+   -----------------------------
+*//**
+
+   \param[in]     *text    Text to be written
 
    Displays text, processing it first if any control codes are found. Used
    by the various text positioning routines.
 
-   08.05.92 Original
+-  08.05.92 Original
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void PSShowText(char *text)
+void blPSShowText(char *text)
 {
    char  buffer[MAXBUFF];
    int   i, j;
@@ -701,13 +760,16 @@ void PSShowText(char *text)
 }
 
 /************************************************************************/
-/*>void PSEnd(void)
-   ----------------
+/*>void blPSEnd(void)
+   ------------------
+*//**
+
    End of page
 
-   08.05.92 Original
+-  08.05.92 Original
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-void PSEnd(void)
+void blPSEnd(void)
 {
    fputs("showpage\n",gPSFile);
    fputs("%%Trailer\n",gPSFile);
@@ -716,16 +778,19 @@ void PSEnd(void)
 }
 
 /************************************************************************/
-/*>char *PSCorrectCase(char *font)
-   -------------------------------
-   Input:   char   *font    Input fontname
-   Returns: char   *        Case-fixed fontname
+/*>char *blPSCorrectCase(char *font)
+   ---------------------------------
+*//**
+
+   \param[in]     *font    Input fontname
+   \return                 Case-fixed fontname
 
    Goes through a fontname and fixes case to match the required standard.
 
-   08.05.92 Original
+-  08.05.92 Original
+-  07.07.14 Use bl prefix for functions By: CTP
 */
-char *PSCorrectCase(char *font)
+char *blPSCorrectCase(char *font)
 {
    int i;
    /* Set the first character to UC                                     */

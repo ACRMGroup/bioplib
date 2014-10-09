@@ -1,0 +1,161 @@
+/**
+
+\page page_01 Compiling BiopLib
+\brief
+   Bioplib - Compiling and Installation of BiopLib Library
+
+Installation on UNIX systems
+----------------------------
+
+Create sub-directories of your main directory called include and lib: 
+
+         mkdir ~/include
+         mkdir ~/include/bioplib
+         mkdir ~/lib
+
+Unpack the tar file:
+
+            zcat BiopLibV2.0.tar.gz | tar -xvf -
+         -or-
+            gunzip BiopLibV2.0.tar.gz
+            tar -xvf BiopLibV2.0.tar
+         -or- (if you have Gnu tar)
+            tar -zxvf BiopLibV2.0.tar.gz
+
+This will create a directory called BiopLibV2.0.  Enter this directory and then go into the src sub-directory:
+
+         cd BiopLibV2.0/src
+
+Modify the Makefile as required for your system. If you are using the GNU C compiler and have followed the directions above, no changes should be needed. If you have chosen alternative locations for the include and library directories then you will need to change LIBDEST to be the library directory you have created and INCDEST to the include directory you have created (N.B. the complete path is required, you can't do ~/lib).
+
+To build the libraries, type:
+
+         make 
+
+The compilation should complete with no errors or warning except for implicit declarations of popen() in ReadPDB.c and WholePDB.c This is because popen() is not an ANSI C function and the -ansi flag causes this to be a warning.
+
+To install the libraries and the include files, type:
+
+         make install
+
+To remove the object files and local copies of the libraries, type:
+
+         make clean
+
+Documentation for the BiopLib can be generated using Doxygen (www.doxygen.org). To generate documentation for the BIopLib library type:
+
+         make doxygen
+
+The output directories for doxygen are doc/doxygen/latex and doc/doxygen/html which contain documentation in LaTeX and HTML format. 
+
+The documentation uses markdown format which is supported by version 1.8.0 (or later) of Doxygen.
+
+If you are using a shell which supports aliases, set up an alias for the cc command to add the include directory to the include search path and the lib directory to the lib search path. Using the BASH shell and assuming you have installed the libraries and include files in the default location, the following will work:
+
+         alias cc '/bin/cc -I$HOME/include -L$HOME/lib'
+
+If you have chosen an alternative location to install the libraries and include files, you will need to change the paths for include and lib. 
+
+You can then compile a program using the command:
+
+         cc -o foo foo.c -lbiop -lgen -lm
+
+Note that -lbiop must appear before -lgen
+
+If support for reading and writing pdbml-formatted files is required then the program must be linked to the libxml2 library. Compile using the command:
+
+         cc -o foo foo.c -lbiop -lgen -lm -lxml2
+
+It is good practice to add flags to enforce the strict ANSI C standard at the same time (-Wall -ansi -pedantic for GCC or -ansi -fullwarn on an SGI).
+
+If building a project using a Makefile, then you will need to include -I$HOME/include -L$HOME/lib in your CFLAGS and remember to include the libraries (-lbiop -lgen and maybe -lm or -lxml2) at the end of your link command.
+
+To access the C library functions you will need to include appropriate header files. For example:
+
+         #include "bioplib/pdb.h"
+
+
+
+
+Makefile Options
+----------------
+
+Various options for compiling the BiopLib library are available by editing the Makefile in the src directory.
+
+
+_PDBML Format_
+
+BiopLib uses the libxml2 library for parsing and output of PDBML-format files. 
+
+Libxml2 may already be installed on your system. For instance, it is part of the standard installation on the Apple OS X operating system.
+
+If the libxml2 library is not installed then instructions for downloading and installing the libxml2 library are available at the libxml2 website:
+http://xmlsoft.org
+
+To compile the BiopLib library with support for PDBML-formatted files uncomment the following line in the Makefile:
+
+         #COPT := $(COPT) -D XML_SUPPORT $(shell xml2-config --cflags)
+
+The compiler directive XML_SUPPORT is used as a switch to compile the code in BiopLib for reading and writing pdbml files. The program xml2-config is part of the libxml2 installation and ensures the libxml2 include file is in the search path (-I option).
+
+Use either "-lxml2" or "$(shell xml2-config --libs)" to link a program to the libxml2 library.
+
+
+_Install Location_
+
+The default location for installing BiopLib is in the user's home directory. This location can be changed to install in another location. For example in the /usr/local/include and /usr/local/lib directories. Change the install location by editing the following lines in the Makefile:
+
+         LIBDEST = ${HOME}/lib
+         INCDEST = ${HOME}/include
+         SHAREDLIBDEST = ${HOME}/lib
+
+
+_Deprecated Functions_
+
+In 2014 almost all of the the functions in the BiopLib library had the prefix bl added to the function name (ReadPDB() became blReadPDB()) to provide a consistent naming scheme. In addition, functions that expected a single character for the chain name were updated to take a string. 
+
+Programs using the older function names will compile however, a warning message will be generated if the function is called by a program. The default option is to display a warning message unless the environment variable, BIOPLIB_DEPRECATED_QUIET is set.
+
+There are also options for handling error messages are also set within the Makefile. Uncommenting one of the following lines will either always display a warning message or silence the warning message:
+
+         #COPT := $(COPT) -D BIOPLIB_DEPRECATED_CHECK
+         #COPT := $(COPT) -D BIOPLIB_DEPRECATED_QUIET
+
+
+
+Windows Installation
+--------------------
+
+_MinGW and MSYS_
+
+The BiopLib library will compile on Microsoft Windows systems. We compiled BiopLib on Windows 7 using the the MinGW, Minimalist GNU for Windows, and MSYS, Minimalist System, packages which are available from www.mingw.org.
+
+MinGW and MSYS can be installed by downloading the MinGW installer executable and using it to install MinGW and MSYS. MinGW provides a port of the GCC compiler and MSYS creates a unix-like environment and filesystem on the Windows machine and provides a unix-like terminal.
+
+
+_Installing the Libxml2 and Check Libraries_
+
+The Libxml2 library is required to read pdbml-formatted files. The Check library is required only if unit tests are to be run. Libxml2 can be downloaded from xmlsoft.org and Check can be downloaded from check.sourceforge.net.
+
+To compile and install either the libxml2 or check library from source, unpack the source files and use './configure', 'make', and 'make install' from within the MSYS shell (NOT the cmd window). When running a program that uses a user-installed library, the dynamically-linked library file needs to be in the PATH. The path can be set from the cmd window command line or from the control panel in MS Windows. Setting a user's path from the control panel is preferable - it only has to be done once and compiled programs can be launched by double-clicking on the executable from the Windows file browser.
+
+
+_Installing BiopLib_
+
+To install BiopLib follow the commands for installing on unix like systems from within the MSYS terminal.
+
+BiopLib can also be compiled form within the cmd window using mingw32-make however the makefile will have to be altered to explicitly give the location of the libxml2 library include files (e.g. -I C:\MinGW\msys\1.0\local\include\libxml2)
+
+
+_Unit Tests_
+
+Unit tests were added for newly installed features from 2014. Unit tests use the Check library which can be installed from check.sourceforge.net. 
+
+Unit tests are in the src/TEST subdirectory. To run tests first compile BiopLib from within the src directory with ‘make’ and then compile the unit tests from within the src/TEST directory with ‘make’ to create and an executable file, run_tests. Tests can be run by typing either ‘./run_tests’ or ‘./run_tests -v’ for verbose output.
+
+Note: If unit tests are run under MS windows then the unit tests must be run from within a MSYS terminal as the tests for writing PDB files require the unix ‘dos2unix’ and ‘cmp’ commands.
+
+
+
+
+*/
