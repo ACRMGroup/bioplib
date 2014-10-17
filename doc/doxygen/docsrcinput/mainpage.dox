@@ -4,7 +4,7 @@
 \brief
    Bioplib - a high quality programming library for protein bioinformatics
 \author
-   Dr. Andrew C.R. Martin and Dr. Craig T. Porter
+   Dr. Andrew C.R. Martin with additions by Dr. Craig T. Porter
 
 Bioplib is a programming library, written in the C programming language, 
 for handling bioinformatics data – primarily protein structures, but also 

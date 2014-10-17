@@ -2,7 +2,7 @@
 
 \page page_01 Compiling BiopLib
 \brief
-   Bioplib - Compiling and Installation of BiopLib Library
+   Bioplib - Compiling and Installing the BiopLib Library
 
 Installation on UNIX systems
 ----------------------------
@@ -15,16 +15,18 @@ Create sub-directories of your main directory called include and lib:
 
 Unpack the tar file:
 
-            zcat BiopLibV2.0.tar.gz | tar -xvf -
+            zcat BiopLibVX.Y.tar.gz | tar -xvf -
          -or-
-            gunzip BiopLibV2.0.tar.gz
-            tar -xvf BiopLibV2.0.tar
+            gunzip BiopLibVX.Y.tar.gz
+            tar -xvf BiopLibVX.Y.tar
          -or- (if you have Gnu tar)
-            tar -zxvf BiopLibV2.0.tar.gz
+            tar -zxvf BiopLibVX.Y.tar.gz
 
-This will create a directory called BiopLibV2.0.  Enter this directory and then go into the src sub-directory:
+(where X.Y is the major and minor version numbers - e.g. 3.0)
 
-         cd BiopLibV2.0/src
+This will create a directory called BiopLibVX.Y.  Enter this directory and then go into the src sub-directory:
+
+         cd BiopLibVX.Y/src
 
 Modify the Makefile as required for your system. If you are using the GNU C compiler and have followed the directions above, no changes should be needed. If you have chosen alternative locations for the include and library directories then you will need to change LIBDEST to be the library directory you have created and INCDEST to the include directory you have created (N.B. the complete path is required, you can't do ~/lib).
 
@@ -32,7 +34,7 @@ To build the libraries, type:
 
          make 
 
-The compilation should complete with no errors or warning except for implicit declarations of popen() in ReadPDB.c and WholePDB.c This is because popen() is not an ANSI C function and the -ansi flag causes this to be a warning.
+The compilation should complete with no errors or warnings except for implicit declarations of popen() in ReadPDB.c and WholePDB.c This is because popen() is not an ANSI C function and the -ansi flag causes this to be a warning.
 
 To install the libraries and the include files, type:
 
@@ -46,7 +48,7 @@ Documentation for the BiopLib can be generated using Doxygen (www.doxygen.org). 
 
          make doxygen
 
-The output directories for doxygen are doc/doxygen/latex and doc/doxygen/html which contain documentation in LaTeX and HTML format. 
+The output directories for doxygen are doc/latex and doc/html which contain documentation in LaTeX and HTML format. 
 
 The documentation uses markdown format which is supported by version 1.8.0 (or later) of Doxygen.
 
@@ -89,12 +91,12 @@ BiopLib uses the libxml2 library for parsing and output of PDBML-format files.
 
 Libxml2 may already be installed on your system. For instance, it is part of the standard installation on the Apple OS X operating system.
 
-If the libxml2 library is not installed then instructions for downloading and installing the libxml2 library are available at the libxml2 website:
+If the libxml2 library is not installed, then instructions for downloading and installing the libxml2 library are available at the libxml2 website:
 http://xmlsoft.org
 
-To compile the BiopLib library with support for PDBML-formatted files uncomment the following line in the Makefile:
+By default, BiopLib is configured with support for PDBML-formatted files. If you don't need this then comment out the following line in the Makefile:
 
-         #COPT := $(COPT) -D XML_SUPPORT $(shell xml2-config --cflags)
+         COPT := $(COPT) -D XML_SUPPORT $(shell xml2-config --cflags)
 
 The compiler directive XML_SUPPORT is used as a switch to compile the code in BiopLib for reading and writing pdbml files. The program xml2-config is part of the libxml2 installation and ensures the libxml2 include file is in the search path (-I option).
 
@@ -103,16 +105,27 @@ Use either "-lxml2" or "$(shell xml2-config --libs)" to link a program to the li
 
 _Install Location_
 
-The default location for installing BiopLib is in the user's home directory. This location can be changed to install in another location. For example in the /usr/local/include and /usr/local/lib directories. Change the install location by editing the following lines in the Makefile:
+The default location for installing BiopLib is in the user's home
+directory. This location can be changed to install in another
+location. For example, to install in the /usr/local/include and /usr/local/lib
+directories, change the install location by editing the following
+lines in the Makefile:
 
          LIBDEST = ${HOME}/lib
          INCDEST = ${HOME}/include
          SHAREDLIBDEST = ${HOME}/lib
-
+to
+         LIBDEST = /usr/local/lib
+         INCDEST = /usr/local/include
+         SHAREDLIBDEST = /usr/local/lib
 
 _Deprecated Functions_
 
-In 2014 almost all of the the functions in the BiopLib library had the prefix bl added to the function name (ReadPDB() became blReadPDB()) to provide a consistent naming scheme. In addition, functions that expected a single character for the chain name were updated to take a string. 
+In 2014 almost all of the the functions in the BiopLib library had the
+prefix bl added to the function name (e.g. ReadPDB() became blReadPDB()) to
+provide a consistent naming scheme. In addition, functions that
+expected a single character for the chain name were updated to take a
+string.
 
 Programs using the older function names will compile however, a warning message will be generated if the function is called by a program. The default option is to display a warning message unless the environment variable, BIOPLIB_DEPRECATED_QUIET is set.
 
@@ -121,14 +134,19 @@ There are also options for handling error messages are also set within the Makef
          #COPT := $(COPT) -D BIOPLIB_DEPRECATED_CHECK
          #COPT := $(COPT) -D BIOPLIB_DEPRECATED_QUIET
 
-
+Note that deprecated functions will be removed in V4.0, so if you have
+programs that use the old functions, start changing them now!
+ 
 
 Windows Installation
 --------------------
 
 _MinGW and MSYS_
 
-The BiopLib library will compile on Microsoft Windows systems. We compiled BiopLib on Windows 7 using the the MinGW, Minimalist GNU for Windows, and MSYS, Minimalist System, packages which are available from www.mingw.org.
+The BiopLib library will compile on Microsoft Windows systems. We
+compiled BiopLib on Windows 7 using the the MinGW (Minimalist GNU for
+Windows) and MSYS (Minimalist System) packages which are available
+from www.mingw.org.
 
 MinGW and MSYS can be installed by downloading the MinGW installer executable and using it to install MinGW and MSYS. MinGW provides a port of the GCC compiler and MSYS creates a unix-like environment and filesystem on the Windows machine and provides a unix-like terminal.
 
@@ -142,16 +160,25 @@ To compile and install either the libxml2 or check library from source, unpack t
 
 _Installing BiopLib_
 
-To install BiopLib follow the commands for installing on unix like systems from within the MSYS terminal.
+To install BiopLib, follow the commands for installing on unix like systems from within the MSYS terminal.
 
-BiopLib can also be compiled form within the cmd window using mingw32-make however the makefile will have to be altered to explicitly give the location of the libxml2 library include files (e.g. -I C:\MinGW\msys\1.0\local\include\libxml2)
+BiopLib can also be compiled form within the cmd window using
+mingw32-make however the makefile will have to be altered to give the
+location of the libxml2 library include files explicitly (e.g. -I
+C:\MinGW\msys\1.0\local\include\libxml2)
 
 
 _Unit Tests_
 
-Unit tests were added for newly installed features from 2014. Unit tests use the Check library which can be installed from check.sourceforge.net. 
+Unit tests were added for newly installed features from 2014. Unit
+tests use the Check library which can be installed from
+check.sourceforge.net.
 
-Unit tests are in the src/TEST subdirectory. To run tests first compile BiopLib from within the src directory with ‘make’ and then compile the unit tests from within the src/TEST directory with ‘make’ to create and an executable file, run_tests. Tests can be run by typing either ‘./run_tests’ or ‘./run_tests -v’ for verbose output.
+Unit tests are in the src/TEST subdirectory. To run tests first
+compile BiopLib from within the src directory with ‘make’ and then
+compile the unit tests from within the src/TEST directory with ‘make’
+to create an executable file, run_tests. Tests can be run by typing
+either ‘./run_tests’ or ‘./run_tests -v’ for verbose output.
 
 Note: If unit tests are run under MS windows then the unit tests must be run from within a MSYS terminal as the tests for writing PDB files require the unix ‘dos2unix’ and ‘cmp’ commands.
 
