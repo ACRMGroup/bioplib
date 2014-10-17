@@ -68,23 +68,24 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP File IO
-   #FUNCTION  blFreeWholePDB()
-   Frees the header, trailer and atom content from a WHOLEPDB structure
 
-   #FUNCTION  blWriteWholePDB()
+   #KEYFUNCTION  blReadWholePDB()
+   Reads a PDB file, storing the header and trailer information as
+   well as the coordinate data. Can read gzipped files as well as
+   uncompressed files.
+
+   #KEYFUNCTION  blWriteWholePDB()
    Writes a PDB file including header and trailer information.
    Output in PDBML-format if flags set.
+
+   #FUNCTION  blFreeWholePDB()
+   Frees the header, trailer and atom content from a WHOLEPDB structure
 
    #FUNCTION  blWriteWholePDBHeader()
    Writes the header of a PDB file 
 
    #FUNCTION  blWriteWholePDBTrailer()
    Writes the trailer of a PDB file 
-
-   #FUNCTION  blReadWholePDB()
-   Reads a PDB file, storing the header and trailer information as
-   well as the coordinate data. Can read gzipped files as well as
-   uncompressed files.
 
    #FUNCTION  blReadWholePDBAtoms()
    Reads a PDB file, storing the header and trailer information as

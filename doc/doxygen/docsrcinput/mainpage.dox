@@ -4,17 +4,20 @@
 \brief
    Bioplib - a high quality programming library for protein bioinformatics
 \author
-   Dr. Andrew C.R. Martin
+   Dr. Andrew C.R. Martin and Dr. Craig T. Porter
 
 Bioplib is a programming library, written in the C programming language, 
 for handling bioinformatics data – primarily protein structures, but also 
 sequence data.
 
+**Click the 'Related Pages' link above for information on installation and
+detailed listings of what the library contains**
+
 The library has equivalents for other programming languages such as Python 
 (BioPython) and Perl (BioPerl) and another C library and tool-set 
 (EMBOSS) is also available. However, the focus of all these other 
-libraries is on protein and DNA sequence rather than structure. Conversely
-, Bioplib is a very comprehensive library for handling protein structure, 
+libraries is on protein and DNA sequence rather than structure. Conversely,
+Bioplib is a very comprehensive library for handling protein structure, 
 with some support for protein and DNA sequences. The fact that the code is
 implemented in C means that it is ideal for more complex and CPU-intensive
 tasks since C (unlike Perl and Python) is a compiled language.
@@ -73,8 +76,8 @@ __Utility Functions__
 Example of usage
 ----------------
 \code
-   #include "pdb.h"
-   #include "macros.h"
+   #include "bioplib/pdb.h"
+   #include "bioplib/macros.h"
 
    WHOLEPDB *wpdb = NULL;
    PDB      *p    = NULL;

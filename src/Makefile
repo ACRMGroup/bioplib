@@ -7,7 +7,7 @@ SHAREDLIBDEST = ${HOME}/lib
 
 # Doxygen and adddoxy directories
 DOCDIR      = ../doc
-DOXYDIR     = $(DOCDIR)/doxytest
+DOXYDIR     = $(DOCDIR)/doxygen
 ADDDOXY     = $(DOCDIR)/adddoxy/adddoxy.pl
 ADDDOXYCONF = $(DOCDIR)/adddoxy/adddoxy.conf
 

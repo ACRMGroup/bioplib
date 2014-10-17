@@ -209,7 +209,7 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
    #GROUP    Handling PDB Data
    #SUBGROUP File IO
 
-   #FUNCTION blReadPDB() 
+   #KEYFUNCTION blReadPDB() 
    Main way of reading a PDB file into a linked list, reading just the
    highest occupancy atoms
 

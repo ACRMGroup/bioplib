@@ -88,8 +88,11 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP File IO
-   #FUNCTION blWritePDB(FILE *fp, PDB *pdb)
+   #KEYFUNCTION blWritePDB(FILE *fp, PDB *pdb)
    Main entry point to write a PDB linked list to a file
+
+   #KEYFUNCTION blWritePDBRecord(FILE *fp, PDB *pdb)
+   Writes a single PDB record in PDB format
 
    #FUNCTION blFormatCheckWritePDB(PDB *pdb)
    Checks that a PDB linked list can be written as a standard PDB file
@@ -97,9 +100,6 @@
 
    #FUNCTION blWriteAsPDB(FILE *fp, PDB *pdb)
    Writes a PDB linked list to a file in PDB format
-
-   #FUNCTION blWritePDBRecord(FILE *fp, PDB *pdb)
-   Writes a single PDB record in PDB format
 
    #FUNCTION blWritePDBRecordAtnam(FILE *fp, PDB *pdb)
    Writes a single PDB record in PDB format using atom data from the

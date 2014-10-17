@@ -49,7 +49,7 @@
 #      #FUNCTION functionname()
 #      description....
 #      description....
-#      #FUNCTION functionname()
+#      #KEYFUNCTION functionname()
 #      description....
 #      description....
 #      ...
@@ -107,11 +107,14 @@ my $group = "";
 my $subgroup = "";
 my $function = "";
 my $description = "";
+my $keyFunction = 0;
 
 # Take the config file from the command line if specified
 # with a -conf= flag - otherwise adddoxy.conf
 my $conffile = (defined($::conf)?$::conf:"adddoxy.conf");
 
+$::data        = ();
+$::keyData     = ();
 $::packageName = "";
 $::pageOffset  = 0;
 $::outDir      = ".";
@@ -136,15 +139,17 @@ while(<>)
 
         if(/\*\//)              # End of comment
         {
-            ProcessTags($group, $subgroup, $function, $description);
+            ProcessTags($group, $subgroup, $function, $description, $keyFunction);
             $description = "";
-            $inDoxy    = 0;
-            $inFunction = 0;
+            $inDoxy      = 0;
+            $inFunction  = 0;
+            $keyFunction = 0;
         }
-        elsif(/^\#/)            # It's one of our spcial tags
+        elsif(/^\#/)            # It's one of our special tags
         {
             # Process existing tag data
-            ProcessTags($group, $subgroup, $function, $description);
+            ProcessTags($group, $subgroup, $function, $description, $keyFunction);
+            $keyFunction = 0;
             $description = "";
 
             # Get the tag and the details and remove the # from the tag
@@ -162,8 +167,15 @@ while(<>)
             }
             elsif($tag eq "FUNCTION") # The #FUNCTION tag
             {
-                $inFunction = 1;
-                $function = $details;
+                $inFunction  = 1;
+                $function    = $details;
+                $keyFunction = 0;
+            }
+            elsif($tag eq "KEYFUNCTION") # The #KEYFUNCTION tag
+            {
+                $inFunction  = 1;
+                $function    = $details;
+                $keyFunction = 1;
             }
         }
         elsif($inFunction)
@@ -180,20 +192,28 @@ PrintData();
 # Process the stored data for the tags for a function
 sub ProcessTags
 {
-    my($group, $subgroup, $function, $description) = @_;
+    my($group, $subgroup, $function, $description, $keyFunction) = @_;
 
     if(($description ne "") && 
        ($group       ne "") && 
        ($subgroup    ne "") && 
-       ($function     ne ""))
+       ($function    ne ""))
     {
-        if(defined($::data{$group}{$subgroup}{$function}))
+        if(defined($::data{$group}{$subgroup}{$function}) ||
+           defined($::keyData{$group}{$subgroup}{$function}))
         {
             print STDERR "$group : $subgroup : $function has been redefined\n";
         }
         
         $description =~ s/^\s+//;
-        $::data{$group}{$subgroup}{$function} = $description;
+        if($keyFunction)
+        {
+            $::keyData{$group}{$subgroup}{$function} = $description;
+        }
+        else
+        {
+            $::data{$group}{$subgroup}{$function} = $description;
+        }
     }
 }
 
@@ -361,8 +381,24 @@ sub PrintData
 
                 PrintSubgroupPre($pagefile, $group, $subgroup);
 
+                my $printed = 0;
+                foreach my $function (sort keys %{$::keyData{$group}{$subgroup}})
+                {
+                    if(!$printed)
+                    {
+                        print $pagefile "\n\n**Key functions**\n\n";
+                        $printed = 1;
+                    }
+                    print $pagefile "- $function - $::keyData{$group}{$subgroup}{$function}\n";
+                }
+
                 foreach my $function (sort keys %{$::data{$group}{$subgroup}})
                 {
+                    if($printed)
+                    {
+                        print $pagefile "\n\n**Other functions**\n\n";
+                        $printed = 0;
+                    }
                     print $pagefile "- $function - $::data{$group}{$subgroup}{$function}\n";
                 }
 
