@@ -62,6 +62,16 @@
 -  V1.12 31.07.14 Moved GetPDBChainLabels() to dperecated.c By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Extracting data
+   #ROUTINE  blGetPDBChainLabels()
+   Scans a PDB linked list for chain names. Allocates memory for an 
+   array of strings containing these labels which is returned together 
+   with the number of chains found.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdlib.h>

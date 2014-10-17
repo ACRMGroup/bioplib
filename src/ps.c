@@ -71,6 +71,71 @@
 #define _PS_MAIN
 
 /************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Graphics
+   #SUBGROUP Postscript
+   #ROUTINE blPSInit()
+   Initialises the file writing the Prologue. The filename and creator
+   are written into the Prologue and EPSFxoff and EPSFyoff are used to
+   calculate the bounding box size for EPSF plots.
+
+   #ROUTINE blPSThick()
+   Set the line thickness
+
+   #ROUTINE blPSMove()
+   Move to X,Y
+
+   #ROUTINE blPSDraw()
+   Draw to X,Y
+
+   #ROUTINE blPSSetDash()
+   Set a line dash pattern which must be supplied as a string
+
+   #ROUTINE blPSClearDash()
+   Clear the dash pattern to a full line
+
+   #ROUTINE blPSStroke()
+   Actually draw what you've just done onto the paper
+
+   #ROUTINE blPSFont()
+   Set the font and size
+
+   #ROUTINE blPSLText()
+   Left justify text
+
+   #ROUTINE blPSCBText()
+   Centers a piece of text with X,Y being the Coords of the BOTTOM centre 
+   point
+
+   #ROUTINE blPSROffText()
+   Right justify text with offset in device coordinates (points).
+
+   #ROUTINE blPSLCText()
+   Left justify text, centred on Y
+
+   #ROUTINE blPSCTText()
+   Centers a piece of text with X,Y being the Coords of the TOP centre 
+   point
+
+   #ROUTINE blPSVText()
+   Write vertical text centred on x,y offset back along x by the size of
+   label and by xoff in pts. Used, for example, to title the y-axis of
+   a graph. The `label' specification is used to calculate an amount by
+   which to move the text back. Typically this would be the longest data
+   label on the graph's Y-axis.
+
+   #ROUTINE blPSShowText()
+   Displays text, processing it first if any control codes are found. Used
+   by the various text positioning routines.
+
+   #ROUTINE blPSEnd()
+   End of page
+
+   #ROUTINE blPSCorrectCase()
+   Goes through a fontname and fixes case to match the required standard.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>
@@ -104,11 +169,12 @@ static REAL sTextHeight = 10.0;
    \param[in]     *FName     PostScript filename
    \param[in]     *creator   Creator string
    \param[in]     *AltFont   Alternate font (normall greek style)
-   \return                    Success?
+   \return                   Success?
 
    Initialises the file writing the Prologue. The filename and creator
    are written into the Prologue and EPSFxoff and EPSFyoff are used to
    calculate the bounding box size for EPSF plots.
+
 -  08.05.92 Added definitions of raise, lower and greek. New parameter
             to specify name of alternate font.
 -  23.06.92 Padded BoundingBox with spaces and setting of PSXMin, etc.
@@ -255,6 +321,7 @@ void blPSThick(REAL thickness)
    \param[in]     Y     Y coordinate
 
    Move to X,Y
+
 -  27.07.93 Floating point precision -> double
 -  07.07.14 Use bl prefix for functions By: CTP
 */
@@ -274,6 +341,7 @@ void blPSMove(REAL X,
    \param[in]     Y     Y coordinate
 
    Draw to X,Y
+
 -  27.07.93 Floating point precision -> double
 -  07.07.14 Use bl prefix for functions By: CTP
 */

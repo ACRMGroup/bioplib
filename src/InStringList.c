@@ -73,6 +73,14 @@
 -  V1.21 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP Lists of strings
+   #ROUTINE  blInStringList()
+   Searches a string list for an *exact match* with the specified string.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <string.h>

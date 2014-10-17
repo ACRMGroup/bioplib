@@ -73,6 +73,14 @@
 -  V1.21 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP String handling
+   #ROUTINE  blUpstrncmp()
+   Like strncmp(), but upcases each character before comparison
+*/
+/************************************************************************/
 /* Includes
 */
 #include <ctype.h>
@@ -97,8 +105,8 @@
    \param[in]     *word1     First word
    \param[in]     *word2     Second word
    \param[in]     ncomp      Number of characters to compare
-   \return                     0 if strings match or offset of first 
-                            mismatched character
+   \return                   0 if strings match or offset of first 
+                             mismatched character
 
    Like strncmp(), but upcases each character before comparison
 

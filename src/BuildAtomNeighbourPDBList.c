@@ -56,6 +56,15 @@
                   blBuildAtomNeighbourPDBListAsCopy() By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Manipulating the PDB linked list
+   #ROUTINE  blBuildAtomNeighbourPDBListAsCopy()
+   Builds a PDB linked list of atoms neighbouring those in a specified
+   residue. 
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdlib.h>

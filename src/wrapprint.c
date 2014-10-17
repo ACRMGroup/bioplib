@@ -49,6 +49,20 @@
 -  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP String handling
+   #ROUTINE  blWrapString()
+   Wraps a string with double inverted commas if it contains spaces
+   and escapes any contained double inverted commas with a backslash.
+
+   #ROUTINE blWrapPrint()
+   Wraps a string with double inverted commas if it contains spaces
+   and escapes any contained double inverted commas with a backslash.
+   Then prints the string
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>
@@ -77,7 +91,7 @@
    \param[in]     *in      Input string
    \param[in]     maxlen   Max length of output string
    \param[out]    *out     Output wrapped string
-   \return                     Output string was long enough
+   \return                 Output string was long enough
 
    Wraps a string with double inverted commas if it contains spaces
    and escapes any contained double inverted commas with a backslash.

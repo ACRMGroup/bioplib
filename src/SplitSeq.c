@@ -65,6 +65,15 @@
 -  V1.11 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling Sequence Data
+   #SUBGROUP blSplitSeq()
+   Splits a sequence stored as a linear array with each chain separated
+   by a * into an array of sequences. Returns the number of chains
+   found.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdlib.h>

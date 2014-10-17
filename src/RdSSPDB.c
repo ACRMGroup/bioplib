@@ -51,6 +51,15 @@
    =================
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP File IO
+   #ROUTINE  blReadDisulphidesPDB()
+   Searches a PDB file for SSBOND records and constructs a linked list
+   of information from these records.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>
@@ -81,8 +90,8 @@
 
    \param[in]     *fp     PDB file pointer
    \param[out]    *error  Success
-   \return                  Linked list of disulphide information.
-                                NULL if none found or error (Check flag)
+   \return                Linked list of disulphide information.
+                          NULL if none found or error (Check flag)
 
    Searches a PDB file for SSBOND records and constructs a linked list
    of information from these records.

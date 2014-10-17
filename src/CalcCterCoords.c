@@ -5,7 +5,7 @@
    
    \version    V1.4
    \date       07.07.14
-   \brief      Calcualtes C-terminal oxygen coordinates.
+   \brief      Calculates C-terminal oxygen coordinates.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-6
    \author     Dr. Andrew C. R. Martin
@@ -59,6 +59,14 @@
 -  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Calculations
+   #ROUTINE  blCalcCterCoords()
+   Calculates CTER OT2 coordinates
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>
@@ -94,7 +102,7 @@
    \param[in]     *o_p   Antecedent O PDB pointer
    \return                Success
 
-   This routine actually calculates the CTER OT2 coords.
+   Calculates the CTER OT2 coords
 
 -  15.07.90 Original
 -  07.07.14 Use bl prefix for functions By: CTP

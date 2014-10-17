@@ -57,6 +57,66 @@
 -  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Graphics
+   #SUBGROUP Plotting
+   #ROUTINE  blAMInitPlot()
+   Initialise a device ready for plotting.
+
+   #ROUTINE blAMSetPen()
+   Change pen
+
+   #ROUTINE blAMMove()
+   Move to a position specified in data coordinates.
+
+   #ROUTINE blAMDraw()
+   Draw to a position specified in data coordinates.
+
+   #ROUTINE blAMSetLineStyle()
+   Set the line style
+
+   #ROUTINE blAMEndLine()
+   End a line; required by PostScript actually to draw on the paper.
+
+   #ROUTINE blAMSetFont()
+   Sets the current font using PostScript font names. If producing HPGL
+   output, a lookup table is used to translate this to an HPGL font
+   number
+
+   #ROUTINE blAMText()
+   Left/bottom justify text at position in data coordinates
+
+   #ROUTINE blAMCBText()
+   Centre-bottom justify text
+
+   #ROUTINE blAMRText()
+   Right/centre justify text at position in data coordinates; offset is 
+   an x-offset specified in device coordinates (pt)
+
+   #ROUTINE blAMLCText()
+   Left/centre height justify text at position in data coordinates
+
+   #ROUTINE blAMCTText()
+   Centre/top justify text at position in data coordinates. 
+
+   #ROUTINE blAMEndPlot()
+   Close up a device after plotting.
+
+   #ROUTINE blPS2HPGLFont()
+   Takes the PostScript font name and works out the best HPGL equivalent
+   from a translation table. On the first call, the table is read from 
+   disk and space is allocated for it. If the routine is called with a 
+   NULL parameter, the space allocated for the table is freed. It is 
+   quite safe to call the routine again after this has occurred; the 
+   table will simply be re-read from disk.
+
+   #ROUTINE blSimplifyText()
+   Removes control codes from a string for screen display. Also used for
+   calculating string length. The returned string is stored as static
+   within the routine
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -275,6 +335,7 @@ void blAMMove(int  dest,
    \param[in]     y         Y coordinate
 
    Draw to a position specified in data coordinates.
+
 -  06.04.92 Handles screen
 -  10.04.92 Added log support
 -  29.04.92 Added check on log bounds
@@ -320,6 +381,7 @@ void blAMDraw(int  dest,
    \param[in]     style     Style number (0--5)
 
    Set the line style
+
 -  08.04.92 Framework
 -  07.05.92 Original (screen & PS)
 -  25.06.92 Added HPGL support. Removed static store of style.
@@ -441,6 +503,7 @@ void blAMSetFont(int  dest,
    \param[in]     *text     Text to write
 
    Left/bottom justify text at position in data coordinates
+
 -  08.04.92 Handles screen
 -  10.04.92 Added log support
 -  29.04.92 Added check on log bounds
@@ -588,6 +651,7 @@ void blAMRText(int    dest,
    \param[in]     *text     Text to print
 
    Left/centre height justify text at position in data coordinates
+
 -  08.04.92 Handles screen
 -  10.04.92 Added log support
 -  29.04.92 Added check on log bounds

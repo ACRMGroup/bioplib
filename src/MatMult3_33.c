@@ -57,6 +57,14 @@
 -  V1.7  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Matrices
+   #ROUTINE  blMatMult3_33()
+   Multiply a 3-vector by a 3x3 matrix
+*/
+/************************************************************************/
 /* Includes
 */
 #include "MathType.h"

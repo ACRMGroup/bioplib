@@ -54,6 +54,15 @@
 -  V1.5  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Searching the PDB linked list
+   #ROUTINE  blInPDBZoneSpec()
+   Determines whether a PDB pointer is within a residue range specified
+   using standard format: [c]nnn[i] or within a specified chain
+*/
+/************************************************************************/
 /* Includes
 */
 #include "SysDefs.h"

@@ -74,6 +74,16 @@
 -  V1.22 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP String handling
+   #ROUTINE  blChindex()
+   Returns the offset of a character in a string. -1 if not found. This is
+   used in a similar manner to strchr(), but gives an offset in the string
+   rather than a pointer to the character.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <string.h>

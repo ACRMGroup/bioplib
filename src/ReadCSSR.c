@@ -146,6 +146,31 @@
 -  V1.7  15.08.14 Updated blReadCSSRasPDB() to use CLEAR_PDB() By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling CSSR Data
+   #SUBGROUP File IO
+
+   #ROUTINE  blReadCSSR()
+   Read a CSSR file into a CSSR linked list
+
+   #ROUTINE  blReadCSSRasPDB()
+   Read a CSSR file into a PDB linked list
+
+
+   #SUBGROUP Transformations
+
+   #ROUTINE  blNormaliseCSSR()
+   Convert a CSSR linked list in fractional coordinates to orthonormal
+
+   #ROUTINE  blNormalisePDB()
+   Convert a PDB linked list in fractional cooridinates to orthonormal
+
+   #ROUTINE  blOrtho()
+   Calculate a matrix which will convert between fractional and
+   orthonormal coordinates given unit cell dimensions and angles.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>
@@ -529,7 +554,7 @@ void blNormaliseCSSR(CSSR *cssr,
 
 /************************************************************************/
 /*>void blNormalisePDB(PDB *pdb, REAL cell[3], REAL alpha,
-                     REAL beta, REAL gamma)
+                       REAL beta, REAL gamma)
    -------------------------------------------------------
 *//**
 

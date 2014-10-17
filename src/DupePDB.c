@@ -60,6 +60,14 @@
 -  V1.11 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Manipulating the PDB linked list
+   #ROUTINE  blDupePDB()
+   Duplicates a PDB linked list.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>

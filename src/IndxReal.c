@@ -65,6 +65,14 @@
 -  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP Sorting
+   #ROUTINE  blIndexReal()
+   Index an array by Heapsort.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>

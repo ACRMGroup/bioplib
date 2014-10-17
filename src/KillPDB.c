@@ -60,6 +60,14 @@
 -  V1.11 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Manipulating the PDB linked list
+   #ROUTINE  blKillPDB()
+   Remove an item in the PDB linked list and re-link correctly
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdlib.h>

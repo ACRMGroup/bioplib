@@ -52,6 +52,15 @@
 -  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Searching the PDB linked list        
+   #ROUTINE  blFindHetatmResidueSpec()
+   Search a PDB linked list for a specified residue (given as
+   [chain[.]]num[[.]insert]) but limits search to HETATM residues
+*/
+/************************************************************************/
 /* Includes
 */
 #include <ctype.h>

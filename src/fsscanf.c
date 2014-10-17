@@ -93,6 +93,15 @@
 -  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP File IO
+   #ROUTINE  fsscanf() 
+   A FORTRAN-style rigid-column formatted version of sscanf()
+*/
+
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>

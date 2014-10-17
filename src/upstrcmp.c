@@ -73,6 +73,14 @@
 -  V1.21 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP String handling
+   #ROUTINE  blUpstrcmp()
+   Like strcmp(), but upcases each character before comparison
+*/
+/************************************************************************/
 /* Includes
 */
 #include <ctype.h>

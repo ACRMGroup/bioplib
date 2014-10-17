@@ -75,6 +75,13 @@
 -  V2.8  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling Sequence Data
+   #SUBGROUP File IO
+   This is an all-singing, all-dancing PIR reader
+*/
+/************************************************************************/
 /* Includes
 */
 #include <string.h>

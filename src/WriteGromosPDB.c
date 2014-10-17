@@ -69,6 +69,19 @@
 -  V1.8  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP File IO
+   #ROUTINE  blWriteGromosPDB()
+   Write a PDB linked list by calls to WriteGromosPDBRecord()
+
+   #ROUTINE  blWriteGromosPDBRecord()
+   Write a GROMOS PDB record
+*/
+/************************************************************************/
+/* Includes
+*/
 #include <stdio.h>
 #include <string.h>
 #include <math.h>

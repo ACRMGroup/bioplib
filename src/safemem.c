@@ -78,6 +78,22 @@
 -  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP Memory management
+   #ROUTINE  blSafemalloc(int nbytes)
+   Debugging version of malloc() which creates protection buffers each
+   side of the requested memory block.
+
+   #ROUTINE  blSafefree()
+   Debugging version of free() which checks protection buffers each
+   side of the requested memory block.
+
+   #ROUTINE  blSafeleaks()
+   Prints a list of any safemalloc()'d memory which was not freed
+*/
+/************************************************************************/
 /* Includes - Note we must *not* include safemem.h since we require the
    standard versions of INITPREV, ALLOCNEXTPREV, etc.
 */
@@ -117,6 +133,8 @@ static char    sBlank        = BLANK;
 /*>void *blSafemalloc(int nbytes)
    ------------------------------
 *//**
+   \param[in]   nbytes  Number of bytes to allocate
+   \return              Pointer to block of memory
 
    Debugging version of malloc() which creates protection buffers each
    side of the requested memory block.

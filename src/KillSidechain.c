@@ -60,6 +60,14 @@
 -  V1.11 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Modifying the structure
+   #ROUTINE  blKillSidechain()
+   Remove sidechain atoms, optionally removing the CBeta
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdlib.h>
@@ -89,7 +97,7 @@
    \param[in]     *ResStart     Start of a residue in linked list
    \param[in]     *NextRes      Start of next residue
    \param[in]     doCB          Flag to kill CB as part of s/c
-   \return                        Success?
+   \return                      Success?
    
    Kill a sidechain, by calls to KillPDB(). If doCB is set, will kill 
    the CB.

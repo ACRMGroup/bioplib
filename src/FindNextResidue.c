@@ -61,6 +61,19 @@
 -  V1.12 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Searching the PDB linked list        
+   #ROUTINE  blFindEndPDB()
+   Step along a PDB linked list from start until we find a different
+   residue. Return a pointer to this PDB item. This function should
+   not be used and has been replaced by blFindNextResidue()
+
+   #ROUTINE  blFindNextResidue()
+   Finds the next residue in a PDB linked list.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>

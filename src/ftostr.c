@@ -66,6 +66,17 @@
 -  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP String handling
+   #ROUTINE  blFtostr()
+   Convert a REAL to a string using precision decimal places. If 
+   precision is negative, use e-form, otherwise use f-form. This is used
+   to generate precisely formatted string versions of numbers for
+   applications where the appearance of a numeric value is important.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <string.h>

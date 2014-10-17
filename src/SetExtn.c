@@ -73,6 +73,15 @@
 -  V2.21 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP File IO
+   #ROUTINE  blSetExtn()
+   Force a filename extension. Modifies the input filename to have the
+   specified extension.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <string.h>

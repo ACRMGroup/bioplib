@@ -73,6 +73,16 @@
 -  V1.21 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP String handling
+   #ROUTINE  blKillLeadSpaces()
+   This routine strips leading spaces and tabs from a string returning
+   a pointer to the first non-whitespace character. The macro
+   KILLLEADSPACES() in macros.h is now a recommended replacement
+*/
+/************************************************************************/
 /* Includes
 */
 
@@ -91,12 +101,12 @@
 
 /************************************************************************/
 /*>char *blKillLeadSpaces(char *string)
-   ----------------------------------
+   ------------------------------------
 *//**
 
    \param[in]     *string        A character string
-   \return                         A pointer to the string with the 
-                                    leading spaces removed
+   \return                       A pointer to the string with the 
+                                 leading spaces removed
 
    This routine strips leading spaces and tabs from a string returning
    a pointer to the first non-whitespace character.

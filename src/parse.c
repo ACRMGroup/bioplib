@@ -127,6 +127,34 @@
 -  V1.11 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP User interaction
+   #ROUTINE  blParse()
+   Keyword-based command parser using a fixed number of parameters per
+   command
+
+   #ROUTINE  blMparse()
+   As blParse(), but allows variable number of parameters to each keyword.
+
+
+
+   #SUBGROUP String handling
+
+   #ROUTINE  blMatch()
+   Matches two strings, but stops the comparison as soon
+   as a space or NULL is found in either string. The returned value
+
+   #ROUTINE  blGetString()
+   Returns the first space-delimited group of characters
+   from a character string
+
+   #ROUTINE  blGetParam()
+   Extracts the first space-delimited number from a
+   character string.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>
@@ -161,7 +189,8 @@
    \param[out]    **strparam     Array of pointers to returned strings
    \return                          Index of found command or error flag
 
-   Keyword-based command parser. Fixed number of parameters.
+   Keyword-based command parser using a fixed number of parameters per
+   command
 
 -  11.07.90 Original    By: ACRM
 -  22.04.93 Tidied comments, etc. Corrected NULL to 0.
@@ -257,11 +286,11 @@ int blParse(char  *comline,
    \param[in]     *comstring     A character string
    \param[in]     *string2       A second string
    \param[out]    *nletters      Number of letters matched
-   \return                          0 String mismatch
-                                    1 First string finished first
-                                    2 Second string finished first
+   \return                       0 String mismatch
+                                 1 First string finished first
+                                 2 Second string finished first
 
-   This routine matches two strings, but stops the comparison as soon
+   Matches two strings, but stops the comparison as soon
    as a space or NULL is found in either string. The returned value
    indicates which string finished first or 0 if the letters before the
    space or NULL have a mismatch. The routine calls StringToUpper()
@@ -316,10 +345,10 @@ int blMatch(char *comstring,
 
    \param[in]     *command       A character string
    \param[out]    *strparam      Returned character string
-   \return                          Number of characters pulled out
-                                    of the command string
+   \return                       Number of characters pulled out
+                                 of the command string
 
-   This routine returns the first space-delimited group of characters
+   Returns the first space-delimited group of characters
    from character string `command'
 
 -  11.07.90 Original    By: ACRM
@@ -369,11 +398,11 @@ int blGetString(char *command,
    \param[in]     *command       A character string
    \param[out]    *value         Returned float value
    \param[out]    *nletters      Number of charcters pulled out
-                                    of the command string
-   \return                          0 If error
-                                    1 If OK
+                                 of the command string
+   \return                       0 If error
+                                 1 If OK
 
-   This routine extracts the first space-delimited number from the
+   Extracts the first space-delimited number from the
    `command' character string.
 
 -  11.07.90 Original    By: ACRM
@@ -408,7 +437,7 @@ int blGetParam(char  *command,
    \param[out]    *nparam        Number of parameters found
    \return                           Index of found command or error flag
 
-   As parse(), but allows variable number of parameters to each keyword.
+   As blParse(), but allows variable number of parameters to each keyword.
 
 -  23.02.94 Original based on parse()   By: ACRM
 -  11.03.94 Added $ line handling

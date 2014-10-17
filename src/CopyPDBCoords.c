@@ -60,6 +60,16 @@
 -  V1.11 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP blCopyPDBCoords()
+   Applies the coordinates of one PDB linked list to another.
+   Assumes that the structures
+   are equivalent with identical atom ordering. Makes a simple check on
+   resnam and atnam at each position.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>

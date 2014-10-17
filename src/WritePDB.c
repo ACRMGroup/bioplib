@@ -84,6 +84,35 @@
                   support for PDBML format. By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP File IO
+   #ROUTINE blWritePDB(FILE *fp, PDB *pdb)
+   Main entry point to write a PDB linked list to a file
+
+   #ROUTINE blFormatCheckWritePDB(PDB *pdb)
+   Checks that a PDB linked list can be written as a standard PDB file
+   (i.e. chain labels are no more than one character)
+
+   #ROUTINE blWriteAsPDB(FILE *fp, PDB *pdb)
+   Writes a PDB linked list to a file in PDB format
+
+   #ROUTINE blWritePDBRecord(FILE *fp, PDB *pdb)
+   Writes a single PDB record in PDB format
+
+   #ROUTINE blWritePDBRecordAtnam(FILE *fp, PDB *pdb)
+   Writes a single PDB record in PDB format using atom data from the
+   atnam field rather than the atnam_raw field
+
+   #ROUTINE blWriteAsPDBML(FILE *fp, PDB *pdb)
+   Write a PDB linked list to a file in PDBML XML format
+
+   #ROUTINE blSetElementSymbolFromAtomName(char *element, char * atom_name)
+   Sets the element field based on the content of the atom name stored 
+   in atnam_raw
+*/
+/************************************************************************/
 /* Defines required for includes
 */
 #define WRITEPDB_MAIN
@@ -525,8 +554,8 @@ void blWriteAsPDBML(FILE *fp, PDB  *pdb)
 }
 
 /************************************************************************/
-/*>void blSetElementSymbolFromAtomName(char *element, char * atom_name)
-   --------------------------------------------------------------------
+/*>void blSetElementSymbolFromAtomName(char *element, char *atom_name)
+   -------------------------------------------------------------------
 *//**
 
    \param[out]    *element       Element symbol
@@ -540,7 +569,7 @@ void blWriteAsPDBML(FILE *fp, PDB  *pdb)
 -  17.07.14 Original. By: CTP
 
 */
-void blSetElementSymbolFromAtomName(char *element, char * atom_name)
+void blSetElementSymbolFromAtomName(char *element, char *atom_name)
 {
    char  buffer[] = "  ",
          *buffer_ptr;

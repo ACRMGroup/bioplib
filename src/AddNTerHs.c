@@ -67,6 +67,14 @@
 -  V1.8  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Modifying the structure
+   #ROUTINE  blAddNTerHs()
+   Adds hydrogens onto the N-termini
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>

@@ -57,6 +57,45 @@
 
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP Text window handling - experimental
+   #ROUTINE  blScreen()
+   Writes information to the screen. Handles any windows as appropriate.
+
+   #ROUTINE  blPrompt()
+   Sets a prompt for input. If windowing is on, this simply sets the 
+   prompt variable (the actual prompt is issued by the GetKybdString()
+   function). If no windowing is used, the actual string is printed.
+   If the prompt ends with a . it is simply printed; if not, a > is 
+   appended.
+
+   #ROUTINE  blRePrompt()
+   Reissue the current prompt. Only has any effect when windowing is not
+   in use. Normally only used by ReadBufferedFile() and 
+   ProbeBufferedFile() to re-issue prompts while eating blank lines.
+
+   #ROUTINE  blGetKybdString()
+   Reads a string from the keyboard
+
+   #ROUTINE  blPagingOn()
+   Switches on screen paging.
+
+   #ROUTINE  blPagingOff()
+   Switches off screen paging.
+
+   #ROUTINE  blWindowMode()
+   Switch window mode on or off.
+
+   #ROUTINE  blWindowInteractive()
+   Switch interactive mode on or off.
+   If switched off, calls WindowMode(FALSE) to switch off windowing
+
+   #ROUTINE blYorN()
+   Get a yes or no response from the keyboard
+*/
+/************************************************************************/
 /* Definition of windowing type. If nothing defined, simple screen I/O
    will be used.
 */
@@ -100,6 +139,7 @@ static BOOL sDoPaging    = FALSE,
    \param[in]     *string    String to write on window
 
    Writes information to the screen. Handles any windows as appropriate.
+
 -  25.09.92 Original
 -  02.10.92 Added CURSES support
 -  05.10.92 Added AMIGA_WINDOWS support
@@ -213,6 +253,7 @@ void blRePrompt(void)
 *//**
 
    Reads a string from the keyboard
+
 -  02.10.92 Original
 -  05.10.92 Added AMIGA_WINDOWS support
 -  15.03.94 Added check on sWindowMode
@@ -247,6 +288,7 @@ void blGetKybdString(char *string, int maxlen)
 *//**
 
    Switches on screen paging.
+
 -  07.10.92 Original
 -  07.07.14 Use bl prefix for functions By: CTP
 */
@@ -262,6 +304,7 @@ void blPagingOn(void)
 *//**
 
    Switches off screen paging.
+
 -  07.10.92 Original
 -  07.07.14 Use bl prefix for functions By: CTP
 */
@@ -279,6 +322,7 @@ void blPagingOff(void)
                           FALSE: Output normally (default)
 
    Switch window mode on or off.
+
 -  11.03.94 Original    By: ACRM
 -  15.03.94 Added check on WINDOWING
 -  07.07.14 Use bl prefix for functions By: CTP
@@ -323,7 +367,7 @@ void blWindowInteractive(BOOL mode)
    \param[in]     *deflt   Default response ('y' or 'n') if return is 
                            pressed without a letter or an invalid letter
                            is given
-   \return                    0 if the user responds with N or n
+   \return                 0 if the user responds with N or n
                            1 if the user responds with Y or y 
                            2 if the user responds with A or a
                            3 if the user responds with Q or q

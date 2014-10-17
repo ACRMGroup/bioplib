@@ -70,6 +70,32 @@
 
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP File IO
+   #ROUTINE  blGetResolPDB()
+   Attempts to obtain resolution and R-factor information
+   out of a PDB file. Does not return R-free - use of blGetExptl() is
+   recommended.
+
+   #ROUTINE  blGetExptl()
+   This routine attempts to obtain resolution and R-factor information
+   out of a PDB file. Returns R-free
+
+   #ROUTINE  blReportStructureType()
+   Returns structure description from a numeric representation
+
+
+
+   #GROUP    General Programming
+   #SUBGROUP File IO
+
+   #ROUTINE  FindNextNumber()
+   Find the next number which occurs in a file within a specified number
+   of lines.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>

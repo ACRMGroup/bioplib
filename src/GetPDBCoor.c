@@ -56,6 +56,15 @@
                   linked lists are already at the origin
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Extracting data
+   #ROUTINE  blGetPDBCoor()
+   Get the coordinates out of a PDB linked list into an array of type COOR
+   The COOR array is allocated for you
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdlib.h>
@@ -83,7 +92,7 @@
 
    \param[in]     *pdb    PDB linked list
    \param[out]    **coor  Array of coordinate structure pointers
-   \return                  Number of coordinates copied
+   \return                Number of coordinates copied
 
    Get the coordinates out of a PDB linked list into an array of type COOR
    The COOR array is allocated for you

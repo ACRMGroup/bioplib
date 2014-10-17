@@ -78,6 +78,21 @@
 #define RSC_MAIN
 
 /************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Modifying the structure
+   #ROUTINE  blRepSChain()
+   Replace sidechains. 
+
+   #ROUTINE  blRepOneSChain()
+   Replace a single sidechain. 
+
+   #ROUTINE  blEndRepSChain()
+   Cleans up open files and memory used by the sidechain replacement
+   routines.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>

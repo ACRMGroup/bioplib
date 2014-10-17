@@ -52,6 +52,14 @@
 -  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Vectors
+   #ROUTINE blVecDist()
+   Finds the distance between two vectors of arbitrary length
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>

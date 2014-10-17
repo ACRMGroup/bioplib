@@ -51,6 +51,14 @@
 -  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Moving the structure
+   #ROUTINE  blOriginPDB()
+   Moves a PDB linked list to the origin, ignoring NULL coordinates.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>

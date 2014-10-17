@@ -60,6 +60,14 @@
 -  V1.11 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Searching the PDB linked list        
+   #ROUTINE  blFindAtomInRes()
+   Finds an atom within a residue
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -94,6 +102,8 @@
                                to be space-padded)
    \return                     Pointer to required atom, NULL if not
                                found
+
+   Finds an atom within a residue
 
 -  14.03.96 Original   By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP

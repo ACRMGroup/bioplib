@@ -92,6 +92,15 @@
 -  V1.10 19.08.14 Renamed function to blSelectAtomsPDBAsCopy(). By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Manipulating the PDB linked list
+   #ROUTINE  blSelectAtomsPDBAsCopy()
+   Take a PDB linked list and returns a list containing only those atom 
+   types specified in the sel array.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <string.h>

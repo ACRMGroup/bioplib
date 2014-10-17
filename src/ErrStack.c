@@ -78,6 +78,18 @@
 -  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP Handling errors
+   #ROUTINE  blStoreError()
+   Stores an error on the error stack.
+
+   #ROUTINE  blShowErrors()
+   Display the error stack using the supplied print routine or the
+   simple default one if NULL is given.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>

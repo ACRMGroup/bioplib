@@ -70,6 +70,20 @@
          Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP Array handling
+
+   #ROUTINE blArray3D()
+   Create a 3D array of elements of size `size' with dimensions `dim1' 
+   rows by `dim2' columns by `dim3' planes
+
+   #ROUTINE blFreeArray3D()
+   Frees a 3D array with dimensions `dim1' rows by `dim2' columns by
+   `dim3' planes.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdlib.h>

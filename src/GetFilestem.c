@@ -73,6 +73,26 @@
 -  V1.21 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP File IO
+   #ROUTINE  blGetFilestem()
+   Extracts the filestem from a complete filename. Should work under
+   Unix, VMS, MS-DOS, AmigaDOS, etc.
+
+   #ROUTINE
+   #ROUTINE
+   #ROUTINE
+   #ROUTINE
+   #ROUTINE
+   #ROUTINE
+   #ROUTINE
+   #ROUTINE
+   #ROUTINE
+   #ROUTINE
+*/
+/************************************************************************/
 /* Includes
 */
 #include <string.h>

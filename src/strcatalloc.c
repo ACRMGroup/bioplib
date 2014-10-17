@@ -50,6 +50,14 @@
 -  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP String handling
+   #ROUTINE  blStrcatalloc()
+   Like strcat() but uses a realloc() on instr to make space available.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdlib.h>

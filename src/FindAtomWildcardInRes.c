@@ -51,6 +51,16 @@
 
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Searching the PDB linked list        
+   #ROUTINE  blFindAtomWildcardInRes()
+   Finds an atom within the residue given as a PDB pointer. Allows 
+   single character wildcards. Thus ?G? maybe used for any atom at the
+   gamma position.
+*/
+/************************************************************************/
 /* Includes
 */
 #include "pdb.h"

@@ -52,6 +52,14 @@
                   blStripWatersPDBAsCopy() By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Modifying the structure
+   #ROUTINE  blStripWatersPDBAsCopy()
+   Take a PDB linked list and returns the PDB list minus waters
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdlib.h>

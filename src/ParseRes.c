@@ -73,6 +73,26 @@
 -  V1.13 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Miscellaneous functions
+   #ROUTINE  blParseResSpec()
+   Splits up a residue specification of the form 
+         [c][.]num[i]
+   into chain, resnum and insert. Chain and insert code will be up-cased
+
+   #ROUTINE  blParseResSpecNoUpper()
+   Splits up a residue specification of the form 
+         [c][.]num[i]
+   into chain, resnum and insert. Chain and insert code will NOT be up-cased
+
+   #ROUTINE  blDoParseResSpec()
+   Splits up a residue specification of the form 
+         [c][.]num[i]
+   into chain, resnum and insert. Gives control over up-casing
+*/
+/************************************************************************/
 /* Includes
 */
 #include <ctype.h>

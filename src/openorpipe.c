@@ -63,6 +63,18 @@
                   standard output
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP File IO
+   #ROUTINE  blOpenOrPipe()
+   Opens a file for writing unless the filename begins with a | in which
+   case it is opened as a pipe.
+
+   #ROUTINE  blCloseOrPipe()
+   Attempts to close a file pointer as a pipe.
+*/
+/************************************************************************/
 /* Includes
 */
 #ifndef NOPIPE
@@ -147,7 +159,7 @@ FILE *blOpenOrPipe(char *filename)
    \return                      Error code (as for fclose())
 
    Attempts to close a file pointer as a pipe. If it isn't associated 
-   with a pipe (i.e. popen returns (-1)), tries again to close it as
+   with a pipe (i.e. pclose returns (-1)), tries again to close it as
    a normal file.
 
 -  26.05.97 Original   By: ACRM

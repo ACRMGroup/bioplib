@@ -50,6 +50,15 @@
 -  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP File IO
+   #ROUTINE  blWriteCrystPDB()
+   Write crystal parameters (unit cell, space group, origin and scale
+   matrices) to a PDB file.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>

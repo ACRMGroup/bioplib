@@ -71,6 +71,22 @@
 -  V1.9  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling Sequence Data
+   #SUBGROUP Conversions
+   #ROUTINE  blThrone()
+   Converts 3-letter code to 1-letter code.
+   Handles ASX and GLX as X
+
+   #ROUTINE  blThronex()
+   Converts 3-letter code to 1-letter code.
+   Handles ASX and GLX as B and Z.
+
+   #ROUTINE  blOnethr()
+   Converts 1-letter code to 3-letter code (actually as 4 chars).
+*/
+/************************************************************************/
 /* Includes
 */
 #include <string.h>
@@ -192,7 +208,7 @@ char blThronex(char *three)
 *//**
 
    \param[in]     one     One letter code
-   \return                  Three letter code (padded to 4 chars with a 
+   \return                Three letter code (padded to 4 chars with a 
                           space)
 
    Converts 1-letter code to 3-letter code (actually as 4 chars).

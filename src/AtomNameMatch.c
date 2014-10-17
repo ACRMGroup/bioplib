@@ -62,6 +62,27 @@
 -  V1.8  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Miscellaneous functions
+   #ROUTINE  blAtomNameMatch()
+   Tests whether an atom name matches an atom name specification.
+   ? or % is used to match a single character
+   * is used to match any trailing characters; it may not be used for
+   leading characters or in the middle of a specification (e.g. *B*,
+   C*2 are both illegal).
+   Wildcards may be escaped with a backslash.
+
+   #ROUTINE  blAtomNameRawMatch()
+   Tests whether an atom name matches an atom name specification
+   having been given a 'raw' atom name rather than the 
+   massaged one. i.e. " CA " is C-alpha, "CA  " is Calcium
+   Normally it checks against the second character onwards unless the
+   spec starts with a < in which case it checks from the beginning of
+   the string.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <ctype.h>
@@ -92,14 +113,14 @@
    \param[in]     *atnam      The atom name to test
    \param[in]     *spec       The atom specification
    \param[in,out] *ErrorWarn  On input, if TRUE, this routine will
-                               indicate errors.
-                               On output, indicates whether there
-                               was an error.
-                               Note that you must be careful to supply
-                               an lvalue here, you can't just use TRUE
-                               or FALSE since it's modified on return.
-                               NULL is allowed if you don't care about
-                               errors.
+                              indicate errors.
+                              On output, indicates whether there
+                              was an error.
+                              Note that you must be careful to supply
+                              an lvalue here, you can't just use TRUE
+                              or FALSE since it's modified on return.
+                              NULL is allowed if you don't care about
+                              errors.
 
    Tests whether an atom name matches an atom name specification.
    ? or % is used to match a single character
@@ -203,14 +224,14 @@ BOOL blAtomNameMatch(char *atnam, char *spec, BOOL *ErrorWarn)
    \param[in]     *atnam      The atom name to check
    \param[in]     *spec       The atom specification
    \param[in,out] *ErrorWarn  On input, if TRUE, this routine will
-                               indicate errors.
-                               On output, indicates whether there
-                               was an error.
-                               Note that you must be careful to supply
-                               an lvalue here, you can't just use TRUE
-                               or FALSE since it's modified on return.
-                               NULL is allowed if you don't care about
-                               errors.
+                              indicate errors.
+                              On output, indicates whether there
+                              was an error.
+                              Note that you must be careful to supply
+                              an lvalue here, you can't just use TRUE
+                              or FALSE since it's modified on return.
+                              NULL is allowed if you don't care about
+                              errors.
 
    Tests whether an atom name matches an atom name specification.
 

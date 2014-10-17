@@ -60,6 +60,17 @@
 -  V1.7  17.07.14 Removed unused varables  By: ACRM
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Coordinate Fitting
+   #SUBGROUP Fitting based on coordinate arrays
+   #ROUTINE  blMatfit()
+   Fit coordinate array x2 to x1 both centred around the origin and of 
+   length n. Optionally weighted with the wt1 array if wt1 is not NULL.
+   If column is set the matrix will be returned column-wise rather 
+   than row-wise.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -86,7 +97,7 @@ static void qikfit(REAL umat[3][3], REAL rm[3][3], BOOL column);
 
 /************************************************************************/
 /*>BOOL blMatfit(COOR *x1, COOR *x2, REAL rm[3][3], int n,
-               REAL *wt1, BOOL column)
+                 REAL *wt1, BOOL column)
    -------------------------------------------------------
 *//**
 

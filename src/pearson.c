@@ -51,6 +51,15 @@
 
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Statistics
+   #ROUTINE  blPearson()
+   Calculates the Pearson correlation coefficient making two
+   passes through the data
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -78,8 +87,9 @@
    \param[in]     *x     Array of x items
    \param[in]     *y     Array of y items
    \param[in]     NItem  Number of items
-   \return                 Pearson correlation coefficient
+   \return               Pearson correlation coefficient
 
+   Calculates the Pearson correlation coefficient
    This version makes 2 passes through the data
 
 -  15.07.94 Original    By: ACRM

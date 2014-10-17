@@ -52,6 +52,14 @@
 -  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Manipulating the PDB linked list
+   #ROUTINE  blSetResnam()
+   Change the residue name, number, insert and chain for an amino acid.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdlib.h>

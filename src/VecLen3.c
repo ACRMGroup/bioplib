@@ -52,6 +52,14 @@
 -  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Vectors
+   #ROUTINE blVecLen3()
+   Calculate the length of a vector
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -76,7 +84,9 @@
 *//**
 
    \param[in]     Vec       Vector
-   \return                      Length of vector
+   \return                  Length of vector
+
+   Calculate the length of a vector
 
 -  18.06.96 Original   By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP

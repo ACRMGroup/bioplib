@@ -74,6 +74,14 @@
 -  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP File IO
+   #ROUTINE  blReadSecPDB()
+   Reads secondary structure information from the header of a PDB file.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>

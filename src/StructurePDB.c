@@ -52,6 +52,24 @@
 -  V1.3   07.07.14  Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Manipulating the PDB linked list
+   #ROUTINE  blAllocPDBStructure()
+   Takes a PDB linked list and converts it into a hierarchical structure
+   of chains, residues and atoms
+
+   #ROUTINE  blFreePDBStructure()
+   Frees memory used by the hierarchical description of a PDB structure.
+   Note this does not free the underlying PDB linked list
+
+   #ROUTINE  blFindNextChain()
+   Takes a PDB linked list and find the start of the next chain. This is
+   similar to another Bioplib routine which terminates the first chain,
+   but this routines doesn't terminate.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdlib.h>

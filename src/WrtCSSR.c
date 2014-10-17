@@ -72,6 +72,14 @@
 -  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling CSSR Data
+   #SUBGROUP File IO
+   #ROUTINE  blWriteCSSR()
+   Write a CSSR file from a CSSR linked list.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>
@@ -104,9 +112,9 @@
 *//**
 
    \param[in]     *fp      A pointer to type FILE in which the
-                              CSSR file is stored.
+                           CSSR file is stored.
    \param[in]     *cssr    A pointer to the first allocated item of
-                              the CSSR linked list
+                           the CSSR linked list
    \param[in]     *name    The molecule's name.
    \param[in]     *title   Title on the molecule.
 

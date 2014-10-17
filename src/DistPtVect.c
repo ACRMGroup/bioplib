@@ -52,6 +52,15 @@
 -  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Geometry
+   #ROUTINE  blDistPtVect()
+   Calculate the distance from a point to a vector described by two
+   end points
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>

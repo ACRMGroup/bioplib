@@ -53,6 +53,56 @@
 -  V2.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Graphics
+   #SUBGROUP HPGL
+   #ROUTINE  blHPGLInit()
+   Initialise an HPGL plot. The parameters specify the unprintable margins
+   on the output device.
+
+   #ROUTINE blHPGLPen()
+   Select a Pen
+
+   #ROUTINE blHPGLMove()
+   Move on HPGL plot
+
+   #ROUTINE blHPGLDraw()
+   Draw on HPGL plot
+
+   #ROUTINE blHPGLSetDash()
+   Set the line style (may be printer dependent):
+
+   #ROUTINE blHPGLFont()
+   Set font for HPGL plot
+
+   #ROUTINE blHPGLLText()
+   Write left justified text on HPGL plot
+
+   #ROUTINE blHPGLCBText()
+   Write centre-bottom justified text in HPGL
+
+   #ROUTINE blHPGLROffText()
+   Print right-justified text to HPGL
+
+   #ROUTINE blHPGLLCText()
+   Print left-centre justified text
+
+   #ROUTINE blHPGLCTText()
+   Center Top justify text at x,y with y-offset in pts.
+
+   #ROUTINE blHPGLVText()
+   Write vertical text centred on x,y offset back along x by the size of
+   label and by xoff in pts
+
+   #ROUTINE blHPGLEnd()
+   Close the HPGL plot file
+
+   #ROUTINE blHPGLShowText()
+   Displays the text, raising or lowering as appropriate and selecting
+   alternate font where required. Used by the various ...Text() routines.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -156,6 +206,7 @@ BOOL blHPGLInit(char *filename,
    \param[in]     num      Pen number
 
    Select a Pen
+
 -  25.06.92 Taken from MoG
 -  08.09.92 Changed to store pen first (having seen IntroCAD output)
 -  07.07.14 Use bl prefix for functions By: CTP
@@ -177,6 +228,7 @@ void blHPGLPen(int num)
    \param[in]     y     Y position (0.0--1.0)
 
    Move on HPGL plot
+
 -  25.06.92 Taken from MoG
 -  07.07.14 Use bl prefix for functions By: CTP
 */
@@ -198,6 +250,7 @@ void blHPGLMove(REAL x,
    \param[in]     y     Y position (0.0--1.0)
 
    Draw on HPGL plot
+
 -  25.06.92 Taken from MoG
 -  07.07.14 Use bl prefix for functions By: CTP
 */
@@ -218,7 +271,6 @@ void blHPGLDraw(REAL x,
    \param[in]     style    Line style
 
    Set the line style (may be printer dependent):
-
 
          0 Solid line
          1 ............
@@ -265,6 +317,7 @@ void blHPGLSetDash(int style)
    \param[in]     size       Point size of font
 
    Set font for HPGL plot
+
 -  25.06.92 Taken from MoG
 -  29.06.92 Corrected CA to CS and added SS. Changed to use global width
             and height variables. Altered width to 1/2.4 * height
@@ -589,7 +642,6 @@ void blHPGLVText(REAL x,
 /*>void blHPGLEnd(void)
    --------------------
 *//**
-
 
    Close the HPGL plot file
 

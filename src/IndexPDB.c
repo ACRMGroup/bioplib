@@ -67,6 +67,16 @@
 -  V2.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Manipulating the PDB linked list
+   #ROUTINE  blIndexPDB()
+   Creates an array of pointers to PDB from a linked list. This is used
+   to allow array style access to items in the linked list:
+   e.g. (indx[23])->x will give the x coordinate of the 23rd item
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -79,7 +89,7 @@
 
 /************************************************************************/
 /*>PDB **blIndexPDB(PDB *pdb, int *natom)
-   ------------------------------------
+   --------------------------------------
 *//**
 
    \param[in]     *pdb        Pointer to the start of a PDB linked list.

@@ -66,6 +66,14 @@
 
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Searching the PDB linked list        
+   #ROUTINE  blFindResidue()
+   Finds a pointer to the start of a residue in a PDB linked list.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <ctype.h>
@@ -93,9 +101,14 @@
 /*>PDB *blFindResidue(PDB *pdb, char *chain, int resnum, char *insert)
   --------------------------------------------------------------------
 *//**
+   \param[in]   pdb    PDB linked list
+   \param[in]   chain  Chain label
+   \param[in]   resnum Residue number
+   \param[in]   insert Insert code
+   \return             Pointer to start of specified residue
 
-  Finds a pointer to the start of a residue in a PDB linked list.
-  Uses string for chain and insert.
+   Finds a pointer to the start of a residue in a PDB linked list.
+   Uses string for chain and insert.
 
 -  24.02.14 Original   By: CTP
 -  07.07.14 Renamed to blFindResidue()

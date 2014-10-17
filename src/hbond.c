@@ -64,6 +64,25 @@
 -  V1.7  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Analyzing structures
+   #ROUTINE  blIsHBonded()
+   Determines whether 2 residues are H-bonded
+
+   #ROUTINE  blValidHBond()
+   Determines whether a set of atoms form a valid H-bond
+
+   #ROUTINE  blIsMCDonorHBonded()
+   Determines whether 2 residues are H-bonded with the first 
+   residue being a mainchain donor
+
+   #ROUTINE  blIsMCAcceptorHBonded()
+   Determines whether 2 residues are H-bonded with the first 
+   residue being a mainchain acceptor
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -674,8 +693,8 @@ int blIsMCDonorHBonded(PDB *res1, PDB *res2, int type)
    N.B. Explicit hydrogens must be added to the PDB linked list before
    calling this routine!
 
-   Searches for HBonds, in which the first residue is a mainchain donor
-   and the second residue is an acceptor. Type should be
+   Searches for HBonds, in which the first residue is a mainchain 
+   acceptor and the second residue is a donor. Type should be
    HBOND_BACK2 or HBOND_SIDE2 depending whether the second residue
    (the acceptor) is backbond or sidechain
 

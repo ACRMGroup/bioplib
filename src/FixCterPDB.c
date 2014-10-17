@@ -64,6 +64,17 @@
 -  V1.7  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Modifying the structure
+   #ROUTINE  blFixCterPDB()
+   Renames C-ter atoms in required style and calls CalcCterCoords()
+   as required to calculate coordinates ans splices them in.
+   The input PDB linked list may have standard, CHARMM or GROMOS
+   style.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>

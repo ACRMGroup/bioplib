@@ -82,6 +82,44 @@
 -  V3.5  26.08.14 Added blSetMDMScoreWeight() By: ACRM
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling Sequence Data
+   #SUBGROUP Alignment
+
+   #ROUTINE blAlign()
+   Perform simple N&W alignment of seq1 and seq2. A single gap penalty 
+   is used so there is no extension penalty
+
+   #ROUTINE blAffinealign()
+   Perform simple N&W alignment of seq1 and seq2 with separate gap
+   opening and extension penalties
+
+   #ROUTINE blAffinealignuc()
+   Perform simple N&W alignment of seq1 and seq2 with separate gap
+   opening and extension penalties. Optimized for DNA sequences
+
+   #ROUTINE blReadMDM()
+   Read mutation data matrix into static global arrays for use by 
+   alignment code
+
+   #ROUTINE blCalcMDMScore()
+   Calculates a score for comparing two amino acids using a mutation
+   data matrix
+
+   #ROUTINE blCalcMDMScoreUC()
+   As blCalcMDMScore() but upcases the amino acid labels before 
+   calculation
+
+   #ROUTINE blZeroMDM()
+   Modifies all values in the MDM such that the minimum value is 0
+
+   #ROUTINE blSetMDMScoreWeight()
+   Apply a weight to a particular amino acid substitution. Modifies
+   the scoring matrix read by blReadMDM()
+
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>

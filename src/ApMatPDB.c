@@ -48,6 +48,14 @@
    =================
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Moving the structure
+   #ROUTINE  blApplyMatrixPDB()
+   Apply a rotation matrix to a PDB linked list.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>

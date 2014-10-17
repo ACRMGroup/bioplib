@@ -57,6 +57,15 @@
 -  V1.7  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Matrices
+   #ROUTINE  blCreateRotMat()
+   Create a 3x3 rotation matrix. Takes a direction as a single character
+   ('x', 'y', or 'z'), an angle (in rads) and outputs a rotation matrix
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>

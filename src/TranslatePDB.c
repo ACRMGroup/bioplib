@@ -51,6 +51,14 @@
 -  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Moving the structure
+   #ROUTINE  blTranslatePDB()
+   Translates a PDB linked list, ignoring null (9999.0) coordinates.
+*/
+/************************************************************************/
 /* Includes
 */
 #include "MathType.h"
@@ -79,6 +87,7 @@
    \param[in]     tvect  Translation vector
 
    Translates a PDB linked list, ignoring null (9999.0) coordinates.
+
 -  01.10.92 Original
 -  11.03.94 Changed check on 9999.0 to >9998.0 and cast to REAL
 -  07.07.14 Use bl prefix for functions By: CTP

@@ -73,6 +73,15 @@
 -  V1.21 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP String handling
+   #ROUTINE  blQueryStrStr()
+   This is like strstr() but allows a ? character in the substring
+   which matches any character.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <string.h>

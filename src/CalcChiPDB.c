@@ -51,6 +51,14 @@
 -  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Calculations
+   #ROUTINE  blCalcChi()
+   Calculates a sidechain torsion angle from a pdb linked list.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -79,7 +87,7 @@
 
    \param[in]     *pdb     PDB linked list
    \param[in]     type     Torsion type (see below)
-   \return                   Torsion angle
+   \return                 Torsion angle
 
    Calculates a sidechain torsion angle from a pdb linked list. The atoms
    to be included in the calculation are specified by type.

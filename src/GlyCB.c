@@ -52,6 +52,23 @@
 -  07.07.14 V1.1   Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Modifying the structure
+   #ROUTINE  blAddCBtoGly()
+   Adds a CB atom to a glycine. This is used when one needs to orientate
+   a residue in a common frame of reference which makes use of the CB.
+
+   #ROUTINE  blAddCBtoAllGly()
+   Adds a CB atom to all glycines in a PDB linked list. This is used 
+   when one needs to orientate a residue in a common frame of reference 
+   which makes use of the CB.
+
+   #ROUTINE  blStripGlyCB()
+   Removes all Glycine CB pseudo-atoms added by AddGlyCB()
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>

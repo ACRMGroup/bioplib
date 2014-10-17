@@ -50,6 +50,15 @@
 -  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Miscellaneous
+   #ROUTINE  blFactdiv()
+   Calculates the factorial of one number divided by the factorial of
+   another (smaller) number.
+*/
+/************************************************************************/
 /* Includes
 */
 #include "SysDefs.h"

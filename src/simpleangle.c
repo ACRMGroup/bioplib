@@ -50,6 +50,14 @@
 -  V1.6  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Geometry
+   #ROUTINE  blSimpleangle()
+   Simplifies a signed angle to an unsigned angle <=2*PI
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -75,7 +83,7 @@
 *//**
 
    \param[in]     ang         An angle
-   \return                        Simplified angle
+   \return                    Simplified angle
    
    Simplifies a signed angle to an unsigned angle <=2*PI
 

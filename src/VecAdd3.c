@@ -53,6 +53,14 @@
 
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Vectors
+   #ROUTINE  blVecAdd3()
+   Add 2 vectors
+*/
+/************************************************************************/
 /* Includes
 */
 #include "MathType.h"
@@ -80,6 +88,7 @@
    \param[out]    Out       Output vector
 
    Add 2 vectors
+
 -  06.10.98 Original   By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP
 */

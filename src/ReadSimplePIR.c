@@ -69,6 +69,15 @@
 -  V2.9  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling Sequence Data
+   #SUBGROUP File IO
+   #ROUTINE  blReadSimplePIR()
+   Read a PIR file containing multiple chains of up to maxres amino acids.
+   Doesn't handle special PIR characters
+*/
+/************************************************************************/
 /* Includes
 */
 #include <ctype.h>
@@ -97,7 +106,7 @@
    \param[in]     *fp       File pointer
    \param[in]     maxres    Max number of residues in chain.
    \param[out]    **seqs    Array of pointers to sequences
-   \return                    Number of chains. 0 if error
+   \return                  Number of chains. 0 if error
 
    Read a PIR file containing multiple chains of up to maxres amino acids.
    Each chain is returned in seqs[].

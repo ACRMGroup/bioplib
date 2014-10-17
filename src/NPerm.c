@@ -50,6 +50,14 @@
 -  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Miscellaneous
+   #ROUTINE  blNPerm()
+   Calculates number of permutations of n items in r groups
+*/
+/************************************************************************/
 /* Includes
 */
 #include "SysDefs.h"

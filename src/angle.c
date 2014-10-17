@@ -96,6 +96,14 @@
 
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Geometry
+   #ROUTINE  blAngle()
+   Calculates the angle between three sets of coordinates
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -117,7 +125,7 @@
 
 /************************************************************************/
 /*>REAL blAngle(REAL xi,REAL yi,REAL zi,REAL xj,REAL yj,
-              REAL zj,REAL xk,REAL yk,REAL zk)
+                REAL zj,REAL xk,REAL yk,REAL zk)
    -----------------------------------------------------
 *//**
 

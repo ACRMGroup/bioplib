@@ -52,6 +52,14 @@
 -  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Calculations
+   #ROUTINE  blGetCofGPDB()
+   Finds the CofG of a PDB linked list, ignoring NULL coordinates.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>

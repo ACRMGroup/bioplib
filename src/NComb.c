@@ -51,6 +51,14 @@
 
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Miscellaneous
+   #ROUTINE  blNComb()
+   Calculates number of combinations of n items in r groups
+*/
+/************************************************************************/
 /* Includes
 */
 #include "SysDefs.h"

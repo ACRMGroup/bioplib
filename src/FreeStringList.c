@@ -74,6 +74,14 @@
 -  V1.21 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP Lists of strings
+   #ROUTINE  blFreeStringList()
+   Frees memory allocated for a string list.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <string.h>

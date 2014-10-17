@@ -58,6 +58,14 @@
 -  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Calculations
+   #ROUTINE  blCalcRMSPDB()
+   Calculate the RMS deviation between two pre-fitted PDB linked lists.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -89,11 +97,12 @@
 
    \param[in]     *pdb1   First PDB linked list
    \param[in]     *pdb2   Second PDB linked list
-   \return                 RMS deviation
+   \return                RMS deviation
 
-   Calculate the RMS deviation between two fitted PDB linked lists. The
-   two lists must contain equivalent structures (same atom types in same
-   order). No checks are made on this.
+   Calculate the RMS deviation between two fitted PDB linked lists. 
+   No fitting is done. The two lists must contain equivalent 
+   structures (same atom types in same order). No checks are made 
+   on this.
 
 -  11.03.94 Original    By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP

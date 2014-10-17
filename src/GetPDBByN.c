@@ -60,6 +60,14 @@
 -  V1.11 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Manipulating the PDB linked list
+   #ROUTINE  blGetPDBByN()
+   Gets a pointer to Nth item in a PDB linked list
+*/
+/************************************************************************/
 /* Includes
 */
 #include "pdb.h"
@@ -85,7 +93,7 @@
 
    \param[in]     *pdb    PDB linked list
    \param[in]     n       Offset into linked list
-   \return                   Pointer to n'th item in linked list
+   \return                Pointer to n'th item in linked list
 
    Gets a pointer to a pdb item by taking a PDB linked list and an 
    integer.

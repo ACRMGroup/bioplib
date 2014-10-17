@@ -52,6 +52,16 @@
 -  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Modifying the structure
+   #ROUTINE  blSetChi()
+   Sets a sidechain torsion angle in a pdb linked list. The routine 
+   assumes standard atom ordering: N,CA,C,O,s/c with standard order in
+   the s/c.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdlib.h>

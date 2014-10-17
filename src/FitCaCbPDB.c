@@ -58,6 +58,18 @@
 -  V1.4  07.07.14 Use bl prefix for functions. By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Fitting
+   #ROUTINE  blFitCaCbPDB()
+   Does a weighted fitting of 2 PDB linked lists. The CA and CB are given
+   a weight of 1.0 while the other atoms are given a weight of 1.0/natom
+   in the residue.
+   Thus for N,CA,C,CB backbone only, this will be N and C with weights 
+   of 0.25
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>

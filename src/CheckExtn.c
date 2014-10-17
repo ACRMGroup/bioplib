@@ -74,6 +74,14 @@
 -  V1.21 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP File IO
+   #ROUTINE  blCheckExtn()
+   Check the extension of a filename. Case insensitive!
+*/
+/************************************************************************/
 /* Includes
 */
 
@@ -105,6 +113,7 @@
 
    Check the extension of a filename. For use on machines like VAXes,
    MS-DOS and Amigas, everything is converted to upper case first.
+
 -  18.06.93 Original    By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP
 */

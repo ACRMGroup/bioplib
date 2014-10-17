@@ -52,6 +52,14 @@
 -  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Vectors
+   #ROUTINE  blCrossProd3()
+   Calculate the cross product of 2 3-vectors
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -78,7 +86,8 @@
    \param[in]     In2       Second vector
    \param[out]    Out       Output vector
 
-   Calculate the cross product of 2 vectors
+   Calculate the cross product of 2 3-vectors
+
 -  18.06.96 Original   By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP
 */

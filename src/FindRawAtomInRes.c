@@ -62,6 +62,15 @@
 -  V1.13 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Searching the PDB linked list        
+   #ROUTINE  blFindRawAtomInRes()
+   Searches the raw atom name (atnam_raw) field of the current residue
+   for the specified atom name
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -91,11 +100,14 @@
 *//**
 
    \param[in]     *pdb         The beginning of a residue in a PDB 
-                                linked list
+                               linked list
    \param[in]     *atnam_in    An atom name to search for (doesn't need
-                                to be space-padded)
-   \return                         Pointer to required atom, NULL if not
-                                found
+                               to be space-padded)
+   \return                     Pointer to required atom, NULL if not
+                               found
+
+   Searches the raw atom name (atnam_raw) field for the specified atom
+   name
 
 -  28.02.01 Original based on FindAtomInRes()  By: ACRM
 -  03.06.05 Now compares 4 characters rather than 5

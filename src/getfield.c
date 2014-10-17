@@ -51,6 +51,15 @@
 -  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP String handling
+   #ROUTINE  blGetfield()
+   Reads a column out of a buffer. If the specfied column extends beyond
+   the size of the buffer, then it will be padded with spaces.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <string.h>

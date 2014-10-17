@@ -45,23 +45,31 @@
 
 **************************************************************************
 
-   Revision History:
-   =================
--  V1.0  01.03.94 Original release
--  V1.1  11.03.94 Fixed bug in calls to matfit(). Had not been changed 
-                  to reflect modification in MatMult3_33().
--  V1.2  14.03.94 Fixed FitPDB(); wasn't filling in the output matrix
--  V1.3  14.03.96 Added FitCaPDB()
-                  Changed FitPDB() and FitCaCbPDB() to use 
-                  ApplyMatrixPDB() rather than RotatePDB() since the PDB
-                  linked lists are already at the origin
--  V1.4  28.01.09 Initialize RetVal - this randomly worked in 32bit but
-                  broke in 64bit
--  V1.5  07.07.14 Use bl prefix for functions By: CTP
--  V1.6  19.08.14 Fixed calls to renamed function: 
-                  blSelectAtomsPDBAsCopy() By: CTP
+   Revision History: 
+   ================= 
+   - V1.0 01.03.94 Original release
+   - V1.1 11.03.94 Fixed bug in calls to matfit(). Had not been
+                   changed to reflect modification in MatMult3_33().
+   - V1.2 14.03.94 Fixed FitPDB(); wasn't filling in the output matrix
+   - V1.3 14.03.96 Added FitCaPDB() Changed FitPDB() and FitCaCbPDB()
+                   to use ApplyMatrixPDB() rather than RotatePDB()
+                   since the PDB linked lists are already at the
+                   origin
+   - V1.4 28.01.09 Initialize RetVal - this randomly worked in 32bit
+                   but broke in 64bit
+   - V1.5 07.07.14 Use bl prefix for functions By: CTP
+   - V1.6 19.08.14 Fixed calls to renamed function:
+                   blSelectAtomsPDBAsCopy() By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Fitting
+   #ROUTINE  blFitCaPDB()
+   Fits two PDB linked lists using only the CA atoms. 
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>

@@ -74,6 +74,15 @@
 -  V1.22 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP String handling
+   #ROUTINE  blWord()
+   Removes leading spaces and extracts a space/tab delimited word. string2
+   must have the same amount of space as string1.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <string.h>

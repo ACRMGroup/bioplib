@@ -69,6 +69,17 @@
 -  V2.8  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling Sequence Data
+   #SUBGROUP File IO
+   #ROUTINE  blReadRawPIR()
+   This is based on ReadPIR(), but reads all characters into the
+   sequence arrays (i.e. all punctuation characters are read as is).
+   This is useful when punctuation has been used to indicate
+   consensus sequence features.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>

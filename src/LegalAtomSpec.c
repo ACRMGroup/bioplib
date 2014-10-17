@@ -62,6 +62,16 @@
 -  V1.8  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Atom names and elements
+   #ROUTINE  blLegalAtomSpec()
+   Partner routine for AtomNameMatch(). Checks whether a wildcard
+   specfication is legal (i.e. will not return an error when used
+   with AtomNameMatch()).
+*/
+/************************************************************************/
 /* Includes
 */
 #include "SysDefs.h"
@@ -81,7 +91,7 @@
 
 /************************************************************************/
 /*>BOOL blLegalAtomSpec(char *spec)
-   ------------------------------
+   --------------------------------
 *//**
 
    Partner routine for AtomNameMatch(). Checks whether a wildcard

@@ -51,6 +51,14 @@
 -  V1.8  17.07.14 Removed unused varables  By: ACRM
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Geometry
+   #ROUTINE  blPhi()
+   Calculates the torsion angle described by 4 sets of coordinates.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>

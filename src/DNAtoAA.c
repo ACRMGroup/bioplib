@@ -53,6 +53,16 @@
 -  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling Sequence Data
+   #SUBGROUP Conversions
+   #ROUTINE  blDNAtoAA()
+   Converts a nucleic acid codon to the 1-letter amino acid equivalent.
+   Termination codons are returned as X. No special action is taken
+   for initiation codons.
+*/
+/************************************************************************/
 /* Includes
 */
 #include "macros.h"

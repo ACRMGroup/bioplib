@@ -54,6 +54,15 @@
 */
 
 /************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Calculations
+   #ROUTINE  blCalcCellTrans()
+   Calculates the offsets to apply in X, Y and Z directions for creating
+   a crystal lattice from the unit cell parameters.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>
@@ -74,7 +83,7 @@
 
 /************************************************************************/
 /*>void blCalcCellTrans(VEC3F UnitCell, VEC3F CellAngles, 
-                      VEC3F *xtrans, VEC3F *ytrans, VEC3F *ztrans)
+                        VEC3F *xtrans, VEC3F *ytrans, VEC3F *ztrans)
    -----------------------------------------------------------------
 *//**
 
@@ -87,8 +96,7 @@
    Calculates the offsets to apply in X, Y and Z directions for creating
    a crystal lattice from the unit cell parameters.
 
--  11.10.95 Original    By: ACRM, Based on code from Rasmol by Roger
-                        Sayle (ros@dcs.ed.ac.uk, ras32425@ggr.co.uk)
+-  11.10.95 Original    By: ACRM, Based losely on code from Rasmol
 -  07.07.14 Use bl prefix for functions By: CTP
 */
 void blCalcCellTrans(VEC3F UnitCell, VEC3F CellAngles, 

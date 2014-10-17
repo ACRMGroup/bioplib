@@ -50,6 +50,14 @@
 -  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Miscellaneous
+   #ROUTINE  blFactorial()
+   Calculates the factorial of an integer.
+*/
+/************************************************************************/
 /* Includes
 */
 #include "SysDefs.h"

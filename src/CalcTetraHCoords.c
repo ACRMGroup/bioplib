@@ -62,6 +62,14 @@
 -  V1.5  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Calculations
+   #ROUTINE  blCalcTetraHCoords()
+   Calculates coordinates for extra hydrogens.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>

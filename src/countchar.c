@@ -73,6 +73,14 @@
 -  V1.21 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP String handling
+   #ROUTINE  blCountchar()
+   Counts occurrences of a charcater in a string
+*/
+/************************************************************************/
 /* Includes
 */
 #include <string.h>

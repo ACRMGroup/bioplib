@@ -59,6 +59,14 @@
 -  V1.10 08.10.99 Initialised some variables
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Manipulating the PDB linked list
+   #ROUTINE  blAppendPDB()
+   Appends one PDB linked list onto another.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -93,6 +101,7 @@
    
    Appends list second onto first. Returns start of new list (useful if 
    first was NULL).
+
 -  13.05.92 Original
 -  09.07.93 Changed to use LAST()
 -  07.07.14 Use bl prefix for functions By: CTP

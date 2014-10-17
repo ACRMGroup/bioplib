@@ -55,6 +55,15 @@
 
 *************************************************************************/
 
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Searching the PDB linked list        
+
+   Finds pointers to the start and end of a zone in a PDB linked list. The
+   end is the atom *after* the specified zone
+*/
+/************************************************************************/
 /* Includes
 */
 #include "SysDefs.h"

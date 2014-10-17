@@ -51,6 +51,14 @@
 -  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP String handling
+   #ROUTINE  blRightJustify()
+   Right justifies a string in place
+*/
+/************************************************************************/
 /* Includes
 */
 #include <string.h>

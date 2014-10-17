@@ -73,6 +73,15 @@
 -  V2.21 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP File IO
+   #ROUTINE  blKillLine()
+   This routine reads characters from a file till it reaches a '\n' or 
+   the end of file.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>

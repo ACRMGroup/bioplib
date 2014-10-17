@@ -70,6 +70,15 @@
 
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Conversions
+   #ROUTINE  blDoPDB2Seq()
+   malloc()'s an array containing the 1-letter sequence corresponding to
+   an input PDB linked list.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdlib.h>

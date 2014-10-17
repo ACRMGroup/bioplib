@@ -54,6 +54,15 @@
 
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Searching the PDB linked list        
+   #ROUTINE  blFindHetatmResidue()
+   Finds a pointer to the start of a residue in a PDB linked list, but
+   requires the residue is a HETATM record
+*/
+/************************************************************************/
 /* Includes
 */
 #include <ctype.h>
@@ -80,11 +89,19 @@
 
 
 /************************************************************************/
-/*>PDB *blFindHetatmResidue(PDB *pdb, char chain, int resnum, char insert)
-  ------------------------------------------------------------------------
-  Finds a pointer to the start of a residue in a PDB linked list, but
-  requires the residue is a HETATM record
-  Uses string for chain and insert.
+/*>PDB *blFindHetatmResidue(PDB *pdb, char *chain, int resnum, 
+                            char *insert)
+   -----------------------------------------------------------
+*//**
+   \param[in]  pdb    PDB linked list
+   \param[in]  chain  Chain label
+   \param[in]  resnum Residue number
+   \param[in]  insert Insert code
+   \return            Pointer to start of HET residue
+
+   Finds a pointer to the start of a residue in a PDB linked list, but
+   requires the residue is a HETATM record
+   Uses string for chain and insert.
 
 -  24.02.14 Original. By: CTP
 -  07.07.14 Renamed to FindHetatmResidue().

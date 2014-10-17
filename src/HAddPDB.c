@@ -131,6 +131,21 @@
                   strings
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Modifying the structure
+   #ROUTINE  blHAddPDB()
+   This routine adds hydrogens to a PDB linked list. Performs all
+   necessary functions.
+
+   #ROUTINE  blReadPGP()
+   Read a proton generation parameter file
+
+   #ROUTINE  blOpenPGPFile()
+   Open the PGP file
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>
@@ -1274,9 +1289,11 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
 
    \param[in]     *pgpfile       Name of a PGP file or NULL
    \param[in]     AllHyd         If name of PGP not specified, this
-                                  flag specified whether all or explicit
-                                  hydrogen file required
-   \return                          File pointer
+                                 flag specified whether all or explicit
+                                 hydrogen file required
+   \return                       File pointer
+
+   Open the PGP file
 
 -  23.08.94 Original    By: ACRM
 -  28.07.05 Added conditionals for msdos and Mac OS/X

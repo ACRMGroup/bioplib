@@ -75,6 +75,16 @@
 -  V1.23 07.07.14 Include general.h Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP File IO
+   #ROUTINE  blOpenFile()
+   Attempts to open a filename as specified. Returns a file
+   pointer. If this fails looks in a directory specified using an
+   environment variable or assign.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>

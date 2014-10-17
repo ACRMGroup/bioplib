@@ -64,6 +64,34 @@
                   By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP File IO
+   #ROUTINE  blFreeWholePDB()
+   Frees the header, trailer and atom content from a WHOLEPDB structure
+
+   #ROUTINE  blWriteWholePDB()
+   Writes a PDB file including header and trailer information.
+   Output in PDBML-format if flags set.
+
+   #ROUTINE  blWriteWholePDBHeader()
+   Writes the header of a PDB file 
+
+   #ROUTINE  blWriteWholePDBTrailer()
+   Writes the trailer of a PDB file 
+
+   #ROUTINE  blReadWholePDB()
+   Reads a PDB file, storing the header and trailer information as
+   well as the coordinate data. Can read gzipped files as well as
+   uncompressed files.
+
+   #ROUTINE  blReadWholePDBAtoms()
+   Reads a PDB file, storing the header and trailer information as
+   well as the coordinate data. Only reads the ATOM record for 
+   coordinates
+*/
+/************************************************************************/
 /* Includes
 */
 #include "port.h"    /* Required before stdio.h                         */

@@ -87,6 +87,16 @@
 -  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP File IO
+   #ROUTINE  blFgetsany(FILE *fp)
+   blFgetsany() provides a routine like fgets() for reading strings from
+   a file, but does not require you to impose a limit on the length of
+   string which may be read. 
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>
@@ -117,13 +127,13 @@ extern int errno;
    \return                      Allocated string or NULL on EOF and
                                 no memory (errno==ENOMEM)
 
-   fgetsany() provides a routine like fgets() for reading strings from
+   blFgetsany() provides a routine like fgets() for reading strings from
    a file, but does not require you to impose a limit on the length of
-   string which may be read. fgetsany() allocates memory to store a
+   string which may be read. blFgetsany() allocates memory to store a
    string of any length and returns a pointer to that allocated memory.
    After use, this memory must be freed by the calling routine.
 
-   fgetsany() returns NULL on end-of-file and if memory allocation
+   blFgetsany() returns NULL on end-of-file and if memory allocation
    failed. It uses the global `errno' variable to indicate a memory
    allocation failure (errno==ENOMEM). 
 

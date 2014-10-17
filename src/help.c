@@ -93,6 +93,18 @@
 -  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP User interaction
+   #ROUTINE  blHelp()
+   Generates help from a help file on the topic named by string. If 
+   this is `help' or `?', available topics will be listed.
+
+   #ROUTINE  blDoHelp()
+   Handles help facility. This is the normal entry point.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>

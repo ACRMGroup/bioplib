@@ -74,6 +74,15 @@
 -  V1.22 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP String handling
+   #ROUTINE  blStringToLower()
+   Converts a lower or mixed case string to lower case. The LOWER() macro
+   from macros.h is now preferred
+*/
+/************************************************************************/
 /* Includes
 */
 #include <ctype.h>
@@ -94,7 +103,7 @@
 
 /************************************************************************/
 /*>void blStringToLower(char *string1, char *string2)
-   ------------------------------------------------
+   --------------------------------------------------
 *//**
 
    \param[in]     *string1       A character string

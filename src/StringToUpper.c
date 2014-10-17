@@ -74,6 +74,15 @@
 -  V1.22 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP String handling
+   #ROUTINE  blStringToUpper()
+   Converts a lower or mixed case string to upper case. The UPPER() macro
+   from macros.h is now preferred
+*/
+/************************************************************************/
 /* Includes
 */
 #include <ctype.h>

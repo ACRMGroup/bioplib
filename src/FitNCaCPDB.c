@@ -60,6 +60,14 @@
                   By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Fitting
+   #ROUTINE  blFitNCaCPDB()
+   Fits two PDB linked lists using only the N, CA, CB atoms. 
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -94,7 +102,7 @@
    \param[out]    rm           Rotation matrix (May be input as NULL).
    \return                     Success
 
-   Fits two PDB linked lists using only the CA atoms. 
+   Fits two PDB linked lists using only the N, CA, CB atoms. 
 
    Actually fits fit_pdb onto ref_pdb and also returns the rotation 
    matrix. This may be NULL if these data are not required.

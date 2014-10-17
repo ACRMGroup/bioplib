@@ -57,6 +57,14 @@
 -  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Matrices
+   #ROUTINE  blInvert33()
+   Invert a 3x3 matrix
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>

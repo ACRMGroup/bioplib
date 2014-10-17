@@ -52,6 +52,14 @@
 -  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Vectors
+   #ROUTINE  blVecSub3()
+   Subtract 2 vectors
+*/
+/************************************************************************/
 /* Includes
 */
 #include "MathType.h"

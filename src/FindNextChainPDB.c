@@ -60,6 +60,15 @@
 -  V1.11 04.02.14 Use CHAINMATCH By: CTP
 -  V1.12 07.07.14 Use bl prefix for functions By: CTP
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Searching the PDB linked list        
+   #ROUTINE  blFindNextChainPDB()
+   Terminates the linked list at the end of the current chain and 
+   returns a pointer to the start of the next chain.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>

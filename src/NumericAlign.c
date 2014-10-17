@@ -70,6 +70,23 @@
 
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling Sequence Data
+   #SUBGROUP Alignment
+   #ROUTINE  blNumericReadMDM()
+   Read mutation data matrix into static global arrays for number-encoded
+   sequences
+
+   #ROUTINE  blNumericCalcMDMScore()
+   Calculate score from static globally stored mutation data matrix for
+   number-encoded sequences
+
+   #ROUTINE  blNumericAffineAlign()
+   Perform simple N&W alignment using sequences encodede as arrays of
+   numeric tokens
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>
@@ -311,7 +328,7 @@ BOOL blNumericReadMDM(char *mdmfile)
 
    \param[in]     resa      First token  
    \param[in]     resb      Second token  
-   \return                      score
+   \return                  score
 
    Calculate score from static globally stored mutation data matrix
 

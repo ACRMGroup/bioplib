@@ -65,6 +65,15 @@
 -  V1.11 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling Sequence Data
+   #SUBGROUP Obtaining information
+   #ROUTINE  blKnownSeqLen()
+   Scans a 1-letter code sequence and calculate the length without
+   `-', ` ' or '?' residues
+*/
+/************************************************************************/
 /* Includes
 */
 

@@ -54,6 +54,24 @@
 
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Manipulating the PDB linked list
+   #ROUTINE  blFixOrderPDB()
+   Runs through a PDB linked list and corrects the atom order to match
+   the N,CA,C,O,s/c standard.
+
+   #ROUTINE  blShuffleResPDB()
+   Shuffle atoms within a residue into the standard order
+
+   #ROUTINE  blGetAtomTypes()
+   Obtain a list of the atom types for a given residue.
+
+   #ROUTINE  blShuffleBB()
+   Shuffles the PDB list to match the standard of N,CA,C,O,CB,other.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -130,7 +148,7 @@ static char sAtoms[MAXSTDAA][MAXATINRES+1][8] =
    \param[in]     Pad     TRUE: Create dummy coordinate atoms for any
                           missing atoms in standard residues
    \param[in]     Renum   TRUE: Renumber the atoms
-   \return                   Corrected PDB linked list
+   \return                 Corrected PDB linked list
 
    Runs through a PDB linked list and corrects the atom order to match
    the N,CA,C,O,s/c standard. Only standard amino acids are processed.

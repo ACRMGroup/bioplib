@@ -55,6 +55,26 @@
 -  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP File IO
+   #ROUTINE  blOpenBufferedFile()
+   Open a file for buffered input. This allows probe-ahead to look at the
+   contents of the next line without removing it from the input stream.
+
+   #ROUTINE  blReadBufferedFile()
+   Reads a line from a buffered file (like fgets()).
+   Blank lines in the file will be skipped.
+
+   #ROUTINE  blProbeBufferedFile()
+   Read the next line from a buffered file without removing it from
+   the input stream. Repeated calls will thus return the same string.
+   The next call to ReadBufferedFile will also output the same string,
+   but will remove the line from the input stream.
+   Blank lines in the file will be skipped.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdlib.h>

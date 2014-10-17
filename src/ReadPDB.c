@@ -204,6 +204,62 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                   blCheckFileFormatPDBML() and blDoReadPDB(). By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP File IO
+
+   #ROUTINE blReadPDB() 
+   Main way of reading a PDB file into a linked list, reading just the
+   highest occupancy atoms
+
+   #ROUTINE blReadPDBAll() 
+   Reads a PDB file into a linked list, reading all multiple
+   occupancy atoms
+
+   #ROUTINE blReadPDBAtoms() 
+   Reads only ATOM records from a PDB file into a linked list, reading 
+   just the highest occupancy atoms
+
+   #ROUTINE blReadPDBOccRaank() 
+   Reads the specified ranking of occupancy (e.g. the second most 
+   populated coordinates) from a PDB file into a linked list
+
+   #ROUTINE blReadPDBAtomsOccRaank() 
+   Reads only the ATOM records for the specified ranking of occupancy 
+   (e.g. the second most populated coordinates) from a PDB file into a 
+   linked list
+
+   #ROUTINE blDoReadPDB() 
+   A lower level routine giving full control over reading all or only
+   ATOM records, occupancy rankings and model numbers.
+
+   #ROUTINE blDoReadPDBML() 
+   A lower level routine giving full control over reading all or only
+   ATOM records, occupancy rankings and model numbers from a PDBML XML
+   file.
+
+   #ROUTINE blCheckFileFormatPDBML() 
+   A simple test to detect whether a file is a PDBML-formatted PDB file.
+
+
+   #SUBGROUP Atom names and elements
+   #ROUTINE blProcessElementFields() 
+   Works out the element type from the element field if present, otherwise
+   from the atom name
+
+   #ROUTINE blFixAtomName()
+   Fixes an atom name by removing leading spaces, or moving a leading
+   digit to the end of the string.
+
+
+   #SUBGROUP Manipulating the PDB linked list
+   #ROUTINE blRemoveAlternates()
+   Removes alternate occupancy atoms. This may be useful after
+   blReadPDBAll()
+*/
+
+/************************************************************************/
 /* Defines required for includes
 */
 #define READPDB_MAIN

@@ -64,6 +64,14 @@
 -  V1.6  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Geometry
+   #ROUTINE  blTrueAngle()
+   Return the +ve angle between 0 and 2PI given the opp and adj values.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>

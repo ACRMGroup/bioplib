@@ -61,6 +61,15 @@
 -  V1.12 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Manipulating the PDB linked list
+   #ROUTINE  blTermPDB()
+   Terminate a PDB linked list after length residues, returning a pointer
+   to the next residue. 
+*/
+/************************************************************************/
 /* Includes
 */
 #include "pdb.h"

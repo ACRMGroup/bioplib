@@ -73,6 +73,15 @@
 -  V1.22 07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP String handling
+   #ROUTINE  blWordN()
+   Removes leading spaces and extracts a space/tab delimited word. A 
+   maximum of MaxChar characters will be copied into the word.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <string.h>

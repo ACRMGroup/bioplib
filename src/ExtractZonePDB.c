@@ -65,6 +65,15 @@
 -  V1.16 19.08.14 Renamed function to blExtractZonePDBAsCopy() By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Searching the PDB linked list
+   #ROUTINE  blExtractZonePDBAsCopy()
+   Reduces a PDB linked list to those residues within a specified zone
+   forming a new linked list.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>

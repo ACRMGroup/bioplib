@@ -50,6 +50,15 @@
 -  V1.1  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP File IO
+   #ROUTINE  blGetCrystPDB()
+   Read the crystal parameters (unit cell, spacegroup, origin and scale 
+   matrices) out of a PDB file.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>

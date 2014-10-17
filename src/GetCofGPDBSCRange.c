@@ -52,6 +52,15 @@
 -  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Calculations
+   #ROUTINE  blGetCofGPDBSCRange()
+   Find CofG of a range in a PDB linked list, ignoring NULL coordinates
+   Looks only at the sidechain atoms
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -83,6 +92,7 @@
    \param[out]    *cg        Centre of geometry of specified region
 
    Find CofG of a range in a PDB linked list, ignoring NULL coordinates
+   Looks only at the sidechain atoms
    (specified as all coords==9999.000) and backbone (N,CA,C,O).
    For Glycine, returns the CA coordinates.
 

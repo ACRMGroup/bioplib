@@ -52,6 +52,19 @@
 -  V2.2  08.03.14 Made doGetWord() a static function. By CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP String handling
+
+   #ROUTINE  blGetWord()
+   Reads a whitespace/comma delimted word out of buffer into word.
+
+   #ROUTINE  blGetWordNC()
+   Reads a whitespace delimted word out of buffer into word. Commas
+   are treated just like normal characters.
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>
@@ -253,8 +266,8 @@ char *blGetWord(char *buffer, char *word, int maxlen)
    \param[in]     *buffer     Input buffer to read words from
    \param[in]     maxlen      Max length of output word
    \param[out]    *word       Word read from buffer
-   \return                        Pointer to start of next word in buffer
-                                or NULL
+   \return                    Pointer to start of next word in buffer
+                              or NULL
 
    This code is a wrapper to doGetWord()
 

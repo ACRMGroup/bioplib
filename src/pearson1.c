@@ -50,6 +50,15 @@
 -  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Statistics
+   #ROUTINE blPearson1()
+   Calculates the Pearson correlation coefficient making a single pass 
+   through the data
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>

@@ -74,6 +74,19 @@
 -  V1.4  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Statistics
+   #ROUTINE  blCalcExtSD()
+   Calculate the mean and standard deviation from a set of numbers. 
+   The routine is called with each value to be sampled and then again
+   to obtain the results.
+   This is the same as blCalcSD() except that the variables used to
+   accumulate totals are kept outside the function instead of being 
+   static within the function
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -97,10 +110,6 @@
    ------------------------------------------------------------
 *//**
 
-   Calculate the mean and standard deviation from a set of numbers. 
-   The routine is called with each value to be sampled and the action 
-   required is specified:
-
    \param[in]     val          The value to be sampled
    \param[in]     action       0: Sample the value
                                1: Calculate & return mean and SD
@@ -111,9 +120,13 @@
    \param[in,out] SxSq         Sum of values squared
    \param[in,out] NValues      Number of values
 
+   Calculate the mean and standard deviation from a set of numbers. 
+   The routine is called with each value to be sampled and the action 
+   required is specified:
+
    The output values are only set when action==1
 
-   This is the same as CalcSD except that the Sx, SxSq and NValues
+   This is the same as blCalcSD() except that the Sx, SxSq and NValues
    variables are kept outside the function instead of being static
    within the function
 

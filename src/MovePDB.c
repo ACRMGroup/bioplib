@@ -52,6 +52,14 @@
 -  V1.3  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Manipulating the PDB linked list
+   #ROUTINE  blMovePDB()
+   Moves a PDB record from one linked list to another. from and to should
+*/
+/************************************************************************/
 /* Includes
 */
 #include "SysDefs.h"

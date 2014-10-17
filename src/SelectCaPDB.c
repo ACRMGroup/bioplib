@@ -60,6 +60,14 @@
 -  V1.8  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP Manipulating the PDB linked list
+   #ROUTINE  blSelectCaPDB()
+   Reduce a PDB linked list to CA atoms only discarding other atoms
+*/
+/************************************************************************/
 /* Includes
 */
 #include <string.h>

@@ -51,6 +51,14 @@
 -  V1.2  07.07.14 Use bl prefix for functions By: CTP
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling PDB Data
+   #SUBGROUP File IO
+   #ROUTINE  blReadSeqresPDB()
+   Reads the sequence from the SEQRES records of a PDB file
+*/
+/************************************************************************/
 /* Includes
 */
 #include <stdlib.h>

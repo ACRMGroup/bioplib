@@ -48,6 +48,15 @@
    =================
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Maths
+   #SUBGROUP Geometry
+   #ROUTINE  blTorToCoor()
+   Calculates cartesian coordinates for an atom given the coordinates of
+   three antecedant atoms and the bond length, angle and torsion angle
+*/
+/************************************************************************/
 /* Includes
 */
 #include <math.h>
@@ -89,8 +98,7 @@
    Calculates cartesian coordinates for an atom given the coordinates of
    three antecedant atoms and the bond length, angle and torsion angle
 
--  08.07.96 Original By: ACRM based on FORTRAN code adapted from Bob
-            Bruccoleri's code from CONGEN.
+-  08.07.96 Original By: ACRM based on earlier FORTRAN code
 -  07.07.14 Use bl prefix for functions By: CTP
 */
 BOOL blTorToCoor(VEC3F ant1, VEC3F ant2, VEC3F ant3, 
