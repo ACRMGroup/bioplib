@@ -62,7 +62,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Calculations
-   #ROUTINE  blCalcRMSPDB()
+   #FUNCTION  blCalcRMSPDB()
    Calculate the RMS deviation between two pre-fitted PDB linked lists.
 */
 /************************************************************************/

@@ -77,9 +77,9 @@
    -------
    #GROUP    General Programming
    #SUBGROUP File IO
-   #ROUTINE  blKillLine()
-   This routine reads characters from a file till it reaches a '\n' or 
-   the end of file.
+   #FUNCTION  blKillLine()
+   This routine reads characters from a file till it reaches a return
+   character or the end of file.
 */
 /************************************************************************/
 /* Includes

@@ -77,7 +77,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP String handling
-   #ROUTINE  blKillLeadSpaces()
+   #FUNCTION  blKillLeadSpaces()
    This routine strips leading spaces and tabs from a string returning
    a pointer to the first non-whitespace character. The macro
    KILLLEADSPACES() in macros.h is now a recommended replacement

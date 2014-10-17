@@ -67,7 +67,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Modifying the structure
-   #ROUTINE  blStripHPDBAsCopy()
+   #FUNCTION  blStripHPDBAsCopy()
    Take a PDB linked list and returns the PDB list minus hydrogens
 */
 /************************************************************************/

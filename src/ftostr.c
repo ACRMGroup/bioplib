@@ -70,7 +70,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP String handling
-   #ROUTINE  blFtostr()
+   #FUNCTION  blFtostr()
    Convert a REAL to a string using precision decimal places. If 
    precision is negative, use e-form, otherwise use f-form. This is used
    to generate precisely formatted string versions of numbers for

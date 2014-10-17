@@ -68,7 +68,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Geometry
-   #ROUTINE  blTrueAngle()
+   #FUNCTION  blTrueAngle()
    Return the +ve angle between 0 and 2PI given the opp and adj values.
 */
 /************************************************************************/

@@ -62,7 +62,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Fitting
-   #ROUTINE  blFitCaCbPDB()
+   #FUNCTION  blFitCaCbPDB()
    Does a weighted fitting of 2 PDB linked lists. The CA and CB are given
    a weight of 1.0 while the other atoms are given a weight of 1.0/natom
    in the residue.

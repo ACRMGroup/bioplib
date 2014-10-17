@@ -70,7 +70,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Searching the PDB linked list        
-   #ROUTINE  blFindResidue()
+   #FUNCTION  blFindResidue()
    Finds a pointer to the start of a residue in a PDB linked list.
 */
 /************************************************************************/

@@ -1,0 +1,20 @@
+/**
+
+\page page_04 Manipulating the PDB linked list.
+\brief
+   Bioplib - Functions manipulating the contents of the PDB linked list.
+
+Manipulation of PDB Linked List
+-------------------------------
+
+- blCopyPDB() Copies PDB record (a single atom).
+- blDupePDB() Duplicates a PDB linked list.
+- blDupeResiduePDB() Duplicates a single residue.
+- blKillPDB() Deletes an atom from the linked list and relinks the list.
+ 
+- blMovePDB() Moves atom record from one linked list to another
+- blAppendPDB() appends a linked list to another linked list.
+ 
+
+
+*/

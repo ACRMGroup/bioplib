@@ -82,10 +82,10 @@
    -------
    #GROUP    General Programming
    #SUBGROUP Handling errors
-   #ROUTINE  blStoreError()
+   #FUNCTION  blStoreError()
    Stores an error on the error stack.
 
-   #ROUTINE  blShowErrors()
+   #FUNCTION  blShowErrors()
    Display the error stack using the supplied print routine or the
    simple default one if NULL is given.
 */

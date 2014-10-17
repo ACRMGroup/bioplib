@@ -68,17 +68,17 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Analyzing structures
-   #ROUTINE  blIsHBonded()
+   #FUNCTION  blIsHBonded()
    Determines whether 2 residues are H-bonded
 
-   #ROUTINE  blValidHBond()
+   #FUNCTION  blValidHBond()
    Determines whether a set of atoms form a valid H-bond
 
-   #ROUTINE  blIsMCDonorHBonded()
+   #FUNCTION  blIsMCDonorHBonded()
    Determines whether 2 residues are H-bonded with the first 
    residue being a mainchain donor
 
-   #ROUTINE  blIsMCAcceptorHBonded()
+   #FUNCTION  blIsMCAcceptorHBonded()
    Determines whether 2 residues are H-bonded with the first 
    residue being a mainchain acceptor
 */

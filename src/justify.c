@@ -55,7 +55,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP String handling
-   #ROUTINE  blRightJustify()
+   #FUNCTION  blRightJustify()
    Right justifies a string in place
 */
 /************************************************************************/

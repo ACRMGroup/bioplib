@@ -5,13 +5,6 @@
    Bioplib - Functions dealing with Sequence Data 
 
 Functions dealing with Sequence Data 
-
-Include the seq.h header file for sequence functions.
-
-\code
-   #include seq.h
-\endcode
-
 PDB linked lists can be converted to sequences using the blPDB2Seq() and related macros:
 
 - blPDB2Seq()  - converts PDB sequence to sequence string

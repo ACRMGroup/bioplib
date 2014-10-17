@@ -54,7 +54,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Miscellaneous
-   #ROUTINE  blFactdiv()
+   #FUNCTION  blFactdiv()
    Calculates the factorial of one number divided by the factorial of
    another (smaller) number.
 */

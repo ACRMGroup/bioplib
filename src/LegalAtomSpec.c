@@ -66,7 +66,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Atom names and elements
-   #ROUTINE  blLegalAtomSpec()
+   #FUNCTION  blLegalAtomSpec()
    Partner routine for AtomNameMatch(). Checks whether a wildcard
    specfication is legal (i.e. will not return an error when used
    with AtomNameMatch()).

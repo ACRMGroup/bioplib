@@ -59,15 +59,15 @@
    -------
    #GROUP    General Programming
    #SUBGROUP File IO
-   #ROUTINE  blOpenBufferedFile()
+   #FUNCTION  blOpenBufferedFile()
    Open a file for buffered input. This allows probe-ahead to look at the
    contents of the next line without removing it from the input stream.
 
-   #ROUTINE  blReadBufferedFile()
+   #FUNCTION  blReadBufferedFile()
    Reads a line from a buffered file (like fgets()).
    Blank lines in the file will be skipped.
 
-   #ROUTINE  blProbeBufferedFile()
+   #FUNCTION  blProbeBufferedFile()
    Read the next line from a buffered file without removing it from
    the input stream. Repeated calls will thus return the same string.
    The next call to ReadBufferedFile will also output the same string,

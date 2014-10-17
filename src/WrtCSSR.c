@@ -76,7 +76,7 @@
    -------
    #GROUP    Handling CSSR Data
    #SUBGROUP File IO
-   #ROUTINE  blWriteCSSR()
+   #FUNCTION  blWriteCSSR()
    Write a CSSR file from a CSSR linked list.
 */
 /************************************************************************/

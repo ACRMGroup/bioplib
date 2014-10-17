@@ -64,7 +64,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Manipulating the PDB linked list
-   #ROUTINE  blSelectCaPDB()
+   #FUNCTION  blSelectCaPDB()
    Reduce a PDB linked list to CA atoms only discarding other atoms
 */
 /************************************************************************/

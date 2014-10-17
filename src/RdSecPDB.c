@@ -78,7 +78,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP File IO
-   #ROUTINE  blReadSecPDB()
+   #FUNCTION  blReadSecPDB()
    Reads secondary structure information from the header of a PDB file.
 */
 /************************************************************************/

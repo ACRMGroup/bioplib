@@ -78,7 +78,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP Lists of strings
-   #ROUTINE  blStoreString()
+   #FUNCTION  blStoreString()
    Stores strings (of any length) in a linked list of type STRINGLIST.
    Return a pointer to the start of the linked list which is used on
    the first call to access the newly allocated memory.

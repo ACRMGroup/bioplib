@@ -56,7 +56,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Manipulating the PDB linked list
-   #ROUTINE  blMovePDB()
+   #FUNCTION  blMovePDB()
    Moves a PDB record from one linked list to another. from and to should
 */
 /************************************************************************/

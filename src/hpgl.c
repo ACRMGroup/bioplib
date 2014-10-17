@@ -57,48 +57,48 @@
    -------
    #GROUP    Graphics
    #SUBGROUP HPGL
-   #ROUTINE  blHPGLInit()
+   #FUNCTION  blHPGLInit()
    Initialise an HPGL plot. The parameters specify the unprintable margins
    on the output device.
 
-   #ROUTINE blHPGLPen()
+   #FUNCTION blHPGLPen()
    Select a Pen
 
-   #ROUTINE blHPGLMove()
+   #FUNCTION blHPGLMove()
    Move on HPGL plot
 
-   #ROUTINE blHPGLDraw()
+   #FUNCTION blHPGLDraw()
    Draw on HPGL plot
 
-   #ROUTINE blHPGLSetDash()
+   #FUNCTION blHPGLSetDash()
    Set the line style (may be printer dependent):
 
-   #ROUTINE blHPGLFont()
+   #FUNCTION blHPGLFont()
    Set font for HPGL plot
 
-   #ROUTINE blHPGLLText()
+   #FUNCTION blHPGLLText()
    Write left justified text on HPGL plot
 
-   #ROUTINE blHPGLCBText()
+   #FUNCTION blHPGLCBText()
    Write centre-bottom justified text in HPGL
 
-   #ROUTINE blHPGLROffText()
+   #FUNCTION blHPGLROffText()
    Print right-justified text to HPGL
 
-   #ROUTINE blHPGLLCText()
+   #FUNCTION blHPGLLCText()
    Print left-centre justified text
 
-   #ROUTINE blHPGLCTText()
+   #FUNCTION blHPGLCTText()
    Center Top justify text at x,y with y-offset in pts.
 
-   #ROUTINE blHPGLVText()
+   #FUNCTION blHPGLVText()
    Write vertical text centred on x,y offset back along x by the size of
    label and by xoff in pts
 
-   #ROUTINE blHPGLEnd()
+   #FUNCTION blHPGLEnd()
    Close the HPGL plot file
 
-   #ROUTINE blHPGLShowText()
+   #FUNCTION blHPGLShowText()
    Displays the text, raising or lowering as appropriate and selecting
    alternate font where required. Used by the various ...Text() routines.
 */

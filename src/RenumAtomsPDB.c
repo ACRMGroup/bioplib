@@ -55,7 +55,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Manipulating the PDB linked list
-   #ROUTINE  blRenumAtomsPDB()
+   #FUNCTION  blRenumAtomsPDB()
    Renumber the atoms throughout a PDB linked list
 */
 /************************************************************************/

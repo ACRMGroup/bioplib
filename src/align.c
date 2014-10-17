@@ -87,34 +87,34 @@
    #GROUP    Handling Sequence Data
    #SUBGROUP Alignment
 
-   #ROUTINE blAlign()
+   #FUNCTION blAlign()
    Perform simple N&W alignment of seq1 and seq2. A single gap penalty 
    is used so there is no extension penalty
 
-   #ROUTINE blAffinealign()
+   #FUNCTION blAffinealign()
    Perform simple N&W alignment of seq1 and seq2 with separate gap
    opening and extension penalties
 
-   #ROUTINE blAffinealignuc()
+   #FUNCTION blAffinealignuc()
    Perform simple N&W alignment of seq1 and seq2 with separate gap
    opening and extension penalties. Optimized for DNA sequences
 
-   #ROUTINE blReadMDM()
+   #FUNCTION blReadMDM()
    Read mutation data matrix into static global arrays for use by 
    alignment code
 
-   #ROUTINE blCalcMDMScore()
+   #FUNCTION blCalcMDMScore()
    Calculates a score for comparing two amino acids using a mutation
    data matrix
 
-   #ROUTINE blCalcMDMScoreUC()
+   #FUNCTION blCalcMDMScoreUC()
    As blCalcMDMScore() but upcases the amino acid labels before 
    calculation
 
-   #ROUTINE blZeroMDM()
+   #FUNCTION blZeroMDM()
    Modifies all values in the MDM such that the minimum value is 0
 
-   #ROUTINE blSetMDMScoreWeight()
+   #FUNCTION blSetMDMScoreWeight()
    Apply a weight to a particular amino acid substitution. Modifies
    the scoring matrix read by blReadMDM()
 

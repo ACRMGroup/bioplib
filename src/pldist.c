@@ -54,7 +54,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Geometry
-   #ROUTINE  blPointLineDistance()
+   #FUNCTION  blPointLineDistance()
    Calculates the shortest distance from a point P to a line between
    points P1 and P2. This value is returned and the point on the line
    can also be returned.

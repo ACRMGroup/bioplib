@@ -52,7 +52,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Moving the structure
-   #ROUTINE  blApplyMatrixPDB()
+   #FUNCTION  blApplyMatrixPDB()
    Apply a rotation matrix to a PDB linked list.
 */
 /************************************************************************/

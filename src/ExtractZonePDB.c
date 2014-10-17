@@ -69,7 +69,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Searching the PDB linked list
-   #ROUTINE  blExtractZonePDBAsCopy()
+   #FUNCTION  blExtractZonePDBAsCopy()
    Reduces a PDB linked list to those residues within a specified zone
    forming a new linked list.
 */

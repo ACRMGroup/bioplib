@@ -55,7 +55,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Manipulating the PDB linked list
-   #ROUTINE  blDupeResiduePDB()
+   #FUNCTION  blDupeResiduePDB()
    Makes a duplicate PDB linked list of just one residue
 */
 /************************************************************************/

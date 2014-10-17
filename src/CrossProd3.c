@@ -56,7 +56,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Vectors
-   #ROUTINE  blCrossProd3()
+   #FUNCTION  blCrossProd3()
    Calculate the cross product of 2 3-vectors
 */
 /************************************************************************/

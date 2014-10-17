@@ -77,17 +77,17 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Miscellaneous functions
-   #ROUTINE  blParseResSpec()
+   #FUNCTION  blParseResSpec()
    Splits up a residue specification of the form 
          [c][.]num[i]
    into chain, resnum and insert. Chain and insert code will be up-cased
 
-   #ROUTINE  blParseResSpecNoUpper()
+   #FUNCTION  blParseResSpecNoUpper()
    Splits up a residue specification of the form 
          [c][.]num[i]
    into chain, resnum and insert. Chain and insert code will NOT be up-cased
 
-   #ROUTINE  blDoParseResSpec()
+   #FUNCTION  blDoParseResSpec()
    Splits up a residue specification of the form 
          [c][.]num[i]
    into chain, resnum and insert. Gives control over up-casing

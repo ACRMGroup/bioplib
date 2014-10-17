@@ -61,7 +61,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Matrices
-   #ROUTINE  blCreateRotMat()
+   #FUNCTION  blCreateRotMat()
    Create a 3x3 rotation matrix. Takes a direction as a single character
    ('x', 'y', or 'z'), an angle (in rads) and outputs a rotation matrix
 */

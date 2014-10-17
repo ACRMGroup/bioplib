@@ -56,7 +56,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Vectors
-   #ROUTINE  blVecSub3()
+   #FUNCTION  blVecSub3()
    Subtract 2 vectors
 */
 /************************************************************************/

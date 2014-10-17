@@ -55,7 +55,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Statistics
-   #ROUTINE  blPearson()
+   #FUNCTION  blPearson()
    Calculates the Pearson correlation coefficient making two
    passes through the data
 */

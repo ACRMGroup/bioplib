@@ -75,64 +75,64 @@
    -------
    #GROUP    Graphics
    #SUBGROUP Postscript
-   #ROUTINE blPSInit()
+   #FUNCTION blPSInit()
    Initialises the file writing the Prologue. The filename and creator
    are written into the Prologue and EPSFxoff and EPSFyoff are used to
    calculate the bounding box size for EPSF plots.
 
-   #ROUTINE blPSThick()
+   #FUNCTION blPSThick()
    Set the line thickness
 
-   #ROUTINE blPSMove()
+   #FUNCTION blPSMove()
    Move to X,Y
 
-   #ROUTINE blPSDraw()
+   #FUNCTION blPSDraw()
    Draw to X,Y
 
-   #ROUTINE blPSSetDash()
+   #FUNCTION blPSSetDash()
    Set a line dash pattern which must be supplied as a string
 
-   #ROUTINE blPSClearDash()
+   #FUNCTION blPSClearDash()
    Clear the dash pattern to a full line
 
-   #ROUTINE blPSStroke()
+   #FUNCTION blPSStroke()
    Actually draw what you've just done onto the paper
 
-   #ROUTINE blPSFont()
+   #FUNCTION blPSFont()
    Set the font and size
 
-   #ROUTINE blPSLText()
+   #FUNCTION blPSLText()
    Left justify text
 
-   #ROUTINE blPSCBText()
+   #FUNCTION blPSCBText()
    Centers a piece of text with X,Y being the Coords of the BOTTOM centre 
    point
 
-   #ROUTINE blPSROffText()
+   #FUNCTION blPSROffText()
    Right justify text with offset in device coordinates (points).
 
-   #ROUTINE blPSLCText()
+   #FUNCTION blPSLCText()
    Left justify text, centred on Y
 
-   #ROUTINE blPSCTText()
+   #FUNCTION blPSCTText()
    Centers a piece of text with X,Y being the Coords of the TOP centre 
    point
 
-   #ROUTINE blPSVText()
+   #FUNCTION blPSVText()
    Write vertical text centred on x,y offset back along x by the size of
    label and by xoff in pts. Used, for example, to title the y-axis of
    a graph. The `label' specification is used to calculate an amount by
    which to move the text back. Typically this would be the longest data
    label on the graph's Y-axis.
 
-   #ROUTINE blPSShowText()
+   #FUNCTION blPSShowText()
    Displays text, processing it first if any control codes are found. Used
    by the various text positioning routines.
 
-   #ROUTINE blPSEnd()
+   #FUNCTION blPSEnd()
    End of page
 
-   #ROUTINE blPSCorrectCase()
+   #FUNCTION blPSCorrectCase()
    Goes through a fontname and fixes case to match the required standard.
 */
 /************************************************************************/

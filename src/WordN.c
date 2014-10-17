@@ -77,7 +77,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP String handling
-   #ROUTINE  blWordN()
+   #FUNCTION  blWordN()
    Removes leading spaces and extracts a space/tab delimited word. A 
    maximum of MaxChar characters will be copied into the word.
 */

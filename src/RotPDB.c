@@ -54,7 +54,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Moving the structure
-   #ROUTINE  blRotatePDB()
+   #FUNCTION  blRotatePDB()
    Rotates a PDB linked list using ApplyMatrixPDB() which ignores 
    coordinates of 9999.0. The structure is moved to the origin, the 
    matrix is applied and the structure is moved back.

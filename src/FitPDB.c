@@ -62,7 +62,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Fitting
-   #ROUTINE  blFitPDB()
+   #FUNCTION  blFitPDB()
    Fits two PDB linked lists. Actually fits fit_pdb onto ref_pdb and also
    returns the rotation matrix. This may be NULL if these data are not
    required.

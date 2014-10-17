@@ -68,7 +68,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Modifying the structure
-   #ROUTINE  blFixCterPDB()
+   #FUNCTION  blFixCterPDB()
    Renames C-ter atoms in required style and calls CalcCterCoords()
    as required to calculate coordinates ans splices them in.
    The input PDB linked list may have standard, CHARMM or GROMOS

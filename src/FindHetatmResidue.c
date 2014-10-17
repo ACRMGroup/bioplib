@@ -58,7 +58,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Searching the PDB linked list        
-   #ROUTINE  blFindHetatmResidue()
+   #FUNCTION  blFindHetatmResidue()
    Finds a pointer to the start of a residue in a PDB linked list, but
    requires the residue is a HETATM record
 */

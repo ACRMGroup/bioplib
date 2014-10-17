@@ -55,7 +55,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Moving the structure
-   #ROUTINE  blOriginPDB()
+   #FUNCTION  blOriginPDB()
    Moves a PDB linked list to the origin, ignoring NULL coordinates.
 */
 /************************************************************************/

@@ -78,7 +78,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP String handling
-   #ROUTINE  blStringToLower()
+   #FUNCTION  blStringToLower()
    Converts a lower or mixed case string to lower case. The LOWER() macro
    from macros.h is now preferred
 */

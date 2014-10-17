@@ -5,6 +5,11 @@ LIBDEST = ${HOME}/lib
 INCDEST = ${HOME}/include
 SHAREDLIBDEST = ${HOME}/lib
 
+# Doxygen and adddoxy directories
+DOCDIR      = ../doc
+DOXYDIR     = $(DOCDIR)/doxytest
+ADDDOXY     = $(DOCDIR)/adddoxy/adddoxy.pl
+ADDDOXYCONF = $(DOCDIR)/adddoxy/adddoxy.conf
 
 # Define the C compiler here
 CC = gcc
@@ -118,7 +123,13 @@ clean :
 
 # Documentation
 doxygen :
-	(cd ../doc/doxygen; doxygen)
+	$(ADDDOXY) -conf=$(ADDDOXYCONF) *.c *.h
+	mkdir -p $(DOXYDIR)/docsrc
+	cp $(DOXYDIR)/docsrcinput/*.dox $(DOXYDIR)/docsrc
+	(cd $(DOXYDIR); doxygen)
+doxyclean :
+	rm -rf $(DOCDIR)/html $(DOCDIR)/latex $(DOXYDIR)/docsrc
+
 
 # Installation
 install :

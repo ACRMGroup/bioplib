@@ -56,7 +56,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Manipulating the PDB linked list
-   #ROUTINE  blSetResnam()
+   #FUNCTION  blSetResnam()
    Change the residue name, number, insert and chain for an amino acid.
 */
 /************************************************************************/

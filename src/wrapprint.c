@@ -53,11 +53,11 @@
    -------
    #GROUP    General Programming
    #SUBGROUP String handling
-   #ROUTINE  blWrapString()
+   #FUNCTION  blWrapString()
    Wraps a string with double inverted commas if it contains spaces
    and escapes any contained double inverted commas with a backslash.
 
-   #ROUTINE blWrapPrint()
+   #FUNCTION blWrapPrint()
    Wraps a string with double inverted commas if it contains spaces
    and escapes any contained double inverted commas with a backslash.
    Then prints the string

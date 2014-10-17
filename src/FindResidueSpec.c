@@ -69,7 +69,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Searching the PDB linked list        
-   #ROUTINE  blFindResidueSpec()
+   #FUNCTION  blFindResidueSpec()
    Search a PDB linked list for a specified residue (given as
    [chain][.]num[insert])
 */

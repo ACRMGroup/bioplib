@@ -58,7 +58,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Calculations
-   #ROUTINE  blCalcCellTrans()
+   #FUNCTION  blCalcCellTrans()
    Calculates the offsets to apply in X, Y and Z directions for creating
    a crystal lattice from the unit cell parameters.
 */

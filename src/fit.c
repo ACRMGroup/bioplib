@@ -64,7 +64,7 @@
    -------
    #GROUP    Coordinate Fitting
    #SUBGROUP Fitting based on coordinate arrays
-   #ROUTINE  blMatfit()
+   #FUNCTION  blMatfit()
    Fit coordinate array x2 to x1 both centred around the origin and of 
    length n. Optionally weighted with the wt1 array if wt1 is not NULL.
    If column is set the matrix will be returned column-wise rather 

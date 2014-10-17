@@ -69,7 +69,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP Sorting
-   #ROUTINE  blIndexReal()
+   #FUNCTION  blIndexReal()
    Index an array by Heapsort.
 */
 /************************************************************************/

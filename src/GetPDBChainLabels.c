@@ -66,7 +66,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Extracting data
-   #ROUTINE  blGetPDBChainLabels()
+   #FUNCTION  blGetPDBChainLabels()
    Scans a PDB linked list for chain names. Allocates memory for an 
    array of strings containing these labels which is returned together 
    with the number of chains found.

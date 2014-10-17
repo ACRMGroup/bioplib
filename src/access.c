@@ -75,20 +75,16 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Analyzing structures
-   #ROUTINE  blGetElement()
-   Obtains the element type from the atom name. 
-   NOTE! This function should no longer be used
-
-   #ROUTINE blSetAtomRadii()
+   #FUNCTION blSetAtomRadii()
    Set atom radii from the radius file in the PDB linked list
    Returns the radius lookup information since it also contains the 
    standard accessibilities
 
-   #ROUTINE  blCalcAccess()
+   #FUNCTION  blCalcAccess()
    Allocates arrays and calls routines to populate them, do the access
    calculations and populate into the PDB linked list
 
-   #ROUTINE  blCalcResAccess()
+   #FUNCTION  blCalcResAccess()
    Calculates and populates the residue totals and relative values
    using standards stored in resrad
 */

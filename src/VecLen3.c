@@ -56,7 +56,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Vectors
-   #ROUTINE blVecLen3()
+   #FUNCTION blVecLen3()
    Calculate the length of a vector
 */
 /************************************************************************/

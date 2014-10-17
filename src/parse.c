@@ -131,26 +131,26 @@
    -------
    #GROUP    General Programming
    #SUBGROUP User interaction
-   #ROUTINE  blParse()
+   #FUNCTION  blParse()
    Keyword-based command parser using a fixed number of parameters per
    command
 
-   #ROUTINE  blMparse()
+   #FUNCTION  blMparse()
    As blParse(), but allows variable number of parameters to each keyword.
 
 
 
    #SUBGROUP String handling
 
-   #ROUTINE  blMatch()
+   #FUNCTION  blMatch()
    Matches two strings, but stops the comparison as soon
    as a space or NULL is found in either string. The returned value
 
-   #ROUTINE  blGetString()
+   #FUNCTION  blGetString()
    Returns the first space-delimited group of characters
    from a character string
 
-   #ROUTINE  blGetParam()
+   #FUNCTION  blGetParam()
    Extracts the first space-delimited number from a
    character string.
 */

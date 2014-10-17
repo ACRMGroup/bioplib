@@ -80,11 +80,11 @@
    #GROUP    General Programming
    #SUBGROUP Array handling
 
-   #ROUTINE  blArray2D()
+   #FUNCTION  blArray2D()
    Create a 2D array of elements of size `size' with dimensions `dim1' 
    rows by `dim2' columns.
 
-   #ROUTINE blFreeArray2D()
+   #FUNCTION blFreeArray2D()
    Frees a 2D array with dimensions `dim1' rows by `dim2' columns.
 */
 /************************************************************************/

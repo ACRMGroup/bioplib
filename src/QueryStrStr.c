@@ -77,7 +77,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP String handling
-   #ROUTINE  blQueryStrStr()
+   #FUNCTION  blQueryStrStr()
    This is like strstr() but allows a ? character in the substring
    which matches any character.
 */

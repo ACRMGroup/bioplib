@@ -54,7 +54,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP File IO
-   #ROUTINE  blGetCrystPDB()
+   #FUNCTION  blGetCrystPDB()
    Read the crystal parameters (unit cell, spacegroup, origin and scale 
    matrices) out of a PDB file.
 */

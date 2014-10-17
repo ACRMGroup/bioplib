@@ -135,14 +135,14 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Modifying the structure
-   #ROUTINE  blHAddPDB()
+   #FUNCTION  blHAddPDB()
    This routine adds hydrogens to a PDB linked list. Performs all
    necessary functions.
 
-   #ROUTINE  blReadPGP()
+   #FUNCTION  blReadPGP()
    Read a proton generation parameter file
 
-   #ROUTINE  blOpenPGPFile()
+   #FUNCTION  blOpenPGPFile()
    Open the PGP file
 */
 /************************************************************************/

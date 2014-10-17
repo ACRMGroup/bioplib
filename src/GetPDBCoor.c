@@ -60,7 +60,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Extracting data
-   #ROUTINE  blGetPDBCoor()
+   #FUNCTION  blGetPDBCoor()
    Get the coordinates out of a PDB linked list into an array of type COOR
    The COOR array is allocated for you
 */

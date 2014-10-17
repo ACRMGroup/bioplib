@@ -55,7 +55,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP String handling
-   #ROUTINE  blGetfield()
+   #FUNCTION  blGetfield()
    Reads a column out of a buffer. If the specfied column extends beyond
    the size of the buffer, then it will be padded with spaces.
 */

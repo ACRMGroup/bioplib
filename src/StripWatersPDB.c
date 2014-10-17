@@ -56,7 +56,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Modifying the structure
-   #ROUTINE  blStripWatersPDBAsCopy()
+   #FUNCTION  blStripWatersPDBAsCopy()
    Take a PDB linked list and returns the PDB list minus waters
 */
 /************************************************************************/

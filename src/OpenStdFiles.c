@@ -78,7 +78,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP File IO
-   #ROUTINE  blOpenStdFiles()
+   #FUNCTION  blOpenStdFiles()
    Open the files if specified. Does not modify the file handles if 
    files are not specified. Typically used to open files for input and
    output using stdin and stdout if files not given.

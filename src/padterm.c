@@ -79,7 +79,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP String handling
-   #ROUTINE  blPadterm()
+   #FUNCTION  blPadterm()
    Pads a string with spaces to length characters, then terminates it.
    Note that the PADMINTERM() macro in macros.h is a replacement for this
 */

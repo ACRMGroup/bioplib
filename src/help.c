@@ -97,11 +97,11 @@
    -------
    #GROUP    General Programming
    #SUBGROUP User interaction
-   #ROUTINE  blHelp()
+   #FUNCTION  blHelp()
    Generates help from a help file on the topic named by string. If 
    this is `help' or `?', available topics will be listed.
 
-   #ROUTINE  blDoHelp()
+   #FUNCTION  blDoHelp()
    Handles help facility. This is the normal entry point.
 */
 /************************************************************************/

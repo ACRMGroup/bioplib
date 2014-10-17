@@ -56,7 +56,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Vectors
-   #ROUTINE blVecDist()
+   #FUNCTION blVecDist()
    Finds the distance between two vectors of arbitrary length
 */
 /************************************************************************/

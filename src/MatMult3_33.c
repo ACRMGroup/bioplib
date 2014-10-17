@@ -61,7 +61,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Matrices
-   #ROUTINE  blMatMult3_33()
+   #FUNCTION  blMatMult3_33()
    Multiply a 3-vector by a 3x3 matrix
 */
 /************************************************************************/

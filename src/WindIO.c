@@ -61,38 +61,38 @@
    -------
    #GROUP    General Programming
    #SUBGROUP Text window handling - experimental
-   #ROUTINE  blScreen()
+   #FUNCTION  blScreen()
    Writes information to the screen. Handles any windows as appropriate.
 
-   #ROUTINE  blPrompt()
+   #FUNCTION  blPrompt()
    Sets a prompt for input. If windowing is on, this simply sets the 
    prompt variable (the actual prompt is issued by the GetKybdString()
    function). If no windowing is used, the actual string is printed.
    If the prompt ends with a . it is simply printed; if not, a > is 
    appended.
 
-   #ROUTINE  blRePrompt()
+   #FUNCTION  blRePrompt()
    Reissue the current prompt. Only has any effect when windowing is not
    in use. Normally only used by ReadBufferedFile() and 
    ProbeBufferedFile() to re-issue prompts while eating blank lines.
 
-   #ROUTINE  blGetKybdString()
+   #FUNCTION  blGetKybdString()
    Reads a string from the keyboard
 
-   #ROUTINE  blPagingOn()
+   #FUNCTION  blPagingOn()
    Switches on screen paging.
 
-   #ROUTINE  blPagingOff()
+   #FUNCTION  blPagingOff()
    Switches off screen paging.
 
-   #ROUTINE  blWindowMode()
+   #FUNCTION  blWindowMode()
    Switch window mode on or off.
 
-   #ROUTINE  blWindowInteractive()
+   #FUNCTION  blWindowInteractive()
    Switch interactive mode on or off.
    If switched off, calls WindowMode(FALSE) to switch off windowing
 
-   #ROUTINE blYorN()
+   #FUNCTION blYorN()
    Get a yes or no response from the keyboard
 */
 /************************************************************************/

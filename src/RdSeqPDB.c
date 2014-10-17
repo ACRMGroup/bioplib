@@ -55,7 +55,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP File IO
-   #ROUTINE  blReadSeqresPDB()
+   #FUNCTION  blReadSeqresPDB()
    Reads the sequence from the SEQRES records of a PDB file
 */
 /************************************************************************/

@@ -62,7 +62,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Searching the PDB linked list
-   #ROUTINE  blInPDBZone()
+   #FUNCTION  blInPDBZone()
    Checks that atom stored in PDB pointer p is within the specified 
    residue range.
 */

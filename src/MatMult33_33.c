@@ -61,7 +61,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Matrices
-   #ROUTINE  blMatMult33_33()
+   #FUNCTION  blMatMult33_33()
    Multiply two 3x3 matrices
 */
 /************************************************************************/

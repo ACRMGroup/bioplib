@@ -64,7 +64,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Searching the PDB linked list        
-   #ROUTINE  blFindAtomInRes()
+   #FUNCTION  blFindAtomInRes()
    Finds an atom within a residue
 */
 /************************************************************************/

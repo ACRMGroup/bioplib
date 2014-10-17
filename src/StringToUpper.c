@@ -78,7 +78,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP String handling
-   #ROUTINE  blStringToUpper()
+   #FUNCTION  blStringToUpper()
    Converts a lower or mixed case string to upper case. The UPPER() macro
    from macros.h is now preferred
 */

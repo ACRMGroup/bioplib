@@ -82,15 +82,15 @@
    -------
    #GROUP    General Programming
    #SUBGROUP Memory management
-   #ROUTINE  blSafemalloc(int nbytes)
+   #FUNCTION  blSafemalloc(int nbytes)
    Debugging version of malloc() which creates protection buffers each
    side of the requested memory block.
 
-   #ROUTINE  blSafefree()
+   #FUNCTION  blSafefree()
    Debugging version of free() which checks protection buffers each
    side of the requested memory block.
 
-   #ROUTINE  blSafeleaks()
+   #FUNCTION  blSafeleaks()
    Prints a list of any safemalloc()'d memory which was not freed
 */
 /************************************************************************/

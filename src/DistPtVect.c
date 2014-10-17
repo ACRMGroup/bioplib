@@ -56,7 +56,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Geometry
-   #ROUTINE  blDistPtVect()
+   #FUNCTION  blDistPtVect()
    Calculate the distance from a point to a vector described by two
    end points
 */

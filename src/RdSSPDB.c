@@ -55,7 +55,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP File IO
-   #ROUTINE  blReadDisulphidesPDB()
+   #FUNCTION  blReadDisulphidesPDB()
    Searches a PDB file for SSBOND records and constructs a linked list
    of information from these records.
 */

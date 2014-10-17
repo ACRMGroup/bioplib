@@ -77,7 +77,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP File IO
-   #ROUTINE  blSetExtn()
+   #FUNCTION  blSetExtn()
    Force a filename extension. Modifies the input filename to have the
    specified extension.
 */

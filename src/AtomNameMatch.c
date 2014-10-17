@@ -66,7 +66,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Miscellaneous functions
-   #ROUTINE  blAtomNameMatch()
+   #FUNCTION  blAtomNameMatch()
    Tests whether an atom name matches an atom name specification.
    ? or % is used to match a single character
    * is used to match any trailing characters; it may not be used for
@@ -74,7 +74,7 @@
    C*2 are both illegal).
    Wildcards may be escaped with a backslash.
 
-   #ROUTINE  blAtomNameRawMatch()
+   #FUNCTION  blAtomNameRawMatch()
    Tests whether an atom name matches an atom name specification
    having been given a 'raw' atom name rather than the 
    massaged one. i.e. " CA " is C-alpha, "CA  " is Calcium

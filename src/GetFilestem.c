@@ -77,20 +77,20 @@
    -------
    #GROUP    General Programming
    #SUBGROUP File IO
-   #ROUTINE  blGetFilestem()
+   #FUNCTION  blGetFilestem()
    Extracts the filestem from a complete filename. Should work under
    Unix, VMS, MS-DOS, AmigaDOS, etc.
 
-   #ROUTINE
-   #ROUTINE
-   #ROUTINE
-   #ROUTINE
-   #ROUTINE
-   #ROUTINE
-   #ROUTINE
-   #ROUTINE
-   #ROUTINE
-   #ROUTINE
+   #FUNCTION
+   #FUNCTION
+   #FUNCTION
+   #FUNCTION
+   #FUNCTION
+   #FUNCTION
+   #FUNCTION
+   #FUNCTION
+   #FUNCTION
+   #FUNCTION
 */
 /************************************************************************/
 /* Includes

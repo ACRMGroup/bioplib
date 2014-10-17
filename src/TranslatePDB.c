@@ -55,7 +55,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Moving the structure
-   #ROUTINE  blTranslatePDB()
+   #FUNCTION  blTranslatePDB()
    Translates a PDB linked list, ignoring null (9999.0) coordinates.
 */
 /************************************************************************/

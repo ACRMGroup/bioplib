@@ -71,7 +71,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Modifying the structure
-   #ROUTINE  blAddNTerHs()
+   #FUNCTION  blAddNTerHs()
    Adds hydrogens onto the N-termini
 */
 /************************************************************************/

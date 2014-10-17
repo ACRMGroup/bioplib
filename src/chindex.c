@@ -78,7 +78,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP String handling
-   #ROUTINE  blChindex()
+   #FUNCTION  blChindex()
    Returns the offset of a character in a string. -1 if not found. This is
    used in a similar manner to strchr(), but gives an offset in the string
    rather than a pointer to the character.

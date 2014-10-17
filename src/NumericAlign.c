@@ -74,15 +74,15 @@
    -------
    #GROUP    Handling Sequence Data
    #SUBGROUP Alignment
-   #ROUTINE  blNumericReadMDM()
+   #FUNCTION  blNumericReadMDM()
    Read mutation data matrix into static global arrays for number-encoded
    sequences
 
-   #ROUTINE  blNumericCalcMDMScore()
+   #FUNCTION  blNumericCalcMDMScore()
    Calculate score from static globally stored mutation data matrix for
    number-encoded sequences
 
-   #ROUTINE  blNumericAffineAlign()
+   #FUNCTION  blNumericAffineAlign()
    Perform simple N&W alignment using sequences encodede as arrays of
    numeric tokens
 */

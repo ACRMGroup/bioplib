@@ -56,7 +56,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Calculations
-   #ROUTINE  blGetCofGPDBSCRange()
+   #FUNCTION  blGetCofGPDBSCRange()
    Find CofG of a range in a PDB linked list, ignoring NULL coordinates
    Looks only at the sidechain atoms
 */

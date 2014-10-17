@@ -64,7 +64,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Modifying the structure
-   #ROUTINE  blKillSidechain()
+   #FUNCTION  blKillSidechain()
    Remove sidechain atoms, optionally removing the CBeta
 */
 /************************************************************************/

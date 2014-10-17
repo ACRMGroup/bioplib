@@ -77,7 +77,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP Lists of strings
-   #ROUTINE  blInStringList()
+   #FUNCTION  blInStringList()
    Searches a string list for an *exact match* with the specified string.
 */
 /************************************************************************/

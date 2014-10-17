@@ -100,7 +100,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Geometry
-   #ROUTINE  blAngle()
+   #FUNCTION  blAngle()
    Calculates the angle between three sets of coordinates
 */
 /************************************************************************/

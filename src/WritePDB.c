@@ -88,27 +88,27 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP File IO
-   #ROUTINE blWritePDB(FILE *fp, PDB *pdb)
+   #FUNCTION blWritePDB(FILE *fp, PDB *pdb)
    Main entry point to write a PDB linked list to a file
 
-   #ROUTINE blFormatCheckWritePDB(PDB *pdb)
+   #FUNCTION blFormatCheckWritePDB(PDB *pdb)
    Checks that a PDB linked list can be written as a standard PDB file
    (i.e. chain labels are no more than one character)
 
-   #ROUTINE blWriteAsPDB(FILE *fp, PDB *pdb)
+   #FUNCTION blWriteAsPDB(FILE *fp, PDB *pdb)
    Writes a PDB linked list to a file in PDB format
 
-   #ROUTINE blWritePDBRecord(FILE *fp, PDB *pdb)
+   #FUNCTION blWritePDBRecord(FILE *fp, PDB *pdb)
    Writes a single PDB record in PDB format
 
-   #ROUTINE blWritePDBRecordAtnam(FILE *fp, PDB *pdb)
+   #FUNCTION blWritePDBRecordAtnam(FILE *fp, PDB *pdb)
    Writes a single PDB record in PDB format using atom data from the
    atnam field rather than the atnam_raw field
 
-   #ROUTINE blWriteAsPDBML(FILE *fp, PDB *pdb)
+   #FUNCTION blWriteAsPDBML(FILE *fp, PDB *pdb)
    Write a PDB linked list to a file in PDBML XML format
 
-   #ROUTINE blSetElementSymbolFromAtomName(char *element, char * atom_name)
+   #FUNCTION blSetElementSymbolFromAtomName(char *element, char * atom_name)
    Sets the element field based on the content of the atom name stored 
    in atnam_raw
 */

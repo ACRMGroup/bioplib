@@ -55,7 +55,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Calculations
-   #ROUTINE  blCalcChi()
+   #FUNCTION  blCalcChi()
    Calculates a sidechain torsion angle from a pdb linked list.
 */
 /************************************************************************/

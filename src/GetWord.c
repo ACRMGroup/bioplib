@@ -57,10 +57,10 @@
    #GROUP    General Programming
    #SUBGROUP String handling
 
-   #ROUTINE  blGetWord()
+   #FUNCTION  blGetWord()
    Reads a whitespace/comma delimted word out of buffer into word.
 
-   #ROUTINE  blGetWordNC()
+   #FUNCTION  blGetWordNC()
    Reads a whitespace delimted word out of buffer into word. Commas
    are treated just like normal characters.
 */

@@ -73,10 +73,10 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP File IO
-   #ROUTINE  blWriteGromosPDB()
+   #FUNCTION  blWriteGromosPDB()
    Write a PDB linked list by calls to WriteGromosPDBRecord()
 
-   #ROUTINE  blWriteGromosPDBRecord()
+   #FUNCTION  blWriteGromosPDBRecord()
    Write a GROMOS PDB record
 */
 /************************************************************************/

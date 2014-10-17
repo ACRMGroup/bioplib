@@ -78,7 +78,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP String handling
-   #ROUTINE  blPadchar()
+   #FUNCTION  blPadchar()
    Pads a string with a specified character to length characters, then 
    terminates it.
    Note that PADCHARMINTERM() in macros.h is a replacement for this

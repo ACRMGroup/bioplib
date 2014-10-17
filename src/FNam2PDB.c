@@ -55,7 +55,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP File IO
-   #ROUTINE  blFNam2PDB()
+   #FUNCTION  blFNam2PDB()
    Attempts to extract a PDB code from a filename
 */
 /************************************************************************/

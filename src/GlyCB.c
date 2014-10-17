@@ -56,16 +56,16 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Modifying the structure
-   #ROUTINE  blAddCBtoGly()
+   #FUNCTION  blAddCBtoGly()
    Adds a CB atom to a glycine. This is used when one needs to orientate
    a residue in a common frame of reference which makes use of the CB.
 
-   #ROUTINE  blAddCBtoAllGly()
+   #FUNCTION  blAddCBtoAllGly()
    Adds a CB atom to all glycines in a PDB linked list. This is used 
    when one needs to orientate a residue in a common frame of reference 
    which makes use of the CB.
 
-   #ROUTINE  blStripGlyCB()
+   #FUNCTION  blStripGlyCB()
    Removes all Glycine CB pseudo-atoms added by AddGlyCB()
 */
 /************************************************************************/

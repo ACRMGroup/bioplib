@@ -79,7 +79,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP File IO
-   #ROUTINE  blOpenFile()
+   #FUNCTION  blOpenFile()
    Attempts to open a filename as specified. Returns a file
    pointer. If this fails looks in a directory specified using an
    environment variable or assign.

@@ -65,7 +65,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Manipulating the PDB linked list
-   #ROUTINE  blTermPDB()
+   #FUNCTION  blTermPDB()
    Terminate a PDB linked list after length residues, returning a pointer
    to the next residue. 
 */

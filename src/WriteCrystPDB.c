@@ -54,7 +54,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP File IO
-   #ROUTINE  blWriteCrystPDB()
+   #FUNCTION  blWriteCrystPDB()
    Write crystal parameters (unit cell, space group, origin and scale
    matrices) to a PDB file.
 */

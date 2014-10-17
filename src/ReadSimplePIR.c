@@ -73,7 +73,7 @@
    -------
    #GROUP    Handling Sequence Data
    #SUBGROUP File IO
-   #ROUTINE  blReadSimplePIR()
+   #FUNCTION  blReadSimplePIR()
    Read a PIR file containing multiple chains of up to maxres amino acids.
    Doesn't handle special PIR characters
 */

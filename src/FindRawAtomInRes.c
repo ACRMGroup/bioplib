@@ -66,7 +66,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Searching the PDB linked list        
-   #ROUTINE  blFindRawAtomInRes()
+   #FUNCTION  blFindRawAtomInRes()
    Searches the raw atom name (atnam_raw) field of the current residue
    for the specified atom name
 */

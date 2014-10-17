@@ -54,7 +54,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Miscellaneous
-   #ROUTINE  blNPerm()
+   #FUNCTION  blNPerm()
    Calculates number of permutations of n items in r groups
 */
 /************************************************************************/

@@ -58,17 +58,17 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Manipulating the PDB linked list
-   #ROUTINE  blFixOrderPDB()
+   #FUNCTION  blFixOrderPDB()
    Runs through a PDB linked list and corrects the atom order to match
    the N,CA,C,O,s/c standard.
 
-   #ROUTINE  blShuffleResPDB()
+   #FUNCTION  blShuffleResPDB()
    Shuffle atoms within a residue into the standard order
 
-   #ROUTINE  blGetAtomTypes()
+   #FUNCTION  blGetAtomTypes()
    Obtain a list of the atom types for a given residue.
 
-   #ROUTINE  blShuffleBB()
+   #FUNCTION  blShuffleBB()
    Shuffles the PDB list to match the standard of N,CA,C,O,CB,other.
 */
 /************************************************************************/

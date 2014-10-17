@@ -151,22 +151,22 @@
    #GROUP    Handling CSSR Data
    #SUBGROUP File IO
 
-   #ROUTINE  blReadCSSR()
+   #FUNCTION  blReadCSSR()
    Read a CSSR file into a CSSR linked list
 
-   #ROUTINE  blReadCSSRasPDB()
+   #FUNCTION  blReadCSSRasPDB()
    Read a CSSR file into a PDB linked list
 
 
    #SUBGROUP Transformations
 
-   #ROUTINE  blNormaliseCSSR()
+   #FUNCTION  blNormaliseCSSR()
    Convert a CSSR linked list in fractional coordinates to orthonormal
 
-   #ROUTINE  blNormalisePDB()
+   #FUNCTION  blNormalisePDB()
    Convert a PDB linked list in fractional cooridinates to orthonormal
 
-   #ROUTINE  blOrtho()
+   #FUNCTION  blOrtho()
    Calculate a matrix which will convert between fractional and
    orthonormal coordinates given unit cell dimensions and angles.
 */

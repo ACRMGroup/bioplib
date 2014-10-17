@@ -78,7 +78,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Statistics
-   #ROUTINE  blCalcExtSD()
+   #FUNCTION  blCalcExtSD()
    Calculate the mean and standard deviation from a set of numbers. 
    The routine is called with each value to be sampled and then again
    to obtain the results.

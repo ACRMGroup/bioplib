@@ -64,7 +64,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Manipulating the PDB linked list
-   #ROUTINE  blKillPDB()
+   #FUNCTION  blKillPDB()
    Remove an item in the PDB linked list and re-link correctly
 */
 /************************************************************************/

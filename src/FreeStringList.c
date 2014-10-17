@@ -78,7 +78,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP Lists of strings
-   #ROUTINE  blFreeStringList()
+   #FUNCTION  blFreeStringList()
    Frees memory allocated for a string list.
 */
 /************************************************************************/

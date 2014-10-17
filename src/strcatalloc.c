@@ -54,7 +54,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP String handling
-   #ROUTINE  blStrcatalloc()
+   #FUNCTION  blStrcatalloc()
    Like strcat() but uses a realloc() on instr to make space available.
 */
 /************************************************************************/

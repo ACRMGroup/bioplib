@@ -58,7 +58,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Searching the PDB linked list
-   #ROUTINE  blInPDBZoneSpec()
+   #FUNCTION  blInPDBZoneSpec()
    Determines whether a PDB pointer is within a residue range specified
    using standard format: [c]nnn[i] or within a specified chain
 */

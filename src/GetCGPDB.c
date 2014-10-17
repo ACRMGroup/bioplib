@@ -56,7 +56,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Calculations
-   #ROUTINE  blGetCofGPDB()
+   #FUNCTION  blGetCofGPDB()
    Finds the CofG of a PDB linked list, ignoring NULL coordinates.
 */
 /************************************************************************/

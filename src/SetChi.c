@@ -56,7 +56,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Modifying the structure
-   #ROUTINE  blSetChi()
+   #FUNCTION  blSetChi()
    Sets a sidechain torsion angle in a pdb linked list. The routine 
    assumes standard atom ordering: N,CA,C,O,s/c with standard order in
    the s/c.

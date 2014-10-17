@@ -97,7 +97,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP File IO
-   #ROUTINE  fsscanf() 
+   #FUNCTION  fsscanf() 
    A FORTRAN-style rigid-column formatted version of sscanf()
 */
 

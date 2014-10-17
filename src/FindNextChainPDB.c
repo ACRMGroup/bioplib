@@ -64,7 +64,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Searching the PDB linked list        
-   #ROUTINE  blFindNextChainPDB()
+   #FUNCTION  blFindNextChainPDB()
    Terminates the linked list at the end of the current chain and 
    returns a pointer to the start of the next chain.
 */

@@ -78,7 +78,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP File IO
-   #ROUTINE  blCheckExtn()
+   #FUNCTION  blCheckExtn()
    Check the extension of a filename. Case insensitive!
 */
 /************************************************************************/

@@ -64,7 +64,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Manipulating the PDB linked list
-   #ROUTINE  blGetPDBByN()
+   #FUNCTION  blGetPDBByN()
    Gets a pointer to Nth item in a PDB linked list
 */
 /************************************************************************/

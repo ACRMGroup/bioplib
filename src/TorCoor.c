@@ -52,7 +52,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Geometry
-   #ROUTINE  blTorToCoor()
+   #FUNCTION  blTorToCoor()
    Calculates cartesian coordinates for an atom given the coordinates of
    three antecedant atoms and the bond length, angle and torsion angle
 */

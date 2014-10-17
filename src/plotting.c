@@ -61,49 +61,49 @@
    -------
    #GROUP    Graphics
    #SUBGROUP Plotting
-   #ROUTINE  blAMInitPlot()
+   #FUNCTION  blAMInitPlot()
    Initialise a device ready for plotting.
 
-   #ROUTINE blAMSetPen()
+   #FUNCTION blAMSetPen()
    Change pen
 
-   #ROUTINE blAMMove()
+   #FUNCTION blAMMove()
    Move to a position specified in data coordinates.
 
-   #ROUTINE blAMDraw()
+   #FUNCTION blAMDraw()
    Draw to a position specified in data coordinates.
 
-   #ROUTINE blAMSetLineStyle()
+   #FUNCTION blAMSetLineStyle()
    Set the line style
 
-   #ROUTINE blAMEndLine()
+   #FUNCTION blAMEndLine()
    End a line; required by PostScript actually to draw on the paper.
 
-   #ROUTINE blAMSetFont()
+   #FUNCTION blAMSetFont()
    Sets the current font using PostScript font names. If producing HPGL
    output, a lookup table is used to translate this to an HPGL font
    number
 
-   #ROUTINE blAMText()
+   #FUNCTION blAMText()
    Left/bottom justify text at position in data coordinates
 
-   #ROUTINE blAMCBText()
+   #FUNCTION blAMCBText()
    Centre-bottom justify text
 
-   #ROUTINE blAMRText()
+   #FUNCTION blAMRText()
    Right/centre justify text at position in data coordinates; offset is 
    an x-offset specified in device coordinates (pt)
 
-   #ROUTINE blAMLCText()
+   #FUNCTION blAMLCText()
    Left/centre height justify text at position in data coordinates
 
-   #ROUTINE blAMCTText()
+   #FUNCTION blAMCTText()
    Centre/top justify text at position in data coordinates. 
 
-   #ROUTINE blAMEndPlot()
+   #FUNCTION blAMEndPlot()
    Close up a device after plotting.
 
-   #ROUTINE blPS2HPGLFont()
+   #FUNCTION blPS2HPGLFont()
    Takes the PostScript font name and works out the best HPGL equivalent
    from a translation table. On the first call, the table is read from 
    disk and space is allocated for it. If the routine is called with a 
@@ -111,7 +111,7 @@
    quite safe to call the routine again after this has occurred; the 
    table will simply be re-read from disk.
 
-   #ROUTINE blSimplifyText()
+   #FUNCTION blSimplifyText()
    Removes control codes from a string for screen display. Also used for
    calculating string length. The returned string is stored as static
    within the routine

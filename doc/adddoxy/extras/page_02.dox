@@ -4,10 +4,6 @@
 \brief
    Bioplib - Reading and writing PDB and PDBML files.
 
-BiopLib provides functions for reading and writing PDB files. The functions blReadPDB() and blWritePDB() will read and write the ATOM/HETATM records only. The functions ReadWholePDB() and WriteWholePDB() will include the header and trailer information from the PDB file.
-
-If the BiopLib library has been compiled with XML support then the above functions will also read and write PDBML formatted files. 
-
 
 Read Functions
 --------------

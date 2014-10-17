@@ -56,7 +56,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Searching the PDB linked list        
-   #ROUTINE  blFindHetatmResidueSpec()
+   #FUNCTION  blFindHetatmResidueSpec()
    Search a PDB linked list for a specified residue (given as
    [chain[.]]num[[.]insert]) but limits search to HETATM residues
 */

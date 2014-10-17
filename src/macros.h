@@ -46,52 +46,6 @@
    Usage:
    ======
 
-\verbatim
-   INIT(x,y)            Initialise list of name x and type y. 
-                        Set x->next to NULL
-   INITPREV(x,y)        Ditto, but also sets x->prev to NULL
-   NEXT(x)              Step on in linked list
-   PREV(x)              Step back in linked list
-   ALLOCNEXT(x,y)       Allocate next item in list and step on
-   ALLOCNEXTPREV(x,y)   Allocate next item in list and step on. 
-                        Also set ->prev item in next item
-   LAST(x)              Move to end of list
-   FREELIST(y,z)        Free list y of type z
-   NEWLINE              Print a newline character ty stdout
-   TOGGLE(x)            Toggle a flag
-   RANGECHECK(x,y,z)    Return x constrained to range y to z
-   TERMINATE(x)         Terminate a string at the first \n
-   MAX(x,y)             max() as macro
-   MIN(x,y)             min() as macro
-   ABS(x,y)             abs() as macro
-   UPPER(x)             Converts a string to upper case
-   KILLLEADSPACES(x,y)  Makes x a pointer into string y after any spaces
-                        or tabs.
-   D(BUG)               Prints the BUG string if DEBUG is defined first
-   DELETE(lst,itm,type) Deletes (itm) from linked list (lst) of type
-                        (type)
-   TESTINARRAY(x,l,y,r) Tests whether value (y) is in array (x) if length
-                        (l) returning the result in (r)
-   FINDINARRAY(x,l,y,r) Finds value (y) is in array (x) if length
-                        (l) returning the offset in (r). Offset is -1 if
-                        not found
-   SET(x,y)             Sets bit y (a hex value) in variable x
-   UNSET(x,y)           Clears bit y (a hex value) in variable x
-   ISSET(x,y)           Tests bit y (a hex value) in variable x
-   TERMAT(x,y)          Terminates character string x at first character y
-   KILLTRAILSPACES(x)   Terminate string to remove any trailing white 
-                        space
-   PROMPT(fp,x)         Issue a prompt to stdout if fp is a terminal
-   PADMINTERM(str,len)  Pads a string to len chars only if it is shorter
-   DELETEDOUBLE(lst,itm,type) Deletes (itm) from a doubly linked list 
-                        (lst) of type (type)
-   PADCHARMINTERM(str,char,len) Pads a string to len chars with specified
-                        character only if it is shorter
-   DOTIFY(str)          Replace ' ' with '.' in string
-   DEDOTIFY(str)        Replace '.' with ' ' in string
-   FINDPREV(p, start, q) Set p to item in linked list start before q
-   
-\endverbatim
 **************************************************************************
 
    Revision History:
@@ -142,6 +96,95 @@
                   blPadterm() By: CTP
 -  V2.21 24.07.14 Initialize list pointers for DELETE macro. By: CTP
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    General Programming
+   #SUBGROUP Handling linked lists
+
+   #FUNCTION INIT(x,y)
+   Macro: Initialise list of name x and type y. Set x->next to NULL
+   #FUNCTION INITPREV(x,y)        
+   Macro: Initialise list of name x and type y. Set x->next and x->prev to NULL
+   #FUNCTION NEXT(x)              
+   Macro: Step on in linked list
+   #FUNCTION PREV(x)              
+   Macro: Step back in doubly linked list
+   #FUNCTION ALLOCNEXT(x,y)       
+   Macro: Allocate next item in list and step on
+   #FUNCTION ALLOCNEXTPREV(x,y)   
+   Macro: Allocate next item in doubly linked list and step on. 
+   #FUNCTION LAST(x)              
+   Macro: Move to end of list
+   #FUNCTION FREELIST(y,z)        
+   Macro: Free list y of type z
+   #FUNCTION DELETE(lst,itm,type) 
+   Macro: Deletes (itm) from linked list (lst) of type (type)
+   #FUNCTION FINDPREV(p, start, q) 
+   Set p to item in linked list start before q
+   #FUNCTION DELETEDOUBLE(lst,itm,type) 
+   Macro: Deletes (itm) from a doubly linked list (lst) of type (type)
+
+   #SUBGROUP Miscellaneous
+   #FUNCTION NEWLINE              
+   Macro: Print a newline character to stdout
+   #FUNCTION RANGECHECK(x,y,z)    
+   Macro: Return x constrained to range y to z
+
+   #SUBGROUP Flags and bitwise operations
+   #FUNCTION TOGGLE(x)            
+   Macro: Toggle a flag
+   #FUNCTION SET(x,y)             
+   Macro: Sets bit y (a hex value) in variable x
+   #FUNCTION UNSET(x,y)           
+   Macro: Clears bit y (a hex value) in variable x
+   #FUNCTION ISSET(x,y)           
+   Macro: Tests bit y (a hex value) in variable x
+
+   #SUBGROUP String handling
+   #FUNCTION TERMINATE(x)         
+   Macro: Terminate a string at the first \n
+   #FUNCTION UPPER(x)             
+   Macro: Converts a string to upper case
+   #FUNCTION KILLLEADSPACES(x,y)  
+   Macro: Makes x a pointer into string y after any spaces or tabs.
+   #FUNCTION TERMAT(x,y)          
+   Macro: Terminates character string x at first character y
+   #FUNCTION KILLTRAILSPACES(x)   
+   Macro: Terminate string to remove any trailing white space
+   #FUNCTION PADMINTERM(str,len)  
+   Macro: Pads a string to len chars only if it is shorter
+   #FUNCTION PADCHARMINTERM(str,char,len) 
+   Macro: Pads a string to len chars with specified
+          character only if it is shorter
+   #FUNCTION DOTIFY(str)          
+   Macro: Replace ' ' with '.' in string
+   #FUNCTION DEDOTIFY(str)        
+   Macro: Replace '.' with ' ' in string
+
+   #SUBGROUP Maths
+   #FUNCTION MAX(x,y)             
+   Macro: max() as macro
+   #FUNCTION MIN(x,y)             
+   Macro: min() as macro
+   #FUNCTION ABS(x,y)             
+   Macro: abs() as macro
+
+   #SUBGROUP Debugging
+   #FUNCTION D(BUG)               
+   Macro: Prints the BUG string if DEBUG is defined first
+
+   #SUBGROUP Arrays
+   #FUNCTION TESTINARRAY(x,l,y,r) 
+   Macro: Tests whether value (y) is in array (x) if length (l) returning the result in (r)
+   #FUNCTION FINDINARRAY(x,l,y,r) 
+   Macro: Finds value (y) is in array (x) if length
+      (l) returning the offset in (r). Offset is -1 if not found
+
+   #SUBGROUP User interaction
+   #FUNCTION PROMPT(fp,x)         
+   Macro: Issue a prompt to stdout if fp is a terminal
+*/
+/************************************************************************/
 #ifndef _MACROS_H
 #define _MACROS_H
 

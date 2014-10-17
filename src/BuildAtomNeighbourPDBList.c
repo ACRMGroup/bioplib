@@ -60,7 +60,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Manipulating the PDB linked list
-   #ROUTINE  blBuildAtomNeighbourPDBListAsCopy()
+   #FUNCTION  blBuildAtomNeighbourPDBListAsCopy()
    Builds a PDB linked list of atoms neighbouring those in a specified
    residue. 
 */

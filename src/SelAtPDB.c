@@ -96,7 +96,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Manipulating the PDB linked list
-   #ROUTINE  blSelectAtomsPDBAsCopy()
+   #FUNCTION  blSelectAtomsPDBAsCopy()
    Take a PDB linked list and returns a list containing only those atom 
    types specified in the sel array.
 */

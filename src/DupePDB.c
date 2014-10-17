@@ -64,7 +64,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Manipulating the PDB linked list
-   #ROUTINE  blDupePDB()
+   #FUNCTION  blDupePDB()
    Duplicates a PDB linked list.
 */
 /************************************************************************/

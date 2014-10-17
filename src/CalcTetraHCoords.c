@@ -66,7 +66,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Calculations
-   #ROUTINE  blCalcTetraHCoords()
+   #FUNCTION  blCalcTetraHCoords()
    Calculates coordinates for extra hydrogens.
 */
 /************************************************************************/

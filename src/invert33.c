@@ -61,7 +61,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Matrices
-   #ROUTINE  blInvert33()
+   #FUNCTION  blInvert33()
    Invert a 3x3 matrix
 */
 /************************************************************************/

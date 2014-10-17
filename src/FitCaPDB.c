@@ -66,7 +66,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Fitting
-   #ROUTINE  blFitCaPDB()
+   #FUNCTION  blFitCaPDB()
    Fits two PDB linked lists using only the CA atoms. 
 */
 /************************************************************************/

@@ -82,13 +82,13 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Modifying the structure
-   #ROUTINE  blRepSChain()
+   #FUNCTION  blRepSChain()
    Replace sidechains. 
 
-   #ROUTINE  blRepOneSChain()
+   #FUNCTION  blRepOneSChain()
    Replace a single sidechain. 
 
-   #ROUTINE  blEndRepSChain()
+   #FUNCTION  blEndRepSChain()
    Cleans up open files and memory used by the sidechain replacement
    routines.
 */

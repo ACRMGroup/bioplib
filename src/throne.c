@@ -75,15 +75,15 @@
    -------
    #GROUP    Handling Sequence Data
    #SUBGROUP Conversions
-   #ROUTINE  blThrone()
+   #FUNCTION  blThrone()
    Converts 3-letter code to 1-letter code.
    Handles ASX and GLX as X
 
-   #ROUTINE  blThronex()
+   #FUNCTION  blThronex()
    Converts 3-letter code to 1-letter code.
    Handles ASX and GLX as B and Z.
 
-   #ROUTINE  blOnethr()
+   #FUNCTION  blOnethr()
    Converts 1-letter code to 3-letter code (actually as 4 chars).
 */
 /************************************************************************/

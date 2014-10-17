@@ -54,7 +54,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Miscellaneous
-   #ROUTINE  blFactorial()
+   #FUNCTION  blFactorial()
    Calculates the factorial of an integer.
 */
 /************************************************************************/

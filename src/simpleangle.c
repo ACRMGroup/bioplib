@@ -54,7 +54,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Geometry
-   #ROUTINE  blSimpleangle()
+   #FUNCTION  blSimpleangle()
    Simplifies a signed angle to an unsigned angle <=2*PI
 */
 /************************************************************************/

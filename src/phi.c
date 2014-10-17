@@ -55,7 +55,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Geometry
-   #ROUTINE  blPhi()
+   #FUNCTION  blPhi()
    Calculates the torsion angle described by 4 sets of coordinates.
 */
 /************************************************************************/

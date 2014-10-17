@@ -55,7 +55,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Miscellaneous
-   #ROUTINE  blNComb()
+   #FUNCTION  blNComb()
    Calculates number of combinations of n items in r groups
 */
 /************************************************************************/

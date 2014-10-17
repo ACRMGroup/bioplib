@@ -209,52 +209,48 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
    #GROUP    Handling PDB Data
    #SUBGROUP File IO
 
-   #ROUTINE blReadPDB() 
+   #FUNCTION blReadPDB() 
    Main way of reading a PDB file into a linked list, reading just the
    highest occupancy atoms
 
-   #ROUTINE blReadPDBAll() 
+   #FUNCTION blReadPDBAll() 
    Reads a PDB file into a linked list, reading all multiple
    occupancy atoms
 
-   #ROUTINE blReadPDBAtoms() 
+   #FUNCTION blReadPDBAtoms() 
    Reads only ATOM records from a PDB file into a linked list, reading 
    just the highest occupancy atoms
 
-   #ROUTINE blReadPDBOccRaank() 
+   #FUNCTION blReadPDBOccRank() 
    Reads the specified ranking of occupancy (e.g. the second most 
    populated coordinates) from a PDB file into a linked list
 
-   #ROUTINE blReadPDBAtomsOccRaank() 
+   #FUNCTION blReadPDBAtomsOccRank() 
    Reads only the ATOM records for the specified ranking of occupancy 
    (e.g. the second most populated coordinates) from a PDB file into a 
    linked list
 
-   #ROUTINE blDoReadPDB() 
+   #FUNCTION blDoReadPDB() 
    A lower level routine giving full control over reading all or only
    ATOM records, occupancy rankings and model numbers.
 
-   #ROUTINE blDoReadPDBML() 
+   #FUNCTION blDoReadPDBML() 
    A lower level routine giving full control over reading all or only
    ATOM records, occupancy rankings and model numbers from a PDBML XML
    file.
 
-   #ROUTINE blCheckFileFormatPDBML() 
+   #FUNCTION blCheckFileFormatPDBML() 
    A simple test to detect whether a file is a PDBML-formatted PDB file.
 
 
    #SUBGROUP Atom names and elements
-   #ROUTINE blProcessElementFields() 
-   Works out the element type from the element field if present, otherwise
-   from the atom name
-
-   #ROUTINE blFixAtomName()
+   #FUNCTION blFixAtomName()
    Fixes an atom name by removing leading spaces, or moving a leading
    digit to the end of the string.
 
 
    #SUBGROUP Manipulating the PDB linked list
-   #ROUTINE blRemoveAlternates()
+   #FUNCTION blRemoveAlternates()
    Removes alternate occupancy atoms. This may be useful after
    blReadPDBAll()
 */

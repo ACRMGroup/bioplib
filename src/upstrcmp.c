@@ -77,7 +77,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP String handling
-   #ROUTINE  blUpstrcmp()
+   #FUNCTION  blUpstrcmp()
    Like strcmp(), but upcases each character before comparison
 */
 /************************************************************************/

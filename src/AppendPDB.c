@@ -63,7 +63,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Manipulating the PDB linked list
-   #ROUTINE  blAppendPDB()
+   #FUNCTION  blAppendPDB()
    Appends one PDB linked list onto another.
 */
 /************************************************************************/

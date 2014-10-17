@@ -63,7 +63,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Calculations
-   #ROUTINE  blCalcCterCoords()
+   #FUNCTION  blCalcCterCoords()
    Calculates CTER OT2 coordinates
 */
 /************************************************************************/

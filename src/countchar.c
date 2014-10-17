@@ -77,7 +77,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP String handling
-   #ROUTINE  blCountchar()
+   #FUNCTION  blCountchar()
    Counts occurrences of a charcater in a string
 */
 /************************************************************************/

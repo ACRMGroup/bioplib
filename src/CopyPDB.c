@@ -64,7 +64,7 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Manipulating the PDB linked list
-   #ROUTINE  blCopyPDB()
+   #FUNCTION  blCopyPDB()
    Copy a PDB record, except that the ->next is set to NULL;
 */
 /************************************************************************/

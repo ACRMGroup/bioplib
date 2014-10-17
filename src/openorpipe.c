@@ -67,11 +67,11 @@
    -------
    #GROUP    General Programming
    #SUBGROUP File IO
-   #ROUTINE  blOpenOrPipe()
+   #FUNCTION  blOpenOrPipe()
    Opens a file for writing unless the filename begins with a | in which
    case it is opened as a pipe.
 
-   #ROUTINE  blCloseOrPipe()
+   #FUNCTION  blCloseOrPipe()
    Attempts to close a file pointer as a pipe.
 */
 /************************************************************************/

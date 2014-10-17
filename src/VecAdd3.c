@@ -57,7 +57,7 @@
    -------
    #GROUP    Maths
    #SUBGROUP Vectors
-   #ROUTINE  blVecAdd3()
+   #FUNCTION  blVecAdd3()
    Add 2 vectors
 */
 /************************************************************************/
