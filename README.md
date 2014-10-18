@@ -28,14 +28,14 @@ also available - see COPYING.DOC.
 INSTALLATION INSTRUCTIONS
 -------------------------
 
-(1) Create sub-directories of your main directory called include and
+####(1) Create sub-directories of your main directory called include and
 lib:
 
    mkdir ~/include
    mkdir ~/include/bioplib
    mkdir ~/lib
 
-(2) Unpack the tar file:
+####(2) Unpack the tar file:
 
    zcat bioplib-X.Y.tar.gz | tar -xvf -
 -or-
@@ -46,8 +46,9 @@ lib:
 
 (where X.Y is the major and minor version numbers - e.g. 3.0)
 
-(3) This will create a directory called bioplib-X.Y.  Enter this
-directory and then go into the src sub-directory:
+####(3) This will create a directory called bioplib-X.Y.  
+
+Enter this directory and then go into the src sub-directory:
 
    cd bioplib-X.Y/src
 
@@ -59,13 +60,13 @@ to be the library directory you have created and INCDEST to the
 include directory you have created (N.B. the complete path is
 required, you can't do ~/lib).
 
-(4) Type the commands:
+####(4) Type the commands:
 
    make 
    make doxygen
    make install
 
-(5) For more information read the file:
+####(5) For more information, read the file:
 
    bioplib-X.Y/doc/doxygen/docsrcinput/page_01.dox
 
