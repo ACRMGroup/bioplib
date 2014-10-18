@@ -31,18 +31,18 @@ INSTALLATION INSTRUCTIONS
 ####(1) Create sub-directories of your main directory called include and
 lib:
 
-   mkdir ~/include
-   mkdir ~/include/bioplib
-   mkdir ~/lib
+        mkdir ~/include
+        mkdir ~/include/bioplib
+        mkdir ~/lib
 
 ####(2) Unpack the tar file:
 
-   zcat bioplib-X.Y.tar.gz | tar -xvf -
+        zcat bioplib-X.Y.tar.gz | tar -xvf -
 -or-
-   gunzip bioplib-X.Y.tar.gz
-   tar -xvf bioplib-X.Y.tar
+        gunzip bioplib-X.Y.tar.gz
+        tar -xvf bioplib-X.Y.tar
 -or- (if you have Gnu tar)
-   tar -zxvf bioplib-X.Y.tar.gz
+        tar -zxvf bioplib-X.Y.tar.gz
 
 (where X.Y is the major and minor version numbers - e.g. 3.0)
 
@@ -50,7 +50,7 @@ lib:
 
 Enter this directory and then go into the src sub-directory:
 
-   cd bioplib-X.Y/src
+        cd bioplib-X.Y/src
 
 Modify the Makefile as required for your system. If you are using the
 GNU C compiler and have followed the directions above, no changes
@@ -62,16 +62,16 @@ required, you can't do ~/lib).
 
 ####(4) Type the commands:
 
-   make 
-   make doxygen
-   make install
+        make 
+        make doxygen
+        make install
 
 ####(5) For more information, read the file:
 
-   bioplib-X.Y/doc/doxygen/docsrcinput/page_01.dox
+        bioplib-X.Y/doc/doxygen/docsrcinput/page_01.dox
 
 or, after doing 'make doxygen', read the formatted version by pointing
 a web browser at:
 
-   bioplib-X.Y/doc/html/index.html
+        bioplib-X.Y/doc/html/index.html
 
