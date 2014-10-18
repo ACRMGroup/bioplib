@@ -68,7 +68,7 @@
    -------
    #GROUP    Handling Sequence Data
    #SUBGROUP Obtaining information
-   #FUNCTION  blTrueSeqLen(char *sequence)
+   #FUNCTION  blTrueSeqLen()
    Scans a 1-letter code sequence and calculate the length without
    `-' or ` ' residues
 */

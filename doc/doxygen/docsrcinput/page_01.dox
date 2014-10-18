@@ -7,56 +7,82 @@
 Installation on UNIX systems
 ----------------------------
 
-Create sub-directories of your main directory called include and lib: 
+###(1) Create sub-directories of your main directory called include and lib: 
 
          mkdir ~/include
          mkdir ~/include/bioplib
          mkdir ~/lib
 
-Unpack the tar file:
+###(2) Unpack the tar file:
 
-            zcat BiopLibVX.Y.tar.gz | tar -xvf -
+            zcat bioplib-X.Y.tar.gz | tar -xvf -
          -or-
-            gunzip BiopLibVX.Y.tar.gz
-            tar -xvf BiopLibVX.Y.tar
+            gunzip bioplib-X.Y.tar.gz
+            tar -xvf bioplib-X.Y.tar
          -or- (if you have Gnu tar)
-            tar -zxvf BiopLibVX.Y.tar.gz
+            tar -zxvf bioplib-X.Y.tar.gz
 
 (where X.Y is the major and minor version numbers - e.g. 3.0)
 
-This will create a directory called BiopLibVX.Y.  Enter this directory and then go into the src sub-directory:
+###(3) This will create a directory called bioplib-X.Y.  
 
-         cd BiopLibVX.Y/src
+Enter this directory and then go into the src sub-directory:
 
-Modify the Makefile as required for your system. If you are using the GNU C compiler and have followed the directions above, no changes should be needed. If you have chosen alternative locations for the include and library directories then you will need to change LIBDEST to be the library directory you have created and INCDEST to the include directory you have created (N.B. the complete path is required, you can't do ~/lib).
+         cd bioplib-X.Y/src
 
-To build the libraries, type:
+Modify the Makefile as required for your system. If you are using the
+GNU C compiler and have followed the directions above, no changes
+should be needed. If you have chosen alternative locations for the
+include and library directories then you will need to change LIBDEST
+to be the library directory you have created and INCDEST to the
+include directory you have created (N.B. the complete path is
+required, you can't do ~/lib).
+
+###(4) To build the libraries, type:
 
          make 
 
-The compilation should complete with no errors or warnings except for implicit declarations of popen() in ReadPDB.c and WholePDB.c This is because popen() is not an ANSI C function and the -ansi flag causes this to be a warning.
+The compilation should complete with no errors or warnings except for
+implicit declarations of popen() in ReadPDB.c and WholePDB.c This is
+because popen() is not an ANSI C function and the -ansi flag causes
+this to be a warning.
 
-To install the libraries and the include files, type:
+###(5) Install the libraries and the include files:
 
          make install
 
-To remove the object files and local copies of the libraries, type:
-
-         make clean
-
-Documentation for the BiopLib can be generated using Doxygen (www.doxygen.org). To generate documentation for the BIopLib library type:
+###(6) Build the documentation:
 
          make doxygen
 
-The output directories for doxygen are doc/latex and doc/html which contain documentation in LaTeX and HTML format. 
+This uses Doxygen (www.doxygen.org) and exploits the markdown format
+which is supported by version 1.8.0 (or later) of Doxygen.
 
-The documentation uses markdown format which is supported by version 1.8.0 (or later) of Doxygen.
+The resulting documentation will be found in the doc/html
+sub-directory of bioplib-X.Y
 
-If you are using a shell which supports aliases, set up an alias for the cc command to add the include directory to the include search path and the lib directory to the lib search path. Using the BASH shell and assuming you have installed the libraries and include files in the default location, the following will work:
+
+###(7) To remove the object files and local copies of the libraries:
+
+         make clean
+
+###(8) To remove the documentation:
+
+         make doxyclean
+
+###(9) Set up aliases
+
+If you are using a shell which supports aliases, set up an alias
+for the cc command to add the include directory to the include search
+path and the lib directory to the lib search path. Using the BASH
+shell and assuming you have installed the libraries and include files
+in the default location, the following will work:
 
          alias cc '/bin/cc -I$HOME/include -L$HOME/lib'
 
-If you have chosen an alternative location to install the libraries and include files, you will need to change the paths for include and lib. 
+If you have chosen an alternative location to install the libraries
+and include files, you will need to change the paths for include and
+lib.
 
 You can then compile a program using the command:
 
@@ -64,15 +90,27 @@ You can then compile a program using the command:
 
 Note that -lbiop must appear before -lgen
 
-If support for reading and writing pdbml-formatted files is required then the program must be linked to the libxml2 library. Compile using the command:
+If support for reading and writing pdbml-formatted files is required
+then the program must be linked to the libxml2 library. Compile using
+the command:
 
          cc -o foo foo.c -lbiop -lgen -lm -lxml2
 
-It is good practice to add flags to enforce the strict ANSI C standard at the same time (-Wall -ansi -pedantic for GCC or -ansi -fullwarn on an SGI).
+It is good practice to add flags to enforce the strict ANSI C standard
+at the same time (-Wall -ansi -pedantic for GCC or -ansi -fullwarn on
+an SGI).
 
-If building a project using a Makefile, then you will need to include -I$HOME/include -L$HOME/lib in your CFLAGS and remember to include the libraries (-lbiop -lgen and maybe -lm or -lxml2) at the end of your link command.
+###(10) Using Makefiles
 
-To access the C library functions you will need to include appropriate header files. For example:
+If building a project using a Makefile, then you will need to
+include -I$HOME/include -L$HOME/lib in your CFLAGS and remember to
+include the libraries (-lbiop -lgen and maybe -lm or -lxml2) at the
+end of your link command.
+
+###(11) Include the header files
+
+To access the C library functions you will need to include appropriate
+header files. For example:
 
          #include "bioplib/pdb.h"
 

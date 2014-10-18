@@ -386,7 +386,7 @@ sub PrintData
                 {
                     if(!$printed)
                     {
-                        print $pagefile "\n\n**Key functions**\n\n";
+                        print $pagefile "\n\n####Key functions\n\n";
                         $printed = 1;
                     }
                     print $pagefile "- $function - $::keyData{$group}{$subgroup}{$function}\n";
@@ -396,7 +396,7 @@ sub PrintData
                 {
                     if($printed)
                     {
-                        print $pagefile "\n\n**Other functions**\n\n";
+                        print $pagefile "\n\n####Other functions\n\n";
                         $printed = 0;
                     }
                     print $pagefile "- $function - $::data{$group}{$subgroup}{$function}\n";

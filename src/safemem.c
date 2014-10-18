@@ -82,7 +82,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP Memory management
-   #FUNCTION  blSafemalloc(int nbytes)
+   #FUNCTION  blSafemalloc()
    Debugging version of malloc() which creates protection buffers each
    side of the requested memory block.
 

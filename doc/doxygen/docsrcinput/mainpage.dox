@@ -10,8 +10,7 @@ Bioplib is a programming library, written in the C programming language,
 for handling bioinformatics data – primarily protein structures, but also 
 sequence data.
 
-**Click the 'Related Pages' link above for information on installation and
-detailed listings of what the library contains**
+### Click the 'Related Pages' link above for information on installation and detailed listings of what the library contains 
 
 The library has equivalents for other programming languages such as Python 
 (BioPython) and Perl (BioPerl) and another C library and tool-set 

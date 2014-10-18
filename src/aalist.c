@@ -58,58 +58,58 @@
    #GROUP    Handling Sequence Data
    #SUBGROUP Sequence manipulation
 
-   #FUNCTION blInsertNextResiduesInAAList(AA *a, char res, int nres)
+   #FUNCTION blInsertNextResiduesInAAList()
    Inserts a set of identical residues after the current position in
    the linked list.  The returned value is the last residue which has
    been inserted so this can be called again on the returned aa to
    insert another aa
 
-   #FUNCTION blInsertNextResidueInAAList(AA *a, char res)
+   #FUNCTION blInsertNextResidueInAAList()
    Inserts a residues after the current position in the linked list.
    The returned value is the residue which has been inserted so this
    can be called again on the returned aa to insert another aa
 
-   #FUNCTION blBuildSeqFromAAList(AA *aa)
+   #FUNCTION blBuildSeqFromAAList()
    Converts the linked list back into a string which is malloc'd
 
-   #FUNCTION blInsertResidueInAAListAt(AA *aa, char res, int pos)
+   #FUNCTION blInsertResidueInAAListAt()
    Inserts a residue after the specified position in the
    list. Residues are numbered from 1. If the position is > length of
    the list then the residue will be added at the end. If the position
    is zero, it will be at the start of the list in which case the
    return value for the list will be different from the input value.
 
-   #FUNCTION blInsertResiduesInAAListAt(AA *aa, char res, int nres, int pos)
+   #FUNCTION blInsertResiduesInAAListAt()
    Inserts a set of residues after the specified position in the
    list. Residues are numbered from 1. If the position is > length of
    the list then the residue will be added at the end. If the position
    is zero, it will be at the start of the list in which case the
    return value for the list will be different from the input value.
 
-   #FUNCTION blBuildAAList(char *seq)
+   #FUNCTION blBuildAAList()
    Converts a sequence string into a linked list
 
-   #FUNCTION blFindAAListOffsetByResnum(AA *aa, int resnum)
+   #FUNCTION blFindAAListOffsetByResnum()
    Searches the linked list of the specified resnum (i.e. the original
    residue number in the sequence before any insertions were made) and 
    returns the position of that residue in the list (numbered from 1)
 
-   #FUNCTION blFindAAListItemByResnum(AA *aa, int resnum)
+   #FUNCTION blFindAAListItemByResnum()
    Searches the linked list of the specified resnum (i.e. the original
    residue number in the sequence before any insertions were made) and 
    returns a pointer to that item in the list.
 
-   #FUNCTION blSetAAListFlagByResnum(AA *aa, int resnum)
+   #FUNCTION blSetAAListFlagByResnum()
    Searches the linked list of the specified resnum (i.e. the original
    residue number in the sequence before any insertions were made) and 
    sets the flag in that item in the linked list
 
-   #FUNCTION blBuildFlagSeqFromAAList(AA *aa, char ch)
+   #FUNCTION blBuildFlagSeqFromAAList()
    Builds a sequence string with blanks except where the flag in the
    sequence structure is set. At these positions the character specified
    in ch is used instead.
 
-   #FUNCTION blGetAAListLen(AA *aa)
+   #FUNCTION blGetAAListLen()
    Returns the number of items in the linked list
 */
 /************************************************************************/

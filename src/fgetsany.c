@@ -91,7 +91,7 @@
    -------
    #GROUP    General Programming
    #SUBGROUP File IO
-   #FUNCTION  blFgetsany(FILE *fp)
+   #FUNCTION  blFgetsany()
    blFgetsany() provides a routine like fgets() for reading strings from
    a file, but does not require you to impose a limit on the length of
    string which may be read. 

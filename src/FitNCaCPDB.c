@@ -65,7 +65,7 @@
    #GROUP    Handling PDB Data
    #SUBGROUP Fitting
    #FUNCTION  blFitNCaCPDB()
-   Fits two PDB linked lists using only the N, CA, CB atoms. 
+   Fits two PDB linked lists using only the N, CA, C atoms. 
 */
 /************************************************************************/
 /* Includes
@@ -102,7 +102,7 @@
    \param[out]    rm           Rotation matrix (May be input as NULL).
    \return                     Success
 
-   Fits two PDB linked lists using only the N, CA, CB atoms. 
+   Fits two PDB linked lists using only the N, CA, C atoms. 
 
    Actually fits fit_pdb onto ref_pdb and also returns the rotation 
    matrix. This may be NULL if these data are not required.
