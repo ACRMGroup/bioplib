@@ -3,8 +3,8 @@
 
    \file       deprecatedGen.c
    
-   \version    V1.2
-   \date       14.08.14
+   \version    V1.3
+   \date       24.10.14
    \brief      Source code for all deprecated functions.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014
@@ -66,9 +66,10 @@
    =================
 
 -  V1.0  31.07.14 Original By: CTP
--  V1.1  08.08.14 Separated Biop and Gen deprecation  By: ACRM
+-  V1.1  08.08.14 Separated Biop and Gen deprecation   By: ACRM
 -  V1.2  14.08.14 Removed unnecessary includes. 
                   Corrected safemem.h function names   By: CTP
+-  V1.3  24.10.14 Added regression and eigen           By: ACRM
 
 *************************************************************************/
 /* Includes
@@ -89,6 +90,8 @@
 #include "plotting.h"
 #include "ps.h"
 #include "safemem.h"
+#include "eigen.h"
+#include "regression.h"
 
 
 /************************************************************************/
@@ -983,6 +986,42 @@ void safeleaks(void)
    DEPRECATED("safeleaks()","blSafeleaks()");
    blSafeleaks();
 }
+
+int eigen(REAL **M, REAL **Vectors, REAL *lambda, int n)
+{
+   DEPRECATED("eigen()", "blEigen()");
+   return(blEigen(M, Vectors, lambda, n));
+}
+
+BOOL CalculateBestFitLine(double **coordinates, int numberOfPoints,
+                          int numberOfDimensions, double *centroid,
+                          double *eigenVector)
+{
+   DEPRECATED("CalculateBestFitLine()", 
+              "blCalculateBestFitLine()");
+   return(blCalculateBestFitLine(coordinates, numberOfPoints,
+                                 numberOfDimensions, centroid,
+                                 eigenVector));
+}
+
+
+void FindCentroid(REAL **coordinates, int numberOfPoints, 
+                  int numberOfDimensions, REAL *centroid)
+{
+   DEPRECATED("FindCentroid()","blFindCentroid()");
+   blFindCentroid(coordinates, numberOfPoints, 
+                  numberOfDimensions, centroid);
+}
+
+
+BOOL CalculateCovarianceMatrix(REAL **x, int numX, int numY, REAL **cov)
+{
+   DEPRECATED("CalculateCovarianceMatrix()",
+              "blCalculateCovarianceMatrix()");
+   return(blCalculateCovarianceMatrix(x, numX, numY, cov));
+}
+
+
 
 /************************************************************************/
 /** \endcond                                                            */

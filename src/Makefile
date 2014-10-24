@@ -52,11 +52,11 @@ RANLIB = ranlib
 # Version numbers for shared libraries - strictly the MINOR numbers here
 # are the minor and release numbers
 # libgen
-GMAJOR = 1
-GMINOR = 0.1
+GMAJOR = 3
+GMINOR = 0.2
 # libbiop
-BMAJOR = 1
-BMINOR = 0.1
+BMAJOR = 3
+BMINOR = 0.2
 
 # Files for libgen.a
 OFILESG = BuffInp.o CalcExtSD.o CalcSD.o CheckExtn.o CreateRotMat.o CrossProd3.o \
@@ -69,7 +69,8 @@ array2.o chindex.o countchar.o factdiv.o factorial.o fgetsany.o \
 fsscanf.o ftostr.o help.o hpgl.o invert33.o openorpipe.o padchar.o \
 padterm.o parse.o pearson.o pearson1.o phi.o pldist.o plotting.o \
 ps.o safemem.o simpleangle.o strcatalloc.o upstrcmp.o upstrncmp.o \
-WindIO.o getfield.o array3.o justify.o wrapprint.o deprecatedGen.o
+WindIO.o getfield.o array3.o justify.o wrapprint.o deprecatedGen.o \
+eigen.o regression.o
 
 
 # Files for libbiop.a

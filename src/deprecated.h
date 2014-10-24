@@ -3,8 +3,8 @@
 
    \file       deprecated.h
    
-   \version    v1.4
-   \date       26.08.14
+   \version    v1.5
+   \date       24.10.14
    \brief      Redirect calls to deprecated functions.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014
@@ -70,6 +70,8 @@
 -  ps.h
 -  safemem.h
 -  seq.h
+-  eigen.h
+-  regression.h
 
 
 \par Documentation
@@ -110,6 +112,7 @@
                   By: CTP
 -  V1.4  26.08.14 Added blSetMDMScoreWeight() By: ACRM
                   PDB2Seq macros give deprecation message. By: CTP
+-  V1.5  24.10.14 Added regression and eigen           By: ACRM
 
 *************************************************************************/
 #ifndef _DEPRECATED_H
@@ -163,7 +166,9 @@
       if(!getenv("BIOPLIB_DEPRECATED_QUIET"))                            \
          fprintf(stderr,                                                 \
                  "This code uses %s which is now deprecated!\n"          \
-                 "   Use %s instead\n", (s), (t));                       \
+                 "   Use %s instead\n"                                   \
+                 "   Set the BIOPLIB_DEPRECATED_QUIET environment \
+variable to silence this message" , (s), (t));                           \
    }
 #endif
 
@@ -730,6 +735,30 @@ int NumericAffineAlign(int *seq1, int length1, int *seq2, int length2,
                        int penext, int *align1, int *align2, 
                        int *align_len);
 void SetMDMScoreWeight(char resa, char resb, REAL weight);
+
+#endif
+
+/************************************************************************/
+/* Deprecated functions: eigen.h                                        */
+
+#ifdef _EIGEN_H_DEPRECATED
+#undef _EIGEN_H_DEPRECATED
+
+int eigen(REAL **M, REAL **Vectors, REAL *lambda, int n);
+
+#endif
+
+/************************************************************************/
+/* Deprecated functions: regression.h                                   */
+#ifdef _REGRESSION_H_DEPRECATED
+#undef _REGRESSION_H_DEPRECATED
+
+BOOL CalculateBestFitLine(double **coordinates, int numberOfPoints,
+                          int numberOfDimensions, double *centroid,
+                          double *eigenVector);
+void FindCentroid(REAL **coordinates, int numberOfPoints, 
+                  int numberOfDimensions, REAL *centroid);
+BOOL CalculateCovarianceMatrix(REAL **x, int numX, int numY, REAL **cov);
 
 #endif
 
