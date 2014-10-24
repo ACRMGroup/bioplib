@@ -54,7 +54,7 @@
    Find the covariance matrix for a given matrix
  
    #GROUP    Maths
-   #SUBGROUP Geometry (3D)
+   #SUBGROUP Geometry
    #FUNCTION blCalculateBestFitLine()
    Calculates a best fit line through a set of coordinates in 3D. 
    Results are returned as a vector and a point through which the vector
@@ -126,12 +126,12 @@ BOOL blCalculateBestFitLine(REAL **coordinates, int numberOfPoints,
 
    /* Allocate memory                                                   */
    eigenValues = (REAL *)malloc(numberOfDimensions * sizeof(REAL));
-   covarianceMatrix = (REAL **)Array2D(sizeof(REAL), 
-                                       numberOfDimensions,
-                                       numberOfDimensions);
-   eigenVectorMatrix = (REAL **)Array2D(sizeof(REAL), 
-                                        numberOfDimensions,
-                                        numberOfDimensions);
+   covarianceMatrix = (REAL **)blArray2D(sizeof(REAL), 
+                                         numberOfDimensions,
+                                         numberOfDimensions);
+   eigenVectorMatrix = (REAL **)blArray2D(sizeof(REAL), 
+                                          numberOfDimensions,
+                                          numberOfDimensions);
    
    if((eigenValues == NULL) || (eigenVectorMatrix == NULL) ||
       (covarianceMatrix == NULL))
@@ -187,12 +187,12 @@ BOOL blCalculateBestFitLine(REAL **coordinates, int numberOfPoints,
    
    /* Free allocated memory                                             */
    if(eigenValues)       free(eigenValues);
-   if(eigenVectorMatrix) FreeArray2D((char **)eigenVectorMatrix, 
-                                     numberOfDimensions, 
-                                     numberOfDimensions);
-   if(covarianceMatrix)  FreeArray2D((char **)covarianceMatrix, 
-                                     numberOfDimensions, 
-                                     numberOfDimensions);
+   if(eigenVectorMatrix) blFreeArray2D((char **)eigenVectorMatrix, 
+                                       numberOfDimensions, 
+                                       numberOfDimensions);
+   if(covarianceMatrix)  blFreeArray2D((char **)covarianceMatrix, 
+                                       numberOfDimensions, 
+                                       numberOfDimensions);
 
    return(retValue);
 }

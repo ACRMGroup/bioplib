@@ -85,7 +85,7 @@ int blIsMCAcceptorHBonded(PDB *res1, PDB *res2, int type);
 
 /************************************************************************/
 /* Include deprecated functions                                         */
-#define _hbond_h_deprecated
+#define _HBOND_H_DEPRECATED
 #include "deprecated.h"
 /************************************************************************/
 

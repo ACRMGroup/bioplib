@@ -71,7 +71,12 @@
    #SUBGROUP Searching the PDB linked list
    #FUNCTION  blExtractZonePDBAsCopy()
    Reduces a PDB linked list to those residues within a specified zone
-   forming a new linked list.
+   forming a new linked list. Uses separate chain, residue number and 
+   insert rather than residue specifications.
+   #FUNCTION  blExtractZoneSpecPDBAsCopy()
+   Reduces a PDB linked list to those residues within a specified zone
+   forming a new linked list. Uses residue specifications ([c]nnn[i])
+   rather than separate chain, residue number and insert.
 */
 /************************************************************************/
 /* Includes
@@ -217,6 +222,38 @@ PDB *blExtractZonePDBAsCopy(PDB *inpdb,
    }
 
    return(start);
+}
+
+
+/************************************************************************/
+/*>PDB *blExtractZoneSpecPDBAsCopy(PDB *pdb, char *firstRes, 
+                                   char *lastRes)
+   ---------------------------------------------------------
+*//**
+   \param[in]   pdb       PDB linked list
+   \param[in]   firstRes  Residue spec ([chain]resnum[insert])
+   \param[in]   lastRes   Residue spec ([chain]resnum[insert])
+
+   Extracts a zone from a PDB linked list, making a copy of the original
+   list.
+
+-  08.10.14  Original   By: ACRM
+*/
+PDB *blExtractZoneSpecPDBAsCopy(PDB *pdb, char *firstRes, char *lastRes)
+{
+   char chain1[8],  chain2[8],
+        insert1[8], insert2[8];
+   int  resnum1,    resnum2;
+   PDB  *zone = NULL;
+
+   if(blParseResSpec(firstRes, chain1, &resnum1, insert1) &&
+      blParseResSpec(lastRes,  chain2, &resnum2, insert2))
+   {
+      zone = blExtractZonePDBAsCopy(pdb, 
+                                    chain1, resnum1, insert1,
+                                    chain2, resnum2, insert2);
+   }
+   return(zone);
 }
 
 

@@ -3,8 +3,8 @@
 
    \file       deprecatedBiop.c
    
-   \version    V1.4
-   \date       26.08.14
+   \version    V1.5
+   \date       24.10.14
    \brief      Source code for Biop deprecated functions.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014
@@ -74,7 +74,8 @@
 -  V1.3  19.08.14 Renamed functions: blBuildAtomNeighbourPDBList(),
                   blExtractZonePDB(), blSelectAtomsPDB(), blStripHPDB(),
                   blStripWatersPDB() with AsCopy suffix. By: CTP
--  v1.4  26.08.14 Added blSetMDMScoreWeight() By: ACRM
+-  V1.4  26.08.14 Added blSetMDMScoreWeight() By: ACRM
+-  V1.5  24.10.14 Added blExtractZoneSpecPDBAsCopy()
 
 *************************************************************************/
 /* Includes
@@ -918,6 +919,12 @@ PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
    DEPRECATED("ExtractZonePDB()","blExtractZonePDBAsCopy()");
    return(blExtractZonePDBAsCopy(inpdb, chain1, resnum1, insert1, chain2,
                                  resnum2, insert2));
+}
+
+PDB *ExtractZoneSpecPDB(PDB *inpdb, char *resspec1, char *resspec2)
+{
+   DEPRECATED("ExtractZoneSpecPDB()","blExtractZoneSpecPDBAsCopy()");
+   return(blExtractZoneSpecPDBAsCopy(inpdb, resspec1, resspec2));
 }
 
 PDB *FindAtomInRes(PDB *pdb, char *atnam)

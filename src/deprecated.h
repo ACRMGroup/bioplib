@@ -113,17 +113,20 @@
 -  V1.4  26.08.14 Added blSetMDMScoreWeight() By: ACRM
                   PDB2Seq macros give deprecation message. By: CTP
 -  V1.5  24.10.14 Added regression and eigen           By: ACRM
+                  Added NODEPRECATION check
+                  Added ExtractZoneSpecPDB
 
 *************************************************************************/
-#ifndef _DEPRECATED_H
-#define _DEPRECATED_H
+#ifndef NODEPRECATION
+#   ifndef _DEPRECATED_H
+#      define _DEPRECATED_H
 
 /* Includes
 */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "macros.h"
+#      include <stdio.h>
+#      include <stdlib.h>
+#      include <string.h>
+#      include "macros.h"
 
 
 /************************************************************************/
@@ -151,17 +154,17 @@
    
 -  29.04.14 Original    By: CTP
 */
-#if(defined BIOPLIB_DEPRECATED_CHECK || defined BIOPLIB_DEPRECATED_QUIET)
-#  ifndef BIOPLIB_DEPRECATED_QUIET
-#     define DEPRECATED(s, t)                                            \
+#      if(defined BIOPLIB_DEPRECATED_CHECK || defined BIOPLIB_DEPRECATED_QUIET)
+#         ifndef BIOPLIB_DEPRECATED_QUIET
+#            define DEPRECATED(s, t)                                     \
                fprintf(stderr,                                           \
                        "This code uses %s which is now deprecated!\n"    \
                        "   Use %s instead\n", (s), (t))
-#  else
-#      define DEPRECATED(s, t)
-#  endif
-#else
-#  define DEPRECATED(s, t)                                               \
+#         else
+#            define DEPRECATED(s, t)
+#         endif
+#      else
+#         define DEPRECATED(s, t)                                        \
    {                                                                     \
       if(!getenv("BIOPLIB_DEPRECATED_QUIET"))                            \
          fprintf(stderr,                                                 \
@@ -170,7 +173,7 @@
                  "   Set the BIOPLIB_DEPRECATED_QUIET environment \
 variable to silence this message" , (s), (t));                           \
    }
-#endif
+#      endif
 
 
 /************************************************************************/
@@ -181,15 +184,15 @@ variable to silence this message" , (s), (t));                           \
 /* Prototypes
 */
 
-# endif
+#   endif  /* _DEPRECATED_H                                             */
 
 /************************************************************************/
 /** \cond deprecated                                                    */
 /************************************************************************/
 /* Deprecated functions: general.h                                      */
 
-#ifdef _GENERAL_H_DEPRECATED
-#undef _GENERAL_H_DEPRECATED
+#   ifdef _GENERAL_H_DEPRECATED
+#      undef _GENERAL_H_DEPRECATED
 
 void StringToLower(char *string1, char *string2);
 void StringToUpper(char *string1, char *string2);
@@ -231,13 +234,13 @@ void RightJustify(char *string);
 char *GetWordNC(char *buffer, char *word, int maxlen);
 void getfield(char *buffer, int start, int width, char *str);
 
-#endif
+#   endif   /* _GENERAL_H_DEPRECATED                                    */
 
 /************************************************************************/
 /* Deprecated functions: pdb.h                                          */
 
-#ifdef _PDB_H_DEPRECATED
-#undef _PDB_H_DEPRECATED
+#   ifdef _PDB_H_DEPRECATED
+#      undef _PDB_H_DEPRECATED
 
 char *GetPDBChainLabels(PDB *pdb);
 PDB *ReadPDB(FILE *fp, int *natom);
@@ -337,7 +340,7 @@ void WriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
                      REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4]);
 PDB *ExtractZonePDB(PDB *inpdb, char *chain1, int resnum1, char *insert1,
                       char *chain2, int resnum2, char *insert2);
-
+PDB *ExtractZoneSpecPDB(PDB *pdb, char *firstRes, char *lastRes);
 PDB *FindResidue(PDB *pdb, char chain, int resnum, char insert);
 PDB *FindHetatmResidue(PDB *pdb, char chain, int resnum, char insert);
 PDB *FindAtomInRes(PDB *pdb, char *atnam);
@@ -370,37 +373,35 @@ PDB *FindNextChain(PDB *pdb);
 void FreePDBStructure(PDBSTRUCT *pdbstruct);
 void SetElementSymbolFromAtomName(char *element, char * atom_name);
 
-#endif
+#   endif   /* _PDB_H_DEPRECATED                                        */
 
 /************************************************************************/
 /* Deprecated functions: BuffInp.h                                      */
 
-#ifdef _BUFFINPUT_H_DEPRECATED
-#undef _BUFFINPUT_H_DEPRECATED
+#   ifdef _BUFFINPUT_H_DEPRECATED
+#      undef _BUFFINPUT_H_DEPRECATED
 
 INBUFFER *OpenBufferedFile(char *filename, int maxstr);
 BOOL ReadBufferedFile(INBUFFER *bfp, char *string, int length);
 BOOL ProbeBufferedFile(INBUFFER *bfp, char *string, int length);
 
-#endif
+#   endif   /* _BUFFINPUT_H_DEPRECATED                                  */
 
 /************************************************************************/
 /* Deprecated functions: ErrStack.h                                     */
-#ifdef _ERRSTACK_H_DEPRECATED
-#undef _ERRSTACK_H_DEPRECATED
-
+#   ifdef _ERRSTACK_H_DEPRECATED
+#      undef _ERRSTACK_H_DEPRECATED
 
 void StoreError(char *routine, char *error);
 void ShowErrors(void *PrintRoutine(char *), BOOL Trace);
 
-#endif
+#   endif   /* _ERRSTACK_H_DEPRECATED                                   */
 
 /************************************************************************/
 /* Deprecated functions: MathUtil.h                                     */
 
-#ifdef _MATHUTIL_H_DEPRECATED
-#undef _MATHUTIL_H_DEPRECATED
-
+#   ifdef _MATHUTIL_H_DEPRECATED
+#      undef _MATHUTIL_H_DEPRECATED
 
 void CalcSD(REAL val, int action, REAL *mean, REAL *SD);
 void CalcExtSD(REAL val, int action, REAL *Sx, REAL *SxSq, 
@@ -423,14 +424,13 @@ ULONG Factdiv(int n1, int n2);
 ULONG NPerm(int n, int r);
 ULONG NComb(int n, int r);
 
-#endif
+#   endif   /* _MATHUTIL_H_DEPRECATED                                   */
 
 /************************************************************************/
 /* Deprecated functions: WindIO.h                                       */
 
-#ifdef _WINDIO_H_DEPRECATED
-#undef _WINDIO_H_DEPRECATED
-
+#   ifdef _WINDIO_H_DEPRECATED
+#      undef _WINDIO_H_DEPRECATED
 
 void screen(char *string);
 void prompt(char *string);
@@ -442,14 +442,13 @@ void WindowMode(BOOL mode);
 void WindowInteractive(BOOL mode);
 int YorN(char deflt);
 
-#endif
+#   endif   /* _WINDIO_H_DEPRECATED                                     */
 
 /************************************************************************/
 /* Deprecated functions: aalist.h                                       */
 
-#ifdef _AALIST_H_DEPRECATED
-#undef _AALIST_H_DEPRECATED
-
+#   ifdef _AALIST_H_DEPRECATED
+#      undef _AALIST_H_DEPRECATED
 
 AA *InsertNextResiduesInAAList(AA *a, char res, int nres);
 AA *InsertNextResidueInAAList(AA *a, char res);
@@ -463,14 +462,13 @@ void SetAAListFlagByResnum(AA *aa, int resnum);
 char *BuildFlagSeqFromAAList(AA *aa, char ch);
 int GetAAListLen(AA *aa);
 
-#endif
+#   endif   /* _AALIST_H_DEPRECATED                                     */
 
 /************************************************************************/
 /* Deprecated functions: angle.h                                        */
 
-#ifdef _ANGLE_H_DEPRECATED
-#undef _ANGLE_H_DEPRECATED
-
+#   ifdef _ANGLE_H_DEPRECATED
+#      undef _ANGLE_H_DEPRECATED
 
 REAL angle(REAL xi, REAL yi, REAL zi, REAL xj, REAL yj, REAL zj,
            REAL xk, REAL yk, REAL zk);
@@ -482,29 +480,27 @@ BOOL TorToCoor(VEC3F ant1, VEC3F ant2, VEC3F ant3,
                  REAL bond, REAL theta, REAL torsion,
                  VEC3F *coords);
                  
-#endif
+#   endif   /* _ANGLE_H_DEPRECATED                                      */
 
 /************************************************************************/
 /* Deprecated functions: array.h                                        */
 
-#ifdef _ARRAY_H_DEPRECATED
-#undef _ARRAY_H_DEPRECATED
-
+#   ifdef _ARRAY_H_DEPRECATED
+#      undef _ARRAY_H_DEPRECATED
 
 char **Array2D(int size, int dim1, int dim2);
 void FreeArray2D(char **array, int dim1, int dim2);
 char ***Array3D(int size, int dim1, int dim2, int dim3);
 void FreeArray3D(char ***array, int dim1, int dim2, int dim3);
 
-#endif
+#   endif   /* _ARRAY_H_DEPRECATED                                      */
 
 /************************************************************************/
 /* Deprecated functions: cssr.h                                         */
 
 
-#ifdef _CSSR_H_DEPRECATED
-#undef _CSSR_H_DEPRECATED
-
+#   ifdef _CSSR_H_DEPRECATED
+#      undef _CSSR_H_DEPRECATED
 
 CSSR *ReadCSSR(FILE *fp, int *natom, char *name, char *title);
 PDB *ReadCSSRasPDB(FILE *fp, int *natom);
@@ -516,52 +512,49 @@ void ortho(REAL cell[3], REAL alpha, REAL beta, REAL gamma,
            REAL amatrx[3][3], int isw, int ncode);
 void WriteCSSR(FILE *fp, CSSR *cssr, char *name, char *title);
 
-#endif
+#   endif   /* _CSSR_H_DEPRECATED                                       */
 
 /************************************************************************/
 /* Deprecated functions: fit.h                                          */
 
-#ifdef _FIT_H_DEPRECATED
-#undef _FIT_H_DEPRECATED
+#   ifdef _FIT_H_DEPRECATED
+#      undef _FIT_H_DEPRECATED
 
 
 BOOL matfit(COOR *x1, COOR *x2, REAL rm[3][3], int n, REAL *wt1, 
               BOOL column);
 
-#endif
+#   endif   /* _FIT_H_DEPRECATED                                        */
 
 /************************************************************************/
 /* Deprecated functions: hbond.h                                        */
 
-#ifdef _hbond_h_deprecated
-#undef _hbond_h_deprecated
-
+#   ifdef _HBOND_H_DEPRECATED
+#      undef _HBOND_H_DEPRECATED
 
 int  IsHBonded(PDB *res1, PDB *res2, int type);
 BOOL ValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP);
 int IsMCDonorHBonded(PDB *res1, PDB *res2, int type);
 int IsMCAcceptorHBonded(PDB *res1, PDB *res2, int type);
 
-#endif
+#   endif   /* _HBOND_H_DEPRECATED                                      */
 
 /************************************************************************/
 /* Deprecated functions: help.h                                         */
 
-#ifdef _HELP_H_DEPRECATED
-#undef _HELP_H_DEPRECATED
-
+#   ifdef _HELP_H_DEPRECATED
+#      undef _HELP_H_DEPRECATED
 
 void Help(char *string, char *HelpFile);
 void DoHelp(char *string, char *HelpFile);
 
-#endif
+#   endif   /* _HELP_H_DEPRECATED                                       */
 
 /************************************************************************/
 /* Deprecated functions: hpgl.h                                         */
 
-#ifdef _HPGL_H_DEPRECATED
-#undef _HPGL_H_DEPRECATED
-
+#   ifdef _HPGL_H_DEPRECATED
+#      undef _HPGL_H_DEPRECATED
 
 BOOL HPGLInit(char *filename, char *AltFont, REAL xmargin, REAL ymargin);
 void HPGLPen(int num);
@@ -579,14 +572,13 @@ void HPGLVText(REAL x, REAL y, REAL xoff, char *text, int TitleFont,
 void HPGLEnd(void);
 void HPGLShowText(char *text, BOOL orientation, int XBase, int YBase);
 
-#endif
+#   endif   /* _HPGL_H_DEPRECATED                                       */
 
 /************************************************************************/
 /* Deprecated functions: matrix.h                                       */
 
-#ifdef _MATRIX_H_DEPRECATED
-#undef _MATRIX_H_DEPRECATED
-
+#   ifdef _MATRIX_H_DEPRECATED
+#      undef _MATRIX_H_DEPRECATED
 
 void MatMult3_33(VEC3F vecin, REAL matin[3][3], VEC3F *vecout);
 void MatMult33_33(REAL a[3][3], REAL b[3][3], REAL out[3][3]);
@@ -594,14 +586,13 @@ void invert33(REAL s[3][3], REAL ss[3][3]);
 void CreateRotMat(char direction, REAL angle, REAL matrix[3][3]);
 REAL VecDist(REAL *a, REAL *b, int len);
 
-#endif
+#   endif   /* _MATRIX_H_DEPRECATED                                     */
 
 /************************************************************************/
 /* Deprecated functions: parse.h                                        */
 
-#ifdef _PARSE_H_DEPRECATED
-#undef _PARSE_H_DEPRECATED
-
+#   ifdef _PARSE_H_DEPRECATED
+#      undef _PARSE_H_DEPRECATED
 
 int parse(char *comline, int nkeys, KeyWd *keywords, REAL *REALparam,
           char **strparam);
@@ -611,14 +602,13 @@ int match(char *comstring, char *string2, int *nletters);
 int GetString(char *command, char *strparam);
 int GetParam(char  *command, REAL *value, int *nletters);
 
-#endif
+#   endif   /* _PARSE_H_DEPRECATED                                      */
 
 /************************************************************************/
 /* Deprecated functions: plotting.h                                     */
 
-#ifdef _PLOTTING_H_DEPRECATED
-#undef _PLOTTING_H_DEPRECATED
-
+#   ifdef _PLOTTING_H_DEPRECATED
+#      undef _PLOTTING_H_DEPRECATED
 
 BOOL AMInitPlot(char *filename, char *title, int dest, REAL OutXSize, 
                 REAL OutYSize, REAL OutXOff, REAL OutYOff,
@@ -640,14 +630,13 @@ void AMEndPlot(int dest);
 int  PS2HPGLFont(char *font);
 char *SimplifyText(char *string);
 
-#endif
+#   endif   /* _PLOTTING_H_DEPRECATED                                   */
 
 /************************************************************************/
 /* Deprecated functions: ps.h                                           */
 
-#ifdef _PS_H_DEPRECATED
-#undef _PS_H_DEPRECATED
-
+#   ifdef _PS_H_DEPRECATED
+#      undef _PS_H_DEPRECATED
 
 BOOL PSInit(char *FName, char *creator, char *AltFont);
 void PSThick(REAL thickness);
@@ -668,26 +657,25 @@ void PSShowText(char *text);
 void PSEnd(void);
 char *PSCorrectCase(char *font);
 
-#endif
+#   endif   /* _PS_H_DEPRECATED                                         */
 
 /************************************************************************/
 /* Deprecated functions: safemem.h                                      */
 
-#ifdef _SAFEMEM_H_DEPRECATED
-#undef _SAFEMEM_H_DEPRECATED
-
+#   ifdef _SAFEMEM_H_DEPRECATED
+#      undef _SAFEMEM_H_DEPRECATED
 
 void *safemalloc(int nbytes);
 BOOL safefree(void *ptr);
 void safeleaks(void);
 
-#endif
+#   endif   /* _SAFEMEM_H_DEPRECATED                                    */
 
 /************************************************************************/
 /* Deprecated macros: seq.h                                             */
 
-#ifdef _SEQ_H_DEPRECATED
-#undef _SEQ_H_DEPRECATED
+#   ifdef _SEQ_H_DEPRECATED
+#      undef _SEQ_H_DEPRECATED
 
 #define PDB2Seq(x)          DoPDB2Seq((x), FALSE, FALSE, FALSE)
 #define PDB2SeqX(x)         DoPDB2Seq((x), TRUE,  FALSE, FALSE)
@@ -736,22 +724,22 @@ int NumericAffineAlign(int *seq1, int length1, int *seq2, int length2,
                        int *align_len);
 void SetMDMScoreWeight(char resa, char resb, REAL weight);
 
-#endif
+#   endif   /* _SEQ_H_DEPRECATED                                        */
 
 /************************************************************************/
 /* Deprecated functions: eigen.h                                        */
 
-#ifdef _EIGEN_H_DEPRECATED
-#undef _EIGEN_H_DEPRECATED
+#   ifdef _EIGEN_H_DEPRECATED
+#      undef _EIGEN_H_DEPRECATED
 
 int eigen(REAL **M, REAL **Vectors, REAL *lambda, int n);
 
-#endif
+#   endif   /* _EIGEN_H_DEPRECATED                                      */
 
 /************************************************************************/
 /* Deprecated functions: regression.h                                   */
-#ifdef _REGRESSION_H_DEPRECATED
-#undef _REGRESSION_H_DEPRECATED
+#   ifdef _REGRESSION_H_DEPRECATED
+#      undef _REGRESSION_H_DEPRECATED
 
 BOOL CalculateBestFitLine(double **coordinates, int numberOfPoints,
                           int numberOfDimensions, double *centroid,
@@ -760,7 +748,11 @@ void FindCentroid(REAL **coordinates, int numberOfPoints,
                   int numberOfDimensions, REAL *centroid);
 BOOL CalculateCovarianceMatrix(REAL **x, int numX, int numY, REAL **cov);
 
-#endif
+#   endif   /* _REGRESSION_H_DEPRECATED                                 */
+
+
+/************************************************************************/
+#endif      /* NODEPRECATION                                            */
 
 /************************************************************************/
 /** \endcond                                                            */

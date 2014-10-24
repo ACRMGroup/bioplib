@@ -120,25 +120,34 @@ header files. For example:
 Makefile Options
 ----------------
 
-Various options for compiling the BiopLib library are available by editing the Makefile in the src directory.
+Various options for compiling the BiopLib library are available by
+editing the Makefile in the src directory.
 
 
 _PDBML Format_
 
 BiopLib uses the libxml2 library for parsing and output of PDBML-format files. 
 
-Libxml2 may already be installed on your system. For instance, it is part of the standard installation on the Apple OS X operating system.
+Libxml2 may already be installed on your system. For instance, it is
+part of the standard installation on the Apple OS X operating system.
 
-If the libxml2 library is not installed, then instructions for downloading and installing the libxml2 library are available at the libxml2 website:
-http://xmlsoft.org
+If the libxml2 library is not installed, then instructions for
+downloading and installing the libxml2 library are available at the
+libxml2 website: http://xmlsoft.org
 
-By default, BiopLib is configured with support for PDBML-formatted files. If you don't need this then comment out the following line in the Makefile:
+By default, BiopLib is configured with support for PDBML-formatted
+files. If you don't need this then comment out the following line in
+the Makefile:
 
          COPT := $(COPT) -D XML_SUPPORT $(shell xml2-config --cflags)
 
-The compiler directive XML_SUPPORT is used as a switch to compile the code in BiopLib for reading and writing pdbml files. The program xml2-config is part of the libxml2 installation and ensures the libxml2 include file is in the search path (-I option).
+The compiler directive XML_SUPPORT is used as a switch to compile the
+code in BiopLib for reading and writing pdbml files. The program
+xml2-config is part of the libxml2 installation and ensures the
+libxml2 include file is in the search path (-I option).
 
-Use either "-lxml2" or "$(shell xml2-config --libs)" to link a program to the libxml2 library.
+Use either "-lxml2" or "$(shell xml2-config --libs)" to link a program
+to the libxml2 library.
 
 
 _Install Location_
@@ -152,10 +161,13 @@ lines in the Makefile:
          LIBDEST = ${HOME}/lib
          INCDEST = ${HOME}/include
          SHAREDLIBDEST = ${HOME}/lib
+
 to
+
          LIBDEST = /usr/local/lib
          INCDEST = /usr/local/include
          SHAREDLIBDEST = /usr/local/lib
+
 
 _Deprecated Functions_
 
@@ -165,16 +177,30 @@ provide a consistent naming scheme. In addition, functions that
 expected a single character for the chain name were updated to take a
 string.
 
-Programs using the older function names will compile however, a warning message will be generated if the function is called by a program. The default option is to display a warning message unless the environment variable, BIOPLIB_DEPRECATED_QUIET is set.
+Programs using the older function names will compile however, a
+warning message will be generated if the function is called by a
+program. The default option is to display a warning message unless the
+environment variable, BIOPLIB_DEPRECATED_QUIET is set.
 
-There are also options for handling error messages are also set within the Makefile. Uncommenting one of the following lines will either always display a warning message or silence the warning message:
+There are also options for handling error messages are also set within
+the Makefile. Uncommenting one of the following lines will either
+always display a warning message or silence the warning message:
 
          #COPT := $(COPT) -D BIOPLIB_DEPRECATED_CHECK
          #COPT := $(COPT) -D BIOPLIB_DEPRECATED_QUIET
 
 Note that deprecated functions will be removed in V4.0, so if you have
 programs that use the old functions, start changing them now!
- 
+
+To obtain a warning of the use of deprecated BiopLib functions at
+compile time, you can define the value NODEPRECATION when you compile
+your code.  This prevents the deprecated function header files from
+being read and with -Wall (GCC) or -fullwarn (Irix) will cause warnings
+about undefined functions. For example:
+
+         cc -Wall -D NODEPRECATION -o myprogram myprogram.c -lbiop -lgen -lm -lxml2
+
+
 
 Windows Installation
 --------------------
@@ -186,19 +212,34 @@ compiled BiopLib on Windows 7 using the the MinGW (Minimalist GNU for
 Windows) and MSYS (Minimalist System) packages which are available
 from www.mingw.org.
 
-MinGW and MSYS can be installed by downloading the MinGW installer executable and using it to install MinGW and MSYS. MinGW provides a port of the GCC compiler and MSYS creates a unix-like environment and filesystem on the Windows machine and provides a unix-like terminal.
+MinGW and MSYS can be installed by downloading the MinGW installer
+executable and using it to install MinGW and MSYS. MinGW provides a
+port of the GCC compiler and MSYS creates a unix-like environment and
+filesystem on the Windows machine and provides a unix-like terminal.
 
 
 _Installing the Libxml2 and Check Libraries_
 
-The Libxml2 library is required to read pdbml-formatted files. The Check library is required only if unit tests are to be run. Libxml2 can be downloaded from xmlsoft.org and Check can be downloaded from check.sourceforge.net.
+The Libxml2 library is required to read pdbml-formatted files. The
+Check library is required only if unit tests are to be run. Libxml2
+can be downloaded from xmlsoft.org and Check can be downloaded from
+check.sourceforge.net.
 
-To compile and install either the libxml2 or check library from source, unpack the source files and use './configure', 'make', and 'make install' from within the MSYS shell (NOT the cmd window). When running a program that uses a user-installed library, the dynamically-linked library file needs to be in the PATH. The path can be set from the cmd window command line or from the control panel in MS Windows. Setting a user's path from the control panel is preferable - it only has to be done once and compiled programs can be launched by double-clicking on the executable from the Windows file browser.
+To compile and install either the libxml2 or check library from
+source, unpack the source files and use './configure', 'make', and
+'make install' from within the MSYS shell (NOT the cmd window). When
+running a program that uses a user-installed library, the
+dynamically-linked library file needs to be in the PATH. The path can
+be set from the cmd window command line or from the control panel in
+MS Windows. Setting a user's path from the control panel is preferable
+- it only has to be done once and compiled programs can be launched by
+double-clicking on the executable from the Windows file browser.
 
 
 _Installing BiopLib_
 
-To install BiopLib, follow the commands for installing on unix like systems from within the MSYS terminal.
+To install BiopLib, follow the commands for installing on unix like
+systems from within the MSYS terminal.
 
 BiopLib can also be compiled form within the cmd window using
 mingw32-make however the makefile will have to be altered to give the
@@ -218,7 +259,9 @@ compile the unit tests from within the src/TEST directory with ‘make’
 to create an executable file, run_tests. Tests can be run by typing
 either ‘./run_tests’ or ‘./run_tests -v’ for verbose output.
 
-Note: If unit tests are run under MS windows then the unit tests must be run from within a MSYS terminal as the tests for writing PDB files require the unix ‘dos2unix’ and ‘cmp’ commands.
+Note: If unit tests are run under MS windows then the unit tests must
+be run from within a MSYS terminal as the tests for writing PDB files
+require the unix ‘dos2unix’ and ‘cmp’ commands.
 
 
 

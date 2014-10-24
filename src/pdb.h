@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.66
-   \date       17.09.14
+   \version    V1.67
+   \date       24.10.14
    \brief      Include file for pdb routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2014
@@ -152,6 +152,7 @@
                   functions return a new PDB list rather than alter their
                   input PDB list.
 -  V1.66 17.09.14 Commented the fields of the PDB structure
+-  V1.67 24.10.14 Added ExtractZoneSpecPDB()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -524,6 +525,7 @@ void blWriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
 PDB *blExtractZonePDBAsCopy(PDB *inpdb, char *chain1, int resnum1, 
                             char *insert1, char *chain2, int resnum2, 
                             char *insert2);
+PDB *blExtractZoneSpecPDBAsCopy(PDB *pdb, char *firstRes, char *lastRes);
 PDB *blFindResidue(PDB *pdb, char *chain, int resnum, char *insert);
 PDB *blFindHetatmResidue(PDB *pdb, char *chain, int resnum, char *insert);
 PDB *blFindAtomInRes(PDB *pdb, char *atnam);
@@ -556,7 +558,6 @@ PDBSTRUCT *blAllocPDBStructure(PDB *pdb);
 PDB *blFindNextChain(PDB *pdb);
 void blFreePDBStructure(PDBSTRUCT *pdbstruct);
 void blSetElementSymbolFromAtomName(char *element, char * atom_name);
-
 
 /************************************************************************/
 /* Include deprecated functions                                         */
