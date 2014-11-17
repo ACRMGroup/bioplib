@@ -531,7 +531,7 @@ do {  char *_subschar_macro_ch = (s);                                    \
 /* isatty() is not POSIX                                                */
 #ifdef __unix
 #  if defined(_POSIX_SOURCE) || !defined(_SVR4_SOURCE)
-      extern int isatty(int);
+      #include <unistd.h>
 #  endif
 #endif
 
