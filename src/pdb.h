@@ -3,11 +3,11 @@
 
    \file       pdb.h
    
-   \version    V1.67
-   \date       24.10.14
-   \brief      Include file for pdb routines
+   \version    V1.68
+   \date       12.02.15
+   \brief      Include file for PDB routines
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -152,7 +152,8 @@
                   functions return a new PDB list rather than alter their
                   input PDB list.
 -  V1.66 17.09.14 Commented the fields of the PDB structure
--  V1.67 24.10.14 Added ExtractZoneSpecPDB()
+-  V1.67 24.10.14 Added blExtractZoneSpecPDB()
+-  V1.68 12.02.15 Added blWriteWholePDBNoConnect()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -442,6 +443,7 @@ void blWriteAsPDB(FILE *fp, PDB  *pdb);
 void blWriteAsPDBML(FILE *fp, PDB  *pdb);
 BOOL blFormatCheckWritePDB(PDB *pdb);
 BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb);
+BOOL blWriteWholePDBNoConnect(FILE *fp, WHOLEPDB *wpdb);
 void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb);
 void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb);
 
