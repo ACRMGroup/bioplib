@@ -595,6 +595,7 @@ preceeding the last residue\n");
 -  07.07.14 Use bl prefix for functions By: CTP
 -  26.08.14 Used n and nt variables consistently instead of literal
             strings. Moved all use of 'ok' variable into SCREEN_INFO
+-  13.02.15 Added setting of element type
 */
 static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta, 
                   BOOL firstres)
@@ -802,7 +803,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
       }
 
       hlist->resnum=sNo;
-      hlist->insert[0]=sIns;              /* 26.01.96                   */
+      hlist->insert[0]=sIns;                       /* 26.01.96          */
       blPadterm(hlist->insert,4);
       strcpy(hlist->atnam,sGHName[5]);
       SetRawAtnam(hlist->atnam_raw, sGHName[5]);   /* 05.12.02          */
@@ -810,6 +811,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
       hlist->x=x5;
       hlist->y=y5;
       hlist->z=z5;
+      strcpy(hlist->element," H");                 /* 13.02.15          */
       ALLOCNEXT(hlist,PDB);
       if(hlist == NULL)
       {
@@ -873,7 +875,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
          }
 
          hlist->resnum=sNo;
-         hlist->insert[0]=sIns;           /* 26.01.96                   */
+         hlist->insert[0]=sIns;                       /* 26.01.96       */
          blPadterm(hlist->insert,4);
          strcpy(hlist->atnam,sGHName[4]);
          SetRawAtnam(hlist->atnam_raw, sGHName[4]);   /* 05.12.02       */
@@ -881,6 +883,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
          hlist->x=x4;
          hlist->y=y4;
          hlist->z=z4;
+         strcpy(hlist->element," H");                 /* 13.02.15       */
          ALLOCNEXT(hlist,PDB);
          if(hlist == NULL)
          {
@@ -894,7 +897,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 #endif
 
          hlist->resnum=sNo;
-         hlist->insert[0]=sIns;           /* 26.01.96                   */
+         hlist->insert[0]=sIns;                       /* 26.01.96       */
          blPadterm(hlist->insert,4);
          strcpy(hlist->atnam,sGHName[5]);
          SetRawAtnam(hlist->atnam_raw, sGHName[5]);   /* 05.12.02       */
@@ -902,6 +905,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
          hlist->x=x5;
          hlist->y=y5;
          hlist->z=z5;
+         strcpy(hlist->element," H");                 /* 13.02.15       */
          ALLOCNEXT(hlist,PDB);
          if(hlist == NULL)
          {
@@ -975,7 +979,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
             }
 
             hlist->resnum=sNo;
-            hlist->insert[0]=sIns;        /* 26.01.96                   */
+            hlist->insert[0]=sIns;                       /* 26.01.96    */
             blPadterm(hlist->insert,4);
             strcpy(hlist->atnam,sGHName[4]);
             SetRawAtnam(hlist->atnam_raw, sGHName[4]);   /* 05.12.02    */
@@ -983,6 +987,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
             hlist->x=x4;
             hlist->y=y4;
             hlist->z=z4;
+            strcpy(hlist->element," H");                 /* 13.02.15    */
             ALLOCNEXT(hlist,PDB);
             if(hlist == NULL)
             {
@@ -996,7 +1001,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 #endif
 
             hlist->resnum=sNo;
-            hlist->insert[0]=sIns;        /* 26.01.96                   */
+            hlist->insert[0]=sIns;                       /* 26.01.96    */
             blPadterm(hlist->insert,4);
             strcpy(hlist->atnam,sGHName[5]);
             SetRawAtnam(hlist->atnam_raw, sGHName[5]);   /* 05.12.02    */
@@ -1004,6 +1009,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
             hlist->x=x5;
             hlist->y=y5;
             hlist->z=z5;
+            strcpy(hlist->element," H");                 /* 13.02.15    */
             ALLOCNEXT(hlist,PDB);
             if(hlist == NULL)
             {
@@ -1017,7 +1023,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 #endif
 
             hlist->resnum=sNo;
-            hlist->insert[0]=sIns;        /* 26.01.96                   */
+            hlist->insert[0]=sIns;                       /* 26.01.96    */
             blPadterm(hlist->insert,4);
             strcpy(hlist->atnam,sGHName[6]);
             SetRawAtnam(hlist->atnam_raw, sGHName[6]);   /* 05.12.02    */
@@ -1025,6 +1031,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
             hlist->x=x6;
             hlist->y=y6;
             hlist->z=z6;
+            strcpy(hlist->element," H");                 /* 13.02.15    */
             ALLOCNEXT(hlist,PDB);
             if(hlist == NULL)
             {
@@ -1058,7 +1065,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
             }
 
             hlist->resnum=sNo; 
-            hlist->insert[0]=sIns;        /* 26.01.96                   */
+            hlist->insert[0]=sIns;                       /* 26.01.96    */
             blPadterm(hlist->insert,4);
             strcpy(hlist->atnam,sGHName[4]);
             SetRawAtnam(hlist->atnam_raw, sGHName[4]);   /* 05.12.02    */
@@ -1066,6 +1073,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
             hlist->x=x4;
             hlist->y=y4;
             hlist->z=z4;
+            strcpy(hlist->element," H");                 /* 13.02.15    */
             ALLOCNEXT(hlist,PDB);
             if(hlist == NULL)
             {
@@ -1115,7 +1123,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
          }
 
          hlist->resnum=sNo;
-         hlist->insert[0]=sIns;           /* 26.01.96                   */
+         hlist->insert[0]=sIns;                       /* 26.01.96       */
          blPadterm(hlist->insert,4);
          strcpy(hlist->atnam,sGHName[4]);
          SetRawAtnam(hlist->atnam_raw, sGHName[4]);   /* 05.12.02       */
@@ -1123,6 +1131,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
          hlist->x=x4;
          hlist->y=y4;
          hlist->z=z4;
+         strcpy(hlist->element," H");                 /* 13.02.15       */
          ALLOCNEXT(hlist,PDB);
          if(hlist == NULL)
          {
@@ -1137,7 +1146,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 
          sNType4++;
       }  /* End of switch                                               */
-   }  /* End of HTYPE 1 else clause                                    */
+   }  /* End of HTYPE 1 else clause                                     */
 
    return(hlist_start);
 }
@@ -1160,6 +1169,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 -  05.12.02 Added setting of atnam_raw
 -  27.03.03 Fixed memory leak - free the hlist when finished
 -  03.06.05 Added setting of altpos
+-  13.02.15 Added copying of element type
 */
 static BOOL AddH(PDB *hlist, PDB **position, int HType)
 {
@@ -1195,7 +1205,6 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
             return(FALSE);
          }
          
-         
          p->next=r;           /* Update its pointer                     */
          strcpy(p->record_type,s->record_type);   /* Copy the info into 
                                                      this record        */
@@ -1212,6 +1221,7 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
          p->z=q->z;
          p->occ=1.0;
          p->bval=20.0;
+         strcpy(p->element,q->element);           /* 13.02.15           */
 
          if((HType==2)||(HType==3))
          {
@@ -1243,6 +1253,7 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
             p->z=q->z;
             p->occ=1.0;
             p->bval=20.0;
+            strcpy(p->element,q->element);         /* 13.02.15          */
          }
          if(HType==3)
          {
@@ -1274,6 +1285,7 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
             p->z=q->z;
             p->occ=1.0;
             p->bval=20.0;
+            strcpy(p->element,q->element);         /* 13.02.15          */
          }
       }   /* End of matches                                             */
    }  /* End of main list                                               */

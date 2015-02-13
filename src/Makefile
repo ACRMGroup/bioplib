@@ -27,7 +27,8 @@ COPT = -fPIC -ansi -Wall -pedantic -g -DGUNZIP_SUPPORT
 
 # Include libxml2
 # Note: xml2-config is installed with libxml2
-#       Link to libxml2 with -lxml2
+# When you compile code you need to link to libxml2 with -lxml2
+# Comment out this line if you do not require PDBML (XML) support
 COPT := $(COPT) -D XML_SUPPORT $(shell xml2-config --cflags)
 
 # Use single letter check for filetype
@@ -35,13 +36,14 @@ COPT := $(COPT) -D XML_SUPPORT $(shell xml2-config --cflags)
 # file or pdbml).
 # For systems were ungetc() fails after pushing back a single character to
 # the input stream.
-# Note: This option is not required for MS Windows.
+# Note: This option is required for MS Windows.
 #COPT := $(COPT) -D SINGLE_CHAR_FILECHECK
 
 # Define the archive/library command here
 AR = ar r
 
-# If ranlib required, set here; otherwise set to echo
+# If ranlib required when creating libraries, set here; 
+# otherwise set to echo
 RANLIB = ranlib
 #RANLIB = echo
 
