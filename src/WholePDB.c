@@ -62,7 +62,7 @@
                   MS Windows. By: CTP
 -  V1.10 29.09.14 Allow single character filetype check for gzipped files.
                   By: CTP
--  V1.11 12.02.15 WriteWholePDB() now has a WhiteWholePDBNoConnect()
+-  V1.11 12.02.15 blWriteWholePDB() now has a blWriteWholePDBNoConnect()
                   variant
 
 *************************************************************************/
@@ -81,7 +81,7 @@
    Output in PDBML-format if flags set.
 
    #KEYFUNCTION  blWriteWholePDBNoConnect()
-   Writes a PDB file including header and trailer information.
+   Writes a PDB file including header information (no trailer).
    Output in PDBML-format if flags set.
 
    #FUNCTION  blFreeWholePDB()
@@ -263,14 +263,18 @@ static BOOL blDoWriteWholePDB(FILE *fp, WHOLEPDB *wpdb, BOOL doConnect)
 
 -  30.05.02  Original   By: ACRM
 -  21.06.14  Renamed to blWriteWholePDBHeader() By: CTP
+-  12.02.15  Added XML check   By: ACRM
 */
 void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
 {
    STRINGLIST *s;
-   
-   for(s=wpdb->header; s!=NULL; NEXT(s))
+
+   if((gPDBXMLForce != FORCEXML_XML) && (gPDBXML == FALSE))
    {
-      fputs(s->string, fp);
+      for(s=wpdb->header; s!=NULL; NEXT(s))
+      {
+         fputs(s->string, fp);
+      }
    }
 }
 
@@ -287,14 +291,18 @@ void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
 
 -  30.05.02  Original   By: ACRM
 -  21.06.14  Renamed to blWriteWholePDBTrailer() By: CTP
+-  12.02.15  Added XML check   By: ACRM
 */
 void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
 {
    STRINGLIST *s;
    
-   for(s=wpdb->trailer; s!=NULL; NEXT(s))
+   if((gPDBXMLForce != FORCEXML_XML) && (gPDBXML == FALSE))
    {
-      fputs(s->string, fp);
+      for(s=wpdb->trailer; s!=NULL; NEXT(s))
+      {
+         fputs(s->string, fp);
+      }
    }
 }
 
