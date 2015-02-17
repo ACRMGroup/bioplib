@@ -28,19 +28,10 @@ also available - see COPYING.DOC.
 INSTALLATION INSTRUCTIONS
 -------------------------
 
-####(1) Create sub-directories of your home directory called include and
-lib:
-
-        mkdir ~/include
-        mkdir ~/include/bioplib
-        mkdir ~/lib
-        mkdir ~/data
-
-####(2) Install libxml2
+####(1) Install libxml2
 
 By default, PDBML (XML) format files are supported. If you wish to do
-this, you need to install libxml2 from
-http://http://xmlsoft.org/downloads.html
+this, you need to install libxml2
 
 If you do not need PDBML (XML) support, then you can skip this step.
 
@@ -50,11 +41,15 @@ systems. If not then it is installed on Fedora/CentOS systems using
 
         yum -y install libxml2 libxml2-devel
 
-of on Debian/Ubuntu systems using:
+or on Debian/Ubuntu systems using:
 
         sudo apt-get install libsml2 libxml2-dev
 
-####(3) Unpack the tar file:
+On other systems, you will need to install libxml2 manually from 
+http://http://xmlsoft.org/downloads.html
+
+
+####(2) Unpack the tar file
 
         zcat bioplib-X.Y.tar.gz | tar -xvf -
 -or-
@@ -72,23 +67,48 @@ You may also have chosen to download a ZIP file, in which case this is unpacked 
         unzip bioplib-X.Y.zip
 
 
-####(4) This will create a directory called bioplib-X.Y.  
+####(3) By default, BiopLib will be installed in sub-directories of your home directory. 
+
+These directories will be created when you install BiopLib if they do
+not exist already:
+
+        mkdir ~/include
+        mkdir ~/include/bioplib
+        mkdir ~/lib
+        mkdir ~/data
+
+You can also choose to install the files elsewhere, but need to modify
+the Makefile. See 'Additional installation options', below.
+
+
+
+####(4) This will create a directory called bioplib-X.Y
 
 Enter this directory and then go into the src sub-directory:
 
         cd bioplib-X.Y/src
 
 Modify the Makefile as required for your system. If you are using the
-GNU C compiler and have followed the directions above, no changes
-should be needed. 
+GNU C compiler and wish to install BiopLib in the default directories
+and provide PDBML (XML) support, no changes should be needed.
 
-If you have chosen alternative locations for the include and library
-directories then you will need to change LIBDEST to be the library
-directory you have created and INCDEST to the include directory you
-have created (N.B. the complete path is required, you can't do ~/lib).
+If you have chosen alternative locations for the include, library and data
+directories then you will need to change:
 
-If you do not require PDBML (XML) support, comment out the relevant 
+- LIBDEST to the directory where you wish to install the static libraries
+- INCDEST to the directory where you wish to install the include files
+- DATADEST to the directory where you wish to install the data file
+
+If you wish to use dynamic libraries, you may also wish to change their location by changing:
+
+- SHAREDLIBDEST to the directory where you wish to install the shared libraries
+
+Note that the complete path is required, you cannot do ~/lib.
+
+If you do *not* require PDBML (XML) support, comment out the relevant 
 COPT line from the Makefile.
+
+
 
 ####(5) Type the commands:
 
@@ -96,6 +116,9 @@ COPT line from the Makefile.
         make doxygen
         make install
         make installdata
+
+
+
 
 ####(6) Set environment variables
 
@@ -125,7 +148,8 @@ the directory in which you have installed the BiopLib help files
 
 ####(7) Additional installation options
 
-You can modify the installation directories as desired by editing the first few lines of the Makefile.
+As described above, you can modify the installation directories as
+desired by editing the first few lines of the Makefile.
 
 You can also use BiopLib as a set of shared libraries:
 
@@ -135,6 +159,9 @@ You can also use BiopLib as a set of shared libraries:
 You can clean up your compilation directory with:
 
         make clean
+
+
+
 
 ####(8) For more information on using BiopLib, read the file:
 
