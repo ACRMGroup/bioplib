@@ -144,6 +144,7 @@ install :
 	cp *.h $(INCDEST)/bioplib
 
 installdata :
+	mkdir -p $(DATADEST)
 	(cd ../data; cp -Rcp * $(DATADEST))
 
 installshared : 
