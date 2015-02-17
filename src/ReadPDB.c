@@ -3,11 +3,11 @@
 
    \file       ReadPDB.c
    
-   \version    V2.36
-   \date       29.09.14
+   \version    V2.37
+   \date       17.02.15
    \brief      Read coordinates from a PDB file 
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -202,6 +202,7 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 -  V2.36 29.09.14 Allow single character check for filetype where ungetc()
                   fails after pushback of single character. Updates to 
                   blCheckFileFormatPDBML() and blDoReadPDB(). By: CTP
+-  V2.37 17.02.15 Added segid support   By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -527,7 +528,7 @@ PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
                   MS Windows. By: CTP
 -  29.09.14 V2.36 Allow single character filetype check for gzipped files.
                   By: CTP
-
+-  17.02.15 V2.37 Added segid support   By: ACRM
 */
 PDB *blDoReadPDB(FILE *fpin,
                  int  *natom,
@@ -542,6 +543,7 @@ PDB *blDoReadPDB(FILE *fpin,
             resnam[8],
             chain[4],
             insert[4],
+            segid[8],
             buffer[160],
             CurAtom[8],
             cmd[80],
@@ -671,9 +673,11 @@ PDB *blDoReadPDB(FILE *fpin,
       if(!strncmp(buffer,"ENDMDL",6))
          gPDBMultiNMR   = TRUE;
       
-      if(fsscanf(buffer,"%6s%5d%1x%5s%4s%1s%4d%1s%3x%8lf%8lf%8lf%6lf%6lf%10x%2s%2s",
+      if(fsscanf(buffer,
+                 "%6s%5d%1x%5s%4s%1s%4d%1s%3x%8lf%8lf%8lf%6lf%6lf%6x%4s%2s%2s",
                  record_type,&atnum,atnambuff,resnam,chain,&resnum,insert,
-                 &x,&y,&z,&occ,&bval,element_buff,charge_buff) != EOF)
+                 &x,&y,&z,&occ,&bval,segid,element_buff,charge_buff) 
+         != EOF)
       {
          if((!strncmp(record_type,"ATOM  ",6)) || 
             (!strncmp(record_type,"HETATM",6) && AllAtoms))
@@ -692,11 +696,11 @@ PDB *blDoReadPDB(FILE *fpin,
             /* Fix the atom name accounting for start in column 13 or 14*/
             atnam = blFixAtomName(atnambuff, occ);
             
-            /* Set element and charge */
+            /* Set element and charge                                   */
             blProcessElementField(element, element_buff);
             blProcessChargeField(&charge, charge_buff);
             
-            /* Set element from atom name if not in input file */
+            /* Set element from atom name if not in input file          */
             if(strlen(element) == 0)
             {
                blSetElementSymbolFromAtomName(element, atnam_raw);
@@ -793,6 +797,7 @@ PDB *blDoReadPDB(FILE *fpin,
                strcpy(p->chain,       chain);
                strcpy(p->insert,      insert);
                strcpy(p->element,     element);
+               strcpy(p->segid,       segid);
             }
             else   /* Partial occupancy                                 */
             {
@@ -857,11 +862,15 @@ PDB *blDoReadPDB(FILE *fpin,
                   strcpy(multi[NPartial].element,     element);
                   /* 03.06.05 - added this line                         */
                   multi[NPartial].altpos = altpos;
+                  /* 17.02.15 - added this line                         */
+                  strcpy(multi[NPartial].segid,       segid);
 
                   NPartial++;
                }
             }
          }
+         charge_buff[0] = '\0';
+         charge = 0;
       }
    }
 
@@ -914,7 +923,7 @@ PDB *blDoReadPDB(FILE *fpin,
             occupancy. Handles residues like 1zeh/B16
 -  04.08.14 Read charge and element. By: CTP
 -  16.08.14 Read formal charge and set partial charge. By: CTP
-
+-  17.02.15 Added segid support   By: ACRM
 */
 static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
                                int NPartial, PDB **ppdb, PDB **pp, 
@@ -1004,6 +1013,8 @@ static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
    strcpy((*pp)->chain,       multi[IMaxOcc].chain);
    strcpy((*pp)->insert,      multi[IMaxOcc].insert);
    strcpy((*pp)->element,     multi[IMaxOcc].element);
+   /* 17.02.15 Added this line                                          */
+   strcpy((*pp)->segid,       multi[IMaxOcc].segid);
 
    /* Patch the atom name to remove the alternate letter                */
    if(strlen((*pp)->atnam) > 4)
@@ -1355,7 +1366,7 @@ pointer\n");
 -  18.08.14 Added XML_SUPPORT option. Return error if XML_SUPPORT not 
             defined By: CTP
 -  26.08.14 Pad record_type to six characters. By: CTP
-
+-  17.02.15 Added segid support   By: ACRM
 */
 PDB *blDoReadPDBML(FILE *fpin,
                    int  *natom,
@@ -1394,14 +1405,13 @@ PDB *blDoReadPDBML(FILE *fpin,
            pad_resnam[8]  = "";
        
 
-   /* Zero natoms and reset flags */
-   gPDBXML        = TRUE;  /* global PDBML-fornmat flag     */
-   gPDBPartialOcc = FALSE; /* global partial occupancy flag */
-   gPDBMultiNMR   = FALSE; /* global multiple models flag   */
-   *natom = 0;             /* atoms stored                  */
+   /* Zero natoms and reset flags                                       */
+   gPDBXML        = TRUE;  /* global PDBML-fornmat flag                 */
+   gPDBPartialOcc = FALSE; /* global partial occupancy flag             */
+   gPDBMultiNMR   = FALSE; /* global multiple models flag               */
+   *natom = 0;             /* atoms stored                              */
 
-
-   /* Generate Document From Filehandle */
+   /* Generate Document From Filehandle                                 */
    size_t = fread(xml_buffer, 1, XML_BUFFER, fpin);
    ctxt = xmlCreatePushParserCtxt(NULL, NULL, xml_buffer, size_t, "file");
    while ((size_t = fread(xml_buffer, 1, XML_BUFFER, fpin)) > 0) 
@@ -1414,20 +1424,20 @@ PDB *blDoReadPDBML(FILE *fpin,
    
    if(document == NULL)
    {
-      /* Error: Failed to parse file */
+      /* Error: Failed to parse file                                    */
       *natom = -1;
       return(NULL);
    }
    
 
-   /* Parse Document Tree */
+   /* Parse Document Tree                                               */
    root_node = xmlDocGetRootElement(document);   
    for(n = root_node->children; n; n = n->next)
    {
-      /* Find Atom Sites Node */
+      /* Find Atom Sites Node                                           */
       if(!strcmp("atom_siteCategory",(char *) n->name))
       {
-         /* Found Atom Sites */
+         /* Found Atom Sites                                            */
          sites_node = n;
          break;
       }
@@ -1435,47 +1445,47 @@ PDB *blDoReadPDBML(FILE *fpin,
    
    if(sites_node == NULL)
    {
-      /* Error: Failed to find atom sites */
+      /* Error: Failed to find atom sites                               */
       xmlFreeDoc(document);
       *natom = -1;
       return(NULL);
    }
 
 
-   /* Scan through atom nodes and populate PDB list. */
+   /* Scan through atom nodes and populate PDB list.                    */
    for(atom_node = sites_node->children; atom_node; 
        atom_node = atom_node->next)
    {
       if(!strcmp("atom_site",(char *) atom_node->name))
       {
-         /* Current PDB */
+         /* Current PDB                                                 */
          INIT(curr_pdb,PDB);
          
          if(curr_pdb == NULL)
          {
-            /* Error: Failed to store atom in pdb list */
+            /* Error: Failed to store atom in pdb list                  */
             xmlFreeDoc(document);
             if(pdb != NULL) FREELIST(pdb,PDB);
             *natom = -1;
             return(NULL);
          }
 
-         /* Set default values */
+         /* Set default values                                          */
          CLEAR_PDB(curr_pdb);
          strcpy(curr_pdb->chain,   "");
          strcpy(curr_pdb->atnam,   "");
          strcpy(curr_pdb->resnam,  "");
          strcpy(curr_pdb->insert, " ");
          strcpy(curr_pdb->element, "");
+         strcpy(curr_pdb->segid,   "");
 
-
-         /* Scan atom node children */
+         /* Scan atom node children                                     */
          for(n = atom_node->children; n; n = n->next)
          {
             if(n->type != XML_ELEMENT_NODE){ continue; }
             content = xmlNodeGetContent(n);
 
-            /* Set PDB values*/
+            /* Set PDB values                                           */
             if(!strcmp((char *) n->name,"B_iso_or_equiv"))
             {
                sscanf((char *) content,"%lf",&content_lf);
@@ -1515,7 +1525,7 @@ PDB *blDoReadPDBML(FILE *fpin,
             }
             else if(!strcmp((char *) n->name,"pdbx_PDB_ins_code"))
             {
-               /* set insertion code */
+               /* set insertion code                                    */
                strcpy(curr_pdb->insert, (char *) content);
             }
             else if(!strcmp((char *) n->name,"group_PDB"))
@@ -1530,7 +1540,7 @@ PDB *blDoReadPDBML(FILE *fpin,
             }
             else if(!strcmp((char *) n->name,"label_alt_id"))
             {
-               /* Use strlen as test for alt position */
+               /* Use strlen as test for alt position                   */
                curr_pdb->altpos = strlen((char *)content) ? content[0]:' ';
             }
             else if(!strcmp((char *) n->name,"pdbx_PDB_model_num"))
@@ -1576,6 +1586,13 @@ PDB *blDoReadPDBML(FILE *fpin,
                sscanf((char *) content,"%lf",&content_lf);
                curr_pdb->formal_charge = (int) content_lf;
                curr_pdb->partial_charge = (REAL) content_lf;
+            }
+            else if(!strcmp((char *) n->name,"seg_id"))  /* 17.02.15    */
+            {
+               if(strlen(curr_pdb->segid) == 0)
+               {
+                  strcpy(curr_pdb->segid, (char *) content);
+               }
             }
 
 
@@ -1625,22 +1642,25 @@ PDB *blDoReadPDBML(FILE *fpin,
          PADMINTERM(pad_resnam, 4);
          strcpy(curr_pdb->resnam, pad_resnam);         
          
-         /* Set chain to " " if not already set */
+         /* Set chain to " " if not already set                         */
          if(strlen(curr_pdb->chain) == 0)
          {
             strcpy(curr_pdb->chain, " ");
          }
 
-         /* Set multi-model flag */
+         /* Pad the segment id                                          */
+         PADMINTERM(curr_pdb->segid, 4);
+
+         /* Set multi-model flag                                        */
          if(model_number > 1)
          {
             gPDBMultiNMR = TRUE;
          }
 
-         /* Filter: Model Number */
+         /* Filter: Model Number                                        */
          if(model_number != ModelNum)
          {
-            /* Free curr_pdb */
+            /* Free curr_pdb                                            */
             FREELIST(curr_pdb,PDB);
             curr_pdb = NULL;
             

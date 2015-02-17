@@ -3,8 +3,8 @@
 
    \file       AddNTerHs.c
    
-   \version    V1.8
-   \date       07.07.14
+   \version    V1.9
+   \date       17.02.15
    \brief      Routines to add N-terminal hydrogens and C-terminal
                oxygens.
    
@@ -65,6 +65,7 @@
 -  V1.6  03.06.05 Handles altpos
 -  V1.7  04.02.14 Use CHAINMATCH By: CTP
 -  V1.8  07.07.14 Use bl prefix for functions By: CTP
+-  V1.9  17.02.15 Handles element
 
 *************************************************************************/
 /* Doxygen
@@ -184,6 +185,8 @@ static PDB *KillNTerH(PDB *pdb)
    }
    return(pdb);
 }
+
+
 /************************************************************************/
 /*>static int doAddGromosNTer(PDB **ppdb, PDB *nter)
    -------------------------------------------------
@@ -200,6 +203,7 @@ static PDB *KillNTerH(PDB *pdb)
 -  05.10.94 Removed unused variables
 -  06.02.03 Handles atnam_raw
 -  03.06.05 Handles altpos
+-  17.02.15 Handles element
 */
 static int doAddGromosNTer(PDB **ppdb, PDB *nter)
 {
@@ -226,7 +230,10 @@ static int doAddGromosNTer(PDB **ppdb, PDB *nter)
       blCopyPDB(H2, nter);
       blCopyPDB(H3, nter);
       H1->bval = H2->bval = H3->bval = (REAL)20.0;
-
+      strcpy(H1->element," H");                    /* 17.02.15          */
+      strcpy(H2->element," H");
+      strcpy(H3->element," H");
+      
       /* Link these extra records into the linked list                  */
       H3->next   = nter->next;
       H1->next   = H2;
@@ -282,6 +289,7 @@ static int doAddGromosNTer(PDB **ppdb, PDB *nter)
 -  05.10.94 Removed unused variables
 -  06.02.03 Handles atnam_raw
 -  03.06.05 Handles altpos
+-  17.02.15 Handles element
 */
 static int doAddCharmmNTer(PDB **ppdb, PDB *nter)
 {
@@ -314,7 +322,8 @@ static int doAddCharmmNTer(PDB **ppdb, PDB *nter)
       strcpy(H1->record_type, "ATOM  ");
       strcpy(H1->chain,       nter->chain);
       strcpy(H1->insert,      " ");
-      H1->altpos = ' ';                   /* 03.06.05                   */
+      H1->altpos = ' ';                            /* 03.06.05          */
+      strcpy(H1->element," H");                    /* 17.02.15          */
       
       H2->atnum  = 9999;
       H2->resnum = 9999;
@@ -326,13 +335,15 @@ static int doAddCharmmNTer(PDB **ppdb, PDB *nter)
       strcpy(H2->record_type, "ATOM  ");
       strcpy(H2->chain,       nter->chain);
       strcpy(H2->insert,      " ");
-      H2->altpos = ' ';                   /* 03.06.05                   */
+      H2->altpos = ' ';                            /* 03.06.05          */
+      strcpy(H2->element," H");                    /* 17.02.15          */
 
       blCopyPDB(H3, nter);
       strcpy(H3->atnam,  "HT3 ");
       strcpy(H3->atnam_raw,   " HT3");
       H3->bval   = 20.0;
-      H3->altpos = ' ';                   /* 03.06.05                   */
+      H3->altpos = ' ';                            /* 03.06.05          */
+      strcpy(H3->element," H");                    /* 17.02.15          */
 
       /* Link these extra records into the linked list                  */
       H3->next   = nter->next;

@@ -3,11 +3,11 @@
 
    \file       HAddPDB.c
    
-   \version    V2.18
-   \date       26.08.14
+   \version    V2.20
+   \date       17.02.15
    \brief      Add hydrogens to a PDB linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -129,6 +129,8 @@
 -  V2.18 26.08.14 Moved use of ok variable into #ifdef SCREEN_INFO and
                   cleaned up use of n and nt variables instead of literal
                   strings
+-  V2.19 13.02.15 Handles elements
+-  V2.20 17.02.15 Handles segid and formal charge
 
 *************************************************************************/
 /* Doxygen
@@ -1170,6 +1172,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 -  27.03.03 Fixed memory leak - free the hlist when finished
 -  03.06.05 Added setting of altpos
 -  13.02.15 Added copying of element type
+-  17.02.15 Added copying of segid and setting of formal_charge
 */
 static BOOL AddH(PDB *hlist, PDB **position, int HType)
 {
@@ -1222,6 +1225,8 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
          p->occ=1.0;
          p->bval=20.0;
          strcpy(p->element,q->element);           /* 13.02.15           */
+         strcpy(p->segid,  s->segid);             /* 17.02.15           */
+         p->formal_charge=0;
 
          if((HType==2)||(HType==3))
          {
@@ -1254,6 +1259,8 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
             p->occ=1.0;
             p->bval=20.0;
             strcpy(p->element,q->element);         /* 13.02.15          */
+            strcpy(p->segid,  s->segid);           /* 17.02.15          */
+            p->formal_charge=0;
          }
          if(HType==3)
          {
@@ -1286,6 +1293,8 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
             p->occ=1.0;
             p->bval=20.0;
             strcpy(p->element,q->element);         /* 13.02.15          */
+            strcpy(p->segid,  s->segid);           /* 17.02.15          */
+            p->formal_charge=0;
          }
       }   /* End of matches                                             */
    }  /* End of main list                                               */
@@ -1376,12 +1385,13 @@ been set.\n",DATAENV);
    \param[out]    *out   Output string
 
    Copies the input atom name (a 4-character name) and outputs it to
-   a 4-character name starting with a space if the input wtring had
-   training spaces. If the input string had no trailing spaces, the
+   a 4-character name starting with a space if the input string had
+   trailing spaces. If the input string had no trailing spaces, the
    last character is moved to the front of the string. This creates
    hydrogen atom names in 'raw' format
 
 -  05.12.02 Original   By: ACRM
+-  17.02.15 Terminates the out string when it is 4 or more characters
 */
 static void SetRawAtnam(char *out, char *in)
 {
@@ -1396,6 +1406,7 @@ static void SetRawAtnam(char *out, char *in)
       out[1] = instr[0];
       out[2] = instr[1];
       out[3] = instr[2];
+      out[4] = '\0';                /* 17.02.15                         */
    }
    else
    {

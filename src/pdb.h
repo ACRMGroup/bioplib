@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.68
-   \date       12.02.15
+   \version    V1.69
+   \date       17.02.15
    \brief      Include file for PDB routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2015
@@ -154,6 +154,7 @@
 -  V1.66 17.09.14 Commented the fields of the PDB structure
 -  V1.67 24.10.14 Added blExtractZoneSpecPDB()
 -  V1.68 12.02.15 Added blWriteWholePDBNoConnect()
+-  V1.69 17.02.15 Added segid to PDB structure and to CLEAR_PDB()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -226,6 +227,7 @@ typedef struct pdb_entry
    char insert[8];           /* Numbering insert code                   */
    char chain[8];            /* Chain label                             */
    char element[8];          /* Element type                            */
+   char segid[8];            /* Segment ID                              */
    char altpos;              /* Alternate position indicator            */
 }  PDB;
 
@@ -327,6 +329,7 @@ typedef struct
                      p->formal_charge  =   0; \
                      p->partial_charge = 0.0; \
                      strcpy(p->element,"  "); \
+                     strcpy(p->segid,"    "); \
                      p->atomType = NULL
 
 #define ISWATER(z)   (!strncmp((z)->resnam,"HOH",3) || \

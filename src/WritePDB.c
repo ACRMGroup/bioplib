@@ -3,11 +3,11 @@
 
    \file       WritePDB.c
    
-   \version    V1.16
-   \date       18.08.14
+   \version    V1.17
+   \date       17.02.15
    \brief      Write a PDB file from a linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -82,6 +82,8 @@
 -  V1.15 16.08.14 Added writing element and charge. By: CTP
 -  V1.16 18.08.14 Added XML_SUPPORT option allowing compilation without 
                   support for PDBML format. By: CTP
+-  V1.17 17.02.15 Handles segid and the element and formal charge in 
+                  blWritePDBRecordAtnam()   By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -262,6 +264,7 @@ void blWriteAsPDB(FILE *fp,
 -  03.06.05 Modified to use altpos
 -  07.07.14 Renamed to blWritePDBRecord() By: CTP
 -  16.08.14 Write element and formal charge.  By: CTP
+-  17.02.15 Added segid support   By: ACRM
 */
 void blWritePDBRecord(FILE *fp,
                       PDB  *pdb)
@@ -275,8 +278,7 @@ void blWritePDBRecord(FILE *fp,
       sign   = pdb->formal_charge > 0 ? '+':'-';
    }
 
-   fprintf(fp,"%-6s%5d %-4s%c%-4s%1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f\
-          %2s%c%c\n",
+   fprintf(fp,"%-6s%5d %-4s%c%-4s%1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f      %4s%2s%c%c\n",
            pdb->record_type,
            pdb->atnum,
            pdb->atnam_raw,
@@ -290,6 +292,7 @@ void blWritePDBRecord(FILE *fp,
            pdb->z,
            pdb->occ,
            pdb->bval,
+           pdb->segid,
            pdb->element,
            charge,
            sign);
@@ -302,7 +305,7 @@ void blWritePDBRecord(FILE *fp,
    \param[in]     *fp     PDB file pointer to be written
    \param[in]     *pdb    PDB linked list record to write
 
-   Write a PDB record
+   Write a PDB record using the data in atnam rather than atnam_raw
 
 -  08.03.89 Original
 -  28.03.90 Changed to match ReadPDB() V1.2 for column widths
@@ -315,11 +318,21 @@ void blWritePDBRecord(FILE *fp,
 -  22.09.05 This is like the old version which used atnam rather
             than atnam_raw
 -  07.07.14 Renamed to blWritePDBRecordAtnam() By: CTP
+-  17.02.15 Added element, formalcharge and segid support   By: ACRM
 */
 void blWritePDBRecordAtnam(FILE *fp,
                            PDB  *pdb)
 {
-   fprintf(fp,"%-6s%5d  %-4s%-4s%1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f\n",
+   char charge = ' ',
+        sign   = ' ';
+
+   if(pdb->formal_charge && ABS(pdb->formal_charge <= 8))
+   {
+      charge = (char)('0' + ABS(pdb->formal_charge));
+      sign   = pdb->formal_charge > 0 ? '+':'-';
+   }
+
+   fprintf(fp,"%-6s%5d  %-4s%-4s%1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f      %4s%2s%c%c\n",
            pdb->record_type,
            pdb->atnum,
            pdb->atnam,
@@ -331,7 +344,11 @@ void blWritePDBRecordAtnam(FILE *fp,
            pdb->y,
            pdb->z,
            pdb->occ,
-           pdb->bval);
+           pdb->bval,
+           pdb->segid,
+           pdb->element,
+           charge,
+           sign);
 }
 
 
@@ -349,18 +366,19 @@ void blWritePDBRecordAtnam(FILE *fp,
 -  21.06.14 Renamed blWriteAsPDBML() and updated symbol handling. By: CTP
 -  17.07.14 Use blSetElementSymbolFromAtomName() By: CTP
 -  16.08.14 Use element and charge data. By: CTP
+-  17.02.15 Added segid support  By: ACRM
 
 */
 void blWriteAsPDBML(FILE *fp, PDB  *pdb)
 {
 #ifndef XML_SUPPORT
 
-   /* PDBML format not supported. */
+   /* PDBML format not supported.                                       */
    return;
 
 #else 
 
-   /* PDBML format supported */
+   /* PDBML format supported                                            */
    PDB         *p;
    xmlDocPtr   doc         = NULL;
    xmlNodePtr  root_node   = NULL, 
@@ -372,11 +390,11 @@ void blWriteAsPDBML(FILE *fp, PDB  *pdb)
    char        buffer[16], 
                *buffer_ptr;
    
-   /* Create doc */
+   /* Create document                                                   */
    doc = xmlNewDoc((xmlChar *) "1.0");
    doc->encoding = xmlStrdup((xmlChar *) "UTF-8");
    
-   /* Root node */
+   /* Root node                                                         */
    root_node = xmlNewNode(NULL, (xmlChar *) "datablock");
    xmlDocSetRootElement(doc, root_node);
    pdbx = xmlNewNs(root_node, (xmlChar *) "null", (xmlChar *) "PDBx");
@@ -384,33 +402,34 @@ void blWriteAsPDBML(FILE *fp, PDB  *pdb)
    xmlSetNs(root_node,pdbx);
    
    
-   /* Atom_sites node */
+   /* Atom_sites node                                                   */
    sites_node = xmlNewChild(root_node, NULL,
                             (xmlChar *) "atom_siteCategory", NULL);
    
-   /* Atom nodes */
+   /* Atom nodes                                                        */
    for(p = pdb ; p ; NEXT(p))
    {
-      /* skip TER */
+      /* skip TER                                                       */
       if(!strncmp("TER",p->resnam,3))
       {
          continue;
       }
 
-      /* Add atom node */
+      /* Add atom node                                                  */
       atom_node = xmlNewChild(sites_node, NULL,
                               (xmlChar *) "atom_site", NULL);
       sprintf(buffer, "%d", p->atnum);
       xmlNewProp(atom_node, (xmlChar *) "id", (xmlChar *) buffer);
       
-      /* Add atom data nodes */
-      /* B value */
+      /*** Add atom data nodes                                        ***/
+
+      /* B value                                                        */
       sprintf(buffer,"%.2f", p->bval);
       node = xmlNewChild(atom_node, NULL, 
                          (xmlChar *) "B_iso_or_equiv",
                          (xmlChar *) buffer);
 
-      /* coordinates */
+      /* coordinates                                                    */
       sprintf(buffer,"%.3f", p->x);
       node = xmlNewChild(atom_node, NULL, (xmlChar *) "Cartn_x",
                          (xmlChar *) buffer);
@@ -423,7 +442,7 @@ void blWriteAsPDBML(FILE *fp, PDB  *pdb)
       node = xmlNewChild(atom_node, NULL, (xmlChar *) "Cartn_z",
                          (xmlChar *) buffer);
 
-      /* author atom site labels */
+      /* author atom site labels                                        */
       node = xmlNewChild(atom_node, NULL, (xmlChar *) "auth_asym_id",
                          (xmlChar *) p->chain);
 
@@ -442,13 +461,13 @@ void blWriteAsPDBML(FILE *fp, PDB  *pdb)
       node = xmlNewChild(atom_node, NULL, (xmlChar *) "auth_seq_id",
                          (xmlChar *) buffer);
 
-      /* record type atom/hetatm */
+      /* record type atom/hetatm                                        */
       strcpy(buffer,p->record_type);
       KILLTRAILSPACES(buffer);
       node = xmlNewChild(atom_node, NULL, (xmlChar *) "group_PDB",
                          (xmlChar *) buffer);
 
-      /* atom site labels */
+      /* atom site labels                                               */
       node = xmlNewChild(atom_node, NULL, (xmlChar *) "label_alt_id",
                          NULL);
       if(p->altpos == ' ')
@@ -480,7 +499,8 @@ void blWriteAsPDBML(FILE *fp, PDB  *pdb)
                          (xmlChar *) buffer_ptr);
 
       /* Note: Entity ID is not stored in PDB data structure. 
-               Value set to 1 */
+               Value set to 1 
+      */
       node = xmlNewChild(atom_node, NULL,
                          (xmlChar *) "label_entity_id",
                          (xmlChar *) "1");
@@ -489,14 +509,15 @@ void blWriteAsPDBML(FILE *fp, PDB  *pdb)
       node = xmlNewChild(atom_node, NULL, (xmlChar *) "label_seq_id",
                          (xmlChar *) buffer);
 
-      /* occupancy */
+      /* occupancy                                                      */
       sprintf(buffer,"%.2f", p->occ);
       node = xmlNewChild(atom_node, NULL, (xmlChar *) "occupancy",
                          (xmlChar *) buffer);
                          
-      /* insertion code */
-      /* Note: Insertion code node only included for residues with 
-               insertion codes */
+      /* insertion code
+         Note: Insertion code node only included for residues with 
+               insertion codes 
+      */
       if(strcmp(p->insert," "))
       {
          sprintf(buffer,"%s", p->insert);
@@ -505,15 +526,17 @@ void blWriteAsPDBML(FILE *fp, PDB  *pdb)
                             (xmlChar *) buffer);
       }
 
-      /* model number */
-      /* Note: Model number is not stored in PDB data structure.
-               Value set to 1 */
+      /* model number
+         Note: Model number is not stored in PDB data structure.
+               Value set to 1
+      */
       node = xmlNewChild(atom_node, NULL,
                          (xmlChar *) "pdbx_PDB_model_num",
                          (xmlChar *) "1");
 
-      /* formal charge */
-      /* Note: Formal charge node not included for neutral atoms */
+      /* formal charge
+         Note: Formal charge node not included for neutral atoms 
+      */
       if(p->formal_charge != 0)
       {
          sprintf(buffer,"%d", p->formal_charge);
@@ -522,10 +545,11 @@ void blWriteAsPDBML(FILE *fp, PDB  *pdb)
                             (xmlChar *) buffer);
       }
 
-      /* atom symbol */
-      /* Note: If the atomic symbol is not set in PDB data structure then
+      /* atom symbol
+         Note: If the atomic symbol is not set in PDB data structure then
                the value set is based on columns 13-14 of pdb-formated
-               text file.  */
+               text file.  
+      */
       sprintf(buffer,"%s", p->element);
       KILLLEADSPACES(buffer_ptr,buffer);
       if(strlen(buffer_ptr))
@@ -539,12 +563,24 @@ void blWriteAsPDBML(FILE *fp, PDB  *pdb)
          node = xmlNewChild(atom_node, NULL, (xmlChar *) "type_symbol",
                             (xmlChar *) buffer);
       }
+
+      /* Segment ID 
+         Note: Segment ID is not included if blank 
+      */
+      if(strncmp(p->segid, "    ", 4))
+      {
+         node = xmlNewChild(atom_node, NULL, 
+                            (xmlChar *) "seg_id",
+                            (xmlChar *) p->segid);
+      }
+
+
    }
 
-   /* Write to doc file pointer */
+   /* Write to doc file pointer                                         */
    xmlDocFormatDump(fp,doc,1);
 
-   /* Free Memory */
+   /* Free Memory                                                       */
     xmlFreeDoc(doc);
     xmlCleanupParser();
 

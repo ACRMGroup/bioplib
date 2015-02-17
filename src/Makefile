@@ -1,8 +1,9 @@
 # makefile for building support libraries under UNIX:
 
 # Destination in which to place the library and the include files
-LIBDEST = ${HOME}/lib
-INCDEST = ${HOME}/include
+LIBDEST       = ${HOME}/lib
+INCDEST       = ${HOME}/include
+DATADEST      = ${HOME}/data
 SHAREDLIBDEST = ${HOME}/lib
 
 # Doxygen and adddoxy directories
@@ -55,10 +56,10 @@ RANLIB = ranlib
 # are the minor and release numbers
 # libgen
 GMAJOR = 3
-GMINOR = 0.2
+GMINOR = 0.3
 # libbiop
 BMAJOR = 3
-BMINOR = 0.2
+BMINOR = 0.3
 
 # Files for libgen.a
 OFILESG = BuffInp.o CalcExtSD.o CalcSD.o CheckExtn.o CreateRotMat.o CrossProd3.o \
@@ -142,6 +143,9 @@ install :
 	cp libbiop.a $(LIBDEST)
 	cp *.h $(INCDEST)/bioplib
 
+installdata :
+	(cd ../data; cp -Rcp * $(DATADEST))
+
 installshared : 
 	mkdir -p $(SHAREDLIBDEST)
 	mkdir -p $(INCDEST)/bioplib
@@ -155,6 +159,7 @@ installshared :
 help :
 	@echo "make               : Build the static libraries"
 	@echo "make install       : Install the static libraries"
+	@echo "make installdata   : Install the data files"
 	@echo "make shared        : Build shared libraries"
 	@echo "make installshared : Install shared libraries"
 	@echo "make clean         : Remove object and library files from compilation directory"

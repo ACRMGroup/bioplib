@@ -34,13 +34,19 @@ lib:
         mkdir ~/include
         mkdir ~/include/bioplib
         mkdir ~/lib
+        mkdir ~/data
 
 ####(2) Install libxml2
 
-If you wish to support PDBML (XML) format files, you need to install
-libxml2 from http://http://xmlsoft.org/doanloads.html
+By default, PDBML (XML) format files are supported. If you wish to do
+this, you need to install libxml2 from
+http://http://xmlsoft.org/downloads.html
 
-This will normally be already installed and available on Linux systems. If not then it is installed on Fedora/CentOS systems using (as root):
+If you do not need PDBML (XML) support, then you can skip this step.
+
+This will normally be already installed and available on Linux
+systems. If not then it is installed on Fedora/CentOS systems using
+(as root):
 
         yum -y install libxml2 libxml2-devel
 
@@ -60,6 +66,11 @@ of on Debian/Ubuntu systems using:
         tar -zxvf bioplib-X.Y.tar.gz
 
 (where X.Y is the major and minor version numbers - e.g. 3.0)
+
+You may also have chosen to download a ZIP file, in which case this is unpacked using
+
+        unzip bioplib-X.Y.zip
+
 
 ####(4) This will create a directory called bioplib-X.Y.  
 
@@ -84,8 +95,48 @@ COPT line from the Makefile.
         make 
         make doxygen
         make install
+        make installdata
 
-####(6) For more information, read the file:
+####(6) Set environment variables
+
+If you are using BiopLib routines that access BiopLib data directories, you must set the environment variable DATADIR to point to the directory in which you have installed the BiopLib data files (default $HOME/data)
+
+        sh/bash:
+           export DATADIR=$HOME/data
+
+        csh/tcsh:
+           setenv DATADIR $HOME/data
+(this command should be placed in your .bashrc, .profile, .tcsh or .cshrc file as appropriate for your shell).
+
+If you are using the BiopLib interactive help support in your
+programs, you must set the environment variable HELPDIR to point to
+the directory in which you have installed the BiopLib help files
+(default $HOME/help)
+
+        sh/bash:
+           export HELPDIR=$HOME/data
+
+        csh/tcsh:
+           setenv HELPDIR $HOME/data
+(this command should be placed in your .bashrc, .profile, .tcsh or .cshrc file as appropriate for your shell).
+
+
+
+
+####(7) Additional installation options
+
+You can modify the installation directories as desired by editing the first few lines of the Makefile.
+
+You can also use BiopLib as a set of shared libraries:
+
+        make shared
+        make installshared
+
+You can clean up your compilation directory with:
+
+        make clean
+
+####(8) For more information on using BiopLib, read the file:
 
         bioplib-X.Y/doc/doxygen/docsrcinput/page_01.dox
 
