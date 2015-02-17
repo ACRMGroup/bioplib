@@ -62,7 +62,7 @@
                   MS Windows. By: CTP
 -  V1.10 29.09.14 Allow single character filetype check for gzipped files.
                   By: CTP
--  V1.11 12.02.15 blWriteWholePDB() now has a blWriteWholePDBNoConnect()
+-  V1.11 12.02.15 blWriteWholePDB() now has a blWriteWholePDBNoConect()
                   variant
 
 *************************************************************************/
@@ -80,7 +80,7 @@
    Writes a PDB file including header and trailer information.
    Output in PDBML-format if flags set.
 
-   #KEYFUNCTION  blWriteWholePDBNoConnect()
+   #KEYFUNCTION  blWriteWholePDBNoConect()
    Writes a PDB file including header information (no trailer).
    Output in PDBML-format if flags set.
 
@@ -182,8 +182,8 @@ BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
 
 
 /************************************************************************/
-/*>BOOL blWriteWholePDBNoConnect(FILE *fp, WHOLEPDB *wpdb)
-   -------------------------------------------------------
+/*>BOOL blWriteWholePDBNoConect(FILE *fp, WHOLEPDB *wpdb)
+   ------------------------------------------------------
 *//**
 
    \param[in]     *fp        File pointer
@@ -195,7 +195,7 @@ BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
 
 -  12.02.15 Original   By: ACRM
 */
-BOOL blWriteWholePDBNoConnect(FILE *fp, WHOLEPDB *wpdb)
+BOOL blWriteWholePDBNoConect(FILE *fp, WHOLEPDB *wpdb)
 {
    return(blDoWriteWholePDB(fp, wpdb, FALSE));
 }
