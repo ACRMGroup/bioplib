@@ -153,7 +153,7 @@
                   input PDB list.
 -  V1.66 17.09.14 Commented the fields of the PDB structure
 -  V1.67 24.10.14 Added blExtractZoneSpecPDB()
--  V1.68 12.02.15 Added blWriteWholePDBNoConnect()
+-  V1.68 12.02.15 Added blWriteWholePDBNoConect()
 -  V1.69 17.02.15 Added segid to PDB structure and to CLEAR_PDB()
 
 *************************************************************************/
@@ -446,7 +446,7 @@ void blWriteAsPDB(FILE *fp, PDB  *pdb);
 void blWriteAsPDBML(FILE *fp, PDB  *pdb);
 BOOL blFormatCheckWritePDB(PDB *pdb);
 BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb);
-BOOL blWriteWholePDBNoConnect(FILE *fp, WHOLEPDB *wpdb);
+BOOL blWriteWholePDBNoConect(FILE *fp, WHOLEPDB *wpdb);
 void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb);
 void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb);
 
