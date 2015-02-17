@@ -3,11 +3,11 @@
 
    \file       FixCterPDB.c
    
-   \version    V1.7
-   \date       07.07.14
+   \version    V1.8
+   \date       17.02.15
    \brief      Routine to add C-terminal oxygens.
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -62,6 +62,7 @@
 -  V1.5  03.06.05 Handles altpos
 -  V1.6  04.02.14 Use CHAINMATCH By: CTP
 -  V1.7  07.07.14 Use bl prefix for functions By: CTP
+-  V1.8  17.02.15 Added check on memory allocation   By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -108,8 +109,8 @@ static BOOL SetCterStyle(PDB *start, PDB *end, int style);
 
    \param[in,out] *pdb   PDB linked list to modify
    \param[in]     style  CTER_STYLE_STD, CTER_STYLE_GROMOS or 
-                        CTER_STYLE_CHARMM
-   \return                Memory allocation OK?
+                         CTER_STYLE_CHARMM
+   \return               Memory allocation OK?
 
    Renames C-ter atoms in required style and calls CalcCterCoords()
    as required to calculate coordinates ans splices them in.
@@ -126,6 +127,7 @@ static BOOL SetCterStyle(PDB *start, PDB *end, int style);
 -  03.06.05 Handles altpos
 -  04.02.14 Use CHAINMATCH By: CTP
 -  07.07.14 Use bl prefix for functions By: CTP
+-  17.02.15 Checks INIT() succeeded  By: ACRM
 */
 BOOL blFixCterPDB(PDB *pdb, int style)
 {
@@ -171,6 +173,9 @@ BOOL blFixCterPDB(PDB *pdb, int style)
          if(O2 == NULL)
          {
             INIT(O2, PDB);
+            if(O2==NULL)                     /* 17.02.15                */
+               return(FALSE);
+            
             CLEAR_PDB(O2);
             if(O1 != NULL) 
                blCopyPDB(O2, O1);
