@@ -46,10 +46,10 @@ or on Debian/Ubuntu systems using:
         sudo apt-get install libsml2 libxml2-dev
 
 On other systems, you will need to install libxml2 manually from 
-http://http://xmlsoft.org/downloads.html
+http://xmlsoft.org/downloads.html
 
 
-####(2) Unpack the tar file
+####(2) Unpack the BiopLib tar file
 
         zcat bioplib-X.Y.tar.gz | tar -xvf -
 -or-
@@ -66,31 +66,36 @@ You may also have chosen to download a ZIP file, in which case this is unpacked 
 
         unzip bioplib-X.Y.zip
 
-
-####(3) By default, BiopLib will be installed in sub-directories of your home directory. 
-
-These directories will be created when you install BiopLib if they do
-not exist already:
-
-        mkdir ~/include
-        mkdir ~/include/bioplib
-        mkdir ~/lib
-        mkdir ~/data
-
-You can also choose to install the files elsewhere, but need to modify
-the Makefile. See 'Additional installation options', below.
-
-
-
-####(4) This will create a directory called bioplib-X.Y
+This will create a directory called bioplib-X.Y
 
 Enter this directory and then go into the src sub-directory:
 
         cd bioplib-X.Y/src
 
-Modify the Makefile as required for your system. If you are using the
-GNU C compiler and wish to install BiopLib in the default directories
-and provide PDBML (XML) support, no changes should be needed.
+
+
+####(3) By default, BiopLib will be installed in sub-directories of your home directory
+
+These directories will be created when you install BiopLib if they do
+not exist already:
+
+        ~/include
+        ~/include/bioplib
+        ~/lib
+        ~/data
+
+You can also choose to install the files elsewhere, but need to modify
+the Makefile as described below.
+
+
+
+####(4) Modify the configuration
+
+If you are using the GNU C compiler and wish to install BiopLib in the
+default directories and provide PDBML (XML) support, no configuration
+changes should be needed and this section can be skipped.
+
+Otherwise, modify the Makefile as required for your system. 
 
 If you have chosen alternative locations for the include, library and data
 directories then you will need to change:
@@ -99,13 +104,15 @@ directories then you will need to change:
 - INCDEST to the directory where you wish to install the include files
 - DATADEST to the directory where you wish to install the data file
 
-If you wish to use dynamic libraries, you may also wish to change their location by changing:
+Note that the complete path is required, you cannot do ~/lib.
+
+If you wish to use dynamic libraries (see 'Additional installation
+options', below), you may also wish to change their location by
+changing:
 
 - SHAREDLIBDEST to the directory where you wish to install the shared libraries
 
-Note that the complete path is required, you cannot do ~/lib.
-
-If you do *not* require PDBML (XML) support, comment out the relevant 
+If you do **not** require PDBML (XML) support, comment out the relevant 
 COPT line from the Makefile.
 
 
@@ -129,7 +136,7 @@ If you are using BiopLib routines that access BiopLib data directories, you must
 
         csh/tcsh:
            setenv DATADIR $HOME/data
-(this command should be placed in your .bashrc, .profile, .tcsh or .cshrc file as appropriate for your shell).
+(This command should be placed in your .bashrc, .profile, .tcsh or .cshrc file as appropriate for your shell.)
 
 If you are using the BiopLib interactive help support in your
 programs, you must set the environment variable HELPDIR to point to
@@ -141,17 +148,14 @@ the directory in which you have installed the BiopLib help files
 
         csh/tcsh:
            setenv HELPDIR $HOME/data
-(this command should be placed in your .bashrc, .profile, .tcsh or .cshrc file as appropriate for your shell).
+(This command should be placed in your .bashrc, .profile, .tcsh or .cshrc file as appropriate for your shell.)
 
 
 
 
 ####(7) Additional installation options
 
-As described above, you can modify the installation directories as
-desired by editing the first few lines of the Makefile.
-
-You can also use BiopLib as a set of shared libraries:
+You can use BiopLib as a set of shared libraries:
 
         make shared
         make installshared
