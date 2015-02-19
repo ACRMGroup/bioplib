@@ -35,6 +35,12 @@ int main(int argc, char **argv)
    }
 */ 
    WriteWholePDB(stdout, wpdb);
+   fprintf(stdout,"TEST  \n");
+
+   blBuildConectData(wpdb->pdb);
+   blWriteWholePDBTrailer(stdout, wpdb);
+
+
 
    return(0);
 }

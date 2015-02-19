@@ -98,6 +98,7 @@
    Reads a PDB file, storing the header and trailer information as
    well as the coordinate data. Only reads the ATOM record for 
    coordinates
+
 */
 /************************************************************************/
 /* Includes
@@ -133,7 +134,7 @@ static WHOLEPDB *blDoReadWholePDB(FILE *fpin, BOOL atomsonly);
 static STRINGLIST *blParseHeaderPDBML(FILE *fpin);
 static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date);
 static BOOL blDoWriteWholePDB(FILE *fp, WHOLEPDB *wpdb, BOOL doConnect);
-static void StoreConect(WHOLEPDB *wpdb, char *buffer);
+static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer);
 
 #if !defined(__APPLE__) && !defined(MS_WINDOWS)
 FILE *popen(char *, char *);
@@ -519,7 +520,7 @@ static WHOLEPDB *blDoReadWholePDB(FILE *fpin, BOOL atomsonly)
             wpdb->trailer = blStoreString(wpdb->trailer, buffer);
             if(!strncmp(buffer, "CONECT", 6))
             {
-               StoreConect(wpdb, buffer);
+               StoreConectRecords(wpdb, buffer);
             }
          }
       }
@@ -533,7 +534,7 @@ static WHOLEPDB *blDoReadWholePDB(FILE *fpin, BOOL atomsonly)
 }
 
 /************************************************************************/
-static void StoreConect(WHOLEPDB *wpdb, char *buffer)
+static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer)
 {
    char record_type[8];
    int  i, j,

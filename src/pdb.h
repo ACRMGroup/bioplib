@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.70
-   \date       18.02.15
+   \version    V1.71
+   \date       19.02.15
    \brief      Include file for PDB routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2015
@@ -156,6 +156,8 @@
 -  V1.68 12.02.15 Added blWriteWholePDBNoConect()
 -  V1.69 17.02.15 Added segid to PDB structure and to CLEAR_PDB()
 -  V1.70 18.02.15 Added conect to PDB structure and to CLEAR_PDB()
+-  V1.71 19.02.15 Added blBuildConectData(), blAddConect() and
+                  blIsBonded()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -455,6 +457,10 @@ BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb);
 BOOL blWriteWholePDBNoConect(FILE *fp, WHOLEPDB *wpdb);
 void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb);
 void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb);
+
+BOOL blBuildConectData(PDB *pdb);
+BOOL blAddConect(PDB *p, PDB *q);
+BOOL blIsBonded(PDB *p, PDB *q);
 
 void blWritePDBRecord(FILE *fp, PDB *pdb);
 void blWritePDBRecordAtnam(FILE *fp, PDB  *pdb);
