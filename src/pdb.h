@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.69
-   \date       17.02.15
+   \version    V1.70
+   \date       18.02.15
    \brief      Include file for PDB routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2015
@@ -155,6 +155,7 @@
 -  V1.67 24.10.14 Added blExtractZoneSpecPDB()
 -  V1.68 12.02.15 Added blWriteWholePDBNoConect()
 -  V1.69 17.02.15 Added segid to PDB structure and to CLEAR_PDB()
+-  V1.70 18.02.15 Added conect to PDB structure and to CLEAR_PDB()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -169,6 +170,7 @@
 
 #define MAXSTDAA    21       /* Number of standard amino acids (w/ PCA)*/
 #define MAXATINRES  14       /* Max number of atoms in a standard aa   */
+#define MAXCONECT    8       /* Max number of CONECT connections       */
 
 /* blATOMTYPE is unused at present, but gives the flexibility of
    associating type information with each PDB record. 
@@ -217,9 +219,11 @@ typedef struct pdb_entry
    APTR extras;              /* Pointer for users to add information    */
    blATOMTYPE *atomType;     /* Reserved for future use                 */
    struct pdb_entry *next;   /* Forward linked list                     */
+   struct pdb_entry *conect[MAXCONECT];  /* CONECT record links         */
    int  atnum;               /* Atom number                             */
    int  resnum;              /* Residue number                          */
    int  formal_charge;       /* Formal charge - used in XML files       */
+   int  nConect;             /* Number of conections                    */
    char record_type[8];      /* ATOM / HETATM                           */
    char atnam[8];            /* Atom name, left justified               */
    char atnam_raw[8];        /* Atom name as it appears in the PDB file */
@@ -330,6 +334,8 @@ typedef struct
                      p->partial_charge = 0.0; \
                      strcpy(p->element,"  "); \
                      strcpy(p->segid,"    "); \
+                     p->conect[0] = NULL;     \
+                     p->nConect = 0;          \
                      p->atomType = NULL
 
 #define ISWATER(z)   (!strncmp((z)->resnam,"HOH",3) || \

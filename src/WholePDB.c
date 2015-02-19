@@ -3,8 +3,8 @@
 
    \file       WholePDB.c
    
-   \version    V1.11
-   \date       12.02.15
+   \version    V1.12
+   \date       18.02.15
    \brief      
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2002-2015
@@ -64,6 +64,7 @@
                   By: CTP
 -  V1.11 12.02.15 blWriteWholePDB() now has a blWriteWholePDBNoConect()
                   variant
+-  V1.12 18.02.15 Added parsing and storage of CONECT data
 
 *************************************************************************/
 /* Doxygen
@@ -108,6 +109,7 @@
 #include "macros.h"
 #include "general.h"
 #include "pdb.h"
+#include "fsscanf.h"
 
 #ifdef XML_SUPPORT /* Required to read PDBML files                      */
 #include <libxml/parser.h>
@@ -131,6 +133,7 @@ static WHOLEPDB *blDoReadWholePDB(FILE *fpin, BOOL atomsonly);
 static STRINGLIST *blParseHeaderPDBML(FILE *fpin);
 static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date);
 static BOOL blDoWriteWholePDB(FILE *fp, WHOLEPDB *wpdb, BOOL doConnect);
+static void StoreConect(WHOLEPDB *wpdb, char *buffer);
 
 #if !defined(__APPLE__) && !defined(MS_WINDOWS)
 FILE *popen(char *, char *);
@@ -272,34 +275,6 @@ void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
    if((gPDBXMLForce != FORCEXML_XML) && (gPDBXML == FALSE))
    {
       for(s=wpdb->header; s!=NULL; NEXT(s))
-      {
-         fputs(s->string, fp);
-      }
-   }
-}
-
-
-/************************************************************************/
-/*>void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
-   -----------------------------------------------------
-*//**
-
-   \param[in]     *fp        File pointer
-   \param[in]     *wpdb      Whole PDB structure pointer
-
-   Writes the trailer of a PDB file 
-
--  30.05.02  Original   By: ACRM
--  21.06.14  Renamed to blWriteWholePDBTrailer() By: CTP
--  12.02.15  Added XML check   By: ACRM
-*/
-void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
-{
-   STRINGLIST *s;
-   
-   if((gPDBXMLForce != FORCEXML_XML) && (gPDBXML == FALSE))
-   {
-      for(s=wpdb->trailer; s!=NULL; NEXT(s))
       {
          fputs(s->string, fp);
       }
@@ -488,12 +463,11 @@ static WHOLEPDB *blDoReadWholePDB(FILE *fpin, BOOL atomsonly)
    }
 #endif   
 
-
-   /* Check file format */
+   /* Check file format                                                 */
    pdbml_format = blCheckFileFormatPDBML(fp);
 
 #ifndef XML_SUPPORT
-   /* PDBML format not supported. */
+   /* PDBML format not supported.                                       */
    if(pdbml_format)
    {
       free(wpdb);
@@ -543,6 +517,10 @@ static WHOLEPDB *blDoReadWholePDB(FILE *fpin, BOOL atomsonly)
             !strncmp(buffer, "END   ", 6))
          {
             wpdb->trailer = blStoreString(wpdb->trailer, buffer);
+            if(!strncmp(buffer, "CONECT", 6))
+            {
+               StoreConect(wpdb, buffer);
+            }
          }
       }
    }
@@ -552,6 +530,86 @@ static WHOLEPDB *blDoReadWholePDB(FILE *fpin, BOOL atomsonly)
    }
    
    return(wpdb);
+}
+
+/************************************************************************/
+static void StoreConect(WHOLEPDB *wpdb, char *buffer)
+{
+   char record_type[8];
+   int  i, j,
+        nConect,
+        atoms[5];
+   PDB  *p,
+        *atomsP[5];
+   BOOL gotLink;
+
+   fsscanf(buffer,"%6s%5d%5d%5d%5d%5d", 
+           record_type,&atoms[0],&atoms[1],&atoms[2],&atoms[3],&atoms[4]);
+
+   /* Find the PDB pointers for the (up to) 5 CONECT atoms              */
+   nConect = 0;
+   for(i=0; i<5; i++)
+   {
+      /* Have we run out of specified atoms?                            */
+      if(atoms[i] == 0)
+         break;
+
+      /* Look for this atom                                             */
+      for(p=wpdb->pdb; p!=NULL; NEXT(p))
+      {
+         if(atoms[i] == p->atnum)
+         {
+            /* Found it so store and break out                          */
+            atomsP[i] = p;
+            nConect++;
+            break;
+         }
+      }
+   }
+
+   /* Set the connections from atom 0                                   */
+   for(i=1; i<nConect; i++)
+   {
+      /* Look to see if we have this conect stored already              */
+      gotLink = FALSE;
+      for(j=0; j<atomsP[0]->nConect; j++)
+      {
+         if(atomsP[0]->conect[j] == atomsP[i])
+         {
+            gotLink = TRUE;
+            break;
+         }
+      }
+
+      /* If not then store it                                           */
+      if(!gotLink && (atomsP[0]->nConect < MAXCONECT))
+      {
+         atomsP[0]->conect[atomsP[0]->nConect] = atomsP[i];
+         (atomsP[0]->nConect)++;
+      }
+   }
+
+   /* Set the connections in the other direction                        */
+   for(i=1; i<nConect; i++)
+   {
+      /* Look to see if we have this conect stored already              */
+      gotLink = FALSE;
+      for(j=0; j<atomsP[i]->nConect; j++)
+      {
+         if(atomsP[i]->conect[j] == atomsP[0])
+         {
+            gotLink = TRUE;
+            break;
+         }
+      }
+
+      /* If not then store it                                           */
+      if(!gotLink && (atomsP[i]->nConect < MAXCONECT))
+      {
+         atomsP[i]->conect[atomsP[i]->nConect] = atomsP[0];
+         (atomsP[i]->nConect)++;
+      }
+   }
 }
 
 /************************************************************************/
@@ -789,3 +847,55 @@ static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date)
 
    return TRUE;
 }
+
+
+/************************************************************************/
+/*>void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
+   -----------------------------------------------------
+*//**
+
+   \param[in]     *fp        File pointer
+   \param[in]     *wpdb      Whole PDB structure pointer
+
+   Writes the trailer of a PDB file 
+
+-  30.05.02  Original   By: ACRM
+-  21.06.14  Renamed to blWriteWholePDBTrailer() By: CTP
+-  12.02.15  Added XML check   By: ACRM
+-  18.02.15  Complete rewrite to use the parsed CONECT data rather than
+             simply rewriting what was read in
+*/
+void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
+{
+   if((gPDBXMLForce != FORCEXML_XML) && (gPDBXML == FALSE))
+   {
+      /* Write the CONECT records                                       */
+      PDB *p;
+      for(p=wpdb->pdb; p!=NULL; NEXT(p))
+      {
+         if(p->nConect)
+         {
+            BOOL conectPrinted = FALSE;
+            int i;
+            for(i=0; i<p->nConect; i++)
+            {
+               if(!(i%4))
+               {
+                  if(conectPrinted)
+                     fprintf(fp, "\n");
+                  fprintf(fp,"CONECT%5d", p->atnum);
+                  conectPrinted = 1;
+               }
+               fprintf(fp,"%5d", p->conect[i]->atnum);
+            }
+            fprintf(fp, "\n");
+         }
+      }
+
+      /* NOW NEED TO GENERATE THE MASTER RECORD                         */
+
+      fprintf(fp, "END   \n");
+   }
+}
+
+

@@ -55,7 +55,6 @@
    -   natom - A pointer to type integer in which the number of atoms
                found is stored.
 
-
    As of V2.3, the routine makes provision for partial occupancies. If 
    the occupancies are 1.0 or 0.0, the atoms are read verbatim. If not,
    only the highest occupancy atoms are read and the atom names are 
