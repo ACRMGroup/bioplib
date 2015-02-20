@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V2.37
-   \date       17.02.15
+   \version    V3.0
+   \date       20.02.15
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2015
@@ -202,6 +202,7 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                   fails after pushback of single character. Updates to 
                   blCheckFileFormatPDBML() and blDoReadPDB(). By: CTP
 -  V2.37 17.02.15 Added segid support   By: ACRM
+-  V3.0  20.02.15 Merged functionality of ReadWholePDB() into this
 
 *************************************************************************/
 /* Doxygen
@@ -241,6 +242,33 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 
    #FUNCTION blCheckFileFormatPDBML() 
    A simple test to detect whether a file is a PDBML-formatted PDB file.
+
+   #KEYFUNCTION  blReadWholePDB()
+   Reads a PDB file, storing the header and trailer information as
+   well as the coordinate data. Can read gzipped files as well as
+   uncompressed files.
+
+   #KEYFUNCTION  blWriteWholePDB()
+   Writes a PDB file including header and trailer information.
+   Output in PDBML-format if flags set.
+
+   #KEYFUNCTION  blWriteWholePDBNoConect()
+   Writes a PDB file including header information (no trailer).
+   Output in PDBML-format if flags set.
+
+   #FUNCTION  blFreeWholePDB()
+   Frees the header, trailer and atom content from a WHOLEPDB structure
+
+   #FUNCTION  blWriteWholePDBHeader()
+   Writes the header of a PDB file 
+
+   #FUNCTION  blWriteWholePDBTrailer()
+   Writes the trailer of a PDB file 
+
+   #FUNCTION  blReadWholePDBAtoms()
+   Reads a PDB file, storing the header and trailer information as
+   well as the coordinate data. Only reads the ATOM record for 
+   coordinates
 
 
    #SUBGROUP Atom names and elements
@@ -288,6 +316,11 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 #define SMALL      0.000001
 #define XML_BUFFER 1024
 #define XML_SAMPLE 256
+#define MAXBUFF    160
+
+#define LOCATION_HEADER      0
+#define LOCATION_COORDINATES 1
+#define LOCATION_TRAILER     2
 
 /************************************************************************/
 /* Prototypes
@@ -297,6 +330,14 @@ static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
                                int *natom);
 static void blProcessElementField(char *element, char *element_field);
 static void blProcessChargeField(int *charge, char *charge_field);
+static BOOL blDoWriteWholePDB(FILE *fp, WHOLEPDB *wpdb, BOOL doConnect);
+static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer);
+#ifdef XML_SUPPORT
+static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date);
+static STRINGLIST *blParseHeaderPDBML(FILE *fpin);
+#endif
+
+
 
 #if !defined(__APPLE__) && !defined(MS_WINDOWS)
 FILE *popen(char *, char *);
@@ -334,8 +375,20 @@ PDB *blReadPDB(FILE *fp,
                int  *natom)
 {
    PDB *pdb;
-   pdb = blDoReadPDB(fp, natom, TRUE, 1, 1);
-   pdb = blRemoveAlternates(pdb);
+   WHOLEPDB *wpdb;
+   *natom=(-1);
+
+   if((wpdb = blDoReadPDB(fp, TRUE, 1, 1, FALSE))!=NULL)
+   {
+      blFreeStringList(wpdb->header);
+      blFreeStringList(wpdb->trailer);
+      *natom = wpdb->natoms;
+      pdb = wpdb->pdb;
+      free(wpdb);
+
+      pdb = blRemoveAlternates(pdb);
+   }
+   
    return(pdb);
 }
 
@@ -360,7 +413,20 @@ PDB *blReadPDB(FILE *fp,
 PDB *blReadPDBAll(FILE *fp,
              int  *natom)
 {
-   return(blDoReadPDB(fp, natom, TRUE, 0, 0));
+   PDB *pdb;
+   WHOLEPDB *wpdb;
+   *natom=(-1);
+
+   if((wpdb = blDoReadPDB(fp, TRUE, 0, 0, FALSE))!=NULL)
+   {
+      blFreeStringList(wpdb->header);
+      blFreeStringList(wpdb->trailer);
+      *natom = wpdb->natoms;
+      pdb = wpdb->pdb;
+      free(wpdb);
+   }
+   
+   return(pdb);
 }
 
 /************************************************************************/
@@ -389,8 +455,20 @@ PDB *blReadPDBAtoms(FILE *fp,
                     int  *natom)
 {
    PDB *pdb;
-   pdb = blDoReadPDB(fp, natom, FALSE, 1, 1);
-   pdb = blRemoveAlternates(pdb);
+   WHOLEPDB *wpdb;
+   *natom=(-1);
+
+   if((wpdb = blDoReadPDB(fp, FALSE, 1, 1, FALSE))!=NULL)
+   {
+      blFreeStringList(wpdb->header);
+      blFreeStringList(wpdb->trailer);
+      *natom = wpdb->natoms;
+      pdb = wpdb->pdb;
+      free(wpdb);
+
+      pdb = blRemoveAlternates(pdb);
+   }
+   
    return(pdb);
 }
 
@@ -415,7 +493,22 @@ PDB *blReadPDBAtoms(FILE *fp,
 */
 PDB *blReadPDBOccRank(FILE *fp, int *natom, int OccRank)
 {
-   return(blDoReadPDB(fp, natom, TRUE, OccRank, 1));
+   PDB *pdb;
+   WHOLEPDB *wpdb;
+   *natom=(-1);
+
+   if((wpdb = blDoReadPDB(fp, TRUE, OccRank, 1, FALSE))!=NULL)
+   {
+      blFreeStringList(wpdb->header);
+      blFreeStringList(wpdb->trailer);
+      *natom = wpdb->natoms;
+      pdb = wpdb->pdb;
+      free(wpdb);
+
+      pdb = blRemoveAlternates(pdb);
+   }
+   
+   return(pdb);
 }
 
 /************************************************************************/
@@ -439,12 +532,27 @@ PDB *blReadPDBOccRank(FILE *fp, int *natom, int OccRank)
 */
 PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
 {
-   return(blDoReadPDB(fp, natom, FALSE, OccRank, 1));
+   PDB *pdb;
+   WHOLEPDB *wpdb;
+   *natom=(-1);
+
+   if((wpdb = blDoReadPDB(fp, FALSE, OccRank, 1, FALSE))!=NULL)
+   {
+      blFreeStringList(wpdb->header);
+      blFreeStringList(wpdb->trailer);
+      *natom = wpdb->natoms;
+      pdb = wpdb->pdb;
+      free(wpdb);
+
+      pdb = blRemoveAlternates(pdb);
+   }
+   
+   return(pdb);
 }
 
 /************************************************************************/
-/*>PDB *blDoReadPDB(FILE *fpin, int *natom, BOOL AllAtoms, int OccRank,
-                    int ModelNum)
+/*>WHOLEPDB *blDoReadPDB(FILE *fpin, BOOL AllAtoms, int OccRank,
+                         int ModelNum, BOOL DoWhole)
    --------------------------------------------------------------------
 *//**
 
@@ -454,9 +562,9 @@ PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
                            FALSE: ATOM records only
    \param[in]     OccRank  Occupancy ranking
    \param[in]     ModelNum NMR Model number (0 = all)
-   \param[out]    *natom   Number of atoms read. -1 if error.
-   \return                 A pointer to the first allocated item of
-                           the PDB linked list
+   \param[in]     DoWhole  Read the whole PDB file rather than just 
+                           the ATOM/HETATM records.
+   \return                 A pointer to a malloc'd WHOLEPDB structure
 
    Reads a PDB file into a PDB linked list. The OccRank value indicates
    occupancy ranking to read for partial occupancy atoms.
@@ -528,12 +636,18 @@ PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
 -  29.09.14 V2.36 Allow single character filetype check for gzipped files.
                   By: CTP
 -  17.02.15 V2.37 Added segid support   By: ACRM
+-  20.02.15 V3.0  NOT COMPATIBLE WITH PREVIOUS VERSIONS. The functionality
+                  of the old ReadWholePDB() is now integrated into this
+                  function.
+
+We need to deal with freeing wpdb if we are returning null.
+Also need to deal with some sort of error code
 */
-PDB *blDoReadPDB(FILE *fpin,
-                 int  *natom,
-                 BOOL AllAtoms,
-                 int  OccRank,
-                 int  ModelNum)
+WHOLEPDB *blDoReadPDB(FILE *fpin,
+                      BOOL AllAtoms,
+                      int  OccRank,
+                      int  ModelNum,
+                      BOOL DoWhole)
 {
    char     record_type[8],
             atnambuff[8],
@@ -556,14 +670,17 @@ PDB *blDoReadPDB(FILE *fpin,
             CurRes = 0,
             NPartial,
             ModelCount = 1,
-            charge = 0;
+            charge = 0,
+            inLocation = LOCATION_HEADER;
    FILE     *fp = fpin;
    double   x,y,z,
             occ,
             bval;
-   PDB      *pdb  = NULL,
-            *p,
+   PDB      *p,
             multi[MAXPARTIAL];   /* Temporary storage for partial occ   */
+   WHOLEPDB *wpdb = NULL;
+   BOOL     pdbml_format;
+   
 
 #if defined(GUNZIP_SUPPORT) && !defined(MS_WINDOWS)
    int      signature[3],
@@ -574,7 +691,14 @@ PDB *blDoReadPDB(FILE *fpin,
 #  endif
 #endif
 
-   *natom         = 0;
+   if((wpdb=(WHOLEPDB *)malloc(sizeof(WHOLEPDB)))==NULL)
+      return(NULL);
+
+   wpdb->pdb     = NULL;
+   wpdb->header  = NULL;
+   wpdb->trailer = NULL;
+   
+   wpdb->natoms   = 0;
    CurAtom[0]     = '\0';
    NPartial       = 0;
    gPDBPartialOcc = FALSE;
@@ -614,7 +738,7 @@ PDB *blDoReadPDB(FILE *fpin,
       sprintf(cmd,"gunzip >/tmp/readpdb_%d",(int)getpid());
       if((fp = (FILE *)popen(cmd,"w"))==NULL)
       {
-         *natom = (-1);
+         wpdb->natoms = (-1);
          return(NULL);
       }
       while((ch=fgetc(fpin))!=EOF)
@@ -625,37 +749,44 @@ PDB *blDoReadPDB(FILE *fpin,
       sprintf(cmd,"/tmp/readpdb_%d",(int)getpid());
       if((fp = fopen(cmd,"r"))==NULL)
       {
-         *natom = (-1);
+         wpdb->natoms = (-1);
          return(NULL);
       }
    }
 #endif   
 
 
-   /* Check file format */
-   if(blCheckFileFormatPDBML(fp))
+   /* Check file format                                                 */
+   pdbml_format = blCheckFileFormatPDBML(fp);
+   
+   /* If it's PDBML then call the appropriate parser                    */
+   if(pdbml_format)
    {
 #ifdef XML_SUPPORT
-
-      /* Parse PDBML-formatted PDB file */
-      pdb = blDoReadPDBML(fp,natom,AllAtoms,OccRank,ModelNum);
-      xmlCleanupParser();     /* free globals set by parser */
-      if(cmd[0]) unlink(cmd); /* delete tmp file            */
-      return( pdb );          /* return PDB list            */
-
+      /* Parse PDBML-formatted PDB file                                 */
+      if(DoWhole)
+         wpdb->header = blParseHeaderPDBML(fp);
+      
+      wpdb->pdb = blDoReadPDBML(fp,&wpdb->natoms,AllAtoms,
+                                OccRank,ModelNum);
+      if(DoWhole)
+         wpdb->trailer = blStoreString(wpdb->trailer, "END   \n");
+      xmlCleanupParser();     /* free globals set by parser             */
+      if(cmd[0]) unlink(cmd); /* delete tmp file                        */
+      return(wpdb);           /* return PDB list                        */
 #else
-
-      /* PDBML format not supported. */
-      if(cmd[0]) unlink(cmd); /* delete tmp file            */
-      *natom = (-1);          /* Indicate error             */
-      return( NULL );         /* return NULL list           */
-
+      /* PDBML format not supported.                                    */
+      if(cmd[0]) unlink(cmd); /* delete tmp file                        */
+      wpdb->natoms = (-1);    /* Indicate error                         */
+      return(NULL);           /* return NULL list                       */
 #endif
    }
 
-
+   inLocation = LOCATION_HEADER;
+   
    while(fgets(buffer,159,fp))
    {
+      /*** Deal with counting model numbers                           ***/
       if(ModelNum != 0)          /* We are interested in model numbers  */
       {
          if(!strncmp(buffer,"ENDMDL",6))
@@ -671,7 +802,44 @@ PDB *blDoReadPDB(FILE *fpin,
 
       if(!strncmp(buffer,"ENDMDL",6))
          gPDBMultiNMR   = TRUE;
+
+
+      if(!strncmp(buffer, "ATOM  ", 6) ||
+         !strncmp(buffer, "HETATM", 6) ||
+         !strncmp(buffer, "MODEL ", 6))
+      {
+         inLocation = LOCATION_COORDINATES;
+      }
+      if(!strncmp(buffer, "CONECT", 6) ||
+         !strncmp(buffer, "MASTER", 6) ||
+         !strncmp(buffer, "END   ", 6))
+      {
+         inLocation = LOCATION_TRAILER;
+      }
       
+      /* If we are in the header, just store it                         */
+      if(inLocation == LOCATION_HEADER)
+      {
+         if(DoWhole)
+         {
+            if((wpdb->header = blStoreString(wpdb->header, buffer))==NULL)
+               return(NULL);
+         }
+         continue;
+      }
+      if(inLocation == LOCATION_TRAILER)
+      {
+         if(DoWhole)
+         {
+            wpdb->trailer = blStoreString(wpdb->trailer, buffer);
+            if(!strncmp(buffer, "CONECT", 6))
+               StoreConectRecords(wpdb, buffer);
+         }
+         
+         continue;
+      }
+
+      /* Read a record                                                  */
       if(fsscanf(buffer,
                  "%6s%5d%1x%5s%4s%1s%4d%1s%3x%8lf%8lf%8lf%6lf%6lf%6x%4s%2s%2s",
                  record_type,&atnum,atnambuff,resnam,chain,&resnum,insert,
@@ -737,11 +905,11 @@ PDB *blDoReadPDB(FILE *fpin,
                
                if(NPartial != 0)
                {
-                  if(!blStoreOccRankAtom(OccRank,multi,NPartial,&pdb,&p,
-                                         natom))
+                  if(!blStoreOccRankAtom(OccRank,multi,NPartial,
+                                         &wpdb->pdb,&p,&(wpdb->natoms)))
                   {
-                     if(pdb != NULL) FREELIST(pdb, PDB);
-                     *natom = (-1);
+                     if(wpdb->pdb != NULL) FREELIST(wpdb->pdb, PDB);
+                     wpdb->natoms = (-1);
                      if(cmd[0]) unlink(cmd);
                      return(NULL);
                   }
@@ -751,10 +919,10 @@ PDB *blDoReadPDB(FILE *fpin,
                }
                
                /* Allocate space in the linked list                     */
-               if(pdb == NULL)
+               if(wpdb->pdb == NULL)
                {
-                  INIT(pdb, PDB);
-                  p = pdb;
+                  INIT(wpdb->pdb, PDB);
+                  p = wpdb->pdb;
                }
                else
                {
@@ -764,14 +932,14 @@ PDB *blDoReadPDB(FILE *fpin,
                /* Failed to allocate space; free up list so far & return*/
                if(p==NULL)
                {
-                  if(pdb != NULL) FREELIST(pdb, PDB);
-                  *natom = (-1);
+                  if(wpdb->pdb != NULL) FREELIST(wpdb->pdb, PDB);
+                  wpdb->natoms = (-1);
                   if(cmd[0]) unlink(cmd);
                   return(NULL);
                }
                
                /* Increment the number of atoms                         */
-               (*natom)++;
+               (wpdb->natoms)++;
                
                /* Store the information read                            */
                CLEAR_PDB(p);
@@ -817,12 +985,12 @@ PDB *blDoReadPDB(FILE *fpin,
                {
                   /* Atom name has changed 
                      Select and store the OccRank highest occupancy atom
-                     */
-                  if(!blStoreOccRankAtom(OccRank,multi,NPartial,&pdb,&p,
-                                         natom))
+                  */
+                  if(!blStoreOccRankAtom(OccRank,multi,NPartial,
+                                         &wpdb->pdb,&p,&wpdb->natoms))
                   {
-                     if(pdb != NULL) FREELIST(pdb, PDB);
-                     *natom = (-1);
+                     if(wpdb->pdb != NULL) FREELIST(wpdb->pdb, PDB);
+                     wpdb->natoms = (-1);
                      if(cmd[0]) unlink(cmd);
                      return(NULL);
                   }
@@ -875,10 +1043,11 @@ PDB *blDoReadPDB(FILE *fpin,
 
    if(NPartial != 0)
    {
-      if(!blStoreOccRankAtom(OccRank,multi,NPartial,&pdb,&p,natom))
+      if(!blStoreOccRankAtom(OccRank,multi,NPartial,&wpdb->pdb,&p,
+                             &wpdb->natoms))
       {
-         if(pdb != NULL) FREELIST(pdb, PDB);
-         *natom = (-1);
+         if(wpdb->pdb != NULL) FREELIST(wpdb->pdb, PDB);
+         wpdb->natoms = (-1);
          if(cmd[0]) unlink(cmd);
          return(NULL);
       }
@@ -887,7 +1056,7 @@ PDB *blDoReadPDB(FILE *fpin,
    if(cmd[0]) unlink(cmd);
 
    /* Return pointer to start of linked list                            */
-   return(pdb);
+   return(wpdb);
 }
 
 /************************************************************************/
@@ -1598,23 +1767,24 @@ PDB *blDoReadPDBML(FILE *fpin,
             xmlFree(content);           
          }
          
-         /* Set raw atom name */
-         /* Note: The text pdb format uses columns 13-16 to store the atom
+         /* Set raw atom name
+            Note: The text pdb format uses columns 13-16 to store the atom
                   name. By convention, columns 13-14 contain the 
                   right-justified element symbol for the atom.
                   
                   The raw atom name is equivalent to colums 13-16 of a
-                  pdb-formatted text file .                             */
+                  pdb-formatted text file .                             
+         */
 
          if(strlen(curr_pdb->atnam) == 1)
          {
-            /* copy 1-letter name atnam_raw */
+            /* copy 1-letter name atnam_raw                             */
             strcpy((curr_pdb->atnam_raw),               " ");
             strcpy((curr_pdb->atnam_raw)+1, curr_pdb->atnam);
          }
          if(strlen(curr_pdb->atnam) == 4)
          {
-            /* copy 4-letter name atnam_raw */
+            /* copy 4-letter name atnam_raw                             */
             strcpy(curr_pdb->atnam_raw, curr_pdb->atnam);
          }
          else if(strlen(curr_pdb->element) == 1)
@@ -1627,16 +1797,17 @@ PDB *blDoReadPDBML(FILE *fpin,
             strcpy(curr_pdb->atnam_raw, curr_pdb->atnam);
          }
          
-         /* Pad atom names to 4 characters */
+         /* Pad atom names to 4 characters                              */
          PADMINTERM(curr_pdb->atnam,     4);
          PADMINTERM(curr_pdb->atnam_raw, 4);
          
-         /* Pad Residue Name */
-         /* Note: The text pdb format uses columns 18-20 to store the 
+         /* Pad Residue Name
+            Note: The text pdb format uses columns 18-20 to store the 
                   residue name (right-justified).
                   
                   curr_pdb->resnam is is equivalent to colums 18-21 of a
-                  pdb-formatted text file.                              */
+                  pdb-formatted text file.                              
+         */
          sprintf(pad_resnam,"%3s",curr_pdb->resnam);
          PADMINTERM(pad_resnam, 4);
          strcpy(curr_pdb->resnam, pad_resnam);         
@@ -1665,29 +1836,29 @@ PDB *blDoReadPDBML(FILE *fpin,
             
             if(model_number > ModelNum)
             {
-               break; /* skip rest of tree */
+               break;    /* skip rest of tree                           */
             }
             else
             {
-               continue; /* filter */
+               continue; /* filter                                      */
             }
          }
 
 
-         /* Filter: All Atoms */
+         /* Filter: All Atoms                                           */
          if(!AllAtoms && strncmp(curr_pdb->record_type, "ATOM  ", 6))
          {
-            /* Free curr_pdb and skip atom */
+            /* Free curr_pdb and skip atom                              */
             FREELIST(curr_pdb,PDB);
             curr_pdb = NULL;
-            continue; /* filter */
+            continue;    /* filter                                      */
          }
 
 
-         /* Add partial occ atom from temp storage to output PDB list */
+         /* Add partial occ atom from temp storage to output PDB list   */
          if(NPartial != 0 && strcmp(curr_pdb->atnam,store_atnam))
          {
-            /* Store atom */
+            /* Store atom                                               */
             if( blStoreOccRankAtom(OccRank,multi,NPartial,&pdb,&end_pdb,
                                    natom) )
             {
@@ -1696,7 +1867,7 @@ PDB *blDoReadPDBML(FILE *fpin,
             }
             else
             {
-               /* Error: Failed to store partial occ atom */
+               /* Error: Failed to store partial occ atom               */
                xmlFreeDoc(document);
                if(curr_pdb != NULL) FREELIST(curr_pdb,PDB);
                if(pdb      != NULL) FREELIST(pdb,     PDB);
@@ -1706,33 +1877,34 @@ PDB *blDoReadPDBML(FILE *fpin,
          }
 
 
-         /* Set atom number */
-         /* Note: Cannot use atom site id for atom number so base atnum on
-                  number of atoms stored */
+         /* Set atom number
+            Note: Cannot use atom site id for atom number so base atnum on
+                  number of atoms stored 
+         */
          curr_pdb->atnum = *natom + 1;
          
          
-         /* Add partial occupancy atom to temp storage */
+         /* Add partial occupancy atom to temp storage                  */
          if(curr_pdb->altpos != ' ' && NPartial < MAXPARTIAL)
          {
-            /* Copy the partial atom data to storage */
+            /* Copy the partial atom data to storage                    */
             blCopyPDB(&multi[NPartial], curr_pdb);
 
-            /* Set global partial occupancy flag */
+            /* Set global partial occupancy flag                        */
             gPDBPartialOcc = TRUE;
             
-            /* Store current atom name */
+            /* Store current atom name                                  */
             strcpy(store_atnam,curr_pdb->atnam);
             NPartial++;
 
-            /* Free curr_pdb and continue */
+            /* Free curr_pdb and continue                               */
             FREELIST(curr_pdb,PDB);
             curr_pdb = NULL;
             continue;
          }
 
          
-         /* Store Atom */
+         /* Store Atom                                                  */
          if(pdb == NULL)
          {
             pdb      = curr_pdb;
@@ -1750,15 +1922,15 @@ PDB *blDoReadPDBML(FILE *fpin,
       }
    }
       
-   /* Free document */
+   /* Free document                                                     */
    xmlFreeDoc(document);
 
-   /* Store final atom (if partial occupancy) */   
+   /* Store final atom (if partial occupancy)                           */
    if(NPartial != 0)
    {
       if(!blStoreOccRankAtom(OccRank,multi,NPartial,&pdb,&end_pdb,natom))
       {
-         /* Error: Failed to store atom in pdb list */
+         /* Error: Failed to store atom in pdb list                     */
          if(pdb != NULL) FREELIST(pdb,PDB);
          *natom = -1;
          return(NULL);
@@ -1766,15 +1938,15 @@ PDB *blDoReadPDBML(FILE *fpin,
       
    }
    
-   /* Check atoms have been stored */
+   /* Check atoms have been stored                                      */
    if(pdb == NULL || *natom == 0)
    {
-      /* Error: pdb list empty or no atoms stored */
+      /* Error: pdb list empty or no atoms stored                       */
       if(pdb != NULL) FREELIST(pdb,PDB);
       *natom = -1;
    }
     
-   /* Return PDB linked list */
+   /* Return PDB linked list                                            */
    return(pdb);
 
 #endif
@@ -1812,31 +1984,31 @@ BOOL blCheckFileFormatPDBML(FILE *fp)
 {
 #if !defined(SINGLE_CHAR_FILECHECK) && !defined(MS_WINDOWS)
 
-   /* Default Filetype Check */
+   /* Default Filetype Check                                            */
    char buffer[XML_SAMPLE];
    int  i, c;
    BOOL found_xml  = FALSE,
         found_pdbx = FALSE;
 
-   /* store sample from stream */
+   /* store sample from stream                                          */
    for(i = 0; i < (XML_SAMPLE - 1); i++)
    {
       c = fgetc(fp);
       if(c == EOF || feof(fp)) break;
       buffer[i] = (char)c;      
    }
-   buffer[i] = '\0'; /* terminate string */
+   buffer[i] = '\0'; /* terminate string                                */
 
-   /* push sample back on input stream */
+   /* push sample back on input stream                                  */
    for(i = strlen(buffer) - 1; i >= 0; i--)
    {
       ungetc(buffer[i], fp);
    }
 
-   /* check first line */
+   /* check first line                                                  */
    if(!strncmp(buffer,"<?xml ",6)) found_xml  = TRUE;
    
-   /* check remaining lines */
+   /* check remaining lines                                             */
    for(i = 0; i < strlen(buffer); i++)
    {
       if(buffer[i] != '\n') continue;
@@ -1846,22 +2018,22 @@ BOOL blCheckFileFormatPDBML(FILE *fp)
       if(!strncmp(&buffer[i+1],"<PDBx:datablock ",16)) found_pdbx = TRUE;
    }
 
-   return found_xml && found_pdbx ? TRUE : FALSE ;
+   return ((found_xml && found_pdbx) ? TRUE : FALSE);
 
 #else
 
-   /* Single Character Filetype Check */
+   /* Single Character Filetype Check                                   */
    int c;
 
-   /* get single char from input stream */
+   /* get single char from input stream                                 */
    c = fgetc(fp);
    if(c == EOF || feof(fp)) return FALSE;
 
-   /* pushback character */
+   /* pushback character                                                */
    ungetc(c, fp);
 
-   /* detect filetype */
-   return (char)c == '<' ? TRUE:FALSE;
+   /* detect filetype                                                   */
+   return (((char)c == '<') ? TRUE:FALSE);
 
 #endif 
 }
@@ -1885,7 +2057,7 @@ static void blProcessElementField(char *element, char *element_field)
    char element_sym[4] = "";
    char *element_ptr   = NULL;
 
-   /* Get element */
+   /* Get element                                                       */
    if(strlen(element_field) >= 2)
    {
       strncpy(element_sym, element_field, 2);
@@ -1913,13 +2085,13 @@ static void blProcessElementField(char *element, char *element_field)
 */
 static void blProcessChargeField(int *charge, char *charge_field)
 {
-   /* Get charge magnitude */
+   /* Get charge magnitude                                              */
    if(strlen(charge_field) >= 2 && isdigit(charge_field[0]))
    {
       *charge = charge_field[0] - '0';
    }
 
-   /* Get charge sign */
+   /* Get charge sign                                                   */
    if(strlen(charge_field) >= 2 && charge_field[1] == '-')
    {
       *charge = *charge * -1;
@@ -1927,3 +2099,594 @@ static void blProcessChargeField(int *charge, char *charge_field)
 
    return;
 }
+
+/************************************************************************/
+/*>void blFreeWholePDB(WHOLEPDB *wpdb)
+   ---------------------------------
+*//**
+
+   \param[in]     *wpdb    WHOLEPDB structure to be freed
+
+   Frees the header, trailer and atom content from a WHOLEPDB structure
+
+-  30.05.02  Original   By: ACRM
+-  07.07.14  Renamed to blFreeWholePDB() By: CTP
+*/
+void blFreeWholePDB(WHOLEPDB *wpdb)
+{
+   blFreeStringList(wpdb->header);
+   blFreeStringList(wpdb->trailer);
+   FREELIST(wpdb->pdb, PDB);
+   free(wpdb);
+}
+
+/************************************************************************/
+/*>BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
+   ----------------------------------------------
+*//**
+
+   \param[in]     *fp        File pointer
+   \param[in]     *wpdb      Whole PDB structure pointer
+
+   Writes a PDB file including header and trailer information.
+   Output in PDBML-format if flags set.
+
+-  21.06.14 Original   By: CTP
+-  18.08.14 Added XML_SUPPORT option. Return error if attempting to write 
+            PDBML format. By: CTP
+-  12.02.15 Now a wrapper to blDoWriteWhilePDB()
+*/
+BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
+{
+   return(blDoWriteWholePDB(fp, wpdb, TRUE));
+}
+
+
+/************************************************************************/
+/*>BOOL blWriteWholePDBNoConect(FILE *fp, WHOLEPDB *wpdb)
+   ------------------------------------------------------
+*//**
+
+   \param[in]     *fp        File pointer
+   \param[in]     *wpdb      Whole PDB structure pointer
+
+   Writes a PDB file including header information (but not CONECT 
+   records).
+   Output in PDBML-format if flags set.
+
+-  12.02.15 Original   By: ACRM
+*/
+BOOL blWriteWholePDBNoConect(FILE *fp, WHOLEPDB *wpdb)
+{
+   return(blDoWriteWholePDB(fp, wpdb, FALSE));
+}
+
+
+/************************************************************************/
+/*>static BOOL blDoWriteWholePDB(FILE *fp, WHOLEPDB *wpdb, 
+               BOOL *doConnect)
+   -------------------------------------------------------
+*//**
+
+   \param[in]     *fp        File pointer
+   \param[in]     *wpdb      Whole PDB structure pointer
+   \param[in]     *doConnect Print the connect records
+
+   Writes a PDB file including header and trailer information.
+   Output in PDBML-format if flags set.
+
+-  21.06.14 Original   By: CTP
+-  18.08.14 Added XML_SUPPORT option. Return error if attempting to write 
+            PDBML format. By: CTP
+-  12.02.15 Remamed from blWriteWholePDB(), but with added doConnect
+            flag
+*/
+static BOOL blDoWriteWholePDB(FILE *fp, WHOLEPDB *wpdb, BOOL doConnect)
+{
+   if((gPDBXMLForce == FORCEXML_XML) ||
+      (gPDBXMLForce == FORCEXML_NOFORCE && gPDBXML == TRUE))
+   {
+#ifdef XML_SUPPORT
+      /* Write PDBML file (omitting header and footer data)             */
+      blWriteAsPDBML(fp, wpdb->pdb);
+#else
+      /* PDBML not supported                                            */
+      return FALSE;
+#endif
+   }
+   else
+   {
+      /* Check format                                                   */
+      if(blFormatCheckWritePDB(wpdb->pdb) == FALSE)
+      {
+         return FALSE;
+      }
+
+      /* Write whole PDB File                                           */
+      blWriteWholePDBHeader(fp, wpdb);
+      blWriteAsPDB(fp, wpdb->pdb);
+      if(doConnect)
+         blWriteWholePDBTrailer(fp, wpdb);
+   }
+   
+   return TRUE;
+}
+
+
+/************************************************************************/
+/*>void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
+   ----------------------------------------------------
+*//**
+
+   \param[in]     *fp        File pointer
+   \param[in]     *wpdb      Whole PDB structure pointer
+
+   Writes the header of a PDB file 
+
+-  30.05.02  Original   By: ACRM
+-  21.06.14  Renamed to blWriteWholePDBHeader() By: CTP
+-  12.02.15  Added XML check   By: ACRM
+*/
+void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
+{
+   STRINGLIST *s;
+
+   if((gPDBXMLForce != FORCEXML_XML) && (gPDBXML == FALSE))
+   {
+      for(s=wpdb->header; s!=NULL; NEXT(s))
+      {
+         fputs(s->string, fp);
+      }
+   }
+}
+
+
+/************************************************************************/
+/*>WHOLEPDB *blReadWholePDB(FILE *fpin)
+   ------------------------------------
+*//**
+
+   \param[in]     *fpin     File pointer
+   \return                  Whole PDB structure containing linked
+                            list to PDB coordinate data
+
+   Reads a PDB file, storing the header and trailer information as
+   well as the coordinate data. Can read gzipped files as well as
+   uncompressed files.
+
+   Coordinate data is accessed as linked list of type PDB as follows:
+   
+   WHOLEPDB *wpdb;
+   PDB      *p;
+   wpdb = ReadWholePDB(fp);
+   for(p=wpdb->pdb; p!=NULL; p=p->next)
+   {
+      ... Do something with p ...
+   }
+
+-  07.03.07 Made into a wrapper to doReadWholePDB()
+-  07.07.14 Use blDoReadWholePDB() Renamed to blReadWholePDB() By: CTP
+*/
+WHOLEPDB *blReadWholePDB(FILE *fpin)
+{
+   WHOLEPDB *wpdb;
+   wpdb = blDoReadPDB(fpin, TRUE, 1, 1, TRUE);
+   wpdb->pdb = blRemoveAlternates(wpdb->pdb);
+   return(wpdb);
+}
+
+/************************************************************************/
+/*>WHOLEPDB *blReadWholePDBAtoms(FILE *fpin)
+   -----------------------------------------
+*//**
+
+   \param[in]     *fpin     File pointer
+   \return                  Whole PDB structure containing linked
+                            list to PDB coordinate data
+
+   Reads a PDB file, storing the header and trailer information as
+   well as the coordinate data. Can read gzipped files as well as
+   uncompressed files.
+
+   Coordinate data is accessed as linked list of type PDB as follows:
+   
+   WHOLEPDB *wpdb;
+   PDB      *p;
+   wpdb = ReadWholePDB(fp);
+   for(p=wpdb->pdb; p!=NULL; p=p->next)
+   {
+      ... Do something with p ...
+   }
+
+-  07.03.07 Made into a wrapper to doReadWholePDB()
+-  07.07.14 Use blDoReadWholePDB() Renamed to blReadWholePDBAtoms() 
+            By: CTP
+*/
+WHOLEPDB *blReadWholePDBAtoms(FILE *fpin)
+{
+   WHOLEPDB *wpdb;
+   wpdb = blDoReadPDB(fpin, FALSE, 1, 1, TRUE);
+   wpdb->pdb = blRemoveAlternates(wpdb->pdb);
+   return(wpdb);
+}
+
+
+/************************************************************************/
+/*>static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer)
+   ------------------------------------------------------------
+*//**
+   \param[in,out]    *wpdb      Whole PDB structure
+   \param[in]        *buffer    A line containing a CONECT record
+
+   Stores the connectivity data from a CONECT record into the PDB linked
+   list
+
+-  18.02.15  Original   By: ACRM
+*/
+static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer)
+{
+   char record_type[8];
+   int  i, j,
+        nConect,
+        atoms[5];
+   PDB  *p,
+        *atomsP[5];
+   BOOL gotLink;
+
+   fsscanf(buffer,"%6s%5d%5d%5d%5d%5d", 
+           record_type,&atoms[0],&atoms[1],&atoms[2],&atoms[3],&atoms[4]);
+
+   /* Find the PDB pointers for the (up to) 5 CONECT atoms              */
+   nConect = 0;
+   for(i=0; i<5; i++)
+   {
+      /* Have we run out of specified atoms?                            */
+      if(atoms[i] == 0)
+         break;
+
+      /* Look for this atom                                             */
+      for(p=wpdb->pdb; p!=NULL; NEXT(p))
+      {
+         if(atoms[i] == p->atnum)
+         {
+            /* Found it so store and break out                          */
+            atomsP[i] = p;
+            nConect++;
+            break;
+         }
+      }
+   }
+
+   /* Set the connections from atom 0                                   */
+   for(i=1; i<nConect; i++)
+   {
+      /* Look to see if we have this conect stored already              */
+      gotLink = FALSE;
+      for(j=0; j<atomsP[0]->nConect; j++)
+      {
+         if(atomsP[0]->conect[j] == atomsP[i])
+         {
+            gotLink = TRUE;
+            break;
+         }
+      }
+
+      /* If not then store it                                           */
+      if(!gotLink && (atomsP[0]->nConect < MAXCONECT))
+      {
+         atomsP[0]->conect[atomsP[0]->nConect] = atomsP[i];
+         (atomsP[0]->nConect)++;
+      }
+   }
+
+   /* Set the connections in the other direction                        */
+   for(i=1; i<nConect; i++)
+   {
+      /* Look to see if we have this conect stored already              */
+      gotLink = FALSE;
+      for(j=0; j<atomsP[i]->nConect; j++)
+      {
+         if(atomsP[i]->conect[j] == atomsP[0])
+         {
+            gotLink = TRUE;
+            break;
+         }
+      }
+
+      /* If not then store it                                           */
+      if(!gotLink && (atomsP[i]->nConect < MAXCONECT))
+      {
+         atomsP[i]->conect[atomsP[i]->nConect] = atomsP[0];
+         (atomsP[i]->nConect)++;
+      }
+   }
+}
+
+#ifdef XML_SUPPORT
+/************************************************************************/
+/*>static STRINGLIST *blParseHeaderPDBML(FILE *fpin)
+   -------------------------------------------------
+*//**
+
+   \param[in]     *fpin   File pointer
+   \return                STRINGLIST with basic header information.
+
+   Parses a PDBML file and creates HEADER and TITLE lines.
+
+-  22.04.14 Original. By: CTP
+-  07.07.14 Renamed to blParseHeaderPDBML() By: CTP
+-  18.08.14 Return NULL if XML not supported. By: CTP
+-  10.09.14 Use blSetPDBDateField() to set date field. By: CTP
+
+*/
+static STRINGLIST *blParseHeaderPDBML(FILE *fpin)
+{
+#ifndef XML_SUPPORT
+
+   /* PDBML format not supported.                                       */
+   return NULL;
+
+#else
+
+   /* Parse PDBML header                                                */
+   xmlParserCtxtPtr ctxt;
+   xmlDoc  *document;
+   xmlNode *root_node = NULL, 
+           *node      = NULL,
+           *subnode   = NULL,
+           *n         = NULL;
+   int     size_t;
+   char    xml_buffer[XML_BUFFER];
+   xmlChar *content, *attribute;
+   
+   STRINGLIST *wpdb_header = NULL,
+              *title_lines = NULL;
+
+   char header_line[82]  = "",
+        title_line[82]   = "",
+        header_field[41] = "",
+        pdb_field[5]     = "",
+        date_field[10]   = "",
+        title_field[71]  = "";
+        
+   int cut_from = 0, 
+       cut_to   = 0,
+       nlines   = 0,
+       i        = 0;
+
+   
+   /* Generate Document From Filehandle                                 */
+   size_t = fread(xml_buffer, 1, XML_BUFFER, fpin);
+   ctxt = xmlCreatePushParserCtxt(NULL, NULL, xml_buffer, size_t, "file");
+   while ((size_t = fread(xml_buffer, 1, XML_BUFFER, fpin)) > 0) 
+   {
+      xmlParseChunk(ctxt, xml_buffer, size_t, 0);
+   }
+   xmlParseChunk(ctxt, xml_buffer, 0, 1);
+   document = ctxt->myDoc;
+   xmlFreeParserCtxt(ctxt);
+
+   if(document == NULL){ return(NULL); } /*        failed to parse file */
+
+
+   /* Parse Document Tree                                               */
+   root_node = xmlDocGetRootElement(document);
+   for(node = root_node->children; node; node = node->next)
+   {
+      if(node->type != XML_ELEMENT_NODE){ continue; }
+
+      /* get header                                                     */
+      if(!strcmp("struct_keywordsCategory",(char *)node->name))
+      {
+         for(subnode = node->children; subnode; subnode = subnode->next)
+         {
+            for(n=subnode->children; n; n = n->next)
+            {
+               if(strcmp("pdbx_keywords",(char *) n->name)){ continue; }
+               content = xmlNodeGetContent(n);
+               strncpy(header_field,(char *) content,40);
+               xmlFree(content);
+            }
+         }
+      }
+
+      /* get date                                                       */
+      if(!strcmp("database_PDB_revCategory",(char *)node->name))
+      {
+         for(subnode = node->children; subnode; subnode = subnode->next)
+         {
+            for(n=subnode->children; n; n = n->next)
+            {
+               if(strcmp("date_original",(char *) n->name)){ continue; }
+               content = xmlNodeGetContent(n);
+               
+               /* convert date format                                   */
+               blSetPDBDateField(date_field, (char *)content);
+               
+               xmlFree(content);
+            }
+         }
+      }
+
+      /* get pdb code                                                   */
+      if(!strcmp("entryCategory",(char *)node->name))
+      {
+         for(subnode = node->children; subnode; subnode = subnode->next)
+         {
+            if(strcmp("entry",(char *) subnode->name)){ continue; }
+            attribute = xmlGetProp(subnode,(xmlChar *) "id");
+            strncpy(pdb_field,(char *)attribute,4);
+            pdb_field[4] = '\0';
+            xmlFree(attribute);
+         }
+      }
+
+      /* get title                                                      */
+      if(!strcmp("structCategory",(char *)node->name))
+      {
+         for(subnode = node->children; subnode; subnode = subnode->next)
+         {
+            for(n=subnode->children; n; n = n->next)
+            {
+               if(strcmp("title",(char *) n->name)){ continue; }
+               content = xmlNodeGetContent(n);
+
+               /* Get title lines as STRINGLIST                         */
+               for(i=0; i<strlen((char *) content); i++)
+               {
+                  if(content[i] == ' ' ) cut_to = i;
+                  if(i == strlen((char *) content) - 1) cut_to = i+1;
+
+                  /* split and store title line                         */
+                  if( (i && !((i - cut_from)%70)) || 
+                      i == strlen((char *) content)-1 )
+                  {
+                     nlines++;
+                     cut_to = (cut_from == cut_to) ? i : cut_to;
+                     strncpy(title_field,
+                             (char *) &content[cut_from],
+                             cut_to - cut_from);
+                     title_field[cut_to - cut_from] = '\0';
+                     PADMINTERM(title_field,70);
+                     cut_from = cut_to;
+                     i        = cut_to;
+
+                     if(nlines == 1)
+                     {
+                        sprintf(title_line, "TITLE     %s\n",
+                                title_field);
+                        title_lines = blStoreString(NULL,title_line);
+                     }
+                     else
+                     {
+                        sprintf(title_line, "TITLE   %2d%s\n", nlines,
+                                title_field);
+                        blStoreString(title_lines,title_line);
+                     }
+                  }
+               }
+               xmlFree(content);
+            }
+         }
+      }
+   }
+
+   /* Free document                                                     */
+   xmlFreeDoc(document);
+
+   /* Cleanup xml parser                                                */
+   xmlCleanupParser();
+
+   /* Create Header Line                                                */
+   if(!strlen(header_field))
+   {
+      strcpy(header_field,"Converted from PDBML");
+   }
+   sprintf(header_line, "HEADER    %-40s%9s   %4s              \n",
+           header_field, date_field, pdb_field);
+   
+   /* Make Stringlist                                                   */
+   wpdb_header = blStoreString(wpdb_header, header_line);
+   wpdb_header->next = title_lines;
+   
+   return(wpdb_header);
+
+#endif
+}
+
+/************************************************************************/
+/*>static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date)
+   ---------------------------------------------------------------
+*//**
+
+   \param[out]    *pdb_date      PDB date string   'dd-MTH-yy'
+   \param[in]     *pdbml_date    PDBML date string 'yyyy-mm-dd'
+   \return                       Success?
+
+   Convert pdbml date format to pdb date format.
+
+-  10.09.14 Original. By: CTP
+
+*/
+static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date)
+{
+   char month_letter[12][4] = {"JAN","FEB","MAR","APR","MAY","JUN",
+                               "JUL","AUG","SEP","OCT","NOV","DEC"};
+   int day   = 0,
+       month = 0,
+       year  = 0,
+       items = 0;
+   
+   /* parse pdbml date                                                  */
+   items = sscanf(pdbml_date, "%4d-%2d-%2d", &year, &month, &day);
+
+   /* error check                                                       */
+   if(items != 3 || 
+      year == 0 || month == 0 || day == 0 || 
+      day   < 1 || day > 31   ||
+      month < 1 || month > 12 ||
+      year  < 1900)
+   {
+      /* conversion failed                                              */
+      strncpy(pdb_date, "         ", 10);
+      return FALSE;
+   }
+   
+   /* set pdb date                                                      */
+   sprintf(pdb_date, "%02d-%3s-%02d",
+           day, month_letter[month - 1], year % 100);
+
+   return TRUE;
+}
+#endif
+
+/************************************************************************/
+/*>void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
+   -----------------------------------------------------
+*//**
+
+   \param[in]     *fp        File pointer
+   \param[in]     *wpdb      Whole PDB structure pointer
+
+   Writes the trailer of a PDB file 
+
+-  30.05.02  Original   By: ACRM
+-  21.06.14  Renamed to blWriteWholePDBTrailer() By: CTP
+-  12.02.15  Added XML check   By: ACRM
+-  18.02.15  Complete rewrite to use the parsed CONECT data rather than
+             simply rewriting what was read in
+*/
+void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
+{
+   if((gPDBXMLForce != FORCEXML_XML) && (gPDBXML == FALSE))
+   {
+      /* Write the CONECT records                                       */
+      PDB *p;
+      for(p=wpdb->pdb; p!=NULL; NEXT(p))
+      {
+         if(p->nConect)
+         {
+            BOOL conectPrinted = FALSE;
+            int i;
+            for(i=0; i<p->nConect; i++)
+            {
+               if(!(i%4))
+               {
+                  if(conectPrinted)
+                     fprintf(fp, "\n");
+                  fprintf(fp,"CONECT%5d", p->atnum);
+                  conectPrinted = 1;
+               }
+               fprintf(fp,"%5d", p->conect[i]->atnum);
+            }
+            fprintf(fp, "\n");
+         }
+      }
+
+      /* NOW NEED TO GENERATE THE MASTER RECORD                         */
+
+      fprintf(fp, "END   \n");
+   }
+}
+
+

@@ -443,8 +443,8 @@ PDB *blReadPDBAll(FILE *fp, int *natom);
 PDB *blReadPDBAtoms(FILE *fp, int *natom);
 PDB *blReadPDBOccRank(FILE *fp, int *natom, int OccRank);
 PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank);
-PDB *blDoReadPDB(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank, 
-                 int ModelNum);
+WHOLEPDB *blDoReadPDB(FILE *fp, BOOL AllAtoms, int OccRank, 
+                      int ModelNum, BOOL DoWhole);
 PDB *blDoReadPDBML(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank, 
                    int ModelNum);
 BOOL blCheckFileFormatPDBML(FILE *fp);
