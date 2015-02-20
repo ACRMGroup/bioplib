@@ -10,10 +10,11 @@ int main(int argc, char **argv)
    
    in=fopen("test.pdb", "r");
 
-/*   
    pdb = ReadPDB(in, &natoms);
    WritePDB(stdout, pdb);
-*/
+
+   return(0);
+   
    
    wpdb = ReadWholePDB(in);
 

@@ -332,6 +332,7 @@ static void blProcessElementField(char *element, char *element_field);
 static void blProcessChargeField(int *charge, char *charge_field);
 static BOOL blDoWriteWholePDB(FILE *fp, WHOLEPDB *wpdb, BOOL doConnect);
 static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer);
+static void WriteMaster(FILE *fp, WHOLEPDB *wpdb, int numConect);
 #ifdef XML_SUPPORT
 static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date);
 static STRINGLIST *blParseHeaderPDBML(FILE *fpin);
@@ -2658,6 +2659,8 @@ static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date)
 */
 void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
 {
+   int nConect = 0;
+   
    if((gPDBXMLForce != FORCEXML_XML) && (gPDBXML == FALSE))
    {
       /* Write the CONECT records                                       */
@@ -2675,6 +2678,7 @@ void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
                   if(conectPrinted)
                      fprintf(fp, "\n");
                   fprintf(fp,"CONECT%5d", p->atnum);
+                  nConect++;
                   conectPrinted = 1;
                }
                fprintf(fp,"%5d", p->conect[i]->atnum);
@@ -2684,9 +2688,68 @@ void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
       }
 
       /* NOW NEED TO GENERATE THE MASTER RECORD                         */
-
+      WriteMaster(fp, wpdb, nConect);
+      
       fprintf(fp, "END   \n");
    }
 }
 
+/* TODO Still needs to count the TER cards                              */
+static void WriteMaster(FILE *fp, WHOLEPDB *wpdb, int numConect)
+{
+   int numRemark = 0, /* Number of REMARK records                       */
+       numHet    = 0, /* Number of HET records                          */
+       numHelix  = 0, /* Number of HELIX records                        */
+       numSheet  = 0, /* Number of SHEET records                        */
+       numTurn   = 0, /* Number of TURN records                         */
+       numSite   = 0, /* Number of SITE records                         */
+       numXform  = 0, /* Number of coordinate transformation records 
+                         (ORIGX+SCALE+MTRIX)                            */
+       numCoord  = 0, /* Number of atomic coordinate records 
+                         (ATOM+HETATM)                                  */
+       numTer    = 0, /* Number of TER records                          */
+       numSeq    = 0; /* Number of SEQRES records                       */
+   STRINGLIST *s;
+   PDB *p;
+   
 
+   for(s=wpdb->header; s!=NULL; NEXT(s))
+   {
+      if(!strncmp(s->string, "REMARK", 6))
+         numRemark++;
+      if(!strncmp(s->string, "HET   ", 6))
+         numHet++;
+      if(!strncmp(s->string, "HELIX ", 6))
+         numHelix++;
+      if(!strncmp(s->string, "SHEET ", 6))
+         numSheet++;
+      if(!strncmp(s->string, "TURN  ", 6))
+         numTurn++;
+      if(!strncmp(s->string, "SITE  ", 6))
+         numSite++;
+      if(!strncmp(s->string, "ORIGX ", 6))
+         numXform++;
+      if(!strncmp(s->string, "SCALE ", 6))
+         numXform++;
+      if(!strncmp(s->string, "MTRIX ", 6))
+         numXform++;
+      if(!strncmp(s->string, "SEQRES", 6))
+         numSeq++;
+   }
+
+   for(p=wpdb->pdb; p!=NULL; NEXT(p))
+      numCoord++;
+   
+   fprintf(fp,"MASTER%5d    0%5d%5d%5d%5d%5d%5d%5d%5d%5d%5d\n",
+           numRemark,
+           numHet,
+           numHelix,
+           numSheet,
+           numTurn,
+           numSite,
+           numXform,
+           numCoord,
+           numTer,
+           numConect,
+           numSeq);
+}
