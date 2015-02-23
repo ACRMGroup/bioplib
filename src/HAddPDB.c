@@ -3,8 +3,8 @@
 
    \file       HAddPDB.c
    
-   \version    V2.20
-   \date       17.02.15
+   \version    V2.21
+   \date       23.02.15
    \brief      Add hydrogens to a PDB linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2015
@@ -129,8 +129,9 @@
 -  V2.18 26.08.14 Moved use of ok variable into #ifdef SCREEN_INFO and
                   cleaned up use of n and nt variables instead of literal
                   strings
--  V2.19 13.02.15 Handles elements
+-  V2.19 13.02.15 Handles elements  By: ACRM
 -  V2.20 17.02.15 Handles segid and formal charge
+-  V2.21 23.02.15 Uses new blRenumAtomsPDB()
 
 *************************************************************************/
 /* Doxygen
@@ -239,12 +240,11 @@ static PDB  *StripDummyH(PDB *pdb, int *nhyd);
 -  28.11.05 Removes any dummy hydrogens added because there were
             missing atoms
 -  07.07.14 Use bl prefix for functions By: CTP
+-  23.02.15 Uses blRenumAtomsPDB()  By: ACRM
 */
 int blHAddPDB(FILE *fp, PDB  *pdb)
 {
-   PDB            *p;
-   int            nhydrogens,
-                  atomcount = 1;
+   int            nhydrogens;
    BOOL           err_flag  = FALSE;
    static BOOL    FirstCall = TRUE;
    
@@ -266,7 +266,8 @@ int blHAddPDB(FILE *fp, PDB  *pdb)
 /* ACRM=== 28.11.05                                                     */
    
    /* Renumber atoms in PDB linked list                                 */
-   for(p=pdb;p;NEXT(p)) p->atnum=atomcount++;
+   blRenumAtomsPDB(pdb, 1);
+
    return(nhydrogens);
 }
 

@@ -332,7 +332,8 @@ static void blProcessElementField(char *element, char *element_field);
 static void blProcessChargeField(int *charge, char *charge_field);
 static BOOL blDoWriteWholePDB(FILE *fp, WHOLEPDB *wpdb, BOOL doConnect);
 static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer);
-static void WriteMaster(FILE *fp, WHOLEPDB *wpdb, int numConect);
+static void WriteMaster(FILE *fp, WHOLEPDB *wpdb, int numConect,
+                        int numTer);
 #ifdef XML_SUPPORT
 static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date);
 static STRINGLIST *blParseHeaderPDBML(FILE *fpin);
@@ -2184,6 +2185,8 @@ BOOL blWriteWholePDBNoConect(FILE *fp, WHOLEPDB *wpdb)
 */
 static BOOL blDoWriteWholePDB(FILE *fp, WHOLEPDB *wpdb, BOOL doConnect)
 {
+   int nter;
+
    if((gPDBXMLForce == FORCEXML_XML) ||
       (gPDBXMLForce == FORCEXML_NOFORCE && gPDBXML == TRUE))
    {
@@ -2205,9 +2208,9 @@ static BOOL blDoWriteWholePDB(FILE *fp, WHOLEPDB *wpdb, BOOL doConnect)
 
       /* Write whole PDB File                                           */
       blWriteWholePDBHeader(fp, wpdb);
-      blWriteAsPDB(fp, wpdb->pdb);
+      nter = blWriteAsPDB(fp, wpdb->pdb);
       if(doConnect)
-         blWriteWholePDBTrailer(fp, wpdb);
+         blWriteWholePDBTrailer(fp, wpdb, nter);
    }
    
    return TRUE;
@@ -2642,12 +2645,13 @@ static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date)
 #endif
 
 /************************************************************************/
-/*>void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
-   -----------------------------------------------------
+/*>void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb, int numTer)
+   -----------------------------------------------------------------
 *//**
 
    \param[in]     *fp        File pointer
    \param[in]     *wpdb      Whole PDB structure pointer
+   \param[in]     numTer     Number of TER cards
 
    Writes the trailer of a PDB file 
 
@@ -2656,8 +2660,9 @@ static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date)
 -  12.02.15  Added XML check   By: ACRM
 -  18.02.15  Complete rewrite to use the parsed CONECT data rather than
              simply rewriting what was read in
+-  23.02.15  Added numTer parameter
 */
-void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
+void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb, int numTer)
 {
    int nConect = 0;
    
@@ -2687,15 +2692,16 @@ void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
          }
       }
 
-      /* NOW NEED TO GENERATE THE MASTER RECORD                         */
-      WriteMaster(fp, wpdb, nConect);
+      /* Now write the MASTER record                                    */
+      WriteMaster(fp, wpdb, nConect, numTer);
       
       fprintf(fp, "END   \n");
    }
 }
 
 /* TODO Still needs to count the TER cards                              */
-static void WriteMaster(FILE *fp, WHOLEPDB *wpdb, int numConect)
+static void WriteMaster(FILE *fp, WHOLEPDB *wpdb, int numConect,
+                        int numTer)
 {
    int numRemark = 0, /* Number of REMARK records                       */
        numHet    = 0, /* Number of HET records                          */
@@ -2707,7 +2713,6 @@ static void WriteMaster(FILE *fp, WHOLEPDB *wpdb, int numConect)
                          (ORIGX+SCALE+MTRIX)                            */
        numCoord  = 0, /* Number of atomic coordinate records 
                          (ATOM+HETATM)                                  */
-       numTer    = 0, /* Number of TER records                          */
        numSeq    = 0; /* Number of SEQRES records                       */
    STRINGLIST *s;
    PDB *p;

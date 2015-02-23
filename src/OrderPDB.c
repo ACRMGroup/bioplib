@@ -3,11 +3,11 @@
 
    \file       OrderPDB.c
    
-   \version    V1.4
-   \date       07.07.14
+   \version    V1.5
+   \date       23.02.15
    \brief      Functions to modify atom order in PDB linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -51,6 +51,8 @@
 -  V1.2  18.03.94 Bug fix in ShuffleResPDB().
 -  V1.3  22.06.08 Bug fix in ShuffleBB()
 -  V1.4  07.07.14 Use bl prefix for functions By: CTP
+-  V1.5  23.02.15 Modified for new blRenumAtomsPDB() which takes an 
+                  offset   By: ACRM
 
 
 *************************************************************************/
@@ -161,6 +163,7 @@ static char sAtoms[MAXSTDAA][MAXATINRES+1][8] =
 
 -  08.07.93 Original    By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP
+-  23.02.15 Modified for new blRenumAtomsPDB() which takes an offset
 */
 PDB *blFixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum)
 {
@@ -190,7 +193,7 @@ PDB *blFixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum)
          NEXT(current);
    }
 
-   if(Renum) blRenumAtomsPDB(ret);
+   if(Renum) blRenumAtomsPDB(ret, 1);
    
    return(ret);
 }

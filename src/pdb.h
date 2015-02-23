@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.71
-   \date       19.02.15
+   \version    V1.72
+   \date       23.02.15
    \brief      Include file for PDB routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2015
@@ -158,6 +158,11 @@
 -  V1.70 18.02.15 Added conect to PDB structure and to CLEAR_PDB()
 -  V1.71 19.02.15 Added blBuildConectData(), blAddConect() and
                   blIsBonded()
+-  V1.72 23.02.15 blWritePDB() and blWriteAsPDB() now return int instead
+                  of void. Added blWriteTerCard(). blWritePDBTrailier()
+                  now takes an additional numTer parameter and
+                  blRenumAtomsPDB() takes a new offset parameter
+
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -449,14 +454,15 @@ PDB *blDoReadPDBML(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank,
                    int ModelNum);
 BOOL blCheckFileFormatPDBML(FILE *fp);
 
-BOOL blWritePDB(FILE *fp, PDB  *pdb);
-void blWriteAsPDB(FILE *fp, PDB  *pdb);
+int  blWritePDB(FILE *fp, PDB  *pdb);
+int  blWriteAsPDB(FILE *fp, PDB  *pdb);
 void blWriteAsPDBML(FILE *fp, PDB  *pdb);
+void blWriteTerCard(FILE *fp, PDB *p);
 BOOL blFormatCheckWritePDB(PDB *pdb);
 BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb);
 BOOL blWriteWholePDBNoConect(FILE *fp, WHOLEPDB *wpdb);
 void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb);
-void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb);
+void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb, int numTer);
 
 BOOL blBuildConectData(PDB *pdb);
 BOOL blAddConect(PDB *p, PDB *q);
@@ -487,7 +493,7 @@ FILE *blOpenPGPFile(char *pgpfile, BOOL AllHyd);
 PDB *blSelectAtomsPDBAsCopy(PDB *pdbin, int nsel, char **sel, int *natom);
 PDB *blStripHPDBAsCopy(PDB *pdbin, int *natom);
 SECSTRUC *blReadSecPDB(FILE *fp, int *nsec);
-void blRenumAtomsPDB(PDB *pdb);
+void blRenumAtomsPDB(PDB *pdb, int offset);
 PDB *blFindEndPDB(PDB *start);
 PDB *blFixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum);
 PDB *blShuffleResPDB(PDB *start, PDB *end, BOOL Pad);

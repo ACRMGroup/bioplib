@@ -3,11 +3,11 @@
 
    \file       deprecatedBiop.c
    
-   \version    V1.5
-   \date       24.10.14
+   \version    V1.6
+   \date       23.02.15
    \brief      Source code for Biop deprecated functions.
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -76,6 +76,8 @@
                   blStripWatersPDB() with AsCopy suffix. By: CTP
 -  V1.4  26.08.14 Added blSetMDMScoreWeight() By: ACRM
 -  V1.5  24.10.14 Added blExtractZoneSpecPDBAsCopy()
+-  V1.6  23.02.15 blWritePDBTrailier() and blRenumAtomsPDB() now take
+                  additional parameters
 
 *************************************************************************/
 /* Includes
@@ -323,11 +325,12 @@ void WritePDB(FILE *fp, PDB *pdb)
 */
 void WriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
 {
+   int numTer;
    DEPRECATED("WriteWholePDB","blWriteWholePDB()");
    
    blWriteWholePDBHeader(fp, wpdb);
-   blWritePDB(fp, wpdb->pdb);
-   blWriteWholePDBTrailer(fp, wpdb);
+   numTer = blWritePDB(fp, wpdb->pdb);
+   blWriteWholePDBTrailer(fp, wpdb, numTer);
 }
 
 
@@ -373,7 +376,7 @@ void WriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
 void WriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb)
 {
    DEPRECATED("WriteWholePDBTrailer()","blWriteWholePDBTrailer()");
-   blWriteWholePDBTrailer(fp, wpdb);
+   blWriteWholePDBTrailer(fp, wpdb, 0);
 }
 
 
@@ -486,8 +489,16 @@ PDB *ReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
 PDB *doReadPDB(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank,
                int ModelNum)
 {
+   WHOLEPDB *wpdb;
+   *natom = 0;
+
    DEPRECATED("doReadPDB()","blDoReadPDB()");
-   return(blDoReadPDB(fp, natom, AllAtoms, OccRank, ModelNum));
+   if(((wpdb = blDoReadPDB(fp, AllAtoms, OccRank, ModelNum, FALSE))==NULL)
+      || (wpdb->pdb == NULL))
+      return(NULL);
+
+   *natom = wpdb->natoms;
+   return(wpdb->pdb);
 }
 
 PDB *doReadPDBML(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank,
@@ -656,7 +667,7 @@ SECSTRUC *ReadSecPDB(FILE *fp, int *nsec)
 void RenumAtomsPDB(PDB *pdb)
 {
    DEPRECATED("RenumAtomsPDB()","blRenumAtomsPDB()");
-   blRenumAtomsPDB(pdb);
+   blRenumAtomsPDB(pdb, 1);
 }
 
 PDB *FindEndPDB(PDB *start)

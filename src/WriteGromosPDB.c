@@ -3,11 +3,11 @@
 
    \file       WriteGromosPDB.c
    
-   \version    V1.8
-   \date       07.07.14
+   \version    V1.9
+   \date       23.02.15
    \brief      Write a PDB file from a linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -67,6 +67,7 @@
 -  V1.6  30.05.02 Changed PDB field from 'junk' to 'record_type'
 -  V1.7  04.02.14 Use CHAINMATCH macro. By: CTP
 -  V1.8  07.07.14 Use bl prefix for functions By: CTP
+-  V1.9  23.02.15 Proper TER card support  By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -109,26 +110,24 @@
 -  15.02.01 This is the old WritePDB()
 -  04.02.14 Use CHAINMATCH macro. By: CTP
 -  07.07.14 Use bl prefix for functions By: CTP
+-  23.02.15 Proper TER card support  By: ACRM
 */
 void blWriteGromosPDB(FILE *fp,
                       PDB  *pdb)
 {
-   PDB   *p;
-   char  PrevChain[8];
+   PDB   *p,
+         *prev = NULL;
    
-   strcpy(PrevChain,pdb->chain);
-
-   for(p = pdb ; p ; NEXT(p))
+   for(p=pdb; p!=NULL; NEXT(p))
    {
-      if(!CHAINMATCH(PrevChain,p->chain))
+      if((prev!=NULL) && !CHAINMATCH(prev->chain, p->chain))
       {
          /* Chain change, insert TER card                               */
-         fprintf(fp,"TER   \n");
-         strcpy(PrevChain,p->chain);
+         blWriteTerCard(fp, prev);
       }
       blWriteGromosPDBRecord(fp,p);
    }
-   fprintf(fp,"TER   \n");
+   blWriteTerCard(fp, prev);
 }
 
 /************************************************************************/

@@ -3,8 +3,8 @@
 
    \file       WritePDB.c
    
-   \version    V1.17
-   \date       17.02.15
+   \version    V1.18
+   \date       23.02.15
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
@@ -84,6 +84,8 @@
                   support for PDBML format. By: CTP
 -  V1.17 17.02.15 Handles segid and the element and formal charge in 
                   blWritePDBRecordAtnam()   By: ACRM
+-  V1.18 23.02.15 Modified blWriteAsPDB() to do proper TER cards - now
+                  returns an int - the number of TER cards written
 
 *************************************************************************/
 /* Doxygen
@@ -135,48 +137,57 @@
 #include "macros.h"
 
 /************************************************************************/
-/*>BOOL blWritePDB(FILE *fp, PDB *pdb)
-   -----------------------------------
+/* Prototypes
+*/
+
+/************************************************************************/
+/*>int blWritePDB(FILE *fp, PDB *pdb)
+   ----------------------------------
 *//**
 
    \param[in]     *fp   PDB file pointer to be written
    \param[in]     *pdb  PDB linked list to write
+   \return        int   Number of TER cards written (0 indicates error)
 
    Write a PDB linked list...
 
 -  21.06.14 Original By: CTP
 -  18.08.14 Added XML_SUPPORT option. Return error if attempting to write 
             PDBML format. By: CTP
+-  23.02.15 Now returns an int
 */
-BOOL blWritePDB(FILE *fp,
-                PDB  *pdb)
+int blWritePDB(FILE *fp,
+               PDB  *pdb)
 {
+   int numTer;
+
    if((gPDBXMLForce == FORCEXML_XML) ||
       (gPDBXMLForce == FORCEXML_NOFORCE && gPDBXML == TRUE))
    {
 
 #ifdef XML_SUPPORT
-      /* Write PDBML file */
+      /* Write PDBML file                                               */
       blWriteAsPDBML(fp, pdb);
+      return(1);
 #else
-      /* PDBML not supported */
+      /* PDBML not supported                                            */
       return FALSE;
 #endif
 
    }
    else
    {
-      /* Check format */
+      /* Check format                                                   */
       if(blFormatCheckWritePDB(pdb) == FALSE)
       {
-         return FALSE;
+         return(0);
       }
 
       /* Write whole PDB File */
-      blWriteAsPDB(fp, pdb);
+      numTer = blWriteAsPDB(fp, pdb);
    }
    
-   return TRUE;
+   return(numTer);
 }
 
 /************************************************************************/
@@ -205,12 +216,13 @@ BOOL blFormatCheckWritePDB(PDB *pdb)
 }
 
 /************************************************************************/
-/*>void blWriteAsPDB(FILE *fp, PDB *pdb)
-   -------------------------------------
+/*>int blWriteAsPDB(FILE *fp, PDB *pdb)
+   ------------------------------------
 *//**
 
    \param[in]     *fp   PDB file pointer to be written
    \param[in]     *pdb  PDB linked list to write
+   \return              Number of TER cards written (0=error)
 
    Write a PDB linked list by calls to WritePDBRecord()
 
@@ -222,26 +234,48 @@ BOOL blFormatCheckWritePDB(PDB *pdb)
 -  04.02.14 Use CHAINMATCH macro. By: CTP
 -  17.06.14 Renamed to blWriteAsPDB() By: CTP
 -  07.07.14 Use blWritePDBRecord() By: CTP
-*/
-void blWriteAsPDB(FILE *fp,
-                  PDB  *pdb)
-{
-   PDB   *p;
-   char  PrevChain[8];
-   
-   strcpy(PrevChain,pdb->chain);
+-  23.02.15 Write correct format TER cards. Now returns int    By: ACRM
 
-   for(p = pdb ; p ; NEXT(p))
+*/
+int blWriteAsPDB(FILE *fp,
+                 PDB  *pdb)
+{
+   PDB   *p,
+         *prev = NULL;
+   int   numTer = 0;
+
+   for(p=pdb; p!=NULL; NEXT(p))
    {
-      if(!CHAINMATCH(PrevChain,p->chain))
+      if((prev!=NULL) && !CHAINMATCH(p->chain, prev->chain))
       {
          /* Chain change, insert TER card                               */
-         fprintf(fp,"TER   \n");
-         strcpy(PrevChain,p->chain);
+         blWriteTerCard(fp, prev);
+         numTer++;
       }
       blWritePDBRecord(fp,p);
    }
-   fprintf(fp,"TER   \n");
+   blWriteTerCard(fp, prev);
+   numTer++;
+   return(numTer);
+}
+
+/************************************************************************/
+/*>void blWriteTerCard(FILE *fp, PDB *p)
+   -------------------------------------
+*//**
+   \param[in]    *fp    File pointer
+   \param[in]    *p     PDB record pointer
+
+   Prints a TER card in the new PDB format - i.e. with the residue 
+   information for the previous ATOM/HETATM, rather than just printing
+   TER
+
+-  23.02.15  Original   By: ACRM
+*/
+void blWriteTerCard(FILE *fp, PDB *p)
+{
+   fprintf(fp,"TER   %5d      %-4s%1s%4d%1s\n",
+           p->atnum+1, p->resnam, p->chain, p->resnum, p->insert);
 }
 
 /************************************************************************/
@@ -297,6 +331,8 @@ void blWritePDBRecord(FILE *fp,
            charge,
            sign);
 }
+
+
 /************************************************************************/
 /*>void blWritePDBRecordAtnam(FILE *fp, PDB *pdb)
    ----------------------------------------------
@@ -581,13 +617,14 @@ void blWriteAsPDBML(FILE *fp, PDB  *pdb)
    xmlDocFormatDump(fp,doc,1);
 
    /* Free Memory                                                       */
-    xmlFreeDoc(doc);
-    xmlCleanupParser();
+   xmlFreeDoc(doc);
+   xmlCleanupParser();
 
    return;
 
 #endif
 }
+
 
 /************************************************************************/
 /*>void blSetElementSymbolFromAtomName(char *element, char *atom_name)

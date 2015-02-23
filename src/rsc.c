@@ -3,11 +3,11 @@
 
    \file       rsc.c
    
-   \version    V1.13
-   \date       15.08.14
+   \version    V1.14
+   \date       23.02.15
    \brief      Modify sequence of a PDB linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2005
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -71,6 +71,8 @@
 -  V1.11 03.06.05 Added altpos
 -  V1.12 07.07.14 Use bl prefix for functions By: CTP
 -  V1.13 15.08.14 Updated ReadRefCoords() to use CLEAR_PDB() By: CTP
+-  V1.14 23.02.15 Modified for new blRenumAtomsPDB() which takes an 
+                  offset   By: ACRM
 
 *************************************************************************/
 /* Defines required for includes
@@ -171,6 +173,8 @@ static PDB *FixTorsions(PDB *pdb, PDB *ResStart, PDB *NextRes,
             shared by RepOneSChain(). sChiTab was being allocated on every
             call instead of just the first one.
 -  07.07.14 Use bl prefix for functions By: CTP
+-  23.02.15 Modified for new blRenumAtomsPDB() which takes an offset
+
 */
 BOOL blRepSChain(PDB  *pdb,         /* PDB linked list                  */
                  char *sequence,    /* Sequence 1-letter code           */
@@ -266,7 +270,7 @@ BOOL blRepSChain(PDB  *pdb,         /* PDB linked list                  */
       }
    }
    
-   blRenumAtomsPDB(pdb);
+   blRenumAtomsPDB(pdb, 1);
    
    return(TRUE);
 }
@@ -296,6 +300,7 @@ BOOL blRepSChain(PDB  *pdb,         /* PDB linked list                  */
 -  12.08.96 Original based on RepSChain()
 -  15.08.96 Removed unused variables
 -  07.07.14 Use bl prefix for functions By: CTP
+-  23.02.15 Modified for new blRenumAtomsPDB() which takes an offset
 */
 BOOL blRepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
                   char *RefCoords)
@@ -370,7 +375,7 @@ BOOL blRepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
       }
    }
    
-   blRenumAtomsPDB(pdb);
+   blRenumAtomsPDB(pdb, 1);
    
    return(TRUE);
 }
