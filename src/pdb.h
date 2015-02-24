@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.72
-   \date       23.02.15
+   \version    V1.73
+   \date       24.02.15
    \brief      Include file for PDB routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2015
@@ -162,7 +162,9 @@
                   of void. Added blWriteTerCard(). blWritePDBTrailier()
                   now takes an additional numTer parameter and
                   blRenumAtomsPDB() takes a new offset parameter
-
+-  V1.73 24.02.15 Renamed blWriteAsPDB() to blWritePDBAsPDBorGromos() and
+                  added a new parameter. Renamed blWriteAsPDBML() to
+                  blWritePDBAsPDBML()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -455,8 +457,8 @@ PDB *blDoReadPDBML(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank,
 BOOL blCheckFileFormatPDBML(FILE *fp);
 
 int  blWritePDB(FILE *fp, PDB  *pdb);
-int  blWriteAsPDB(FILE *fp, PDB  *pdb);
-void blWriteAsPDBML(FILE *fp, PDB  *pdb);
+int  blWritePDBAsPDBorGromos(FILE *fp, PDB  *pdb, BOOL doGromos);
+void blWritePDBAsPDBML(FILE *fp, PDB  *pdb);
 void blWriteTerCard(FILE *fp, PDB *p);
 BOOL blFormatCheckWritePDB(PDB *pdb);
 BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb);

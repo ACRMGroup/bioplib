@@ -3,8 +3,8 @@
 
    \file       deprecatedBiop.c
    
-   \version    V1.6
-   \date       23.02.15
+   \version    V1.7
+   \date       24.02.15
    \brief      Source code for Biop deprecated functions.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014-2015
@@ -78,6 +78,8 @@
 -  V1.5  24.10.14 Added blExtractZoneSpecPDBAsCopy()
 -  V1.6  23.02.15 blWritePDBTrailier() and blRenumAtomsPDB() now take
                   additional parameters
+-  V1.7  24.02.15 WritePDB() points to blWritePDB() instead of
+                  blWriteAsPDB() (which is now blWritePDBAsPDBorGromos())
 
 *************************************************************************/
 /* Includes
@@ -300,11 +302,12 @@ BOOL InPDBZone(PDB *p, char chain, int resnum1, char insert1,
             By: CTP
 -  31.07.14 Moved to deprecated.c and converted from macro to function. 
             By: CTP
+-  24.02.15 Now calls blWritePDB()
 */
 void WritePDB(FILE *fp, PDB *pdb)
 {
    DEPRECATED("WritePDB","blWritePDB()");
-   blWriteAsPDB(fp, pdb);
+   blWritePDB(fp, pdb);
 }
 
 /************************************************************************/
@@ -516,14 +519,14 @@ BOOL CheckFileFormatPDBML(FILE *fp)
 
 void WriteAsPDB(FILE *fp, PDB  *pdb)
 {
-   DEPRECATED("WriteAsPDB()","blWriteAsPDB()");
-   blWriteAsPDB(fp, pdb);
+   DEPRECATED("WriteAsPDB()","blWritePDBAsPDBorGromos()");
+   blWritePDBAsPDBorGromos(fp, pdb, FALSE);
 }
 
 void WriteAsPDBML(FILE *fp, PDB  *pdb)
 {
-   DEPRECATED("WriteAsPDBML()","blWriteAsPDBML()");
-   blWriteAsPDBML(fp, pdb);
+   DEPRECATED("WriteAsPDBML()","blWritePDBAsPDBML()");
+   blWritePDBAsPDBML(fp, pdb);
 }
 
 BOOL FormatCheckWritePDB(PDB *pdb)
