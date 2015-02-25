@@ -106,10 +106,6 @@
    Writes a PDB file including header and trailer information.
    Output in PDBML-format if flags set.
 
-   #FUNCTION  blWriteWholePDBNoConect()
-   Writes a PDB file including header information (no trailer).
-   Output in PDBML-format if flags set.
-
    #FUNCTION  blWriteWholePDBHeader()
    Writes the header of a PDB file 
 
@@ -165,7 +161,6 @@
 /************************************************************************/
 /* Prototypes
 */
-static BOOL blDoWriteWholePDB(FILE *fp, WHOLEPDB *wpdb, BOOL doConnect);
 static void WriteMaster(FILE *fp, WHOLEPDB *wpdb, int numConect,
                         int numTer);
 
@@ -809,55 +804,11 @@ void blWriteGromosPDBRecord(FILE *fp,
 -  18.08.14 Added XML_SUPPORT option. Return error if attempting to write 
             PDBML format. By: CTP
 -  12.02.15 Now a wrapper to blDoWriteWhilePDB()
-*/
-BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
-{
-   return(blDoWriteWholePDB(fp, wpdb, TRUE));
-}
-
-
-/************************************************************************/
-/*>BOOL blWriteWholePDBNoConect(FILE *fp, WHOLEPDB *wpdb)
-   ------------------------------------------------------
-*//**
-
-   \param[in]     *fp        File pointer
-   \param[in]     *wpdb      Whole PDB structure pointer
-
-   Writes a PDB file including header information (but not CONECT 
-   records).
-   Output in PDBML-format if flags set.
-
--  12.02.15 Original   By: ACRM
-*/
-BOOL blWriteWholePDBNoConect(FILE *fp, WHOLEPDB *wpdb)
-{
-   return(blDoWriteWholePDB(fp, wpdb, FALSE));
-}
-
-
-/************************************************************************/
-/*>static BOOL blDoWriteWholePDB(FILE *fp, WHOLEPDB *wpdb, 
-               BOOL *doConnect)
-   -------------------------------------------------------
-*//**
-
-   \param[in]     *fp        File pointer
-   \param[in]     *wpdb      Whole PDB structure pointer
-   \param[in]     *doConnect Print the connect records
-
-   Writes a PDB file including header and trailer information.
-   Output in PDBML-format if flags set.
-
--  21.06.14 Original   By: CTP
--  18.08.14 Added XML_SUPPORT option. Return error if attempting to write 
-            PDBML format. By: CTP
--  12.02.15 Remamed from blWriteWholePDB(), but with added doConnect
-            flag
 -  24.02.15 blWriteAsPDBML() changed to blWritePDBAsPDBML()
             blWriteAsPDB() changed to blWritePDBAsPDBorGromos()
+-  25.02.15 No longer a wrapper
 */
-static BOOL blDoWriteWholePDB(FILE *fp, WHOLEPDB *wpdb, BOOL doConnect)
+BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
 {
    int nter;
 
@@ -869,7 +820,7 @@ static BOOL blDoWriteWholePDB(FILE *fp, WHOLEPDB *wpdb, BOOL doConnect)
       blWritePDBAsPDBML(fp, wpdb->pdb);
 #else
       /* PDBML not supported                                            */
-      return FALSE;
+      return(FALSE);
 #endif
    }
    else
@@ -877,17 +828,16 @@ static BOOL blDoWriteWholePDB(FILE *fp, WHOLEPDB *wpdb, BOOL doConnect)
       /* Check format                                                   */
       if(blFormatCheckWritePDB(wpdb->pdb) == FALSE)
       {
-         return FALSE;
+         return(FALSE);
       }
 
       /* Write whole PDB File                                           */
       blWriteWholePDBHeader(fp, wpdb);
       nter = blWritePDBAsPDBorGromos(fp, wpdb->pdb, FALSE);
-      if(doConnect)
-         blWriteWholePDBTrailer(fp, wpdb, nter);
+      blWriteWholePDBTrailer(fp, wpdb, nter);
    }
    
-   return TRUE;
+   return(TRUE);
 }
 
 /************************************************************************/

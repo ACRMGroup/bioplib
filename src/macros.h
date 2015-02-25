@@ -3,11 +3,11 @@
 
    \file       macros.h
    
-   \version    V2.21
-   \date       24.07.14
+   \version    V2.22
+   \date       25.02.15
    \brief      Useful macros
    
-   \copyright  SciTech Software 1991-2014
+   \copyright  SciTech Software 1991-2015
    \author     Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -95,6 +95,8 @@
 -  V2.20 07.07.14 Use bl prefix for functions - change padterm() to 
                   blPadterm() By: CTP
 -  V2.21 24.07.14 Initialize list pointers for DELETE macro. By: CTP
+-  V2.22 25.02.15 LAST() is now safe if the pointer is NULL
+
 *************************************************************************/
 /* Doxygen
    -------
@@ -237,7 +239,7 @@
                              { (x)->next->prev = (x); \
                                (x)->next->next=NULL; }\
                                NEXT(x);} while(0)
-#define LAST(x)   while((x)->next != NULL) NEXT(x)
+#define LAST(x)   while(((x)!=NULL) && ((x)->next != NULL)) NEXT(x)
 /* FREELIST takes 2 parameters:
    y: name of list
    z: type of list

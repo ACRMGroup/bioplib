@@ -3,8 +3,8 @@
 
    \file       rsc.c
    
-   \version    V1.14
-   \date       23.02.15
+   \version    V1.15
+   \date       25.02.15
    \brief      Modify sequence of a PDB linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2015
@@ -73,6 +73,7 @@
 -  V1.13 15.08.14 Updated ReadRefCoords() to use CLEAR_PDB() By: CTP
 -  V1.14 23.02.15 Modified for new blRenumAtomsPDB() which takes an 
                   offset   By: ACRM
+-  V1.15 25.02.15 Sets the element type for new atoms
 
 *************************************************************************/
 /* Defines required for includes
@@ -581,12 +582,12 @@ static int ReplaceGly(PDB  *ResStart,
       {
          natoms++;
          
-         if(parent_mc == NULL)               /* Initialise start of list*/
+         if(parent_mc == NULL)             /* Initialise start of list  */
          {
             INIT(parent_mc,PDB);
             q = parent_mc;
          }
-         else                                /* Next item in list       */
+         else                              /* Next item in list         */
          {
             ALLOCNEXT(q,PDB);
          }
@@ -599,10 +600,10 @@ static int ReplaceGly(PDB  *ResStart,
          }
 
          
-         blCopyPDB(q,p);                       /* Copy PDB item           */
+         blCopyPDB(q,p);                   /* Copy PDB item             */
       }
    }
-   if(natoms != 3)                           /* Atoms missing           */
+   if(natoms != 3)                         /* Atoms missing             */
    {
       retval = 1;
       goto Cleanup;
@@ -619,12 +620,12 @@ static int ReplaceGly(PDB  *ResStart,
       {
          natoms++;
          
-         if(ref_mc == NULL)                  /* Initialise start of list*/
+         if(ref_mc == NULL)                /* Initialise start of list  */
          {
             INIT(ref_mc,PDB);
             q = ref_mc;
          }
-         else                                /* Next item in list       */
+         else                              /* Next item in list         */
          {
             ALLOCNEXT(q,PDB);
          }
@@ -636,10 +637,10 @@ static int ReplaceGly(PDB  *ResStart,
             goto Cleanup;
          }
          
-         blCopyPDB(q,p);                       /* Copy PDB item           */
+         blCopyPDB(q,p);                   /* Copy PDB item             */
       }
    }
-   if(natoms != 3)                           /* Atoms missing           */
+   if(natoms != 3)                         /* Atoms missing             */
    {
       retval = 1;
       goto Cleanup;
@@ -1011,6 +1012,7 @@ Cleanup:
             Sets default occ/bval to 1.0 and 20.0
 -  03.06.05 Sets altpos
 -  05.08.14 Use CLEAR_PDB() to set default values. By: CTP
+-  25.02.15 Now sets the element type   By: ACRM
 */
 static PDB *ReadRefCoords(FILE *fp,
                           char seq)
@@ -1119,6 +1121,9 @@ static PDB *ReadRefCoords(FILE *fp,
          /* We don't care about occ and BVal                            */
          p->occ  = 1.0;
          p->bval = 20.0;
+
+         /* 25.02.15 Set the element type from atnam_raw                */
+         blSetElementSymbolFromAtomName(p->element, p->atnam_raw);
          
          done = TRUE;
       }

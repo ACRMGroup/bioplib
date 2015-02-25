@@ -3,8 +3,8 @@
 
    \file       FixCterPDB.c
    
-   \version    V1.8
-   \date       17.02.15
+   \version    V1.9
+   \date       25.02.15
    \brief      Routine to add C-terminal oxygens.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2015
@@ -63,6 +63,8 @@
 -  V1.6  04.02.14 Use CHAINMATCH By: CTP
 -  V1.7  07.07.14 Use bl prefix for functions By: CTP
 -  V1.8  17.02.15 Added check on memory allocation   By: ACRM
+-  V1.9  25.02.15 Ensures terminal oxygens are only added to amino acids 
+                  not HETATM groups
 
 *************************************************************************/
 /* Doxygen
@@ -128,6 +130,8 @@ static BOOL SetCterStyle(PDB *start, PDB *end, int style);
 -  04.02.14 Use CHAINMATCH By: CTP
 -  07.07.14 Use bl prefix for functions By: CTP
 -  17.02.15 Checks INIT() succeeded  By: ACRM
+-  25.02.15 Ensures terminal oxygens are only added to amino acids not
+            HETATM groups
 */
 BOOL blFixCterPDB(PDB *pdb, int style)
 {
@@ -148,6 +152,13 @@ BOOL blFixCterPDB(PDB *pdb, int style)
    {
       end = blFindEndPDB(start);
       
+      /* Skip if this is not an amino acid                              */
+      if(strncmp(start->record_type, "ATOM  ", 6))
+      {
+         start = end;
+         continue;
+      }
+
       if(end==NULL || !CHAINMATCH(end->chain,start->chain))
       {
          /* We're in a c-ter residue; find the atoms                    */
@@ -246,7 +257,7 @@ BOOL blFixCterPDB(PDB *pdb, int style)
 
    Runs through a PDB linked list and corrects the C-terminal residues
    to the standard PDB style. Removes CTER residue names, but does
-   not generate and missing Oxygens.
+   not generate any missing Oxygens.
 
 -  24.08.94 Original    By: ACRM
 -  06.02.03 Handles atnam_raw

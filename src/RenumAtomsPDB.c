@@ -112,6 +112,7 @@ void blRenumAtomsPDB(PDB *pdb, int offset)
       if((prev != NULL) && (!CHAINMATCH(p->chain, prev->chain)))
          i++;
       p->atnum=i++;
+      prev=p;
    }
 }
 
