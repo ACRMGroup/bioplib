@@ -7,41 +7,20 @@ int main(int argc, char **argv)
    PDB *pdb, *p;
    FILE *in;
    int natoms;
+   DISULPHIDE *dis = NULL, *d;
+   BOOL       error;
    
    in=fopen("test.pdb", "r");
 
-   pdb = ReadPDB(in, &natoms);
-   WritePDB(stdout, pdb);
+   wpdb = blReadWholePDB(in);
 
-   return(0);
-   
-   
-   wpdb = ReadWholePDB(in);
-
-/*  
-   for(p=wpdb->pdb; p!=NULL; NEXT(p))
+   dis = blReadDisulphidesWholePDB(wpdb, &error);
+   for(d=dis; d!=NULL; NEXT(d))
    {
-      int i;
-      if(p->nConect)
-      {
-         blWritePDBRecord(stdout, p);
-
-         for(i=0; i<p->nConect; i++)
-         {
-            blWritePDBRecord(stdout, p->conect[i]);
-         }
-
-         printf("\n\n");
-      }
+      printf("%s%d%s : %s%d%s\n", 
+             d->chain1, d->res1, d->insert1,
+             d->chain2, d->res2, d->insert2);
    }
-*/ 
-   WriteWholePDB(stdout, wpdb);
-   fprintf(stdout,"TEST  \n");
-
-   blBuildConectData(wpdb->pdb);
-   blWriteWholePDBTrailer(stdout, wpdb);
-
-
 
    return(0);
 }

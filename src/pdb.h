@@ -524,6 +524,7 @@ BOOL blGetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
 char *blReportStructureType(int type);
 PDB **blIndexPDB(PDB *pdb, int *natom);
 DISULPHIDE *blReadDisulphidesPDB(FILE *fp, BOOL *error);
+DISULPHIDE *blReadDisulphidesWholePDB(WHOLEPDB *wpdb, BOOL *error);
 BOOL blParseResSpec(char *spec, char *chain, int *resnum, char *insert);
 BOOL blParseResSpecNoUpper(char *spec, char *chain, int *resnum, char *insert);
 BOOL blDoParseResSpec(char *spec, char *chain, int *resnum, char *insert, 
