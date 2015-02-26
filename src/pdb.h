@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.73
-   \date       24.02.15
+   \version    V1.74
+   \date       26.02.15
    \brief      Include file for PDB routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2015
@@ -165,6 +165,7 @@
 -  V1.73 24.02.15 Renamed blWriteAsPDB() to blWritePDBAsPDBorGromos() and
                   added a new parameter. Renamed blWriteAsPDBML() to
                   blWritePDBAsPDBML()
+-  V1.74 26.02.15 blWritePDBAsPDBML() now returns BOOL
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -458,7 +459,7 @@ BOOL blCheckFileFormatPDBML(FILE *fp);
 
 int  blWritePDB(FILE *fp, PDB  *pdb);
 int  blWritePDBAsPDBorGromos(FILE *fp, PDB  *pdb, BOOL doGromos);
-void blWritePDBAsPDBML(FILE *fp, PDB  *pdb);
+BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb);
 void blWriteTerCard(FILE *fp, PDB *p);
 BOOL blFormatCheckWritePDB(PDB *pdb);
 BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb);

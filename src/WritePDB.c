@@ -3,8 +3,8 @@
 
    \file       WritePDB.c
    
-   \version    V1.18
-   \date       23.02.15
+   \version    V1.20
+   \date       25.02.15
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
@@ -89,6 +89,8 @@
 -  V1.19 24.02.15 Renamed blWriteAsPDB() to blWritePDBAsPDBorGromos()
                   and integrated Gromos support into this routine.
                   Now takes a new BOOL flag
+-  V1.20 25.02.15 blWritePDBAsPDBML() now returns BOOL and checks all
+                  memory allocations
 
 *************************************************************************/
 /* Doxygen
@@ -152,6 +154,9 @@
 #ifdef XML_SUPPORT /* Required to read PDBML files                      */
 #include <libxml/tree.h>
 #include <ctype.h>
+#define XMLDIE(x) do {if((x)!=NULL) { xmlFreeDoc((x));                   \
+                                      xmlCleanupParser(); }              \
+                      return(FALSE);} while(FALSE)
 #endif
 
 #include "MathType.h"
@@ -215,6 +220,7 @@ int blWritePDB(FILE *fp,
    return(numTer);
 }
 
+
 /************************************************************************/
 /*>BOOL blFormatCheckWritePDB(PDB *pdb)
    ------------------------------------
@@ -239,6 +245,7 @@ BOOL blFormatCheckWritePDB(PDB *pdb)
    }
    return TRUE;
 }
+
 
 /************************************************************************/
 /*>int blWritePDBAsPDBorGromos(FILE *fp, PDB *pdb, BOOL doGromos)
@@ -301,6 +308,7 @@ int blWritePDBAsPDBorGromos(FILE *fp, PDB  *pdb, BOOL doGromos)
    return(numTer);
 }
 
+
 /************************************************************************/
 /*>void blWriteTerCard(FILE *fp, PDB *p)
    -------------------------------------
@@ -322,6 +330,7 @@ void blWriteTerCard(FILE *fp, PDB *p)
               p->atnum+1, p->resnam, p->chain, p->resnum, p->insert);
    }
 }
+
 
 /************************************************************************/
 /*>void blWritePDBRecord(FILE *fp, PDB *pdb)
@@ -434,12 +443,13 @@ void blWritePDBRecordAtnam(FILE *fp,
 
 
 /************************************************************************/
-/*>void blWritePDBAsPDBML(FILE *fp, PDB *pdb)
+/*>BOOL blWritePDBAsPDBML(FILE *fp, PDB *pdb)
    ------------------------------------------
 *//**
 
    \param[in]     *fp   PDB file pointer to be written
    \param[in]     *pdb  PDB linked list to write
+   \return              Success
 
    Write a PDB linked list in PDBML format.
 
@@ -449,9 +459,10 @@ void blWritePDBRecordAtnam(FILE *fp,
 -  16.08.14 Use element and charge data. By: CTP
 -  17.02.15 Added segid support  By: ACRM
 -  24.02.15 Changed name to blWritePDBAsPDBML()
+-  25.02.15 Changed to type BOOL and checks all memory allocations
 
 */
-void blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
+BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
 {
 #ifndef XML_SUPPORT
 
@@ -473,23 +484,33 @@ void blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
                *buffer_ptr;
    
    /* Create document                                                   */
-   doc = xmlNewDoc((xmlChar *) "1.0");
-   doc->encoding = xmlStrdup((xmlChar *) "UTF-8");
+   if((doc = xmlNewDoc((xmlChar *)"1.0"))==NULL)
+      XMLDIE(doc);                         /* 25.02.15                  */
+   if((doc->encoding = xmlStrdup((xmlChar *) "UTF-8"))==NULL)
+      XMLDIE(doc);                         /* 25.02.15                  */
    
    /* Root node                                                         */
-   root_node = xmlNewNode(NULL, (xmlChar *) "datablock");
+   if((root_node=xmlNewNode(NULL, (xmlChar *)"datablock"))==NULL)
+      XMLDIE(doc);                         /* 25.02.15                  */
    xmlDocSetRootElement(doc, root_node);
-   pdbx = xmlNewNs(root_node, (xmlChar *) "null", (xmlChar *) "PDBx");
-   xsi  = xmlNewNs(root_node, (xmlChar *) "null", (xmlChar *) "xsi");
+   if((pdbx=xmlNewNs(root_node, (xmlChar *)"null", 
+                     (xmlChar *)"PDBx"))==NULL)
+      XMLDIE(doc);                         /* 25.02.15                  */
+   if((xsi =xmlNewNs(root_node, (xmlChar *)"null",
+                     (xmlChar *)"xsi"))==NULL)
+      XMLDIE(doc);                         /* 25.02.15                  */
    xmlSetNs(root_node,pdbx);
    
    
    /* Atom_sites node                                                   */
-   sites_node = xmlNewChild(root_node, NULL,
-                            (xmlChar *) "atom_siteCategory", NULL);
+   if((sites_node = xmlNewChild(root_node, NULL, 
+                                (xmlChar *)"atom_siteCategory", 
+                                NULL))==NULL)
+      XMLDIE(doc);                         /* 25.02.15                  */
+
    
    /* Atom nodes                                                        */
-   for(p = pdb ; p ; NEXT(p))
+   for(p=pdb; p!=NULL; NEXT(p))
    {
       /* skip TER                                                       */
       if(!strncmp("TER",p->resnam,3))
@@ -498,103 +519,127 @@ void blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
       }
 
       /* Add atom node                                                  */
-      atom_node = xmlNewChild(sites_node, NULL,
-                              (xmlChar *) "atom_site", NULL);
+      if((atom_node = xmlNewChild(sites_node, NULL,
+                                  (xmlChar *)"atom_site", NULL))==NULL)
+         XMLDIE(doc);                      /* 25.02.15                  */
+
       sprintf(buffer, "%d", p->atnum);
-      xmlNewProp(atom_node, (xmlChar *) "id", (xmlChar *) buffer);
+      xmlNewProp(atom_node, (xmlChar *)"id", (xmlChar *)buffer);
       
       /*** Add atom data nodes                                        ***/
 
       /* B value                                                        */
       sprintf(buffer,"%.2f", p->bval);
-      node = xmlNewChild(atom_node, NULL, 
-                         (xmlChar *) "B_iso_or_equiv",
-                         (xmlChar *) buffer);
+      if((node = xmlNewChild(atom_node, NULL, 
+                             (xmlChar *)"B_iso_or_equiv",
+                             (xmlChar *)buffer))==NULL)
+         XMLDIE(doc);                      /* 25.02.15                  */
 
       /* coordinates                                                    */
       sprintf(buffer,"%.3f", p->x);
-      node = xmlNewChild(atom_node, NULL, (xmlChar *) "Cartn_x",
-                         (xmlChar *) buffer);
+      if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"Cartn_x",
+                             (xmlChar *)buffer))==NULL)
+         XMLDIE(doc);                      /* 25.02.15                  */
 
       sprintf(buffer,"%.3f", p->y);
-      node = xmlNewChild(atom_node, NULL, (xmlChar *) "Cartn_y",
-                         (xmlChar *) buffer);
+      if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"Cartn_y",
+                             (xmlChar *)buffer))==NULL)
+         XMLDIE(doc);                      /* 25.02.15                  */
+
 
       sprintf(buffer,"%.3f", p->z);
-      node = xmlNewChild(atom_node, NULL, (xmlChar *) "Cartn_z",
-                         (xmlChar *) buffer);
+      if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"Cartn_z",
+                             (xmlChar *)buffer))==NULL)
+         XMLDIE(doc);                      /* 25.02.15                  */
 
       /* author atom site labels                                        */
-      node = xmlNewChild(atom_node, NULL, (xmlChar *) "auth_asym_id",
-                         (xmlChar *) p->chain);
+      if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"auth_asym_id",
+                             (xmlChar *)p->chain))==NULL)
+         XMLDIE(doc);                      /* 25.02.15                  */
+
 
       strcpy(buffer,p->atnam);
       KILLTRAILSPACES(buffer);
-      node = xmlNewChild(atom_node, NULL, (xmlChar *) "auth_atom_id",
-                         (xmlChar *) buffer);
+      if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"auth_atom_id",
+                             (xmlChar *)buffer))==NULL)
+         XMLDIE(doc);                      /* 25.02.15                  */
 
       strcpy(buffer,p->resnam);
       KILLTRAILSPACES(buffer);
       KILLLEADSPACES(buffer_ptr,buffer);
-      node = xmlNewChild(atom_node, NULL, (xmlChar *) "auth_comp_id",
-                         (xmlChar *) buffer_ptr);
+      if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"auth_comp_id",
+                             (xmlChar *)buffer_ptr))==NULL)
+         XMLDIE(doc);                      /* 25.02.15                  */
+
       
       sprintf(buffer,"%d", p->resnum);
-      node = xmlNewChild(atom_node, NULL, (xmlChar *) "auth_seq_id",
-                         (xmlChar *) buffer);
+      if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"auth_seq_id",
+                             (xmlChar *)buffer))==NULL)
+         XMLDIE(doc);                      /* 25.02.15                  */
+
 
       /* record type atom/hetatm                                        */
       strcpy(buffer,p->record_type);
       KILLTRAILSPACES(buffer);
-      node = xmlNewChild(atom_node, NULL, (xmlChar *) "group_PDB",
-                         (xmlChar *) buffer);
+      if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"group_PDB",
+                             (xmlChar *)buffer))==NULL)
+         XMLDIE(doc);                      /* 25.02.15                  */
+
 
       /* atom site labels                                               */
-      node = xmlNewChild(atom_node, NULL, (xmlChar *) "label_alt_id",
-                         NULL);
+      if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"label_alt_id",
+                             NULL))==NULL)
+         XMLDIE(doc);                      /* 25.02.15                  */
+
       if(p->altpos == ' ')
       {
-         xmlNewNsProp(node, xsi, (xmlChar *) "nil", (xmlChar *) "true");
+         xmlNewNsProp(node, xsi, (xmlChar *)"nil", (xmlChar *)"true");
       }
       else
       {
          buffer[0] = p->altpos;
          buffer[1] = '\0';
-         xmlNodeSetContent(node, (xmlChar *) buffer);
+         xmlNodeSetContent(node, (xmlChar *)buffer);
       }
       
-      node = xmlNewChild(atom_node, NULL, 
-                         (xmlChar *) "label_asym_id",
-                         (xmlChar *) p->chain);
+      if((node = xmlNewChild(atom_node, NULL, 
+                             (xmlChar *)"label_asym_id",
+                             (xmlChar *)p->chain))==NULL)
+         XMLDIE(doc);                      /* 25.02.15                  */
 
       strcpy(buffer,p->atnam);
       KILLTRAILSPACES(buffer);
-      node = xmlNewChild(atom_node, NULL, 
-                         (xmlChar *) "label_atom_id",
-                         (xmlChar *) buffer);
+      if((node = xmlNewChild(atom_node, NULL, 
+                             (xmlChar *)"label_atom_id",
+                             (xmlChar *)buffer))==NULL)
+         XMLDIE(doc);                      /* 25.02.15                  */
 
       strcpy(buffer,p->resnam);
       KILLTRAILSPACES(buffer);
       KILLLEADSPACES(buffer_ptr,buffer);
-      node = xmlNewChild(atom_node, NULL, 
-                         (xmlChar *) "label_comp_id",
-                         (xmlChar *) buffer_ptr);
+      if((node = xmlNewChild(atom_node, NULL, 
+                             (xmlChar *)"label_comp_id",
+                             (xmlChar *)buffer_ptr))==NULL)
+         XMLDIE(doc);                      /* 25.02.15                  */
 
       /* Note: Entity ID is not stored in PDB data structure. 
                Value set to 1 
       */
-      node = xmlNewChild(atom_node, NULL,
-                         (xmlChar *) "label_entity_id",
-                         (xmlChar *) "1");
+      if((node = xmlNewChild(atom_node, NULL,
+                             (xmlChar *)"label_entity_id",
+                             (xmlChar *)"1"))==NULL)
+         XMLDIE(doc);                      /* 25.02.15                  */
       
       sprintf(buffer,"%d", p->resnum);
-      node = xmlNewChild(atom_node, NULL, (xmlChar *) "label_seq_id",
-                         (xmlChar *) buffer);
+      if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"label_seq_id",
+                             (xmlChar *)buffer))==NULL)
+         XMLDIE(doc);                      /* 25.02.15                  */
 
       /* occupancy                                                      */
       sprintf(buffer,"%.2f", p->occ);
-      node = xmlNewChild(atom_node, NULL, (xmlChar *) "occupancy",
-                         (xmlChar *) buffer);
+      if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"occupancy",
+                             (xmlChar *)buffer))==NULL)
+         XMLDIE(doc);                      /* 25.02.15                  */
                          
       /* insertion code
          Note: Insertion code node only included for residues with 
@@ -603,18 +648,20 @@ void blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
       if(strcmp(p->insert," "))
       {
          sprintf(buffer,"%s", p->insert);
-         node = xmlNewChild(atom_node, NULL, 
-                            (xmlChar *) "pdbx_PDB_ins_code",
-                            (xmlChar *) buffer);
+         if((node = xmlNewChild(atom_node, NULL, 
+                                (xmlChar *)"pdbx_PDB_ins_code",
+                                (xmlChar *)buffer))==NULL)
+            XMLDIE(doc);                   /* 25.02.15                  */
       }
 
       /* model number
          Note: Model number is not stored in PDB data structure.
                Value set to 1
       */
-      node = xmlNewChild(atom_node, NULL,
-                         (xmlChar *) "pdbx_PDB_model_num",
-                         (xmlChar *) "1");
+      if((node = xmlNewChild(atom_node, NULL,
+                             (xmlChar *)"pdbx_PDB_model_num",
+                             (xmlChar *)"1"))==NULL)
+         XMLDIE(doc);                      /* 25.02.15                  */
 
       /* formal charge
          Note: Formal charge node not included for neutral atoms 
@@ -622,9 +669,10 @@ void blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
       if(p->formal_charge != 0)
       {
          sprintf(buffer,"%d", p->formal_charge);
-         node = xmlNewChild(atom_node, NULL, 
-                            (xmlChar *) "pdbx_formal_charge",
-                            (xmlChar *) buffer);
+         if((node = xmlNewChild(atom_node, NULL, 
+                                (xmlChar *)"pdbx_formal_charge",
+                                (xmlChar *)buffer))==NULL)
+            XMLDIE(doc);                   /* 25.02.15                  */
       }
 
       /* atom symbol
@@ -636,14 +684,17 @@ void blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
       KILLLEADSPACES(buffer_ptr,buffer);
       if(strlen(buffer_ptr))
       {
-         node = xmlNewChild(atom_node, NULL, (xmlChar *) "type_symbol",
-                            (xmlChar *) buffer_ptr);
+         if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"type_symbol",
+                                (xmlChar *)buffer_ptr))==NULL)
+            XMLDIE(doc);                   /* 25.02.15                  */
+
       }
       else
       {
          blSetElementSymbolFromAtomName(buffer,p->atnam_raw);
-         node = xmlNewChild(atom_node, NULL, (xmlChar *) "type_symbol",
-                            (xmlChar *) buffer);
+         if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"type_symbol",
+                                (xmlChar *)buffer))==NULL)
+            XMLDIE(doc);                   /* 25.02.15                  */
       }
 
       /* Segment ID 
@@ -651,12 +702,11 @@ void blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
       */
       if(strncmp(p->segid, "    ", 4))
       {
-         node = xmlNewChild(atom_node, NULL, 
-                            (xmlChar *) "seg_id",
-                            (xmlChar *) p->segid);
+         if((node = xmlNewChild(atom_node, NULL, 
+                                (xmlChar *)"seg_id",
+                                (xmlChar *)p->segid))==NULL)
+            XMLDIE(doc);                   /* 25.02.15                  */
       }
-
-
    }
 
    /* Write to doc file pointer                                         */
@@ -666,7 +716,7 @@ void blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
    xmlFreeDoc(doc);
    xmlCleanupParser();
 
-   return;
+   return(TRUE);
 
 #endif
 }
@@ -752,6 +802,7 @@ void blWriteGromosPDB(FILE *fp,
    blWritePDBAsPDBorGromos(fp, pdb, TRUE);
 }
 
+
 /************************************************************************/
 /*>void blWriteGromosPDBRecord(FILE *fp, PDB *pdb)
    -----------------------------------------------
@@ -788,6 +839,7 @@ void blWriteGromosPDBRecord(FILE *fp,
            pdb->occ,
            pdb->bval);
 }
+
 
 /************************************************************************/
 /*>BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
@@ -839,6 +891,7 @@ BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
    
    return(TRUE);
 }
+
 
 /************************************************************************/
 /*>void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)

@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V3.0
-   \date       20.02.15
+   \version    V3.1
+   \date       25.02.15
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2015
@@ -203,6 +203,7 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                   blCheckFileFormatPDBML() and blDoReadPDB(). By: CTP
 -  V2.37 17.02.15 Added segid support   By: ACRM
 -  V3.0  20.02.15 Merged functionality of ReadWholePDB() into this
+-  V3.1  25.02.15 Enhanced error checking and safety of blDoReadPDBML()
 
 *************************************************************************/
 /* Doxygen
@@ -1520,6 +1521,12 @@ pointer\n");
             defined By: CTP
 -  26.08.14 Pad record_type to six characters. By: CTP
 -  17.02.15 Added segid support   By: ACRM
+-  25.02.15 Added some checks on potential NULL pointers
+            Changed all strcpy()s to strncpy()s
+            Initialized numeric content variable before each sscanf()
+            in case it fails
+            Calls blRenumAtomsPDB() at the end since we don't use the
+            atom site IDs for atom numbers
 */
 PDB *blDoReadPDBML(FILE *fpin,
                    int  *natom,
@@ -1585,7 +1592,13 @@ PDB *blDoReadPDBML(FILE *fpin,
 
    /* Parse Document Tree                                               */
    root_node = xmlDocGetRootElement(document);   
-   for(n = root_node->children; n; n = n->next)
+   if(root_node == NULL)                   /* 25.02.15                  */
+   {
+      *natom = -1;
+      return(NULL);
+   }
+      
+   for(n=root_node->children; n!=NULL; NEXT(n))
    {
       /* Find Atom Sites Node                                           */
       if(!strcmp("atom_siteCategory",(char *) n->name))
@@ -1637,7 +1650,13 @@ PDB *blDoReadPDBML(FILE *fpin,
          {
             if(n->type != XML_ELEMENT_NODE){ continue; }
             content = xmlNodeGetContent(n);
-
+            if(content == NULL)            /* 25.02.15                  */
+            {
+               FREELIST(pdb, PDB);
+               *natom = -1;
+               return(NULL);
+            }
+            
             /* Set PDB values                                           */
             if(!strcmp((char *) n->name,"B_iso_or_equiv"))
             {
@@ -1678,16 +1697,20 @@ PDB *blDoReadPDBML(FILE *fpin,
             }
             else if(!strcmp((char *) n->name,"pdbx_PDB_ins_code"))
             {
-               /* set insertion code                                    */
-               strcpy(curr_pdb->insert, (char *) content);
+               /* set insertion code
+                  25.02.15 Changed to strncpy()  By: ACRM
+               */
+               strncpy(curr_pdb->insert, (char *) content, 8);
             }
             else if(!strcmp((char *) n->name,"group_PDB"))
             {
-              strcpy(curr_pdb->record_type, (char *) content);
-              PADMINTERM(curr_pdb->record_type, 6);
+               /* 25.02.15 Changed to strncpy()  By: ACRM               */
+               strncpy(curr_pdb->record_type, (char *) content, 8);
+               PADMINTERM(curr_pdb->record_type, 6);
             }
             else if(!strcmp((char *) n->name,"occupancy"))
             {
+               content_lf = (REAL)0.0;     /* 25.02.15                  */
                sscanf((char *) content,"%lf",&content_lf);
                curr_pdb->occ = (REAL) content_lf;
             }
@@ -1698,44 +1721,51 @@ PDB *blDoReadPDBML(FILE *fpin,
             }
             else if(!strcmp((char *) n->name,"pdbx_PDB_model_num"))
             {
+               content_lf = (REAL)0.0;     /* 25.02.15                  */
                sscanf((char *) content,"%lf",&content_lf);
                model_number = (int) content_lf;
             }
             else if(!strcmp((char *) n->name,"type_symbol"))
             {
-               strcpy(curr_pdb->element, (char *) content);
+               /* 25.02.15 Changed to strncpy()  By: ACRM               */
+               strncpy(curr_pdb->element, (char *) content, 8);
             }
             else if(!strcmp((char *) n->name,"label_asym_id"))
             {
                if(strlen(curr_pdb->chain) == 0)
                {
-                  strcpy(curr_pdb->chain, (char *) content);
+                  /* 25.02.15 Changed to strncpy()  By: ACRM            */
+                  strncpy(curr_pdb->chain, (char *) content, 8);
                }
             }
             else if(!strcmp((char *) n->name,"label_atom_id"))
             {
                if(strlen(curr_pdb->atnam) == 0)
                {
-                  strcpy(curr_pdb->atnam, (char *) content);
+                  /* 25.02.15 Changed to strncpy()  By: ACRM            */
+                  strncpy(curr_pdb->atnam, (char *) content, 8);
                }
             }
             else if(!strcmp((char *) n->name,"label_comp_id"))
             {
                if(strlen(curr_pdb->resnam) == 0)
                {
-                  strcpy(curr_pdb->resnam, (char *) content);
+                  /* 25.02.15 Changed to strncpy()  By: ACRM            */
+                  strncpy(curr_pdb->resnam, (char *) content, 8);
                }
             }
             else if(!strcmp((char *) n->name,"label_seq_id"))
             {
                if(curr_pdb->resnum == 0 && strlen((char *) content) > 0)
                {
+                  content_lf = (REAL)0.0;  /* 25.02.15                  */
                   sscanf((char *) content,"%lf",&content_lf);
                   curr_pdb->resnum = (REAL) content_lf;
                }
             }
             else if(!strcmp((char *) n->name,"pdbx_formal_charge"))
             {
+               content_lf = (REAL)0.0;     /* 25.02.15                  */
                sscanf((char *) content,"%lf",&content_lf);
                curr_pdb->formal_charge = (int) content_lf;
                curr_pdb->partial_charge = (REAL) content_lf;
@@ -1744,10 +1774,10 @@ PDB *blDoReadPDBML(FILE *fpin,
             {
                if(strlen(curr_pdb->segid) == 0)
                {
-                  strcpy(curr_pdb->segid, (char *) content);
+                  /* 25.02.15 Changed to strncpy()  By: ACRM            */
+                  strncpy(curr_pdb->segid, (char *) content, 8);
                }
             }
-
 
             xmlFree(content);           
          }
@@ -1765,21 +1795,25 @@ PDB *blDoReadPDBML(FILE *fpin,
          {
             /* copy 1-letter name atnam_raw                             */
             strcpy((curr_pdb->atnam_raw),               " ");
-            strcpy((curr_pdb->atnam_raw)+1, curr_pdb->atnam);
+            /* 25.02.15 Changed to strncpy()  By: ACRM                  */
+            strncpy((curr_pdb->atnam_raw)+1, curr_pdb->atnam, 7);
          }
          if(strlen(curr_pdb->atnam) == 4)
          {
             /* copy 4-letter name atnam_raw                             */
-            strcpy(curr_pdb->atnam_raw, curr_pdb->atnam);
+            /* 25.02.15 Changed to strncpy()  By: ACRM                  */
+            strncpy(curr_pdb->atnam_raw, curr_pdb->atnam, 8);
          }
          else if(strlen(curr_pdb->element) == 1)
          {
             strcpy((curr_pdb->atnam_raw),               " ");
-            strcpy((curr_pdb->atnam_raw)+1, curr_pdb->atnam);
+            /* 25.02.15 Changed to strncpy()  By: ACRM                  */
+            strncpy((curr_pdb->atnam_raw)+1, curr_pdb->atnam, 7);
          }
          else
          {
-            strcpy(curr_pdb->atnam_raw, curr_pdb->atnam);
+            /* 25.02.15 Changed to strncpy()  By: ACRM                  */
+            strncpy(curr_pdb->atnam_raw, curr_pdb->atnam, 4);
          }
          
          /* Pad atom names to 4 characters                              */
@@ -1795,7 +1829,8 @@ PDB *blDoReadPDBML(FILE *fpin,
          */
          sprintf(pad_resnam,"%3s",curr_pdb->resnam);
          PADMINTERM(pad_resnam, 4);
-         strcpy(curr_pdb->resnam, pad_resnam);         
+         /* 25.02.15 Changed to strncpy()  By: ACRM                     */
+         strncpy(curr_pdb->resnam, pad_resnam, 8);
          
          /* Set chain to " " if not already set                         */
          if(strlen(curr_pdb->chain) == 0)
@@ -1865,12 +1900,14 @@ PDB *blDoReadPDBML(FILE *fpin,
          /* Set atom number
             Note: Cannot use atom site id for atom number so base atnum on
                   number of atoms stored 
+
+            25.02.15 We will renumber afterwards
          */
          curr_pdb->atnum = *natom + 1;
          
          
          /* Add partial occupancy atom to temp storage                  */
-         if(curr_pdb->altpos != ' ' && NPartial < MAXPARTIAL)
+         if((curr_pdb->altpos != ' ') && (NPartial < MAXPARTIAL))
          {
             /* Copy the partial atom data to storage                    */
             blCopyPDB(&multi[NPartial], curr_pdb);
@@ -1879,7 +1916,8 @@ PDB *blDoReadPDBML(FILE *fpin,
             gPDBPartialOcc = TRUE;
             
             /* Store current atom name                                  */
-            strcpy(store_atnam,curr_pdb->atnam);
+            /* 25.02.15 Changed to strncpy()  By: ACRM                  */
+            strncpy(store_atnam, curr_pdb->atnam, 8);
             NPartial++;
 
             /* Free curr_pdb and continue                               */
@@ -1920,7 +1958,6 @@ PDB *blDoReadPDBML(FILE *fpin,
          *natom = -1;
          return(NULL);
       }
-      
    }
    
    /* Check atoms have been stored                                      */
@@ -1930,6 +1967,9 @@ PDB *blDoReadPDBML(FILE *fpin,
       if(pdb != NULL) FREELIST(pdb,PDB);
       *natom = -1;
    }
+
+   /* 25.02.15 Renumber atoms since we don't use the atom site IDs      */
+   blRenumAtomsPDB(pdb, 1);
     
    /* Return PDB linked list                                            */
    return(pdb);
