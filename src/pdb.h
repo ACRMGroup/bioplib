@@ -168,6 +168,8 @@
 -  V1.74 26.02.15 blWritePDBAsPDBML() now returns BOOL
                   blIsBonded() now takes a tolerance parameter
                   blBuildConectData() now takes a tolerance parameter
+                  Added blReadSecWholePDB(), blReadDisulphideWholePDB(),
+                  blReadSeqresWholePDB()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -283,9 +285,9 @@ typedef struct sec_entry
 {
    struct sec_entry *next;
    char chain1[8];
-   char ins1[8];
+   char insert1[8];
    char chain2[8];
-   char ins2[8];
+   char insert2[8];
    int  res1;
    int  res2;
    char type;
@@ -498,6 +500,7 @@ FILE *blOpenPGPFile(char *pgpfile, BOOL AllHyd);
 PDB *blSelectAtomsPDBAsCopy(PDB *pdbin, int nsel, char **sel, int *natom);
 PDB *blStripHPDBAsCopy(PDB *pdbin, int *natom);
 SECSTRUC *blReadSecPDB(FILE *fp, int *nsec);
+SECSTRUC *blReadSecWholePDB(WHOLEPDB *wpdb, int *nsec);
 void blRenumAtomsPDB(PDB *pdb, int offset);
 PDB *blFindEndPDB(PDB *start);
 PDB *blFixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum);
@@ -568,6 +571,7 @@ BOOL blRepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
                     char *RefCoords);
 void blEndRepSChain(void);
 char **blReadSeqresPDB(FILE *fp, int *nchains);
+char **blReadSeqresWholePDB(WHOLEPDB *wpdb, int *nchains);
 PDB *blSelectCaPDB(PDB *pdb);
 char *blFixAtomName(char *name, REAL occup);
 

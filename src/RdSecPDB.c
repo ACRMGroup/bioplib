@@ -3,12 +3,12 @@
 
    \file       RdSecPDB.c
    
-   \version    V1.4
-   \date       07.07.14
+   \version    V1.5
+   \date       26.02.15
    \brief      Read secondary structure information from the HELIX, TURN
                and SHEET records in a PDB file
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -72,6 +72,7 @@
                   No need to initialise this before calling
 -  V1.3  18.08.98 Changed SEC to SECSTRUC 'cos of conflict in SunOS
 -  V1.4  07.07.14 Use bl prefix for functions By: CTP
+-  V1.5  26.02.15 Added blReadSecWholePDB()   By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -80,6 +81,10 @@
    #SUBGROUP File IO
    #FUNCTION  blReadSecPDB()
    Reads secondary structure information from the header of a PDB file.
+
+   #FUNCTION  blReadSecWholePDB()
+   Reads secondary structure information from the header information 
+   stored in a WHOLEPDB structure.
 */
 /************************************************************************/
 /* Includes
@@ -141,8 +146,8 @@ SECSTRUC *blReadSecPDB(FILE *fp, int *nsec)
    char        buffer[160],
                chain1[8],
                chain2[8],
-               ins1[8],
-               ins2[8],
+               insert1[8],
+               insert2[8],
                type;
    static char classtab[16] = "HHGGGHGGGH"; /* Class 0 shouldn't occur  */
    SECSTRUC    *p,
@@ -162,8 +167,8 @@ SECSTRUC *blReadSecPDB(FILE *fp, int *nsec)
       if(!strncmp(buffer,"SHEET ",6))
       {
          fsscanf(buffer,"%21x%1s%4d%1s%5x%1s%4d%1s",
-                 chain1, &res1, ins1,
-                 chain2, &res2, ins2);
+                 chain1, &res1, insert1,
+                 chain2, &res2, insert2);
                   
          type = 'E';
       }
@@ -172,8 +177,8 @@ SECSTRUC *blReadSecPDB(FILE *fp, int *nsec)
       if(!strncmp(buffer,"HELIX ",6))
       {
          fsscanf(buffer,"%19x%1s%1x%4d%1s%5x%1s%1x%4d%1s%2d",
-                 chain1, &res1, ins1,
-                 chain2, &res2, ins2,
+                 chain1, &res1, insert1,
+                 chain2, &res2, insert2,
                  &class);
 
          type=classtab[class];
@@ -183,15 +188,15 @@ SECSTRUC *blReadSecPDB(FILE *fp, int *nsec)
       if(!strncmp(buffer,"TURN  ",6))
       {
          fsscanf(buffer,"%19x%1s%4d%1s%5x%1s%4d%1s",
-                 chain1, &res1, ins1,
-                 chain2, &res2, ins2);
+                 chain1, &res1, insert1,
+                 chain2, &res2, insert2);
 
          type = 'T';
       }
         
       if(type)    /* We've got some secondary structure                 */
       {
-         /* Allcoate space                                              */
+         /* Allocate space                                              */
          if(sec == NULL)
          {
             INIT(sec,SECSTRUC);
@@ -213,8 +218,123 @@ SECSTRUC *blReadSecPDB(FILE *fp, int *nsec)
          /* Copy data into linked list                                  */
          strcpy(p->chain1, chain1);
          strcpy(p->chain2, chain2);
-         strcpy(p->ins1,   ins1);
-         strcpy(p->ins2,   ins2);
+         strcpy(p->insert1,insert1);
+         strcpy(p->insert2,insert2);
+         p->res1 = res1;
+         p->res2 = res2;
+         p->type = type;
+         
+         (*nsec)++;
+      }
+   }
+   
+   /* Return pointer to start of linked list                            */
+   return(sec);
+}
+
+/************************************************************************/
+/*>SECSTRUC *blReadSecWholePDB(WHOLEPDB *wpdb, int *nsec)
+   ------------------------------------------------------
+*//**
+
+   \param[in]     *wpdb    WHOLEPDB structure
+   \param[out]    *nsec    Number of sec struc regions identified
+   \return                 Linked list of type SECSTRUC
+
+   Reads secondary structure information from the header of a PDB file
+   stored in a WHOLEPDB structure.
+   Returns a pointer to a linked list of type SECSTRUC.
+
+   On return, the variable nsec, or the value returned by the routine
+   should be checked to ensure some secondary structure was returned.
+   The secondary structure is stored together with ranges of residues
+   to which it applies. The form of the structure should be checked
+   in pdb.h
+
+-  26.02.15 Original based on blReadSecPDB()
+*/
+SECSTRUC *blReadSecWholePDB(WHOLEPDB *wpdb, int *nsec)
+{
+   int         class,
+               res1,
+               res2;
+   char        chain1[8],
+               chain2[8],
+               insert1[8],
+               insert2[8],
+               type;
+   static char classtab[16] = "HHGGGHGGGH"; /* Class 0 shouldn't occur  */
+   SECSTRUC    *p,
+               *sec = NULL;
+   STRINGLIST  *s;
+   
+   *nsec =  0;
+
+   for(s=wpdb->header; s!=NULL; NEXT(s))
+   {
+      /* Use this as a flag for having found some secondary structure   */
+      type    = '\0';
+        
+      /* Break out of the while loop when we find an ATOM               */
+      if(!strncmp(s->string,"ATOM  ",6)) break;
+        
+      /* Process SHEET records                                          */
+      if(!strncmp(s->string,"SHEET ",6))
+      {
+         fsscanf(s->string,"%21x%1s%4d%1s%5x%1s%4d%1s",
+                 chain1, &res1, insert1,
+                 chain2, &res2, insert2);
+                  
+         type = 'E';
+      }
+        
+      /* Process HELIX records                                          */
+      if(!strncmp(s->string,"HELIX ",6))
+      {
+         fsscanf(s->string,"%19x%1s%1x%4d%1s%5x%1s%1x%4d%1s%2d",
+                 chain1, &res1, insert1,
+                 chain2, &res2, insert2,
+                 &class);
+
+         type=classtab[class];
+      }
+        
+      /* Process TURN records                                           */
+      if(!strncmp(s->string,"TURN  ",6))
+      {
+         fsscanf(s->string,"%19x%1s%4d%1s%5x%1s%4d%1s",
+                 chain1, &res1, insert1,
+                 chain2, &res2, insert2);
+
+         type = 'T';
+      }
+        
+      if(type)    /* We've got some secondary structure                 */
+      {
+         /* Allocate space                                              */
+         if(sec == NULL)
+         {
+            INIT(sec,SECSTRUC);
+            p = sec;
+         }
+         else
+         {
+            ALLOCNEXT(p,SECSTRUC);
+         }
+         
+         /* Check allocation; free list and return if failed            */
+         if(p==NULL)
+         {
+            if(sec != NULL) FREELIST(sec,SECSTRUC);
+            *nsec = 0;
+            return(NULL);
+         }
+         
+         /* Copy data into linked list                                  */
+         strcpy(p->chain1, chain1);
+         strcpy(p->chain2, chain2);
+         strcpy(p->insert1,insert1);
+         strcpy(p->insert2,insert2);
          p->res1 = res1;
          p->res2 = res2;
          p->type = type;
