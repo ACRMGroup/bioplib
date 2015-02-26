@@ -166,6 +166,8 @@
                   added a new parameter. Renamed blWriteAsPDBML() to
                   blWritePDBAsPDBML()
 -  V1.74 26.02.15 blWritePDBAsPDBML() now returns BOOL
+                  blIsBonded() now takes a tolerance parameter
+                  blBuildConectData() now takes a tolerance parameter
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -467,9 +469,9 @@ BOOL blWriteWholePDBNoConect(FILE *fp, WHOLEPDB *wpdb);
 void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb);
 void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb, int numTer);
 
-BOOL blBuildConectData(PDB *pdb);
+BOOL blBuildConectData(PDB *pdb, REAL tol);
 BOOL blAddConect(PDB *p, PDB *q);
-BOOL blIsBonded(PDB *p, PDB *q);
+BOOL blIsBonded(PDB *p, PDB *q, REAL tol);
 
 void blWritePDBRecord(FILE *fp, PDB *pdb);
 void blWritePDBRecordAtnam(FILE *fp, PDB  *pdb);

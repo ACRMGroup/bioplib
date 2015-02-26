@@ -55,13 +55,10 @@
    #SUBGROUP Miscellaneous functions
 
    #FUNCTION blBuildConectData()
-   Rebuilds all CONECT data using covalent radii of the atoms
+   Rebuild all CONECT data using covalent radii of the atoms
 
    #FUNCTION blAddConect()
    Adds a CONECT between two specified atoms
-
-   #FUNCTION blBuildConectData(PDB *pdb)
-   Rebuild all CONECT data using covalent bonding radii
 
 */
 /************************************************************************/
@@ -80,7 +77,6 @@
 /************************************************************************/
 /* Defines and macros
 */
-#define TOLERANCE 0.2  /* Additional distance to define atoms as bonded */
 struct _covalentradii
 {
    char element[8];
@@ -171,10 +167,11 @@ BOOL blAddConect(PDB *p, PDB *q)
 
 
 /************************************************************************/
-/*>BOOL blBuildConectData(PDB *pdb)
-   --------------------------------
+/*>BOOL blBuildConectData(PDB *pdb, REAL tol)
+   ------------------------------------------
 *//**
    \param[in,out]   *pdb   PDB linked list
+   \param[in]       tol    Tolerence for distance between atoms
    \return                 Were all CONECTs added OK
 
    Deletes all current connectivity data and rebuilds it using covalent
@@ -183,8 +180,9 @@ BOOL blAddConect(PDB *p, PDB *q)
    increased in pdb.h
 
 -  19.02.15  Original   By: ACRM
+-  26.02.15  Added tol paramater
 */
-BOOL blBuildConectData(PDB *pdb)
+BOOL blBuildConectData(PDB *pdb, REAL tol)
 {
    PDB  *p, 
         *q,
@@ -210,7 +208,7 @@ BOOL blBuildConectData(PDB *pdb)
             if(!strncmp(p->record_type, "HETATM", 6) ||
                !strncmp(q->record_type, "HETATM", 6))
             {
-               if(blIsBonded(p,q))
+               if(blIsBonded(p, q, tol))
                {
                   if(!blAddConect(p,q))
                      retval=FALSE;
@@ -230,7 +228,7 @@ BOOL blBuildConectData(PDB *pdb)
             if(strncmp(p->atnam, "C   ", 4) ||
                strncmp(q->atnam, "N   ", 4))
             {
-               if(blIsBonded(p, q))
+               if(blIsBonded(p, q, tol))
                {
                   if(!blAddConect(p,q))
                      retval=FALSE;
@@ -247,24 +245,27 @@ BOOL blBuildConectData(PDB *pdb)
 
 
 /************************************************************************/
-/*>BOOL blIsBonded(PDB *p, PDB *q)
-   -------------------------------
+/*>BOOL blIsBonded(PDB *p, PDB *q, REAL tol)
+   -----------------------------------------
 *//**
    \param[in]    *p   First PDB atom
    \param[in]    *q   Second PDB atom
+   \param[in]    tol  Telerance for separation between atoms
    \return            Bonded?
 
    Test whether two atoms are bonded
 
 -  19.02.15  Original   By: ACRM
+-  26.02.15  Added tol parameter. Changed to used squared distances
 */
-BOOL blIsBonded(PDB *p, PDB *q)
+BOOL blIsBonded(PDB *p, PDB *q, REAL tol)
 {
-   REAL r1, r2;
+   REAL r1, r2, bondDist;
    r1 = findCovalentRadius(p->element);
    r2 = findCovalentRadius(q->element);
+   bondDist = (r1+r2+tol);
 
-   if(DIST(p,q) <= (r1+r2+TOLERANCE))
+   if(DISTSQ(p,q) <= bondDist*bondDist)
       return(TRUE);
    return(FALSE);
 }

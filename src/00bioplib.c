@@ -7,7 +7,7 @@
    \date       
    \brief      
    
-   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 1996-2007
+   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 1988-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
