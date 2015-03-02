@@ -3,8 +3,8 @@
 
    \file       WritePDB.c
    
-   \version    V1.20
-   \date       25.02.15
+   \version    V1.21
+   \date       02.03.15
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
@@ -91,6 +91,11 @@
                   Now takes a new BOOL flag
 -  V1.20 25.02.15 blWritePDBAsPDBML() now returns BOOL and checks all
                   memory allocations
+-  V1.21 02.03.15 Corrected counting of ORIGX, SCALE and MTRIX records
+                  in WriteMaster().
+                  Added space padding to TER in blWriteTerCard()
+                  Added space padding to END and to CONECT in
+                  blWriteWholePDBTrailer()
 
 *************************************************************************/
 /* Doxygen
@@ -321,13 +326,15 @@ int blWritePDBAsPDBorGromos(FILE *fp, PDB  *pdb, BOOL doGromos)
    TER
 
 -  23.02.15  Original   By: ACRM
+-  02.03.15  Added space padding
 */
 void blWriteTerCard(FILE *fp, PDB *p)
 {
    if(p!=NULL)
    {
-      fprintf(fp,"TER   %5d      %-4s%1s%4d%1s\n",
-              p->atnum+1, p->resnam, p->chain, p->resnum, p->insert);
+      fprintf(fp,"TER   %5d      %-4s%1s%4d%1s%s\n",
+              p->atnum+1, p->resnam, p->chain, p->resnum, p->insert,
+              "                                                     ");
    }
 }
 
@@ -938,6 +945,7 @@ void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
 -  18.02.15  Complete rewrite to use the parsed CONECT data rather than
              simply rewriting what was read in
 -  23.02.15  Added numTer parameter
+-  02.03.15  Padded END and CONECT
 */
 void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb, int numTer)
 {
@@ -952,7 +960,10 @@ void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb, int numTer)
          if(p->nConect)
          {
             BOOL conectPrinted = FALSE;
-            int i;
+            int  i, 
+                 width=0;
+            char format[8];
+
             for(i=0; i<p->nConect; i++)
             {
                if(!(i%4))
@@ -961,18 +972,21 @@ void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb, int numTer)
                      fprintf(fp, "\n");
                   fprintf(fp,"CONECT%5d", p->atnum);
                   nConect++;
+                  width = 11;
                   conectPrinted = 1;
                }
                fprintf(fp,"%5d", p->conect[i]->atnum);
+               width += 5;
             }
-            fprintf(fp, "\n");
+            sprintf(format, "%%%ds\n", 80-width);
+            fprintf(fp, format, " ");
          }
       }
 
       /* Now write the MASTER record                                    */
       WriteMaster(fp, wpdb, nConect, numTer);
       
-      fprintf(fp, "END   \n");
+      fprintf(fp, "END%77s\n", " ");
    }
 }
 
@@ -991,7 +1005,8 @@ void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb, int numTer)
    apart from the number of CONECT records and the number of TER cards
    which must be passed in
 
--  22.02.15  Original   By: ACRM
+-  22.02.15 Original   By: ACRM
+-  02.03.15 Corrected counting of ORIGX, SCALE and MTRIX
 */
 static void WriteMaster(FILE *fp, WHOLEPDB *wpdb, int numConect,
                         int numTer)
@@ -1025,11 +1040,11 @@ static void WriteMaster(FILE *fp, WHOLEPDB *wpdb, int numConect,
          numTurn++;
       if(!strncmp(s->string, "SITE  ", 6))
          numSite++;
-      if(!strncmp(s->string, "ORIGX ", 6))
+      if(!strncmp(s->string, "ORIGX",  5))
          numXform++;
-      if(!strncmp(s->string, "SCALE ", 6))
+      if(!strncmp(s->string, "SCALE",  5))
          numXform++;
-      if(!strncmp(s->string, "MTRIX ", 6))
+      if(!strncmp(s->string, "MTRIX",  5))
          numXform++;
       if(!strncmp(s->string, "SEQRES", 6))
          numSeq++;
