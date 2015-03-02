@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.74
-   \date       26.02.15
+   \version    V1.75
+   \date       02.03.15
    \brief      Include file for PDB routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2015
@@ -170,6 +170,8 @@
                   blBuildConectData() now takes a tolerance parameter
                   Added blReadSecWholePDB(), blReadDisulphideWholePDB(),
                   blReadSeqresWholePDB()
+-  V1.75 02.03.15 Renamed blGetExptl() to blGetExptlPDB()
+                  Added blGetResolWholePDB(), blGetExptlWholePDB()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -519,9 +521,13 @@ void blSetResnam(PDB *ResStart, PDB *NextRes, char *resnam, int resnum,
                  char *insert, char *chain);
 void blApplyMatrixPDB(PDB *pdb, REAL matrix[3][3]);
 BOOL blGetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor, 
-                 int *StrucType);
-BOOL blGetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
+                   int *StrucType);
+BOOL blGetResolWholePDB(WHOLEPDB *wpdb, REAL *resolution, REAL *RFactor, 
+                        int *StrucType);
+BOOL blGetExptlPDB(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
               int *StrucType);
+BOOL blGetExptlWholePDB(WHOLEPDB *wpdb, REAL *resolution, REAL *RFactor, 
+                        REAL *FreeR, int *StrucType);
 BOOL blGetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
               int *StrucType);
 char *blReportStructureType(int type);

@@ -3,8 +3,8 @@
 
    \file       deprecatedBiop.c
    
-   \version    V1.7
-   \date       24.02.15
+   \version    V1.8
+   \date       02.03.15
    \brief      Source code for Biop deprecated functions.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014-2015
@@ -80,6 +80,7 @@
                   additional parameters
 -  V1.7  24.02.15 WritePDB() points to blWritePDB() instead of
                   blWriteAsPDB() (which is now blWritePDBAsPDBorGromos())
+-  V1.8  02.03.15 blGetExptl() is now called blGetExptlPDB()
 
 *************************************************************************/
 /* Includes
@@ -774,8 +775,8 @@ BOOL GetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor,
 BOOL GetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
               int *StrucType)
 {
-   DEPRECATED("GetExptl()","blGetExptl()");
-   return(blGetExptl(fp, resolution, RFactor, FreeR, StrucType));
+   DEPRECATED("GetExptl()","blGetExptlPDB()");
+   return(blGetExptlPDB(fp, resolution, RFactor, FreeR, StrucType));
 }
 
 BOOL GetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,

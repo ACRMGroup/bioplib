@@ -67,7 +67,9 @@
                   PDB files. Old version for old PDB files available as
                   GetExptlOld()
 -  V1.8  07.07.14 Use bl prefix for functions By: CTP
-
+-  V1.9  02.03.15 Renamed blGetExptl() to blGetExptlPDB()
+                  Moved ReadData() out from blGetExptlPDB()
+                  Added blGetExptlWholePDB()
 
 *************************************************************************/
 /* Doxygen
@@ -76,15 +78,25 @@
    #SUBGROUP File IO
    #FUNCTION  blGetResolPDB()
    Attempts to obtain resolution and R-factor information
-   out of a PDB file. Does not return R-free - use of blGetExptl() is
+   out of a PDB file. Does not provide R-free - use of blGetExptlPDB() is
    recommended.
 
-   #FUNCTION  blGetExptl()
-   This routine attempts to obtain resolution and R-factor information
-   out of a PDB file. Returns R-free
+   #FUNCTION  blGetExptlPDB()
+   This routine attempts to obtain resolution, R-factor, R-Free and 
+   experiment type information out of a PDB file.
+
+   #FUNCTION  blGetResolWholePDB()
+   Attempts to obtain resolution and R-factor information out of the
+   headers stored in a WHOLEPDB structure. Does not provide R-free -
+   use of blGetExptlWholePDB() is recommended.
+
+   #FUNCTION  blGetExptlWholePDB()
+   This routine attempts to obtain resolution, R-factor, R-Free and
+   experiment type information out of PDB headers stored in a WHOLEPDB
+   structure.
 
    #FUNCTION  blReportStructureType()
-   Returns structure description from a numeric representation
+   Returns structure type description from a numeric representation
 
 
 
@@ -120,6 +132,8 @@ static int SetStrucType(char *ptr);
 static REAL GetNumberAfterColon(char *ptr);
 static BOOL FindNextNumber(char *buffer, FILE *fp, int nlines, int nskip,
                            int ncheck, REAL *value);
+static void ReadData(char *buffer, REAL *resolution, REAL *RFactor, 
+                     REAL *FreeR, int *StrucType);
 
 
 /************************************************************************/
@@ -181,26 +195,78 @@ BOOL blGetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor,
 {
    REAL FreeR;
    
-   return(blGetExptl(fp, resolution, RFactor, &FreeR, StrucType));
+   return(blGetExptlPDB(fp, resolution, RFactor, &FreeR, StrucType));
 }
 
+
 /************************************************************************/
-/*>BOOL blGetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
-                   int *StrucType)
-   -----------------------------------------------------------------------
+/*>BOOL blGetResolWholePDB(WHOLEPDB *wpdb, REAL *resolution, 
+                           REAL *RFactor, int *StrucType)
+   -------------------------------------------------------------
 *//**
 
-   \param[in]     *fp           PDB file pointer
-   \param[out]    *resolution   The resolution (0.0 if not applicable)
-   \param[out]    *RFactor      The R-factor (0.0 if not found)
-   \param[out]    *FreeR        The Free R-factor (0.0 if not found)
-   \param[out]    *StrucType    Structure type:
+   \param[in]    *wpdb         WHOLEPDB structure pointer
+   \param[out]   *resolution   The resolution (0.0 if not applicable)
+   \param[out]   *RFactor      The R-factor (0.0 if not found)
+   \param[out]   *StrucType    Structure type:
                                STRUCTURE_TYPE_XTAL
                                STRUCTURE_TYPE_NMR
                                STRUCTURE_TYPE_MODEL
                                STRUCTURE_TYPE_UNKNOWN
-   \return                       TRUE if resolution found (even if not
-                               applicable)
+   \return                     TRUE if resolution found or valid 
+                               structure type found
+
+   This routine attempts to obtain resolution and R-factor information
+   out of a WHOLEPDB structure. 
+   It returns TRUE or FALSE to indicate whether valid information was
+   found. Resolution-not-applicable structures then have the resolution
+   set to zero.
+
+   N.B.
+   The resolution information returned by the routine is reliable; the
+   R-factor information is stored in so many forms that it is 
+   difficult to read without some form of natural language parsing, but
+   we manage to handle most situations.
+   The routine assumes the R-factor to be the first number after the 
+   words `R-value' (or one of the other keys - see the case statement in
+   the code for the valid keywords). Thus we cannot handle records of the 
+   form:
+   THE R-VALUE FOR 7142 REFLECTIONS BETWEEN 10.0 AND 1.97 ANGSTROMS 
+   REFINEMENT CYCLE 73 IS 0.254.
+   as appears in entries such as 1LZT. Here, the first number is
+   the number of reflections. There is thus a kludge which sets the 
+   R-factor to zero if it was read as greater than 0.5 to avoid
+   this situation. In these cases, we lose the R-factor information.
+   This occurs in approx 3.5% of the 1XXX PDB entries.
+
+-  02.03.15 Original   By: ACRM
+*/
+BOOL blGetResolWholePDB(WHOLEPDB *wpdb, REAL *resolution, REAL *RFactor, 
+                   int *StrucType)
+{
+   REAL FreeR;
+   
+   return(blGetExptlWholePDB(wpdb, resolution, RFactor, &FreeR, StrucType));
+}
+
+
+/************************************************************************/
+/*>BOOL blGetExptlPDB(FILE *fp, REAL *resolution, REAL *RFactor, 
+                      REAL *FreeR, int *StrucType)
+   -------------------------------------------------------------
+*//**
+
+   \param[in]    *fp           PDB file pointer
+   \param[out]   *resolution   The resolution (0.0 if not applicable)
+   \param[out]   *RFactor      The R-factor (0.0 if not found)
+   \param[out]   *FreeR        The Free R-factor (0.0 if not found)
+   \param[out]   *StrucType    Structure type:
+                               STRUCTURE_TYPE_XTAL
+                               STRUCTURE_TYPE_NMR
+                               STRUCTURE_TYPE_MODEL
+                               STRUCTURE_TYPE_UNKNOWN
+   \return                     TRUE if resolution found or valid 
+                               structure type found
 
    This routine attempts to obtain resolution and R-factor information
    out of a PDB file. 
@@ -217,12 +283,13 @@ BOOL blGetResolPDB(FILE *fp, REAL *resolution, REAL *RFactor,
             If multiple R-factors are provided in different sections, 
             then the first one is returned.
 -  07.07.14 Use bl prefix for functions By: CTP
+-  02.03.15 Moved the actual work into ReadData()  By: ACRM
+            Renamed from blGetExptl()
 */
-BOOL blGetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
-              int *StrucType)
+BOOL blGetExptlPDB(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
+                   int *StrucType)
 {
-   char *ptr,
-        buffer[MAXBUFF];
+   char buffer[MAXBUFF];
 
    /* Set some defaults                                                 */
    *resolution = (REAL)0.0;
@@ -243,138 +310,65 @@ BOOL blGetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
       /* Break out of the loop as soon as we hit an ATOM record         */
       if(!strncmp(buffer,"ATOM  ",6))
          break;
-         
-      /* See if we've found a REMARK record                             */
-      if(!strncmp(buffer,"REMARK",6))
-      {
-         char word[80];
-         int  remarkType = 0;
-         
-         /* See which REMARK type it is                                 */
-         ptr = blGetWord(buffer+6, word, 80);
-         if(sscanf(word, "%d", &remarkType))
-         {
-            switch(remarkType)
-            {
-            case 2:
-               if(*resolution == 0.0)
-               {
-                  ptr = blGetWord(ptr, word, 80);
-                  if(!strncmp(word, "RESOLUTION", 10))
-                  {
-                     ptr = blGetWord(ptr, word, 80);
-                     if(!sscanf(word, "%lf", resolution))
-                     {
-                        *resolution = 0.0;
-                     }
-                  }
-               }
-               break;
-            case 3:
-               if(*RFactor == 0.0)
-               {
-                  if(HasText(ptr, "R VALUE WORKING", "FREE"))
-                  {
-                     *RFactor = GetNumberAfterColon(ptr);
-                  }
-               }
 
-               if(*FreeR == 0.0)
-               {
-                  if(HasText(ptr, "FREE R VALUE", "TEST ERROR"))
-                  {
-                     *FreeR = GetNumberAfterColon(ptr);
-                  }
-               }
-
-               break;
-            case 200:
-               /* If we didn't get the structure type from EXPDTA then 
-                  try here 
-               */
-               if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
-               {
-                  if(HasText(ptr, "EXPERIMENT TYPE", NULL))
-                  {
-                     char *colon;
-                     if((colon = strchr(ptr, ':'))!=NULL)
-                     {
-                        colon++;
-                        *StrucType = SetStrucType(colon);
-                     }
-                  }
-               }
-               break;
-            case 205:
-               if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
-               {
-                  *StrucType = STRUCTURE_TYPE_FIBER;
-               }
-               break;
-            case 215:
-               if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
-               {
-                  *StrucType = STRUCTURE_TYPE_NMR;
-               }
-               break;
-            case 217:
-               if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
-               {
-                  *StrucType = STRUCTURE_TYPE_SSNMR;
-               }
-               break;
-            case 230:
-               if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
-               {
-                  *StrucType = STRUCTURE_TYPE_NEUTRON;
-               }
-               break;
-            case 240:
-               if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
-               {
-                  *StrucType = STRUCTURE_TYPE_ELECTDIFF;
-               }
-               break;
-            case 245:
-               if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
-               {
-                  *StrucType = STRUCTURE_TYPE_EM;
-               }
-               break;
-            case 247:
-               if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
-               {
-                  *StrucType = STRUCTURE_TYPE_EM;
-               }
-               break;
-            case 265:
-               if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
-               {
-                  *StrucType = STRUCTURE_TYPE_SOLSCAT;
-               }
-               break;
-            }
-            
-         }
-      }  /* End of test for it being a REMARK line                      */
-      else if(!strncmp(buffer,"EXPDTA", 6))
-      {
-         char *semiColon;
-         
-         ptr = buffer+10;
-
-         /* Terminate at semi-colon                                     */
-         if((semiColon=strchr(ptr,';'))!=NULL)
-         {
-            *semiColon = '\0';
-         }
-         
-         *StrucType = SetStrucType(ptr);
-         
-      }
-      
+      ReadData(buffer, resolution, RFactor, FreeR, StrucType);
    }  /* End of loop through PDB file                                   */
 
+   /* Return successfully; the output data are already stored in the
+      appropriate places
+   */
+   return ((*resolution > 0.0) || 
+           ( *StrucType != STRUCTURE_TYPE_UNKNOWN ) );
+}
+
+/************************************************************************/
+/*>BOOL blGetExptlWholePDB(WHOLEPDB *wpdb, REAL *resolution, 
+                           REAL *RFactor, REAL *FreeR, int *StrucType)
+   -------------------------------------------------------------------
+*//**
+
+   \param[in]     *wpdb        WHOLEPDB structure pointer
+   \param[out]    *resolution  The resolution (0.0 if not applicable)
+   \param[out]    *RFactor     The R-factor (0.0 if not found)
+   \param[out]    *FreeR       The Free R-factor (0.0 if not found)
+   \param[out]    *StrucType   Structure type:
+                               STRUCTURE_TYPE_XTAL
+                               STRUCTURE_TYPE_NMR
+                               STRUCTURE_TYPE_MODEL
+                               STRUCTURE_TYPE_UNKNOWN
+   \return                     TRUE if resolution found or valid 
+                               structure type found
+
+   This routine attempts to obtain resolution and R-factor information
+   out of a PDB file. 
+   It returns TRUE or FALSE to indicate whether valid information was
+   found. Resolution-not-applicable structures then have the resolution
+   set to zero.
+
+-  02.03.15 Original based on blGetExptlPDB()   By: ACRM
+*/
+BOOL blGetExptlWholePDB(WHOLEPDB *wpdb, REAL *resolution, REAL *RFactor,
+                        REAL *FreeR, int *StrucType)
+{
+   char buffer[MAXBUFF];
+   STRINGLIST *s;
+
+   /* Set some defaults                                                 */
+   *resolution = (REAL)0.0;
+   *RFactor    = (REAL)0.0;
+   *FreeR      = (REAL)0.0;
+   *StrucType  = STRUCTURE_TYPE_UNKNOWN;
+   
+   /* Get lines from the PDB file                                       */
+   for(s=wpdb->header; s!=NULL; NEXT(s))
+   {
+      strncpy(buffer, s->string, MAXBUFF);
+      
+      TERMINATE(buffer);
+      buffer[72] = '\0';
+         
+      ReadData(buffer, resolution, RFactor, FreeR, StrucType);
+   }  /* End of loop through PDB file                                   */
    
 
    /* Return successfully; the output data are already stored in the
@@ -383,6 +377,7 @@ BOOL blGetExptl(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
    return ((*resolution > 0.0) || 
            ( *StrucType != STRUCTURE_TYPE_UNKNOWN ) );
 }
+
 
 /************************************************************************/
 /*>char *blReportStructureType(int StrucType)
@@ -1136,6 +1131,155 @@ static BOOL FindNextNumber(char *buffer, FILE *fp, int nlines, int nskip,
 
 
 /************************************************************************/
+/*>static void ReadData(char *buffer, REAL *resolution, REAL *RFactor, 
+                        REAL *FreeR, int *StrucType)
+   -------------------------------------------------------------------
+*//**
+   \param[in]   buffer      Contents of a line from a PDB file
+   \param[out]  resolution  Resolution data if found
+   \param[out]  RFactor     R-factor data if found
+   \param[out]  FreeR       Free R data if found
+   \param[out]  StrucType   Structure type data if found
+
+-  02.03.15 Original extracted from blGetExptlPDB()
+*/
+static void ReadData(char *buffer, REAL *resolution, REAL *RFactor, 
+                     REAL *FreeR, int *StrucType)
+{
+   char *ptr = NULL;
+
+   /* See if we've found a REMARK record                                */
+   if(!strncmp(buffer,"REMARK",6))
+   {
+      
+      char word[80];
+      int  remarkType = 0;
+      
+      /* See which REMARK type it is                                    */
+      ptr = blGetWord(buffer+6, word, 80);
+      if(sscanf(word, "%d", &remarkType))
+      {
+         switch(remarkType)
+         {
+         case 2:
+            if(*resolution == 0.0)
+            {
+               ptr = blGetWord(ptr, word, 80);
+               if(!strncmp(word, "RESOLUTION", 10))
+               {
+                  ptr = blGetWord(ptr, word, 80);
+                  if(!sscanf(word, "%lf", resolution))
+                  {
+                     *resolution = 0.0;
+                  }
+               }
+            }
+            break;
+         case 3:
+            if(*RFactor == 0.0)
+            {
+               if(HasText(ptr, "R VALUE WORKING", "FREE"))
+               {
+                  *RFactor = GetNumberAfterColon(ptr);
+               }
+            }
+            
+            if(*FreeR == 0.0)
+            {
+               if(HasText(ptr, "FREE R VALUE", "TEST ERROR"))
+               {
+                  *FreeR = GetNumberAfterColon(ptr);
+               }
+            }
+            
+            break;
+         case 200:
+            /* If we didn't get the structure type from EXPDTA then 
+               try here 
+            */
+            if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
+            {
+               if(HasText(ptr, "EXPERIMENT TYPE", NULL))
+               {
+                  char *colon;
+                  if((colon = strchr(ptr, ':'))!=NULL)
+                  {
+                     colon++;
+                     *StrucType = SetStrucType(colon);
+                  }
+               }
+            }
+            break;
+         case 205:
+            if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
+            {
+               *StrucType = STRUCTURE_TYPE_FIBER;
+            }
+            break;
+         case 215:
+            if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
+            {
+               *StrucType = STRUCTURE_TYPE_NMR;
+            }
+            break;
+         case 217:
+            if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
+            {
+               *StrucType = STRUCTURE_TYPE_SSNMR;
+            }
+            break;
+         case 230:
+            if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
+            {
+               *StrucType = STRUCTURE_TYPE_NEUTRON;
+            }
+            break;
+         case 240:
+            if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
+            {
+               *StrucType = STRUCTURE_TYPE_ELECTDIFF;
+            }
+            break;
+         case 245:
+            if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
+            {
+               *StrucType = STRUCTURE_TYPE_EM;
+            }
+            break;
+         case 247:
+            if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
+            {
+               *StrucType = STRUCTURE_TYPE_EM;
+            }
+            break;
+         case 265:
+            if(*StrucType == STRUCTURE_TYPE_UNKNOWN)
+            {
+               *StrucType = STRUCTURE_TYPE_SOLSCAT;
+            }
+            break;
+         }
+         
+      }
+   }  /* End of test for it being a REMARK line                         */
+   else if(!strncmp(buffer,"EXPDTA", 6))
+   {
+      char *semiColon;
+      
+      ptr = buffer+10;
+      
+      /* Terminate at semi-colon                                        */
+      if((semiColon=strchr(ptr,';'))!=NULL)
+      {
+         *semiColon = '\0';
+      }
+      
+      *StrucType = SetStrucType(ptr);
+   }
+}
+
+
+/************************************************************************/
 #ifdef DEMO
 int main(int argc, char **argv)
 {
@@ -1155,5 +1299,8 @@ int main(int argc, char **argv)
    return(0);
 }
 #endif
+
+
+
 
 
