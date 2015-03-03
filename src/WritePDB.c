@@ -116,6 +116,10 @@
    #FUNCTION  blWriteWholePDBHeader()
    Writes the header of a PDB file 
 
+   #FUNCTION blWriteWholePDBHeaderNoRes()
+   Writes the header of a PDB file, but skips any records associated
+   with residue numbers
+
    #FUNCTION  blWriteWholePDBTrailer()
    Writes the trailer of a PDB file 
 
@@ -1066,3 +1070,59 @@ static void WriteMaster(FILE *fp, WHOLEPDB *wpdb, int numConect,
            numConect,
            numSeq);
 }
+
+
+/************************************************************************/
+/*>void blWriteWholePDBHeaderNoRes(FILE *fp, WHOLEPDB *wpdb)
+   ---------------------------------------------------------
+*//**
+
+   \param[in]     *fp        File pointer
+   \param[in]     *wpdb      Whole PDB structure pointer
+
+   Writes the header of a PDB file, but skips any records that include
+   residue numbers for cases where these may have changed.
+
+   Skips: 
+      REMARK 500
+      DBREF
+      HELIX
+      SHEET
+      SSBOND
+      CISPEP
+
+-  02.03.15  Original   By: ACRM
+*/
+void blWriteWholePDBHeaderNoRes(FILE *fp, WHOLEPDB *wpdb)
+{
+   STRINGLIST *s;
+   int i;
+   char *recordLabels[] = {"REMARK 500", 
+                           "DBREF ", 
+                           "HELIX ", 
+                           "SHEET ", 
+                           "SSBOND", 
+                           "CISPEP",
+                           NULL};
+   
+
+   if((gPDBXMLForce != FORCEXML_XML) && (gPDBXML == FALSE))
+   {
+      for(s=wpdb->header; s!=NULL; NEXT(s))
+      {
+         BOOL printIt = TRUE;
+         for(i=0; recordLabels[i] != NULL; i++)
+         {
+            if(!strncmp(s->string, recordLabels[i], strlen(recordLabels[i])))
+            {
+               printIt = FALSE;
+               break;
+            }
+         }
+         if(printIt)
+            fputs(s->string, fp);
+      }
+   }
+}
+
+

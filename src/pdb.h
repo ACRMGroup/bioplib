@@ -172,6 +172,7 @@
                   blReadSeqresWholePDB()
 -  V1.75 02.03.15 Renamed blGetExptl() to blGetExptlPDB()
                   Added blGetResolWholePDB(), blGetExptlWholePDB()
+                  Added blWriteWholePDBHeaderNoRes()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -468,10 +469,12 @@ int  blWritePDBAsPDBorGromos(FILE *fp, PDB  *pdb, BOOL doGromos);
 BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb);
 void blWriteTerCard(FILE *fp, PDB *p);
 BOOL blFormatCheckWritePDB(PDB *pdb);
+
 BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb);
 BOOL blWriteWholePDBNoConect(FILE *fp, WHOLEPDB *wpdb);
 void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb);
 void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb, int numTer);
+void blWriteWholePDBHeaderNoRes(FILE *fp, WHOLEPDB *wpdb);
 
 BOOL blBuildConectData(PDB *pdb, REAL tol);
 BOOL blAddConect(PDB *p, PDB *q);

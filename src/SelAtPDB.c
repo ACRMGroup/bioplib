@@ -43,7 +43,7 @@
    ======
 
 \code
-   pdbout = blSelectatomsPDBAsCopy(pdbin,nsel,sel,natom)
+   pdbout = blSelectAtomsPDBAsCopy(pdbin,nsel,sel,natom)
 \endcode
 
    This routine takes a linked list of type PDB and returns a list
