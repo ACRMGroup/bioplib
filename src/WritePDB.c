@@ -309,7 +309,7 @@ int blWritePDBAsPDBorGromos(FILE *fp, PDB  *pdb, BOOL doGromos)
       }
       prev=p;
    }
-   if(!strncmp(prev->record_type, "ATOM  ", 6))
+   if((prev!=NULL) && !strncmp(prev->record_type, "ATOM  ", 6))
    {
       blWriteTerCard(fp, prev);
       numTer++;
@@ -870,10 +870,14 @@ void blWriteGromosPDBRecord(FILE *fp,
 -  24.02.15 blWriteAsPDBML() changed to blWritePDBAsPDBML()
             blWriteAsPDB() changed to blWritePDBAsPDBorGromos()
 -  25.02.15 No longer a wrapper
+-  04.03.15 Added check on wpdb and wpdb->pdb being non-NULL
 */
 BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
 {
    int nter;
+
+   if((wpdb==NULL) || (wpdb->pdb==NULL))
+      return(FALSE);
 
    if((gPDBXMLForce == FORCEXML_XML) ||
       (gPDBXMLForce == FORCEXML_NOFORCE && gPDBXML == TRUE))

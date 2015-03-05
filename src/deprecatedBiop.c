@@ -326,15 +326,20 @@ void WritePDB(FILE *fp, PDB *pdb)
 -  07.07.14  Use bl prefix for functions. Moved to deprecated.h By: CTP
 -  31.07.14 Moved to deprecated.c and converted from macro to function. 
             By: CTP
+-  04.03.14 Changed to use blWritePDBAsPDBorGromos() and to count TER
+            cards
 */
 void WriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
 {
    int numTer;
    DEPRECATED("WriteWholePDB","blWriteWholePDB()");
    
-   blWriteWholePDBHeader(fp, wpdb);
-   numTer = blWritePDB(fp, wpdb->pdb);
-   blWriteWholePDBTrailer(fp, wpdb, numTer);
+   if((wpdb!=NULL) && (wpdb->pdb!=NULL))
+   {
+      blWriteWholePDBHeader(fp, wpdb);
+      numTer = blWritePDBAsPDBorGromos(fp, wpdb->pdb, FALSE);
+      blWriteWholePDBTrailer(fp, wpdb, numTer);
+   }
 }
 
 
