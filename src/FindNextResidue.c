@@ -3,11 +3,11 @@
 
    \file       FindNextResidue.c
    
-   \version    V1.12
-   \date       07.07.14
+   \version    V1.13
+   \date       05.03.15
    \brief      PDB linked list manipulation
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -59,19 +59,19 @@
 -  V1.10 08.10.99 Initialised some variables
 -  V1.11 04.02.14 Use CHAINMATCH By: CTP
 -  V1.12 07.07.14 Use bl prefix for functions By: CTP
+-  V1.13 05.03.15 Removed blFindEndPDB() since blFindNextResidue()
+                  replaces it and FindEndPDB() deprecates to
+                  blFindNextResidue()
 
 *************************************************************************/
 /* Doxygen
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Searching the PDB linked list        
-   #FUNCTION  blFindEndPDB()
-   Step along a PDB linked list from start until we find a different
-   residue. Return a pointer to this PDB item. This function should
-   not be used and has been replaced by blFindNextResidue()
 
    #FUNCTION  blFindNextResidue()
-   Finds the next residue in a PDB linked list.
+   Finds a pointer to the the start of the next residue in a PDB 
+   linked list.
 */
 /************************************************************************/
 /* Includes
@@ -96,27 +96,6 @@
 /************************************************************************/
 /* Prototypes
 */
-
-/************************************************************************/
-/*>PDB *blFindEndPDB(PDB *start)
-   -----------------------------
-*//**
-
-   \param[in]     *start    PDB linked list
-   \return                     pointer to next residue
-
-   Step along a PDB linked list from start until we find a different
-   residue. Return a pointer to this PDB item.
-   
--  08.07.93 Original    By: ACRM
--  09.08.95 Now simply calls FindNextResidue() which is a rather more
-            sensible name. Retained for backwards compatibility
--  07.07.14 Use bl prefix for functions By: CTP
-*/
-PDB *blFindEndPDB(PDB *start)
-{
-   return(blFindNextResidue(start));
-}
 
 /************************************************************************/
 /*>PDB *blFindNextResidue(PDB *pdb)

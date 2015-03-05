@@ -3,8 +3,8 @@
 
    \file       OrderPDB.c
    
-   \version    V1.5
-   \date       23.02.15
+   \version    V1.6
+   \date       05.03.15
    \brief      Functions to modify atom order in PDB linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
@@ -53,7 +53,7 @@
 -  V1.4  07.07.14 Use bl prefix for functions By: CTP
 -  V1.5  23.02.15 Modified for new blRenumAtomsPDB() which takes an 
                   offset   By: ACRM
-
+-  V1.6  05.03.15 Replaced blFindEndPDB() with blFindNextResidue()
 
 *************************************************************************/
 /* Doxygen
@@ -164,6 +164,7 @@ static char sAtoms[MAXSTDAA][MAXATINRES+1][8] =
 -  08.07.93 Original    By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP
 -  23.02.15 Modified for new blRenumAtomsPDB() which takes an offset
+-  05.03.15 Replaced blFindEndPDB() with blFindNextResidue()
 */
 PDB *blFixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum)
 {
@@ -176,7 +177,7 @@ PDB *blFixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum)
    for(start=pdb; start!=NULL; start=end)
    {
       /* Find a residue's limits                                        */
-      end = blFindEndPDB(start);
+      end = blFindNextResidue(start);
       
       p = blShuffleResPDB(start, end, Pad);
       

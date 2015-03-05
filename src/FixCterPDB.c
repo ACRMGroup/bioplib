@@ -3,8 +3,8 @@
 
    \file       FixCterPDB.c
    
-   \version    V1.9
-   \date       25.02.15
+   \version    V1.10
+   \date       05.03.15
    \brief      Routine to add C-terminal oxygens.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2015
@@ -65,6 +65,7 @@
 -  V1.8  17.02.15 Added check on memory allocation   By: ACRM
 -  V1.9  25.02.15 Ensures terminal oxygens are only added to amino acids 
                   not HETATM groups
+-  V1.10 05.03.15 Replaced blFindEndPDB() with blFindNextResidue()
 
 *************************************************************************/
 /* Doxygen
@@ -132,6 +133,7 @@ static BOOL SetCterStyle(PDB *start, PDB *end, int style);
 -  17.02.15 Checks INIT() succeeded  By: ACRM
 -  25.02.15 Ensures terminal oxygens are only added to amino acids not
             HETATM groups
+-  05.03.15 Replaced blFindEndPDB() with blFindNextResidue()
 */
 BOOL blFixCterPDB(PDB *pdb, int style)
 {
@@ -150,7 +152,7 @@ BOOL blFixCterPDB(PDB *pdb, int style)
    start = pdb;
    while(start != NULL)
    {
-      end = blFindEndPDB(start);
+      end = blFindNextResidue(start);
       
       /* Skip if this is not an amino acid                              */
       if(strncmp(start->record_type, "ATOM  ", 6))
@@ -264,6 +266,7 @@ BOOL blFixCterPDB(PDB *pdb, int style)
 -  03.06.05 Handles altpos
 -  04.02.14 Use CHAINMATCH By: CTP
 -  07.07.14 Use bl prefix for functions By: CTP
+-  05.03.15 Replaced blFindEndPDB() with blFindNextResidue()
 */
 static void StandardiseCTers(PDB *pdb)
 {
@@ -277,7 +280,7 @@ static void StandardiseCTers(PDB *pdb)
    start = pdb;
    while(start != NULL)
    {
-      end = blFindEndPDB(start);
+      end = blFindNextResidue(start);
 
       /* If it's a c-terminal residue or the one before CTER,
          fix the names of the oxygens

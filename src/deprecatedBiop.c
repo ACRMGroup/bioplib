@@ -3,8 +3,8 @@
 
    \file       deprecatedBiop.c
    
-   \version    V1.8
-   \date       02.03.15
+   \version    V1.9
+   \date       05.03.15
    \brief      Source code for Biop deprecated functions.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014-2015
@@ -81,6 +81,8 @@
 -  V1.7  24.02.15 WritePDB() points to blWritePDB() instead of
                   blWriteAsPDB() (which is now blWritePDBAsPDBorGromos())
 -  V1.8  02.03.15 blGetExptl() is now called blGetExptlPDB()
+-  V1.9  05.03.15 Removed blFindEndPDB() as FindEndPDB() is deprecated
+                  and replaced by FindNextResidure()/blFindNextResidue()
 
 *************************************************************************/
 /* Includes
@@ -326,7 +328,7 @@ void WritePDB(FILE *fp, PDB *pdb)
 -  07.07.14  Use bl prefix for functions. Moved to deprecated.h By: CTP
 -  31.07.14 Moved to deprecated.c and converted from macro to function. 
             By: CTP
--  04.03.14 Changed to use blWritePDBAsPDBorGromos() and to count TER
+-  04.03.15 Changed to use blWritePDBAsPDBorGromos() and to count TER
             cards
 */
 void WriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
@@ -681,8 +683,8 @@ void RenumAtomsPDB(PDB *pdb)
 
 PDB *FindEndPDB(PDB *start)
 {
-   DEPRECATED("FindEndPDB()","blFindEndPDB()");
-   return(blFindEndPDB(start));
+   DEPRECATED("FindEndPDB()","blFindNextResidue()");
+   return(blFindNextResidue(start));
 }
 
 PDB *FixOrderPDB(PDB *pdb, BOOL Pad, BOOL Renum)

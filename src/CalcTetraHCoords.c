@@ -3,12 +3,12 @@
 
    \file       CalcTetraHCoords.c
    
-   \version    V1.5
-   \date       07.07.14
+   \version    V1.6
+   \date       05.03.15
    \brief      Routines to add N-terminal hydrogens and C-terminal
                oxygens.
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-6
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -60,6 +60,7 @@
 -  V1.3  13.11.96 Also checks for missing CA,C and O1 records
 -  V1.4  20.03.14 Updated error message for CalcTetraHCoords(). By: CTP
 -  V1.5  07.07.14 Use bl prefix for functions By: CTP
+-  V1.6  05.03.15 Replaced blFindEndPDB() with blFindNextResidue()
 
 *************************************************************************/
 /* Doxygen
@@ -110,6 +111,7 @@
 -  20.03.14 Updated error message. By: CTP
 -  07.07.14 Use bl prefix for functions By: CTP
 -  26.08.14 Removed unused r21 By: ACRM
+-  05.03.15 Replaced blFindEndPDB() with blFindNextResidue()
 */
 int blCalcTetraHCoords(PDB *nter, COOR *coor)
 {
@@ -134,7 +136,7 @@ int blCalcTetraHCoords(PDB *nter, COOR *coor)
    BondLen = (REAL)1.08;
    sFac    = (REAL)(sqrt((double)3.0) * 0.5);
 
-   end = blFindEndPDB(nter);
+   end = blFindNextResidue(nter);
 
    /* Search for the antecedant atom pointers                           */
    for(p=nter; p!= end; NEXT(p))

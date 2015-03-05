@@ -3,8 +3,8 @@
 
    \file       AddNTerHs.c
    
-   \version    V1.9
-   \date       17.02.15
+   \version    V1.10
+   \date       05.03.15
    \brief      Routines to add N-terminal hydrogens and C-terminal
                oxygens.
    
@@ -65,7 +65,8 @@
 -  V1.6  03.06.05 Handles altpos
 -  V1.7  04.02.14 Use CHAINMATCH By: CTP
 -  V1.8  07.07.14 Use bl prefix for functions By: CTP
--  V1.9  17.02.15 Handles element and segid
+-  V1.9  17.02.15 Handles element and segid  By: ACRM
+-  V1.10 05.03.15 Replaced blFindEndPDB() with blFindNextResidue()
 
 *************************************************************************/
 /* Doxygen
@@ -155,6 +156,7 @@ int blAddNTerHs(PDB **ppdb, BOOL Charmm)
    Remove the backbone hydrogen from Nter residue
 
 -  23.08.94 Original    By: ACRM
+-  05.03.15 Replaced blFindEndPDB() with blFindNextResidue()
 */
 static PDB *KillNTerH(PDB *pdb)
 {
@@ -162,7 +164,7 @@ static PDB *KillNTerH(PDB *pdb)
        *end,
        *prev = NULL;
 
-   end = blFindEndPDB(pdb);
+   end = blFindNextResidue(pdb);
    
    for(p=pdb; p!=end; NEXT(p))
    {
