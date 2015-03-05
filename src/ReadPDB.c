@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V3.1
-   \date       25.02.15
+   \version    V3.2
+   \date       05.03.15
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2015
@@ -204,6 +204,9 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 -  V2.37 17.02.15 Added segid support   By: ACRM
 -  V3.0  20.02.15 Merged functionality of ReadWholePDB() into this
 -  V3.1  25.02.15 Enhanced error checking and safety of blDoReadPDBML()
+-  V3.2  05.03.15 Fixed core dump in StoreConectRecords() when alternates
+                  have been deleted so CONECT specifies an atom that
+                  doesn't exist any more
 
 *************************************************************************/
 /* Doxygen
@@ -2227,6 +2230,11 @@ WHOLEPDB *blReadWholePDBAtoms(FILE *fpin)
    list
 
 -  18.02.15  Original   By: ACRM
+-  05.03.15  Initialize all connected atoms to NULL and check for NULLs
+             when storing the CONECTs. This deals with cases where an
+             atom specified in a CONECT record has alternate occupancies
+             and an alternate position is removed. Previously this led
+             to core dumps. e.g. PDB code 3pnw
 */
 static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer)
 {
@@ -2249,6 +2257,8 @@ static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer)
       if(atoms[i] == 0)
          break;
 
+      atomsP[i] = NULL;                                 /* 05.03.15     */
+
       /* Look for this atom                                             */
       for(p=wpdb->pdb; p!=NULL; NEXT(p))
       {
@@ -2263,46 +2273,58 @@ static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer)
    }
 
    /* Set the connections from atom 0                                   */
-   for(i=1; i<nConect; i++)
+   if(atomsP[0] != NULL)                                /* 05.03.15     */
    {
-      /* Look to see if we have this conect stored already              */
-      gotLink = FALSE;
-      for(j=0; j<atomsP[0]->nConect; j++)
+      for(i=1; i<nConect; i++)
       {
-         if(atomsP[0]->conect[j] == atomsP[i])
+         /* Look to see if we have this conect stored already           */
+         gotLink = FALSE;
+         for(j=0; j<atomsP[0]->nConect; j++)
          {
-            gotLink = TRUE;
-            break;
+            if(atomsP[i] != NULL)                       /* 05.03.15     */
+            {
+               if(atomsP[0]->conect[j] == atomsP[i])
+               {
+                  gotLink = TRUE;
+                  break;
+               }
+            }
+         }
+         
+         /* If not then store it                                        */
+         if(!gotLink && (atomsP[0]->nConect < MAXCONECT))
+         {
+            if(atomsP[i] != NULL)                       /* 05.03.15     */
+            {
+               atomsP[0]->conect[atomsP[0]->nConect] = atomsP[i];
+               (atomsP[0]->nConect)++;
+            }
          }
       }
 
-      /* If not then store it                                           */
-      if(!gotLink && (atomsP[0]->nConect < MAXCONECT))
+      /* Set the connections in the other direction                     */
+      for(i=1; i<nConect; i++)
       {
-         atomsP[0]->conect[atomsP[0]->nConect] = atomsP[i];
-         (atomsP[0]->nConect)++;
-      }
-   }
-
-   /* Set the connections in the other direction                        */
-   for(i=1; i<nConect; i++)
-   {
-      /* Look to see if we have this conect stored already              */
-      gotLink = FALSE;
-      for(j=0; j<atomsP[i]->nConect; j++)
-      {
-         if(atomsP[i]->conect[j] == atomsP[0])
+         if(atomsP[i] != NULL)                          /* 05.03.15     */
          {
-            gotLink = TRUE;
-            break;
+            /* Look to see if we have this conect stored already        */
+            gotLink = FALSE;
+            for(j=0; j<atomsP[i]->nConect; j++)
+            {
+               if(atomsP[i]->conect[j] == atomsP[0])
+               {
+                  gotLink = TRUE;
+                  break;
+               }
+            }
+            
+            /* If not then store it                                     */
+            if(!gotLink && (atomsP[i]->nConect < MAXCONECT))
+            {
+               atomsP[i]->conect[atomsP[i]->nConect] = atomsP[0];
+               (atomsP[i]->nConect)++;
+            }
          }
-      }
-
-      /* If not then store it                                           */
-      if(!gotLink && (atomsP[i]->nConect < MAXCONECT))
-      {
-         atomsP[i]->conect[atomsP[i]->nConect] = atomsP[0];
-         (atomsP[i]->nConect)++;
       }
    }
 }
