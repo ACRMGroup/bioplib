@@ -3,8 +3,8 @@
 
    \file       WritePDB.c
    
-   \version    V1.21
-   \date       02.03.15
+   \version    V1.22
+   \date       09.03.15
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
@@ -93,9 +93,11 @@
                   memory allocations
 -  V1.21 02.03.15 Corrected counting of ORIGX, SCALE and MTRIX records
                   in WriteMaster().
+                  Added blWriteWholePDBHeaderNoRes()
                   Added space padding to TER in blWriteTerCard()
                   Added space padding to END and to CONECT in
                   blWriteWholePDBTrailer()
+-  V1.22 09.03.15 blWriteWholePDBHeaderNoRes() now skips more header lines
 
 *************************************************************************/
 /* Doxygen
@@ -1094,8 +1096,14 @@ static void WriteMaster(FILE *fp, WHOLEPDB *wpdb, int numConect,
       SHEET
       SSBOND
       CISPEP
+      SEQADV
+      MODRES
+      HET
+      SITE
+
 
 -  02.03.15  Original   By: ACRM
+-  09.03.15  Additionally skips SEQADV, MODRES, HET, SITE
 */
 void blWriteWholePDBHeaderNoRes(FILE *fp, WHOLEPDB *wpdb)
 {
@@ -1107,6 +1115,10 @@ void blWriteWholePDBHeaderNoRes(FILE *fp, WHOLEPDB *wpdb)
                            "SHEET ", 
                            "SSBOND", 
                            "CISPEP",
+                           "SEQADV",
+                           "MODRES",
+                           "HET   ",
+                           "SITE  ",
                            NULL};
    
 
