@@ -3,8 +3,8 @@
 
    \file       WritePDB.c
    
-   \version    V1.22
-   \date       09.03.15
+   \version    V1.23
+   \date       10.03.15
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
@@ -98,6 +98,7 @@
                   Added space padding to END and to CONECT in
                   blWriteWholePDBTrailer()
 -  V1.22 09.03.15 blWriteWholePDBHeaderNoRes() now skips more header lines
+-  V1.23 10.03.15 blWriteWholePDBHeaderNoRes() now skips more header lines
 
 *************************************************************************/
 /* Doxygen
@@ -1100,10 +1101,20 @@ static void WriteMaster(FILE *fp, WHOLEPDB *wpdb, int numConect,
       MODRES
       HET
       SITE
-
+      REMARK 465
+      REMARK 470
+      REMARK 475
+      REMARK 480
+      REMARK 525
+      REMARK 610
+      REMARK 615
+      REMARK 620
+      REMARK 630
+      REMARK   3
 
 -  02.03.15  Original   By: ACRM
 -  09.03.15  Additionally skips SEQADV, MODRES, HET, SITE
+-  10.03.15  Additionally skips REMARK 3,465,470,475,480,525,610,615,620,630
 */
 void blWriteWholePDBHeaderNoRes(FILE *fp, WHOLEPDB *wpdb)
 {
@@ -1119,9 +1130,18 @@ void blWriteWholePDBHeaderNoRes(FILE *fp, WHOLEPDB *wpdb)
                            "MODRES",
                            "HET   ",
                            "SITE  ",
+                           "REMARK 465",
+                           "REMARK 470",
+                           "REMARK 475",
+                           "REMARK 480",
+                           "REMARK 525",
+                           "REMARK 610",
+                           "REMARK 615",
+                           "REMARK 620",
+                           "REMARK 630",
+                           "REMARK   3",
                            NULL};
    
-
    if((gPDBXMLForce != FORCEXML_XML) && (gPDBXML == FALSE))
    {
       for(s=wpdb->header; s!=NULL; NEXT(s))
