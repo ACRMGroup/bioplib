@@ -43,7 +43,7 @@ systems. If not then it is installed on Fedora/CentOS systems using
 
 or on Debian/Ubuntu systems using:
 
-        sudo apt-get install libsml2 libxml2-dev
+        sudo apt-get install libxml2 libxml2-dev
 
 On other systems, you will need to install libxml2 manually from 
 http://xmlsoft.org/downloads.html
