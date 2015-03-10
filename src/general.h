@@ -3,11 +3,11 @@
 
    \file       general.h
    
-   \version    V1.15
-   \date       14.08.14
+   \version    V1.16
+   \date       10.03.15
    \brief      Header file for general purpose routines
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -64,6 +64,7 @@
                   prototypes for renamed functions. By: CTP
 -  V1.15 14.08.14 Moved deprecated function prototypes to deprecated.h 
                   By: CTP
+-  V1.16 10.03.15 Added **blSplitStringOnCommas()  By: ACRM
 
 *************************************************************************/
 #ifndef _GENERAL_H
@@ -96,6 +97,7 @@ void blGetFilestem(char *filename, char *stem);
 int blUpstrcmp(char *word1, char *word2);
 int blUpstrncmp(char *word1, char *word2, int ncomp);
 char *blGetWord(char *buffer, char *word, int maxsize);
+char **blSplitStringOnCommas(char *string, int minItemLen);
 BOOL blOpenStdFiles(char *infile, char *outfile, FILE **in, FILE **out);
 FILE *blOpenFile(char *filename, char *envvar, char *mode, BOOL *noenv);
 int blCountchar(char *string, char ch);

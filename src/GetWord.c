@@ -3,11 +3,11 @@
 
    \file       GetWord.c
    
-   \version    V2.2
-   \date       03.08.14
+   \version    V2.3
+   \date       10.03.15
    \brief      Get a space delimited word from a string
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1995-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1995-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -50,6 +50,7 @@
 -  V2.0  10.06.99 Complete rewrite to allow escaping of characters
 -  V2.1  07.07.14 Use bl prefix for functions By: CTP
 -  V2.2  08.03.14 Made doGetWord() a static function. By CTP
+-  V2.3  10.03.15 Added blSplitStringOnCommas()  By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -63,13 +64,19 @@
    #FUNCTION  blGetWordNC()
    Reads a whitespace delimted word out of buffer into word. Commas
    are treated just like normal characters.
+
+   #FUNCTION  blSplitStringOnCommas()
+   Split a comma-separated string into an array of items. Mallocs a
+   2D array
 */
 /************************************************************************/
 /* Includes
 */
 #include <stdio.h>
+#include <string.h>
 #include "macros.h"
 #include "SysDefs.h"
+#include "array.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -289,4 +296,74 @@ char *blGetWordNC(char *buffer, char *word, int maxlen)
 {
    return(doGetWord(buffer, word, maxlen, FALSE));
 }
+
+/************************************************************************/
+/*>char **blSplitStringOnCommas(char *string, int minItemLen)
+   ----------------------------------------------------------
+*//**
+   \param[in]  *string        String containing comma-separated items
+   \param[in]  minItemLength  Min size to allocate for each item
+   \return                    Malloc'd array of strings
+
+   Splits a comma separated list of items malloc'ing a 2D array which
+   contains the item strings. The first dimension will be the number
+   if items plus one. The second dimension will be the maximum item
+   length plus one, or at least minItemLen.
+
+   The last position in the first array will be set to a null string
+
+   Note that this routine malloc's a 2D array which will need to be
+   freed
+
+-  10.03.15  Original   By: ACRM
+*/
+char **blSplitStringOnCommas(char *string, int minItemLen)
+{
+   int  nitems = 0;
+   char **items = NULL;
+   char *c, 
+        *buffer;
+   int  maxItemLen = minItemLen-1,
+        itemLen,
+        i;
+
+   /* Count the number of comma-separated items in the string. Also record
+      the length of the longest item
+   */
+   itemLen = 0;
+   for(c=string; *c; c++)
+   {
+      if(*c == ',')
+      {
+         if(itemLen > maxItemLen)
+            maxItemLen = itemLen;
+         nitems++;
+         itemLen = 0;
+      }
+   }
+   if(itemLen > maxItemLen)
+      maxItemLen = itemLen;
+
+   nitems++;
+   maxItemLen++;
+
+   /* Allocate space for the items                                      */
+   if((items = (char **)blArray2D(sizeof(char), nitems+1, 
+                                  maxItemLen))==NULL)
+      return(NULL);
+   
+   /* And copy in the data                                              */
+   buffer = string;
+   for(i=0; i<nitems; i++)
+   {
+      if((c = strchr(buffer, ','))!=NULL)
+         *c = '\0';
+      strncpy(items[i], buffer, maxItemLen);
+      buffer=c+1;
+   }
+   items[nitems][0] = '\0';
+
+   return(items);
+}
+
 
