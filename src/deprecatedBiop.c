@@ -820,8 +820,8 @@ BOOL ParseResSpec(char *spec, char *chain, int *resnum, char *insert)
 BOOL ParseResSpecNoUpper(char *spec, char *chain, int *resnum,
                          char *insert)
 {
-   DEPRECATED("ParseResSpecNoUpper()","blParseResSpecNoUpper()");
-   return(blParseResSpecNoUpper(spec, chain, resnum, insert));
+   DEPRECATED("ParseResSpecNoUpper()","blParseResSpec()");
+   return(blParseResSpec(spec, chain, resnum, insert));
 }
 
 BOOL DoParseResSpec(char *spec, char *chain, int *resnum, char *insert,

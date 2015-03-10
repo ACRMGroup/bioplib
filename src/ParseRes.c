@@ -3,8 +3,8 @@
 
    \file       ParseRes.c
    
-   \version    V1.13
-   \date       07.07.14
+   \version    V1.14
+   \date       10.03.15
    \brief      Parse a residue specification
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -71,6 +71,9 @@
 -  V1.11 28.08.13 chain is now a properly terminated string
 -  V1.12 26.02.14 Parsing handles multi-letter chains. By: CTP
 -  V1.13 07.07.14 Use bl prefix for functions By: CTP
+-  V1.14 10.03.15 Added blPrintResSpecHelp()  By: ACRM
+                  Removed blParseResSpecNoUpper() since blParseResSpec() 
+                  now does this
 
 *************************************************************************/
 /* Doxygen
@@ -80,17 +83,17 @@
    #FUNCTION  blParseResSpec()
    Splits up a residue specification of the form 
          [c][.]num[i]
-   into chain, resnum and insert. Chain and insert code will be up-cased
-
-   #FUNCTION  blParseResSpecNoUpper()
-   Splits up a residue specification of the form 
-         [c][.]num[i]
-   into chain, resnum and insert. Chain and insert code will NOT be up-cased
+   into chain, resnum and insert. Chain and insert code are not up-cased
 
    #FUNCTION  blDoParseResSpec()
    Splits up a residue specification of the form 
          [c][.]num[i]
    into chain, resnum and insert. Gives control over up-casing
+
+   #FUNCTION  blPrintResSpecHelp()
+   Prints a help message on the resdidue specfication format to make
+   help messages more consistent
+
 */
 /************************************************************************/
 /* Includes
@@ -154,35 +157,6 @@ BOOL blParseResSpec(char *spec, char *chain, int *resnum, char *insert)
    return blDoParseResSpec(spec, chain, resnum, insert, FALSE);
 }
 
-/************************************************************************/
-/*>BOOL blParseResSpecNoUpper(char *spec, char *chain, int *resnum, 
-                            char *insert)
-   ----------------------------------------------------------------
-*//**
-
-   \param[in]     *spec    Residue specification
-   \param[out]    *chain   Chain label
-   \param[out]    *resnum  Residue number
-   \param[out]    *insert  Insert label
-   \return                   Success?
-
-   Note that chain and insert must be arrays of at least 2 characters,
-   not character pointers
-
-   Splits up a residue specification of the form 
-         [c][.]num[i]
-   into chain, resnum and insert. Chain and insert are optional and will
-   be set to spaces if not specified. Does not converts the resiude
-   specification to upper case before processing.
-   
--  29.09.05 Original   By: TL
--  07.07.14 Use bl prefix for functions By: CTP
-*/
-BOOL blParseResSpecNoUpper(char *spec, char *chain, int *resnum, 
-                           char *insert)
-{
-   return blDoParseResSpec(spec, chain, resnum, insert, FALSE);
-}
 
 /************************************************************************/
 /*>BOOL blDoParseResSpec(char *inSpec, char *chain, int *resnum, 
@@ -339,4 +313,25 @@ BOOL blDoParseResSpec(char *inSpec, char *chain, int *resnum,
    return(retval);
 }
 
+
+/************************************************************************/
+/*>void blPrintResSpecHelp(FILE *fp)
+   ---------------------------------
+   \param[in]   *fp   File pointer
+
+   Simply prints a help message fo how to use a residue specifier. Makes
+   help messages from programs more consistent.
+
+   10.03.15  Original   By: ACRM
+*/
+void blPrintResSpecHelp(FILE *fp)
+{
+   fprintf(fp,"resspec is a residue specification of the form \
+[c[.]]nnn[i] where c is\n");
+   fprintf(fp,"a (multi-character) chain label optionally followed by \
+a '.' (required\n");
+   fprintf(fp,"if the chain label is numeric), nnn is a residue number \
+and i is an \n");
+   fprintf(fp,"optional insert code.\n");
+}
 

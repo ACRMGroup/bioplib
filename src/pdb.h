@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.75
-   \date       02.03.15
+   \version    V1.76
+   \date       10.03.15
    \brief      Include file for PDB routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2015
@@ -173,6 +173,8 @@
 -  V1.75 02.03.15 Renamed blGetExptl() to blGetExptlPDB()
                   Added blGetResolWholePDB(), blGetExptlWholePDB()
                   Added blWriteWholePDBHeaderNoRes()
+-  V1.76 10.03.15 Added blPrintResSpecHelp()
+                  Removed blParseResSpecNoUpper()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -538,7 +540,7 @@ PDB **blIndexPDB(PDB *pdb, int *natom);
 DISULPHIDE *blReadDisulphidesPDB(FILE *fp, BOOL *error);
 DISULPHIDE *blReadDisulphidesWholePDB(WHOLEPDB *wpdb, BOOL *error);
 BOOL blParseResSpec(char *spec, char *chain, int *resnum, char *insert);
-BOOL blParseResSpecNoUpper(char *spec, char *chain, int *resnum, char *insert);
+void blPrintResSpecHelp(FILE *fp);
 BOOL blDoParseResSpec(char *spec, char *chain, int *resnum, char *insert, 
                       BOOL uppercaseresspec);
 BOOL blRepSChain(PDB *pdb, char *sequence, char *ChiTable, char *RefCoords);
