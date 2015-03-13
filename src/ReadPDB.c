@@ -1530,6 +1530,7 @@ pointer\n");
             in case it fails
             Calls blRenumAtomsPDB() at the end since we don't use the
             atom site IDs for atom numbers
+-  13.03.15 Cosmetic changes
 */
 PDB *blDoReadPDBML(FILE *fpin,
                    int  *natom,
@@ -1649,7 +1650,7 @@ PDB *blDoReadPDBML(FILE *fpin,
          strcpy(curr_pdb->segid,   "");
 
          /* Scan atom node children                                     */
-         for(n = atom_node->children; n; n = n->next)
+         for(n=atom_node->children; n!=NULL; NEXT(n))
          {
             if(n->type != XML_ELEMENT_NODE){ continue; }
             content = xmlNodeGetContent(n);
@@ -1661,124 +1662,125 @@ PDB *blDoReadPDBML(FILE *fpin,
             }
             
             /* Set PDB values                                           */
-            if(!strcmp((char *) n->name,"B_iso_or_equiv"))
+            if(!strcmp((char *)n->name, "B_iso_or_equiv"))
+            {
+               sscanf((char *)content, "%lf", &content_lf);
+               curr_pdb->bval = (REAL)content_lf;
+            }
+            else if(!strcmp((char *)n->name, "Cartn_x"))
+            {
+               sscanf((char *)content, "%lf", &content_lf);
+               curr_pdb->x = (REAL)content_lf;
+            }
+            else if(!strcmp((char *)n->name, "Cartn_y"))
             {
                sscanf((char *) content,"%lf",&content_lf);
-               curr_pdb->bval = (REAL) content_lf;
+               curr_pdb->y = (REAL)content_lf;
             }
-            else if(!strcmp((char *) n->name,"Cartn_x"))
+            else if(!strcmp((char *)n->name, "Cartn_z"))
             {
-               sscanf((char *) content,"%lf",&content_lf);
-               curr_pdb->x = (REAL) content_lf;
+               sscanf((char *)content, "%lf", &content_lf);
+               curr_pdb->z = (REAL)content_lf;
             }
-            else if(!strcmp((char *) n->name,"Cartn_y"))
+            else if(!strcmp((char *)n->name, "auth_asym_id"))
             {
-               sscanf((char *) content,"%lf",&content_lf);
-               curr_pdb->y = (REAL) content_lf;
+               strcpy(curr_pdb->chain, (char *)content);
             }
-            else if(!strcmp((char *) n->name,"Cartn_z"))
+            else if(!strcmp((char *)n->name, "auth_atom_id"))
             {
-               sscanf((char *) content,"%lf",&content_lf);
-               curr_pdb->z = (REAL) content_lf;
+               strcpy(curr_pdb->atnam, (char *)content);
             }
-            else if(!strcmp((char *) n->name,"auth_asym_id"))
-            {
-               strcpy(curr_pdb->chain, (char *) content);
-            }
-            else if(!strcmp((char *) n->name,"auth_atom_id"))
-            {
-               strcpy(curr_pdb->atnam, (char *) content);
-            }
-            else if(!strcmp((char *) n->name,"auth_comp_id"))
+            else if(!strcmp((char *)n->name, "auth_comp_id"))
             {
                strcpy(curr_pdb->resnam, (char *) content);
             }
-            else if(!strcmp((char *) n->name,"auth_seq_id"))
+            else if(!strcmp((char *)n->name, "auth_seq_id"))
             {
-               sscanf((char *) content,"%lf",&content_lf);
-               curr_pdb->resnum = (REAL) content_lf;
+               sscanf((char *)content, "%lf", &content_lf);
+               curr_pdb->resnum = (REAL)content_lf;
             }
-            else if(!strcmp((char *) n->name,"pdbx_PDB_ins_code"))
+            else if(!strcmp((char *)n->name, "pdbx_PDB_ins_code"))
             {
                /* set insertion code
                   25.02.15 Changed to strncpy()  By: ACRM
                */
-               strncpy(curr_pdb->insert, (char *) content, 8);
+               strncpy(curr_pdb->insert, (char *)content, 8);
             }
-            else if(!strcmp((char *) n->name,"group_PDB"))
+            else if(!strcmp((char *)n->name, "group_PDB"))
             {
                /* 25.02.15 Changed to strncpy()  By: ACRM               */
-               strncpy(curr_pdb->record_type, (char *) content, 8);
+               strncpy(curr_pdb->record_type, (char *)content, 8);
                PADMINTERM(curr_pdb->record_type, 6);
             }
-            else if(!strcmp((char *) n->name,"occupancy"))
+            else if(!strcmp((char *)n->name, "occupancy"))
             {
                content_lf = (REAL)0.0;     /* 25.02.15                  */
-               sscanf((char *) content,"%lf",&content_lf);
-               curr_pdb->occ = (REAL) content_lf;
+               sscanf((char *)content, "%lf", &content_lf);
+               curr_pdb->occ = (REAL)content_lf;
             }
-            else if(!strcmp((char *) n->name,"label_alt_id"))
+            else if(!strcmp((char *)n->name, "label_alt_id"))
             {
                /* Use strlen as test for alt position                   */
                curr_pdb->altpos = strlen((char *)content) ? content[0]:' ';
             }
-            else if(!strcmp((char *) n->name,"pdbx_PDB_model_num"))
+            else if(!strcmp((char *)n->name, "pdbx_PDB_model_num"))
             {
                content_lf = (REAL)0.0;     /* 25.02.15                  */
-               sscanf((char *) content,"%lf",&content_lf);
-               model_number = (int) content_lf;
+               sscanf((char *)content, "%lf", &content_lf);
+               model_number = (int)content_lf;
             }
-            else if(!strcmp((char *) n->name,"type_symbol"))
+            else if(!strcmp((char *)n->name, "type_symbol"))
             {
                /* 25.02.15 Changed to strncpy()  By: ACRM               */
-               strncpy(curr_pdb->element, (char *) content, 8);
+               strncpy(curr_pdb->element, (char *)content, 8);
             }
-            else if(!strcmp((char *) n->name,"label_asym_id"))
+            else if(!strcmp((char *)n->name, "label_asym_id"))
             {
                if(strlen(curr_pdb->chain) == 0)
                {
                   /* 25.02.15 Changed to strncpy()  By: ACRM            */
-                  strncpy(curr_pdb->chain, (char *) content, 8);
+                  strncpy(curr_pdb->chain, (char *)content, 8);
                }
             }
-            else if(!strcmp((char *) n->name,"label_atom_id"))
+            else if(!strcmp((char *)n->name, "label_atom_id"))
             {
                if(strlen(curr_pdb->atnam) == 0)
                {
                   /* 25.02.15 Changed to strncpy()  By: ACRM            */
-                  strncpy(curr_pdb->atnam, (char *) content, 8);
+                  strncpy(curr_pdb->atnam, (char *)content, 8);
                }
             }
-            else if(!strcmp((char *) n->name,"label_comp_id"))
+            else if(!strcmp((char *) n->name, "label_comp_id"))
             {
                if(strlen(curr_pdb->resnam) == 0)
                {
                   /* 25.02.15 Changed to strncpy()  By: ACRM            */
-                  strncpy(curr_pdb->resnam, (char *) content, 8);
+                  strncpy(curr_pdb->resnam, (char *)content, 8);
                }
             }
-            else if(!strcmp((char *) n->name,"label_seq_id"))
+            else if(!strcmp((char *)n->name, "label_seq_id"))
             {
-               if(curr_pdb->resnum == 0 && strlen((char *) content) > 0)
+               if((curr_pdb->resnum == 0) && 
+                  (strlen((char *)content) > 0))
                {
                   content_lf = (REAL)0.0;  /* 25.02.15                  */
-                  sscanf((char *) content,"%lf",&content_lf);
-                  curr_pdb->resnum = (REAL) content_lf;
+                  sscanf((char *)content, "%lf", &content_lf);
+                  curr_pdb->resnum = (REAL)content_lf;
                }
             }
-            else if(!strcmp((char *) n->name,"pdbx_formal_charge"))
+            else if(!strcmp((char *)n->name, "pdbx_formal_charge"))
             {
                content_lf = (REAL)0.0;     /* 25.02.15                  */
-               sscanf((char *) content,"%lf",&content_lf);
-               curr_pdb->formal_charge = (int) content_lf;
-               curr_pdb->partial_charge = (REAL) content_lf;
+               sscanf((char *)content, "%lf", &content_lf);
+               curr_pdb->formal_charge = (int)content_lf;
+               curr_pdb->partial_charge = (REAL)content_lf;
             }
-            else if(!strcmp((char *) n->name,"seg_id"))  /* 17.02.15    */
+            else if(!strcmp((char *)n->name, "seg_id"))  /* 17.02.15    */
             {
                if(strlen(curr_pdb->segid) == 0)
                {
                   /* 25.02.15 Changed to strncpy()  By: ACRM            */
-                  strncpy(curr_pdb->segid, (char *) content, 8);
+                  strncpy(curr_pdb->segid, (char *)content, 8);
                }
             }
 
@@ -1797,7 +1799,7 @@ PDB *blDoReadPDBML(FILE *fpin,
          if(strlen(curr_pdb->atnam) == 1)
          {
             /* copy 1-letter name atnam_raw                             */
-            strcpy((curr_pdb->atnam_raw),               " ");
+            strcpy((curr_pdb->atnam_raw), " ");
             /* 25.02.15 Changed to strncpy()  By: ACRM                  */
             strncpy((curr_pdb->atnam_raw)+1, curr_pdb->atnam, 7);
          }
@@ -1830,7 +1832,7 @@ PDB *blDoReadPDBML(FILE *fpin,
                   curr_pdb->resnam is is equivalent to colums 18-21 of a
                   pdb-formatted text file.                              
          */
-         sprintf(pad_resnam,"%3s",curr_pdb->resnam);
+         sprintf(pad_resnam, "%3s", curr_pdb->resnam);
          PADMINTERM(pad_resnam, 4);
          /* 25.02.15 Changed to strncpy()  By: ACRM                     */
          strncpy(curr_pdb->resnam, pad_resnam, 8);
@@ -1879,11 +1881,11 @@ PDB *blDoReadPDBML(FILE *fpin,
 
 
          /* Add partial occ atom from temp storage to output PDB list   */
-         if(NPartial != 0 && strcmp(curr_pdb->atnam,store_atnam))
+         if((NPartial != 0) && strcmp(curr_pdb->atnam,store_atnam))
          {
             /* Store atom                                               */
-            if( blStoreOccRankAtom(OccRank,multi,NPartial,&pdb,&end_pdb,
-                                   natom) )
+            if(blStoreOccRankAtom(OccRank,multi,NPartial,&pdb,&end_pdb,
+                                  natom))
             {
                LAST(end_pdb);
                NPartial = 0;
