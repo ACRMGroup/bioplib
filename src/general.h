@@ -3,8 +3,8 @@
 
    \file       general.h
    
-   \version    V1.16
-   \date       10.03.15
+   \version    V1.17
+   \date       12.03.15
    \brief      Header file for general purpose routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2015
@@ -64,7 +64,8 @@
                   prototypes for renamed functions. By: CTP
 -  V1.15 14.08.14 Moved deprecated function prototypes to deprecated.h 
                   By: CTP
--  V1.16 10.03.15 Added **blSplitStringOnCommas()  By: ACRM
+-  V1.16 10.03.15 Added blSplitStringOnCommas()  By: ACRM
+-  V1.17 12.03.15 Added blSplitStringOnChars(), blCheckProgName()
 
 *************************************************************************/
 #ifndef _GENERAL_H
@@ -98,6 +99,7 @@ int blUpstrcmp(char *word1, char *word2);
 int blUpstrncmp(char *word1, char *word2, int ncomp);
 char *blGetWord(char *buffer, char *word, int maxsize);
 char **blSplitStringOnCommas(char *string, int minItemLen);
+char **blSplitStringOnChars(char *string);
 BOOL blOpenStdFiles(char *infile, char *outfile, FILE **in, FILE **out);
 FILE *blOpenFile(char *filename, char *envvar, char *mode, BOOL *noenv);
 int blCountchar(char *string, char ch);
@@ -120,7 +122,7 @@ BOOL blWrapPrint(FILE *out, char *string);
 void blRightJustify(char *string);
 char *blGetWordNC(char *buffer, char *word, int maxlen);
 void blGetfield(char *buffer, int start, int width, char *str);
-
+BOOL blCheckProgName(char *name, char *expected);
 
 /************************************************************************/
 /* Include deprecated functions                                         */
