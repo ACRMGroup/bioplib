@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.76
-   \date       10.03.15
+   \version    V1.77
+   \date       16.03.15
    \brief      Include file for PDB routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2015
@@ -175,6 +175,7 @@
                   Added blWriteWholePDBHeaderNoRes()
 -  V1.76 10.03.15 Added blPrintResSpecHelp()
                   Removed blParseResSpecNoUpper()
+-  V1.77 16.03.15 Added blGetCrystWholePDB()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -562,6 +563,9 @@ void blCalcCellTrans(VEC3F UnitCell, VEC3F CellAngles,
 int blGetCrystPDB(FILE *fp, VEC3F *UnitCell, VEC3F *CellAngles,
                   char *spacegroup,
                   REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4]);
+int blGetCrystWholePDB(WHOLEPDB *wpdb, VEC3F *UnitCell, VEC3F *CellAngles,
+                       char *spacegroup,
+                       REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4]);
 void blWriteCrystPDB(FILE *fp, VEC3F UnitCell, VEC3F CellAngles,
                      char *spacegroup,
                      REAL OrigMatrix[3][4], REAL ScaleMatrix[3][4]);
