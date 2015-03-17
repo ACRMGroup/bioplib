@@ -179,6 +179,9 @@
                   blDeleteAConect(), blDeleteAConectByNum()
                   blDeleteAtomPDB(), blDeleteAtomConects(),
                   blDeleteAtomRangePDB()
+                  blAddOneDirectionConect() now does what blAddConect()
+                  used to do. blAddConect() adds CONECT in both
+                  directions
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -484,6 +487,7 @@ void blWriteWholePDBHeaderNoRes(FILE *fp, WHOLEPDB *wpdb);
 
 BOOL blBuildConectData(PDB *pdb, REAL tol);
 BOOL blAddConect(PDB *p, PDB *q);
+BOOL blAddOneDirectionConect(PDB *p, PDB *q);
 BOOL blDeleteConect(PDB *p, PDB *q);
 BOOL blDeleteAConectByNum(PDB *pdb, int cNum);
 void blDeleteAtomConects(PDB *pdb);

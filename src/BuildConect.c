@@ -59,7 +59,10 @@
    Rebuild all CONECT data using covalent radii of the atoms
 
    #FUNCTION blAddConect()
-   Adds a CONECT between two specified atoms
+   Adds a CONECT in both directions between two specified atoms
+
+   #FUNCTION blAddOneDirectionConect()
+   Adds a CONECT in one direction between two specified atoms
 
    #FUNCTION blDeleteAConect()
    Deletes a CONECT between two specified atoms
@@ -136,12 +139,39 @@ static REAL findCovalentRadius(char *element);
    \param[in,out]   *q    Second PDB item
    \return                Success?
 
-   Adds a conect from p to q (i.e. one direction only)     
+   Adds a conect bteween p and q (i.e. in both directions)
    Fails if there are too many CONECTs 
 
 -  19.02.15  Original   By: ACRM
 */
 BOOL blAddConect(PDB *p, PDB *q)
+{
+   BOOL retval = TRUE;
+
+   if(!blAddConect(p,q))
+      retval=FALSE;
+   if(!blAddConect(q,p))
+      retval=FALSE;
+
+   return(retval);
+}
+
+
+/************************************************************************/
+/*>BOOL blAddOneDirectionConect(PDB *p, PDB *q)
+   --------------------------------------------
+*//**
+
+   \param[in,out]   *p    First PDB item
+   \param[in,out]   *q    Second PDB item
+   \return                Success?
+
+   Adds a conect from p to q (i.e. one direction only)     
+   Fails if there are too many CONECTs 
+
+-  19.02.15  Original   By: ACRM
+*/
+BOOL blAddOneDirectionConect(PDB *p, PDB *q)
 {
    int i;
    BOOL gotConect;
@@ -220,12 +250,9 @@ BOOL blBuildConectData(PDB *pdb, REAL tol)
                {
                   if(!blAddConect(p,q))
                      retval=FALSE;
-                  if(!blAddConect(q,p))
-                     retval=FALSE;
                }
             }
          }
-         
       }
 
       /* Check for non backbone C-N connections between residues        */
@@ -239,8 +266,6 @@ BOOL blBuildConectData(PDB *pdb, REAL tol)
                if(blIsBonded(p, q, tol))
                {
                   if(!blAddConect(p,q))
-                     retval=FALSE;
-                  if(!blAddConect(q,p))
                      retval=FALSE;
                }
             }
