@@ -173,12 +173,14 @@ static PDB *KillNTerH(PDB *pdb)
          if(prev==NULL)         /* Is the first item in the list        */
          {
             prev = p->next;
+            blDeleteAtomConects(p);
             free(p);
             return(prev);
          }
          else                   /* Is NOT the first item in the list    */
          {
             prev->next = p->next;
+            blDeleteAtomConects(p);
             free(p);
             return(pdb);
          }

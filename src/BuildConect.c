@@ -70,6 +70,11 @@
    #FUNCTION blDeleteAConectByNum()
    Deletes a specified CONECT from an atom
 
+   #FUNCTION blDeleteAtomConects()
+   Deletes all CONECT information associated with a PDB pointer. Also
+   deletes the relevant CONECTs (back to this atom) from the partner 
+   atoms
+
 */
 /************************************************************************/
 /* Includes
