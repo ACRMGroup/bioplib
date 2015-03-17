@@ -148,9 +148,9 @@ BOOL blAddConect(PDB *p, PDB *q)
 {
    BOOL retval = TRUE;
 
-   if(!blAddConect(p,q))
+   if(!blAddOneDirectionConect(p,q))
       retval=FALSE;
-   if(!blAddConect(q,p))
+   if(!blAddOneDirectionConect(q,p))
       retval=FALSE;
 
    return(retval);
