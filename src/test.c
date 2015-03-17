@@ -5,48 +5,44 @@ int main(int argc, char **argv)
 {
    WHOLEPDB *wpdb;
    FILE *in;
+/*
    int nsec, nchains;
    DISULPHIDE *dis = NULL, *d;
    SECSTRUC   *sec = NULL, *s;
    BOOL       error;
    char       **sequences;
+*/
+   PDB        *p1, *p2;
    
    in=fopen("test.pdb", "r");
 
    wpdb = blReadWholePDB(in);
 
-   if((dis = blReadDisulphidesWholePDB(wpdb, &error))!=NULL)
-   {
-      printf("Disulphides\n");
-      for(d=dis; d!=NULL; NEXT(d))
-      {
-         printf("%s%d%s : %s%d%s\n", 
-                d->chain1, d->res1, d->insert1,
-                d->chain2, d->res2, d->insert2);
-      }
-   }
+/*   p1=blFindResidueSpec(wpdb->pdb, "L23"); */
+   p1=wpdb->pdb;
+   p2=blFindResidueSpec(wpdb->pdb, "L35");
+/*   wpdb->pdb = blDeleteAtomRangePDB(wpdb->pdb, p1, p2); */
+   blAddConect(p1,p2);
+   NEXT(p2);
+   blAddConect(p1,p2);
+   NEXT(p2);
+   blAddConect(p1,p2);
+   NEXT(p2);
+   blAddConect(p1,p2);
+   NEXT(p2);
+   blAddConect(p1,p2);
+   NEXT(p2);
+   blAddConect(p1,p2);
+   NEXT(p2);
+   blAddConect(p1,p2);
+   NEXT(p2);
+   blAddConect(p1,p2);
+   NEXT(p2);
+   blAddConect(p1,p2);
 
-   if((sec = blReadSecWholePDB(wpdb, &nsec))!=NULL)
-   {
-      printf("Secondary Structure\n");
-      for(s=sec; s!=NULL; NEXT(s))
-      {
-         printf("%s%d%s - %s%d%s : %c\n", 
-                s->chain1, s->res1, s->insert1,
-                s->chain2, s->res2, s->insert2,
-                s->type);
-      }
-   }
+   p1->conect[3] = NULL;
 
-   if((sequences = blReadSeqresWholePDB(wpdb, &nchains)) != NULL)
-   {
-      int i;
-      printf("SEQRES\n");
-      for(i=0; i<nchains; i++)
-      {
-         printf("%s\n", sequences[i]);
-      }
-   }
+   blWriteWholePDB(stdout, wpdb);
 
    return(0);
 }

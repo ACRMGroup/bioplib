@@ -64,8 +64,19 @@
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Manipulating the PDB linked list
-   #FUNCTION  blKillPDB()
-   Remove an item in the PDB linked list and re-link correctly
+   #FUNCTION blKillPDB()
+   Remove an item in the PDB linked list and re-link correctly. Generally
+   better to use blDeleteAtomPDB()
+
+   #FUNCTION blDeleteAtomPDB()
+   Delete an atom from the linked list re-linking the list and returning
+   the new start of the list (in case the first atom has been deleted)
+
+   #FUNCTION blDeleteAtomRangePDB()
+   Deletes a range of atoms from the linked list re-linking the list and 
+   returning the new start of the list (in case the first atom has been 
+   deleted)
+
 */
 /************************************************************************/
 /* Includes
@@ -89,6 +100,95 @@
 
 
 /************************************************************************/
+/*>PDB *blDeleteAtomRangePDB(PDB *pdb, PDB *start, PDB *stop)
+   ----------------------------------------------------------
+*//**
+   \param[in]    *pdb    Start of PDB linked list
+   \param[in]    *start  First atom to delete
+   \param[in]    *stop   Atom after the one to be deleted
+   \return               New start of linked list
+
+   Deletes a range of atoms from the linked list re-linking the list and 
+   returning the new start of the list (in case the first atom has been 
+   deleted)
+
+-  17.03.15  Original  By: ACRM
+*/
+PDB *blDeleteAtomRangePDB(PDB *pdb, PDB *start, PDB *stop)
+{
+   PDB  *p,
+        *prev = NULL;
+   BOOL found = FALSE;
+ 
+   /* Find the atom previous to start                                   */
+   for(p=pdb; p!=NULL; NEXT(p))
+   {
+      if(p==start)
+      {
+         found = TRUE;
+         break;
+      }
+      
+      prev = p;
+   }
+   if(!found)
+      return(pdb);
+   
+   /* Now step from start to stop deleting atoms                        */
+   for(p=start; p!=stop;)
+   {
+      PDB *next;
+      next=blKillPDB(p, prev);
+      p=next;
+   }
+
+   if(prev==NULL)
+      return(stop);
+   return(pdb);
+}
+
+
+/************************************************************************/
+/*>PDB *blDeleteAtomPDB(PDB *pdb, PDB *atom)
+   -----------------------------------------
+*//**
+   \param[in]     *pdb    Start of PDB linked list
+   \param[in]     *atom   Atom to delete
+   \return                New start of PDB linked list
+
+   Deletes an atom from the PDB linked list. Should be called as 
+   pdb=blDeleteAtomPDB(pdb, atom);
+   to allow for the first atom in the linked list being deleted.
+
+   Returns NULL of all atoms have been deleted. Returns the input
+   pdb linked list unmodified if the atom isn't found.
+
+-  17.03.15  Original   By: ACRM
+*/
+PDB *blDeleteAtomPDB(PDB *pdb, PDB *atom)
+{
+   PDB *p, 
+       *next,
+       *prev=NULL;
+
+   for(p=pdb; p!=NULL; NEXT(p))
+   {
+      if(p==atom)
+      {
+         next = blKillPDB(atom, prev);
+         /* Killed atom from start of linked list                       */
+         if(prev==NULL)
+            return(next);
+         return(pdb);
+      }
+      
+      prev=p;
+   }
+
+   return(pdb);
+}
+
+/************************************************************************/
 /*>PDB *blKillPDB(PDB *pdb, PDB *prev)
    -----------------------------------
 *//**
@@ -104,21 +204,21 @@
 -  12.05.92 Original
 -  11.03.94 Now handles prev==NULL to delete first item in a list
 -  07.07.14 Use bl prefix for functions By: CTP
+-  16.03.15 Checks and removes any CONECT data  By: ACRM
 */
 PDB *blKillPDB(PDB *pdb,              /* Pointer to record to kill      */
                PDB *prev)             /* Pointer to previous record     */
 {
-   PDB *p;
+   PDB *next;
 
-/* Old action was just to return if prev==NULL
-   if(prev == NULL) return(NULL);
-*/
-   p = pdb->next;
+   next = pdb->next;
 
+   blDeleteAtomConects(pdb);
+   
    if(prev!=NULL)
-      prev->next = pdb->next;       /* Relink the list                  */
+      prev->next = next;            /* Relink the list                  */
    free(pdb);                       /* Free the item                    */
 
-   return(p);
+   return(next);
 }
 

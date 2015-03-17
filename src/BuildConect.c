@@ -3,8 +3,8 @@
 
    \file       BuildConect.c
    
-   \version    V1.0
-   \date       19.02.15
+   \version    V1.1
+   \date       16.03.15
    \brief      Build connectivity information in PDB linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2002-2015
@@ -47,6 +47,7 @@
    Revision History:
    =================
 -  V1.0  19.02.15 Original
+-  V1.1  16.03.15 Added blDeleteAConect() and blDeleteAConectByNum()
 
 *************************************************************************/
 /* Doxygen
@@ -59,6 +60,12 @@
 
    #FUNCTION blAddConect()
    Adds a CONECT between two specified atoms
+
+   #FUNCTION blDeleteAConect()
+   Deletes a CONECT between two specified atoms
+
+   #FUNCTION blDeleteAConectByNum()
+   Deletes a specified CONECT from an atom
 
 */
 /************************************************************************/
@@ -129,7 +136,8 @@ static REAL findCovalentRadius(char *element);
    \param[in,out]   *q    Second PDB item
    \return                Success?
 
-   Adds a conect from p to q                                            
+   Adds a conect from p to q (i.e. one direction only)     
+   Fails if there are too many CONECTs 
 
 -  19.02.15  Original   By: ACRM
 */
@@ -292,4 +300,117 @@ static REAL findCovalentRadius(char *element)
       }
    }
    return((REAL)1.0);
+}
+
+
+/************************************************************************/
+/*>BOOL blDeleteAConect(PDB *p, PDB *q)
+   -----------------------------------
+*//**
+   \param[in]    *p     First PDB pointer
+   \param[in]    *q     Second PDB pointer
+   \return              Success
+
+   Deletes the CONECT information between the two specified atoms
+
+-  16.03.15  Original   By: ACRM
+*/
+BOOL blDeleteAConect(PDB *p, PDB *q)
+{
+   int  cNum;
+   BOOL retval = TRUE;
+   
+   for(cNum=0; cNum < p->nConect; cNum++)
+   {
+      if(p->conect[cNum] == q)
+      {
+         if(!blDeleteAConectByNum(p, cNum))
+            retval = FALSE;
+         break;
+      }
+   }
+
+   for(cNum=0; cNum < q->nConect; cNum++)
+   {
+      if(q->conect[cNum] == p)
+      {
+         if(!blDeleteAConectByNum(q, cNum))
+            retval = FALSE;
+         break;
+      }
+   }
+
+   return(retval);
+}
+
+/************************************************************************/
+/*>BOOL blDeleteAConectByNum(PDB *pdb, int cNum)
+   ------------------------------------------
+*//**
+   \param[in]    *pdb   PDB pointer
+   \param[in]    cNum   Index into the ->conect[] array for the CONECT
+                        to be deleted
+   \return              Success
+
+   Deletes the link for the specified CONECT. Other CONECTs are shuffled
+   down.
+
+-  16.03.15  Original   By: ACRM
+*/
+BOOL blDeleteAConectByNum(PDB *pdb, int cNum)
+{
+   int i;
+   
+   /* Check that the CONECT exists                                      */
+   if((cNum >= pdb->nConect) || (pdb->nConect == 0))
+      return(FALSE);
+   
+   /* Shuffle the CONECTs down                                          */
+   for(i=cNum; i<pdb->nConect; i++)
+   {
+      PDB *next = NULL;
+      if((i+1) < pdb->nConect)
+         next = pdb->conect[i+1];
+
+      pdb->conect[i] = next;
+   }
+
+   /* Decrement the number of CONECTs and return                        */
+   pdb->nConect--;
+   return(TRUE);
+}
+
+
+/************************************************************************/
+/*>void blDeleteAtomConects(PDB *pdb)
+   ----------------------------------
+*//**
+   \param[in]     *pdb     PDB pointer
+
+   Deletes all CONECT information associated with a PDB pointer. Also
+   deletes the relevant CONECTs (back to this atom) from the partner 
+   atoms
+
+-  17.03.15  Original   By: ACRM
+*/
+void blDeleteAtomConects(PDB *pdb)
+{
+   int i;
+
+   if(pdb!=NULL)
+   {
+      /* For each CONECT (if there are any)                             */
+      for(i=0; i<pdb->nConect; i++)
+      {
+         /* Find the partner                                               */
+         PDB *conect = pdb->conect[i];
+         
+         if(conect!=NULL)
+         {
+            blDeleteAConect(pdb, conect);
+         }
+         pdb->conect[i] = NULL;
+      }
+      pdb->nConect = 0;
+   }
 }

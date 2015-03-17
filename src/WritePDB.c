@@ -972,12 +972,13 @@ void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb, int numTer)
          {
             BOOL conectPrinted = FALSE;
             int  i, 
+                 nPrinted,
                  width=0;
             char format[8];
 
-            for(i=0; i<p->nConect; i++)
+            for(i=0, nPrinted=0; i<p->nConect; i++)
             {
-               if(!(i%4))
+               if(!(nPrinted%4))
                {
                   if(conectPrinted)
                      fprintf(fp, "\n");
@@ -986,8 +987,12 @@ void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb, int numTer)
                   width = 11;
                   conectPrinted = 1;
                }
-               fprintf(fp,"%5d", p->conect[i]->atnum);
-               width += 5;
+               if(p->conect[i] != NULL)
+               {
+                  fprintf(fp,"%5d", p->conect[i]->atnum);
+                  width += 5;
+                  nPrinted++;
+               }
             }
             sprintf(format, "%%%ds\n", 80-width);
             fprintf(fp, format, " ");

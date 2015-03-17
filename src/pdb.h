@@ -176,6 +176,9 @@
 -  V1.76 10.03.15 Added blPrintResSpecHelp()
                   Removed blParseResSpecNoUpper()
 -  V1.77 16.03.15 Added blGetCrystWholePDB()
+                  blDeleteAConect(), blDeleteAConectByNum()
+                  blDeleteAtomPDB(), blDeleteAtomConects(),
+                  blDeleteAtomRangePDB()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -481,7 +484,12 @@ void blWriteWholePDBHeaderNoRes(FILE *fp, WHOLEPDB *wpdb);
 
 BOOL blBuildConectData(PDB *pdb, REAL tol);
 BOOL blAddConect(PDB *p, PDB *q);
+BOOL blDeleteConect(PDB *p, PDB *q);
+BOOL blDeleteAConectByNum(PDB *pdb, int cNum);
+void blDeleteAtomConects(PDB *pdb);
 BOOL blIsBonded(PDB *p, PDB *q, REAL tol);
+PDB *blDeleteAtomPDB(PDB *pdb, PDB *atom);
+PDB *blDeleteAtomRangePDB(PDB *pdb, PDB *start, PDB *stop);
 
 void blWritePDBRecord(FILE *fp, PDB *pdb);
 void blWritePDBRecordAtnam(FILE *fp, PDB  *pdb);

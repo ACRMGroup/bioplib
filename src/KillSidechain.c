@@ -99,8 +99,9 @@
    \param[in]     doCB          Flag to kill CB as part of s/c
    \return                      Success?
    
-   Kill a sidechain, by calls to KillPDB(). If doCB is set, will kill 
-   the CB.
+   Kills sidechains by calls to KillPDB() for residues between ResStart 
+   and NextRes. If doCB is set, will kill the CB. 
+
    N.B. At least 1 backbone atom must occur in the linked list before the
    sidechain.
    
