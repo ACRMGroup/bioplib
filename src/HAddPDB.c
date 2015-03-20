@@ -51,7 +51,7 @@
    ======
 
 \code
-   nhyd = HAddPDB(fp,pdb)
+   nhyd = blHAddPDB(fp,pdb)
 \endcode
 
    \param[in]        *fp         File containing proton generation
