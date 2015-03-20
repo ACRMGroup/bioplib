@@ -194,9 +194,12 @@
 #include "SysDefs.h"
 #include "general.h"
 
-#define MAXSTDAA    21       /* Number of standard amino acids (w/ PCA)*/
-#define MAXATINRES  14       /* Max number of atoms in a standard aa   */
-#define MAXCONECT    8       /* Max number of CONECT connections       */
+#define MAXSTDAA    21  /* Number of standard amino acids (w/ PCA)      */
+#define MAXATINAA   14  /* Max number of (heavy) atoms in a standard aa */
+#define MAXATINRES  23  /* Max number of (heavy) atoms in a standard aa
+                           or nucleotide
+                        */
+#define MAXCONECT    8  /* Max number of CONECT connections             */
 
 /* blATOMTYPE is unused at present, but gives the flexibility of
    associating type information with each PDB record. 

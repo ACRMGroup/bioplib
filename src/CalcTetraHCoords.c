@@ -112,6 +112,7 @@
 -  07.07.14 Use bl prefix for functions By: CTP
 -  26.08.14 Removed unused r21 By: ACRM
 -  05.03.15 Replaced blFindEndPDB() with blFindNextResidue()
+-  20.03.15 No longer prints a message on not finding atoms
 */
 int blCalcTetraHCoords(PDB *nter, COOR *coor)
 {
@@ -152,8 +153,10 @@ int blCalcTetraHCoords(PDB *nter, COOR *coor)
    /* Check all were found                                              */
    if(N==NULL || CA==NULL || C==NULL)
    {
+/*
       fprintf(stderr,"Atom N,CA or C missing from residue: %s %s%d%s\n",
               p->resnam, p->chain, p->resnum, p->insert);
+*/
       return(0);
    }
 

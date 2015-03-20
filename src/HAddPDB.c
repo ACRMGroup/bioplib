@@ -166,7 +166,9 @@
 /************************************************************************/
 /* Defines and macros
 */
-#define MAXTYPE 200        /* Max number of H definitions in PGP file   */
+#define MAXTYPE    300     /* Max number of H definitions in PGP file   */
+#define MAXLABEL     8     /* Max chars in a label                      */
+#define MAXBUFF    160     /* Buffer size                               */
 #define DATAENV "DATADIR"         /* Unix environment variable for data */
 #define DATADIR "AMDATA:"         /* VMS/AMigaDOS assign for data       */
 #define EXPLPGP "Explicit.pgp"    /* The PGP filename                   */
@@ -183,11 +185,11 @@
 /************************************************************************/
 /* Globals local to this file
 */
-static char    sGRes[MAXTYPE][8],
-               sGAtom[MAXTYPE][8][8],
-               sGRName[8],
-               sGHName[8][8],
-               sGNat[16][8],
+static char    sGRes[MAXTYPE][MAXLABEL],
+               sGAtom[MAXTYPE][MAXLABEL][MAXLABEL],
+               sGRName[MAXLABEL],
+               sGHName[MAXLABEL][MAXLABEL],
+               sGNat[MAXATINRES][MAXLABEL],
                sIns;
 static int     sHType[MAXTYPE],
                sNpgp,
@@ -197,7 +199,7 @@ static int     sHType[MAXTYPE],
 static REAL    sGR[MAXTYPE],
                sAlpha[MAXTYPE],
                sBeta[MAXTYPE],
-               sGX[16], sGY[16], sGZ[16],
+               sGX[MAXATINRES], sGY[MAXATINRES], sGZ[MAXATINRES],
                sFac;
 
 /************************************************************************/
@@ -222,7 +224,7 @@ static PDB  *StripDummyH(PDB *pdb, int *nhyd);
 
    \param[in]     *fp       File pointer to PGP file
    \param[in,out] *pdb      PDB Linked list to which Hs are added
-   \return                        Number of Hs added. 0 if error.
+   \return                  Number of Hs added. -1 on error.
 
    Globals: HADDINFO gHaddInfo Information on Hs added
 
@@ -241,6 +243,7 @@ static PDB  *StripDummyH(PDB *pdb, int *nhyd);
             missing atoms
 -  07.07.14 Use bl prefix for functions By: CTP
 -  23.02.15 Uses blRenumAtomsPDB()  By: ACRM
+-  20.03.15 Returns -1 on error since zero hydrogens may be valid
 */
 int blHAddPDB(FILE *fp, PDB  *pdb)
 {
@@ -248,17 +251,17 @@ int blHAddPDB(FILE *fp, PDB  *pdb)
    BOOL           err_flag  = FALSE;
    static BOOL    FirstCall = TRUE;
    
-
    if(FirstCall)
    {
       /* Read the parameter file                                        */
       FirstCall = FALSE;
-      blReadPGP(fp);
+      if(!blReadPGP(fp))
+         return(-1);
    }
 
    /* Generate the hydrogens                                            */
-   if((nhydrogens=GenH(pdb,&err_flag))==0)
-      return(0);
+   if((nhydrogens=GenH(pdb,&err_flag))<=0)
+      return(nhydrogens);
 
 /* ACRM+++ 28.11.05                                                     */
    /* Remove dummy hydrogens (where atoms are missing)                  */
@@ -277,7 +280,7 @@ int blHAddPDB(FILE *fp, PDB  *pdb)
 *//**
 
    \param[in]     *fp  Pointer to PGP file.
-   \return               Number of parameters read.
+   \return             Number of parameters read. (0 on error)
 
    Read a proton generation parameter file. All data are placed in static
    arrays used by the hydrogen adding routines.
@@ -290,15 +293,22 @@ int blHAddPDB(FILE *fp, PDB  *pdb)
 -  01.03.94 Changed static variable names
 -  01.09.94 Moved n++ out of the fsscanf()
 -  07.07.14 Use bl prefix for functions By: CTP
+-  19.03.15 Skips comments
+-  20.03.15 Returns 0 on error (MAXTYPE exceeded)
 */
 int blReadPGP(FILE *fp)
 {
-   char  buffer[160];
+   char  buffer[MAXBUFF];
    int   n=0;
    
    while(fgets(buffer,159,fp))
    {
-      n++;
+      /* Skip comments                                                  */
+      if((buffer[0] == '#')||(buffer[0] == '!'))
+         continue;
+      
+      if(++n >= MAXTYPE)
+         return(0);
       
       fsscanf(buffer,
               "%4s%4s%1x%4s%1x%4s%1x%4s%1x%4s%1x%4s%1x%1d%10lf%10lf%10lf",
@@ -339,7 +349,7 @@ int blReadPGP(FILE *fp)
 
    \param[in,out] *pdb      PDB Linked to which Hs are added
    \param[in,out] *err_flag Error flag
-   \return                    Number of hydrogens added (0 if error)
+   \return                  Number of hydrogens added (-1 on error)
 
    Does the actual work of generating a set of hydrogens
 
@@ -352,6 +362,9 @@ int blReadPGP(FILE *fp)
 -  24.01.06 Fixed error message which could try to print from NULL 
             pointer
 -  20.03.14 Updated error message. By: CTP
+-  18.03.15 Changed to use MAXATINRES and MAXBUFF  By: ACRM
+-  20.03.15 Now returns -1 on error since zero added hydrogens might
+            not be an error.
 */
 static int GenH(PDB *pdb, BOOL *err_flag)
 {
@@ -361,12 +374,12 @@ static int GenH(PDB *pdb, BOOL *err_flag)
          *c        = "C   ";
    int   k, n, m, j, ittot;
    PDB   *p,*q;
-   PDB   *position[16],*hlist;
+   PDB   *position[MAXATINRES],*hlist;
 #ifdef SCREEN_INFO
-   char  buffer[160];
+   char  buffer[MAXBUFF];
 #endif
     
-   for(j=0;j<16;position[j++]=NULL);
+   for(j=0;j<MAXATINRES;position[j++]=NULL);
 
    sFac     = 0.5 * (REAL)sqrt((double)3.0);
     
@@ -459,9 +472,9 @@ static int GenH(PDB *pdb, BOOL *err_flag)
             /* And add it into the list, updating p to point to the new
                end of this residue
             */
-            if(!AddH(hlist,position,sHType[n])) return(0);
+            if(!AddH(hlist,position,sHType[n])) return(-1);
          }
-         if(*err_flag) return(0);
+         if(*err_flag) return(-1);
       }
       
       /* If this is the first residue then handle it as NTER            */
@@ -492,9 +505,9 @@ static int GenH(PDB *pdb, BOOL *err_flag)
                /* And add it into the list, updating p to point to the new
                   end of this residue 
                */
-               if(!AddH(hlist,position,sHType[n])) return(0);
+               if(!AddH(hlist,position,sHType[n])) return(-1);
             }
-            if(*err_flag) return(0);
+            if(*err_flag) return(-1);
          }
       }
 
@@ -509,6 +522,7 @@ static int GenH(PDB *pdb, BOOL *err_flag)
          for(j=sKMax-1;j>0;j--) if(!strncmp(sGNat[j],c,4))break;
          if(j==0)
          {
+#ifdef WARNINGS
 #ifdef SCREEN_INFO
             sprintf(buffer,"\nError==> genh() found no carbonyl carbon \
 in residue %d\n\n",p->resnum);
@@ -516,7 +530,7 @@ in residue %d\n\n",p->resnum);
 #endif
 /* ACRM--- 25.11.05
             *err_flag=TRUE;
-            return(0);
+            return(-1);
 */
 /* ACRM+++ 28.11.05                                                     */
 /* ACRM 24.01.06                                                        */
@@ -530,6 +544,7 @@ preceeding residue %s%d%s\n", p->chain, p->resnum, p->insert);
                fprintf(stderr,"Warning=> genh() found no carbonyl carbon \
 preceeding the last residue\n");
             }
+#endif
             sGX[1]=9999.0;
             sGY[1]=9999.0;
             sGZ[1]=9999.0;
@@ -545,7 +560,7 @@ preceeding the last residue\n");
          strcpy(sGNat[1],co);
          q=position[j];
             
-         for(k=0;k<16;position[k++]=NULL);
+         for(k=0;k<MAXATINRES;position[k++]=NULL);
          position[1]=q;
       }
       else
@@ -742,7 +757,7 @@ static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta,
       }
       if(!ok)
       {
-         char buffer[160];
+         char buffer[MAXBUFF];
          
          sprintf(buffer,"Error==> makeh() unable to find all atoms \
 required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
@@ -1161,9 +1176,9 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 
    \param[in]     *hlist       Linked list of hydrogens to be merged
    \param[in]     **position   Array of PDB pointers for atoms in this
-                              residue
+                               residue
    \param[in]     HType        Hydrogen type
-   \return                      Success?
+   \return                     Success?
 
    AddH() merges a list of hydrogens for this atom into the main pdb 
    structure list. Returns FALSE if the procedure failed.
@@ -1174,6 +1189,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 -  03.06.05 Added setting of altpos
 -  13.02.15 Added copying of element type
 -  17.02.15 Added copying of segid and setting of formal_charge
+-  18.03.15 Changed to use MAXATINRES  By: ACRM
 */
 static BOOL AddH(PDB *hlist, PDB **position, int HType)
 {
@@ -1184,7 +1200,7 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
    /* Step through each atom in position list until we find the
       one corresponding to this PGP
    */
-   for(k=1;k<16;k++)
+   for(k=1;k<MAXATINRES;k++)
    {
       q=hlist;
 
@@ -1320,12 +1336,13 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
 -  23.08.94 Original    By: ACRM
 -  28.07.05 Added conditionals for msdos and Mac OS/X
 -  07.07.14 Use bl prefix for functions By: CTP
+-  18.03.15 Changed to use MAXBUFF  By: ACRM
 */
 FILE *blOpenPGPFile(char *pgpfile, BOOL AllHyd)
 {
    char *datadir,
-        buffer[160],
-        basename[160];
+        buffer[MAXBUFF],
+        basename[MAXBUFF];
    FILE *fp;
    
    /* If a filename has been specified, just open it and return         */
@@ -1393,12 +1410,13 @@ been set.\n",DATAENV);
 
 -  05.12.02 Original   By: ACRM
 -  17.02.15 Terminates the out string when it is 4 or more characters
+-  18.03.15 Changed to use MAXLABEL
 */
 static void SetRawAtnam(char *out, char *in)
 {
-   char instr[16];
+   char instr[MAXLABEL];
    
-   strncpy(instr, in, 15);
+   strncpy(instr, in, MAXLABEL-1);
    TERMAT(instr, ' ');
    
    if(strlen(instr) > 3)
@@ -1417,6 +1435,7 @@ static void SetRawAtnam(char *out, char *in)
    }
    out[4] = '\0';
 }
+
 
 /************************************************************************/
 /*>static PDB *StripDummyH(PDB *pdb, int *nhyd)
