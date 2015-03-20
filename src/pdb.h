@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.77
-   \date       16.03.15
+   \version    V1.78
+   \date       20.03.15
    \brief      Include file for PDB routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2015
@@ -182,6 +182,10 @@
                   blAddOneDirectionConect() now does what blAddConect()
                   used to do. blAddConect() adds CONECT in both
                   directions
+-  V1.78 20.03.15 Added global variable gPDBModelNotFound for PDB reading
+                  gPDBMultiNMR is now an int containing the number of
+                  MODELs
+
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -446,13 +450,15 @@ typedef struct
 #endif
 
 #ifdef READPDB_MAIN
-   BOOL gPDBPartialOcc;
-   BOOL gPDBMultiNMR;
-   BOOL gPDBXML = FALSE;
+   BOOL gPDBPartialOcc    = FALSE;
+   int  gPDBMultiNMR      = 0;
+   BOOL gPDBXML           = FALSE;
+   BOOL gPDBModelNotFound = TRUE;
 #else
    extern BOOL gPDBPartialOcc;
-   extern BOOL gPDBMultiNMR;
+   extern int  gPDBMultiNMR;
    extern BOOL gPDBXML;
+   extern BOOL gPDBModelNotFound;
 #endif
 
 #ifdef WRITEPDB_MAIN

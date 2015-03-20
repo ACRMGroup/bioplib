@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V3.2
-   \date       05.03.15
+   \version    V3.3
+   \date       20.03.15
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2015
@@ -62,6 +62,13 @@
    overridden by calling one of the ...OccRank() routines to read lower 
    occupancy atoms. If any partial occupancy atoms are read the global
    flag gPDBPartialOcc is set to TRUE.
+
+   The various PDB reading routines set the following global flags:
+   gPDBPartialOcc    - the PDB file contained multiple occupancies
+   gPDBMultiNMR      - the PDB file contained multiple models
+   gPDBXML           - the file was in PDBML (XML) format
+   gPDBModelNotFound - the requested model was not found
+   
 
 NOTE:  Although some of the fields are represented by a single character,
        they are still stored in character arrays.
@@ -207,6 +214,9 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 -  V3.2  05.03.15 Fixed core dump in StoreConectRecords() when alternates
                   have been deleted so CONECT specifies an atom that
                   doesn't exist any more
+-  V3.3  20.03.15 Fixed reading of whole PDB when not the first model
+                  Now sets gPDBModelNotFound flag if the requested model
+                  isn't found
 
 *************************************************************************/
 /* Doxygen
@@ -628,6 +638,10 @@ PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
 -  20.02.15 V3.0  NOT COMPATIBLE WITH PREVIOUS VERSIONS. The functionality
                   of the old ReadWholePDB() is now integrated into this
                   function.
+-  20.03.15 V3.3  Fixed behaviour with reading other than the first model
+                  and now sets a global error flag if the requested model
+                  was not found. Uses MODEL records rather than ENDMDL
+                  records in counting models
 
 We need to deal with freeing wpdb if we are returning null.
 Also need to deal with some sort of error code
@@ -658,7 +672,7 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
             resnum,
             CurRes = 0,
             NPartial,
-            ModelCount = 1,
+            ModelCount = 0,
             charge = 0,
             inLocation = LOCATION_HEADER;
    FILE     *fp = fpin;
@@ -683,17 +697,18 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
    if((wpdb=(WHOLEPDB *)malloc(sizeof(WHOLEPDB)))==NULL)
       return(NULL);
 
-   wpdb->pdb     = NULL;
-   wpdb->header  = NULL;
-   wpdb->trailer = NULL;
+   wpdb->pdb         = NULL;
+   wpdb->header      = NULL;
+   wpdb->trailer     = NULL;
    
-   wpdb->natoms   = 0;
-   CurAtom[0]     = '\0';
-   NPartial       = 0;
-   gPDBPartialOcc = FALSE;
-   gPDBMultiNMR   = FALSE;
-   cmd[0]         = '\0';
-   gPDBXML        = FALSE;
+   wpdb->natoms      = 0;
+   CurAtom[0]        = '\0';
+   NPartial          = 0;
+   gPDBPartialOcc    = FALSE;
+   gPDBMultiNMR      = 0;
+   cmd[0]            = '\0';
+   gPDBXML           = FALSE;
+   gPDBModelNotFound = TRUE;  /* Assume we haven't found the model      */
 
 #if defined(GUNZIP_SUPPORT) && !defined(MS_WINDOWS)
    /* See whether this is a gzipped file                                */
@@ -778,20 +793,26 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
       /*** Deal with counting model numbers                           ***/
       if(ModelNum != 0)          /* We are interested in model numbers  */
       {
-         if(!strncmp(buffer,"ENDMDL",6))
+         if(!strncmp(buffer,"MODEL ",6))
          {
             ModelCount++;
+            gPDBMultiNMR++;
          }
 
-         if(ModelCount < ModelNum)   /* Haven't reached the right model */
-            continue;
-         else if(ModelCount > ModelNum)    /* Gone past the right model */
-            break;
+         /* See if we are in the right model                            */
+         if(inLocation == LOCATION_COORDINATES)
+         {
+            if((ModelCount != ModelNum) && (ModelCount != 0))
+               continue;
+            else
+               gPDBModelNotFound = FALSE;
+         }
       }
-
-      if(!strncmp(buffer,"ENDMDL",6))
-         gPDBMultiNMR   = TRUE;
-
+      else
+      {
+         gPDBModelNotFound = FALSE;
+      }
+      
 
       if(!strncmp(buffer, "ATOM  ", 6) ||
          !strncmp(buffer, "HETATM", 6) ||
@@ -799,9 +820,9 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
       {
          inLocation = LOCATION_COORDINATES;
       }
-      if(!strncmp(buffer, "CONECT", 6) ||
-         !strncmp(buffer, "MASTER", 6) ||
-         !strncmp(buffer, "END   ", 6))
+      else if(!strncmp(buffer, "CONECT", 6) ||
+              !strncmp(buffer, "MASTER", 6) ||
+              !strncmp(buffer, "END   ", 6))
       {
          inLocation = LOCATION_TRAILER;
       }
