@@ -3,8 +3,8 @@
 
    \file       general.h
    
-   \version    V1.17
-   \date       12.03.15
+   \version    V1.18
+   \date       26.03.15
    \brief      Header file for general purpose routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2015
@@ -66,6 +66,7 @@
                   By: CTP
 -  V1.16 10.03.15 Added blSplitStringOnCommas()  By: ACRM
 -  V1.17 12.03.15 Added blSplitStringOnChars(), blCheckProgName()
+-  V1.18 26.03.15 Added blStrncat()
 
 *************************************************************************/
 #ifndef _GENERAL_H
@@ -105,6 +106,7 @@ FILE *blOpenFile(char *filename, char *envvar, char *mode, BOOL *noenv);
 int blCountchar(char *string, char ch);
 char *blFgetsany(FILE *fp);
 char *blStrcatalloc(char *instr, char *catstr);
+char *blStrncat(char *out, const char *in, size_t len);
 
 STRINGLIST *blStoreString(STRINGLIST *StringList, char *string);
 BOOL blInStringList(STRINGLIST *StringList, char *string);

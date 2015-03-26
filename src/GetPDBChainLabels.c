@@ -3,11 +3,11 @@
 
    \file       GetPDBChainLabels.c
    
-   \version    V1.12
-   \date       31.07.14
+   \version    V1.13
+   \date       26.03.15
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -60,6 +60,8 @@
 -  V1.11 25.03.14 Deprecated GetPDBChainLabels() and added replacement 
                   function blGetPDBChainLabels() By: CTP
 -  V1.12 31.07.14 Moved GetPDBChainLabels() to dperecated.c By: CTP
+-  V1.13 26.03.15 blGetPDBChainLabels() no longer assumes all instances
+                  of one label occur together  By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -93,12 +95,12 @@
 
 
 /************************************************************************/
-/*>char **blGetPDBChainLabels(PDB *pdb, int *nchains)
+/*>char **blGetPDBChainLabels(PDB *pdb, int *nChains)
    --------------------------------------------------
 *//**
 
    \param[in]     *pdb        PDB linked list
-   \param[out]    nchains     Number of chains found.
+   \param[out]    nChains     Number of chains found.
    \return                    Allocated array of strings containing chain
                               labels. NULL if unable to allocate memory.
 
@@ -110,58 +112,71 @@
         and for each individual chain label when you've finished with it!
 
 -  25.03.14 Original based on GetPDBChainLabels(). By: CTP
-   
+-  26.03.15 No longer assumes chain labels do not appear again later
+            (i.e. chains L,H,Y,L only returns L,H,Y)  By: ACRM
 */
-char **blGetPDBChainLabels(PDB *pdb, int *nchains)
+char **blGetPDBChainLabels(PDB *pdb, int *nChains)
 {
-   char **chains;
+   char **chains = NULL,
+        prevChain[8];
    PDB  *p;
-   
-   /* Zero Chain Count                                                  */
-   *nchains = 0;
+
+   /* Initialize previous chain and zero chain count                    */
+   prevChain[0] = '\0';
+   *nChains = 0;
    
    /* Just return if linked list is NULL                                */
    if(pdb == NULL)
-   {
       return(NULL);
-   }
    
-   /* Get First Chain                                                   */
-   /* allocate memory */
+   /* Allocate memory for first chain                                   */
    if((chains = (char **)malloc(sizeof(char *)))==NULL)
-   {
       return(NULL);
-   }
    if((chains[0] = (char *)malloc(8 * sizeof(char)))==NULL)
-   {
       return(NULL);
-   }
+   *nChains = 1;      
    
-   /* get first chain and set count */
-   strcpy(chains[0],pdb->chain);  
-   *nchains = 1;      
+   /* Copy in the first chain                                           */
+   strncpy(chains[0], pdb->chain, 8);  
+   strncpy(prevChain, pdb->chain, 8);
 
    /* Run through the pdb linked list                                   */
    for(p=pdb; p!=NULL; NEXT(p))
    {
       /* If chain label has changed                                     */
-      if(!CHAINMATCH(chains[*nchains - 1],p->chain))
+      if(!CHAINMATCH(p->chain, prevChain))
       {
-         /* allocate/reallocate memory */
-         if( (chains = (char **)realloc( chains, 
-                                         (*nchains + 1) * sizeof(char *) )
-             ) == NULL )
-         {
-            return(NULL);
-         }
-         if((chains[*nchains] = (char *)malloc(8 * sizeof(char))) == NULL)
-         {
-            return(NULL);
-         }
+         BOOL found = FALSE;
+         int  chainNum;
+         
+         strncpy(prevChain, p->chain, 8);
 
-         /* get chain and increment count */
-         strcpy(chains[*nchains],p->chain);  
-         *nchains += 1;
+         /* See if this chain has appeared before                       */
+         for(chainNum=0; chainNum<(*nChains); chainNum++)
+         {
+            if(CHAINMATCH(p->chain, chains[chainNum]))
+            {
+               found = TRUE;
+               break;
+            }
+         }
+         /* If it hasn't appeared before, allocate memory to store it
+            and copy in the new label
+         */
+         if(!found)
+         {
+            if((chains = 
+                (char **)realloc(chains, (*nChains + 1)*sizeof(char *)))
+               == NULL)
+               return(NULL);
+
+            if((chains[*nChains] = 
+                (char *)malloc(8 * sizeof(char))) == NULL)
+               return(NULL);
+
+            strncpy(chains[*nChains],p->chain, 8);  
+            (*nChains)++;
+         }
       }
    }
 

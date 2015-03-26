@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.78
-   \date       20.03.15
+   \version    V1.79
+   \date       26.03.15
    \brief      Include file for PDB routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2015
@@ -185,7 +185,7 @@
 -  V1.78 20.03.15 Added global variable gPDBModelNotFound for PDB reading
                   gPDBMultiNMR is now an int containing the number of
                   MODELs
-
+-  V1.79 26.03.15 Added blGetPDBCHainAsCopy()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -574,6 +574,7 @@ int blAddNTerHs(PDB **ppdb, BOOL Charmm);
 char *blFNam2PDB(char *filename);
 PDB *blTermPDB(PDB *pdb, int length);
 char **blGetPDBChainLabels(PDB *pdb, int *nchains);
+PDB *blGetPDBChainAsCopy(PDB *pdbin, char *chain);
 PDB *blFindHetatmResidueSpec(PDB *pdb, char *resspec);
 PDB *blFindResidueSpec(PDB *pdb, char *resspec);
 PDB *blFindNextResidue(PDB *pdb);

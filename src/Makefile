@@ -1,10 +1,11 @@
 # makefile for building support libraries under UNIX:
+DEST=${HOME}
 
 # Destination in which to place the library and the include files
-LIBDEST       = ${HOME}/lib
-INCDEST       = ${HOME}/include
-DATADEST      = ${HOME}/data
-SHAREDLIBDEST = ${HOME}/lib
+LIBDEST       = $(DEST)/lib
+INCDEST       = $(DEST)/include
+DATADEST      = $(DEST)/data
+SHAREDLIBDEST = $(DEST)/lib
 
 # Doxygen and adddoxy directories
 DOCDIR      = ../doc
@@ -73,7 +74,7 @@ fsscanf.o ftostr.o help.o hpgl.o invert33.o openorpipe.o padchar.o \
 padterm.o parse.o pearson.o pearson1.o phi.o pldist.o plotting.o \
 ps.o safemem.o simpleangle.o strcatalloc.o upstrcmp.o upstrncmp.o \
 WindIO.o getfield.o array3.o justify.o wrapprint.o deprecatedGen.o \
-eigen.o regression.o filename.o
+eigen.o regression.o filename.o StringCat.o
 
 
 # Files for libbiop.a
@@ -96,7 +97,7 @@ align.o fit.o hbond.o rsc.o throne.o FitNCaCPDB.o FindRawAtomInRes.o \
 GlyCB.o BuildAtomNeighbourPDBList.o \
 FindAtomWildcardInRes.o DupeResiduePDB.o StripWatersPDB.o aalist.o \
 StructurePDB.o FindHetatmResidue.o FindHetatmResidueSpec.o access.o \
-deprecatedBiop.o BuildConect.o
+deprecatedBiop.o BuildConect.o GetPDBChainAsCopy.o
 
 
 # Static libraries - the default
