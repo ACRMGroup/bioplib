@@ -1,9 +1,6 @@
-HEADER    TEST FILE                               10-SEP-14   TEST              
-TITLE     ALANINE - TEST FILE FOR WHOLE PDB (PDBML INPUT)                       
 ATOM      1  N   ALA A   1       1.201   0.847   0.000  0.75 20.00           N  
 ATOM      2  CA  ALA A   1       0.000   0.000   0.000  0.75 20.00           C  
 ATOM      3  C   ALA A   1      -1.250   0.881   0.000  0.75 20.00           C  
 ATOM      4  O   ALA A   1      -2.185   0.660  -0.784  0.75 20.00           O  
 ATOM      5  CB  ALA A   1       0.020  -0.927   1.209  0.75 20.00           C  
-TER   
-END   
+TER       6      ALA A   1                                                      

@@ -3,8 +3,8 @@
 
    \file       WritePDB.c
    
-   \version    V1.23
-   \date       10.03.15
+   \version    V1.24
+   \date       02.04.15
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
@@ -99,6 +99,7 @@
                   blWriteWholePDBTrailer()
 -  V1.22 09.03.15 blWriteWholePDBHeaderNoRes() now skips more header lines
 -  V1.23 10.03.15 blWriteWholePDBHeaderNoRes() now skips more header lines
+-  V1.24 02.04.15 WriteMaster() Padded MASTER record to 80 cols.  By: CTP
 
 *************************************************************************/
 /* Doxygen
@@ -1023,6 +1024,7 @@ void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb, int numTer)
 
 -  22.02.15 Original   By: ACRM
 -  02.03.15 Corrected counting of ORIGX, SCALE and MTRIX
+-  02.04.15 Padded MASTER record to 80 columns.  By: CTP
 */
 static void WriteMaster(FILE *fp, WHOLEPDB *wpdb, int numConect,
                         int numTer)
@@ -1069,7 +1071,7 @@ static void WriteMaster(FILE *fp, WHOLEPDB *wpdb, int numConect,
    for(p=wpdb->pdb; p!=NULL; NEXT(p))
       numCoord++;
    
-   fprintf(fp,"MASTER    %5d    0%5d%5d%5d%5d%5d%5d%5d%5d%5d%5d\n",
+   fprintf(fp,"MASTER    %5d    0%5d%5d%5d%5d%5d%5d%5d%5d%5d%5d          \n",
            numRemark,
            numHet,
            numHelix,

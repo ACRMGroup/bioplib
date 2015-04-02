@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V3.3
-   \date       20.03.15
+   \version    V3.4
+   \date       02.04.15
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2015
@@ -217,6 +217,7 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 -  V3.3  20.03.15 Fixed reading of whole PDB when not the first model
                   Now sets gPDBModelNotFound flag if the requested model
                   isn't found
+-  V3.4  02.04.15 Rewind file after reading pdbxml header data.  By: CTP
 
 *************************************************************************/
 /* Doxygen
@@ -642,6 +643,8 @@ PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
                   and now sets a global error flag if the requested model
                   was not found. Uses MODEL records rather than ENDMDL
                   records in counting models
+-  02.04.15 V3.4  Rewind file after reading pdbxml header data.  By: CTP
+
 
 We need to deal with freeing wpdb if we are returning null.
 Also need to deal with some sort of error code
@@ -769,8 +772,10 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
 #ifdef XML_SUPPORT
       /* Parse PDBML-formatted PDB file                                 */
       if(DoWhole)
+      {
          wpdb->header = blParseHeaderPDBML(fp);
-      
+         rewind(fp);
+      }
       wpdb->pdb = blDoReadPDBML(fp,&wpdb->natoms,AllAtoms,
                                 OccRank,ModelNum);
       if(DoWhole)
