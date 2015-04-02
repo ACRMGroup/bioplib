@@ -3,8 +3,8 @@
 
    \file       writepdbml_suite.c
    
-   \version    V1.4
-   \date       12.09.14
+   \version    V1.5
+   \date       02.04.15
    \brief      Test suite for writing pdb and pdbml data to file.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
@@ -53,6 +53,7 @@
 -  V1.3  29.08.14 Check file format before reading as format check no 
                   longer rewinds. By: CTP
 -  V1.4  12.09.14 Update tests for MS Windows. By: CTP
+-  V1.5  02.04.15 Update tests for segment ID. By: CTP
 
 *************************************************************************/
 
@@ -116,6 +117,7 @@ static void writepdbml_set_test_data(void)
    pdb_out->occ =                   1.00 ;
    pdb_out->altpos =                 ' ' ;
    pdb_out->bval =                 20.00 ;
+   strcpy(pdb_out->segid,         "    ");
    strcpy(pdb_out->element,          "C");
    pdb_out->formal_charge =            0 ;
    pdb_out->partial_charge =         0.0 ;
