@@ -4,7 +4,7 @@
    \file       ReadPDB.c
    
    \version    V3.4
-   \date       02.04.15
+   \date       03.04.15
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2015
@@ -217,8 +217,8 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 -  V3.3  20.03.15 Fixed reading of whole PDB when not the first model
                   Now sets gPDBModelNotFound flag if the requested model
                   isn't found
--  V3.4  02.04.15 Rewind file after reading pdbxml header data.  By: CTP
-
+-  V3.4  03.04.15 Rewind file after reading pdbxml header data. 
+                  Initialize pdb to NULL for ReadPDB functions.  By: CTP
 *************************************************************************/
 /* Doxygen
    -------
@@ -370,11 +370,13 @@ int  pclose(FILE *);
             of multiple occupancies like 3pga and the instance where
             the alternates are all grouped at the end of the file.
 -  07.07.14 Renamed to blReadPDB() By: CTP
+-  03.04.15 Initialize pdb to NULL avoiding returning uninitialized value
+            if blDoReadPDB() fails.  By: CTP
 */
 PDB *blReadPDB(FILE *fp,
                int  *natom)
 {
-   PDB *pdb;
+   PDB *pdb = NULL;
    WHOLEPDB *wpdb;
    *natom=(-1);
 
@@ -409,11 +411,13 @@ PDB *blReadPDB(FILE *fp,
 -  04.10.94 Original    By: ACRM
 -  06.03.95 Added value for NMR model to read (0 = all)   
 -  07.07.14 Renamed to blReadPDBAll() By: CTP
+-  03.04.15 Initialize pdb to NULL avoiding returning uninitialized value
+            if blDoReadPDB() fails.  By: CTP
 */
 PDB *blReadPDBAll(FILE *fp,
              int  *natom)
 {
-   PDB *pdb;
+   PDB *pdb = NULL;
    WHOLEPDB *wpdb;
    *natom=(-1);
 
@@ -450,11 +454,13 @@ PDB *blReadPDBAll(FILE *fp,
             of multiple occupancies like 3pga and the instance where
             the alternates are all grouped at the end of the file.
 -  07.07.14 Renamed to blReadPDBAtoms() By: CTP
+-  03.04.15 Initialize pdb to NULL avoiding returning uninitialized value
+            if blDoReadPDB() fails.  By: CTP
 */
 PDB *blReadPDBAtoms(FILE *fp,
                     int  *natom)
 {
-   PDB *pdb;
+   PDB *pdb = NULL;
    WHOLEPDB *wpdb;
    *natom=(-1);
 
@@ -490,10 +496,12 @@ PDB *blReadPDBAtoms(FILE *fp,
 -  17.03.94 Original    By: ACRM
 -  06.03.95 Added value for NMR model to read (1 = first)
 -  07.07.14 Renamed to blDoReadPDB() By: CTP
+-  03.04.15 Initialize pdb to NULL avoiding returning uninitialized value
+            if blDoReadPDB() fails.  By: CTP
 */
 PDB *blReadPDBOccRank(FILE *fp, int *natom, int OccRank)
 {
-   PDB *pdb;
+   PDB *pdb = NULL;
    WHOLEPDB *wpdb;
    *natom=(-1);
 
@@ -529,10 +537,12 @@ PDB *blReadPDBOccRank(FILE *fp, int *natom, int OccRank)
 -  17.03.94 Original    By: ACRM
 -  06.03.95 Added value for NMR model to read (1 = first)
 -  07.07.14 Renamed to blReadPDBAtomsOccRank() By: CTP
+-  03.04.15 Initialize pdb to NULL avoiding returning uninitialized value
+            if blDoReadPDB() fails.  By: CTP
 */
 PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
 {
-   PDB *pdb;
+   PDB *pdb = NULL;
    WHOLEPDB *wpdb;
    *natom=(-1);
 
