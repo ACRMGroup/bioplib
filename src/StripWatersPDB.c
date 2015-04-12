@@ -91,11 +91,9 @@
 
    Take a PDB linked list and returns the PDB list minus waters
 
-   N.B. The routine is non-destructive; i.e. the original PDB linked 
-        list is intact after the selection process
-
 -  30.04.08 Original based on StripHPDB()   By: ACRM
 -  19.08.14 Renamed function to blStripWatersPDBAsCopy() By: CTP
+-  12.04.15 Added rebuild of CONECT data
 */
 PDB *blStripWatersPDBAsCopy(PDB *pdbin, int *natom)
 {
@@ -106,7 +104,7 @@ PDB *blStripWatersPDBAsCopy(PDB *pdbin, int *natom)
    *natom = 0;
    
    /* Step through the input PDB linked list                            */
-   for(p=pdbin; p!= NULL; NEXT(p))
+   for(p=pdbin; p!=NULL; NEXT(p))
    {
       if(!ISWATER(p))
       {
@@ -136,6 +134,9 @@ PDB *blStripWatersPDBAsCopy(PDB *pdbin, int *natom)
          blCopyPDB(q, p);
       }
    }
+
+   /* Rebuild CONECT data in new linked list                            */
+   blBuildConectData(pdbout, DEFCONECTTOL);
 
    /* Return pointer to start of output list                            */
    return(pdbout);

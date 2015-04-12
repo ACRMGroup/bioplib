@@ -204,6 +204,7 @@
                            or nucleotide
                         */
 #define MAXCONECT    8  /* Max number of CONECT connections             */
+#define DEFCONECTTOL 0.1   /* Default CONECT tolerence                  */
 
 /* blATOMTYPE is unused at present, but gives the flexibility of
    associating type information with each PDB record. 
