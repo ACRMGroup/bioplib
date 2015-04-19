@@ -3,11 +3,11 @@
 
    \file       SelAtPDB.c
    
-   \version    V1.10
-   \date       19.08.14
+   \version    V1.11
+   \date       19.04.15
    \brief      Select a subset of atom types from a PDB linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -90,6 +90,7 @@
 -  V1.8  04.02.09 SelectAtomsPDB(): Initialize q for fussy compliers
 -  V1.9  07.07.14 Use bl prefix for functions By: CTP
 -  V1.10 19.08.14 Renamed function to blSelectAtomsPDBAsCopy(). By: CTP
+-  V1.11 19.04.15 Added call to blCopyConect()   By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -215,6 +216,14 @@ PDB *blSelectAtomsPDBAsCopy(PDB *pdbin, int nsel, char **sel, int *natom)
             break;
          }
       }
+   }
+
+   /* Copy CONECT data                                                  */
+   if(!blCopyConects(pdbout, pdbin))
+   {
+      FREELIST(pdbout, PDB);
+      *natom = 0;
+      return(NULL);
    }
 
    /* Return pointer to start of output list                            */

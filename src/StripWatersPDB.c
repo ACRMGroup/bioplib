@@ -3,8 +3,8 @@
 
    \file       StripWatersPDB.c
    
-   \version    V1.2
-   \date       19.08.14
+   \version    V1.3
+   \date       19.04.15
    \brief      
    
    \copyright  (c) Dr. Andrew C. R. Martin, UCL, 2008-2014
@@ -50,6 +50,7 @@
 -  V1.1  07.07.14 Use bl prefix for functions By: CTP
 -  V1.2  19.08.14 Renamed function blStripWatersPDB() to 
                   blStripWatersPDBAsCopy() By: CTP
+-  V1.3  19.04.15 Added call to blCopyConect()   By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -135,8 +136,13 @@ PDB *blStripWatersPDBAsCopy(PDB *pdbin, int *natom)
       }
    }
 
-   /* Rebuild CONECT data in new linked list                            */
-   blBuildConectData(pdbout, DEFCONECTTOL);
+   /* Copy CONECT data to new linked list                               */
+   if(!blCopyConects(pdbout, pdbin))
+   {
+      FREELIST(pdbout, PDB);
+      *natom = 0;
+      return(NULL);
+   }
 
    /* Return pointer to start of output list                            */
    return(pdbout);

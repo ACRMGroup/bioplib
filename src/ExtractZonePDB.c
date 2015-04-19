@@ -73,6 +73,7 @@
    Reduces a PDB linked list to those residues within a specified zone
    forming a new linked list. Uses separate chain, residue number and 
    insert rather than residue specifications.
+
    #FUNCTION  blExtractZoneSpecPDBAsCopy()
    Reduces a PDB linked list to those residues within a specified zone
    forming a new linked list. Uses residue specifications ([c]nnn[i])

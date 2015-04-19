@@ -57,6 +57,8 @@
    #SUBGROUP Manipulating the PDB linked list
    #FUNCTION  blDupeResiduePDB()
    Makes a duplicate PDB linked list of just one residue
+   Note that CONECT data will not be preserved since it would not
+   be valid.
 */
 /************************************************************************/
 /* Includes
@@ -87,7 +89,8 @@
                           (NULL if allocation fails)
 
    Makes a duplicate PDB linked list of just the residue pointed to by
-   `in'
+   `in'. Note that CONECT data will not be preserved since it would not
+   be valid.
 
 -  27.08.96 Original   By: ACRM
 -  08.11.07 Initialize p and q
@@ -122,6 +125,7 @@ PDB *blDupeResiduePDB(PDB *in)
       }
       
       blCopyPDB(q, p);
+      q->nConect=0;
    }
    
    return(out);

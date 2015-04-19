@@ -3,8 +3,8 @@
 
    \file       GetPDBChainAsCopy.c
    
-   \version    V1.0
-   \date       26.03.15
+   \version    V1.1
+   \date       19.04.15
    \brief      
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2015
@@ -47,6 +47,7 @@
    Revision History:
    =================
 -  V1.0  26.03.16 Original By: ACRM
+-  V1.1  19.04.15 Added call to blCopyConect()
 
 *************************************************************************/
 /* Doxygen
@@ -88,7 +89,8 @@
    Extracts a specified chain from a PDB linked list allocating a new
    list containing only that chain. The original list is unchanged.
 
--  26.03.15  Original   By: ACRM
+-  26.03.15 Original   By: ACRM
+-  19.04.15 Added call to blCopyConect()
 */
 PDB *blGetPDBChainAsCopy(PDB *pdbin, char *chain)
 {
@@ -122,6 +124,13 @@ PDB *blGetPDBChainAsCopy(PDB *pdbin, char *chain)
          /* Copy the record to the output list (sets ->next to NULL)    */
          blCopyPDB(q, p);
       }
+   }
+
+   /* Copy CONECT data                                                  */
+   if(!blCopyConects(pdbout, pdbin))
+   {
+      FREELIST(pdbout, PDB);
+      return(NULL);
    }
 
    /* Return pointer to start of output list                            */

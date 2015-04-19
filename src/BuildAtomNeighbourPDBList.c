@@ -8,7 +8,7 @@
    \brief      Build a new PDB linked list containing atos within a given
                distance of a specified residue
    
-   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 1996-2007
+   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 1996-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,

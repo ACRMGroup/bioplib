@@ -3,12 +3,12 @@
 
    \file       StripHPDB.c
    
-   \version    V1.9
-   \date       19.08.14
+   \version    V1.10
+   \date       19.04.15
    \brief      
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, University of Reading, 
-               2002-2014
+               2002-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -61,6 +61,7 @@
 -  V1.8  07.07.14 Use bl prefix for functions By: CTP
 -  V1.9  19.08.14 Renamed blStripHPDBAsCopy() to blStripHPDBAsCopy() 
                   By: CTP
+-  V1.10 19.04.15 Added call to blCopyConect()   By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -109,6 +110,7 @@
 -  26.07.95 Removed unused variables
 -  07.07.14 Use bl prefix for functions By: CTP
 -  19.08.14 Renamed function to blStripHPDBAsCopy() By: CTP
+-  19.04.15 Added call to blCopyConect()   By: ACRM
 */
 PDB *blStripHPDBAsCopy(PDB *pdbin, int *natom)
 {
@@ -148,6 +150,14 @@ PDB *blStripHPDBAsCopy(PDB *pdbin, int *natom)
          /* Copy the record to the output list (sets ->next to NULL)    */
          blCopyPDB(q, p);
       }
+   }
+
+   /* Copy CONECT data                                                  */
+   if(!blCopyConects(pdbout, pdbin))
+   {
+      FREELIST(pdbout, PDB);
+      *natom = 0;
+      return(NULL);
    }
 
    /* Return pointer to start of output list                            */

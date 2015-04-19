@@ -3,11 +3,11 @@
 
    \file       DupePDB.c
    
-   \version    V1.11
-   \date       07.07.14
+   \version    V1.12
+   \date       19.04.15
    \brief      PDB linked list manipulation
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-6
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -58,6 +58,7 @@
 -  V1.9  14.03.96 Added FindAtomInRes()
 -  V1.10 08.10.99 Initialised some variables
 -  V1.11 07.07.14 Use bl prefix for functions By: CTP
+-  V1.12 19.04.15 Added call to blCopyConect()   By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -65,7 +66,8 @@
    #GROUP    Handling PDB Data
    #SUBGROUP Manipulating the PDB linked list
    #FUNCTION  blDupePDB()
-   Duplicates a PDB linked list.
+   Duplicates a PDB linked list. CONECT data are updated to point within
+   the new list.
 */
 /************************************************************************/
 /* Includes
@@ -101,11 +103,12 @@
                           (NULL on allocation failure)
 
    Duplicates a PDB linked list. Allocates new linked list with identical
-   data.
+   data. CONECT data are updated to point within the new list.
 
 -  11.10.95 Original   By: ACRM
 -  08.10.99 Initialise q to NULL
 -  07.07.14 Use bl prefix for functions By: CTP
+-  19.04.15 Added call to blCopyConect()   By: ACRM
 */
 PDB *blDupePDB(PDB *in)
 {
@@ -132,6 +135,12 @@ PDB *blDupePDB(PDB *in)
       blCopyPDB(q, p);
    }
    
+   if(!blCopyConects(out, in))
+   {
+      FREELIST(out, PDB);
+      return(NULL);
+   }
+
    return(out);
 }
 
