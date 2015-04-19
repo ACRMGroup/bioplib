@@ -3,11 +3,11 @@
 
    \file       IndexPDB.c
    
-   \version    V2.1
-   \date       07.07.14
+   \version    V2.2
+   \date       19.04.15
    \brief      Create an array of pointers into a PDB linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -65,6 +65,7 @@
 -  V2.0  24.02.94 Completely re-written. Note that the calling format
                   has changed!! NOT BACKWARDLY COMPATIBLE!
 -  V2.1  07.07.14 Use bl prefix for functions By: CTP
+-  V2.2  19.04.15 Added blCreatePDBAtomNumberIndex()  By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -75,6 +76,13 @@
    Creates an array of pointers to PDB from a linked list. This is used
    to allow array style access to items in the linked list:
    e.g. (indx[23])->x will give the x coordinate of the 23rd item
+
+   # FUNCTION blAtomNumberIndexPDB()
+   Creates an array of pointers to PDB from a linked list. This is used
+   to allow array style access to items in the linked list by atom
+   number:
+   e.g. (indx[23])->x will give the x coordinate of atom number 23
+
 */
 /************************************************************************/
 /* Includes
@@ -128,4 +136,46 @@ PDB **blIndexPDB(PDB *pdb, int *natom)
    
    return(indx);
 }
+
+/************************************************************************/
+/*>PDB **blAtomNumberIndexPDB(PDB *pdb, int *indexSize)
+   ----------------------------------------------------
+*//**
+   \param[in]   *pdb         PDB linked list
+   \param[out]  *indexSize   Index size
+   \return                   malloc'd array of PDB pointers indexed
+                             by atom number
+
+   Creates an array of pointers to PDB from a linked list. This is used
+   to allow array style access to items in the linked list by atom
+   number:
+   e.g. (indx[23])->x will give the x coordinate of atom number 23
+
+-  19.04.15 Original   By: ACRM
+*/
+PDB **blAtomNumberIndexPDB(PDB *pdb, int *indexSize)
+{
+   PDB *p,
+       **index = NULL;
+   int maxAtnum = 0;
+   
+   for(p=pdb; p!=NULL; NEXT(p))
+   {
+      if(p->atnum > maxAtnum)
+         maxAtnum = p->atnum;
+   }
+
+   *indexSize = maxAtnum + 1;
+
+   if((index=(PDB **)calloc((*indexSize), sizeof(PDB *)))!=NULL)
+   {
+      for(p=pdb; p!=NULL; NEXT(p))
+      {
+         index[p->atnum] = p;
+      }
+   }
+   
+   return(index);
+}
+
 

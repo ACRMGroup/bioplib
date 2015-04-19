@@ -186,6 +186,7 @@
                   gPDBMultiNMR is now an int containing the number of
                   MODELs
 -  V1.79 26.03.15 Added blGetPDBCHainAsCopy()
+-  V1.80 17.04.15 Added blCopyConects() and blAtomNumberIndexPDB()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -501,6 +502,7 @@ BOOL blAddOneDirectionConect(PDB *p, PDB *q);
 BOOL blDeleteConect(PDB *p, PDB *q);
 BOOL blDeleteAConectByNum(PDB *pdb, int cNum);
 void blDeleteAtomConects(PDB *pdb);
+BOOL blCopyConects(PDB *out, PDB *in);
 BOOL blIsBonded(PDB *p, PDB *q, REAL tol);
 PDB *blDeleteAtomPDB(PDB *pdb, PDB *atom);
 PDB *blDeleteAtomRangePDB(PDB *pdb, PDB *start, PDB *stop);
@@ -560,6 +562,7 @@ BOOL blGetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
               int *StrucType);
 char *blReportStructureType(int type);
 PDB **blIndexPDB(PDB *pdb, int *natom);
+PDB **blAtomNumberIndexPDB(PDB *pdb, int *indexSize);
 DISULPHIDE *blReadDisulphidesPDB(FILE *fp, BOOL *error);
 DISULPHIDE *blReadDisulphidesWholePDB(WHOLEPDB *wpdb, BOOL *error);
 BOOL blParseResSpec(char *spec, char *chain, int *resnum, char *insert);

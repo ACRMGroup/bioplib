@@ -75,15 +75,16 @@
    deletes the relevant CONECTs (back to this atom) from the partner 
    atoms
 
+   #FUNCTION blCopyConects()
+   Updates the CONECT information in the out PDB linked list based on
+   those in the in linked list. This is used when we have copied a PDB
+   linked list (e.g. in the bl...AsCopy() routines) to make sure the
+   CONECT data points to records in the new linked list instead of the
+   old one.
+
 */
 /************************************************************************/
 /* Includes
-*/
-/*
-#include "port.h"
-#include <stdlib.h>
-#include <unistd.h>
-#include "general.h"
 */
 #include <math.h>
 #include "macros.h"
@@ -444,3 +445,118 @@ void blDeleteAtomConects(PDB *pdb)
       pdb->nConect = 0;
    }
 }
+
+/************************************************************************/
+/*>BOOL blCopyConects(PDB *out, PDB *in)
+   -------------------------------------
+*//**
+   \param[out]   *out   PDB linked list containing new CONECT records
+   \param[in]    *in    PDB linked list containing original CONECT records
+   \return              Success
+
+   Updates the CONECT information in the out PDB linked list based on
+   those in the in linked list. This is used when we have copied a PDB
+   linked list (e.g. in the bl...AsCopy() routines) to make sure the
+   CONECT data points to records in the new linked list instead of the
+   old one.
+
+-  17.04.15  Original   By: ACRM
+*/
+BOOL blCopyConects(PDB *out, PDB *in)
+{
+   PDB **idxOut = NULL,
+       *p;
+   int indexSize = 0;
+   
+   /* Create an indices by atom number                                  */
+   if((idxOut = blAtomNumberIndexPDB(out, &indexSize))==NULL)
+      return(FALSE);
+   
+   /* Step through the output linked list                               */
+   for(p=out; p!=NULL; NEXT(p))
+   {
+      int i;
+      
+      /* Step through the CONECT data for this atom - which will be
+         from the OLD linked list
+      */
+      for(i=0; i<p->nConect; i++)
+      {
+         if(p->conect[i] != NULL)
+         {
+            int atomNum;
+            PDB *newPtr = NULL;
+         
+            /* Find the atom number from old linked list                */
+            atomNum = (p->conect[i])->atnum;
+            
+            /* Look up the pointer for this in the new linked list index*/
+            if(atomNum < indexSize)
+               newPtr = idxOut[atomNum];
+
+            /* Reset pointer                                            */
+            p->conect[i] = newPtr;
+         }
+      }
+   }
+
+   free(idxOut);
+   return(TRUE);
+}
+
+/************************************************************************/
+#ifdef TEST
+#include <stdio.h>
+
+int main(int argc, char **argv)
+{
+   char     *filename = "test.pdb";
+   WHOLEPDB *wpdb;
+   FILE     *fp;
+   PDB      *pdb1, *pdb2, *p;
+   int      natoms;
+
+   if((fp=fopen(filename, "r"))==NULL)
+   {
+      fprintf(stderr,"Can't open %s\n", filename);
+      return(1);
+   }
+   
+   if(((wpdb=blReadWholePDB(fp))==NULL)||(wpdb->pdb == NULL))
+   {
+      fprintf(stderr,"Can't read atoms from %s\n", filename);
+      return(1);
+   }
+   fclose(fp);
+   
+   pdb1 = wpdb->pdb;
+   if((pdb2 = blStripHPDBAsCopy(pdb1, &natoms))==NULL)
+   {
+      fprintf(stderr,"Stripping hydrogens failed\n");
+      return(1);
+   }
+   
+   if(!blCopyConects(pdb2, pdb1))
+   {
+      fprintf(stderr,"Failed to copy CONECT data\n");
+      return(1);
+   }
+
+   printf(">>> Original CONECT data\n");
+   wpdb->pdb = pdb1;
+   blWriteWholePDBTrailer(stdout, wpdb, 1);
+
+   /* Reset atom numbers in original list to prove we aren't picking up
+      the old atoms
+   */
+   for(p=pdb1; p!=NULL; NEXT(p))
+      p->atnum = 0;
+   
+   printf(">>> New CONECT data\n");
+   wpdb->pdb = pdb2;
+   blWriteWholePDBTrailer(stdout, wpdb, 1);
+   
+   return(0);
+}
+#endif
+
