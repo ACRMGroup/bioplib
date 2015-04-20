@@ -65,7 +65,7 @@
 -  V2.0  24.02.94 Completely re-written. Note that the calling format
                   has changed!! NOT BACKWARDLY COMPATIBLE!
 -  V2.1  07.07.14 Use bl prefix for functions By: CTP
--  V2.2  19.04.15 Added blCreatePDBAtomNumberIndex()  By: ACRM
+-  V2.2  19.04.15 Added blIndexAtomNumbersPDB()  By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -77,7 +77,7 @@
    to allow array style access to items in the linked list:
    e.g. (indx[23])->x will give the x coordinate of the 23rd item
 
-   # FUNCTION blAtomNumberIndexPDB()
+   # FUNCTION blIndexAtomNumbersPDB()
    Creates an array of pointers to PDB from a linked list. This is used
    to allow array style access to items in the linked list by atom
    number:
@@ -138,8 +138,8 @@ PDB **blIndexPDB(PDB *pdb, int *natom)
 }
 
 /************************************************************************/
-/*>PDB **blAtomNumberIndexPDB(PDB *pdb, int *indexSize)
-   ----------------------------------------------------
+/*>PDB **blIndexAtomNumbersPDB(PDB *pdb, int *indexSize)
+   -----------------------------------------------------
 *//**
    \param[in]   *pdb         PDB linked list
    \param[out]  *indexSize   Index size
@@ -153,7 +153,7 @@ PDB **blIndexPDB(PDB *pdb, int *natom)
 
 -  19.04.15 Original   By: ACRM
 */
-PDB **blAtomNumberIndexPDB(PDB *pdb, int *indexSize)
+PDB **blIndexAtomNumbersPDB(PDB *pdb, int *indexSize)
 {
    PDB *p,
        **index = NULL;
