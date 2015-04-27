@@ -469,7 +469,7 @@ BOOL blCopyConects(PDB *out, PDB *in)
    int indexSize = 0;
    
    /* Create an indices by atom number                                  */
-   if((idxOut = blAtomNumberIndexPDB(out, &indexSize))==NULL)
+   if((idxOut = blIndexAtomNumbersPDB(out, &indexSize))==NULL)
       return(FALSE);
    
    /* Step through the output linked list                               */
