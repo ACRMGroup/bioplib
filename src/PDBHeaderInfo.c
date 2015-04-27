@@ -80,7 +80,7 @@
 /************************************************************************/
 /* Defines and macros
 */
-#define MAXBUFF 160
+#define MAXBUFF   160
 
 /************************************************************************/
 /* Globals
@@ -229,6 +229,7 @@ char *collapseSpaces(char *inText)
 
 typedef struct _compnd
 {
+   int   molid;
    char  molecule[MAXBUFF],
          chain[MAXBUFF],
          fragment[MAXBUFF],
@@ -249,7 +250,7 @@ typedef struct _pdbsource
 
    
 /************************************************************************/
-STRINGLIST *FindNextMolIDRecord(STRINGLIST *start)
+STRINGLIST *FindNextMolIDRecord(STRINGLIST *start, char *type)
 {
    STRINGLIST *s;
    
@@ -258,7 +259,7 @@ STRINGLIST *FindNextMolIDRecord(STRINGLIST *start)
    
    for(s=start->next; s!=NULL; NEXT(s))
    {
-      if(!strncmp(s->string, "COMPND", 6))
+      if(!strncmp(s->string, type, 6))
       {
          if(strstr(s->string, "MOL_ID:"))
             return(s);
@@ -271,8 +272,8 @@ STRINGLIST *FindNextMolIDRecord(STRINGLIST *start)
 
 
 /************************************************************************/
-BOOL PopulateCompndField(STRINGLIST *molidStart, STRINGLIST *molidStop,
-                         char *data, char *field)
+BOOL PopulateField(STRINGLIST *molidStart, STRINGLIST *molidStop,
+                   char *data, char *type, char *field)
 
 {
    STRINGLIST *s;
@@ -284,7 +285,7 @@ BOOL PopulateCompndField(STRINGLIST *molidStart, STRINGLIST *molidStop,
 
    for(s=molidStart; s!=molidStop; NEXT(s))
    {
-      if(strncmp(s->string, "COMPND", 6))
+      if(strncmp(s->string, type, 6))
          break;
 
       chp = NULL;
@@ -339,7 +340,7 @@ BOOL blGetCompoundWholePDBChain(WHOLEPDB *wpdb, char *chain,
               *s;
    BOOL       foundChain = FALSE;
 
-
+   compnd->molid         = 0;
    compnd->molecule[0]   = '\0';
    compnd->chain[0]      = '\0';
    compnd->fragment[0]   = '\0';
@@ -349,11 +350,11 @@ BOOL blGetCompoundWholePDBChain(WHOLEPDB *wpdb, char *chain,
    compnd->mutation[0]   = '\0';
    compnd->other[0]      = '\0';
 
-   molidFirst = FindNextMolIDRecord(wpdb->header);
+   molidFirst = FindNextMolIDRecord(wpdb->header, "COMPND");
 
    for(molidStart=molidFirst; molidStart!=NULL; molidStart=molidStop)
    {
-      molidStop  = FindNextMolIDRecord(molidStart);
+      molidStop  = FindNextMolIDRecord(molidStart, "COMPND");
       for(s=molidStart; s!=molidStop; NEXT(s))
       {
          char *chp;
@@ -382,22 +383,27 @@ BOOL blGetCompoundWholePDBChain(WHOLEPDB *wpdb, char *chain,
 found:
    if(foundChain)
    {
-      PopulateCompndField(molidStart, molidStop,
-                          compnd->molecule,   "MOLECULE:");
-      PopulateCompndField(molidStart, molidStop,
-                          compnd->chain,      "CHAIN:");
-      PopulateCompndField(molidStart, molidStop,
-                          compnd->fragment,   "FRAGMENT:");
-      PopulateCompndField(molidStart, molidStop,
-                          compnd->synonym,    "SYNONYM:");
-      PopulateCompndField(molidStart, molidStop,
-                          compnd->ec,         "EC:");
-      PopulateCompndField(molidStart, molidStop,
-                          compnd->engineered, "ENGINEERED:");
-      PopulateCompndField(molidStart, molidStop,
-                          compnd->mutation,   "MUTATION:");
-      PopulateCompndField(molidStart, molidStop,
-                          compnd->other,      "OTHER:");
+      char buffer[MAXBUFF];
+      
+      PopulateField(molidStart, molidStop,
+                    compnd->molecule,   "COMPND","MOLECULE:");
+      PopulateField(molidStart, molidStop,
+                    compnd->chain,      "COMPND", "CHAIN:");
+      PopulateField(molidStart, molidStop,
+                    compnd->fragment,   "COMPND", "FRAGMENT:");
+      PopulateField(molidStart, molidStop,
+                    compnd->synonym,    "COMPND", "SYNONYM:");
+      PopulateField(molidStart, molidStop,
+                    compnd->ec,         "COMPND", "EC:");
+      PopulateField(molidStart, molidStop,
+                    compnd->engineered, "COMPND", "ENGINEERED:");
+      PopulateField(molidStart, molidStop,
+                    compnd->mutation,   "COMPND", "MUTATION:");
+      PopulateField(molidStart, molidStop,
+                    compnd->other,      "COMPND", "OTHER:");
+      PopulateField(molidStart, molidStop,
+                    buffer,             "COMPND", "MOL_ID:");
+      sscanf(buffer,"%d", &(compnd->molid));
       return(TRUE);
    }
    
@@ -408,11 +414,62 @@ found:
 BOOL blGetSpeciesWholePDBChain(WHOLEPDB *wpdb, char *chain,
                                PDBSOURCE *source)
 {
+   STRINGLIST *s;
+   BOOL inSource = FALSE;
+   int  molid    = 0;
+   STRINGLIST *molidFirst = NULL,
+              *molidStart = NULL,
+              *molidStop  = NULL;
+
    source->scientificName[0] = '\0';
    source->commonName[0]     = '\0';
    source->strain[0]         = '\0';
    source->taxid             = 0;
+
+/* TODO!!! */
+   /* molid = blFindMolId(wpdb, chain); */
    
+   
+/*
+SOURCE    MOL_ID: 1;                                                            
+SOURCE   2 ORGANISM_SCIENTIFIC: MUS MUSCULUS;                                   
+SOURCE   3 ORGANISM_COMMON: HOUSE MOUSE;                                        
+SOURCE   4 ORGANISM_TAXID: 10090;                                               
+SOURCE   5 STRAIN: BALB-C;                                                      
+*/
+   molidFirst = FindNextMolIDRecord(wpdb->header, "SOURCE");
+
+   for(molidStart=molidFirst; molidStart!=NULL; molidStart=molidStop)
+   {
+      molidStop  = FindNextMolIDRecord(molidStart, "SOURCE");
+      for(s=molidStart; s!=molidStop; NEXT(s))
+      {
+         char *chp;
+         char buffer[MAXBUFF],
+              word[MAXWORD];
+         int  thisMolid = 0;
+
+         PopulateField(molidStart, molidStop,
+                       buffer,             "SOURCE", "MOL_ID:");
+         sscanf(buffer,"%d", &thisMolid);
+
+         if(thisMolid == molid)
+         {
+            PopulateField(molidStart, molidStop,
+                          source->scientificName, "SOURCE","ORGANISM_SCIENTIFIC:");
+            PopulateField(molidStart, molidStop,
+                          source->commonName,     "SOURCE", "ORGANISM_COMMON:");
+            PopulateField(molidStart, molidStop,
+                          source->strain,         "SOURCE", "STRAIN:");
+            PopulateField(molidStart, molidStop,
+                          buffer,                 "SOURCE", "ORGANISM_TAXID:");
+            sscanf(buffer,"%d",&source->taxid);
+            return(TRUE);
+         }
+      }
+   }
+
+
    return(FALSE);
 }
 
@@ -459,14 +516,15 @@ int main(int argc, char **argv)
 
             blGetCompoundWholePDBChain(wpdb, chainLabels[i], &compound);
 
-            printf("molecule: %s\n", compound.molecule);
-            printf("chain: %s\n", compound.chain);
-            printf("fragment: %s\n", compound.fragment);
-            printf("synonym: %s\n", compound.synonym);
-            printf("ec: %s\n", compound.ec);
+            printf("molid:      %d\n", compound.molid);
+            printf("molecule:   %s\n", compound.molecule);
+            printf("chain:      %s\n", compound.chain);
+            printf("fragment:   %s\n", compound.fragment);
+            printf("synonym:    %s\n", compound.synonym);
+            printf("ec:         %s\n", compound.ec);
             printf("engineered: %s\n", compound.engineered);
-            printf("mutation: %s\n", compound.mutation);
-            printf("other: %s\n", compound.other);
+            printf("mutation:   %s\n", compound.mutation);
+            printf("other:      %s\n", compound.other);
 
             if(blGetSpeciesWholePDBChain(wpdb, chainLabels[i], &species))
             {
