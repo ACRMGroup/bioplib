@@ -1,12 +1,13 @@
 /************************************************************************/
 /**
 
-   \file       strcatalloc.c
+   \file       stringutil.c
    
-   \version    V1.2
-   \date       07.07.14
+   \version    V1.0
+   \date       28.04.15
+   \brief      Get misc header info from PDB header
    
-   \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002-14
+   \copyright  (c) UCL / Dr. Andrew C.R. Martin, 2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -41,13 +42,13 @@
    Usage:
    ======
 
+   See documentation for details
+
 **************************************************************************
 
    Revision History:
    =================
--  V1.0  22.05.99 Original   By: ACRM
--  V1.1  11.07.00 Check that realloc succeeded
--  V1.2  07.07.14 Use bl prefix for functions By: CTP
+-  V1.0  28.04.15 Original
 
 *************************************************************************/
 /* Doxygen
@@ -55,18 +56,23 @@
    #GROUP    General Programming
    #SUBGROUP String handling
 
-   #FUNCTION  blStrcatalloc()
-   Like strcat() but uses a realloc() on instr to make space available.
+   #FUNCTION blCollapseSpaces()
+   Takes a string and collapses multiple spaces down to a single space
+   Equivalent of perl 's/\s+/ /g'
 */
+
 /************************************************************************/
 /* Includes
 */
-#include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
+#include "pdb.h"
+#include "macros.h"
 
 /************************************************************************/
 /* Defines and macros
 */
+#define MAXWORD 8
 
 /************************************************************************/
 /* Globals
@@ -78,36 +84,52 @@
 
 
 /************************************************************************/
-/*>char *blStrcatalloc(char *instr, char *catstr)
-   ----------------------------------------------
+/*>char *blCollapseSpaces(char *inText)
+   ------------------------------------
 *//**
+   \param[in]     *inText   Input text string
+   \return                  malloc()'d string with multiple spaces 
+                            collapsed
 
-   \param[in]     *instr    String to append to
-   \param[in]     *catstr   String to append
-   \return                      realloc'd version of instr with catstr
-                              appended
+   Takes a string and collapses multiple spaces down to a single space
+   Equivalent of perl 's/\s+/ /g'
+   The input string is unmodified and malloc()s the output.
 
-   Like strcat() but uses a realloc() on instr to make space available.
-
--  22.05.99 Original   By: ACRM
--  16.06.99 Initialise outstr to NULL
--  25.08.99 Fixed bug where testing for NULL outstr instead of catstr
--  11.07.00 Check that realloc succeeded
--  07.07.14 Use bl prefix for functions By: CTP
+   28.04.15  Original   By: ACRM
 */
-char *blStrcatalloc(char *instr, char *catstr)
+char *blCollapseSpaces(char *inText)
 {
-   int  totLen;
-   char *outstr = NULL;
+   int  nchar = 0;
+   char *ch, *chp, *chq,
+        *outText = NULL;
+
+   if(inText==NULL)
+      return(NULL);
    
-   totLen = ((instr==NULL)  ? 0 : strlen(instr)) + 
-      ((catstr==NULL) ? 0 : strlen(catstr));
-   if((outstr = realloc(instr, totLen+1))!=NULL)
+   /* Get length of input string                                        */
+   nchar = strlen(inText) + 1;
+
+   /* Allocate new space                                                */
+   if((outText=(char *)malloc(nchar * sizeof(char)))==NULL)
+      return(NULL);
+
+   /* Copy characters skipping repeated spaces                          */
+   chp=NULL;
+   chq=outText;
+   for(ch=inText; *ch!='\0'; ch++)
    {
-      if(instr==NULL)
-         outstr[0] = '\0';
-      strcat(outstr, catstr);
+      if(*ch == '\t') *ch = ' '; /* Tab to space                        */
+      if((chp   == NULL) ||      /* 1st char                            */
+         (*chp != ' ')   ||      /* Prev char not \s                    */
+         (*ch  != ' '))          /* Curr char not \s                    */
+      {
+         *chq = *ch;
+         chq++;
+      }
+      chp=ch;
    }
-   
-   return(outstr);
+   *chq = '\0';
+
+   return(outText);
 }
+

@@ -74,7 +74,7 @@ fsscanf.o ftostr.o help.o hpgl.o invert33.o openorpipe.o padchar.o \
 padterm.o parse.o pearson.o pearson1.o phi.o pldist.o plotting.o \
 ps.o safemem.o simpleangle.o strcatalloc.o upstrcmp.o upstrncmp.o \
 WindIO.o getfield.o array3.o justify.o wrapprint.o deprecatedGen.o \
-eigen.o regression.o filename.o StringCat.o
+eigen.o regression.o filename.o stringcat.o stringutil.o
 
 
 # Files for libbiop.a
@@ -97,7 +97,7 @@ align.o fit.o hbond.o rsc.o throne.o FitNCaCPDB.o FindRawAtomInRes.o \
 GlyCB.o BuildAtomNeighbourPDBList.o \
 FindAtomWildcardInRes.o DupeResiduePDB.o StripWatersPDB.o aalist.o \
 StructurePDB.o FindHetatmResidue.o FindHetatmResidueSpec.o access.o \
-deprecatedBiop.o BuildConect.o GetPDBChainAsCopy.o
+deprecatedBiop.o BuildConect.o GetPDBChainAsCopy.o PDBHeaderInfo.o
 
 
 # Static libraries - the default
