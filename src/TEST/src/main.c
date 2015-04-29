@@ -3,11 +3,11 @@
 
    \file       main.c
    
-   \version    V1.0
-   \date       05.08.14
+   \version    V1.1
+   \date       28.04.15
    \brief      Run test suites for BiopLib.
 
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -69,6 +69,7 @@
    =================
 
 -  V1.0  05.08.14 Original By: CTP
+-  V1.1  28.04.15 Add CONECT tests. By: CTP
 
 *************************************************************************/
 
@@ -84,6 +85,8 @@
 #include "readpdbml_suite.h"
 #include "writepdbml_suite.h"
 #include "wholepdb_suite.h"
+#include "conect_suite.h"
+                                                  /* add suites here... */
 
 
 int main(int argc, char **argv)
@@ -106,6 +109,7 @@ int main(int argc, char **argv)
    srunner_add_suite(sr, readpdbml_suite());
    srunner_add_suite(sr, writepdbml_suite());
    srunner_add_suite(sr, wholepdb_suite());
+   srunner_add_suite(sr, conect_suite());
                                                   /* add suites here... */
 
 
