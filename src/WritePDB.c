@@ -4,7 +4,7 @@
    \file       WritePDB.c
    
    \version    V1.24
-   \date       02.04.15
+   \date       29.04.15
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
@@ -100,6 +100,8 @@
 -  V1.22 09.03.15 blWriteWholePDBHeaderNoRes() now skips more header lines
 -  V1.23 10.03.15 blWriteWholePDBHeaderNoRes() now skips more header lines
 -  V1.24 02.04.15 WriteMaster() Padded MASTER record to 80 cols.  By: CTP
+-  V1.25 29.04.15 Updated blWritePDBAsPDBML() to write CONECT records.  
+                  By: CTP
 
 *************************************************************************/
 /* Doxygen
@@ -475,6 +477,7 @@ void blWritePDBRecordAtnam(FILE *fp,
 -  17.02.15 Added segid support  By: ACRM
 -  24.02.15 Changed name to blWritePDBAsPDBML()
 -  25.02.15 Changed to type BOOL and checks all memory allocations
+-  29.04.15 Updated to write CONECT records.  By: CTP
 
 */
 BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
@@ -487,7 +490,8 @@ BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
 #else 
 
    /* PDBML format supported                                            */
-   PDB         *p;
+   PDB         *p,
+               *q;
    xmlDocPtr   doc         = NULL;
    xmlNodePtr  root_node   = NULL, 
                sites_node  = NULL, 
@@ -497,7 +501,9 @@ BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
                xsi         = NULL;
    char        buffer[16], 
                *buffer_ptr;
-   
+   int         conect_id   = 0,
+               i;
+
    /* Create document                                                   */
    if((doc = xmlNewDoc((xmlChar *)"1.0"))==NULL)
       XMLDIE(doc);                         /* 25.02.15                  */
@@ -723,6 +729,202 @@ BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
             XMLDIE(doc);                   /* 25.02.15                  */
       }
    }
+
+
+   /* struct_conn node                                                  */
+   for(p=pdb; p!=NULL; NEXT(p))
+   {
+      if(p->nConect)
+      {
+         if((sites_node = xmlNewChild(root_node, NULL, 
+                                      (xmlChar *)"struct_connCategory", 
+                                      NULL))==NULL)
+            XMLDIE(doc);
+
+         break;
+      }
+   }
+   
+   /* Conect nodes                                                      */
+   for(p=pdb; p!=NULL; NEXT(p))
+   {
+      /* skip TER                                                       */
+      if(!strncmp("TER",p->resnam,3))
+      {
+         continue;
+      }
+
+      /* Add conect nodes                                               */
+      for(i=0; i < p->nConect; i++)
+      {
+         if((atom_node = xmlNewChild(sites_node, NULL,
+                                     (xmlChar *)"struct_conn", NULL))==NULL)
+            XMLDIE(doc);
+
+         /* set conect atoms */
+         q = p->conect[i];
+         conect_id++;         
+
+         /* conect id */
+         sprintf(buffer, "%s%d", "conect", conect_id);
+         xmlNewProp(atom_node, (xmlChar *)"id", (xmlChar *)buffer);
+
+         /* connection type */
+         sprintf(buffer, "%s", "covale"); /* set type to covale         */
+         if((node = xmlNewChild(atom_node, NULL,
+                                (xmlChar *)"conn_type_id",
+                                (xmlChar *)buffer))==NULL)
+            XMLDIE(doc);
+
+         /* bond length                                                 */
+         sprintf(buffer, "%.3f", DIST(p,q));
+         if((node = xmlNewChild(atom_node, NULL,
+                                (xmlChar *)"pdbx_dist_value",
+                                (xmlChar *)buffer))==NULL)
+            XMLDIE(doc);
+
+         /* atom one data                                                */
+         if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"ptnr1_auth_asym_id",
+                                (xmlChar *)p->chain))==NULL)
+            XMLDIE(doc);
+
+         strcpy(buffer,p->resnam);
+         KILLTRAILSPACES(buffer);
+         KILLLEADSPACES(buffer_ptr,buffer);
+         if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"ptnr1_auth_comp_id",
+                                (xmlChar *)buffer_ptr))==NULL)
+            XMLDIE(doc);
+
+         sprintf(buffer,"%d", p->resnum);
+         if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"ptnr1_auth_seq_id",
+                                (xmlChar *)buffer))==NULL)
+            XMLDIE(doc);
+
+         /* include alt_id if present                                   */
+         if(p->altpos != ' ')
+         {
+            if((node = xmlNewChild(atom_node, NULL,
+                                   (xmlChar *)"ptnr1_label_alt_id",
+                                   NULL))==NULL)
+               XMLDIE(doc);
+
+            buffer[0] = p->altpos;
+            buffer[1] = '\0';
+            xmlNodeSetContent(node, (xmlChar *)buffer);
+         }
+         
+         if((node = xmlNewChild(atom_node, NULL, 
+                                (xmlChar *)"ptnr1_label_asym_id",
+                                (xmlChar *)p->chain))==NULL)
+            XMLDIE(doc);
+
+         strcpy(buffer,p->atnam);
+         KILLTRAILSPACES(buffer);
+         if((node = xmlNewChild(atom_node, NULL, 
+                                (xmlChar *)"ptnr1_label_atom_id",
+                                (xmlChar *)buffer))==NULL)
+            XMLDIE(doc);
+
+         strcpy(buffer,p->resnam);
+         KILLTRAILSPACES(buffer);
+         KILLLEADSPACES(buffer_ptr,buffer);
+         if((node = xmlNewChild(atom_node, NULL, 
+                                (xmlChar *)"ptnr1_label_comp_id",
+                                (xmlChar *)buffer_ptr))==NULL)
+            XMLDIE(doc);
+      
+         sprintf(buffer,"%d", p->resnum);
+         if((node = xmlNewChild(atom_node, NULL,
+                                (xmlChar *)"ptnr1_label_seq_id",
+                                (xmlChar *)buffer))==NULL)
+            XMLDIE(doc);
+                   
+         /* insertion code
+            Note: Insertion code node only included for residues with 
+                  insertion codes 
+         */
+         if(strcmp(p->insert," "))
+         {
+            sprintf(buffer,"%s", p->insert);
+            if((node = xmlNewChild(atom_node, NULL, 
+                                   (xmlChar *)"ptnr1_PDB_ins_code",
+                                   (xmlChar *)buffer))==NULL)
+               XMLDIE(doc);
+         }
+
+
+         /* atom two data                                               */
+         if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"ptnr2_auth_asym_id",
+                                (xmlChar *)q->chain))==NULL)
+            XMLDIE(doc);
+
+         strcpy(buffer,q->resnam);
+         KILLTRAILSPACES(buffer);
+         KILLLEADSPACES(buffer_ptr,buffer);
+         if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"ptnr2_auth_comp_id",
+                                (xmlChar *)buffer_ptr))==NULL)
+            XMLDIE(doc);
+
+         sprintf(buffer,"%d", q->resnum);
+         if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"ptnr2_auth_seq_id",
+                                (xmlChar *)buffer))==NULL)
+            XMLDIE(doc);
+
+         /* include alt_id if present                                   */
+         if(q->altpos != ' ')
+         {
+            if((node = xmlNewChild(atom_node, NULL,
+                                   (xmlChar *)"ptnr2_label_alt_id",
+                                   NULL))==NULL)
+               XMLDIE(doc);
+
+            buffer[0] = q->altpos;
+            buffer[1] = '\0';
+            xmlNodeSetContent(node, (xmlChar *)buffer);
+         }
+
+         if((node = xmlNewChild(atom_node, NULL, 
+                                (xmlChar *)"ptnr2_label_asym_id",
+                                (xmlChar *)q->chain))==NULL)
+            XMLDIE(doc);
+
+         strcpy(buffer,q->atnam);
+         KILLTRAILSPACES(buffer);
+         if((node = xmlNewChild(atom_node, NULL, 
+                                (xmlChar *)"ptnr2_label_atom_id",
+                                (xmlChar *)buffer))==NULL)
+            XMLDIE(doc);
+
+         strcpy(buffer,q->resnam);
+         KILLTRAILSPACES(buffer);
+         KILLLEADSPACES(buffer_ptr,buffer);
+         if((node = xmlNewChild(atom_node, NULL, 
+                                (xmlChar *)"ptnr2_label_comp_id",
+                                (xmlChar *)buffer_ptr))==NULL)
+            XMLDIE(doc);
+      
+         sprintf(buffer,"%d", q->resnum);
+         if((node = xmlNewChild(atom_node, NULL,
+                                (xmlChar *)"ptnr2_label_seq_id",
+                                (xmlChar *)buffer))==NULL)
+            XMLDIE(doc);
+
+                         
+         /* insertion code
+            Note: Insertion code node only included for residues with 
+                  insertion codes 
+         */
+         if(strcmp(q->insert," "))
+         {
+            sprintf(buffer,"%s", q->insert);
+            if((node = xmlNewChild(atom_node, NULL, 
+                                   (xmlChar *)"ptnr2_PDB_ins_code",
+                                   (xmlChar *)buffer))==NULL)
+               XMLDIE(doc);
+         }
+      }      
+   }
+
 
    /* Write to doc file pointer                                         */
    xmlDocFormatDump(fp,doc,1);

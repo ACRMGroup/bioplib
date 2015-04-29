@@ -183,7 +183,7 @@ START_TEST(test_write_pdbml_01)
 {
    /* get pdb data */
    char filename_in[]      = "test_alanine_in.pdb",
-        filename_example[] = "test_alanine_out.xml",
+        filename_example[] = "test_alanine_out_02.xml",
         test_message[]     = "Output PDBML does not match example file.";
         
    /* force write PDB */
@@ -262,6 +262,8 @@ START_TEST(test_write_pdb_02)
    /* Set temp file name */
    mkstemp(test_output_filename);
 #endif
+   
+   gPDBXML = FALSE; /* Fix: Reset XML flag to allow XML output */
 
    /* write output file */
    fp = fopen(test_output_filename,"w");
