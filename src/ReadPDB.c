@@ -334,14 +334,8 @@ static void blProcessChargeField(int *charge, char *charge_field);
 static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer);
 #ifdef XML_SUPPORT
 static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date);
-/*static STRINGLIST *blParseHeaderPDBML(FILE *fpin);*/
-/* replaces blParseHeaderPDBML() */
 static STRINGLIST *blParseHeaderPDBML(xmlDoc  *document);
 static int blParseConectPDBML(xmlDoc *document, PDB *pdb);
-
-/* replaces blDoReadPDBML() */
-/*static WHOLEPDB *blDoReadPDBML_new(FILE *fpin, BOOL AllAtoms, int OccRank,
-                                   int ModelNum, BOOL DoWhole);*/
 #endif
 
 
