@@ -3,7 +3,7 @@
 
    \file       pdb.h
    
-   \version    V1.81
+   \version    V1.82
    \date       28.04.15
    \brief      Include file for PDB routines
    
@@ -191,7 +191,7 @@
                   blGetCompoundWholePDBChain(), blFindMolID(),
                   blGetSpeciesWholePDBChain() plus the COMPND and
                   PDBSOURCE structures
-
+-  V1.82 28.04.15 Modified blDoReadPDBML()  By: CTP
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -512,8 +512,8 @@ PDB *blReadPDBOccRank(FILE *fp, int *natom, int OccRank);
 PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank);
 WHOLEPDB *blDoReadPDB(FILE *fp, BOOL AllAtoms, int OccRank, 
                       int ModelNum, BOOL DoWhole);
-PDB *blDoReadPDBML(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank, 
-                   int ModelNum);
+WHOLEPDB *blDoReadPDBML(FILE *fp, BOOL AllAtoms, int OccRank, 
+                        int ModelNum, BOOL DoWhole);
 BOOL blCheckFileFormatPDBML(FILE *fp);
 
 int  blWritePDB(FILE *fp, PDB  *pdb);

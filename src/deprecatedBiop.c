@@ -3,8 +3,8 @@
 
    \file       deprecatedBiop.c
    
-   \version    V1.9
-   \date       05.03.15
+   \version    V1.10
+   \date       28.04.15
    \brief      Source code for Biop deprecated functions.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014-2015
@@ -83,6 +83,8 @@
 -  V1.8  02.03.15 blGetExptl() is now called blGetExptlPDB()
 -  V1.9  05.03.15 Removed blFindEndPDB() as FindEndPDB() is deprecated
                   and replaced by FindNextResidure()/blFindNextResidue()
+-  V1.10 28.04.15 Updated doReadPDBML() for latest version of 
+                  blDoReadPDBML().  By: CTP
 
 *************************************************************************/
 /* Includes
@@ -515,8 +517,22 @@ PDB *doReadPDB(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank,
 PDB *doReadPDBML(FILE *fp, int  *natom, BOOL AllAtoms, int OccRank,
                  int ModelNum)
 {
+/*
    DEPRECATED("doReadPDBML()","blDoReadPDBML()");
    return(blDoReadPDBML(fp, natom, AllAtoms, OccRank, ModelNum));
+*/
+   WHOLEPDB *wpdb;
+   *natom = 0;
+
+   DEPRECATED("doReadPDBML()","blDoReadPDBML()");
+   if(((wpdb = blDoReadPDBML(fp, AllAtoms, OccRank, ModelNum, FALSE))==NULL)
+      || (wpdb->pdb == NULL))
+      return(NULL);
+
+   *natom = wpdb->natoms;
+   return(wpdb->pdb);
+
+
 }
                 
 BOOL CheckFileFormatPDBML(FILE *fp)

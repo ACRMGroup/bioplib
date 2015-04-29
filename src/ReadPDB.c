@@ -334,7 +334,14 @@ static void blProcessChargeField(int *charge, char *charge_field);
 static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer);
 #ifdef XML_SUPPORT
 static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date);
-static STRINGLIST *blParseHeaderPDBML(FILE *fpin);
+/*static STRINGLIST *blParseHeaderPDBML(FILE *fpin);*/
+/* replaces blParseHeaderPDBML() */
+static STRINGLIST *blParseHeaderPDBML(xmlDoc  *document);
+static int blParseConectPDBML(xmlDoc *document, PDB *pdb);
+
+/* replaces blDoReadPDBML() */
+/*static WHOLEPDB *blDoReadPDBML_new(FILE *fpin, BOOL AllAtoms, int OccRank,
+                                   int ModelNum, BOOL DoWhole);*/
 #endif
 
 
@@ -654,7 +661,8 @@ PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
                   was not found. Uses MODEL records rather than ENDMDL
                   records in counting models
 -  02.04.15 V3.4  Rewind file after reading pdbxml header data.  By: CTP
-
+-  28.04.15 V3.5  Removed rewind. Call to blDoReadPDBML() returns WHOLEPDB
+                  instead of PDB.  By: CTP
 
 We need to deal with freeing wpdb if we are returning null.
 Also need to deal with some sort of error code
@@ -781,16 +789,8 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
    {
 #ifdef XML_SUPPORT
       /* Parse PDBML-formatted PDB file                                 */
-      if(DoWhole)
-      {
-         wpdb->header = blParseHeaderPDBML(fp);
-         rewind(fp);
-      }
-      wpdb->pdb = blDoReadPDBML(fp,&wpdb->natoms,AllAtoms,
-                                OccRank,ModelNum);
-      if(DoWhole)
-         wpdb->trailer = blStoreString(wpdb->trailer, "END   \n");
-      xmlCleanupParser();     /* free globals set by parser             */
+      blFreeWholePDB(wpdb);   /* free wpdb                              */
+      wpdb = blDoReadPDBML(fp,AllAtoms,OccRank,ModelNum,DoWhole);
       if(cmd[0]) unlink(cmd); /* delete tmp file                        */
       return(wpdb);           /* return PDB list                        */
 #else
@@ -1521,10 +1521,12 @@ pointer\n");
 
 
 
+
+
 /************************************************************************/
-/*>PDB *blDoReadPDBML(FILE *fp, int *natom, BOOL AllAtoms, int OccRank,
-                      int ModelNum)
-   --------------------------------------------------------------------
+/*>WHOLEPDB *blDoReadPDBML(FILE *fpin, BOOL AllAtoms, int  OccRank,
+                           int  ModelNum, BOOL DoWhole)
+-----------------------------------------------------------------------
 *//**
 
    \param[in]     *fpin    A pointer to type FILE in which the
@@ -1533,9 +1535,9 @@ pointer\n");
                            FALSE: ATOM records only
    \param[in]     OccRank  Occupancy ranking
    \param[in]     ModelNum NMR Model number (0 = all)
-   \param[out]    *natom   Number of atoms read. -1 if error.
-   \return                 A pointer to the first allocated item of
-                           the PDB linked list
+   \param[in]     DoWhole  Read the whole PDB file rather than just 
+                           the ATOM/HETATM records.
+   \return                 A pointer to a malloc'd WHOLEPDB structure.
 
    Reads a PDBML-formatted PDB file into a PDB linked list.
    
@@ -1545,6 +1547,9 @@ pointer\n");
    
    The global multiple-models flag is set to true if more than one model 
    is found.
+   
+   Returns NULL if memory allocation fails or returns wpdb with wpdb->pdb
+   set to NULL and wpdb->natoms set to -1.
 
 -  22.04.14 Original By: CTP
 -  02.06.14 Updated setting atnam_raw and parsing data from PDB atom site 
@@ -1567,17 +1572,20 @@ pointer\n");
             Calls blRenumAtomsPDB() at the end since we don't use the
             atom site IDs for atom numbers
 -  13.03.15 Cosmetic changes
+-  28.04.15 Set identical input parameters to blDoReadPDB(). 
+            Added CONECT and header parsing.
+            Return WHOLEPDB instead of PDB.  By: CTP
+
 */
-PDB *blDoReadPDBML(FILE *fpin,
-                   int  *natom,
-                   BOOL AllAtoms,
-                   int  OccRank,
-                   int  ModelNum)
+WHOLEPDB *blDoReadPDBML(FILE *fpin,
+                        BOOL AllAtoms,
+                        int  OccRank,
+                        int  ModelNum,
+                        BOOL DoWhole)
 {
 #ifndef XML_SUPPORT
 
    /* PDBML format not supported.                                       */
-   *natom = (-1);
    return( NULL );
 
 #else
@@ -1594,22 +1602,35 @@ PDB *blDoReadPDBML(FILE *fpin,
    xmlChar *content;
    double  content_lf;
 
-   PDB     *pdb      = NULL,
-           *curr_pdb = NULL,
+   WHOLEPDB *wpdb = NULL;
+
+   /*PDB     *pdb      = NULL,*/
+   PDB     *curr_pdb = NULL,
            *end_pdb  = NULL,
            multi[MAXPARTIAL];
 
    int     NPartial       =  0,
-           model_number   =  0;
+           model_number   =  0,
+           natom          =  0;
    char    store_atnam[8] = "",
            pad_resnam[8]  = "";
-       
 
-   /* Zero natoms and reset flags                                       */
+
+   /* Allocate wpdb                                                     */
+   if((wpdb=(WHOLEPDB *)malloc(sizeof(WHOLEPDB)))==NULL)
+      return(NULL);
+
+   /* Initialise wpdb                                                   */
+   wpdb->pdb         = NULL;
+   wpdb->header      = NULL;
+   wpdb->trailer     = NULL;
+   wpdb->natoms      = 0;
+
+   /* Reset flags                                                       */
    gPDBXML        = TRUE;  /* global PDBML-fornmat flag                 */
    gPDBPartialOcc = FALSE; /* global partial occupancy flag             */
    gPDBMultiNMR   = FALSE; /* global multiple models flag               */
-   *natom = 0;             /* atoms stored                              */
+
 
    /* Generate Document From Filehandle                                 */
    size_t = fread(xml_buffer, 1, XML_BUFFER, fpin);
@@ -1625,19 +1646,24 @@ PDB *blDoReadPDBML(FILE *fpin,
    if(document == NULL)
    {
       /* Error: Failed to parse file                                    */
-      *natom = -1;
-      return(NULL);
+      xmlFreeDoc(document); /* free document                            */
+      xmlCleanupParser();   /* clean up xml parser                      */
+      wpdb->natoms = -1;    /* indicate error                           */
+      return(wpdb);         /* return wpdb                              */
    }
-   
 
    /* Parse Document Tree                                               */
    root_node = xmlDocGetRootElement(document);   
-   if(root_node == NULL)                   /* 25.02.15                  */
+   if(root_node == NULL)
    {
-      *natom = -1;
-      return(NULL);
+      /* Error: Failed to set root node                                 */
+      xmlFreeDoc(document); /* free document                            */
+      xmlCleanupParser();   /* clean up xml parser                      */
+      wpdb->natoms = -1;    /* indicate error                           */
+      return(wpdb);         /* return wpdb                              */
    }
       
+   /* Parse Atom Coordinate Nodes                                       */
    for(n=root_node->children; n!=NULL; NEXT(n))
    {
       /* Find Atom Sites Node                                           */
@@ -1652,9 +1678,10 @@ PDB *blDoReadPDBML(FILE *fpin,
    if(sites_node == NULL)
    {
       /* Error: Failed to find atom sites                               */
-      xmlFreeDoc(document);
-      *natom = -1;
-      return(NULL);
+      xmlFreeDoc(document); /* free document                            */
+      xmlCleanupParser();   /* clean up xml parser                      */
+      wpdb->natoms = -1;    /* indicate error                           */
+      return(wpdb);         /* return wpdb                              */
    }
 
 
@@ -1670,10 +1697,11 @@ PDB *blDoReadPDBML(FILE *fpin,
          if(curr_pdb == NULL)
          {
             /* Error: Failed to store atom in pdb list                  */
-            xmlFreeDoc(document);
-            if(pdb != NULL) FREELIST(pdb,PDB);
-            *natom = -1;
-            return(NULL);
+            FREELIST(wpdb->pdb,PDB); /* free pdb list                   */
+            xmlFreeDoc(document);    /* free document                   */
+            xmlCleanupParser();      /* clean up xml parser             */
+            wpdb->natoms = -1;       /* indicate error                  */
+            return(wpdb);            /* return wpdb                     */
          }
 
          /* Set default values                                          */
@@ -1690,11 +1718,14 @@ PDB *blDoReadPDBML(FILE *fpin,
          {
             if(n->type != XML_ELEMENT_NODE){ continue; }
             content = xmlNodeGetContent(n);
-            if(content == NULL)            /* 25.02.15                  */
+            if(content == NULL)
             {
-               FREELIST(pdb, PDB);
-               *natom = -1;
-               return(NULL);
+               /* Error: Failed to set node content                     */
+               FREELIST(wpdb->pdb,PDB); /* free pdb list                */
+               xmlFreeDoc(document);    /* free document                */
+               xmlCleanupParser();      /* clean up xml parser          */
+               wpdb->natoms = -1;       /* indicate error               */
+               return(wpdb);            /* return wpdb                  */
             }
             
             /* Set PDB values                                           */
@@ -1920,8 +1951,8 @@ PDB *blDoReadPDBML(FILE *fpin,
          if((NPartial != 0) && strcmp(curr_pdb->atnam,store_atnam))
          {
             /* Store atom                                               */
-            if(blStoreOccRankAtom(OccRank,multi,NPartial,&pdb,&end_pdb,
-                                  natom))
+            if(blStoreOccRankAtom(OccRank,multi,NPartial,&wpdb->pdb,
+                                  &end_pdb,&wpdb->natoms))
             {
                LAST(end_pdb);
                NPartial = 0;
@@ -1929,11 +1960,12 @@ PDB *blDoReadPDBML(FILE *fpin,
             else
             {
                /* Error: Failed to store partial occ atom               */
-               xmlFreeDoc(document);
-               if(curr_pdb != NULL) FREELIST(curr_pdb,PDB);
-               if(pdb      != NULL) FREELIST(pdb,     PDB);
-               *natom = -1;
-               return(NULL);
+               FREELIST(curr_pdb,PDB);  /* free curr_pdb                */
+               FREELIST(wpdb->pdb,PDB); /* free pdb list                */
+               xmlFreeDoc(document);    /* free document                */
+               xmlCleanupParser();      /* clean up xml parser          */
+               wpdb->natoms = -1;       /* indicate error               */
+               return(wpdb);            /* return wpdb                  */
             }
          }
 
@@ -1944,7 +1976,8 @@ PDB *blDoReadPDBML(FILE *fpin,
 
             25.02.15 We will renumber afterwards
          */
-         curr_pdb->atnum = *natom + 1;
+         /*curr_pdb->atnum = *natom + 1;*/
+         curr_pdb->atnum = natom + 1;
          
          
          /* Add partial occupancy atom to temp storage                  */
@@ -1969,51 +2002,74 @@ PDB *blDoReadPDBML(FILE *fpin,
 
          
          /* Store Atom                                                  */
-         if(pdb == NULL)
+         if(wpdb->pdb == NULL)
          {
-            pdb      = curr_pdb;
-            end_pdb  = curr_pdb;
-            curr_pdb = NULL;
-            *natom   = 1;
+            /* store first atom                                         */
+            /*pdb        = curr_pdb;*/
+            wpdb->pdb    = curr_pdb;
+            end_pdb      = curr_pdb;
+            curr_pdb     = NULL;
+            wpdb->natoms = 1;
          }
          else
          {
+            /* store subsequent atoms                                   */
             end_pdb->next = curr_pdb;
             end_pdb       = curr_pdb;
             curr_pdb      = NULL;
-            (*natom)++;
+            wpdb->natoms += 1;
          }
       }
    }
       
-   /* Free document                                                     */
-   xmlFreeDoc(document);
 
    /* Store final atom (if partial occupancy)                           */
    if(NPartial != 0)
    {
-      if(!blStoreOccRankAtom(OccRank,multi,NPartial,&pdb,&end_pdb,natom))
+      if(!blStoreOccRankAtom(OccRank,multi,NPartial,&wpdb->pdb,&end_pdb,
+                             &wpdb->natoms))
       {
          /* Error: Failed to store atom in pdb list                     */
-         if(pdb != NULL) FREELIST(pdb,PDB);
-         *natom = -1;
-         return(NULL);
+         FREELIST(wpdb->pdb,PDB); /* free pdb list                      */
+         xmlFreeDoc(document);    /* free document                      */
+         xmlCleanupParser();      /* clean up xml parser                */
+         wpdb->natoms = -1;       /* indicate error                     */
+         return(wpdb);            /* return wpdb                        */
       }
    }
    
    /* Check atoms have been stored                                      */
-   if(pdb == NULL || *natom == 0)
+   if(wpdb->pdb == NULL || wpdb->natoms == 0)
    {
       /* Error: pdb list empty or no atoms stored                       */
-      if(pdb != NULL) FREELIST(pdb,PDB);
-      *natom = -1;
+      FREELIST(wpdb->pdb,PDB); /* free pdb list                         */
+      xmlFreeDoc(document);    /* free document                         */
+      xmlCleanupParser();      /* clean up xml parser                   */
+      wpdb->natoms = -1;       /* indicate error                        */
+      return(wpdb);            /* return wpdb                           */
    }
 
    /* 25.02.15 Renumber atoms since we don't use the atom site IDs      */
-   blRenumAtomsPDB(pdb, 1);
-    
-   /* Return PDB linked list                                            */
-   return(pdb);
+   blRenumAtomsPDB(wpdb->pdb, 1);
+
+
+   /* Parse header data and CONECT nodes for whole pdb                  */
+   if(DoWhole)
+   {
+      /* Parse CONECT Nodes                                             */
+      blParseConectPDBML(document, wpdb->pdb);
+   
+      /* Parse Header Data                                              */
+      wpdb->header = blParseHeaderPDBML(document);
+   }
+
+
+   /* Free document and globals set by XML parser                       */
+   xmlFreeDoc(document);
+   xmlCleanupParser();
+      
+   /* Return WHOLEPDB                                                   */
+   return(wpdb);
 
 #endif
 }
@@ -2373,18 +2429,19 @@ static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer)
    -------------------------------------------------
 *//**
 
-   \param[in]     *fpin   File pointer
-   \return                STRINGLIST with basic header information.
+   \param[in]     *document   XML document
+   \return                    STRINGLIST with basic header information.
 
-   Parses a PDBML file and creates HEADER and TITLE lines.
+   Parses PDBML header date and creates HEADER and TITLE lines.
 
 -  22.04.14 Original. By: CTP
 -  07.07.14 Renamed to blParseHeaderPDBML() By: CTP
 -  18.08.14 Return NULL if XML not supported. By: CTP
 -  10.09.14 Use blSetPDBDateField() to set date field. By: CTP
+-  28.04.15 Parse xmlDoc instead of FILE.  By: CTP
 
 */
-static STRINGLIST *blParseHeaderPDBML(FILE *fpin)
+static STRINGLIST *blParseHeaderPDBML(xmlDoc *document)
 {
 #ifndef XML_SUPPORT
 
@@ -2394,14 +2451,12 @@ static STRINGLIST *blParseHeaderPDBML(FILE *fpin)
 #else
 
    /* Parse PDBML header                                                */
-   xmlParserCtxtPtr ctxt;
-   xmlDoc  *document;
+
    xmlNode *root_node = NULL, 
            *node      = NULL,
            *subnode   = NULL,
            *n         = NULL;
-   int     size_t;
-   char    xml_buffer[XML_BUFFER];
+
    xmlChar *content, *attribute;
    
    STRINGLIST *wpdb_header = NULL,
@@ -2418,20 +2473,6 @@ static STRINGLIST *blParseHeaderPDBML(FILE *fpin)
        cut_to   = 0,
        nlines   = 0,
        i        = 0;
-
-   
-   /* Generate Document From Filehandle                                 */
-   size_t = fread(xml_buffer, 1, XML_BUFFER, fpin);
-   ctxt = xmlCreatePushParserCtxt(NULL, NULL, xml_buffer, size_t, "file");
-   while ((size_t = fread(xml_buffer, 1, XML_BUFFER, fpin)) > 0) 
-   {
-      xmlParseChunk(ctxt, xml_buffer, size_t, 0);
-   }
-   xmlParseChunk(ctxt, xml_buffer, 0, 1);
-   document = ctxt->myDoc;
-   xmlFreeParserCtxt(ctxt);
-
-   if(document == NULL){ return(NULL); } /*        failed to parse file */
 
 
    /* Parse Document Tree                                               */
@@ -2536,12 +2577,6 @@ static STRINGLIST *blParseHeaderPDBML(FILE *fpin)
       }
    }
 
-   /* Free document                                                     */
-   xmlFreeDoc(document);
-
-   /* Cleanup xml parser                                                */
-   xmlCleanupParser();
-
    /* Create Header Line                                                */
    if(!strlen(header_field))
    {
@@ -2603,5 +2638,298 @@ static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date)
 
    return TRUE;
 }
-#endif
 
+
+/************************************************************************/
+/*>static int *blParseConectPDBML(xmlDoc *document, PDB *pdb)
+   ----------------------------------------------------------
+*//**
+
+   \param[in]     *fpin   File pointer
+   \return                STRINGLIST with basic header information.
+
+   Parses a PDBML file and creates HEADER and TITLE lines.
+
+-  28.04.15 Original. By: CTP
+
+*/
+static int blParseConectPDBML(xmlDoc *document, PDB *pdb)
+{
+#ifndef XML_SUPPORT
+
+   /* PDBML format not supported.                                       */
+   return(-1);
+
+#else
+
+   /* Parse PDBML CONECT Records                                        */
+
+   xmlNode *root_node   = NULL, 
+           *sites_node  = NULL, 
+           *conect_node = NULL, 
+           *n           = NULL;
+
+   xmlChar *content;
+   double  content_lf;
+
+   PDB     *conect_one = NULL,
+           *conect_two = NULL,
+           *conect_a = NULL,
+           *conect_b = NULL,           
+           *p = NULL;
+
+   BOOL    valid_conect   = FALSE;
+
+   int     nconect = 0;
+
+
+   /* Parse Document Tree                                               */
+   root_node = xmlDocGetRootElement(document);
+   sites_node = NULL;
+   for(n=root_node->children; n!=NULL; NEXT(n))
+   {
+      /* Find CONECT Sites Node                                         */
+      if(!strcmp("struct_connCategory",(char *) n->name))
+      {
+         /* Found CONECT Sites                                          */
+         sites_node = n;
+         break;
+      }
+   }
+
+   /* Read CONECT data                                                  */
+   if(sites_node != NULL)
+   {
+      INIT(conect_one,PDB);
+      INIT(conect_two,PDB);
+   
+      /* Scan conect nodes                                              */
+      for(conect_node = sites_node->children; conect_node; 
+          conect_node = conect_node->next)
+      {
+         if(conect_node->type != XML_ELEMENT_NODE){ continue; }
+      
+         /* Reset valid conect flag                                     */
+         valid_conect = FALSE;
+         
+         /* Set default values                                          */
+         CLEAR_PDB(conect_one);
+         strcpy(conect_one->chain,   "");
+         strcpy(conect_one->atnam,   "");
+         strcpy(conect_one->resnam,  "");
+         strcpy(conect_one->insert, " ");
+         strcpy(conect_one->element, "");
+         strcpy(conect_one->segid,   "");
+         CLEAR_PDB(conect_two);
+         strcpy(conect_two->chain,   "");
+         strcpy(conect_two->atnam,   "");
+         strcpy(conect_two->resnam,  "");
+         strcpy(conect_two->insert, " ");
+         strcpy(conect_two->element, "");
+         strcpy(conect_two->segid,   "");
+
+         /* Scan conect node children                                   */
+         for(n=conect_node->children; n!=NULL; NEXT(n))
+         {
+            if(n->type != XML_ELEMENT_NODE){ continue; }
+            content = xmlNodeGetContent(n);
+
+            if(content == NULL)
+            {
+               /* Failed to assign memory                               */
+               /* Free memory and return error                          */
+               FREELIST(pdb, PDB);
+               return(-1);
+            }
+
+            /* Check CONECT type                                        */
+            /* BiopLib only handles covalent bonding                    */
+            /* if not covalent bond then skip node                      */
+            if(!strcmp((char *)n->name, "conn_type_id"))
+            {
+               if(!strncmp((char *)content,"covale",6) ||
+                  !strncmp((char *)content,"disulf",6) ||
+                  !strncmp((char *)content,"modres",6))
+               {
+                  /* mark as covalent bond */
+                  valid_conect = TRUE;
+               }
+               else
+               {
+                  /* skip remaining child nodes */
+                  valid_conect = FALSE;
+                  xmlFree(content);
+                  break;
+               }
+            }
+
+            /* Set conect pdb data */
+            if(!strcmp((char *)n->name, "ptnr1_auth_asym_id"))
+            {
+               strcpy(conect_one->chain, (char *)content);
+            }
+            else if(!strcmp((char *)n->name, "ptnr1_auth_comp_id"))
+            {
+               strcpy(conect_one->resnam, (char *) content);
+            }
+            else if(!strcmp((char *)n->name, "ptnr1_auth_seq_id"))
+            {
+               sscanf((char *)content, "%lf", &content_lf);
+               conect_one->resnum = (REAL)content_lf;
+            }
+            else if(!strcmp((char *)n->name, "ptnr1_label_asym_id"))
+            {
+               if(strlen(conect_one->chain) == 0)
+               {
+                  strncpy(conect_one->chain, (char *)content, 8);
+               }
+            }
+            else if(!strcmp((char *)n->name, "ptnr1_label_atom_id"))
+            {
+               if(strlen(conect_one->atnam) == 0)
+               {
+                  strncpy(conect_one->atnam, (char *)content, 8);
+                  PADMINTERM(conect_one->atnam, 4);
+               }
+            }
+            else if(!strcmp((char *) n->name, "ptnr1_label_comp_id"))
+            {
+               if(strlen(conect_one->resnam) == 0)
+               {
+                  strncpy(conect_one->resnam, (char *)content, 8);
+               }
+            }
+            else if(!strcmp((char *)n->name, "ptnr1_label_seq_id"))
+            {
+               if((conect_one->resnum == 0) && 
+                  (strlen((char *)content) > 0))
+               {
+                  content_lf = (REAL)0.0;
+                  sscanf((char *)content, "%lf", &content_lf);
+                  conect_one->resnum = (REAL)content_lf;
+               }
+            }
+            else if(!strcmp((char *)n->name, "ptnr2_auth_asym_id"))
+            {
+               strcpy(conect_two->chain, (char *)content);
+            }
+            else if(!strcmp((char *)n->name, "ptnr2_auth_comp_id"))
+            {
+               strcpy(conect_two->resnam, (char *) content);
+            }
+            else if(!strcmp((char *)n->name, "ptnr2_auth_seq_id"))
+            {
+               sscanf((char *)content, "%lf", &content_lf);
+               conect_two->resnum = (REAL)content_lf;
+            }
+            else if(!strcmp((char *)n->name, "ptnr2_label_asym_id"))
+            {
+               if(strlen(conect_two->chain) == 0)
+               {
+                  strncpy(conect_two->chain, (char *)content, 8);
+               }
+            }
+            else if(!strcmp((char *)n->name, "ptnr2_label_atom_id"))
+            {
+               if(strlen(conect_two->atnam) == 0)
+               {
+                  strncpy(conect_two->atnam, (char *)content, 8);
+                  PADMINTERM(conect_two->atnam, 4);
+               }
+            }
+            else if(!strcmp((char *) n->name, "ptnr2_label_comp_id"))
+            {
+               if(strlen(conect_two->resnam) == 0)
+               {
+                  strncpy(conect_two->resnam, (char *)content, 8);
+               }
+            }
+            else if(!strcmp((char *)n->name, "ptnr2_label_seq_id"))
+            {
+               if((conect_two->resnum == 0) && 
+                  (strlen((char *)content) > 0))
+               {
+                  content_lf = (REAL)0.0;
+                  sscanf((char *)content, "%lf", &content_lf);
+                  conect_two->resnum = (REAL)content_lf;
+               }
+            }
+            
+            /* free xml content                                         */
+            xmlFree(content);
+
+         } /* end conect node                                           */
+
+
+         /* Filter CONECT records                                       */
+         /*  1. Covalent bond type                                      */
+         /*  2. Atoms found in pdb list                                 */
+         /*  3. Bond distance within tolerance                          */
+
+         /* 1. Skip unless CONECT entry is for covalent bond            */
+         if(!valid_conect){ continue; }         
+
+
+         /* 2. Find conect atoms in pdb list                            */
+         conect_a = NULL;
+         conect_b = NULL;
+         for( p=pdb; p!=NULL && (conect_a == NULL || conect_b == NULL); 
+              NEXT(p) )
+         {
+            if(CHAINMATCH(p->chain,conect_one->chain) &&
+               (p->resnum == conect_one->resnum) &&
+               !strncmp(p->atnam,conect_one->atnam,8))
+            {
+               conect_a = p;
+            }
+
+            if(CHAINMATCH(p->chain,conect_two->chain) &&
+               (p->resnum == conect_two->resnum) &&
+               !strncmp(p->atnam,conect_two->atnam,8))
+            {
+               conect_b = p;
+            }
+
+         }
+
+         /* Skip if conect atoms not found in list                      */
+         if(!(conect_a && conect_b)){ continue; }
+
+
+         /* 3. Skip if bond distance outside default tolerance          */
+         if(!blIsBonded(conect_a, conect_b, DEFCONECTTOL))
+         {
+            continue;
+         }
+
+
+         /* Add CONECT record                                           */
+         if(blAddConect(conect_a,conect_b))
+         {
+            /* increment nconect counter                                */
+            nconect++;
+         }
+         else
+         {
+            /* failed to add conect record                              */
+            FREELIST(conect_one,PDB);
+            FREELIST(conect_two,PDB);
+            FREELIST(pdb,PDB);
+            return(-1);
+         }
+
+      } /* end conect node */
+
+      FREELIST(conect_one,PDB);
+      FREELIST(conect_two,PDB);
+
+   } /* end conect sites */
+
+   /* Return number of CONECT records stored                            */
+   return(nconect);
+
+#endif
+}
+
+
+#endif
