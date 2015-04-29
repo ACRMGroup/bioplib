@@ -3,8 +3,8 @@
 
    \file       StripWatersPDB.c
    
-   \version    V1.2
-   \date       19.08.14
+   \version    V1.3
+   \date       19.04.15
    \brief      
    
    \copyright  (c) Dr. Andrew C. R. Martin, UCL, 2008-2014
@@ -50,6 +50,7 @@
 -  V1.1  07.07.14 Use bl prefix for functions By: CTP
 -  V1.2  19.08.14 Renamed function blStripWatersPDB() to 
                   blStripWatersPDBAsCopy() By: CTP
+-  V1.3  19.04.15 Added call to blCopyConect()   By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -91,11 +92,9 @@
 
    Take a PDB linked list and returns the PDB list minus waters
 
-   N.B. The routine is non-destructive; i.e. the original PDB linked 
-        list is intact after the selection process
-
 -  30.04.08 Original based on StripHPDB()   By: ACRM
 -  19.08.14 Renamed function to blStripWatersPDBAsCopy() By: CTP
+-  12.04.15 Added rebuild of CONECT data
 */
 PDB *blStripWatersPDBAsCopy(PDB *pdbin, int *natom)
 {
@@ -106,7 +105,7 @@ PDB *blStripWatersPDBAsCopy(PDB *pdbin, int *natom)
    *natom = 0;
    
    /* Step through the input PDB linked list                            */
-   for(p=pdbin; p!= NULL; NEXT(p))
+   for(p=pdbin; p!=NULL; NEXT(p))
    {
       if(!ISWATER(p))
       {
@@ -135,6 +134,14 @@ PDB *blStripWatersPDBAsCopy(PDB *pdbin, int *natom)
          /* Copy the record to the output list (sets ->next to NULL)    */
          blCopyPDB(q, p);
       }
+   }
+
+   /* Copy CONECT data to new linked list                               */
+   if(!blCopyConects(pdbout, pdbin))
+   {
+      FREELIST(pdbout, PDB);
+      *natom = 0;
+      return(NULL);
    }
 
    /* Return pointer to start of output list                            */

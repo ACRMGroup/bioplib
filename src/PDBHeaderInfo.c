@@ -65,6 +65,9 @@
    #FUNCTION blGetCompoundWholePDBChain()
    Obtains the compound data for a specified chain from WHOLEPDB info
 
+   #FUNCTION blFindMolID()
+   Finds the MOL_ID for a specified chain
+
    #FUNCTION blGetSpeciesWholePDBChain()
    Obtains the species data for a specified chain from WHOLEPDB info
 
@@ -80,7 +83,7 @@
 /************************************************************************/
 /* Defines and macros
 */
-#define MAXBUFF 160
+#define MAXWORD 8
 
 /************************************************************************/
 /* Globals
@@ -89,14 +92,12 @@
 /************************************************************************/
 /* Prototypes
 */
-char *collapseSpaces(char *inText);
-
 
 /************************************************************************/
 /*>BOOL blGetHeaderWholePDB(WHOLEPDB *wpdb, 
-                         char *header,  int maxheader,
-                         char *date,    int maxdate,
-                         char *pdbcode, int maxcode)
+                            char *header,  int maxheader,
+                            char *date,    int maxdate,
+                            char *pdbcode, int maxcode)
    ---------------------------------------------------
 *//**
 
@@ -146,6 +147,17 @@ BOOL blGetHeaderWholePDB(WHOLEPDB *wpdb,
 
 
 /************************************************************************/
+/*>char *blGetTitleWholePDB(WHOLEPDB *wpdb)
+   ----------------------------------------
+*//**
+   \param[in]    *wpdb    WHOLEPDB structure
+   \return                Tit;le from PDB file (malloc()'d)
+
+   Extracts the title from a PDB file malloc()ing a string in which to
+   store the data. This must be freed by user code
+
+   28.04.15 Original   By: ACRM
+*/
 char *blGetTitleWholePDB(WHOLEPDB *wpdb)
 {
    char       *title = NULL,
@@ -157,7 +169,7 @@ char *blGetTitleWholePDB(WHOLEPDB *wpdb)
    {
       if(!strncmp(s->string, "TITLE ", 6))
       {
-         char buffer[MAXBUFF];
+         char buffer[MAXPDBANNOTATION];
          strcpy(buffer, s->string);
          TERMINATE(buffer);
          
@@ -175,7 +187,7 @@ char *blGetTitleWholePDB(WHOLEPDB *wpdb)
       }
    }
 
-   cleanTitle = collapseSpaces(title);
+   cleanTitle = blCollapseSpaces(title);
    free(title);
    KILLTRAILSPACES(cleanTitle);
    
@@ -183,73 +195,20 @@ char *blGetTitleWholePDB(WHOLEPDB *wpdb)
 }
 
 /************************************************************************/
-char *collapseSpaces(char *inText)
-{
-   int  nchar = 0;
-   char *ch, *chp, *chq,
-        *outText = NULL;
+/*>static STRINGLIST *FindNextMolIDRecord(STRINGLIST *start, char *type)
+   ---------------------------------------------------------------------
+*//**
+   \param[in]   *start    Start of stringlist containing header
+   \param[in]   *type     Type of header record - COMPND or SOURCE
+   \return                Pointer to start of the next molecule ID in
+                          the appropriate header records
 
-   if(inText==NULL)
-      return(NULL);
-   
-   /* Count characters skipping repeated spaces                         */
-   chp=NULL;
-   for(ch=inText; *ch!='\0'; ch++)
-   {
-      if(((chp==NULL) || (*chp!=' ')) || (*ch!=' '))
-      {
-         nchar++;
-      }
-      chp=ch;
-   }
-   /* Increment count for terminator                                    */
-   nchar++;
+   Find the next MOL_ID within the specified header record type (COMPND
+   or SOURCE)
 
-   /* Allocate new space                                                */
-   if((outText=(char *)malloc(nchar * sizeof(char)))==NULL)
-      return(NULL);
-
-   /* Copy characters skipping repeated spaces                          */
-   chp=NULL;
-   chq=outText;
-   for(ch=inText; *ch!='\0'; ch++)
-   {
-      if(((chp==NULL) || (*chp!=' ')) || (*ch!=' '))
-      {
-         *chq = *ch;
-         chq++;
-      }
-      chp=ch;
-   }
-   *chq = '\0';
-
-   return(outText);
-}
-
-
-typedef struct _compnd
-{
-   char  molecule[MAXBUFF],
-         chain[MAXBUFF],
-         fragment[MAXBUFF],
-         synonym[MAXBUFF],
-         ec[MAXBUFF],
-         engineered[MAXBUFF],
-         mutation[MAXBUFF],
-         other[MAXBUFF];
-}  COMPND;
-
-typedef struct _pdbsource
-{
-   char scientificName[160],
-        commonName[160],
-        strain[160];
-   int  taxid;
-}  PDBSOURCE;
-
-   
-/************************************************************************/
-STRINGLIST *FindNextMolIDRecord(STRINGLIST *start)
+   28.04.15  Original   By: ACRM
+*/
+static STRINGLIST *FindNextMolIDRecord(STRINGLIST *start, char *type)
 {
    STRINGLIST *s;
    
@@ -258,7 +217,7 @@ STRINGLIST *FindNextMolIDRecord(STRINGLIST *start)
    
    for(s=start->next; s!=NULL; NEXT(s))
    {
-      if(!strncmp(s->string, "COMPND", 6))
+      if(!strncmp(s->string, type, 6))
       {
          if(strstr(s->string, "MOL_ID:"))
             return(s);
@@ -267,24 +226,40 @@ STRINGLIST *FindNextMolIDRecord(STRINGLIST *start)
    return(NULL);
 }
 
-#define MAXWORD 8
-
 
 /************************************************************************/
-BOOL PopulateCompndField(STRINGLIST *molidStart, STRINGLIST *molidStop,
-                         char *data, char *field)
+/*>static BOOL ExtractField(STRINGLIST *molidStart, 
+                            STRINGLIST *molidStop, char *data,
+                            char *type, char *field)
+   ------------------------------------------------------------
+*//**
+   \param[in]   *molidStart    Start of a set of header records 
+   \param[in]   *molidStop     Start of next set of headers (or NULL)
+   \param[out]  *data          Storage for extracted string
+   \param[in]   *type          Record type (COMPND or SOURCE)
+   \param[in]   *field         Sub-record field of interest
+   \return                     Success
 
+   Extracts data for a field from a COMPND or SOURCE record. The field 
+   data after the field specfication and is terminated by a ;
+
+   Returns FALSE if field not found.
+
+   28.04.15  Original   By: ACRM
+*/
+static BOOL ExtractField(STRINGLIST *molidStart, STRINGLIST *molidStop,
+                         char *data, char *type, char *field)
 {
    STRINGLIST *s;
    BOOL       GotField = FALSE;
    char       *chp,
-              buffer[MAXBUFF];
+              buffer[MAXPDBANNOTATION];
 
    data[0] = '\0';
 
    for(s=molidStart; s!=molidStop; NEXT(s))
    {
-      if(strncmp(s->string, "COMPND", 6))
+      if(strncmp(s->string, type, 6))
          break;
 
       chp = NULL;
@@ -310,12 +285,12 @@ BOOL PopulateCompndField(STRINGLIST *molidStart, STRINGLIST *molidStop,
       if(GotField && (chp != NULL))
       {
          /* Copy into the buffer                                        */
-         strncpy(buffer, chp, MAXBUFF);
+         strncpy(buffer, chp, MAXPDBANNOTATION);
          /* Remove spaces                                               */
          TERMINATE(buffer);
          KILLTRAILSPACES(buffer);
          /* Add to output data                                          */
-         blStrncat(data, buffer, MAXBUFF);
+         blStrncat(data, buffer, MAXPDBANNOTATION);
 
          /* Exit if the string contains a ;                             */
          if((chp=strchr(data, ';'))!=NULL)
@@ -330,6 +305,20 @@ BOOL PopulateCompndField(STRINGLIST *molidStart, STRINGLIST *molidStop,
 
 
 /************************************************************************/
+/*>BOOL blGetCompoundWholePDBChain(WHOLEPDB *wpdb, char *chain, 
+                                   COMPND *compnd)
+   ------------------------------------------------------------
+*//**
+   \param[in]    *wpdb    WHOLEPDB structure
+   \param[in]    *chain   Chain label of interest
+   \param[out]   *compnd  Data from the COMPND records
+   \return       BOOL     Success
+
+   Extracts the COMPND data for a specified chain. Returns FALSE if the
+   chain isn't found
+
+   28.04.15 Original   By: ACRM
+*/
 BOOL blGetCompoundWholePDBChain(WHOLEPDB *wpdb, char *chain, 
                                 COMPND *compnd)
 {
@@ -337,9 +326,10 @@ BOOL blGetCompoundWholePDBChain(WHOLEPDB *wpdb, char *chain,
               *molidStart,
               *molidStop,
               *s;
-   BOOL       foundChain = FALSE;
+   int        molid;
+   
 
-
+   compnd->molid         = 0;
    compnd->molecule[0]   = '\0';
    compnd->chain[0]      = '\0';
    compnd->fragment[0]   = '\0';
@@ -349,72 +339,171 @@ BOOL blGetCompoundWholePDBChain(WHOLEPDB *wpdb, char *chain,
    compnd->mutation[0]   = '\0';
    compnd->other[0]      = '\0';
 
-   molidFirst = FindNextMolIDRecord(wpdb->header);
+   if((molid = blFindMolID(wpdb, chain)) == 0)
+      return(FALSE);
+   
+   molidFirst = FindNextMolIDRecord(wpdb->header, "COMPND");
 
    for(molidStart=molidFirst; molidStart!=NULL; molidStart=molidStop)
    {
-      molidStop  = FindNextMolIDRecord(molidStart);
+      molidStop  = FindNextMolIDRecord(molidStart, "COMPND");
+      for(s=molidStart; s!=molidStop; NEXT(s))
+      {
+         char buffer[MAXPDBANNOTATION];
+         int  thisMolid = 0;
+
+         ExtractField(molidStart, molidStop,
+                      buffer,             "COMPND", "MOL_ID:");
+         sscanf(buffer,"%d", &thisMolid);
+
+         if(thisMolid == molid)
+         {
+            ExtractField(molidStart, molidStop,
+                         compnd->molecule,   "COMPND","MOLECULE:");
+            ExtractField(molidStart, molidStop,
+                         compnd->chain,      "COMPND", "CHAIN:");
+            ExtractField(molidStart, molidStop,
+                         compnd->fragment,   "COMPND", "FRAGMENT:");
+            ExtractField(molidStart, molidStop,
+                         compnd->synonym,    "COMPND", "SYNONYM:");
+            ExtractField(molidStart, molidStop,
+                         compnd->ec,         "COMPND", "EC:");
+            ExtractField(molidStart, molidStop,
+                         compnd->engineered, "COMPND", "ENGINEERED:");
+            ExtractField(molidStart, molidStop,
+                         compnd->mutation,   "COMPND", "MUTATION:");
+            ExtractField(molidStart, molidStop,
+                         compnd->other,      "COMPND", "OTHER:");
+            ExtractField(molidStart, molidStop,
+                         buffer,             "COMPND", "MOL_ID:");
+            sscanf(buffer,"%d", &(compnd->molid));
+            return(TRUE);
+         }
+      }
+   }
+
+   return(FALSE);
+}
+
+
+/************************************************************************/
+/*>int blFindMolID(WHOLEPDB *wpdb, char *chain)
+   --------------------------------------------
+*//**
+   \param[in]    *wpdb   WHOLEPDB structure
+   \param[in]    *chain  Chain label
+   \return               MOL_ID or 0 if chain not found
+
+   Finds the MOL_ID for a specified chain
+
+   28.04.15   Original   By: ACRM
+*/
+int blFindMolID(WHOLEPDB *wpdb, char *chain)
+{
+   STRINGLIST *molidFirst,
+              *molidStart,
+              *molidStop,
+              *s;
+
+   molidFirst = FindNextMolIDRecord(wpdb->header, "COMPND");
+
+   for(molidStart=molidFirst; molidStart!=NULL; molidStart=molidStop)
+   {
+      molidStop  = FindNextMolIDRecord(molidStart, "COMPND");
       for(s=molidStart; s!=molidStop; NEXT(s))
       {
          char *chp;
-         char buffer[MAXBUFF],
+         char buffer[MAXPDBANNOTATION],
               word[MAXWORD];
          
          if((chp=strstr(s->string, "CHAIN:"))!=NULL)
          {
-            strncpy(buffer, chp+6, MAXBUFF);
+            strncpy(buffer, chp+6, MAXPDBANNOTATION);
             TERMAT(buffer, ';');
             KILLLEADSPACES(chp,buffer);
 
             /* Check the chains to see if our chain is there            */
             do {
+               int molid = 0;
+               
                chp=blGetWord(chp, word, MAXWORD);
                if(!strcmp(word, chain))
                {
-                  foundChain = TRUE;
-                  goto found;
+                  ExtractField(molidStart, molidStop,
+                               buffer,             "COMPND", "MOL_ID:");
+                  sscanf(buffer,"%d", &molid);
+                  return(molid);
                }
             }  while(chp!=NULL);
          }
       }
    }
    
-found:
-   if(foundChain)
-   {
-      PopulateCompndField(molidStart, molidStop,
-                          compnd->molecule,   "MOLECULE:");
-      PopulateCompndField(molidStart, molidStop,
-                          compnd->chain,      "CHAIN:");
-      PopulateCompndField(molidStart, molidStop,
-                          compnd->fragment,   "FRAGMENT:");
-      PopulateCompndField(molidStart, molidStop,
-                          compnd->synonym,    "SYNONYM:");
-      PopulateCompndField(molidStart, molidStop,
-                          compnd->ec,         "EC:");
-      PopulateCompndField(molidStart, molidStop,
-                          compnd->engineered, "ENGINEERED:");
-      PopulateCompndField(molidStart, molidStop,
-                          compnd->mutation,   "MUTATION:");
-      PopulateCompndField(molidStart, molidStop,
-                          compnd->other,      "OTHER:");
-      return(TRUE);
-   }
-   
-   return(FALSE);
+   return(0);
 }
 
 /************************************************************************/
+/*>BOOL blGetSpeciesWholePDBChain(WHOLEPDB *wpdb, char *chain,
+                                  PDBSOURCE *source)
+   -----------------------------------------------------------
+*//**
+   \param[in]    *wpdb    WHOLEPDB structure
+   \param[in]    *chain   Chain label
+   \param[out]   *source  SOURCE information for chain
+   \return                Success (chain found?)
+
+   Extracts the SOURCE data for a specified chain
+*/
 BOOL blGetSpeciesWholePDBChain(WHOLEPDB *wpdb, char *chain,
                                PDBSOURCE *source)
 {
+   STRINGLIST *s,
+              *molidFirst = NULL,
+              *molidStart = NULL,
+              *molidStop  = NULL;
+   int        molid    = 0;
+
    source->scientificName[0] = '\0';
    source->commonName[0]     = '\0';
    source->strain[0]         = '\0';
    source->taxid             = 0;
+
+   if((molid = blFindMolID(wpdb, chain)) == 0)
+      return(FALSE);
    
+   molidFirst = FindNextMolIDRecord(wpdb->header, "SOURCE");
+
+   for(molidStart=molidFirst; molidStart!=NULL; molidStart=molidStop)
+   {
+      molidStop  = FindNextMolIDRecord(molidStart, "SOURCE");
+      for(s=molidStart; s!=molidStop; NEXT(s))
+      {
+         char buffer[MAXPDBANNOTATION];
+         int  thisMolid = 0;
+
+         ExtractField(molidStart, molidStop,
+                      buffer,             "SOURCE", "MOL_ID:");
+         sscanf(buffer,"%d", &thisMolid);
+
+         if(thisMolid == molid)
+         {
+            ExtractField(molidStart, molidStop,
+                         source->scientificName, "SOURCE","ORGANISM_SCIENTIFIC:");
+            ExtractField(molidStart, molidStop,
+                         source->commonName,     "SOURCE", "ORGANISM_COMMON:");
+            ExtractField(molidStart, molidStop,
+                         source->strain,         "SOURCE", "STRAIN:");
+            ExtractField(molidStart, molidStop,
+                         buffer,                 "SOURCE", "ORGANISM_TAXID:");
+            sscanf(buffer,"%d",&source->taxid);
+            return(TRUE);
+         }
+      }
+   }
+
    return(FALSE);
 }
+
 
 /************************************************************************/
 #ifdef TEST
@@ -459,14 +548,15 @@ int main(int argc, char **argv)
 
             blGetCompoundWholePDBChain(wpdb, chainLabels[i], &compound);
 
-            printf("molecule: %s\n", compound.molecule);
-            printf("chain: %s\n", compound.chain);
-            printf("fragment: %s\n", compound.fragment);
-            printf("synonym: %s\n", compound.synonym);
-            printf("ec: %s\n", compound.ec);
+            printf("molid:      %d\n", compound.molid);
+            printf("molecule:   %s\n", compound.molecule);
+            printf("chain:      %s\n", compound.chain);
+            printf("fragment:   %s\n", compound.fragment);
+            printf("synonym:    %s\n", compound.synonym);
+            printf("ec:         %s\n", compound.ec);
             printf("engineered: %s\n", compound.engineered);
-            printf("mutation: %s\n", compound.mutation);
-            printf("other: %s\n", compound.other);
+            printf("mutation:   %s\n", compound.mutation);
+            printf("other:      %s\n", compound.other);
 
             if(blGetSpeciesWholePDBChain(wpdb, chainLabels[i], &species))
             {

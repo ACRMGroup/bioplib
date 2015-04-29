@@ -3,8 +3,8 @@
 
    \file       general.h
    
-   \version    V1.18
-   \date       26.03.15
+   \version    V1.19
+   \date       28.04.15
    \brief      Header file for general purpose routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2015
@@ -67,6 +67,7 @@
 -  V1.16 10.03.15 Added blSplitStringOnCommas()  By: ACRM
 -  V1.17 12.03.15 Added blSplitStringOnChars(), blCheckProgName()
 -  V1.18 26.03.15 Added blStrncat()
+-  V1.19 28.04.15 Added blCollapseSpaces()
 
 *************************************************************************/
 #ifndef _GENERAL_H
@@ -125,6 +126,7 @@ void blRightJustify(char *string);
 char *blGetWordNC(char *buffer, char *word, int maxlen);
 void blGetfield(char *buffer, int start, int width, char *str);
 BOOL blCheckProgName(char *name, char *expected);
+char *blCollapseSpaces(char *inText);
 
 /************************************************************************/
 /* Include deprecated functions                                         */

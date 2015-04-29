@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.79
-   \date       26.03.15
+   \version    V1.81
+   \date       28.04.15
    \brief      Include file for PDB routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2015
@@ -186,6 +186,12 @@
                   gPDBMultiNMR is now an int containing the number of
                   MODELs
 -  V1.79 26.03.15 Added blGetPDBCHainAsCopy()
+-  V1.80 17.04.15 Added blCopyConects() and blIndexAtomNumbersPDB()
+-  V1.81 28.04.15 Added blGetHeaderWholePDB(), blGetTitleWholePDB(),
+                  blGetCompoundWholePDBChain(), blFindMolID(),
+                  blGetSpeciesWholePDBChain() plus the COMPND and
+                  PDBSOURCE structures
+
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -204,6 +210,10 @@
                            or nucleotide
                         */
 #define MAXCONECT    8  /* Max number of CONECT connections             */
+#define DEFCONECTTOL 0.1   /* Default CONECT tolerence                  */
+#define MAXPDBANNOTATION 160 /* Max size for storing a PDB header 
+                                annotation
+                             */
 
 /* blATOMTYPE is unused at present, but gives the flexibility of
    associating type information with each PDB record. 
@@ -319,6 +329,30 @@ typedef struct _wholepdb
    STRINGLIST *trailer;
    int        natoms;
 }  WHOLEPDB;
+
+typedef struct _compnd
+{
+   int   molid;
+   char  molecule[MAXPDBANNOTATION],
+         chain[MAXPDBANNOTATION],
+         fragment[MAXPDBANNOTATION],
+         synonym[MAXPDBANNOTATION],
+         ec[MAXPDBANNOTATION],
+         engineered[MAXPDBANNOTATION],
+         mutation[MAXPDBANNOTATION],
+         other[MAXPDBANNOTATION];
+}  COMPND;
+
+typedef struct _pdbsource
+{
+   char scientificName[MAXPDBANNOTATION],
+        commonName[MAXPDBANNOTATION],
+        strain[MAXPDBANNOTATION];
+   int  taxid;
+}  PDBSOURCE;
+
+   
+
 
 /* This is designed to cause an error message which prints this line
    It has been tested with gcc and Irix cc and does as required in
@@ -500,6 +534,7 @@ BOOL blAddOneDirectionConect(PDB *p, PDB *q);
 BOOL blDeleteConect(PDB *p, PDB *q);
 BOOL blDeleteAConectByNum(PDB *pdb, int cNum);
 void blDeleteAtomConects(PDB *pdb);
+BOOL blCopyConects(PDB *out, PDB *in);
 BOOL blIsBonded(PDB *p, PDB *q, REAL tol);
 PDB *blDeleteAtomPDB(PDB *pdb, PDB *atom);
 PDB *blDeleteAtomRangePDB(PDB *pdb, PDB *start, PDB *stop);
@@ -559,6 +594,7 @@ BOOL blGetExptlOld(FILE *fp, REAL *resolution, REAL *RFactor, REAL *FreeR,
               int *StrucType);
 char *blReportStructureType(int type);
 PDB **blIndexPDB(PDB *pdb, int *natom);
+PDB **blIndexAtomNumbersPDB(PDB *pdb, int *indexSize);
 DISULPHIDE *blReadDisulphidesPDB(FILE *fp, BOOL *error);
 DISULPHIDE *blReadDisulphidesWholePDB(WHOLEPDB *wpdb, BOOL *error);
 BOOL blParseResSpec(char *spec, char *chain, int *resnum, char *insert);
@@ -628,6 +664,16 @@ PDBSTRUCT *blAllocPDBStructure(PDB *pdb);
 PDB *blFindNextChain(PDB *pdb);
 void blFreePDBStructure(PDBSTRUCT *pdbstruct);
 void blSetElementSymbolFromAtomName(char *element, char * atom_name);
+BOOL blGetHeaderWholePDB(WHOLEPDB *wpdb, 
+                            char *header,  int maxheader,
+                            char *date,    int maxdate,
+                            char *pdbcode, int maxcode);
+char *blGetTitleWholePDB(WHOLEPDB *wpdb);
+BOOL blGetCompoundWholePDBChain(WHOLEPDB *wpdb, char *chain, 
+                                   COMPND *compnd);
+int blFindMolID(WHOLEPDB *wpdb, char *chain);
+BOOL blGetSpeciesWholePDBChain(WHOLEPDB *wpdb, char *chain,
+                                  PDBSOURCE *source);
 
 /************************************************************************/
 /* Include deprecated functions                                         */

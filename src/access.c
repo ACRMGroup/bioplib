@@ -209,7 +209,7 @@ static char *blGetElement(PDB *p)
    
    KILLLEADSPACES(buffer_ptr,buffer);
       
-   /* remove digits */
+   /* remove digits                                                     */
    if(strlen(buffer_ptr) == 2 && isdigit(buffer[1]))
    {
       buffer[1] = '\0';
@@ -219,7 +219,7 @@ static char *blGetElement(PDB *p)
       buffer_ptr += 1;
    }
    
-   /* fix hydrogens and carbons */
+   /* fix hydrogens and carbons                                         */
    if(strlen(buffer_ptr) == 2 && rawAtomName[3] != ' ' &&
       (rawAtomName[0] == 'H' || rawAtomName[0] == 'C' ||
        rawAtomName[0] == 'N' || rawAtomName[0] == 'O' ||
@@ -261,6 +261,7 @@ RESRAD *blSetAtomRadii(PDB *pdb, FILE *fpRad)
    char   currentResnam[8];
    PDB    *p;
 
+
    resrad=ReadRadiusFile(fpRad);
 
    strcpy(currentResnam,"    ");
@@ -274,7 +275,7 @@ RESRAD *blSetAtomRadii(PDB *pdb, FILE *fpRad)
          strcpy(currentResnam, p->resnam);
          radii = GetResidueRadii(resrad,p->resnam);
       }
-      
+
       if(radii == NULL)
       {
          /* Residue not found, use default for element                  */
@@ -468,7 +469,7 @@ static RESRAD *ReadRadiusFile(FILE *fpRad)
 
    while(fgets(buffer,MAXBUFF,fpRad))
    {
-      /* Beginning of a new residue                               */
+      /* Beginning of a new residue                                     */
       if(!atomCount)
       {
          if(resrad==NULL)
@@ -502,7 +503,7 @@ static RESRAD *ReadRadiusFile(FILE *fpRad)
                r->atnam[atomIndex][i] = r->atnam[atomIndex][i+1];
          }
 #endif
-         /* Replace dots with spaces */
+         /* Replace dots with spaces                                    */
          DEDOTIFY(r->atnam[atomIndex]);
          
          sscanf(buffer,"%s %lf",junk,&(r->radius[atomIndex]));
