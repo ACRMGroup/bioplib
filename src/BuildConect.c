@@ -3,8 +3,8 @@
 
    \file       BuildConect.c
    
-   \version    V1.1
-   \date       16.03.15
+   \version    V1.2
+   \date       12.05.15
    \brief      Build connectivity information in PDB linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2002-2015
@@ -48,6 +48,8 @@
    =================
 -  V1.0  19.02.15 Original
 -  V1.1  16.03.15 Added blDeleteAConect() and blDeleteAConectByNum()
+-  V1.2  12.05.15 Fixed to add conects between C and N if either is
+                  a HETATM
 
 *************************************************************************/
 /* Doxygen
@@ -225,6 +227,8 @@ BOOL blAddOneDirectionConect(PDB *p, PDB *q)
 
 -  19.02.15  Original   By: ACRM
 -  26.02.15  Added tol paramater
+-  12.05.15  Conects are built involving backbone C and N if either atom
+             is a HETATM
 */
 BOOL blBuildConectData(PDB *pdb, REAL tol)
 {
@@ -261,13 +265,17 @@ BOOL blBuildConectData(PDB *pdb, REAL tol)
          }
       }
 
-      /* Check for non backbone C-N connections between residues        */
+      /* Check for connections between residues which don't involve backbone
+         C or N, or do involve HETATMS
+      */
       for(p=res; p!=nextRes; NEXT(p))
       {
          for(q=nextRes; q!=NULL; NEXT(q))
          {
             if(strncmp(p->atnam, "C   ", 4) ||
-               strncmp(q->atnam, "N   ", 4))
+               strncmp(q->atnam, "N   ", 4) ||
+               !strncmp(p->record_type, "HETATM", 6) ||
+               !strncmp(q->record_type, "HETATM", 6))
             {
                if(blIsBonded(p, q, tol))
                {
