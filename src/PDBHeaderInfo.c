@@ -79,6 +79,7 @@
 #include <string.h>
 #include "pdb.h"
 #include "macros.h"
+#include "general.h"
 
 /************************************************************************/
 /* Defines and macros
