@@ -1,0 +1,23 @@
+HEADER    TEST FILE                               13-MAY-15   TEST              
+TITLE     ALANINE - TEST FILE FOR COMPND AND SOURCE RECORDS (PDBML INPUT)       
+COMPND    MOL_ID: 1;                                                            
+COMPND   2 MOLECULE: ALANINE;                                                   
+COMPND   3 MUTATION: YES;                                                       
+SOURCE    MOL_ID: 1;                                                            
+SOURCE   2 ORGANISM_SCIENTIFIC: ORYCTOLAGUS CUNICULUS;                          
+SOURCE   3 ORGANISM_COMMON: RABBIT;                                             
+SOURCE   4 ORGANISM_TAXID: 9986;                                                
+SOURCE   5 STRAIN: BUGS;                                                        
+ATOM      1  N   ALA A   1       1.201   0.847   0.000  0.75 20.00           N  
+ATOM      2  CA  ALA A   1       0.000   0.000   0.000  0.75 20.00           C  
+ATOM      3  C   ALA A   1      -1.250   0.881   0.000  0.75 20.00           C  
+ATOM      4  O   ALA A   1      -2.185   0.660  -0.784  0.75 20.00           O  
+ATOM      5  CB  ALA A   1       0.020  -0.927   1.209  0.75 20.00           C  
+TER       6      ALA A   1                                                      
+CONECT    1    2                                                                
+CONECT    2    1    3    5                                                      
+CONECT    3    2    4                                                           
+CONECT    4    3                                                                
+CONECT    5    2                                                                
+MASTER        0    0    0    0    0    0    0    0    5    1    5    0          
+END                                                                             

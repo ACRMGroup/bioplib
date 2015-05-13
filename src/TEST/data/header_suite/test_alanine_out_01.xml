@@ -250,18 +250,33 @@
   </PDBx:struct_connCategory>
   <PDBx:database_PDB_revCategory>
     <PDBx:database_PDB_rev num="1">
-      <PDBx:date>2015-04-04</PDBx:date>
-      <PDBx:date_original>2015-04-04</PDBx:date_original>
+      <PDBx:date>2015-05-13</PDBx:date>
+      <PDBx:date_original>2015-05-13</PDBx:date_original>
       <PDBx:mod_type>0</PDBx:mod_type>
       <PDBx:replaces>TEST</PDBx:replaces>
     </PDBx:database_PDB_rev>
   </PDBx:database_PDB_revCategory>
+  <PDBx:entityCategory>
+    <PDBx:entity id="1">
+      <PDBx:details>TEST COMPOUND</PDBx:details>
+      <PDBx:pdbx_description>ALANINE</PDBx:pdbx_description>
+      <PDBx:pdbx_mutation>YES</PDBx:pdbx_mutation>
+    </PDBx:entity>
+  </PDBx:entityCategory>
+  <PDBx:entity_src_genCategory>
+    <PDBx:entity_src_gen entity_id="1" pdbx_src_id="1">
+      <PDBx:pdbx_gene_src_common_name>RABBIT</PDBx:pdbx_gene_src_common_name>
+      <PDBx:pdbx_gene_src_strain>BUGS</PDBx:pdbx_gene_src_strain>
+      <PDBx:pdbx_gene_src_ncbi_taxonomy_id>9986</PDBx:pdbx_gene_src_ncbi_taxonomy_id>
+      <PDBx:pdbx_gene_src_scientific_name>ORYCTOLAGUS CUNICULUS</PDBx:pdbx_gene_src_scientific_name>
+    </PDBx:entity_src_gen>
+  </PDBx:entity_src_genCategory>
   <PDBx:entryCategory>
     <PDBx:entry id="TEST"/>
   </PDBx:entryCategory>
   <PDBx:structCategory>
     <PDBx:struct entry_id="TEST">
-      <PDBx:title>ALANINE - TEST FILE FOR CONECT AND MASTER RECORDS (PDB)</PDBx:title>
+      <PDBx:title>ALANINE - TEST FILE FOR COMPND AND SOURCE RECORDS (PDB INPUT)</PDBx:title>
     </PDBx:struct>
   </PDBx:structCategory>
   <PDBx:struct_keywordsCategory>

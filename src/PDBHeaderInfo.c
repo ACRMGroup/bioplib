@@ -3,8 +3,8 @@
 
    \file       PDBHeaderInfo.c
    
-   \version    V1.0
-   \date       26.03.15
+   \version    V1.1
+   \date       13.05.15
    \brief      Get misc header info from PDB header
    
    \copyright  (c) UCL / Dr. Andrew C.R. Martin, 2015
@@ -49,6 +49,10 @@
    Revision History:
    =================
 -  V1.0  26.03.15 Original
+-  V1.1  13.05.15 blGetTitleWholePDB() returns NULL if no title line in
+                  header. Fix for blGetSpeciesWholePDBChain()
+                  Added blGetCompoundWholePDBMolID() and 
+                  blGetSpeciesWholePDBMolID() By: CTP
 
 *************************************************************************/
 /* Doxygen
@@ -70,6 +74,14 @@
 
    #FUNCTION blGetSpeciesWholePDBChain()
    Obtains the species data for a specified chain from WHOLEPDB info
+   
+   #FUNCTION blGetCompoundWholePDBCMolID()
+   Obtains the species data for a specified MOL_ID from WHOLEPDB info
+   
+   #FUNCTION blGetSpeciesWholePDBMolID()
+   Obtains the species data for a specified MOL_ID from WHOLEPDB info
+   
+ 
 
 */
 /************************************************************************/
@@ -158,6 +170,7 @@ BOOL blGetHeaderWholePDB(WHOLEPDB *wpdb,
    store the data. This must be freed by user code
 
    28.04.15 Original   By: ACRM
+   11.05.15 Return NULL if TITLE line absent. By: CTP
 */
 char *blGetTitleWholePDB(WHOLEPDB *wpdb)
 {
@@ -187,6 +200,10 @@ char *blGetTitleWholePDB(WHOLEPDB *wpdb)
          break;
       }
    }
+
+   /* title line not found                                              */
+   if(title == NULL)
+      return(NULL);
 
    cleanTitle = blCollapseSpaces(title);
    free(title);
@@ -318,7 +335,8 @@ static BOOL ExtractField(STRINGLIST *molidStart, STRINGLIST *molidStop,
    Extracts the COMPND data for a specified chain. Returns FALSE if the
    chain isn't found
 
-   28.04.15 Original   By: ACRM
+-  28.04.15 Original   By: ACRM
+-  15.05.15 Changed "OTHER:" to "OTHER_DETAILS:"  By: CTP
 */
 BOOL blGetCompoundWholePDBChain(WHOLEPDB *wpdb, char *chain, 
                                 COMPND *compnd)
@@ -374,7 +392,7 @@ BOOL blGetCompoundWholePDBChain(WHOLEPDB *wpdb, char *chain,
             ExtractField(molidStart, molidStop,
                          compnd->mutation,   "COMPND", "MUTATION:");
             ExtractField(molidStart, molidStop,
-                         compnd->other,      "COMPND", "OTHER:");
+                         compnd->other,      "COMPND", "OTHER_DETAILS:");
             ExtractField(molidStart, molidStop,
                          buffer,             "COMPND", "MOL_ID:");
             sscanf(buffer,"%d", &(compnd->molid));
@@ -474,6 +492,150 @@ BOOL blGetSpeciesWholePDBChain(WHOLEPDB *wpdb, char *chain,
    
    molidFirst = FindNextMolIDRecord(wpdb->header, "SOURCE");
 
+   for(molidStart=molidFirst; molidStart!=NULL; molidStart=molidStop)
+   {
+      molidStop  = FindNextMolIDRecord(molidStart, "SOURCE");
+      for(s=molidStart; s!=molidStop; NEXT(s))
+      {
+         char buffer[MAXPDBANNOTATION];
+         int  thisMolid = 0;
+
+         ExtractField(molidStart, molidStop,
+                      buffer,             "SOURCE", "MOL_ID:");
+         sscanf(buffer,"%d", &thisMolid);
+
+         if(thisMolid == molid)
+         {
+            ExtractField(molidStart, molidStop,
+                         source->scientificName, "SOURCE","ORGANISM_SCIENTIFIC:");
+            ExtractField(molidStart, molidStop,
+                         source->commonName,     "SOURCE", "ORGANISM_COMMON:");
+            ExtractField(molidStart, molidStop,
+                         source->strain,         "SOURCE", "STRAIN:");
+            ExtractField(molidStart, molidStop,
+                         buffer,                 "SOURCE", "ORGANISM_TAXID:");
+            sscanf(buffer,"%d",&source->taxid);
+            return(TRUE);
+         }
+      }
+   }
+
+   return(FALSE);
+}
+
+/************************************************************************/
+/*>BOOL blGetCompoundWholePDBMolID(WHOLEPDB *wpdb, int molid, 
+                                   COMPND *compnd)
+   ------------------------------------------------------------
+*//**
+   \param[in]    *wpdb    WHOLEPDB structure
+   \param[in]    molid    MOL_ID from PDB-format COMPND record.
+   \param[out]   *compnd  Data from the COMPND records
+   \return       BOOL     Success
+
+   Extracts the COMPND data for a specified MOL_ID. Returns FALSE if the
+   MOL_ID isn't found
+
+-  13.05.15 Original based on blGetCompoundWholePDBChain().  By: CTP
+*/
+BOOL blGetCompoundWholePDBMolID(WHOLEPDB *wpdb, int molid, 
+                                 COMPND *compnd)
+{
+   STRINGLIST *molidFirst,
+              *molidStart,
+              *molidStop,
+              *s;
+
+   /* reset compnd */
+   compnd->molid         = 0;
+   compnd->molecule[0]   = '\0';
+   compnd->chain[0]      = '\0';
+   compnd->fragment[0]   = '\0';
+   compnd->synonym[0]    = '\0';
+   compnd->ec[0]         = '\0';
+   compnd->engineered[0] = '\0';
+   compnd->mutation[0]   = '\0';
+   compnd->other[0]      = '\0';
+
+   /* find start of compnd records */
+   molidFirst = FindNextMolIDRecord(wpdb->header, "COMPND");
+
+   /* get compound record */
+   for(molidStart=molidFirst; molidStart!=NULL; molidStart=molidStop)
+   {
+      molidStop  = FindNextMolIDRecord(molidStart, "COMPND");
+      for(s=molidStart; s!=molidStop; NEXT(s))
+      {
+         char buffer[MAXPDBANNOTATION];
+         int  thisMolid = 0;
+
+         ExtractField(molidStart, molidStop,
+                      buffer,             "COMPND", "MOL_ID:");
+         sscanf(buffer,"%d", &thisMolid);
+
+         if(thisMolid == molid)
+         {
+            ExtractField(molidStart, molidStop,
+                         compnd->molecule,   "COMPND","MOLECULE:");
+            ExtractField(molidStart, molidStop,
+                         compnd->chain,      "COMPND", "CHAIN:");
+            ExtractField(molidStart, molidStop,
+                         compnd->fragment,   "COMPND", "FRAGMENT:");
+            ExtractField(molidStart, molidStop,
+                         compnd->synonym,    "COMPND", "SYNONYM:");
+            ExtractField(molidStart, molidStop,
+                         compnd->ec,         "COMPND", "EC:");
+            ExtractField(molidStart, molidStop,
+                         compnd->engineered, "COMPND", "ENGINEERED:");
+            ExtractField(molidStart, molidStop,
+                         compnd->mutation,   "COMPND", "MUTATION:");
+            ExtractField(molidStart, molidStop,
+                         compnd->other,      "COMPND", "OTHER_DETAILS:");
+            ExtractField(molidStart, molidStop,
+                         buffer,             "COMPND", "MOL_ID:");
+            sscanf(buffer,"%d", &(compnd->molid));
+            return(TRUE);
+         }
+      }
+   }
+
+   return(FALSE);
+}
+
+/************************************************************************/
+/*>BOOL blGetSpeciesWholePDBMolID(WHOLEPDB *wpdb, int molid,
+                                  PDBSOURCE *source)
+   -----------------------------------------------------------
+*//**
+   \param[in]    *wpdb    WHOLEPDB structure
+   \param[in]    molid    MOL_ID from PDB-format SOURCE record.
+   \param[out]   *source  SOURCE information for chain
+   \return                Success (chain found?)
+
+   Extracts the SOURCE data for a specified MOL_ID. Returns FALSE if not 
+   found.
+   
+   12.05.15 Original based on blGetSpeciesWholePDBChain().  By: CTP
+*/
+BOOL blGetSpeciesWholePDBMolID(WHOLEPDB *wpdb, int molid,
+                                PDBSOURCE *source)
+{
+   STRINGLIST *s,
+              *molidFirst = NULL,
+              *molidStart = NULL,
+              *molidStop  = NULL;
+
+   /* reset source */
+   source->scientificName[0] = '\0';
+   source->commonName[0]     = '\0';
+   source->strain[0]         = '\0';
+   source->taxid             = 0;
+
+   /* find start of source records */
+   molidFirst = FindNextMolIDRecord(wpdb->header, "SOURCE");
+
+
+   /* get source record */
    for(molidStart=molidFirst; molidStart!=NULL; molidStart=molidStop)
    {
       molidStop  = FindNextMolIDRecord(molidStart, "SOURCE");

@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.82
-   \date       28.04.15
+   \version    V1.83
+   \date       13.05.15
    \brief      Include file for PDB routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2015
@@ -192,6 +192,9 @@
                   blGetSpeciesWholePDBChain() plus the COMPND and
                   PDBSOURCE structures
 -  V1.82 28.04.15 Modified blDoReadPDBML()  By: CTP
+-  V1.83 13.05.15 Added blGetCompoundWholePDBMolID() and 
+                  blGetSpeciesWholePDBMolID()  By: CTP
+
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -674,6 +677,10 @@ BOOL blGetCompoundWholePDBChain(WHOLEPDB *wpdb, char *chain,
 int blFindMolID(WHOLEPDB *wpdb, char *chain);
 BOOL blGetSpeciesWholePDBChain(WHOLEPDB *wpdb, char *chain,
                                   PDBSOURCE *source);
+BOOL blGetCompoundWholePDBMolID(WHOLEPDB *wpdb, int molid,
+                                COMPND *compnd);
+BOOL blGetSpeciesWholePDBMolID(WHOLEPDB *wpdb, int molid, 
+                               PDBSOURCE *source);
 
 /************************************************************************/
 /* Include deprecated functions                                         */

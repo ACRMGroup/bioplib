@@ -248,25 +248,4 @@
       <PDBx:ptnr2_label_seq_id>1</PDBx:ptnr2_label_seq_id>
     </PDBx:struct_conn>
   </PDBx:struct_connCategory>
-  <PDBx:database_PDB_revCategory>
-    <PDBx:database_PDB_rev num="1">
-      <PDBx:date>2015-04-04</PDBx:date>
-      <PDBx:date_original>2015-04-04</PDBx:date_original>
-      <PDBx:mod_type>0</PDBx:mod_type>
-      <PDBx:replaces>TEST</PDBx:replaces>
-    </PDBx:database_PDB_rev>
-  </PDBx:database_PDB_revCategory>
-  <PDBx:entryCategory>
-    <PDBx:entry id="TEST"/>
-  </PDBx:entryCategory>
-  <PDBx:structCategory>
-    <PDBx:struct entry_id="TEST">
-      <PDBx:title>ALANINE - TEST FILE FOR CONECT AND MASTER RECORDS (PDB)</PDBx:title>
-    </PDBx:struct>
-  </PDBx:structCategory>
-  <PDBx:struct_keywordsCategory>
-    <PDBx:struct_keywords entry_id="TEST">
-      <PDBx:pdbx_keywords>TEST FILE</PDBx:pdbx_keywords>
-    </PDBx:struct_keywords>
-  </PDBx:struct_keywordsCategory>
 </PDBx:datablock>

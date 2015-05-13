@@ -1,11 +1,11 @@
 /************************************************************************/
 /**
 
-   \file       conect_suite.c
+   \file       header_suite.c
    
    \version    V1.0
-   \date       28.04.15
-   \brief      Test suite for CONECT data for pdb and pdbml.
+   \date       05.05.15
+   \brief      Test suite for header data for pdbml.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
    \author     Dr. Andrew C. R. Martin
@@ -36,7 +36,7 @@
    Description:
    ============
 
-   Test suite for reading and writing CONECT data for pdb and pdbml files.
+   Test suite for reading and writing header data for pdbml files.
 
 **************************************************************************
 
@@ -47,15 +47,15 @@
 
    Revision History:
    =================
--  V1.0  28.04.15 Original By: CTP
+-  V1.0  05.05.15 Original By: CTP
 
 *************************************************************************/
 
-#include "conect_suite.h"
+#include "header_suite.h"
 
 /* Globals */
 static char test_output_filename[]     = "tmp/test-XXXXX",
-            test_example_basename[]    = "data/conect_suite/",
+            test_example_basename[]    = "data/header_suite/",
             test_input_filename[160]   = "",
             test_example_filename[160] = "";
 
@@ -115,10 +115,11 @@ static void wholepdb_teardown(void)
 }
 
 /* Core tests */
+/* Parse PDB and Write PDBML*/
 START_TEST(test_read_pdb)
 {
    /* set filename */
-   char filename_in[] = "test_alanine_in.pdb";
+   char filename_in[] = "test_alanine_in_01.pdb";
    
    /* set gPDBXML flag */
    gPDBXML = TRUE;
@@ -137,51 +138,11 @@ START_TEST(test_read_pdb)
 }
 END_TEST
 
-START_TEST(test_write_pdb_01)
-{
-   /* get pdb data */
-   char filename_in[]      = "test_alanine_in.pdb",
-        filename_example[] = "test_alanine_out_01.pdb",
-        test_message[]     = "Output PDB does not match example file.";
-        
-   /* force write PDB */
-   FORCEPDB;
-   
-   /* read input file */
-   strcat(test_input_filename,filename_in);
-   fp = fopen(test_input_filename,"r");
-   wpdb = blReadWholePDB(fp);
-   fclose(fp);
-   ck_assert_msg(wpdb != NULL, "Failed to read PDB file.");
-
-#ifndef MS_WINDOWS   
-   /* Set temp file name */
-   mkstemp(test_output_filename);
-#endif
-
-   /* write output file */
-   fp = fopen(test_output_filename,"w");
-   blWriteWholePDB(fp, wpdb);
-   fclose(fp);
-
-   /* compare output file to example file */
-   strcat(test_example_filename, filename_example);
-   files_identical = wholepdb_compare_files(test_example_filename, 
-                                            test_output_filename);
-
-   /* remove output file */
-   remove(test_output_filename);
-  
-   /* return test result */
-   ck_assert_msg(files_identical, test_message);
-}
-END_TEST
-
 START_TEST(test_write_pdbml_01)
 {
    /* get pdb data */
-   char filename_in[]      = "test_alanine_in.pdb",
-        filename_example[] = "test_alanine_out.xml",
+   char filename_in[]      = "test_alanine_in_01.pdb",
+        filename_example[] = "test_alanine_out_01.xml",
         test_message[]     = "Output PDBML does not match example file.";
         
    /* force write PDBML */
@@ -199,6 +160,9 @@ START_TEST(test_write_pdbml_01)
    mkstemp(test_output_filename);
 #endif
 
+   /* Fix: Set flag for XML */
+   gPDBXML = TRUE;
+   
    /* write output file */
    fp = fopen(test_output_filename,"w");
    blWriteWholePDB(fp, wpdb);
@@ -218,11 +182,11 @@ START_TEST(test_write_pdbml_01)
 END_TEST
 
 
-/* TEST READ PDBML CONECT */
+/* Parse PDBML - Write PDB */
 START_TEST(test_read_pdbml)
 {
    /* set filename */
-   char filename_in[] = "test_alanine_in.xml";
+   char filename_in[] = "test_alanine_in_01.xml";
    
    /* set gPDBXML flag */
    gPDBXML = FALSE;
@@ -241,17 +205,12 @@ START_TEST(test_read_pdbml)
 }
 END_TEST
 
-START_TEST(test_write_pdb_02)
+
+START_TEST(test_write_pdb_01)
 {
    /* get pdb data */
-   /*
-   char filename_in[]      = "test_alanine_in.xml",
-        filename_example[] = "test_alanine_out_02.pdb",
-   char filename_in[]      = "1T5S.xml",
-   */
-   
-   char filename_in[]      = "test_alanine_conect_in.xml",
-        filename_example[] = "test_alanine_conect_out.pdb",
+   char filename_in[]      = "test_alanine_in_01.xml",
+        filename_example[] = "test_alanine_out_01.pdb",
         test_message[]     = "Output PDB does not match example file.";
         
    /* force write PDB */
@@ -269,129 +228,8 @@ START_TEST(test_write_pdb_02)
    mkstemp(test_output_filename);
 #endif
 
-   /* Set flag to PDB */
-   /* This should have been overidden by FORCEPDB or FORCEXML */
+   /* Fix: Set flag for XML */
    gPDBXML = FALSE;
-
-   /* write output file */
-   fp = fopen(test_output_filename,"w");
-   blWriteWholePDB(fp, wpdb);
-   fclose(fp);
-
-   /* compare output file to example file */
-   strcat(test_example_filename, filename_example);
-   files_identical = wholepdb_compare_files(test_example_filename, 
-                                            test_output_filename);
-
-   /* remove output file */
-   remove(test_output_filename);
-  
-   /* return test result */
-   ck_assert_msg(files_identical, test_message);
-}
-END_TEST
-
-START_TEST(test_write_pdbml_02)
-{
-   /* get pdb data */
-   char filename_in[]      = "test_alanine_conect_in.xml",
-        filename_example[] = "test_alanine_out_01.xml",
-        test_message[]     = "Output PDBML does not match example file.";
-        
-   /* force write PDB */
-   FORCEXML;
-   
-   /* read input file */
-   strcat(test_input_filename,filename_in);
-   fp = fopen(test_input_filename,"r");
-   wpdb = blReadWholePDB(fp);
-   fclose(fp);
-   ck_assert_msg(wpdb != NULL, "Failed to read PDB file.");
-
-#ifndef MS_WINDOWS   
-   /* Set temp file name */
-   mkstemp(test_output_filename);
-#endif
-
-   /* write output file */
-   fp = fopen(test_output_filename,"w");
-   blWriteWholePDB(fp, wpdb);
-   fclose(fp);
-
-   /* compare output file to example file */
-   strcat(test_example_filename, filename_example);
-   files_identical = wholepdb_compare_files(test_example_filename, 
-                                            test_output_filename);
-
-   /* remove output file */
-   remove(test_output_filename);
-   
-   /* return test result */
-   ck_assert_msg(files_identical, test_message);
-}
-END_TEST
-
-START_TEST(test_read_write_pdb)
-{
-   /* get pdb data */
-   char filename_in[]      = "test_alanine_in.pdb",
-        filename_example[] = "test_alanine_out_01.pdb",
-        test_message[]     = "Output PDB does not match example file.";
-        
-   /* Set Default */
-   gPDBXMLForce = FORCEXML_NOFORCE;
-   
-   /* read input file */
-   strcat(test_input_filename,filename_in);
-   fp = fopen(test_input_filename,"r");
-   wpdb = blReadWholePDB(fp);
-   fclose(fp);
-   ck_assert_msg(wpdb != NULL, "Failed to read PDB file.");
-
-#ifndef MS_WINDOWS   
-   /* Set temp file name */
-   mkstemp(test_output_filename);
-#endif
-
-   /* write output file */
-   fp = fopen(test_output_filename,"w");
-   blWriteWholePDB(fp, wpdb);
-   fclose(fp);
-
-   /* compare output file to example file */
-   strcat(test_example_filename, filename_example);
-   files_identical = wholepdb_compare_files(test_example_filename, 
-                                            test_output_filename);
-
-   /* remove output file */
-   remove(test_output_filename);
-  
-   /* return test result */
-   ck_assert_msg(files_identical, test_message);
-}
-END_TEST
-
-START_TEST(test_read_write_pdbml)
-{
-   /* get pdb data */
-   char filename_in[]      = "test_alanine_conect_in.xml",
-        filename_example[] = "test_alanine_out_02.xml",
-        test_message[]     = "Output PDBML does not match example file.";
-        
-   /* Set Default */
-   gPDBXMLForce = FORCEXML_NOFORCE;
-   
-   /* read input file */
-   strcat(test_input_filename,filename_in);
-   fp = fopen(test_input_filename,"r");
-   wpdb = blReadWholePDB(fp);
-   fclose(fp);
-   ck_assert_msg(wpdb != NULL, "Failed to read PDB file.");
-
-#ifndef MS_WINDOWS   
-   /* Set temp file name */
-   mkstemp(test_output_filename);
-#endif
 
    /* write output file */
    fp = fopen(test_output_filename,"w");
@@ -413,26 +251,25 @@ END_TEST
 
 
 /* Create Suite */
-Suite *conect_suite(void)
+Suite *header_suite(void)
 {
-   Suite *s = suite_create("CONECT");
+   Suite *s = suite_create("Header");
    TCase *tc_core = tcase_create("Core");
 
    /* Core test case */
    tcase_add_checked_fixture(tc_core, 
                              wholepdb_setup, 
                              wholepdb_teardown);
-   tcase_add_test(tc_core, test_read_pdb);
-   tcase_add_test(tc_core, test_write_pdb_01);
-   tcase_add_test(tc_core, test_write_pdbml_01);
-   tcase_add_test(tc_core, test_read_pdbml);
-   tcase_add_test(tc_core, test_write_pdb_02);
-   tcase_add_test(tc_core, test_write_pdbml_02);
-   tcase_add_test(tc_core, test_read_write_pdb);
-   tcase_add_test(tc_core, test_read_write_pdbml);
-   suite_add_tcase(s, tc_core);
 
-   /* Add additional tests here */
+   /* read pdb and write pdbml */
+   tcase_add_test(tc_core, test_read_pdb);
+   tcase_add_test(tc_core, test_write_pdbml_01);
+
+   /* read pdbml and write pdb*/
+   tcase_add_test(tc_core, test_read_pdbml);
+   tcase_add_test(tc_core, test_write_pdb_01);
+
+   suite_add_tcase(s, tc_core);
 
    return s;
 }

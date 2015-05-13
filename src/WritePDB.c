@@ -3,8 +3,8 @@
 
    \file       WritePDB.c
    
-   \version    V1.24
-   \date       29.04.15
+   \version    V1.25
+   \date       13.05.15
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
@@ -100,8 +100,8 @@
 -  V1.22 09.03.15 blWriteWholePDBHeaderNoRes() now skips more header lines
 -  V1.23 10.03.15 blWriteWholePDBHeaderNoRes() now skips more header lines
 -  V1.24 02.04.15 WriteMaster() Padded MASTER record to 80 cols.  By: CTP
--  V1.25 29.04.15 Updated blWritePDBAsPDBML() to write CONECT records.  
-                  By: CTP
+-  V1.25 13.05.15 Updated blWritePDBAsPDBML() to write CONECT records, 
+                  Added output of COMPND and SOURCE records.  By: CTP
 
 *************************************************************************/
 /* Doxygen
@@ -183,6 +183,8 @@
 */
 static void WriteMaster(FILE *fp, WHOLEPDB *wpdb, int numConect,
                         int numTer);
+static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole);
+static BOOL blSetPDBMLDateField(char *pdbml_date, char *pdb_date);
 
 /************************************************************************/
 /*>int blWritePDB(FILE *fp, PDB *pdb)
@@ -458,7 +460,6 @@ void blWritePDBRecordAtnam(FILE *fp,
            sign);
 }
 
-
 /************************************************************************/
 /*>BOOL blWritePDBAsPDBML(FILE *fp, PDB *pdb)
    ------------------------------------------
@@ -478,9 +479,59 @@ void blWritePDBRecordAtnam(FILE *fp,
 -  24.02.15 Changed name to blWritePDBAsPDBML()
 -  25.02.15 Changed to type BOOL and checks all memory allocations
 -  29.04.15 Updated to write CONECT records.  By: CTP
+-  11.05.15 Made function into wrapper for blDoWritePDBAsPDBML(). By: CTP
 
 */
 BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
+{
+#ifndef XML_SUPPORT
+
+   /* PDBML format not supported.                                       */
+   return;
+
+#else 
+
+   /* PDBML format supported.                                           */
+   WHOLEPDB wpdb;
+   wpdb.header  = NULL;
+   wpdb.trailer = NULL;
+   wpdb.natoms  =    0;
+   wpdb.pdb     =  pdb;
+   return(blDoWritePDBAsPDBML(fp, &wpdb, FALSE));
+
+#endif
+}
+
+/************************************************************************/
+/*>BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
+   -----------------------------------------------------------------
+*//**
+
+   \param[in]     *fp      PDB file pointer to be written
+   \param[in]     *wpdb    WHOLEPDB to write
+   \param[in]     doWhole  Write whole pdb including header and conect 
+                           records or just coordinate records.
+   \return                 Success
+
+   Write a PDB linked list in PDBML format.
+
+-  02.06.14 Original. By: CTP
+-  21.06.14 Renamed blWriteAsPDBML() and updated symbol handling. By: CTP
+-  17.07.14 Use blSetElementSymbolFromAtomName() By: CTP
+-  16.08.14 Use element and charge data. By: CTP
+-  17.02.15 Added segid support  By: ACRM
+-  24.02.15 Changed name to blWritePDBAsPDBML()
+-  25.02.15 Changed to type BOOL and checks all memory allocations
+-  29.04.15 Updated to write CONECT records.  By: CTP
+-  11.05.15 Renamed from blWritePDBAsPDBML() to blDoWritePDBAsPDBML().
+            Changed to a static function.
+            blWritePDBAsPDBML() is now a wrapper for this function.
+            This function takes WHOLEPDB as input instead of PDB and 
+            writes wpdb->header and wpdb->trailer info if doWhole param is
+            TRUE.  By: CTP
+
+*/
+static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
 {
 #ifndef XML_SUPPORT
 
@@ -502,7 +553,17 @@ BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
    char        buffer[16], 
                *buffer_ptr;
    int         conect_id   = 0,
-               i;
+               i, j;
+
+   char header[82]     =   "",
+        date[82]       =   "",
+        pdbcode[82]    =   "",
+        pdbml_date[11] =   "",
+        *title         = NULL;
+
+   COMPND    compound;
+   PDBSOURCE species;
+   int molid = 0;
 
    /* Create document                                                   */
    if((doc = xmlNewDoc((xmlChar *)"1.0"))==NULL)
@@ -522,7 +583,7 @@ BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
       XMLDIE(doc);                         /* 25.02.15                  */
    xmlSetNs(root_node,pdbx);
    
-   
+   /* Write Coordinate Data                                             */
    /* Atom_sites node                                                   */
    if((sites_node = xmlNewChild(root_node, NULL, 
                                 (xmlChar *)"atom_siteCategory", 
@@ -531,7 +592,7 @@ BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
 
    
    /* Atom nodes                                                        */
-   for(p=pdb; p!=NULL; NEXT(p))
+   for(p=wpdb->pdb; p!=NULL; NEXT(p))
    {
       /* skip TER                                                       */
       if(!strncmp("TER",p->resnam,3))
@@ -730,9 +791,25 @@ BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
       }
    }
 
+   /* Finished Coordinate Data                                          */
+   /* Clean up and return if doWhole == FALSE                           */
+   if(doWhole == FALSE)
+   {
+      /* Write to doc file pointer                                      */
+      xmlDocFormatDump(fp,doc,1);
+
+      /* Free Memory                                                    */
+      xmlFreeDoc(doc);
+      xmlCleanupParser();
+
+      return(TRUE);
+   }
+
+
+   /*** Write Header and trailer data in PDBML-format                 ***/
 
    /* struct_conn node                                                  */
-   for(p=pdb; p!=NULL; NEXT(p))
+   for(p=wpdb->pdb; p!=NULL; NEXT(p))
    {
       if(p->nConect)
       {
@@ -746,7 +823,7 @@ BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
    }
    
    /* Conect nodes                                                      */
-   for(p=pdb; p!=NULL; NEXT(p))
+   for(p=wpdb->pdb; p!=NULL; NEXT(p))
    {
       /* skip TER                                                       */
       if(!strncmp("TER",p->resnam,3))
@@ -925,6 +1002,235 @@ BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
       }      
    }
 
+   /* get header data                                                   */
+   blGetHeaderWholePDB(wpdb, header, 82, date, 82, pdbcode, 82);
+   KILLTRAILSPACES(pdbcode);
+   
+   /* get title                                                         */
+   title = blGetTitleWholePDB(wpdb);
+
+   /* add date node                                                     */
+   if(blSetPDBMLDateField(pdbml_date, date))
+   {
+      if((sites_node = xmlNewChild(root_node, NULL, 
+                                   (xmlChar *)"database_PDB_revCategory", 
+                                   NULL))==NULL)
+         XMLDIE(doc);
+            
+      if((atom_node = xmlNewChild(sites_node, NULL, 
+                                  (xmlChar *)"database_PDB_rev",
+                                  NULL))==NULL)
+         XMLDIE(doc);
+      xmlNewProp(atom_node, (xmlChar *)"num", (xmlChar *)"1");
+
+      if((node = xmlNewChild(atom_node, NULL, 
+                            (xmlChar *)"date",
+                            (xmlChar *)pdbml_date))==NULL)
+         XMLDIE(doc);
+ 
+       if((node = xmlNewChild(atom_node, NULL, 
+                            (xmlChar *)"date_original",
+                            (xmlChar *)pdbml_date))==NULL)
+         XMLDIE(doc);
+
+       if((node = xmlNewChild(atom_node, NULL, 
+                            (xmlChar *)"mod_type",
+                            (xmlChar *)"0"))==NULL)
+         XMLDIE(doc);
+     
+      if(strlen(pdbcode) == 4)
+      {
+         if((node = xmlNewChild(atom_node, NULL, 
+                                (xmlChar *)"replaces",
+                                (xmlChar *)pdbcode))==NULL)
+            XMLDIE(doc);
+      }
+   }
+
+   /* add compnd nodes                                                  */
+   sites_node = NULL;
+   for(i=1; blGetCompoundWholePDBMolID(wpdb, i, &compound); i++)
+   {
+      molid = i;
+
+      if(sites_node == NULL)
+      {
+         /* add COMPND node */
+         if((sites_node = xmlNewChild(root_node, NULL, 
+                                      (xmlChar *)"entityCategory", 
+                                      NULL))==NULL)
+            XMLDIE(doc);
+      }
+
+      if((atom_node = xmlNewChild(sites_node, NULL, 
+                                  (xmlChar *)"entity",
+                                  NULL))==NULL){ XMLDIE(doc); }
+
+      sprintf(buffer,"%d", i);
+      xmlNewProp(atom_node, (xmlChar *)"id", (xmlChar *)buffer);
+
+      if(strlen(compound.other))
+      {
+         if((node = xmlNewChild(atom_node, NULL, 
+                                (xmlChar *)"details",
+                                (xmlChar *)compound.other))==NULL)
+         { XMLDIE(doc); }
+      }
+
+      if(strlen(compound.molecule))
+      {
+         if((node = xmlNewChild(atom_node, NULL, 
+                                (xmlChar *)"pdbx_description",
+                                (xmlChar *)compound.molecule))==NULL)
+         { XMLDIE(doc); }
+      }
+
+      if(strlen(compound.ec))
+      {
+         if((node = xmlNewChild(atom_node, NULL, 
+                                (xmlChar *)"pdbx_ec",
+                                (xmlChar *)compound.ec))==NULL)
+         { XMLDIE(doc); }
+      }
+
+      if(strlen(compound.fragment))
+      {
+         if((node = xmlNewChild(atom_node, NULL, 
+                                (xmlChar *)"pdbx_fragment",
+                                (xmlChar *)compound.fragment))==NULL)
+         { XMLDIE(doc); }
+      }
+
+      if(strlen(compound.mutation))
+      {
+         if((node = xmlNewChild(atom_node, NULL, 
+                                (xmlChar *)"pdbx_mutation",
+                                (xmlChar *)compound.mutation))==NULL)
+         { XMLDIE(doc); }
+      }
+   }
+
+
+   /* add source nodes                                                  */
+   sites_node = NULL;
+   j = 0;
+   for(i=1; i <= molid; i++)
+   {
+      if(blGetSpeciesWholePDBMolID(wpdb, i, &species))
+      {
+         if(sites_node == NULL)
+         {
+            /* add SOURCE node */
+            if((sites_node = xmlNewChild(root_node, NULL, 
+                                         (xmlChar *)"entity_src_genCategory", 
+                                         NULL))==NULL)
+               XMLDIE(doc);
+         }
+
+         j++; /* pdbx_src_id */
+         
+         if((atom_node = xmlNewChild(sites_node, NULL, 
+                                  (xmlChar *)"entity_src_gen",
+                                  NULL))==NULL){ XMLDIE(doc); }
+
+         sprintf(buffer,"%d", i);
+         xmlNewProp(atom_node,(xmlChar *)"entity_id",(xmlChar *)buffer);
+         sprintf(buffer,"%d", j);
+         xmlNewProp(atom_node,(xmlChar *)"pdbx_src_id",(xmlChar *)buffer);
+
+         if(strlen(species.commonName))
+         {
+            if((node = xmlNewChild(atom_node, NULL, 
+                                   (xmlChar *)"pdbx_gene_src_common_name",
+                                   (xmlChar *)species.commonName))==NULL)
+            { XMLDIE(doc); }
+         }
+
+         if(strlen(species.strain))
+         {
+            if((node = xmlNewChild(atom_node, NULL, 
+                                   (xmlChar *)"pdbx_gene_src_strain",
+                                   (xmlChar *)species.strain))==NULL)
+            { XMLDIE(doc); }
+         }
+
+         if(species.taxid != 0)
+         {
+            sprintf(buffer,"%d", species.taxid);
+            if((node = xmlNewChild(atom_node, NULL, 
+                                   (xmlChar *)"pdbx_gene_src_ncbi_taxonomy_id",
+                                   (xmlChar *)buffer))==NULL)
+            { XMLDIE(doc); }
+         }
+
+         if(strlen(species.scientificName))
+         {
+            if((node = xmlNewChild(atom_node, NULL, 
+                                   (xmlChar *)"pdbx_gene_src_scientific_name",
+                                   (xmlChar *)species.scientificName))==NULL)
+            { XMLDIE(doc); }
+         }
+      }
+   }
+
+   /* pdb entry */
+   if(strlen(pdbcode))
+   {
+      if((sites_node = xmlNewChild(root_node, NULL, 
+                                   (xmlChar *)"entryCategory", 
+                                   NULL))==NULL)
+         XMLDIE(doc);
+            
+      if((atom_node = xmlNewChild(sites_node, NULL, 
+                                  (xmlChar *)"entry",
+                                  (xmlChar *)""))==NULL)
+         XMLDIE(doc);
+      xmlNewProp(atom_node, (xmlChar *)"id", (xmlChar *)pdbcode);
+   }
+
+   /* title node */
+   if(title != NULL && strlen(pdbcode))
+   {
+      if((sites_node = xmlNewChild(root_node, NULL, 
+                                   (xmlChar *)"structCategory", 
+                                   NULL))==NULL)
+         XMLDIE(doc);
+            
+     if((atom_node = xmlNewChild(sites_node, NULL, 
+                                 (xmlChar *)"struct",
+                                 NULL))==NULL)
+        XMLDIE(doc);
+     xmlNewProp(atom_node, (xmlChar *)"entry_id", (xmlChar *)pdbcode);
+     
+     if((node = xmlNewChild(atom_node, NULL, 
+                                 (xmlChar *)"title",
+                                 (xmlChar *)title))==NULL)
+        XMLDIE(doc);
+
+   }
+   if(title != NULL){ free(title); }
+
+   /* header node */
+   if(strlen(header) && strlen(pdbcode))
+   {
+      if((sites_node = xmlNewChild(root_node, NULL, 
+                                   (xmlChar *)"struct_keywordsCategory", 
+                                   NULL))==NULL)
+         XMLDIE(doc);
+            
+     if((atom_node = xmlNewChild(sites_node, NULL, 
+                                 (xmlChar *)"struct_keywords",
+                                 NULL))==NULL)
+        XMLDIE(doc);
+     xmlNewProp(atom_node, (xmlChar *)"entry_id", (xmlChar *)pdbcode);
+     
+     if((node = xmlNewChild(atom_node, NULL, 
+                                 (xmlChar *)"pdbx_keywords",
+                                 (xmlChar *)header))==NULL)
+        XMLDIE(doc);
+
+   }
+
 
    /* Write to doc file pointer                                         */
    xmlDocFormatDump(fp,doc,1);
@@ -1077,6 +1383,7 @@ void blWriteGromosPDBRecord(FILE *fp,
             blWriteAsPDB() changed to blWritePDBAsPDBorGromos()
 -  25.02.15 No longer a wrapper
 -  04.03.15 Added check on wpdb and wpdb->pdb being non-NULL
+-  11.05.15 Updated to use blDoWritePDBAsPDBML().  By: CTP
 */
 BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
 {
@@ -1089,8 +1396,8 @@ BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
       (gPDBXMLForce == FORCEXML_NOFORCE && gPDBXML == TRUE))
    {
 #ifdef XML_SUPPORT
-      /* Write PDBML file (omitting header and footer data)             */
-      blWritePDBAsPDBML(fp, wpdb->pdb);
+      /* Write PDBML file (including header and footer data)            */
+      blDoWritePDBAsPDBML(fp, wpdb, TRUE);
 #else
       /* PDBML not supported                                            */
       return(FALSE);
@@ -1370,4 +1677,67 @@ void blWriteWholePDBHeaderNoRes(FILE *fp, WHOLEPDB *wpdb)
    }
 }
 
+/************************************************************************/
+/*>static BOOL blSetPDBMLDateField(char *pdbml_date, char *pdb_date)
+   -----------------------------------------------------------------
+*//**
+
+   \param[out]    *pdbml_date    PDBML date string 'yyyy-mm-dd'
+   \param[in]     *pdb_date      PDB date string   'dd-MTH-yy'
+   \return                       Success?
+
+   Convert pdb date format to pdbml date format.
+
+-  12.05.15 Original. By: CTP
+
+*/
+static BOOL blSetPDBMLDateField(char *pdbml_date, char *pdb_date)
+{
+   char month_letter[12][4] = {"JAN","FEB","MAR","APR","MAY","JUN",
+                               "JUL","AUG","SEP","OCT","NOV","DEC"};
+   int day   = 0,
+       month = 0,
+       year  = 0,
+       items = 0,
+       i     = 0;
+
+   char pdb_month[4] = "";
+   
+   /* parse pdb date */
+   items = sscanf(pdb_date, "%2d-%3s-%2d", &day, pdb_month, &year);
+
+   /* convert month_pdb */
+   for(i=0; i<12; i++)
+   {
+      if(!strcmp(month_letter[i], pdb_month))
+      {
+         month = i + 1;
+         break;
+      }
+   }
+
+   /* convert 2-digit year to 4-digit year (74 == 2074, 75 == 1975)     */
+   /* earliest searchable pdb structures date from 1976                 */
+   if(year < 75)
+   { year = year + 2000; }
+   else
+   { year = year + 1900; }
+   
+   /* error check                                                       */
+   if(items != 3 || 
+      year == 0 || month == 0 || day == 0 || 
+      day   < 1 || day > 31   ||
+      month < 1 || month > 12 ||
+      year  < 1975)
+   {
+      /* conversion failed                                              */
+      pdbml_date[0] = '\0';
+      return FALSE;
+   }
+   
+   /* set pdbml date                                                    */
+   sprintf(pdbml_date, "%4d-%02d-%02d", year, month, day);
+
+   return TRUE;
+}
 
