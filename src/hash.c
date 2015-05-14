@@ -416,6 +416,7 @@ BOOL blSetHashValue(HASHTABLE *hashtable, char *key, int type, ...)
    return(TRUE);
 }
 
+
 /************************************************************************/
 /*>int blGetHashValueInt(HASHTABLE *hashtable, char *key)
    ------------------------------------------------------
@@ -438,6 +439,7 @@ int blGetHashValueInt(HASHTABLE *hashtable, char *key)
 #endif
    return(0);
 }
+
 
 /************************************************************************/
 /*>double blGetHashValueDouble(HASHTABLE *hashtable, char *key)
@@ -483,6 +485,7 @@ char blGetHashValueChar(HASHTABLE *hashtable, char *key)
    return('\0');
 }
 
+
 /************************************************************************/
 /*>char *blGetHashValueString(HASHTABLE *hashtable, char *key)
    -----------------------------------------------------------
@@ -500,6 +503,7 @@ char *blGetHashValueString(HASHTABLE *hashtable, char *key)
    return((char *)blGetHashValue(hashtable, key, NULL));
 }
 
+
 /************************************************************************/
 /*>BPTR blGetHashValuePointer(HASHTABLE *hashtable, char *key)
    -----------------------------------------------------------
@@ -516,6 +520,7 @@ BPTR blGetHashValuePointer(HASHTABLE *hashtable, char *key)
 {
    return((BPTR)blGetHashValue(hashtable, key, NULL));
 }
+
 
 /************************************************************************/
 /*>BPTR blGetHashValue(HASHTABLE *hashtable, char *key, int *type)
@@ -579,6 +584,7 @@ BPTR blGetHashValue(HASHTABLE *hashtable, char *key, int *type)
 
    return(NULL);
 }
+
 
 /************************************************************************/
 /*>BOOL blDumpHash(FILE *out, HASHTABLE *hashtable)
@@ -716,8 +722,6 @@ void blDeleteHashKey(HASHTABLE *hashtable, char *key)
 }
 
 
-
-
 /************************************************************************/
 /**                                                                    **/
 /** Static functions below here                                        **/
@@ -794,6 +798,7 @@ static void dumpHashTable(FILE *out, HASHTABLE *hashtable)
    }
 }
 #endif
+
 
 /************************************************************************/
 /*>static ULONG hash(char *string, ULONG size)
