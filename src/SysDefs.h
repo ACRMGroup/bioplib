@@ -3,11 +3,11 @@
 
    \file       SysDefs.h
    
-   \version    V1.2R
-   \date       01.02.96
+   \version    V1.3
+   \date       14.05.15
    \brief      System-type variable type definitions
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-6
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -49,6 +49,7 @@
 -  V1.0  01.03.94 Original    By: ACRM
 -  V1.1  02.08.95 Added UCHAR
 -  V1.2  01.02.96 Added UBYTE
+-  V1.3  14.05.15 Added BPTR
 
 *************************************************************************/
 #ifndef _SYSDEFS_H
@@ -56,6 +57,7 @@
 
 #ifndef EXEC_TYPES_H    /* Commodore Amiga; defines in <exec/types.h>   */
 typedef void            *APTR;
+typedef char            *BPTR;
 
 #ifndef SYS_TYPES_H     /* Unix: <sys/types.h>, MS-DOS: <sys\types.h>   */
 #ifndef _TYPES_         /* Ditto                                        */
