@@ -138,6 +138,8 @@ static void       dumpHashTable(FILE *out, HASHTABLE *hashtable);
    waste memory; if too small lookups will take longer. You can use 0
    for the default hash size of 1001
 
+   A future version will implement dynamic hashing.
+
 -  12.05.15  Original   By: ACRM
 */
 HASHTABLE *blInitializeHash(ULONG hashsize)
@@ -859,10 +861,12 @@ static _HASHENTRY *lookup(HASHTABLE *hashtable, char *key)
    \param[in]     hashsize    Basic size of hash
    \return                    Better size
 
-   Calculates a good size for the hash - this is the next highest prime
-   if the specified size is not a prime
+   Calculates a good size for the hash - this is a prime number
+   greater than the specified size.
 
-   FIXME!!!!!!
+   Currently our prime numbers only go up to 60013, so in cases
+   larger than this we just return an odd number >= the specified
+   size.
 
 -  12.05.15  Original   By: ACRM
 */
@@ -870,8 +874,28 @@ static ULONG CalculateHashSize(ULONG hashsize)
 {
    if(hashsize == 0)
       return(DEF_HASHSIZE);
+   else if(hashsize <= 50)
+      return(53);
+   else if(hashsize <= 100)
+      return(101);
+   else if(hashsize <= 1000)
+      return(1009);
+   else if(hashsize <= 5000)
+      return(5011);
+   else if(hashsize <= 10000)
+      return(10007);
+   else if(hashsize <= 20000)
+      return(20011);
+   else if(hashsize <= 30000)
+      return(30011);
+   else if(hashsize <= 40000)
+      return(40009);
+   else if(hashsize <= 50000)
+      return(50021);
+   else if(hashsize <= 60000)
+      return(60013);
    else
-      return(hashsize);   /* FIXME!!! */
+      return(1+(int)(hashsize/2));  /* Just an odd number >= hashsize   */
 }
 
 #ifdef TEST

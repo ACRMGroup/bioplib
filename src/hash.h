@@ -56,7 +56,7 @@
 /************************************************************************/
 /* Defines and macros
 */
-#define DEF_HASHSIZE     1001    /* Must be a prime number              */
+#define DEF_HASHSIZE     1009    /* Must be a prime number              */
 #define HASHTYPE_STRING  0
 #define HASHTYPE_INT     1
 #define HASHTYPE_CHAR    2
