@@ -108,6 +108,7 @@
 #include <stdarg.h>
 #include "hash.h"
 #include "macros.h"
+#include "MathUtil.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -874,33 +875,19 @@ static _HASHENTRY *lookup(HASHTABLE *hashtable, char *key)
    size.
 
 -  12.05.15  Original   By: ACRM
+-  15.05.15  Now returns the next largest prime
 */
 static ULONG CalculateHashSize(ULONG hashsize)
 {
+   ULONG newSize;
+
    if(hashsize == 0)
       return(DEF_HASHSIZE);
-   else if(hashsize <= 50)
-      return(53);
-   else if(hashsize <= 100)
-      return(101);
-   else if(hashsize <= 1000)
-      return(1009);
-   else if(hashsize <= 5000)
-      return(5011);
-   else if(hashsize <= 10000)
-      return(10007);
-   else if(hashsize <= 20000)
-      return(20011);
-   else if(hashsize <= 30000)
-      return(30011);
-   else if(hashsize <= 40000)
-      return(40009);
-   else if(hashsize <= 50000)
-      return(50021);
-   else if(hashsize <= 60000)
-      return(60013);
-   else
-      return(1+(int)(hashsize/2));  /* Just an odd number >= hashsize   */
+
+   if((newSize = blFindNextPrime(hashsize, FALSE)) == 0)
+      return(1+(2*((int)(hashsize/2))));    /* Odd number >= hashsize   */
+
+   return(newSize);
 }
 
 #ifdef TEST

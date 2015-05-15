@@ -3,11 +3,11 @@
 
    \file       MathUtil.h
    
-   \version    V1.6
-   \date       14.08.14
+   \version    V1.7
+   \date       15.05.15
    \brief      Prototypes, etc. for maths utility routines
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -55,6 +55,7 @@
                   prototypes for renamed functions. By: CTP
 -  V1.6  14.08.14 Moved deprecated function prototypes to deprecated.h 
                   By: CTP
+-  V1.7  15.05.15 Added blIsPrime() and blFindNextPrime()  By: ACRM
 
 *************************************************************************/
 #ifndef _MATHUTIL_H
@@ -85,6 +86,9 @@ ULONG blFactorial(int n);
 ULONG blFactdiv(int n1, int n2);
 ULONG blNPerm(int n, int r);
 ULONG blNComb(int n, int r);
+BOOL  blIsPrime(ULONG input);
+ULONG blFindNextPrime(ULONG input, BOOL above);
+
 
 /************************************************************************/
 /* Include deprecated functions                                         */

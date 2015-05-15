@@ -74,7 +74,7 @@ fsscanf.o ftostr.o help.o hpgl.o invert33.o openorpipe.o padchar.o \
 padterm.o parse.o pearson.o pearson1.o phi.o pldist.o plotting.o \
 ps.o safemem.o simpleangle.o strcatalloc.o upstrcmp.o upstrncmp.o \
 WindIO.o getfield.o array3.o justify.o wrapprint.o deprecatedGen.o \
-eigen.o regression.o filename.o stringcat.o stringutil.o hash.o
+eigen.o regression.o filename.o stringcat.o stringutil.o hash.o prime.o
 
 
 # Files for libbiop.a
