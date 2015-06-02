@@ -5,7 +5,7 @@
    
    \version    V1.0
    \date       28.04.15
-   \brief      Get misc header info from PDB header
+   \brief      String utilities
    
    \copyright  (c) UCL / Dr. Andrew C.R. Martin, 2015
    \author     Dr. Andrew C. R. Martin
@@ -59,6 +59,12 @@
    #FUNCTION blCollapseSpaces()
    Takes a string and collapses multiple spaces down to a single space
    Equivalent of perl 's/\s+/ /g'
+
+   #FUNCTION blStrdup()
+   Duplicates a string, allocating memory for it.
+   An implementation of SVr4, 4.3BSD, POSIX.1-2001 strdup() which is 
+   not standard ANSI C
+
 */
 
 /************************************************************************/
@@ -66,6 +72,8 @@
 */
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+
 #include "pdb.h"
 #include "macros.h"
 
@@ -132,4 +140,29 @@ char *blCollapseSpaces(char *inText)
 
    return(outText);
 }
+
+
+/************************************************************************/
+/*>char *blStrdup(char *instr)
+   ---------------------------
+*//**
+   \param[in]   instr    A string
+   \return               A malloc'd copy of the string
+
+   An implementation of SVr4, 4.3BSD, POSIX.1-2001 strdup() which is 
+   not standard ANSI C
+
+-  12.05.15  Original   By: ACRM
+*/
+char *blStrdup(char *instr)
+{
+   int  len     = strlen(instr)+1;
+   char *outstr = NULL;
+
+   if((outstr = (char*)malloc(len*sizeof(char)))!=NULL)
+      strcpy(outstr, instr);
+   
+   return(outstr);
+}
+
 
