@@ -3,8 +3,8 @@
 
    \file       PDBHeaderInfo.c
    
-   \version    V1.0
-   \date       26.03.15
+   \version    V1.1
+   \date       04.06.15
    \brief      Get misc header info from PDB header
    
    \copyright  (c) UCL / Dr. Andrew C.R. Martin, 2015
@@ -49,6 +49,8 @@
    Revision History:
    =================
 -  V1.0  26.03.15 Original
+-  V1.1  04.06.15 Fixed bug in dealing with compounds where the referenced
+                  chains span more than one line
 
 *************************************************************************/
 /* Doxygen
@@ -265,9 +267,11 @@ static BOOL ExtractField(STRINGLIST *molidStart, STRINGLIST *molidStop,
 
       chp = NULL;
 
-      if(GotField)
+      if(GotField && isdigit(s->string[9]))
       {
-         /* We have found the field already on previous line            */
+         /* We have found the field already on previous line and this is
+            marked as a continuation line            
+         */
          chp = s->string+10;
       }
       else
@@ -319,16 +323,17 @@ static BOOL ExtractField(STRINGLIST *molidStart, STRINGLIST *molidStop,
    chain isn't found
 
    28.04.15 Original   By: ACRM
+   04.06.15  Modified to use the ExtractField() routine instead of
+             duplicating code here. Fixes a bug in dealing with compounds
+             where the referenced chains span more than one line
 */
 BOOL blGetCompoundWholePDBChain(WHOLEPDB *wpdb, char *chain, 
                                 COMPND *compnd)
 {
    STRINGLIST *molidFirst,
               *molidStart,
-              *molidStop,
-              *s;
+              *molidStop;
    int        molid;
-   
 
    compnd->molid         = 0;
    compnd->molecule[0]   = '\0';
@@ -340,46 +345,51 @@ BOOL blGetCompoundWholePDBChain(WHOLEPDB *wpdb, char *chain,
    compnd->mutation[0]   = '\0';
    compnd->other[0]      = '\0';
 
+#ifdef DEBUG
+   molid = blFindMolID(wpdb, chain);
+   fprintf(stderr,"DEBUG: Chain %s molid %d\n", chain, molid);
+   if(molid == 0)
+      return(FALSE);
+#else
    if((molid = blFindMolID(wpdb, chain)) == 0)
       return(FALSE);
+#endif
    
    molidFirst = FindNextMolIDRecord(wpdb->header, "COMPND");
 
    for(molidStart=molidFirst; molidStart!=NULL; molidStart=molidStop)
    {
-      molidStop  = FindNextMolIDRecord(molidStart, "COMPND");
-      for(s=molidStart; s!=molidStop; NEXT(s))
-      {
-         char buffer[MAXPDBANNOTATION];
-         int  thisMolid = 0;
+      char buffer[MAXPDBANNOTATION];
+      int  thisMolid = 0;
 
+      molidStop  = FindNextMolIDRecord(molidStart, "COMPND");
+
+      ExtractField(molidStart, molidStop,
+                   buffer,             "COMPND", "MOL_ID:");
+      sscanf(buffer,"%d", &thisMolid);
+
+      if(thisMolid == molid)
+      {
+         ExtractField(molidStart, molidStop,
+                      compnd->molecule,   "COMPND","MOLECULE:");
+         ExtractField(molidStart, molidStop,
+                      compnd->chain,      "COMPND", "CHAIN:");
+         ExtractField(molidStart, molidStop,
+                      compnd->fragment,   "COMPND", "FRAGMENT:");
+         ExtractField(molidStart, molidStop,
+                      compnd->synonym,    "COMPND", "SYNONYM:");
+         ExtractField(molidStart, molidStop,
+                      compnd->ec,         "COMPND", "EC:");
+         ExtractField(molidStart, molidStop,
+                      compnd->engineered, "COMPND", "ENGINEERED:");
+         ExtractField(molidStart, molidStop,
+                      compnd->mutation,   "COMPND", "MUTATION:");
+         ExtractField(molidStart, molidStop,
+                      compnd->other,      "COMPND", "OTHER:");
          ExtractField(molidStart, molidStop,
                       buffer,             "COMPND", "MOL_ID:");
-         sscanf(buffer,"%d", &thisMolid);
-
-         if(thisMolid == molid)
-         {
-            ExtractField(molidStart, molidStop,
-                         compnd->molecule,   "COMPND","MOLECULE:");
-            ExtractField(molidStart, molidStop,
-                         compnd->chain,      "COMPND", "CHAIN:");
-            ExtractField(molidStart, molidStop,
-                         compnd->fragment,   "COMPND", "FRAGMENT:");
-            ExtractField(molidStart, molidStop,
-                         compnd->synonym,    "COMPND", "SYNONYM:");
-            ExtractField(molidStart, molidStop,
-                         compnd->ec,         "COMPND", "EC:");
-            ExtractField(molidStart, molidStop,
-                         compnd->engineered, "COMPND", "ENGINEERED:");
-            ExtractField(molidStart, molidStop,
-                         compnd->mutation,   "COMPND", "MUTATION:");
-            ExtractField(molidStart, molidStop,
-                         compnd->other,      "COMPND", "OTHER:");
-            ExtractField(molidStart, molidStop,
-                         buffer,             "COMPND", "MOL_ID:");
-            sscanf(buffer,"%d", &(compnd->molid));
-            return(TRUE);
-         }
+         sscanf(buffer,"%d", &(compnd->molid));
+         return(TRUE);
       }
    }
 
@@ -397,47 +407,43 @@ BOOL blGetCompoundWholePDBChain(WHOLEPDB *wpdb, char *chain,
 
    Finds the MOL_ID for a specified chain
 
-   28.04.15   Original   By: ACRM
+   28.04.15  Original   By: ACRM
+   04.06.15  Modified to use the ExtractField() routine instead of
+             duplicating code here. Fixes a bug in dealing with compounds
+             where the referenced chains span more than one line
 */
 int blFindMolID(WHOLEPDB *wpdb, char *chain)
 {
    STRINGLIST *molidFirst,
               *molidStart,
-              *molidStop,
-              *s;
+              *molidStop;
 
    molidFirst = FindNextMolIDRecord(wpdb->header, "COMPND");
 
    for(molidStart=molidFirst; molidStart!=NULL; molidStart=molidStop)
    {
+      char buffer[MAXPDBANNOTATION],
+           *chp,
+           word[MAXWORD];
+      
       molidStop  = FindNextMolIDRecord(molidStart, "COMPND");
-      for(s=molidStart; s!=molidStop; NEXT(s))
-      {
-         char *chp;
-         char buffer[MAXPDBANNOTATION],
-              word[MAXWORD];
-         
-         if((chp=strstr(s->string, "CHAIN:"))!=NULL)
-         {
-            strncpy(buffer, chp+6, MAXPDBANNOTATION);
-            TERMAT(buffer, ';');
-            KILLLEADSPACES(chp,buffer);
-
-            /* Check the chains to see if our chain is there            */
-            do {
-               int molid = 0;
+      ExtractField(molidStart, molidStop, buffer, "COMPND", "CHAIN:");
+      
+      /* Check the chains to see if our chain is there            */
+      chp = buffer;
+      
+      do {
+         int molid = 0;
                
-               chp=blGetWord(chp, word, MAXWORD);
-               if(!strcmp(word, chain))
-               {
-                  ExtractField(molidStart, molidStop,
-                               buffer,             "COMPND", "MOL_ID:");
-                  sscanf(buffer,"%d", &molid);
-                  return(molid);
-               }
-            }  while(chp!=NULL);
+         chp=blGetWord(chp, word, MAXWORD);
+         if(!strcmp(word, chain))
+         {
+            ExtractField(molidStart, molidStop,
+                         buffer,             "COMPND", "MOL_ID:");
+            sscanf(buffer,"%d", &molid);
+            return(molid);
          }
-      }
+      }  while(chp!=NULL);
    }
    
    return(0);
