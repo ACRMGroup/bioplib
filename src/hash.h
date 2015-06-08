@@ -3,8 +3,8 @@
 
    \file       hash.h
    
-   \version    V1.0
-   \date       14.05.15
+   \version    V1.1
+   \date       03.06.15
    \brief      Defines for using hash functions
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
@@ -46,6 +46,7 @@
    Revision History:
    =================
 -  V1.0  14.05.15 Original    By: ACRM
+-  V1.1  03.06.15 Added wrappers to blSetHashValue()
 
 *************************************************************************/
 /* Includes
@@ -95,6 +96,11 @@ char      **blGetHashKeyList(HASHTABLE *hashtable);
 BOOL      blSetHashValue(HASHTABLE *hashtable, char *key, int type, ...);
 BPTR      blGetHashValue(HASHTABLE *hashtable, char *key, int *type);
 BOOL      blDumpHash(FILE *out, HASHTABLE *hashtable);
+BOOL      blSetHashValueString(HASHTABLE *hashtable, char *key, char *value);
+BOOL      blSetHashValueInt(HASHTABLE *hashtable, char *key, int value);
+BOOL      blSetHashValueDouble(HASHTABLE *hashtable, char *key, double value);
+BOOL      blSetHashValuePointer(HASHTABLE *hashtable, char *key, BPTR ptr);
+BOOL      blSetHashValueChar(HASHTABLE *hashtable, char *key, char value);
 int       blGetHashValueInt(HASHTABLE *hashtable, char *key);
 double    blGetHashValueDouble(HASHTABLE *hashtable, char *key);
 char      blGetHashValueChar(HASHTABLE *hashtable, char *key);
@@ -102,3 +108,4 @@ char      *blGetHashValueString(HASHTABLE *hashtable, char *key);
 BPTR      blGetHashValuePointer(HASHTABLE *hashtable, char *key);
 BOOL      blHashKeyDefined(HASHTABLE *hashtable, char *key);
 void      blDeleteHashKey(HASHTABLE *hashtable, char *key);
+

@@ -3,8 +3,8 @@
 
    \file       StringCat.c
    
-   \version    V1.0
-   \date       26.03.15
+   \version    V1.1
+   \date       04.06.15
    \brief      
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2015
@@ -47,6 +47,7 @@
    Revision History:
    =================
 -  V1.0  26.03.15 Original   By:ACRM
+-  V1.1  04.06.15 Fixed bug in counting number of characters to copy
 
 *************************************************************************/
 /* Doxygen
@@ -90,15 +91,15 @@
    to be appended whereas this takes the max number of chars that 'out'
    can hold.
 
--  16.01.14  Original   By: ACRM
+-  16.01.15  Original   By: ACRM
+-  04.06.15  Fixed - was subtracting the input string length as well!  
 */
 char *blStrncat(char *out, const char *in, size_t len)
 {
-   int lenOut, lenIn, cpLen;
+   int lenOut, cpLen;
    
    lenOut = strlen(out);
-   lenIn  = strlen(in);
-   cpLen  = len - lenOut - lenIn;
+   cpLen  = len - lenOut;
    
    strncat(out, in, cpLen);
    return(out);

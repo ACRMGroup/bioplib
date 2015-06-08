@@ -214,7 +214,7 @@
                         */
 #define MAXCONECT    8  /* Max number of CONECT connections             */
 #define DEFCONECTTOL 0.1   /* Default CONECT tolerence                  */
-#define MAXPDBANNOTATION 160 /* Max size for storing a PDB header 
+#define MAXPDBANNOTATION 640 /* Max size for storing a PDB header 
                                 annotation
                              */
 

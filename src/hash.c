@@ -3,8 +3,8 @@
 
    \file       hash.c
    
-   \version    V1.0
-   \date       14.05.15
+   \version    V1.1
+   \date       03.06.15
    \brief      Flexible hash functions
    
    \copyright  (c) Dr. Andrew C. R. Martin, UCL, 2015
@@ -50,6 +50,7 @@
    Revision History:
    =================
 -  V1.0   14.05.15  Original   By: ACRM
+-  V1.1   03.06.15  Added wrappers to blSetHashValue()
 
 *************************************************************************/
 /* Doxygen
@@ -71,6 +72,21 @@
 
    #FUNCTION blSetHashValue()
    Sets a hash key:value pair
+
+   #FUNCTION blSetHashValueString()
+   Sets a hash key:value pair for a string value
+
+   #FUNCTION blSetHashValueInt()
+   Sets a hash key:value pair for an int value
+
+   #FUNCTION blSetHashValueDouble()
+   Sets a hash key:value pair for a double value
+
+   #FUNCTION blSetHashValuePointer()
+   Sets a hash key:value pair for a general pointer (BPTR) value
+
+   #FUNCTION blSetHashValueChar()
+   Sets a hash key:value pair for a char value
 
    #FUNCTION blGetHashValue()
    Gets a hash value for a specified key
@@ -415,6 +431,106 @@ BOOL blSetHashValue(HASHTABLE *hashtable, char *key, int type, ...)
    hashEntry->type = type;
 
    return(TRUE);
+}
+
+
+/************************************************************************/
+/*>BOOL blSetHashValueString(HASHTABLE *hashtable, char *key, char *value)
+   -----------------------------------------------------------------------
+*//**
+   \param[in]    *hashtable    The hash table
+   \param[in]    *key          The key for the hash entry
+   \param[in]    *value        The value for the hash entry
+   \return                     Success
+
+   Set a string value in a hash
+   Wrapper to blSetHashValue()
+
+-  03.06.15   Original   By: ACRM
+*/
+BOOL blSetHashValueString(HASHTABLE *hashtable, char *key, char *value)
+{
+   return(blSetHashValue(hashtable, key, HASHTYPE_STRING, value));
+}
+
+
+/************************************************************************/
+/*>BOOL blSetHashValueInt(HASHTABLE *hashtable, char *key, int value)
+   ------------------------------------------------------------------
+*//**
+   \param[in]    *hashtable    The hash table
+   \param[in]    *key          The key for the hash entry
+   \param[in]    *value        The value for the hash entry
+   \return                     Success
+
+   Set an int value in a hash 
+   Wrapper to blSetHashValue()
+
+-  03.06.15   Original   By: ACRM
+*/
+BOOL blSetHashValueInt(HASHTABLE *hashtable, char *key, int value)
+{
+   return(blSetHashValue(hashtable, key, HASHTYPE_INT, value));
+}
+
+
+/************************************************************************/
+/*>BOOL blSetHashValueDouble(HASHTABLE *hashtable, char *key,
+   double value)
+   ----------------------------------------------------------   
+*//**
+   \param[in]    *hashtable    The hash table
+   \param[in]    *key          The key for the hash entry
+   \param[in]    *value        The value for the hash entry
+   \return                     Success
+
+   Set a double value in a hash
+   Wrapper to blSetHashValue()
+
+-  03.06.15   Original   By: ACRM
+*/
+BOOL blSetHashValueDouble(HASHTABLE *hashtable, char *key, double value)
+{
+   return(blSetHashValue(hashtable, key, HASHTYPE_DOUBLE, value));
+}
+
+
+/************************************************************************/
+/*>BOOL blSetHashValuePointer(HASHTABLE *hashtable, char *key, BPTR ptr)
+   ---------------------------------------------------------------------
+*//**
+   \param[in]    *hashtable    The hash table
+   \param[in]    *key          The key for the hash entry
+   \param[in]    *value        The value for the hash entry
+   \return                     Success
+
+   Set a general pointer (BPTR) value in a hash
+   Wrapper to blSetHashValue()
+
+-  03.06.15   Original   By: ACRM
+*/
+BOOL blSetHashValuePointer(HASHTABLE *hashtable, char *key, BPTR ptr)
+{
+   return(blSetHashValue(hashtable, key, HASHTYPE_POINTER, ptr));
+}
+
+
+/************************************************************************/
+/*>BOOL blSetHashValueChar(HASHTABLE *hashtable, char *key, char value)
+   --------------------------------------------------------------------
+*//**
+   \param[in]    *hashtable    The hash table
+   \param[in]    *key          The key for the hash entry
+   \param[in]    *value        The value for the hash entry
+   \return                     Success
+
+   Wrapper to blSetHashValue()
+
+-  03.06.15   Original   By: ACRM
+*/
+BOOL blSetHashValueChar(HASHTABLE *hashtable, char *key, char value)
+{
+   return(blSetHashValue(hashtable, key, HASHTYPE_CHAR, value));
 }
 
 
@@ -925,6 +1041,12 @@ int main(int argc, char **argv)
    blSetHashValue(hashtable, "char",    HASHTYPE_CHAR, 'a');
    /* Change this one again                                             */
    blSetHashValue(hashtable, "an int",  HASHTYPE_INT, 99);
+
+   blSetHashValueString(hashtable, "phone2",    "020898765432");
+   blSetHashValueInt(hashtable,     "int2",     10);
+   blSetHashValueDouble(hashtable,  "double2",  123.456);
+   blSetHashValuePointer(hashtable, "pointer2", (BPTR)&i);
+   blSetHashValueChar(hashtable,    "char2",    'a');
 
    printf("\n\nAfter updating...\n");
    blDumpHash(stdout, hashtable);
