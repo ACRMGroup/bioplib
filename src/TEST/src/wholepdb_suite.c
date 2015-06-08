@@ -262,8 +262,6 @@ START_TEST(test_write_pdb_02)
    /* Set temp file name */
    mkstemp(test_output_filename);
 #endif
-   
-   gPDBXML = FALSE; /* Fix: Reset XML flag to allow XML output */
 
    /* write output file */
    fp = fopen(test_output_filename,"w");

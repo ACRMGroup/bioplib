@@ -3,8 +3,8 @@
 
    \file       WritePDB.c
    
-   \version    V1.25
-   \date       13.05.15
+   \version    V1.26
+   \date       08.06.15
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
@@ -102,6 +102,7 @@
 -  V1.24 02.04.15 WriteMaster() Padded MASTER record to 80 cols.  By: CTP
 -  V1.25 13.05.15 Updated blWritePDBAsPDBML() to write CONECT records, 
                   Added output of COMPND and SOURCE records.  By: CTP
+-  V1.26 08.06.15 Updated XML check for output format.  By: CTP
 
 *************************************************************************/
 /* Doxygen
@@ -1434,12 +1435,14 @@ BOOL blWriteWholePDB(FILE *fp, WHOLEPDB *wpdb)
 -  30.05.02  Original   By: ACRM
 -  21.06.14  Renamed to blWriteWholePDBHeader() By: CTP
 -  12.02.15  Added XML check   By: ACRM
+-  06.08.15  Updated XML check. By: CTP
 */
 void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
 {
    STRINGLIST *s;
 
-   if((gPDBXMLForce != FORCEXML_XML) && (gPDBXML == FALSE))
+   if((gPDBXMLForce == FORCEXML_PDB) ||
+      (gPDBXMLForce == FORCEXML_NOFORCE && gPDBXML == FALSE))
    {
       for(s=wpdb->header; s!=NULL; NEXT(s))
       {
@@ -1467,12 +1470,14 @@ void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
              simply rewriting what was read in
 -  23.02.15  Added numTer parameter
 -  02.03.15  Padded END and CONECT
+-  06.08.15  Updated XML check. By: CTP
 */
 void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb, int numTer)
 {
    int nConect = 0;
    
-   if((gPDBXMLForce != FORCEXML_XML) && (gPDBXML == FALSE))
+   if((gPDBXMLForce == FORCEXML_PDB) ||
+      (gPDBXMLForce == FORCEXML_NOFORCE && gPDBXML == FALSE))
    {
       /* Write the CONECT records                                       */
       PDB *p;
@@ -1631,6 +1636,7 @@ static void WriteMaster(FILE *fp, WHOLEPDB *wpdb, int numConect,
 -  02.03.15  Original   By: ACRM
 -  09.03.15  Additionally skips SEQADV, MODRES, HET, SITE
 -  10.03.15  Additionally skips REMARK 3,465,470,475,480,525,610,615,620,630
+-  06.08.15  Updated XML check. By: CTP
 */
 void blWriteWholePDBHeaderNoRes(FILE *fp, WHOLEPDB *wpdb)
 {
@@ -1658,7 +1664,8 @@ void blWriteWholePDBHeaderNoRes(FILE *fp, WHOLEPDB *wpdb)
                            "REMARK   3",
                            NULL};
    
-   if((gPDBXMLForce != FORCEXML_XML) && (gPDBXML == FALSE))
+   if((gPDBXMLForce == FORCEXML_PDB) ||
+      (gPDBXMLForce == FORCEXML_NOFORCE && gPDBXML == FALSE))
    {
       for(s=wpdb->header; s!=NULL; NEXT(s))
       {

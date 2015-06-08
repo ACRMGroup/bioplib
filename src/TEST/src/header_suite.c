@@ -228,9 +228,6 @@ START_TEST(test_write_pdb_01)
    mkstemp(test_output_filename);
 #endif
 
-   /* Fix: Set flag for XML */
-   gPDBXML = FALSE;
-
    /* write output file */
    fp = fopen(test_output_filename,"w");
    blWriteWholePDB(fp, wpdb);
@@ -275,9 +272,6 @@ START_TEST(test_title_01)
    mkstemp(test_output_filename);
 #endif
 
-   /* Fix: Set flag for XML */
-/*   gPDBXML = FALSE;*/
-
    /* write output file */
    fp = fopen(test_output_filename,"w");
    blWriteWholePDB(fp, wpdb);
@@ -318,9 +312,6 @@ START_TEST(test_title_02)
    /* Set temp file name */
    mkstemp(test_output_filename);
 #endif
-
-   /* Fix: Set flag for XML */
-/*   gPDBXML = FALSE;*/
 
    /* write output file */
    fp = fopen(test_output_filename,"w");
@@ -363,9 +354,6 @@ START_TEST(test_title_03)
    mkstemp(test_output_filename);
 #endif
 
-   /* Fix: Set flag for XML */
-   gPDBXML = FALSE;
-
    /* write output file */
    fp = fopen(test_output_filename,"w");
    blWriteWholePDB(fp, wpdb);
@@ -406,9 +394,6 @@ START_TEST(test_title_04)
    /* Set temp file name */
    mkstemp(test_output_filename);
 #endif
-
-   /* Fix: Set flag for XML */
-   gPDBXML = TRUE;
 
    /* write output file */
    fp = fopen(test_output_filename,"w");
