@@ -4,7 +4,7 @@
    \file       PDBHeaderInfo.c
    
    \version    V1.3
-   \date       08.06.15
+   \date       09.06.15
    \brief      Get misc header info from PDB header
    
    \copyright  (c) UCL / Dr. Andrew C.R. Martin, 2015
@@ -55,7 +55,8 @@
                   blGetSpeciesWholePDBMolID() By: CTP
 -  V1.2  04.06.15 Fixed bug in dealing with compounds where the referenced
                   chains span more than one line
--  V1.3  08.06.15 Merged changes from CTP and ACRM. ...
+-  V1.3  09.06.15 Merged changes from CTP and ACRM. 
+                  Updated blGetTitleWholePDB()  By: CTP
 
 *************************************************************************/
 /* Doxygen
@@ -172,8 +173,10 @@ BOOL blGetHeaderWholePDB(WHOLEPDB *wpdb,
    Extracts the title from a PDB file malloc()ing a string in which to
    store the data. This must be freed by user code
 
-   28.04.15 Original   By: ACRM
-   11.05.15 Return NULL if TITLE line absent. By: CTP
+-  28.04.15 Original   By: ACRM
+-  11.05.15 Return NULL if TITLE line absent. By: CTP
+-  09.06.15 Add columns 11 to 80 to title string for both start and 
+            continuation lines. By: CTP
 */
 char *blGetTitleWholePDB(WHOLEPDB *wpdb)
 {
@@ -189,11 +192,9 @@ char *blGetTitleWholePDB(WHOLEPDB *wpdb)
          char buffer[MAXPDBANNOTATION];
          strcpy(buffer, s->string);
          TERMINATE(buffer);
-         
-         if(buffer[9] == ' ')
-            title = blStrcatalloc(title, buffer+10);
-         else
-            title = blStrcatalloc(title, buffer+11);
+
+         /* append cols 11-80 to title string                           */
+         title = blStrcatalloc(title, buffer+10);
 
          if(title == NULL)
             return(NULL);
