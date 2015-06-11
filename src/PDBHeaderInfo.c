@@ -3,8 +3,8 @@
 
    \file       PDBHeaderInfo.c
    
-   \version    V1.1
-   \date       04.06.15
+   \version    V1.2
+   \date       11.06.15
    \brief      Get misc header info from PDB header
    
    \copyright  (c) UCL / Dr. Andrew C.R. Martin, 2015
@@ -51,6 +51,8 @@
 -  V1.0  26.03.15 Original
 -  V1.1  04.06.15 Fixed bug in dealing with compounds where the referenced
                   chains span more than one line
+-  V1.2  11.06.15 Added blGetSeqresAsStringWholePDB(),
+                  blGetModresWholePDB() and blFindOriginalResType()
 
 *************************************************************************/
 /* Doxygen
@@ -73,20 +75,34 @@
    #FUNCTION blGetSpeciesWholePDBChain()
    Obtains the species data for a specified chain from WHOLEPDB info
 
+   #FUNCTION blGetSeqresAsStringWholePDB()
+   Obtain the sequence from the SEQRES records
+
+   #FUNCTION blGetModresWholePDB()
+   Obtain the MODRES data
+
+   #FUNCTION blFindOriginalResType()
+   Find the original residue type for a modified residue from MODRES
+   data
 */
+
 /************************************************************************/
 /* Includes
 */
 #include <stdio.h>
 #include <string.h>
 #include "pdb.h"
+#include "seq.h"
 #include "macros.h"
+#include "fsscanf.h"
 #include "general.h"
 
 /************************************************************************/
 /* Defines and macros
 */
-#define MAXWORD 8
+#define MAXWORD     8
+#define MAXBUFF   160
+#define ALLOCSIZE  80
 
 /************************************************************************/
 /* Globals
@@ -510,6 +526,216 @@ BOOL blGetSpeciesWholePDBChain(WHOLEPDB *wpdb, char *chain,
 
    return(FALSE);
 }
+
+/************************************************************************/
+/*>char *blGetSeqresAsStringWholePDB(WHOLEPDB *wpdb, char **chains, 
+                                     MODRES *modres, BOOL doNucleic)
+   -----------------------------------------------------------------
+*//**
+   \param[in]  *wpdb      Pointer to whole PDB structure
+   \param[out] **chains   Chain labels for the chains - may also be
+                          set to NULL
+   \param[in]  *modres    Linked list of MODRES information
+   \param[in]  doNucleic  Read sequence for nucleic acid chains
+   \return                malloc()'d Sequence from SEQRES, chains 
+                          separated by a *
+
+   Reads sequence from SEQRES records into a character string in 1-letter
+   code. Chains are terminated by * characters.
+
+-  21.08.97 Original   by: ACRM
+-  22.08.97 Added chains parameter
+-  26.08.97 No longer reads DNA/RNA
+-  07.03.07 Added code to check for modified amino acids
+            Now reads from wpdb rather than from the file
+-  07.11.14 Initialize lastchain
+-  11.06.15 Moved to bioplib - doNucleic is now a paramater instead of
+            a global; chains is now an array of strings
+*/
+char *blGetSeqresAsStringWholePDB(WHOLEPDB *wpdb, char **chains, 
+                                  MODRES *modres, BOOL doNucleic)
+{
+   static char *sequence = NULL;
+   char        buffer[MAXBUFF],
+               chain[blMAXCHAINLABEL],
+               lastchain[blMAXCHAINLABEL],
+               seq3[13][4];
+   int         i,
+               nchain    = 0,
+               nres      = 0,
+               ArraySize = ALLOCSIZE;
+   BOOL        AddStar   = FALSE;
+   STRINGLIST  *s;
+   
+   lastchain[0] = '\0';
+
+   if((sequence=(char *)malloc(ArraySize * sizeof(char)))==NULL)
+   {
+      return(NULL);
+   }
+   sequence[0] = '\0';
+   
+   for(s=wpdb->header; s!=NULL; NEXT(s))
+   {
+      strncpy(buffer, s->string, MAXBUFF);
+      TERMINATE(buffer);
+      if(!strncmp(buffer,"SEQRES",6))
+      {
+         fsscanf(buffer, 
+                 "%11x%1s%7x%3s%1x%3s%1x%3s%1x%3s%1x%3s%1x%3s%1x%3s%1x\
+%3s%1x%3s%1x%3s%1x%3s%1x%3s%1x%3s",
+                 chain,
+                 seq3[0],  seq3[1],  seq3[2],  seq3[3],  seq3[4], 
+                 seq3[5],  seq3[6],  seq3[7],  seq3[8],  seq3[9],
+                 seq3[10], seq3[11], seq3[12]);
+
+         if((nres == 0) && !AddStar)
+         {
+            /* This is the first line so we set the lastchain           */
+            strcpy(lastchain, chain);
+            if(chains!=NULL)
+               strncpy(chains[nchain++], chain, blMAXCHAINLABEL);
+         }
+         else if(nres+15 >= ArraySize)
+         {
+            /* Allocate more space if needed                            */
+            ArraySize += ALLOCSIZE;
+            if((sequence=(char *)realloc((void *)sequence, 
+                                         ArraySize*sizeof(char)))
+               == NULL)
+            {
+               return(NULL);
+            }
+         }
+
+         if(!CHAINMATCH(chain, lastchain))
+         {
+            sequence[nres++] = '*';
+            strcpy(lastchain, chain);
+            if(chains!=NULL)
+               strncpy(chains[nchain++], chain, blMAXCHAINLABEL);
+         }
+
+         for(i=0; i<13; i++)
+         {
+            AddStar = TRUE;
+            if(!strncmp(seq3[i],"   ",3))
+               break;
+            sequence[nres] = blThronex(seq3[i]);
+
+            /* 07.03.07 Added code to check for modified amino acids    */
+            if(sequence[nres] == 'X')
+            {
+               char tmpthree[8];
+               if(modres != NULL)   /* 11.06.15                         */
+               {
+                  blFindOriginalResType(seq3[i], tmpthree, modres);
+                  sequence[nres] = blThronex(tmpthree);
+               }
+            }
+               
+            if(!gBioplibSeqNucleicAcid || doNucleic)
+               nres++;
+         }
+      }
+   }
+
+   if(AddStar)
+   {
+      sequence[nres++] = '*';
+   }
+   sequence[nres++] = '\0';
+   if(chains!=NULL)
+      chains[nchain][0] = '\0';
+
+   return(sequence);
+}
+
+/************************************************************************/
+/*>MODRES *blGetModresWholePDB(WHOLEPDB *wpdb)
+   -------------------------------------------
+*//**
+   \param[in]
+   \return
+
+   Reads MODRES records from a Whole PDB structure and returns a linked
+   list containing the information
+
+-  07.03.07  Original   By: ACRM
+-  11.06.15  Moved to Bioplib
+*/
+MODRES *blGetModresWholePDB(WHOLEPDB *wpdb)
+{
+   STRINGLIST *s;
+   char *ch;
+   MODRES *modres = NULL,
+          *m = NULL;
+   
+   
+   for(s=wpdb->header; s!=NULL; NEXT(s))
+   {
+      if(!strncmp(s->string, "MODRES", 6))
+      {
+         if(m==NULL)
+         {
+            INIT(modres, MODRES);
+            m = modres;
+         }
+         else
+         {
+            ALLOCNEXT(m, MODRES);
+         }
+         if(m==NULL)
+         {
+            fprintf(stderr,"pdb2pir: Error! No memory for modres\n");
+            exit(1);
+         }
+         
+         ch = s->string+12;
+         strncpy(m->modres, ch, 3);
+         PADCHARMINTERM(m->modres, ' ', 4);
+         
+         ch = s->string+24;
+         strncpy(m->origres, ch, 3);
+         PADCHARMINTERM(m->origres, ' ', 4);
+         if(m->origres[0] == ' ')
+         {
+            strncpy(m->origres, "XXX ", 4);
+         }
+      }
+   }
+   return(modres);
+}
+
+
+/************************************************************************/
+/*>void blFindOriginalResType(char *modAA, char *stdAA, MODRES *modres)
+   --------------------------------------------------------------------
+*//**
+   \param[in]  *modAA    Non-standard (modified) amino acid name
+   \param[out] *stdAA    Standard amino acid from which it was derived
+   \param[in]  *modres   MODRES linked list
+
+   Uses the MODRES information to identify the original (standard)
+   amino acid from which a modified amino acid was derived
+
+-  07.03.07  Original   By: ACRM
+-  11.06.15  Moved to bioplib, renamed routine and parameters
+*/
+void blFindOriginalResType(char *modAA, char *stdAA, MODRES *modres)
+{
+   MODRES *m;
+   for(m=modres; m!=NULL; NEXT(m))
+   {
+      if(!strncmp(modAA, m->modres, 3))
+      {
+         strncpy(stdAA, m->origres, 3);
+         PADCHARMINTERM(stdAA, ' ', 4);
+         return;
+      }
+   }
+}
+
 
 
 /************************************************************************/

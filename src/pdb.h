@@ -191,7 +191,8 @@
                   blGetCompoundWholePDBChain(), blFindMolID(),
                   blGetSpeciesWholePDBChain() plus the COMPND and
                   PDBSOURCE structures
-
+-  V1.81 11.06.15 Added blGetSeqresAsStringWholePDB(),
+                  blGetModresWholePDB(), blFindOriginalResType()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -214,6 +215,8 @@
 #define MAXPDBANNOTATION 640 /* Max size for storing a PDB header 
                                 annotation
                              */
+#define blMAXCHAINLABEL 8
+
 
 /* blATOMTYPE is unused at present, but gives the flexibility of
    associating type information with each PDB record. 
@@ -350,6 +353,13 @@ typedef struct _pdbsource
         strain[MAXPDBANNOTATION];
    int  taxid;
 }  PDBSOURCE;
+
+typedef struct _modres
+{
+   struct _modres *next;
+   char modres[8];
+   char origres[8];
+}  MODRES;
 
    
 
@@ -674,6 +684,10 @@ BOOL blGetCompoundWholePDBChain(WHOLEPDB *wpdb, char *chain,
 int blFindMolID(WHOLEPDB *wpdb, char *chain);
 BOOL blGetSpeciesWholePDBChain(WHOLEPDB *wpdb, char *chain,
                                   PDBSOURCE *source);
+char *blGetSeqresAsStringWholePDB(WHOLEPDB *wpdb, char **chains, 
+                                  MODRES *modres, BOOL doNucleic);
+MODRES *blGetModresWholePDB(WHOLEPDB *wpdb);
+void blFindOriginalResType(char *orig, char *new, MODRES *modres);
 
 /************************************************************************/
 /* Include deprecated functions                                         */
