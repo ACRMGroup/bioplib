@@ -534,8 +534,11 @@ BOOL blGetSpeciesWholePDBChain(WHOLEPDB *wpdb, char *chain,
 *//**
    \param[in]  *wpdb      Pointer to whole PDB structure
    \param[out] **chains   Chain labels for the chains - may also be
-                          set to NULL
-   \param[in]  *modres    Linked list of MODRES information
+                          set to NULL if you don't want to record
+                          chain labels
+   \param[in]  *modres    Linked list of MODRES information. May be 
+                          NULL if you don't want to translate 
+                          non-standard amino acids.
    \param[in]  doNucleic  Read sequence for nucleic acid chains
    \return                malloc()'d Sequence from SEQRES, chains 
                           separated by a *
@@ -551,6 +554,7 @@ BOOL blGetSpeciesWholePDBChain(WHOLEPDB *wpdb, char *chain,
 -  07.11.14 Initialize lastchain
 -  11.06.15 Moved to bioplib - doNucleic is now a paramater instead of
             a global; chains is now an array of strings
+-  12.06.15 Frees memory and returns NULL if no SEQRES found
 */
 char *blGetSeqresAsStringWholePDB(WHOLEPDB *wpdb, char **chains, 
                                   MODRES *modres, BOOL doNucleic)
@@ -640,13 +644,22 @@ char *blGetSeqresAsStringWholePDB(WHOLEPDB *wpdb, char **chains,
       }
    }
 
-   if(AddStar)
+   /* If no SEQRES records found, then free the memory and return NULL  */
+   if(!strlen(sequence))
    {
-      sequence[nres++] = '*';
+      free(sequence);
+      sequence = NULL;
    }
-   sequence[nres++] = '\0';
-   if(chains!=NULL)
-      chains[nchain][0] = '\0';
+   else
+   {
+      if(AddStar)
+      {
+         sequence[nres++] = '*';
+      }
+      sequence[nres++] = '\0';
+      if(chains!=NULL)
+         chains[nchain][0] = '\0';
+   }
 
    return(sequence);
 }
