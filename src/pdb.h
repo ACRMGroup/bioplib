@@ -3,7 +3,7 @@
 
    \file       pdb.h
    
-   \version    V1.83
+   \version    V1.84
    \date       13.05.15
    \brief      Include file for PDB routines
    
@@ -194,7 +194,8 @@
 -  V1.82 28.04.15 Modified blDoReadPDBML()  By: CTP
 -  V1.83 13.05.15 Added blGetCompoundWholePDBMolID() and 
                   blGetSpeciesWholePDBMolID()  By: CTP
-
+-  V1.84 11.06.15 Added blGetSeqresAsStringWholePDB(),
+                  blGetModresWholePDB(), blFindOriginalResType()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -217,6 +218,8 @@
 #define MAXPDBANNOTATION 640 /* Max size for storing a PDB header 
                                 annotation
                              */
+#define blMAXCHAINLABEL 8
+
 
 /* blATOMTYPE is unused at present, but gives the flexibility of
    associating type information with each PDB record. 
@@ -353,6 +356,13 @@ typedef struct _pdbsource
         strain[MAXPDBANNOTATION];
    int  taxid;
 }  PDBSOURCE;
+
+typedef struct _modres
+{
+   struct _modres *next;
+   char modres[8];
+   char origres[8];
+}  MODRES;
 
    
 
@@ -681,6 +691,11 @@ BOOL blGetCompoundWholePDBMolID(WHOLEPDB *wpdb, int molid,
                                 COMPND *compnd);
 BOOL blGetSpeciesWholePDBMolID(WHOLEPDB *wpdb, int molid, 
                                PDBSOURCE *source);
+char *blGetSeqresAsStringWholePDB(WHOLEPDB *wpdb, char **chains, 
+                                  MODRES *modres, BOOL doNucleic);
+MODRES *blGetModresWholePDB(WHOLEPDB *wpdb);
+void blFindOriginalResType(char *orig, char *new, MODRES *modres);
+
 
 /************************************************************************/
 /* Include deprecated functions                                         */

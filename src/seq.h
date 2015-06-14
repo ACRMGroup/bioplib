@@ -3,11 +3,11 @@
 
    \file       seq.h
    
-   \version    V2.14
-   \date       26.08.14
+   \version    V2.15
+   \date       11.06.15
    \brief      Header file for sequence handling
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -66,6 +66,7 @@
 -  V2.13 14.08.14 Moved deprecated function prototypes to deprecated.h 
                   By: CTP
 -  V2.14 26.08.14 Added blSetMDMScoreWeight()
+-  V2.15 11.06.15 Added blWriteOneStringPIR()
 
 *************************************************************************/
 #ifndef _SEQ_H
@@ -78,6 +79,7 @@
 /************************************************************************/
 /* Defines and macros
  */
+#define blMAXPIRLABEL 160
 #define ALLOCSIZE 80  /* ReadPIR() uses this as a chunk size for 
                          allocating memory
                       */
@@ -142,6 +144,9 @@ int blNumericAffineAlign(int *seq1, int length1, int *seq2, int length2,
                          int penext, int *align1, int *align2, 
                          int *align_len);
 void blSetMDMScoreWeight(char resa, char resb, REAL weight);
+void blWriteOneStringPIR(FILE *out, char *label, char *title, 
+                         char *sequence,
+                         char **chains, BOOL ByChain, BOOL doFasta);
 
 
 /************************************************************************/
