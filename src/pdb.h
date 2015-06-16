@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.84
-   \date       13.05.15
+   \version    V1.85
+   \date       14.06.15
    \brief      Include file for PDB routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2015
@@ -196,6 +196,8 @@
                   blGetSpeciesWholePDBMolID()  By: CTP
 -  V1.84 11.06.15 Added blGetSeqresAsStringWholePDB(),
                   blGetModresWholePDB(), blFindOriginalResType()
+-  V1.85 14.06.15 Added entity_id to PDB data structure and to CLEAR_PDB()
+                  By: CTP
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -273,6 +275,7 @@ typedef struct pdb_entry
    int  resnum;              /* Residue number                          */
    int  formal_charge;       /* Formal charge - used in XML files       */
    int  nConect;             /* Number of conections                    */
+   int  entity_id;           /* Entity ID - used in XML files           */
    char record_type[8];      /* ATOM / HETATM                           */
    char atnam[8];            /* Atom name, left justified               */
    char atnam_raw[8];        /* Atom name as it appears in the PDB file */
@@ -416,7 +419,8 @@ typedef struct
                      strcpy(p->segid,"    "); \
                      p->conect[0] = NULL;     \
                      p->nConect = 0;          \
-                     p->atomType = NULL
+                     p->atomType = NULL;      \
+                     p->entity_id = 0
 
 #define ISWATER(z)   (!strncmp((z)->resnam,"HOH",3) || \
                       !strncmp((z)->resnam,"OH2",3) || \

@@ -246,6 +246,50 @@ START_TEST(test_write_pdb_01)
 }
 END_TEST
 
+/* TEST FOR MULTI-CHAIN COMPND */
+/* REQUIRES TEST FILES */
+START_TEST(test_write_pdb_02)
+{
+   /* get pdb data */
+//   char filename_in[]      = "1ZEH.xml",
+   char filename_in[]      = "test_alanine_in_01.xml",
+        filename_example[] = "test_alanine_out_01.pdb",
+        test_message[]     = "Output PDB does not match example file.";
+        
+   /* force write PDB */
+   FORCEPDB;
+   
+   /* read input file */
+   strcat(test_input_filename,filename_in);
+   fp = fopen(test_input_filename,"r");
+   wpdb = blReadWholePDB(fp);
+   fclose(fp);
+   ck_assert_msg(wpdb != NULL, "Failed to read PDB file.");
+
+#ifndef MS_WINDOWS   
+   /* Set temp file name */
+   mkstemp(test_output_filename);
+#endif
+
+   /* write output file */
+   fp = fopen(test_output_filename,"w");
+   blWriteWholePDB(fp, wpdb);
+   fclose(fp);
+
+   /* compare output file to example file */
+   strcat(test_example_filename, filename_example);
+   files_identical = wholepdb_compare_files(test_example_filename, 
+                                            test_output_filename);
+
+   /* remove output file */
+   remove(test_output_filename);
+  
+   /* return test result */
+   ck_assert_msg(files_identical, test_message);
+}
+END_TEST
+
+
 /* Title tests */
 /* =========== */
 
@@ -378,7 +422,7 @@ START_TEST(test_title_04)
    /* get pdb data */
    char filename_in[]      = "test_alanine_in_03.pdb",
         filename_example[] = "test_alanine_out_02.xml",
-        test_message[]     = "Output PDB does not match example file.";
+        test_message[]     = "Output PDBML does not match example file.";
         
    /* force write PDB */
    FORCEXML;
@@ -431,9 +475,10 @@ Suite *header_suite(void)
    tcase_add_test(tc_core, test_read_pdb);
    tcase_add_test(tc_core, test_write_pdbml_01);
 
-   /* read pdbml and write pdb*/
+   /* read pdbml and write pdb */
    tcase_add_test(tc_core, test_read_pdbml);
    tcase_add_test(tc_core, test_write_pdb_01);
+   tcase_add_test(tc_core, test_write_pdb_02);
 
    suite_add_tcase(s, tc_core);
 

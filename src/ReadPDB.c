@@ -336,7 +336,7 @@ static void blProcessChargeField(int *charge, char *charge_field);
 static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer);
 #ifdef XML_SUPPORT
 static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date);
-static STRINGLIST *blParseHeaderPDBML(xmlDoc  *document);
+static STRINGLIST *blParseHeaderPDBML(xmlDoc  *document, PDB *pdb);
 static int blParseConectPDBML(xmlDoc *document, PDB *pdb);
 static STRINGLIST *blTitleStringlist(char *titlestring);
 static STRINGLIST *blCompndStringlist(STRINGLIST *stringlist, 
@@ -344,6 +344,8 @@ static STRINGLIST *blCompndStringlist(STRINGLIST *stringlist,
 static STRINGLIST *blSourceStringlist(STRINGLIST *stringlist, 
                                       int *lines_stored, int mol_id, 
                                       PDBSOURCE *source);
+static char **blGetEntityChainLabels(int entity, PDB *pdb, int *nChains);
+
 #endif
 
 
@@ -1577,6 +1579,7 @@ pointer\n");
 -  28.04.15 Set identical input parameters to blDoReadPDB(). 
             Added CONECT and header parsing.
             Return WHOLEPDB instead of PDB.  By: CTP
+-  14.06.15 Read entity_id  By: CTP
 
 */
 WHOLEPDB *blDoReadPDBML(FILE *fpin,
@@ -1826,6 +1829,16 @@ WHOLEPDB *blDoReadPDBML(FILE *fpin,
                   strncpy(curr_pdb->resnam, (char *)content, 8);
                }
             }
+            else if(!strcmp((char *)n->name, "label_entity_id"))
+            {
+               if((curr_pdb->entity_id == 0) && 
+                  (strlen((char *)content) > 0))
+               {
+                  content_lf = (REAL)0.0;
+                  sscanf((char *)content, "%lf", &content_lf);
+                  curr_pdb->entity_id = (REAL)content_lf;
+               }
+            }
             else if(!strcmp((char *)n->name, "label_seq_id"))
             {
                if((curr_pdb->resnum == 0) && 
@@ -2061,7 +2074,7 @@ WHOLEPDB *blDoReadPDBML(FILE *fpin,
       blParseConectPDBML(document, wpdb->pdb);
    
       /* Parse Header Data                                              */
-      wpdb->header = blParseHeaderPDBML(document);
+      wpdb->header = blParseHeaderPDBML(document, wpdb->pdb);
    }
 
 
@@ -2443,7 +2456,7 @@ static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer)
 -  05.05.15 Added Source and Compound data.  By: CTP
 
 */
-static STRINGLIST *blParseHeaderPDBML(xmlDoc *document)
+static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
 {
 #ifndef XML_SUPPORT
 
@@ -2479,7 +2492,11 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document)
    /* compound and source */
    COMPND    compnd;
    PDBSOURCE source;
-   int       mol_id = 0;
+   int       mol_id = 0,
+             nchains = 0,
+             i = 0;
+   char      **chains = NULL;
+
 
    /* Parse Document Tree                                               */
    root_node = xmlDocGetRootElement(document);
@@ -2551,7 +2568,6 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document)
          }
       }
 
-
       /* get compound                                                   */
       if(!strcmp("entityCategory",(char *)node->name))
       {
@@ -2615,6 +2631,21 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document)
 
             /* exclude water */
             if(!strcmp(compnd.molecule,"water")){ continue; }
+
+            /* get chains */
+            chains = blGetEntityChainLabels(compnd.molid , pdb, &nchains);
+            if(chains != NULL)
+            {
+               /* make compnd.chain string */
+               for(i=0; i<nchains; i++)
+               {
+                  if(i){ strncat(compnd.chain,", ",3); }
+                  strncat(compnd.chain,chains[i],8);
+                  free(chains[i]);
+               }
+               free(chains);
+               nchains = 0;
+            }
 
             /* store compound as stringlist */
             compnd_lines = blCompndStringlist(compnd_lines, &nlines, &compnd);
@@ -2715,6 +2746,97 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document)
 
 #endif
 }
+
+/************************************************************************/
+/*>static char **blGetEntityChainLabels(int entity, PDB *pdb,
+                                        int *nChains)
+   ----------------------------------------------------------
+/**
+   \param[in]  entity      Entity ID
+   \param[in]  *pdb        PDB linked list
+   \param[out] *nChains    Number of chain labels found.
+   \return                 Array of strings containing chain labels.
+
+   Gets chain labels associated with an entity_id.
+
+   Called when parsing PDBML-formatted files. The PDBML entity_id is 
+   equivalent to the MOL_ID for PDB-formatted files.
+
+-  15.06.15 Original. By: CTP
+
+*/
+static char **blGetEntityChainLabels(int entity, PDB *pdb, int *nChains)
+{
+#ifndef XML_SUPPORT
+
+   /* PDBML format not supported.                                       */
+   return NULL;
+
+#else
+
+   /* PDBML format supported. */
+   
+   char **chains = NULL,
+        prev_chain[8] = "";
+   PDB *p = NULL;
+   int i = 0;
+   BOOL found = FALSE;
+   
+   /* zero chain count */
+   *nChains = 0;
+
+   /* Scan PDB list */
+   for(p = pdb; p != NULL; NEXT(p))
+   {
+      /* entity found and chain is not last chain found */
+      if(p->entity_id == entity && !CHAINMATCH(p->chain,prev_chain))
+      {
+         /* check all found chains */
+         found = FALSE;
+         for(i=0; i < *nChains && !found; i++)
+         {
+            if(CHAINMATCH(p->chain,chains[i]))
+            {
+               found = TRUE;
+            }
+         }
+         
+         /* add new chain to array */
+         if(!found)
+         {
+            /* allocate memory */
+            if(chains == NULL)
+            {
+               /* first chain pointer */
+               if( (chains = (char **)malloc(sizeof(char *))) == NULL )
+                  return(NULL);
+            }
+            else 
+            {
+               /* add new chain pointer */
+               if((chains = (char **)realloc(chains, (*nChains + 1)*sizeof(char *))) == NULL)
+                  return(NULL);
+            }
+
+            /* chain */
+            if((chains[*nChains] = (char *)malloc(8 * sizeof(char))) == NULL)
+               return(NULL);
+
+            /* add chain and update count */
+            strncpy(chains[*nChains],p->chain, 8);
+            (*nChains)++;
+         }
+
+         /* update last chain found */
+         strncpy(prev_chain, p->chain, 8);
+      }
+   }
+
+   /* return chains */
+   return chains;
+#endif
+}
+
 
 /************************************************************************/
 /*>static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date)
@@ -3202,6 +3324,7 @@ static STRINGLIST *blTitleStringlist(char *titlestring)
    Creates COMPND lines in PDB-format.
 
 -  13.05.15 Original. By: CTP
+-  14.06.15 Store chain. By: CTP
 
 */
 static STRINGLIST *blCompndStringlist(STRINGLIST *stringlist, 
@@ -3235,6 +3358,9 @@ static STRINGLIST *blCompndStringlist(STRINGLIST *stringlist,
 
    /* molecule */ 
    blDoStoreStringlist(stringlist, "COMPND", lines_stored, " MOLECULE: ", compnd->molecule, ";");
+
+   /* chain */ 
+   blDoStoreStringlist(stringlist, "COMPND", lines_stored, " CHAIN: ", compnd->chain, ";");
 
    /* fragment */ 
    blDoStoreStringlist(stringlist, "COMPND", lines_stored, " FRAGMENT: ", compnd->fragment, ";");

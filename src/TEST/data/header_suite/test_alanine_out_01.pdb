@@ -2,7 +2,8 @@ HEADER    TEST FILE                               13-MAY-15   TEST
 TITLE     ALANINE - TEST FILE FOR COMPND AND SOURCE RECORDS (PDBML INPUT)       
 COMPND    MOL_ID: 1;                                                            
 COMPND   2 MOLECULE: ALANINE;                                                   
-COMPND   3 MUTATION: YES;                                                       
+COMPND   3 CHAIN: A;                                                            
+COMPND   4 MUTATION: YES;                                                       
 SOURCE    MOL_ID: 1;                                                            
 SOURCE   2 ORGANISM_SCIENTIFIC: ORYCTOLAGUS CUNICULUS;                          
 SOURCE   3 ORGANISM_COMMON: RABBIT;                                             

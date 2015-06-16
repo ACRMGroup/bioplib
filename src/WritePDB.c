@@ -705,14 +705,16 @@ static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
                              (xmlChar *)buffer_ptr))==NULL)
          XMLDIE(doc);                      /* 25.02.15                  */
 
-      /* Note: Entity ID is not stored in PDB data structure. 
-               Value set to 1 
+      /* Note: Entity ID is not set for PDB format.
+               If entity_id not set then default to 1
       */
+      if(p->entity_id){ sprintf(buffer,"%d", p->entity_id); }
+      else{ strcpy(buffer,"1"); }
       if((node = xmlNewChild(atom_node, NULL,
                              (xmlChar *)"label_entity_id",
-                             (xmlChar *)"1"))==NULL)
+                             (xmlChar *)buffer))==NULL)
          XMLDIE(doc);                      /* 25.02.15                  */
-      
+
       sprintf(buffer,"%d", p->resnum);
       if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"label_seq_id",
                              (xmlChar *)buffer))==NULL)
