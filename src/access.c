@@ -3,11 +3,11 @@
 
    \file       access.c
    
-   \version    V1.1
-   \date       17.07.14
+   \version    V1.2
+   \date       17.06.15
    \brief      Accessibility calculation code
    
-   \copyright  (c) UCL, Dr. Andrew C.R. Martin, 1999-2014
+   \copyright  (c) UCL, Dr. Andrew C.R. Martin, 1999-2015
    \author     Dr. Andrew C.R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -69,6 +69,7 @@
    =================
 -  V1.0  21.04.99 Original   By: ACRM
 -  V1.1  17.07.14 Extracted from XMAS code
+-  V1.2  17.06.15 Added sidechain residues access
 
 *************************************************************************/
 /* Doxygen
@@ -625,13 +626,17 @@ static void SetPDBAccess(PDB *pdb, REAL *accessArray)
             for < VERY_SMALL rather than ==0.0
             Set relative access to -1 if the standard accessibility is
             unknown rather than to 0.0
+-  17.06.15 Added calculation of sidechain accessibility
 */
 RESACCESS *blCalcResAccess(PDB *pdb, RESRAD *resrad)
 {
    PDB *start, *stop, *p;
    REAL resAccess,
         relAccess,
-        stdAccess;
+        scAccess,
+        scRelAccess,
+        stdAccess,
+        stdAccessSC;
 
    RESACCESS *residues = NULL, 
              *r = NULL;
@@ -642,23 +647,40 @@ RESACCESS *blCalcResAccess(PDB *pdb, RESRAD *resrad)
 
       /* Add up accessibility for this residue                          */
       resAccess = (REAL)0.0;
+      scAccess  = (REAL)0.0;
       for(p=start; p!=stop; NEXT(p))
       {
          resAccess += p->access;
+         if(strncmp(p->atnam, "N   ", 4) &&
+            strncmp(p->atnam, "CA  ", 4) &&
+            strncmp(p->atnam, "C   ", 4) &&
+            strncmp(p->atnam, "O   ", 4) &&
+            strncmp(p->atnam, "OXT ", 4))
+         {
+            scAccess += p->access;
+         }
       }
 
       /* Get the standard accessibility for this amino acid and calculate
          relative accessibility
       */
       stdAccess = GetStandardAccess(start->resnam, resrad);
+
+      /*                         N      CA     C     O                  */
+      stdAccessSC = stdAccess - (14.5 + 16.2 + 4.5 + 32.0 );
+
       if(stdAccess<VERY_SMALL)
-      {
-         relAccess = -1.0;
-      }
+         relAccess   = -1.0;
       else
-      {
-         relAccess = 100.0 * resAccess / stdAccess;
-      }
+         relAccess   = 100.0 * resAccess / stdAccess;
+
+      if(stdAccessSC < VERY_SMALL)
+         scRelAccess = -1.0;
+      else
+         scRelAccess = 100.0 * scAccess  / stdAccessSC;
+      
+
+
 
       /* Create space to store the values                               */
       if(residues == NULL)
@@ -680,9 +702,11 @@ RESACCESS *blCalcResAccess(PDB *pdb, RESRAD *resrad)
       strcpy(r->resnam, start->resnam);
       strcpy(r->insert, start->insert);
       strcpy(r->chain,  start->chain);
-      r->resnum = start->resnum;
-      r->resAccess = resAccess;
-      r->relAccess = relAccess;
+      r->resnum      = start->resnum;
+      r->resAccess   = resAccess;
+      r->relAccess   = relAccess;
+      r->scAccess    = scAccess;
+      r->scRelAccess = scRelAccess;
    }
 
    return(residues);
