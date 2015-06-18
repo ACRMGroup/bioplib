@@ -3,8 +3,8 @@
 
    \file       WritePDB.c
    
-   \version    V1.26
-   \date       08.06.15
+   \version    V1.27
+   \date       18.06.15
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
@@ -103,6 +103,8 @@
 -  V1.25 13.05.15 Updated blWritePDBAsPDBML() to write CONECT records, 
                   Added output of COMPND and SOURCE records.  By: CTP
 -  V1.26 08.06.15 Updated XML check for output format.  By: CTP
+-  V1.27 18.06.15 Added blMapChainsToEntity(). blDoWritePDBAsPDBML() uses 
+                  sets entity_id based on CONECT records. By: CTP
 
 *************************************************************************/
 /* Doxygen
@@ -178,6 +180,7 @@
 #include "MathType.h"
 #include "pdb.h"
 #include "macros.h"
+#include "hash.h"
 
 /************************************************************************/
 /* Prototypes
@@ -186,6 +189,7 @@ static void WriteMaster(FILE *fp, WHOLEPDB *wpdb, int numConect,
                         int numTer);
 static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole);
 static BOOL blSetPDBMLDateField(char *pdbml_date, char *pdb_date);
+static HASHTABLE *blMapChainsToEntity(WHOLEPDB *wpdb);
 
 /************************************************************************/
 /*>int blWritePDB(FILE *fp, PDB *pdb)
@@ -530,6 +534,7 @@ BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
             This function takes WHOLEPDB as input instead of PDB and 
             writes wpdb->header and wpdb->trailer info if doWhole param is
             TRUE.  By: CTP
+-  18.06.15 Write entity_id. Use COMPND record to set entity_id if not set in PDB.
 
 */
 static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
@@ -565,6 +570,7 @@ static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
    COMPND    compound;
    PDBSOURCE species;
    int molid = 0;
+   HASHTABLE *chain_to_entity = NULL;
 
    /* Create document                                                   */
    if((doc = xmlNewDoc((xmlChar *)"1.0"))==NULL)
@@ -585,6 +591,10 @@ static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
    xmlSetNs(root_node,pdbx);
    
    /* Write Coordinate Data                                             */
+   
+   /* map chain to entity from compnd records                           */
+   chain_to_entity = blMapChainsToEntity(wpdb);
+
    /* Atom_sites node                                                   */
    if((sites_node = xmlNewChild(root_node, NULL, 
                                 (xmlChar *)"atom_siteCategory", 
@@ -706,14 +716,31 @@ static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
          XMLDIE(doc);                      /* 25.02.15                  */
 
       /* Note: Entity ID is not set for PDB format.
-               If entity_id not set then default to 1
+               If entity_id is not set in PDB list then set from COMPND
+               or default to 1.
       */
-      if(p->entity_id){ sprintf(buffer,"%d", p->entity_id); }
-      else{ strcpy(buffer,"1"); }
+      if(p->entity_id)
+      {
+         /* set from PDB list */
+         sprintf(buffer,"%d", p->entity_id);
+      }
+      else if(chain_to_entity != NULL && 
+              blHashKeyDefined(chain_to_entity, p->chain))
+      {
+         /* set from COMPND record */
+         sprintf(buffer,"%d", 
+                 blGetHashValueInt(chain_to_entity, p->chain));
+      }
+      else
+      {
+         /* default */
+         strcpy(buffer,"1");
+      }
       if((node = xmlNewChild(atom_node, NULL,
                              (xmlChar *)"label_entity_id",
                              (xmlChar *)buffer))==NULL)
-         XMLDIE(doc);                      /* 25.02.15                  */
+         XMLDIE(doc);
+
 
       sprintf(buffer,"%d", p->resnum);
       if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"label_seq_id",
@@ -804,6 +831,7 @@ static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
       /* Free Memory                                                    */
       xmlFreeDoc(doc);
       xmlCleanupParser();
+      blFreeHash(chain_to_entity);
 
       return(TRUE);
    }
@@ -1241,6 +1269,7 @@ static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
    /* Free Memory                                                       */
    xmlFreeDoc(doc);
    xmlCleanupParser();
+   blFreeHash(chain_to_entity);
 
    return(TRUE);
 
@@ -1748,5 +1777,64 @@ static BOOL blSetPDBMLDateField(char *pdbml_date, char *pdb_date)
    sprintf(pdbml_date, "%4d-%02d-%02d", year, month, day);
 
    return TRUE;
+}
+
+/************************************************************************/
+/*>static HASHTABLE *blMapChainsToEntity(WHOLEPDB *wpdb)
+   -----------------------------------------------------
+*//**
+
+   \param[in]     *wpdb    WHOLEPDB to parse.
+   \return                 HASHTABLE mapping chain labels to MOL_ID
+
+   Map chain labels to MOL_IDs from header COMPND records.
+   
+   Used to set entity_id for PDBML-format files if entity_id has not been
+   set (eg if original input file was PDB-format).
+
+-  18.06.14 Original. By: CTP
+
+*/
+static HASHTABLE *blMapChainsToEntity(WHOLEPDB *wpdb)
+{
+   HASHTABLE *hashtable = NULL;
+   char      **chains   = NULL;
+   int       nchains    =    0,
+             i          =    0;
+   COMPND    compnd;
+
+   /* return if wpdb not set                                            */
+   if(wpdb == NULL || wpdb->pdb == NULL || wpdb->header == NULL)
+   { return NULL; }
+
+   /* get chain array                                                   */
+   chains = blGetPDBChainLabels(wpdb->pdb, &nchains);
+
+   /* init hashtable                                                    */
+   if((hashtable = blInitializeHash(0))==NULL)
+   {
+      fprintf(stderr,"No memory for hash table\n");
+      return(NULL);
+   }
+
+   /* set hashtable                                                     */
+   for(i=0;i<nchains;i++)
+   {
+      if(blGetCompoundWholePDBChain(wpdb, chains[i], &compnd))
+      {
+         if(compnd.molid)
+            blSetHashValueInt(hashtable, chains[i], compnd.molid);
+      }
+   }
+
+   /* free chains array                                                 */ 
+   if(nchains)
+   {
+      for(i=0;i<nchains;i++){ free(chains[i]); }
+      free(chains);
+   }
+
+   /* return hashtable                                                  */
+   return hashtable;
 }
 
