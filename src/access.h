@@ -3,11 +3,11 @@
 
    \file       access.h
    
-   \version    V1.1
-   \date       17.07.14
+   \version    V1.2
+   \date       17.06.16
    \brief      Accessibility calculation code
    
-   \copyright  (c) UCL, Dr. Andrew C.R. Martin, 1999-2014
+   \copyright  (c) UCL, Dr. Andrew C.R. Martin, 1999-2015
    \author     Dr. Andrew C.R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -47,6 +47,8 @@
    =================
 -  V1.0  21.04.99 Original   By: ACRM
 -  V1.1  17.07.14 Extracted from XMAS code
+-  V1.2  17.06.15 Added scAccess and scRelAccess to RESACCESS structure
+                  Added stdaccessSc to RESRAD structure
 
 *************************************************************************/
 #ifndef _ACCESS_H_
@@ -63,7 +65,8 @@
 typedef struct _resrad
 {
    struct _resrad *next;
-   REAL  stdaccess,
+   REAL  stdAccess,
+         stdAccessSC,
          radius[ACCESS_MAX_ATOMS_PER_RESIDUE];
    int   natoms;
    char  resnam[8],
@@ -75,7 +78,9 @@ typedef struct _resaccess
 {
    struct _resaccess *next;
    REAL resAccess,
-        relAccess;
+        relAccess,
+        scAccess,
+        scRelAccess;
    int  resnum;
    char chain[8],
         resnam[8],

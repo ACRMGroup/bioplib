@@ -3,11 +3,11 @@
 
    \file       access.c
    
-   \version    V1.1
-   \date       17.07.14
+   \version    V1.2
+   \date       17.06.15
    \brief      Accessibility calculation code
    
-   \copyright  (c) UCL, Dr. Andrew C.R. Martin, 1999-2014
+   \copyright  (c) UCL, Dr. Andrew C.R. Martin, 1999-2015
    \author     Dr. Andrew C.R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -69,6 +69,7 @@
    =================
 -  V1.0  21.04.99 Original   By: ACRM
 -  V1.1  17.07.14 Extracted from XMAS code
+-  V1.2  17.06.15 Added sidechain residues access
 
 *************************************************************************/
 /* Doxygen
@@ -183,6 +184,8 @@ static REAL GetStandardAccess(char *resnam, RESRAD *resrad);
 static REAL DefaultRadius(char *element);
 static void SetPDBAccess(PDB *pdb, REAL *accessArray);
 static char *blGetElement(PDB *p);
+static REAL GetStandardAccessSC(char *resnam, RESRAD *resrad);
+
 
 /************************************************************************/
 /*>static char *blGetElement(PDB *p)
@@ -457,10 +460,12 @@ static RESRAD *GetResidueRadii(RESRAD *resrad, char *resnam)
 -  22.04.99 Original   By: ACRM
 -  16.06.99 Initialise atomIndex to 0 and r to NULL
 -  16.07.14 Changed to passing in file pointer
+-  17.06.15 Reads stdAccessSc
 */
 static RESRAD *ReadRadiusFile(FILE *fpRad)
 {
    char   buffer[MAXBUFF],
+          *chp,
           junk[8];
    RESRAD *resrad = NULL, 
           *r = NULL;
@@ -469,6 +474,13 @@ static RESRAD *ReadRadiusFile(FILE *fpRad)
 
    while(fgets(buffer,MAXBUFF,fpRad))
    {
+      if((chp=strchr(buffer,'#'))!=NULL)  /* Strip comments             */
+         *chp = '\0';
+
+      KILLLEADSPACES(chp, buffer);
+      if(!strlen(chp))                    /* Skip blank lines           */
+         continue;
+
       /* Beginning of a new residue                                     */
       if(!atomCount)
       {
@@ -487,8 +499,9 @@ static RESRAD *ReadRadiusFile(FILE *fpRad)
             return(NULL);
          }
          
-         sscanf(buffer,"%s %d %lf", 
-                r->resnam, &(r->natoms), &(r->stdaccess));
+         sscanf(buffer,"%s %d %lf %lf", 
+                r->resnam, &(r->natoms), 
+                &(r->stdAccess), &(r->stdAccessSC));
          atomCount = r->natoms;
          atomIndex = 0;
       }
@@ -538,7 +551,37 @@ static REAL GetStandardAccess(char *resnam, RESRAD *resrad)
    {
       if(!strncmp(r->resnam, resnam, 3))
       {
-         return(r->stdaccess);
+         return(r->stdAccess);
+      }
+   }
+
+   return((REAL)0.0);
+}
+
+/************************************************************************/
+/*>static REAL GetStandardAccessSC(char *resnam, RESRAD *resrad)
+   --------------------------------------------------------------
+*//**
+   \param[in]   *resnam  Residue name
+   \param[in]   *resrad  Residue/atom radii and standard 
+                         accessibilities
+   \return               Standard s/c accessibility for this residue
+
+   Gets the standard sidechain accessibility for the specified residue
+   type
+
+-  17.06.15 Original   By: ACRM
+*/
+static REAL GetStandardAccessSC(char *resnam, RESRAD *resrad)
+{
+   RESRAD *r;
+   
+   /* Search through the residue types to find this residue             */
+   for(r=resrad; r!=NULL; NEXT(r))
+   {
+      if(!strncmp(r->resnam, resnam, 3))
+      {
+         return(r->stdAccessSC);
       }
    }
 
@@ -625,13 +668,17 @@ static void SetPDBAccess(PDB *pdb, REAL *accessArray)
             for < VERY_SMALL rather than ==0.0
             Set relative access to -1 if the standard accessibility is
             unknown rather than to 0.0
+-  17.06.15 Added calculation of sidechain accessibility
 */
 RESACCESS *blCalcResAccess(PDB *pdb, RESRAD *resrad)
 {
    PDB *start, *stop, *p;
    REAL resAccess,
         relAccess,
-        stdAccess;
+        scAccess,
+        scRelAccess,
+        stdAccess,
+        stdAccessSC;
 
    RESACCESS *residues = NULL, 
              *r = NULL;
@@ -642,24 +689,36 @@ RESACCESS *blCalcResAccess(PDB *pdb, RESRAD *resrad)
 
       /* Add up accessibility for this residue                          */
       resAccess = (REAL)0.0;
+      scAccess  = (REAL)0.0;
       for(p=start; p!=stop; NEXT(p))
       {
          resAccess += p->access;
+         if(strncmp(p->atnam, "N   ", 4) &&
+            strncmp(p->atnam, "CA  ", 4) &&
+            strncmp(p->atnam, "C   ", 4) &&
+            strncmp(p->atnam, "O   ", 4) &&
+            strncmp(p->atnam, "OXT ", 4))
+         {
+            scAccess += p->access;
+         }
       }
 
       /* Get the standard accessibility for this amino acid and calculate
          relative accessibility
       */
-      stdAccess = GetStandardAccess(start->resnam, resrad);
-      if(stdAccess<VERY_SMALL)
-      {
-         relAccess = -1.0;
-      }
-      else
-      {
-         relAccess = 100.0 * resAccess / stdAccess;
-      }
+      stdAccess   = GetStandardAccess(start->resnam, resrad);
+      stdAccessSC = GetStandardAccessSC(start->resnam, resrad);
 
+      if(stdAccess<VERY_SMALL)
+         relAccess   = -1.0;
+      else
+         relAccess   = 100.0 * resAccess / stdAccess;
+
+      if(stdAccessSC < VERY_SMALL)
+         scRelAccess = -1.0;
+      else
+         scRelAccess = 100.0 * scAccess  / stdAccessSC;
+      
       /* Create space to store the values                               */
       if(residues == NULL)
       {
@@ -680,9 +739,11 @@ RESACCESS *blCalcResAccess(PDB *pdb, RESRAD *resrad)
       strcpy(r->resnam, start->resnam);
       strcpy(r->insert, start->insert);
       strcpy(r->chain,  start->chain);
-      r->resnum = start->resnum;
-      r->resAccess = resAccess;
-      r->relAccess = relAccess;
+      r->resnum      = start->resnum;
+      r->resAccess   = resAccess;
+      r->relAccess   = relAccess;
+      r->scAccess    = scAccess;
+      r->scRelAccess = scRelAccess;
    }
 
    return(residues);
