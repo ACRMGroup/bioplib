@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V3.5
-   \date       13.05.15
+   \version    V3.6
+   \date       18.06.15
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2015
@@ -220,6 +220,8 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 -  V3.4  03.04.15 Rewind file after reading pdbxml header data. 
                   Initialize pdb to NULL for ReadPDB functions.  By: CTP
 -  V3.5  13.05.15 Added COMPND and SOURCE parsing for PDBML-format By: CTP
+-  V3.6  18.06.15 Parse entity_id from PDBML files. Parse chain for COMPND
+                  records from PDBML files. By: CTP
                   
 *************************************************************************/
 /* Doxygen
@@ -2751,7 +2753,7 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
 /*>static char **blGetEntityChainLabels(int entity, PDB *pdb,
                                         int *nChains)
    ----------------------------------------------------------
-/**
+*//**
    \param[in]  entity      Entity ID
    \param[in]  *pdb        PDB linked list
    \param[out] *nChains    Number of chain labels found.
