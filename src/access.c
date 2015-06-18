@@ -184,6 +184,8 @@ static REAL GetStandardAccess(char *resnam, RESRAD *resrad);
 static REAL DefaultRadius(char *element);
 static void SetPDBAccess(PDB *pdb, REAL *accessArray);
 static char *blGetElement(PDB *p);
+static REAL GetStandardAccessSC(char *resnam, RESRAD *resrad);
+
 
 /************************************************************************/
 /*>static char *blGetElement(PDB *p)
@@ -458,10 +460,12 @@ static RESRAD *GetResidueRadii(RESRAD *resrad, char *resnam)
 -  22.04.99 Original   By: ACRM
 -  16.06.99 Initialise atomIndex to 0 and r to NULL
 -  16.07.14 Changed to passing in file pointer
+-  17.06.15 Reads stdAccessSc
 */
 static RESRAD *ReadRadiusFile(FILE *fpRad)
 {
    char   buffer[MAXBUFF],
+          *chp,
           junk[8];
    RESRAD *resrad = NULL, 
           *r = NULL;
@@ -470,6 +474,13 @@ static RESRAD *ReadRadiusFile(FILE *fpRad)
 
    while(fgets(buffer,MAXBUFF,fpRad))
    {
+      if((chp=strchr(buffer,'#'))!=NULL)  /* Strip comments             */
+         *chp = '\0';
+
+      KILLLEADSPACES(chp, buffer);
+      if(!strlen(chp))                    /* Skip blank lines           */
+         continue;
+
       /* Beginning of a new residue                                     */
       if(!atomCount)
       {
@@ -488,8 +499,9 @@ static RESRAD *ReadRadiusFile(FILE *fpRad)
             return(NULL);
          }
          
-         sscanf(buffer,"%s %d %lf", 
-                r->resnam, &(r->natoms), &(r->stdaccess));
+         sscanf(buffer,"%s %d %lf %lf", 
+                r->resnam, &(r->natoms), 
+                &(r->stdAccess), &(r->stdAccessSC));
          atomCount = r->natoms;
          atomIndex = 0;
       }
@@ -539,7 +551,37 @@ static REAL GetStandardAccess(char *resnam, RESRAD *resrad)
    {
       if(!strncmp(r->resnam, resnam, 3))
       {
-         return(r->stdaccess);
+         return(r->stdAccess);
+      }
+   }
+
+   return((REAL)0.0);
+}
+
+/************************************************************************/
+/*>static REAL GetStandardAccessSC(char *resnam, RESRAD *resrad)
+   --------------------------------------------------------------
+*//**
+   \param[in]   *resnam  Residue name
+   \param[in]   *resrad  Residue/atom radii and standard 
+                         accessibilities
+   \return               Standard s/c accessibility for this residue
+
+   Gets the standard sidechain accessibility for the specified residue
+   type
+
+-  17.06.15 Original   By: ACRM
+*/
+static REAL GetStandardAccessSC(char *resnam, RESRAD *resrad)
+{
+   RESRAD *r;
+   
+   /* Search through the residue types to find this residue             */
+   for(r=resrad; r!=NULL; NEXT(r))
+   {
+      if(!strncmp(r->resnam, resnam, 3))
+      {
+         return(r->stdAccessSC);
       }
    }
 
@@ -664,10 +706,8 @@ RESACCESS *blCalcResAccess(PDB *pdb, RESRAD *resrad)
       /* Get the standard accessibility for this amino acid and calculate
          relative accessibility
       */
-      stdAccess = GetStandardAccess(start->resnam, resrad);
-
-      /*                         N      CA     C     O                  */
-      stdAccessSC = stdAccess - (14.5 + 16.2 + 4.5 + 32.0 );
+      stdAccess   = GetStandardAccess(start->resnam, resrad);
+      stdAccessSC = GetStandardAccessSC(start->resnam, resrad);
 
       if(stdAccess<VERY_SMALL)
          relAccess   = -1.0;
@@ -679,9 +719,6 @@ RESACCESS *blCalcResAccess(PDB *pdb, RESRAD *resrad)
       else
          scRelAccess = 100.0 * scAccess  / stdAccessSC;
       
-
-
-
       /* Create space to store the values                               */
       if(residues == NULL)
       {
