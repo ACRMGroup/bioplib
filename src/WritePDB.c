@@ -4,7 +4,7 @@
    \file       WritePDB.c
    
    \version    V1.27
-   \date       18.06.15
+   \date       21.06.15
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
@@ -103,8 +103,9 @@
 -  V1.25 13.05.15 Updated blWritePDBAsPDBML() to write CONECT records, 
                   Added output of COMPND and SOURCE records.  By: CTP
 -  V1.26 08.06.15 Updated XML check for output format.  By: CTP
--  V1.27 18.06.15 Added blMapChainsToEntity(). blDoWritePDBAsPDBML() uses 
-                  sets entity_id based on CONECT records. By: CTP
+-  V1.27 21.06.15 Added blMapChainsToEntity(). blDoWritePDBAsPDBML() sets
+                  entity_id based on COMPND records if entty_id not 
+                  already set.  By: CTP
 
 *************************************************************************/
 /* Doxygen
@@ -534,7 +535,8 @@ BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
             This function takes WHOLEPDB as input instead of PDB and 
             writes wpdb->header and wpdb->trailer info if doWhole param is
             TRUE.  By: CTP
--  18.06.15 Write entity_id. Use COMPND record to set entity_id if not set in PDB.
+-  21.06.15 Write entity_id. Use COMPND record to set entity_id if not set
+            in PDB. Set compound type to polymer. By:  CTP
 
 */
 static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
@@ -1139,6 +1141,12 @@ static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
                                 (xmlChar *)compound.mutation))==NULL)
          { XMLDIE(doc); }
       }
+
+      /* set type to polymer */
+      if((node = xmlNewChild(atom_node, NULL, 
+                             (xmlChar *)"type",
+                             (xmlChar *)"polymer"))==NULL)
+      { XMLDIE(doc); }
    }
 
 

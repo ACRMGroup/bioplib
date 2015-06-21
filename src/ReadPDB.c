@@ -4,7 +4,7 @@
    \file       ReadPDB.c
    
    \version    V3.6
-   \date       18.06.15
+   \date       21.06.15
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2015
@@ -220,8 +220,9 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 -  V3.4  03.04.15 Rewind file after reading pdbxml header data. 
                   Initialize pdb to NULL for ReadPDB functions.  By: CTP
 -  V3.5  13.05.15 Added COMPND and SOURCE parsing for PDBML-format By: CTP
--  V3.6  18.06.15 Parse entity_id from PDBML files. Parse chain for COMPND
-                  records from PDBML files. By: CTP
+-  V3.6  21.06.15 Parse entity_id from PDBML files. Parse chain for COMPND
+                  records from PDBML files. Restrict compnd type to 
+                  polymer entries. By: CTP
                   
 *************************************************************************/
 /* Doxygen
@@ -2456,6 +2457,7 @@ static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer)
 -  10.09.14 Use blSetPDBDateField() to set date field. By: CTP
 -  28.04.15 Parse xmlDoc instead of FILE.  By: CTP
 -  05.05.15 Added Source and Compound data.  By: CTP
+-  21.06.15 Restrict compnd type to polymer. By: CTP
 
 */
 static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
@@ -2497,7 +2499,8 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
    int       mol_id = 0,
              nchains = 0,
              i = 0;
-   char      **chains = NULL;
+   char      **chains = NULL,
+             compnd_type[16] = "";
 
 
    /* Parse Document Tree                                               */
@@ -2589,6 +2592,8 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
             compnd.mutation[0]   = '\0';
             compnd.other[0]      = '\0';
 
+            compnd_type[0]       = '\0';
+
             /* mol id */
             attribute = xmlGetProp(subnode,(xmlChar *) "id");
             sscanf((char *)attribute, "%i", &compnd.molid);
@@ -2623,6 +2628,10 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
                {
                   strcpy(compnd.engineered,(char *) content);
                }
+               else if(!strcmp("type",(char *) n->name))
+               {
+                  strcpy(compnd_type,(char *) content);
+               }
                else
                {
                   continue;
@@ -2630,6 +2639,9 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
 
                xmlFree(content);
             }
+
+            /* restrict to compnd type to polymer */
+            if(strcmp(compnd_type,"polymer")){ continue; }
 
             /* exclude water */
             if(!strcmp(compnd.molecule,"water")){ continue; }

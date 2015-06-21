@@ -260,6 +260,7 @@
     <PDBx:entity id="1">
       <PDBx:pdbx_description>ALANINE</PDBx:pdbx_description>
       <PDBx:pdbx_mutation>YES</PDBx:pdbx_mutation>
+      <PDBx:type>polymer</PDBx:type>
     </PDBx:entity>
   </PDBx:entityCategory>
   <PDBx:entity_src_genCategory>

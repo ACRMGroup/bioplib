@@ -3,7 +3,7 @@
   <PDBx:atom_siteCategory>
     <PDBx:atom_site id="1">
       <PDBx:B_iso_or_equiv>20.00</PDBx:B_iso_or_equiv>
-      <PDBx:Cartn_x>1.201</PDBx:Cartn_x>
+      <PDBx:Cartn_x>-0.799</PDBx:Cartn_x>
       <PDBx:Cartn_y>0.847</PDBx:Cartn_y>
       <PDBx:Cartn_z>0.000</PDBx:Cartn_z>
       <PDBx:auth_asym_id>A</PDBx:auth_asym_id>
@@ -23,7 +23,7 @@
     </PDBx:atom_site>
     <PDBx:atom_site id="2">
       <PDBx:B_iso_or_equiv>20.00</PDBx:B_iso_or_equiv>
-      <PDBx:Cartn_x>0.000</PDBx:Cartn_x>
+      <PDBx:Cartn_x>-2.000</PDBx:Cartn_x>
       <PDBx:Cartn_y>0.000</PDBx:Cartn_y>
       <PDBx:Cartn_z>0.000</PDBx:Cartn_z>
       <PDBx:auth_asym_id>A</PDBx:auth_asym_id>
@@ -43,7 +43,7 @@
     </PDBx:atom_site>
     <PDBx:atom_site id="3">
       <PDBx:B_iso_or_equiv>20.00</PDBx:B_iso_or_equiv>
-      <PDBx:Cartn_x>-1.250</PDBx:Cartn_x>
+      <PDBx:Cartn_x>-3.250</PDBx:Cartn_x>
       <PDBx:Cartn_y>0.881</PDBx:Cartn_y>
       <PDBx:Cartn_z>0.000</PDBx:Cartn_z>
       <PDBx:auth_asym_id>A</PDBx:auth_asym_id>
@@ -63,7 +63,7 @@
     </PDBx:atom_site>
     <PDBx:atom_site id="4">
       <PDBx:B_iso_or_equiv>20.00</PDBx:B_iso_or_equiv>
-      <PDBx:Cartn_x>-2.185</PDBx:Cartn_x>
+      <PDBx:Cartn_x>-4.185</PDBx:Cartn_x>
       <PDBx:Cartn_y>0.660</PDBx:Cartn_y>
       <PDBx:Cartn_z>-0.784</PDBx:Cartn_z>
       <PDBx:auth_asym_id>A</PDBx:auth_asym_id>
@@ -83,7 +83,7 @@
     </PDBx:atom_site>
     <PDBx:atom_site id="5">
       <PDBx:B_iso_or_equiv>20.00</PDBx:B_iso_or_equiv>
-      <PDBx:Cartn_x>0.020</PDBx:Cartn_x>
+      <PDBx:Cartn_x>-1.980</PDBx:Cartn_x>
       <PDBx:Cartn_y>-0.927</PDBx:Cartn_y>
       <PDBx:Cartn_z>1.209</PDBx:Cartn_z>
       <PDBx:auth_asym_id>A</PDBx:auth_asym_id>
@@ -96,6 +96,106 @@
       <PDBx:label_atom_id>CB</PDBx:label_atom_id>
       <PDBx:label_comp_id>ALA</PDBx:label_comp_id>
       <PDBx:label_entity_id>1</PDBx:label_entity_id>
+      <PDBx:label_seq_id>1</PDBx:label_seq_id>
+      <PDBx:occupancy>0.75</PDBx:occupancy>
+      <PDBx:pdbx_PDB_model_num>1</PDBx:pdbx_PDB_model_num>
+      <PDBx:type_symbol>C</PDBx:type_symbol>
+    </PDBx:atom_site>
+    <PDBx:atom_site id="7">
+      <PDBx:B_iso_or_equiv>20.00</PDBx:B_iso_or_equiv>
+      <PDBx:Cartn_x>3.201</PDBx:Cartn_x>
+      <PDBx:Cartn_y>0.847</PDBx:Cartn_y>
+      <PDBx:Cartn_z>0.000</PDBx:Cartn_z>
+      <PDBx:auth_asym_id>B</PDBx:auth_asym_id>
+      <PDBx:auth_atom_id>N</PDBx:auth_atom_id>
+      <PDBx:auth_comp_id>ALA</PDBx:auth_comp_id>
+      <PDBx:auth_seq_id>1</PDBx:auth_seq_id>
+      <PDBx:group_PDB>ATOM</PDBx:group_PDB>
+      <PDBx:label_alt_id xsi:nil="true"/>
+      <PDBx:label_asym_id>B</PDBx:label_asym_id>
+      <PDBx:label_atom_id>N</PDBx:label_atom_id>
+      <PDBx:label_comp_id>ALA</PDBx:label_comp_id>
+      <PDBx:label_entity_id>2</PDBx:label_entity_id>
+      <PDBx:label_seq_id>1</PDBx:label_seq_id>
+      <PDBx:occupancy>0.75</PDBx:occupancy>
+      <PDBx:pdbx_PDB_model_num>1</PDBx:pdbx_PDB_model_num>
+      <PDBx:type_symbol>N</PDBx:type_symbol>
+    </PDBx:atom_site>
+    <PDBx:atom_site id="8">
+      <PDBx:B_iso_or_equiv>20.00</PDBx:B_iso_or_equiv>
+      <PDBx:Cartn_x>2.000</PDBx:Cartn_x>
+      <PDBx:Cartn_y>0.000</PDBx:Cartn_y>
+      <PDBx:Cartn_z>0.000</PDBx:Cartn_z>
+      <PDBx:auth_asym_id>B</PDBx:auth_asym_id>
+      <PDBx:auth_atom_id>CA</PDBx:auth_atom_id>
+      <PDBx:auth_comp_id>ALA</PDBx:auth_comp_id>
+      <PDBx:auth_seq_id>1</PDBx:auth_seq_id>
+      <PDBx:group_PDB>ATOM</PDBx:group_PDB>
+      <PDBx:label_alt_id xsi:nil="true"/>
+      <PDBx:label_asym_id>B</PDBx:label_asym_id>
+      <PDBx:label_atom_id>CA</PDBx:label_atom_id>
+      <PDBx:label_comp_id>ALA</PDBx:label_comp_id>
+      <PDBx:label_entity_id>2</PDBx:label_entity_id>
+      <PDBx:label_seq_id>1</PDBx:label_seq_id>
+      <PDBx:occupancy>0.75</PDBx:occupancy>
+      <PDBx:pdbx_PDB_model_num>1</PDBx:pdbx_PDB_model_num>
+      <PDBx:type_symbol>C</PDBx:type_symbol>
+    </PDBx:atom_site>
+    <PDBx:atom_site id="9">
+      <PDBx:B_iso_or_equiv>20.00</PDBx:B_iso_or_equiv>
+      <PDBx:Cartn_x>0.750</PDBx:Cartn_x>
+      <PDBx:Cartn_y>0.881</PDBx:Cartn_y>
+      <PDBx:Cartn_z>0.000</PDBx:Cartn_z>
+      <PDBx:auth_asym_id>B</PDBx:auth_asym_id>
+      <PDBx:auth_atom_id>C</PDBx:auth_atom_id>
+      <PDBx:auth_comp_id>ALA</PDBx:auth_comp_id>
+      <PDBx:auth_seq_id>1</PDBx:auth_seq_id>
+      <PDBx:group_PDB>ATOM</PDBx:group_PDB>
+      <PDBx:label_alt_id xsi:nil="true"/>
+      <PDBx:label_asym_id>B</PDBx:label_asym_id>
+      <PDBx:label_atom_id>C</PDBx:label_atom_id>
+      <PDBx:label_comp_id>ALA</PDBx:label_comp_id>
+      <PDBx:label_entity_id>2</PDBx:label_entity_id>
+      <PDBx:label_seq_id>1</PDBx:label_seq_id>
+      <PDBx:occupancy>0.75</PDBx:occupancy>
+      <PDBx:pdbx_PDB_model_num>1</PDBx:pdbx_PDB_model_num>
+      <PDBx:type_symbol>C</PDBx:type_symbol>
+    </PDBx:atom_site>
+    <PDBx:atom_site id="10">
+      <PDBx:B_iso_or_equiv>20.00</PDBx:B_iso_or_equiv>
+      <PDBx:Cartn_x>-0.185</PDBx:Cartn_x>
+      <PDBx:Cartn_y>0.660</PDBx:Cartn_y>
+      <PDBx:Cartn_z>-0.784</PDBx:Cartn_z>
+      <PDBx:auth_asym_id>B</PDBx:auth_asym_id>
+      <PDBx:auth_atom_id>O</PDBx:auth_atom_id>
+      <PDBx:auth_comp_id>ALA</PDBx:auth_comp_id>
+      <PDBx:auth_seq_id>1</PDBx:auth_seq_id>
+      <PDBx:group_PDB>ATOM</PDBx:group_PDB>
+      <PDBx:label_alt_id xsi:nil="true"/>
+      <PDBx:label_asym_id>B</PDBx:label_asym_id>
+      <PDBx:label_atom_id>O</PDBx:label_atom_id>
+      <PDBx:label_comp_id>ALA</PDBx:label_comp_id>
+      <PDBx:label_entity_id>2</PDBx:label_entity_id>
+      <PDBx:label_seq_id>1</PDBx:label_seq_id>
+      <PDBx:occupancy>0.75</PDBx:occupancy>
+      <PDBx:pdbx_PDB_model_num>1</PDBx:pdbx_PDB_model_num>
+      <PDBx:type_symbol>O</PDBx:type_symbol>
+    </PDBx:atom_site>
+    <PDBx:atom_site id="11">
+      <PDBx:B_iso_or_equiv>20.00</PDBx:B_iso_or_equiv>
+      <PDBx:Cartn_x>2.020</PDBx:Cartn_x>
+      <PDBx:Cartn_y>-0.927</PDBx:Cartn_y>
+      <PDBx:Cartn_z>1.209</PDBx:Cartn_z>
+      <PDBx:auth_asym_id>B</PDBx:auth_asym_id>
+      <PDBx:auth_atom_id>CB</PDBx:auth_atom_id>
+      <PDBx:auth_comp_id>ALA</PDBx:auth_comp_id>
+      <PDBx:auth_seq_id>1</PDBx:auth_seq_id>
+      <PDBx:group_PDB>ATOM</PDBx:group_PDB>
+      <PDBx:label_alt_id xsi:nil="true"/>
+      <PDBx:label_asym_id>B</PDBx:label_asym_id>
+      <PDBx:label_atom_id>CB</PDBx:label_atom_id>
+      <PDBx:label_comp_id>ALA</PDBx:label_comp_id>
+      <PDBx:label_entity_id>2</PDBx:label_entity_id>
       <PDBx:label_seq_id>1</PDBx:label_seq_id>
       <PDBx:occupancy>0.75</PDBx:occupancy>
       <PDBx:pdbx_PDB_model_num>1</PDBx:pdbx_PDB_model_num>
@@ -247,18 +347,168 @@
       <PDBx:ptnr2_label_comp_id>ALA</PDBx:ptnr2_label_comp_id>
       <PDBx:ptnr2_label_seq_id>1</PDBx:ptnr2_label_seq_id>
     </PDBx:struct_conn>
+    <PDBx:struct_conn id="conect9">
+      <PDBx:conn_type_id>covale</PDBx:conn_type_id>
+      <PDBx:pdbx_dist_value>1.470</PDBx:pdbx_dist_value>
+      <PDBx:ptnr1_auth_asym_id>B</PDBx:ptnr1_auth_asym_id>
+      <PDBx:ptnr1_auth_comp_id>ALA</PDBx:ptnr1_auth_comp_id>
+      <PDBx:ptnr1_auth_seq_id>1</PDBx:ptnr1_auth_seq_id>
+      <PDBx:ptnr1_label_asym_id>B</PDBx:ptnr1_label_asym_id>
+      <PDBx:ptnr1_label_atom_id>N</PDBx:ptnr1_label_atom_id>
+      <PDBx:ptnr1_label_comp_id>ALA</PDBx:ptnr1_label_comp_id>
+      <PDBx:ptnr1_label_seq_id>1</PDBx:ptnr1_label_seq_id>
+      <PDBx:ptnr2_auth_asym_id>B</PDBx:ptnr2_auth_asym_id>
+      <PDBx:ptnr2_auth_comp_id>ALA</PDBx:ptnr2_auth_comp_id>
+      <PDBx:ptnr2_auth_seq_id>1</PDBx:ptnr2_auth_seq_id>
+      <PDBx:ptnr2_label_asym_id>B</PDBx:ptnr2_label_asym_id>
+      <PDBx:ptnr2_label_atom_id>CA</PDBx:ptnr2_label_atom_id>
+      <PDBx:ptnr2_label_comp_id>ALA</PDBx:ptnr2_label_comp_id>
+      <PDBx:ptnr2_label_seq_id>1</PDBx:ptnr2_label_seq_id>
+    </PDBx:struct_conn>
+    <PDBx:struct_conn id="conect10">
+      <PDBx:conn_type_id>covale</PDBx:conn_type_id>
+      <PDBx:pdbx_dist_value>1.470</PDBx:pdbx_dist_value>
+      <PDBx:ptnr1_auth_asym_id>B</PDBx:ptnr1_auth_asym_id>
+      <PDBx:ptnr1_auth_comp_id>ALA</PDBx:ptnr1_auth_comp_id>
+      <PDBx:ptnr1_auth_seq_id>1</PDBx:ptnr1_auth_seq_id>
+      <PDBx:ptnr1_label_asym_id>B</PDBx:ptnr1_label_asym_id>
+      <PDBx:ptnr1_label_atom_id>CA</PDBx:ptnr1_label_atom_id>
+      <PDBx:ptnr1_label_comp_id>ALA</PDBx:ptnr1_label_comp_id>
+      <PDBx:ptnr1_label_seq_id>1</PDBx:ptnr1_label_seq_id>
+      <PDBx:ptnr2_auth_asym_id>B</PDBx:ptnr2_auth_asym_id>
+      <PDBx:ptnr2_auth_comp_id>ALA</PDBx:ptnr2_auth_comp_id>
+      <PDBx:ptnr2_auth_seq_id>1</PDBx:ptnr2_auth_seq_id>
+      <PDBx:ptnr2_label_asym_id>B</PDBx:ptnr2_label_asym_id>
+      <PDBx:ptnr2_label_atom_id>N</PDBx:ptnr2_label_atom_id>
+      <PDBx:ptnr2_label_comp_id>ALA</PDBx:ptnr2_label_comp_id>
+      <PDBx:ptnr2_label_seq_id>1</PDBx:ptnr2_label_seq_id>
+    </PDBx:struct_conn>
+    <PDBx:struct_conn id="conect11">
+      <PDBx:conn_type_id>covale</PDBx:conn_type_id>
+      <PDBx:pdbx_dist_value>1.529</PDBx:pdbx_dist_value>
+      <PDBx:ptnr1_auth_asym_id>B</PDBx:ptnr1_auth_asym_id>
+      <PDBx:ptnr1_auth_comp_id>ALA</PDBx:ptnr1_auth_comp_id>
+      <PDBx:ptnr1_auth_seq_id>1</PDBx:ptnr1_auth_seq_id>
+      <PDBx:ptnr1_label_asym_id>B</PDBx:ptnr1_label_asym_id>
+      <PDBx:ptnr1_label_atom_id>CA</PDBx:ptnr1_label_atom_id>
+      <PDBx:ptnr1_label_comp_id>ALA</PDBx:ptnr1_label_comp_id>
+      <PDBx:ptnr1_label_seq_id>1</PDBx:ptnr1_label_seq_id>
+      <PDBx:ptnr2_auth_asym_id>B</PDBx:ptnr2_auth_asym_id>
+      <PDBx:ptnr2_auth_comp_id>ALA</PDBx:ptnr2_auth_comp_id>
+      <PDBx:ptnr2_auth_seq_id>1</PDBx:ptnr2_auth_seq_id>
+      <PDBx:ptnr2_label_asym_id>B</PDBx:ptnr2_label_asym_id>
+      <PDBx:ptnr2_label_atom_id>C</PDBx:ptnr2_label_atom_id>
+      <PDBx:ptnr2_label_comp_id>ALA</PDBx:ptnr2_label_comp_id>
+      <PDBx:ptnr2_label_seq_id>1</PDBx:ptnr2_label_seq_id>
+    </PDBx:struct_conn>
+    <PDBx:struct_conn id="conect12">
+      <PDBx:conn_type_id>covale</PDBx:conn_type_id>
+      <PDBx:pdbx_dist_value>1.524</PDBx:pdbx_dist_value>
+      <PDBx:ptnr1_auth_asym_id>B</PDBx:ptnr1_auth_asym_id>
+      <PDBx:ptnr1_auth_comp_id>ALA</PDBx:ptnr1_auth_comp_id>
+      <PDBx:ptnr1_auth_seq_id>1</PDBx:ptnr1_auth_seq_id>
+      <PDBx:ptnr1_label_asym_id>B</PDBx:ptnr1_label_asym_id>
+      <PDBx:ptnr1_label_atom_id>CA</PDBx:ptnr1_label_atom_id>
+      <PDBx:ptnr1_label_comp_id>ALA</PDBx:ptnr1_label_comp_id>
+      <PDBx:ptnr1_label_seq_id>1</PDBx:ptnr1_label_seq_id>
+      <PDBx:ptnr2_auth_asym_id>B</PDBx:ptnr2_auth_asym_id>
+      <PDBx:ptnr2_auth_comp_id>ALA</PDBx:ptnr2_auth_comp_id>
+      <PDBx:ptnr2_auth_seq_id>1</PDBx:ptnr2_auth_seq_id>
+      <PDBx:ptnr2_label_asym_id>B</PDBx:ptnr2_label_asym_id>
+      <PDBx:ptnr2_label_atom_id>CB</PDBx:ptnr2_label_atom_id>
+      <PDBx:ptnr2_label_comp_id>ALA</PDBx:ptnr2_label_comp_id>
+      <PDBx:ptnr2_label_seq_id>1</PDBx:ptnr2_label_seq_id>
+    </PDBx:struct_conn>
+    <PDBx:struct_conn id="conect13">
+      <PDBx:conn_type_id>covale</PDBx:conn_type_id>
+      <PDBx:pdbx_dist_value>1.529</PDBx:pdbx_dist_value>
+      <PDBx:ptnr1_auth_asym_id>B</PDBx:ptnr1_auth_asym_id>
+      <PDBx:ptnr1_auth_comp_id>ALA</PDBx:ptnr1_auth_comp_id>
+      <PDBx:ptnr1_auth_seq_id>1</PDBx:ptnr1_auth_seq_id>
+      <PDBx:ptnr1_label_asym_id>B</PDBx:ptnr1_label_asym_id>
+      <PDBx:ptnr1_label_atom_id>C</PDBx:ptnr1_label_atom_id>
+      <PDBx:ptnr1_label_comp_id>ALA</PDBx:ptnr1_label_comp_id>
+      <PDBx:ptnr1_label_seq_id>1</PDBx:ptnr1_label_seq_id>
+      <PDBx:ptnr2_auth_asym_id>B</PDBx:ptnr2_auth_asym_id>
+      <PDBx:ptnr2_auth_comp_id>ALA</PDBx:ptnr2_auth_comp_id>
+      <PDBx:ptnr2_auth_seq_id>1</PDBx:ptnr2_auth_seq_id>
+      <PDBx:ptnr2_label_asym_id>B</PDBx:ptnr2_label_asym_id>
+      <PDBx:ptnr2_label_atom_id>CA</PDBx:ptnr2_label_atom_id>
+      <PDBx:ptnr2_label_comp_id>ALA</PDBx:ptnr2_label_comp_id>
+      <PDBx:ptnr2_label_seq_id>1</PDBx:ptnr2_label_seq_id>
+    </PDBx:struct_conn>
+    <PDBx:struct_conn id="conect14">
+      <PDBx:conn_type_id>covale</PDBx:conn_type_id>
+      <PDBx:pdbx_dist_value>1.240</PDBx:pdbx_dist_value>
+      <PDBx:ptnr1_auth_asym_id>B</PDBx:ptnr1_auth_asym_id>
+      <PDBx:ptnr1_auth_comp_id>ALA</PDBx:ptnr1_auth_comp_id>
+      <PDBx:ptnr1_auth_seq_id>1</PDBx:ptnr1_auth_seq_id>
+      <PDBx:ptnr1_label_asym_id>B</PDBx:ptnr1_label_asym_id>
+      <PDBx:ptnr1_label_atom_id>C</PDBx:ptnr1_label_atom_id>
+      <PDBx:ptnr1_label_comp_id>ALA</PDBx:ptnr1_label_comp_id>
+      <PDBx:ptnr1_label_seq_id>1</PDBx:ptnr1_label_seq_id>
+      <PDBx:ptnr2_auth_asym_id>B</PDBx:ptnr2_auth_asym_id>
+      <PDBx:ptnr2_auth_comp_id>ALA</PDBx:ptnr2_auth_comp_id>
+      <PDBx:ptnr2_auth_seq_id>1</PDBx:ptnr2_auth_seq_id>
+      <PDBx:ptnr2_label_asym_id>B</PDBx:ptnr2_label_asym_id>
+      <PDBx:ptnr2_label_atom_id>O</PDBx:ptnr2_label_atom_id>
+      <PDBx:ptnr2_label_comp_id>ALA</PDBx:ptnr2_label_comp_id>
+      <PDBx:ptnr2_label_seq_id>1</PDBx:ptnr2_label_seq_id>
+    </PDBx:struct_conn>
+    <PDBx:struct_conn id="conect15">
+      <PDBx:conn_type_id>covale</PDBx:conn_type_id>
+      <PDBx:pdbx_dist_value>1.240</PDBx:pdbx_dist_value>
+      <PDBx:ptnr1_auth_asym_id>B</PDBx:ptnr1_auth_asym_id>
+      <PDBx:ptnr1_auth_comp_id>ALA</PDBx:ptnr1_auth_comp_id>
+      <PDBx:ptnr1_auth_seq_id>1</PDBx:ptnr1_auth_seq_id>
+      <PDBx:ptnr1_label_asym_id>B</PDBx:ptnr1_label_asym_id>
+      <PDBx:ptnr1_label_atom_id>O</PDBx:ptnr1_label_atom_id>
+      <PDBx:ptnr1_label_comp_id>ALA</PDBx:ptnr1_label_comp_id>
+      <PDBx:ptnr1_label_seq_id>1</PDBx:ptnr1_label_seq_id>
+      <PDBx:ptnr2_auth_asym_id>B</PDBx:ptnr2_auth_asym_id>
+      <PDBx:ptnr2_auth_comp_id>ALA</PDBx:ptnr2_auth_comp_id>
+      <PDBx:ptnr2_auth_seq_id>1</PDBx:ptnr2_auth_seq_id>
+      <PDBx:ptnr2_label_asym_id>B</PDBx:ptnr2_label_asym_id>
+      <PDBx:ptnr2_label_atom_id>C</PDBx:ptnr2_label_atom_id>
+      <PDBx:ptnr2_label_comp_id>ALA</PDBx:ptnr2_label_comp_id>
+      <PDBx:ptnr2_label_seq_id>1</PDBx:ptnr2_label_seq_id>
+    </PDBx:struct_conn>
+    <PDBx:struct_conn id="conect16">
+      <PDBx:conn_type_id>covale</PDBx:conn_type_id>
+      <PDBx:pdbx_dist_value>1.524</PDBx:pdbx_dist_value>
+      <PDBx:ptnr1_auth_asym_id>B</PDBx:ptnr1_auth_asym_id>
+      <PDBx:ptnr1_auth_comp_id>ALA</PDBx:ptnr1_auth_comp_id>
+      <PDBx:ptnr1_auth_seq_id>1</PDBx:ptnr1_auth_seq_id>
+      <PDBx:ptnr1_label_asym_id>B</PDBx:ptnr1_label_asym_id>
+      <PDBx:ptnr1_label_atom_id>CB</PDBx:ptnr1_label_atom_id>
+      <PDBx:ptnr1_label_comp_id>ALA</PDBx:ptnr1_label_comp_id>
+      <PDBx:ptnr1_label_seq_id>1</PDBx:ptnr1_label_seq_id>
+      <PDBx:ptnr2_auth_asym_id>B</PDBx:ptnr2_auth_asym_id>
+      <PDBx:ptnr2_auth_comp_id>ALA</PDBx:ptnr2_auth_comp_id>
+      <PDBx:ptnr2_auth_seq_id>1</PDBx:ptnr2_auth_seq_id>
+      <PDBx:ptnr2_label_asym_id>B</PDBx:ptnr2_label_asym_id>
+      <PDBx:ptnr2_label_atom_id>CA</PDBx:ptnr2_label_atom_id>
+      <PDBx:ptnr2_label_comp_id>ALA</PDBx:ptnr2_label_comp_id>
+      <PDBx:ptnr2_label_seq_id>1</PDBx:ptnr2_label_seq_id>
+    </PDBx:struct_conn>
   </PDBx:struct_connCategory>
   <PDBx:database_PDB_revCategory>
     <PDBx:database_PDB_rev num="1">
-      <PDBx:date>2015-05-13</PDBx:date>
-      <PDBx:date_original>2015-05-13</PDBx:date_original>
+      <PDBx:date>2015-06-21</PDBx:date>
+      <PDBx:date_original>2015-06-21</PDBx:date_original>
       <PDBx:mod_type>0</PDBx:mod_type>
       <PDBx:replaces>TEST</PDBx:replaces>
     </PDBx:database_PDB_rev>
   </PDBx:database_PDB_revCategory>
   <PDBx:entityCategory>
     <PDBx:entity id="1">
-      <PDBx:details>TEST COMPOUND</PDBx:details>
+      <PDBx:details>TEST COMPOUND ONE</PDBx:details>
+      <PDBx:pdbx_description>ALANINE</PDBx:pdbx_description>
+      <PDBx:pdbx_mutation>YES</PDBx:pdbx_mutation>
+      <PDBx:type>polymer</PDBx:type>
+    </PDBx:entity>
+    <PDBx:entity id="2">
+      <PDBx:details>TEST COMPOUND TWO</PDBx:details>
       <PDBx:pdbx_description>ALANINE</PDBx:pdbx_description>
       <PDBx:pdbx_mutation>YES</PDBx:pdbx_mutation>
       <PDBx:type>polymer</PDBx:type>
@@ -266,6 +516,12 @@
   </PDBx:entityCategory>
   <PDBx:entity_src_genCategory>
     <PDBx:entity_src_gen entity_id="1" pdbx_src_id="1">
+      <PDBx:pdbx_gene_src_common_name>HUMAN</PDBx:pdbx_gene_src_common_name>
+      <PDBx:pdbx_gene_src_strain>ELMER</PDBx:pdbx_gene_src_strain>
+      <PDBx:pdbx_gene_src_ncbi_taxonomy_id>9606</PDBx:pdbx_gene_src_ncbi_taxonomy_id>
+      <PDBx:pdbx_gene_src_scientific_name>HOMO SAPIENS</PDBx:pdbx_gene_src_scientific_name>
+    </PDBx:entity_src_gen>
+    <PDBx:entity_src_gen entity_id="2" pdbx_src_id="2">
       <PDBx:pdbx_gene_src_common_name>RABBIT</PDBx:pdbx_gene_src_common_name>
       <PDBx:pdbx_gene_src_strain>BUGS</PDBx:pdbx_gene_src_strain>
       <PDBx:pdbx_gene_src_ncbi_taxonomy_id>9986</PDBx:pdbx_gene_src_ncbi_taxonomy_id>
@@ -277,7 +533,7 @@
   </PDBx:entryCategory>
   <PDBx:structCategory>
     <PDBx:struct entry_id="TEST">
-      <PDBx:title>ALANINE - TEST FILE FOR COMPND AND SOURCE RECORDS (PDB INPUT)</PDBx:title>
+      <PDBx:title>ALANINE - TEST FILE FOR COMPND AND SOURCE RECORDS (PDBML INPUT)</PDBx:title>
     </PDBx:struct>
   </PDBx:structCategory>
   <PDBx:struct_keywordsCategory>

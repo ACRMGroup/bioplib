@@ -183,13 +183,11 @@ END_TEST
 
 
 /* CONVERT MULTI-CHAIN PDB COMPND TO PDBML */
-/* NEED TEST FILES */
 START_TEST(test_write_pdbml_02)
 {
    /* get pdb data */
-   char filename_in[]      = "test_alanine_in_01.pdb",
-//   char filename_in[]      = "1ZEH.pdb",
-        filename_example[] = "test_alanine_out_01.xml",
+   char filename_in[]      = "test_alanine_in_04.pdb",
+        filename_example[] = "test_alanine_out_03.xml",
         test_message[]     = "Output PDBML does not match example file.";
 
    /* force write PDBML */
@@ -295,13 +293,11 @@ START_TEST(test_write_pdb_01)
 END_TEST
 
 /* TEST FOR MULTI-CHAIN COMPND */
-/* REQUIRES TEST FILES */
 START_TEST(test_write_pdb_02)
 {
    /* get pdb data */
-//   char filename_in[]      = "1ZEH.xml",
-   char filename_in[]      = "test_alanine_in_01.xml",
-        filename_example[] = "test_alanine_out_01.pdb",
+   char filename_in[]      = "test_alanine_in_03.xml",
+        filename_example[] = "test_alanine_out_04.pdb",
         test_message[]     = "Output PDB does not match example file.";
         
    /* force write PDB */
