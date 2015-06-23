@@ -137,7 +137,7 @@
    Checks that a PDB linked list can be written as a standard PDB file
    (i.e. chain labels are no more than one character)
 
-   #FUNCTION blWritePDBAsPDBorGROMOS()
+   #FUNCTION blWritePDBAsPDBorGromos()
    Writes a PDB linked list to a file in PDB format or the modified
    GROMOS version
 
@@ -158,6 +158,8 @@
    #FUNCTION  blWriteGromosPDBRecord()
    Write a GROMOS PDB record
 
+   #FUNCTION  blWriteTerCard()
+   Prints a complete new PDB format TER card
 */
 /************************************************************************/
 /* Defines required for includes
@@ -299,31 +301,53 @@ int blWritePDBAsPDBorGromos(FILE *fp, PDB  *pdb, BOOL doGromos)
    PDB   *p,
          *prev = NULL;
    int   numTer = 0;
+   BOOL  doneTer = FALSE;
 
    for(p=pdb; p!=NULL; NEXT(p))
    {
       /* If previous was non-null and was an ATOM                       */
       if((prev!=NULL) && !strncmp(prev->record_type, "ATOM  ", 6))
       {
-         /* If the chain has changed or this is the start of HETATMs    */
-         if(!CHAINMATCH(p->chain, prev->chain) || 
-            !strncmp(p->record_type, "HETATM", 6))
+         /* If the chain has changed write a TER card                   */
+         if(!doneTer && !CHAINMATCH(p->chain, prev->chain))
          {
             blWriteTerCard(fp, prev);
             numTer++;
+            doneTer = TRUE;
+         }
+         /* If we've moved into a HETATM, then see if this HETATOM group
+            is bonded to the previous residue. If it isn't, print a TER
+            card
+         */
+         if(!doneTer && !strncmp(p->record_type, "HETATM", 6))
+         {
+            PDB *prevStart = blFindResidue(pdb, prev->chain, prev->resnum,
+                                           prev->insert);
+            if(!blAreResiduePointersBonded(prevStart, p, (REAL)0.2))
+            {
+               blWriteTerCard(fp, prev);
+               numTer++;
+               doneTer = TRUE;
+            }
          }
       }
+
       if(doGromos)
       {
          blWriteGromosPDBRecord(fp,p);
+         doneTer = FALSE;
       }
       else
       {
          blWritePDBRecord(fp,p);
+         doneTer = FALSE;
       }
       prev=p;
    }
-   if((prev!=NULL) && !strncmp(prev->record_type, "ATOM  ", 6))
+
+   if((!doneTer)   && 
+      (prev!=NULL) && 
+      !strncmp(prev->record_type, "ATOM  ", 6))
    {
       blWriteTerCard(fp, prev);
       numTer++;

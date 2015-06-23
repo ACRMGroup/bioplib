@@ -61,7 +61,7 @@
 -  V1.8  07.07.14 Use bl prefix for functions By: CTP
 -  V1.9  19.08.14 Renamed blStripHPDBAsCopy() to blStripHPDBAsCopy() 
                   By: CTP
--  V1.10 19.04.15 Added call to blCopyConect()   By: ACRM
+-  V1.10 19.04.15 Added call to blCopyConects()   By: ACRM
 
 *************************************************************************/
 /* Doxygen

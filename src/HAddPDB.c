@@ -3,8 +3,8 @@
 
    \file       HAddPDB.c
    
-   \version    V2.21
-   \date       23.02.15
+   \version    V2.22
+   \date       23.06.15
    \brief      Add hydrogens to a PDB linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2015
@@ -132,6 +132,8 @@
 -  V2.19 13.02.15 Handles elements  By: ACRM
 -  V2.20 17.02.15 Handles segid and formal charge
 -  V2.21 23.02.15 Uses new blRenumAtomsPDB()
+-  V2.22 23.06.15 Various calls to CLEAR_PDB() to fix problems with
+                  uninitialized CONECT data
 
 *************************************************************************/
 /* Doxygen
@@ -1190,6 +1192,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
 -  13.02.15 Added copying of element type
 -  17.02.15 Added copying of segid and setting of formal_charge
 -  18.03.15 Changed to use MAXATINRES  By: ACRM
+-  23.06.15 Various calls to CLEAR_PDB()
 */
 static BOOL AddH(PDB *hlist, PDB **position, int HType)
 {
@@ -1224,8 +1227,9 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
             FREELIST(hlist, PDB);   /* 27.03.03 Fixed memory leak       */
             return(FALSE);
          }
+         CLEAR_PDB(p);              /* 23.06.15                         */
          
-         p->next=r;           /* Update its pointer                     */
+         p->next=r;                 /* Update its pointer               */
          strcpy(p->record_type,s->record_type);   /* Copy the info into 
                                                      this record        */
          p->atnum = ++atomcount;
@@ -1259,6 +1263,7 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
                FREELIST(hlist, PDB);   /* 27.03.03 Fixed memory leak    */
                return(FALSE);
             }
+            CLEAR_PDB(p);              /* 23.06.15                      */
             
             p->next=r;
             strcpy(p->record_type, s->record_type);
@@ -1293,7 +1298,8 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
                FREELIST(hlist, PDB);    /* 27.03.03 Fixed memory leak   */
                return(FALSE);
             }
-               
+            CLEAR_PDB(p);               /* 23.06.15                     */
+
             p->next=r;
             strcpy(p->record_type, s->record_type);
             p->atnum = ++atomcount;

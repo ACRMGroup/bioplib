@@ -167,3 +167,4 @@ help :
 	@echo "make installshared : Install shared libraries"
 	@echo "make clean         : Remove object and library files from compilation directory"
 	@echo "make doxygen       : Generate doxygen documentation"
+	@echo "make doxyclean     : Remove doxygen documentation"

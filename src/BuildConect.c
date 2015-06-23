@@ -3,8 +3,8 @@
 
    \file       BuildConect.c
    
-   \version    V1.2
-   \date       12.05.15
+   \version    V1.3
+   \date       23.05.15
    \brief      Build connectivity information in PDB linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2002-2015
@@ -50,6 +50,8 @@
 -  V1.1  16.03.15 Added blDeleteAConect() and blDeleteAConectByNum()
 -  V1.2  12.05.15 Fixed to add conects between C and N if either is
                   a HETATM
+-  V1.3  23.06.15 Added blAreResiduesBonded() and 
+                  blAreResiduePointersBonded()
 
 *************************************************************************/
 /* Doxygen
@@ -84,6 +86,13 @@
    CONECT data points to records in the new linked list instead of the
    old one.
 
+   #FUNCTION AreResiduesBonded()
+   Tests whether residues specified by chain, number and insert are
+   bonded
+
+   #FUNCTION AreResiduePointersBonded()
+   Tests whether residues specified by pointers to the start of the
+   residues
 */
 /************************************************************************/
 /* Includes
@@ -317,6 +326,89 @@ BOOL blIsBonded(PDB *p, PDB *q, REAL tol)
    return(FALSE);
 }
 
+
+/************************************************************************/
+/*>BOOL blAreResiduesBonded(PDB *pdb, 
+                            char *chain1, int resnum1, char *insert1,
+                            char *chain2, int resnum2, char *insert2,
+                            REAL tol)
+   ------------------------------------------------------------------
+*//**
+   \param[in] *pdb       PDB linked list
+   \param[in] *chain1    First chain label
+   \param[in] resnum1    First residue number
+   \param[in] *insert1   First insert code
+   \param[in] *chain2    Second chain label
+   \param[in] resnum2    Second residue number
+   \param[in] *insert2   Second insert code
+   \param[in] tol        Tolerance for distances
+   \return               Are they bonded
+
+   Tests whether two residue are bonded
+
+-  23.06.15 Original   By: ACRM
+*/
+BOOL blAreResiduesBonded(PDB *pdb, 
+                         char *chain1, int resnum1, char *insert1,
+                         char *chain2, int resnum2, char *insert2,
+                         REAL tol)
+{
+   PDB *res1, 
+       *res2;
+
+   /* Find the residues                                                 */
+   if((res1 = blFindResidue(pdb, chain1, resnum1, insert1))!=NULL)
+   {
+      if((res2 = blFindResidue(pdb, chain2, resnum2, insert2))!=NULL)
+      {
+         return(blAreResiduePointersBonded(res1, res2, tol));
+      }
+   }
+   return(FALSE);
+}
+
+
+/************************************************************************/
+/*>BOOL blAreResiduePointersBonded(PDB *res1, PDB *res2, REAL tol)
+   ---------------------------------------------------------------
+*//**
+   \param[in] *res1      Start of first residue
+   \param[in] *res2      Start of second residue
+   \param[in] tol        Tolerance for distances
+   \return               Are they bonded
+
+   Tests whether two residue are bonded using pointers to start of
+   residues
+
+-  23.06.15 Original   By: ACRM
+*/
+BOOL blAreResiduePointersBonded(PDB *res1, PDB *res2, REAL tol)
+{
+   PDB *res1next,
+       *res2next,
+       *p,
+       *q;
+
+   if((res1 != NULL) && (res2 != NULL))
+   {
+      /* Find the following residues                                    */
+      res1next = blFindNextResidue(res1);
+      res2next = blFindNextResidue(res2);
+
+      /* Step through the atoms in each residue and see if they are
+         bonded
+      */
+      for(p=res1; p!=res1next; NEXT(p))
+      {
+         for(q=res2; q!=res2next; NEXT(q))
+         {
+            if(blIsBonded(p, q, tol))
+               return(TRUE);
+         }
+      }
+   }
+   return(FALSE);
+}
 
 /************************************************************************/
 /*>static REAL findCovalentRadius(char *element)

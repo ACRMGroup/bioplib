@@ -3,7 +3,7 @@
 
    \file       ReadPDB.c
    
-   \version    V3.6
+   \version    V3.7
    \date       23.06.15
    \brief      Read coordinates from a PDB file 
    
@@ -224,7 +224,9 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                   records from PDBML files. Restrict compnd type to 
                   polymer entries. Parse SEQRES records from PDBML files.
                   By: CTP
-                  
+-  V3.7  23.06.15 blStoreOccRankAtom() properly clears new PDB items
+
+
 *************************************************************************/
 /* Doxygen
    -------
@@ -1127,6 +1129,7 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
 -  04.08.14 Read charge and element. By: CTP
 -  16.08.14 Read formal charge and set partial charge. By: CTP
 -  17.02.15 Added segid support   By: ACRM
+-  23.06.15 Clears the new PDB items 
 */
 static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
                                int NPartial, PDB **ppdb, PDB **pp, 
@@ -1192,6 +1195,8 @@ static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
    /* Increment the number of atoms                                     */
    (*natom)++;
                
+   CLEAR_PDB((*pp));   /* 23.06.15                                      */
+
    /* Store the information read                                        */
    (*pp)->atnum  = multi[IMaxOcc].atnum;
    (*pp)->resnum = multi[IMaxOcc].resnum;

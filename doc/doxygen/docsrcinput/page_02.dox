@@ -27,11 +27,13 @@ Useful general functions.
 -  fsscanf.h    - Hard formatted version of sscanf(). Implements FORTRAN-like rigid column reading out of a string.
 -  general.h    - Header file for general purpose routines.
 -  macros.h     - Useful macros.
--  help.h       - Include file for help functions.
+-  help.h       - Include file for interactive help functions.
 -  hpgl.h       - Include file for hpgl.
--  parse.h      - Include file for the command parser.
+-  parse.h      - Include file for the keyword command parser.
 -  plotting.h   - Include file for using plotting routines. 
-
+-  eigen.h      - Include file for using Eigen value and vector functions.
+-  hash.h       - Include file for hash/dictionary functions.
+-  regression.h - Include file for regression functions.
 
 _Support_
 

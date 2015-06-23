@@ -175,7 +175,7 @@
    #FUNCTION D(BUG)               
    Macro: Prints the BUG string if DEBUG is defined first
 
-   #SUBGROUP Arrays
+   #SUBGROUP Array handling
    #FUNCTION TESTINARRAY(x,l,y,r) 
    Macro: Tests whether value (y) is in array (x) if length (l) returning the result in (r)
    #FUNCTION FINDINARRAY(x,l,y,r) 

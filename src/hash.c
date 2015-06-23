@@ -56,7 +56,7 @@
 /* Doxygen
    -------
    #GROUP    General Programming
-   #SUBGROUP Data structures
+   #SUBGROUP Hashes / Dictionaries
 
    #FUNCTION blInitializeHash()
    Initializes a hash structure
