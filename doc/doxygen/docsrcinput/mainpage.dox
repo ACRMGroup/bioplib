@@ -32,10 +32,12 @@ Some of the most significant work in Bioplib includes:
    - adding hydrogens; 
    - adding a C-terminal oxygen; 
    - standardizing atom order; 
-   - extracting the sequence from ATOM and SEQRES records and comparing these.
+   - extracting the sequence from ATOM and SEQRES records and comparing these;
+   - handling and regenerating CONECT records;
+   - parsing of key header records (HEADER, COMPND, SEQRES, TITLE, SOURCE).
    
-The Bioplib library currently consists of approximately 37,000 lines of 
-C-code including comments, or 14,700 lines excluding comments.
+The Bioplib library currently consists of approximately 47,700 lines of 
+C-code including comments, or 31,000 lines excluding comments.
 
 Functions exist for:
 -  Reading and Writing PDB and CSSR Files
@@ -51,7 +53,8 @@ Functions exist for:
 -  Protein and DNA Sequences (e.g. reading and writing PIR and FASTA
    formats, DNA translation)
 -  General programming (e.g. command parser, string manipulation,
-   multiple-dimension arrays, interactive help, rigid column file reading)
+   multiple-dimension arrays, interactive help, rigid column file reading,
+   prime numbers, hashes/dictionaries)
 
 
 Include files
@@ -62,15 +65,19 @@ __Data Structures__
             for manipulating them.
 -  aalist.h Include file for amino acid linked lists.
 
-__Stucture Analysis/Manipulation__
+__Handling Stucture Data__
 -  angle.h  Calculate angles, torsions, etc.
 -  fit.h    Include file for least squares fitting
 -  hbond.h  Report whether two residues are H-bonded
+-  access.h Solvent accessibility
+
+__Handling Sequence Data__
+-  seq.h    Used for all sequence functions
 
 __Utility Functions__
 -  general.h   General purpose routines used bu BiopLib
 -  macros.h    Useful macros including linked list definitions used by PDB.
-
+-  hash.h      Hash/dictionary functions
 
 Example of usage
 ----------------
@@ -81,18 +88,28 @@ Example of usage
    WHOLEPDB *wpdb = NULL;
    PDB      *p    = NULL;
    
-   fp_in = fopen("input_file.pdb","r");
-   wpdb = blReadWholePDB(fp_in, &natoms);
-   close(fp_in);
-   
-   for(p=wpdb->pdb; p != NULL; NEXT(p))
+   if((fp_in = fopen("input_file.pdb","r"))!=NULL)
    {
-      _do_something_here_ 
-   }
+      wpdb = blReadWholePDB(fp_in);
+      close(fp_in);
 
-   fp_out = fopen("output_file.pdb","w");
-   blWriteWholePDB(fp_out, wpdb);
-   fclose(fp_out);
+      if((wpdb != NULL) && (wpdb->pdb != NULL))
+      {
+         for(p=wpdb->pdb; p != NULL; NEXT(p))
+         {
+            _do_something_here_ 
+         }
+
+         if((fp_out = fopen("output_file.pdb","w"))!=NULL)
+         {
+            blWriteWholePDB(fp_out, wpdb);
+            fclose(fp_out);
+         }
+         // --- else handle error --- 
+      }
+      // --- else handle error ---
+   }
+   // --- else handle error ---
 \endcode
 
 */

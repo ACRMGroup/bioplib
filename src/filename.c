@@ -51,7 +51,7 @@
 *************************************************************************/
 /* Doxygen
    -------
-   #GROUP     General Progamming
+   #GROUP     General Programming
    #SUBGROUP  Filenames
    #FUNCTION  blCheckProgName()
    Tests if a program name matches the specified name

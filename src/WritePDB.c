@@ -130,7 +130,7 @@
    Checks that a PDB linked list can be written as a standard PDB file
    (i.e. chain labels are no more than one character)
 
-   #FUNCTION blWritePDBAsPDBorGROMOS()
+   #FUNCTION blWritePDBAsPDBorGromos()
    Writes a PDB linked list to a file in PDB format or the modified
    GROMOS version
 
