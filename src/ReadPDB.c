@@ -4,7 +4,7 @@
    \file       ReadPDB.c
    
    \version    V3.6
-   \date       21.06.15
+   \date       23.06.15
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2015
@@ -220,9 +220,10 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 -  V3.4  03.04.15 Rewind file after reading pdbxml header data. 
                   Initialize pdb to NULL for ReadPDB functions.  By: CTP
 -  V3.5  13.05.15 Added COMPND and SOURCE parsing for PDBML-format By: CTP
--  V3.6  21.06.15 Parse entity_id from PDBML files. Parse chain for COMPND
+-  V3.6  23.06.15 Parse entity_id from PDBML files. Parse chain for COMPND
                   records from PDBML files. Restrict compnd type to 
-                  polymer entries. By: CTP
+                  polymer entries. Parse SEQRES records from PDBML files.
+                  By: CTP
                   
 *************************************************************************/
 /* Doxygen
@@ -348,6 +349,8 @@ static STRINGLIST *blSourceStringlist(STRINGLIST *stringlist,
                                       int *lines_stored, int mol_id, 
                                       PDBSOURCE *source);
 static char **blGetEntityChainLabels(int entity, PDB *pdb, int *nChains);
+static STRINGLIST *blSeqresStringlist(int nchains, char **chains, 
+                                      STRINGLIST **residues);
 
 #endif
 
@@ -2458,6 +2461,8 @@ static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer)
 -  28.04.15 Parse xmlDoc instead of FILE.  By: CTP
 -  05.05.15 Added Source and Compound data.  By: CTP
 -  21.06.15 Restrict compnd type to polymer. By: CTP
+-  23.06.15 Removed filter for compnd molecule is water.
+            Added seqres records.  By: CTP
 
 */
 static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
@@ -2483,6 +2488,7 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
               *title_lines  = NULL,
               *compnd_lines = NULL,
               *source_lines = NULL,
+              *seqres_lines = NULL,
               *last         = NULL;
 
    char header_line[82]  = "",
@@ -2493,7 +2499,7 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
    int nlines              = 0,
        source_lines_stored = 0;
 
-   /* compound and source */
+   /* compound and source                                               */
    COMPND    compnd;
    PDBSOURCE source;
    int       mol_id = 0,
@@ -2501,6 +2507,12 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
              i = 0;
    char      **chains = NULL,
              compnd_type[16] = "";
+
+   /* seqres                                                            */
+   STRINGLIST **residue_list = NULL;
+   char       curr_chain[8]  = "",
+              prev_chain[8]  = "",
+              resnam[8]      = "";
 
 
    /* Parse Document Tree                                               */
@@ -2640,17 +2652,15 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
                xmlFree(content);
             }
 
-            /* restrict to compnd type to polymer */
+            /* restrict to compnd type to polymer                       */
             if(strcmp(compnd_type,"polymer")){ continue; }
 
-            /* exclude water */
-            if(!strcmp(compnd.molecule,"water")){ continue; }
 
-            /* get chains */
+            /* get chains                                               */
             chains = blGetEntityChainLabels(compnd.molid , pdb, &nchains);
             if(chains != NULL)
             {
-               /* make compnd.chain string */
+               /* make compnd.chain string                              */
                for(i=0; i<nchains; i++)
                {
                   if(i){ strncat(compnd.chain,", ",3); }
@@ -2661,7 +2671,7 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
                nchains = 0;
             }
 
-            /* store compound as stringlist */
+            /* store compound as stringlist                             */
             compnd_lines = blCompndStringlist(compnd_lines, &nlines, &compnd);
 
          } /*entity*/
@@ -2674,19 +2684,19 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
       {
          for(subnode = node->children; subnode; subnode = subnode->next)
          {
-            /* if not correct subnode continue */
+            /* if not correct subnode continue                          */
             if(strcmp("entity_src_gen",(char *) subnode->name) &&
                strcmp("entity_src_nat",(char *) subnode->name))
                { continue; }
  
-            /* clear SOURCE */
+            /* clear SOURCE                                             */
             mol_id                   =    0;
             source.scientificName[0] = '\0';
             source.commonName[0]     = '\0';
             source.strain[0]         = '\0';
             source.taxid             =    0;
 
-            /* mol id */
+            /* mol id                                                   */
             attribute = xmlGetProp(subnode,(xmlChar *) "entity_id");
             sscanf((char *)attribute, "%i", &mol_id);
 
@@ -2726,12 +2736,96 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
                xmlFree(content);
             }
 
-            /* store source lines */
+            /* store source lines                                       */
             source_lines = blSourceStringlist(source_lines,  
                                               &source_lines_stored, 
                                               mol_id,
                                               &source);
             
+         }
+      }
+
+      /* get seqres records                                             */
+      if(!strcmp("pdbx_poly_seq_schemeCategory",(char *)node->name))
+      {
+         /* get seqres nodes                                            */
+         for(subnode = node->children; subnode; subnode = subnode->next)
+         {
+            if(strcmp("pdbx_poly_seq_scheme",(char *)subnode->name))
+            { continue; }
+            
+            /* get residue from pdbx_poly_seq_scheme node attibutes     */
+            /* note: pdb_mon_id child node also contains the residue name
+                     but the node is absent if no coodinate data for the 
+                     residue is present in the file                     */
+            attribute = xmlGetProp(subnode,(xmlChar *) "mon_id");
+            strncpy(resnam,(char *)attribute,8);
+            xmlFree(attribute);
+
+            /* get chain id from pdb_strand_id child node               */
+            for(n=subnode->children; n; n = n->next)
+            {
+               if(n->type != XML_ELEMENT_NODE){ continue; }
+               content = xmlNodeGetContent(n);
+               
+               if(!strcmp("pdb_strand_id",(char *) n->name))
+               {
+                  strncpy(curr_chain,(char *)content,8);
+               }
+               xmlFree(content);
+            }
+            
+            /* check for change in chain label                          */
+            if(!CHAINMATCH(prev_chain,curr_chain))
+            {
+               /* increment chains and allocate memory                  */
+               nchains++;
+               if(nchains == 1)
+               {
+                  chains = (char **)malloc(sizeof(char *));
+                  residue_list = (STRINGLIST **)malloc(sizeof(STRINGLIST *));
+                  if(chains == NULL || residue_list == NULL)
+                  { return NULL; }
+               }
+               else
+               {
+                  chains = (char **)realloc(chains, (nchains)*sizeof(char *));
+                  residue_list = (STRINGLIST **)realloc(residue_list, (nchains)*sizeof(STRINGLIST *));
+               }
+
+               /* check memory allocated                                */
+               if(chains == NULL || residue_list == NULL)
+               { return NULL; }
+
+               /* store chain                                           */
+               if((chains[nchains - 1] = (char *)malloc(8 * sizeof(char))) == NULL)
+               { return NULL; }
+               strncpy(chains[nchains - 1],curr_chain,8);
+               
+               /* set new residue list pointer to null                  */
+               residue_list[nchains - 1] = NULL;
+            }
+
+            /* store residue                                            */
+            residue_list[nchains-1] = blStoreString(residue_list[nchains-1] ,resnam);
+
+            /* set prev chain                                           */
+            strncpy(prev_chain, curr_chain,8);
+         }
+         
+         /* store sequence as seqres records                            */
+         seqres_lines = blSeqresStringlist(nchains, chains, residue_list);
+
+         /* free memory                                                 */
+         if(nchains)
+         {
+            for(i=0; i<nchains; i++)
+            {
+               free(chains[i]);
+               FREELIST(residue_list[i],STRINGLIST);
+            }
+            free(chains);
+            free(residue_list);
          }
       }
    }
@@ -2754,6 +2848,8 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
    last->next = compnd_lines;
    LAST(last);
    last->next = source_lines;
+   LAST(last);
+   last->next = seqres_lines;
    
    /* Return Stringlist */
    return(wpdb_header);
@@ -3458,6 +3554,76 @@ static STRINGLIST *blSourceStringlist(STRINGLIST *stringlist, int *lines_stored,
 
 #endif
 }
+
+/************************************************************************/
+/*>static STRINGLIST *blSeqresStringlist(int nchains, char **chains, 
+                                         STRINGLIST **residues)
+   -----------------------------------------------------------------
+*//**
+
+   \param[in] nchains         Number of chains
+   \param[in] **chains        Array of chain labels.
+   \param[in] **residues      Array of STRINGLISTS containing residue 
+                              sequence for each chain.
+   \return                    STRINGLIST with SEQRES in PDB-format.
+
+   Creates SEQRES records in PDB-format.
+
+-  23.06.15 Original. By: CTP
+
+*/
+static STRINGLIST *blSeqresStringlist(int nchains, char **chains, 
+                                      STRINGLIST **residues)
+{
+#ifndef XML_SUPPORT
+
+   /* PDBML format not supported.                                       */
+   return(NULL);
+
+#else
+
+   STRINGLIST *stringlist = NULL,
+              *residue = NULL;
+   int i = 0, j = 0, nres = 0;
+   int nline = 0;
+   char seqres_line[82]  = "";
+   char residue_field[5] = "";
+   char sequence_field[53] = "";
+   
+   
+   /* process chains */
+   for(i=0; i<nchains; i++)
+   {
+      /* find number of residues */
+      nres = 0;
+      for(residue = residues[i]; residue != NULL; NEXT(residue))
+      {
+         nres++;
+      }
+      
+      /* store string                                                   */
+      for(residue=residues[i], j=0, nline=0; residue !=NULL; NEXT(residue))
+      {
+         j++;
+         sprintf(residue_field,"%4s",residue->string);
+         strncat(sequence_field,residue_field,4);
+         if(j%13 == 0 || j == nres)
+         {
+            /* store line                                               */
+            nline++;
+            sprintf(seqres_line,"SEQRES%4d%2s %4d %-52s          \n",
+                    nline,chains[i],nres,sequence_field);
+            sequence_field[0] = '\0';
+            stringlist = blStoreString(stringlist,seqres_line);
+         }
+      }
+   }
+
+   return stringlist;
+
+#endif
+}
+
 
 
 #endif

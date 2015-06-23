@@ -1,0 +1,12 @@
+HEADER    TEST FILE                               23-JUN-15   TEST              
+TITLE     TEST FILE FOR SEQRES RECORDS (PDBML INPUT)                            
+SEQRES   1 A   20  ALA ARG ASN ASP CYS GLN GLU GLY HIS ILE LEU LYS MET          
+SEQRES   2 A   20  PHE PRO SER THR TRP TYR VAL                                  
+SEQRES   1 B   20  ALA ARG ASN ASP CYS GLN GLU GLY HIS ILE LEU LYS MET          
+SEQRES   2 B   20  PHE PRO SER THR TRP TYR VAL                                  
+SEQRES   1 C   20  ALA ARG ASN ASP CYS GLN GLU GLY HIS ILE LEU LYS MET          
+SEQRES   2 C   20  PHE PRO SER THR TRP TYR VAL                                  
+ATOM      1  CA  ALA A   1       1.000   2.000   3.000  1.00 20.00           C  
+TER       2      ALA A   1                                                      
+MASTER        0    0    0    0    0    0    0    0    1    1    0    6          
+END                                                                             
