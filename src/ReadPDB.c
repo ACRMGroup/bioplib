@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V3.3
-   \date       20.03.15
+   \version    V3.4
+   \date       23.06.15
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2015
@@ -217,6 +217,7 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 -  V3.3  20.03.15 Fixed reading of whole PDB when not the first model
                   Now sets gPDBModelNotFound flag if the requested model
                   isn't found
+-  V3.4  23.06.15 blStoreOccRankAtom() properly clears new PDB items
 
 *************************************************************************/
 /* Doxygen
@@ -1102,6 +1103,7 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
 -  04.08.14 Read charge and element. By: CTP
 -  16.08.14 Read formal charge and set partial charge. By: CTP
 -  17.02.15 Added segid support   By: ACRM
+-  23.06.15 Clears the new PDB items 
 */
 static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
                                int NPartial, PDB **ppdb, PDB **pp, 
@@ -1167,6 +1169,8 @@ static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
    /* Increment the number of atoms                                     */
    (*natom)++;
                
+   CLEAR_PDB((*pp));   /* 23.06.15                                      */
+
    /* Store the information read                                        */
    (*pp)->atnum  = multi[IMaxOcc].atnum;
    (*pp)->resnum = multi[IMaxOcc].resnum;

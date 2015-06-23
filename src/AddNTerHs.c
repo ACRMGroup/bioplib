@@ -3,8 +3,8 @@
 
    \file       AddNTerHs.c
    
-   \version    V1.10
-   \date       05.03.15
+   \version    V1.11
+   \date       23.06.15
    \brief      Routines to add N-terminal hydrogens and C-terminal
                oxygens.
    
@@ -67,6 +67,7 @@
 -  V1.8  07.07.14 Use bl prefix for functions By: CTP
 -  V1.9  17.02.15 Handles element and segid  By: ACRM
 -  V1.10 05.03.15 Replaced blFindEndPDB() with blFindNextResidue()
+-  V1.11 23.06.15 Added CLEAR_PDB() calls
 
 *************************************************************************/
 /* Doxygen
@@ -117,6 +118,7 @@ static int doAddCharmmNTer(PDB **ppdb, PDB *nter);
 -  23.08.94 Original    By: ACRM
 -  04.02.14 Use CHAINMATCH By: CTP
 -  07.07.14 Use bl prefix for functions By: CTP
+-  23.06.15 Added CLEAR_PDB() calls  By: ACRM
 */
 int blAddNTerHs(PDB **ppdb, BOOL Charmm)
 {
@@ -229,6 +231,10 @@ static int doAddGromosNTer(PDB **ppdb, PDB *nter)
       INIT(H3, PDB);
       if(H1==NULL || H2==NULL || H3==NULL) return(0);
       
+      CLEAR_PDB(H1);   /* 23.06.15                                      */
+      CLEAR_PDB(H2);
+      CLEAR_PDB(H3);
+
       /* Initialise the hydrogens with the res info, etc.               */
       blCopyPDB(H1, nter);
       blCopyPDB(H2, nter);
