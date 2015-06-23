@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.81
-   \date       28.04.15
+   \version    V1.82
+   \date       23.06.15
    \brief      Include file for PDB routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2015
@@ -193,6 +193,8 @@
                   PDBSOURCE structures
 -  V1.81 11.06.15 Added blGetSeqresAsStringWholePDB(),
                   blGetModresWholePDB(), blFindOriginalResType()
+-  V1.82 23.06.15 Added blAreResiduesBonded() and 
+                  blAreResiduePointersBonded()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -548,6 +550,11 @@ BOOL blCopyConects(PDB *out, PDB *in);
 BOOL blIsBonded(PDB *p, PDB *q, REAL tol);
 PDB *blDeleteAtomPDB(PDB *pdb, PDB *atom);
 PDB *blDeleteAtomRangePDB(PDB *pdb, PDB *start, PDB *stop);
+BOOL blAreResiduesBonded(PDB *pdb, 
+                         char *chain1, int resnum1, char *insert1,
+                         char *chain2, int resnum2, char *insert2,
+                         REAL tol);
+BOOL blAreResiduePointersBonded(PDB *res1, PDB *res2, REAL tol);
 
 void blWritePDBRecord(FILE *fp, PDB *pdb);
 void blWritePDBRecordAtnam(FILE *fp, PDB  *pdb);
