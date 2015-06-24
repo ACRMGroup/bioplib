@@ -1,0 +1,10 @@
+HEADER    TEST FILE                               24-JUN-15   TEST              
+TITLE     TEST FILE FOR MODRES RECORDS (PDBML INPUT)                            
+SEQRES   1 A   20  ALA ARG ASN ASP CYS GLN GLU GLY HIS ILE LEU LYS MET          
+SEQRES   2 A   20  PHE PRO SER THR TRP TYR VAL                                  
+MODRES TEST API S  169  LYS  2,6-DIAMINOPIMELIC ACID                            
+MODRES TEST 6OG B   22   DG  6-O-METHYL GUANOSINE-5'-MONOPHOSPHATE              
+ATOM      1  CA  ALA A   1       1.000   2.000   3.000  1.00 20.00           C  
+TER       2      ALA A   1                                                      
+MASTER        0    0    0    0    0    0    0    0    1    1    0    2          
+END                                                                             

@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V3.7
-   \date       23.06.15
+   \version    V3.8
+   \date       24.06.15
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2015
@@ -225,6 +225,7 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                   polymer entries. Parse SEQRES records from PDBML files.
                   By: CTP
 -  V3.7  23.06.15 blStoreOccRankAtom() properly clears new PDB items
+-  V3.8  24.06.15 Parse MODRES records from PDBML files.  By: CTP
 
 
 *************************************************************************/
@@ -2468,6 +2469,7 @@ static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer)
 -  21.06.15 Restrict compnd type to polymer. By: CTP
 -  23.06.15 Removed filter for compnd molecule is water.
             Added seqres records.  By: CTP
+-  24.06.15 Added modres records.  By: CTP
 
 */
 static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
@@ -2494,6 +2496,7 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
               *compnd_lines = NULL,
               *source_lines = NULL,
               *seqres_lines = NULL,
+              *modres_lines = NULL,
               *last         = NULL;
 
    char header_line[82]  = "",
@@ -2518,7 +2521,15 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
    char       curr_chain[8]  = "",
               prev_chain[8]  = "",
               resnam[8]      = "";
-
+              
+   /* modres                                                            */
+   char modres_line[82]    =  "",
+        modres_resnam[8]   =  "",
+        modres_chain[8]    =  "",
+        modres_insert[2]   = " ",
+        modres_stdnam[8]   =  "",
+        modres_comment[42] =  "";
+   int  modres_seqnum      =   0;
 
    /* Parse Document Tree                                               */
    root_node = xmlDocGetRootElement(document);
@@ -2833,6 +2844,90 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
             free(residue_list);
          }
       }
+
+      /* get modres records                                             */
+      if(!strcmp("pdbx_struct_mod_residueCategory",(char *)node->name))
+      {
+         /* get modres nodes                                            */
+         for(subnode = node->children; subnode; subnode = subnode->next)
+         {
+            if(strcmp("pdbx_struct_mod_residue",(char *)subnode->name))
+            { continue; }
+
+            /* zero modres data */
+            strcpy(modres_resnam,  "");
+            strcpy(modres_chain,   "");
+            modres_seqnum = 0;
+            strcpy(modres_insert, " ");
+            strcpy(modres_stdnam,  "");
+            strcpy(modres_comment, "");
+
+            /* scan modres data nodes                                   */
+            for(n=subnode->children; n; n = n->next)
+            {
+               if(n->type != XML_ELEMENT_NODE){ continue; }
+               content = xmlNodeGetContent(n);
+
+               /* get data */
+               if(!strcmp("auth_asym_id",(char *) n->name))
+               {
+                  strncpy(modres_chain,(char *)content,8);
+               }
+               else if(!strcmp("auth_comp_id",(char *) n->name))
+               {
+                  strncpy(modres_resnam,(char *)content,8);
+               }
+               else if(!strcmp("auth_seq_id",(char *) n->name))
+               {
+                  sscanf((char *)content, "%lf", &content_lf);
+                  modres_seqnum = (REAL)content_lf;
+               }
+               else if(!strcmp("details",(char *) n->name))
+               {
+                  strncpy(modres_comment,(char *)content,41);
+               }
+               else if(!strcmp("parent_comp_id",(char *) n->name))
+               {
+                  strncpy(modres_stdnam,(char *)content,8);
+               }
+               else if(!strcmp("label_asym_id",(char *) n->name))
+               {
+                  if(strlen(modres_chain) == 0)
+                  { strncpy(modres_chain,(char *)content,8); }
+               }
+               else if(!strcmp("label_comp_id",(char *) n->name))
+               {
+                  if(strlen(modres_resnam) == 0)
+                  { strncpy(modres_resnam,(char *)content,8); }
+               }
+               else if(!strcmp("label_seq_id",(char *) n->name))
+               {
+                  if(modres_seqnum == 0)
+                  {
+                     sscanf((char *)content, "%lf", &content_lf);
+                     modres_seqnum = (REAL)content_lf;
+                  }
+               }
+               else if(!strcmp("PDB_ins_code",(char *) n->name))
+               {
+                  strncpy(modres_insert,(char *)content,8);
+               }
+
+               xmlFree(content);
+            }
+
+            /* make modres record                                       */ 
+            sprintf(modres_line,"MODRES %4s %3s %1s %4d%1s %3s  %-40s", 
+                    pdb_field, modres_resnam, modres_chain, 
+                    modres_seqnum, modres_insert, modres_stdnam, 
+                    modres_comment);
+            PADMINTERM(modres_line,80);
+            strncat(modres_line,"\n",2);
+
+            /* store modres record                                      */
+            modres_lines = blStoreString(modres_lines ,modres_line);            
+         }   
+      }
    }
 
    /* Create Header Line                                                */
@@ -2847,7 +2942,7 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
    wpdb_header = blStoreString(wpdb_header, header_line);
    wpdb_header->next = title_lines;
 
-   /* append additional lines */
+   /* append additional lines                                           */
    last = wpdb_header;
    LAST(last);
    last->next = compnd_lines;
@@ -2855,6 +2950,8 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
    last->next = source_lines;
    LAST(last);
    last->next = seqres_lines;
+   LAST(last);
+   last->next = modres_lines;
    
    /* Return Stringlist */
    return(wpdb_header);
