@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V3.8
-   \date       24.06.15
+   \version    V3.9
+   \date       25.06.15
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2015
@@ -226,7 +226,10 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                   By: CTP
 -  V3.7  23.06.15 blStoreOccRankAtom() properly clears new PDB items
 -  V3.8  24.06.15 Parse MODRES records from PDBML files.  By: CTP
-
+-  V3.9  25.06.15 Added experimental data support. Fixed some memory 
+                  leaks. Tidied up comments and formatting. Renamed all
+                  static functions so they don't start with bl. Added
+                  checks for failed XML extractions.
 
 *************************************************************************/
 /* Doxygen
@@ -332,27 +335,35 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
 #define LOCATION_COORDINATES 1
 #define LOCATION_TRAILER     2
 
+#ifdef XML_SUPPORT
+#define APPEND_STRINGLIST(x, y)                 \
+   if(((y)!=NULL) && ((x)!=NULL)) {             \
+   LAST((x));                                   \
+   (x)->next = (y);                             \
+   }
+#endif
+
 /************************************************************************/
 /* Prototypes
 */
-static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
+static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
                                int NPartial, PDB **ppdb, PDB **pp, 
                                int *natom);
-static void blProcessElementField(char *element, char *element_field);
-static void blProcessChargeField(int *charge, char *charge_field);
+static void ProcessElementField(char *element, char *element_field);
+static void ProcessChargeField(int *charge, char *charge_field);
 static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer);
 #ifdef XML_SUPPORT
-static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date);
-static STRINGLIST *blParseHeaderPDBML(xmlDoc  *document, PDB *pdb);
-static int blParseConectPDBML(xmlDoc *document, PDB *pdb);
-static STRINGLIST *blTitleStringlist(char *titlestring);
-static STRINGLIST *blCompndStringlist(STRINGLIST *stringlist, 
+static BOOL SetPDBDateField(char *pdb_date, char *pdbml_date);
+static STRINGLIST *ParseHeaderPDBML(xmlDoc  *document, PDB *pdb);
+static int ParseConectPDBML(xmlDoc *document, PDB *pdb);
+static STRINGLIST *TitleStringlist(char *titlestring);
+static STRINGLIST *CompndStringlist(STRINGLIST *stringlist, 
                                       int *lines_stored, COMPND *compnd);
-static STRINGLIST *blSourceStringlist(STRINGLIST *stringlist, 
+static STRINGLIST *SourceStringlist(STRINGLIST *stringlist, 
                                       int *lines_stored, int mol_id, 
                                       PDBSOURCE *source);
-static char **blGetEntityChainLabels(int entity, PDB *pdb, int *nChains);
-static STRINGLIST *blSeqresStringlist(int nchains, char **chains, 
+static char **GetEntityChainLabels(int entity, PDB *pdb, int *nChains);
+static STRINGLIST *SeqresStringlist(int nchains, char **chains, 
                                       STRINGLIST **residues);
 
 #endif
@@ -583,7 +594,7 @@ PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
 /************************************************************************/
 /*>WHOLEPDB *blDoReadPDB(FILE *fpin, BOOL AllAtoms, int OccRank,
                          int ModelNum, BOOL DoWhole)
-   --------------------------------------------------------------------
+   -------------------------------------------------------------
 *//**
 
    \param[in]     *fpin    A pointer to type FILE in which the
@@ -677,8 +688,8 @@ PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
 -  28.04.15 V3.5  Removed rewind. Call to blDoReadPDBML() returns WHOLEPDB
                   instead of PDB.  By: CTP
 
-We need to deal with freeing wpdb if we are returning null.
-Also need to deal with some sort of error code
+   We need to deal with freeing wpdb if we are returning null.
+   Also need to deal with some sort of error code
 */
 WHOLEPDB *blDoReadPDB(FILE *fpin,
                       BOOL AllAtoms,
@@ -773,7 +784,7 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
       /* It is gzipped so we'll open gunzip as a pipe and send the data
          through that into a temporary file
       */
-      sprintf(cmd,"gunzip >/tmp/readpdb_%d",(int)getpid());
+      sprintf(cmd,"gunzip >/tmp/readpdb_%d", (int)getpid());
       if((fp = (FILE *)popen(cmd,"w"))==NULL)
       {
          wpdb->natoms = (-1);
@@ -784,7 +795,7 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
       pclose(fp);
 
       /* We now reopen the temporary file as our PDB input file         */
-      sprintf(cmd,"/tmp/readpdb_%d",(int)getpid());
+      sprintf(cmd,"/tmp/readpdb_%d", (int)getpid());
       if((fp = fopen(cmd,"r"))==NULL)
       {
          wpdb->natoms = (-1);
@@ -879,7 +890,7 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
 
       /* Read a record                                                  */
       if(fsscanf(buffer,
-                 "%6s%5d%1x%5s%4s%1s%4d%1s%3x%8lf%8lf%8lf%6lf%6lf%6x%4s%2s%2s",
+            "%6s%5d%1x%5s%4s%1s%4d%1s%3x%8lf%8lf%8lf%6lf%6lf%6x%4s%2s%2s",
                  record_type,&atnum,atnambuff,resnam,chain,&resnum,insert,
                  &x,&y,&z,&occ,&bval,segid,element_buff,charge_buff) 
          != EOF)
@@ -902,8 +913,8 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
             atnam = blFixAtomName(atnambuff, occ);
             
             /* Set element and charge                                   */
-            blProcessElementField(element, element_buff);
-            blProcessChargeField(&charge, charge_buff);
+            ProcessElementField(element, element_buff);
+            ProcessChargeField(&charge, charge_buff);
             
             /* Set element from atom name if not in input file          */
             if(strlen(element) == 0)
@@ -943,7 +954,7 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
                
                if(NPartial != 0)
                {
-                  if(!blStoreOccRankAtom(OccRank,multi,NPartial,
+                  if(!StoreOccRankAtom(OccRank,multi,NPartial,
                                          &wpdb->pdb,&p,&(wpdb->natoms)))
                   {
                      if(wpdb->pdb != NULL) FREELIST(wpdb->pdb, PDB);
@@ -1024,7 +1035,7 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
                   /* Atom name has changed 
                      Select and store the OccRank highest occupancy atom
                   */
-                  if(!blStoreOccRankAtom(OccRank,multi,NPartial,
+                  if(!StoreOccRankAtom(OccRank,multi,NPartial,
                                          &wpdb->pdb,&p,&wpdb->natoms))
                   {
                      if(wpdb->pdb != NULL) FREELIST(wpdb->pdb, PDB);
@@ -1081,7 +1092,7 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
 
    if(NPartial != 0)
    {
-      if(!blStoreOccRankAtom(OccRank,multi,NPartial,&wpdb->pdb,&p,
+      if(!StoreOccRankAtom(OccRank,multi,NPartial,&wpdb->pdb,&p,
                              &wpdb->natoms))
       {
          if(wpdb->pdb != NULL) FREELIST(wpdb->pdb, PDB);
@@ -1098,20 +1109,20 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
 }
 
 /************************************************************************/
-/*>static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
+/*>static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
                                   int NPartial, PDB **ppdb, PDB **pp, 
                                   int *natom)
    ------------------------------------------------------------------
 *//**
 
-   \param[in]     OccRank     Occupancy ranking required (>=1)
-   \param[in]     multi[]     Array of PDB records for alternative atom
+   \param[in]     OccRank    Occupancy ranking required (>=1)
+   \param[in]     multi[]    Array of PDB records for alternative atom
                              positions
-   \param[in]     NPartial    Number of items in multi array
-   \param[in,out] **ppdb      Start of PDB linked list (or NULL)
-   \param[in,out] **pp        Current position in PDB linked list (or NULL)
-   \param[in,out] *natom      Number of atoms read
-   \return                     Memory allocation success
+   \param[in]     NPartial   Number of items in multi array
+   \param[in,out] **ppdb     Start of PDB linked list (or NULL)
+   \param[in,out] **pp       Current position in PDB linked list (or NULL)
+   \param[in,out] *natom     Number of atoms read
+   \return                   Memory allocation success
 
    Takes an array of PDB records which represent alternative atom 
    positions for an atom. Select the OccRank'th highest occupancy and
@@ -1132,7 +1143,7 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
 -  17.02.15 Added segid support   By: ACRM
 -  23.06.15 Clears the new PDB items 
 */
-static BOOL blStoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
+static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
                                int NPartial, PDB **ppdb, PDB **pp, 
                                int *natom)
 {
@@ -1542,7 +1553,7 @@ pointer\n");
 /************************************************************************/
 /*>WHOLEPDB *blDoReadPDBML(FILE *fpin, BOOL AllAtoms, int  OccRank,
                            int  ModelNum, BOOL DoWhole)
------------------------------------------------------------------------
+   ----------------------------------------------------------------
 *//**
 
    \param[in]     *fpin    A pointer to type FILE in which the
@@ -1683,7 +1694,7 @@ WHOLEPDB *blDoReadPDBML(FILE *fpin,
    for(n=root_node->children; n!=NULL; NEXT(n))
    {
       /* Find Atom Sites Node                                           */
-      if(!strcmp("atom_siteCategory",(char *) n->name))
+      if(!strcmp("atom_siteCategory", (char *)n->name))
       {
          /* Found Atom Sites                                            */
          sites_node = n;
@@ -1705,7 +1716,7 @@ WHOLEPDB *blDoReadPDBML(FILE *fpin,
    for(atom_node = sites_node->children; atom_node; 
        atom_node = atom_node->next)
    {
-      if(!strcmp("atom_site",(char *) atom_node->name))
+      if(!strcmp("atom_site", (char *)atom_node->name))
       {
          /* Current PDB                                                 */
          INIT(curr_pdb,PDB);
@@ -1757,7 +1768,7 @@ WHOLEPDB *blDoReadPDBML(FILE *fpin,
             }
             else if(!strcmp((char *)n->name, "Cartn_y"))
             {
-               sscanf((char *) content,"%lf",&content_lf);
+               sscanf((char *)content,"%lf",&content_lf);
                curr_pdb->y = (REAL)content_lf;
             }
             else if(!strcmp((char *)n->name, "Cartn_z"))
@@ -1775,7 +1786,7 @@ WHOLEPDB *blDoReadPDBML(FILE *fpin,
             }
             else if(!strcmp((char *)n->name, "auth_comp_id"))
             {
-               strcpy(curr_pdb->resnam, (char *) content);
+               strcpy(curr_pdb->resnam, (char *)content);
             }
             else if(!strcmp((char *)n->name, "auth_seq_id"))
             {
@@ -1833,7 +1844,7 @@ WHOLEPDB *blDoReadPDBML(FILE *fpin,
                   strncpy(curr_pdb->atnam, (char *)content, 8);
                }
             }
-            else if(!strcmp((char *) n->name, "label_comp_id"))
+            else if(!strcmp((char *)n->name, "label_comp_id"))
             {
                if(strlen(curr_pdb->resnam) == 0)
                {
@@ -1977,7 +1988,7 @@ WHOLEPDB *blDoReadPDBML(FILE *fpin,
          if((NPartial != 0) && strcmp(curr_pdb->atnam,store_atnam))
          {
             /* Store atom                                               */
-            if(blStoreOccRankAtom(OccRank,multi,NPartial,&wpdb->pdb,
+            if(StoreOccRankAtom(OccRank,multi,NPartial,&wpdb->pdb,
                                   &end_pdb,&wpdb->natoms))
             {
                LAST(end_pdb);
@@ -2052,7 +2063,7 @@ WHOLEPDB *blDoReadPDBML(FILE *fpin,
    /* Store final atom (if partial occupancy)                           */
    if(NPartial != 0)
    {
-      if(!blStoreOccRankAtom(OccRank,multi,NPartial,&wpdb->pdb,&end_pdb,
+      if(!StoreOccRankAtom(OccRank,multi,NPartial,&wpdb->pdb,&end_pdb,
                              &wpdb->natoms))
       {
          /* Error: Failed to store atom in pdb list                     */
@@ -2083,10 +2094,10 @@ WHOLEPDB *blDoReadPDBML(FILE *fpin,
    if(DoWhole)
    {
       /* Parse CONECT Nodes                                             */
-      blParseConectPDBML(document, wpdb->pdb);
+      ParseConectPDBML(document, wpdb->pdb);
    
       /* Parse Header Data                                              */
-      wpdb->header = blParseHeaderPDBML(document, wpdb->pdb);
+      wpdb->header = ParseHeaderPDBML(document, wpdb->pdb);
    }
 
 
@@ -2187,8 +2198,8 @@ BOOL blCheckFileFormatPDBML(FILE *fp)
 }
 
 /************************************************************************/
-/*>static void blProcessElementField(char *element_field, char *element)
-   ---------------------------------------------------------------------
+/*>static void ProcessElementField(char *element_field, char *element)
+   -------------------------------------------------------------------
 *//**
 
    \param[in]  element_field   Columns 77 to 78 of the ATOM/HETATM record 
@@ -2200,7 +2211,7 @@ BOOL blCheckFileFormatPDBML(FILE *fp)
 -  04.08.14 Original By: CTP
    
 */
-static void blProcessElementField(char *element, char *element_field)
+static void ProcessElementField(char *element, char *element_field)
 {
    char element_sym[4] = "";
    char *element_ptr   = NULL;
@@ -2218,8 +2229,8 @@ static void blProcessElementField(char *element, char *element_field)
 }
 
 /************************************************************************/
-/*>static void blProcessChargeField(char *element_charge, int *charge)
-   -------------------------------------------------------------------
+/*>static void ProcessChargeField(char *element_charge, int *charge)
+   -----------------------------------------------------------------
 *//**
 
    \param[in]  element_charge  Columns 79 to 80 of the ATOM/HETATM record 
@@ -2231,7 +2242,7 @@ static void blProcessElementField(char *element, char *element_field)
 -  04.08.14 Original By: CTP
    
 */
-static void blProcessChargeField(int *charge, char *charge_field)
+static void ProcessChargeField(int *charge, char *charge_field)
 {
    /* Get charge magnitude                                              */
    if(strlen(charge_field) >= 2 && isdigit(charge_field[0]))
@@ -2250,7 +2261,7 @@ static void blProcessChargeField(int *charge, char *charge_field)
 
 /************************************************************************/
 /*>void blFreeWholePDB(WHOLEPDB *wpdb)
-   ---------------------------------
+   -----------------------------------
 *//**
 
    \param[in]     *wpdb    WHOLEPDB structure to be freed
@@ -2451,8 +2462,8 @@ static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer)
 
 #ifdef XML_SUPPORT
 /************************************************************************/
-/*>static STRINGLIST *blParseHeaderPDBML(FILE *fpin)
-   -------------------------------------------------
+/*>static STRINGLIST *ParseHeaderPDBML(FILE *fpin)
+   -----------------------------------------------
 *//**
 
    \param[in]     *document   XML document
@@ -2461,18 +2472,25 @@ static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer)
    Parses PDBML header date and creates HEADER and TITLE lines.
 
 -  22.04.14 Original. By: CTP
--  07.07.14 Renamed to blParseHeaderPDBML() By: CTP
+-  07.07.14 Renamed to ParseHeaderPDBML() By: CTP
 -  18.08.14 Return NULL if XML not supported. By: CTP
--  10.09.14 Use blSetPDBDateField() to set date field. By: CTP
+-  10.09.14 UseSetPDBDateField() to set date field. By: CTP
 -  28.04.15 Parse xmlDoc instead of FILE.  By: CTP
 -  05.05.15 Added Source and Compound data.  By: CTP
 -  21.06.15 Restrict compnd type to polymer. By: CTP
 -  23.06.15 Removed filter for compnd molecule is water.
             Added seqres records.  By: CTP
 -  24.06.15 Added modres records.  By: CTP
-
+-  25.06.15 Added experimental data support (type, resolution, 
+            R and RFree)
+            Checked all xmlGetProt() calls succeeded for attributes
+            Checked all xmlNodeGetContent() calls succeeded
+            Fixed some memory leaks with attributes
+            replaced all x=x->next with NEXT(x)
+            Tidied comments and variable declarations
+            Added APPEND_STRINGLIST() macro
 */
-static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
+static STRINGLIST *ParseHeaderPDBML(xmlDoc *document, PDB *pdb)
 {
 #ifndef XML_SUPPORT
 
@@ -2482,39 +2500,38 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
 #else
 
    /* Parse PDBML header                                                */
-
-   xmlNode *root_node = NULL, 
-           *node      = NULL,
-           *subnode   = NULL,
-           *n         = NULL;
-
-   xmlChar *content, *attribute;
-   double  content_lf = 0.0;
-   
+   xmlNode    *root_node = NULL, 
+              *node      = NULL,
+              *subnode   = NULL,
+              *n         = NULL;
+   xmlChar    *content, *attribute;
+   double     content_lf = 0.0;
+   REAL       resolution = (-1.0),
+              RFree      = (-1.0),
+              RWork      = (-1.0);
    STRINGLIST *wpdb_header  = NULL,
               *title_lines  = NULL,
               *compnd_lines = NULL,
               *source_lines = NULL,
               *seqres_lines = NULL,
               *modres_lines = NULL,
+              *resol_lines  = NULL,
               *last         = NULL;
-
-   char header_line[82]  = "",
-        header_field[41] = "",
-        pdb_field[5]     = "",
-        date_field[10]   = "";
-
-   int nlines              = 0,
-       source_lines_stored = 0;
+   char       header_line[82]  = "",
+              header_field[41] = "",
+              pdb_field[5]     = "",
+              date_field[10]   = "";
+   int        nlines              = 0,
+              source_lines_stored = 0;
 
    /* compound and source                                               */
-   COMPND    compnd;
-   PDBSOURCE source;
-   int       mol_id = 0,
-             nchains = 0,
-             i = 0;
-   char      **chains = NULL,
-             compnd_type[16] = "";
+   COMPND     compnd;
+   PDBSOURCE  source;
+   int        mol_id = 0,
+              nchains = 0,
+              i = 0;
+   char       **chains = NULL,
+              compnd_type[16] = "";
 
    /* seqres                                                            */
    STRINGLIST **residue_list = NULL;
@@ -2523,93 +2540,101 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
               resnam[8]      = "";
               
    /* modres                                                            */
-   char modres_line[82]    =  "",
-        modres_resnam[8]   =  "",
-        modres_chain[8]    =  "",
-        modres_insert[2]   = " ",
-        modres_stdnam[8]   =  "",
-        modres_comment[42] =  "";
-   int  modres_seqnum      =   0;
+   char       modres_line[82]    =  "",
+              modres_resnam[8]   =  "",
+              modres_chain[8]    =  "",
+              modres_insert[2]   = " ",
+              modres_stdnam[8]   =  "",
+              modres_comment[42] =  "";
+   int        modres_seqnum      =   0;
+
+   /* Resolution and R-factor                                           */
+   char       resol_line[82]     = "";
 
    /* Parse Document Tree                                               */
    root_node = xmlDocGetRootElement(document);
-   for(node = root_node->children; node; node = node->next)
+   for(node = root_node->children; node; NEXT(node))
    {
       if(node->type != XML_ELEMENT_NODE){ continue; }
 
       /* get header                                                     */
-      if(!strcmp("struct_keywordsCategory",(char *)node->name))
+      if(!strcmp("struct_keywordsCategory", (char *)node->name))
       {
-         for(subnode = node->children; subnode; subnode = subnode->next)
+         for(subnode = node->children; subnode; NEXT(subnode))
          {
-            for(n=subnode->children; n; n = n->next)
+            for(n=subnode->children; n; NEXT(n))
             {
-               if(strcmp("pdbx_keywords",(char *) n->name)){ continue; }
-               content = xmlNodeGetContent(n);
-               strncpy(header_field,(char *) content,40);
-               xmlFree(content);
+               if(strcmp("pdbx_keywords", (char *)n->name)){ continue; }
+               if((content = xmlNodeGetContent(n))!=NULL)
+               {
+                  strncpy(header_field, (char *)content,40);
+                  xmlFree(content);
+               }
             }
          }
       }
 
       /* get date                                                       */
-      if(!strcmp("database_PDB_revCategory",(char *)node->name))
+      if(!strcmp("database_PDB_revCategory", (char *)node->name))
       {
-         for(subnode = node->children; subnode; subnode = subnode->next)
+         for(subnode = node->children; subnode; NEXT(subnode))
          {
-            for(n=subnode->children; n; n = n->next)
+            for(n=subnode->children; n; NEXT(n))
             {
-               if(strcmp("date_original",(char *) n->name)){ continue; }
-               content = xmlNodeGetContent(n);
-               
-               /* convert date format                                   */
-               blSetPDBDateField(date_field, (char *)content);
-               
-               xmlFree(content);
+               if(strcmp("date_original", (char *)n->name)){ continue; }
+               if((content = xmlNodeGetContent(n))!=NULL)
+               {
+                  /* convert date format                                */
+                  SetPDBDateField(date_field, (char *)content);
+                  xmlFree(content);
+               }
             }
          }
       }
 
       /* get pdb code                                                   */
-      if(!strcmp("entryCategory",(char *)node->name))
+      if(!strcmp("entryCategory", (char *)node->name))
       {
-         for(subnode = node->children; subnode; subnode = subnode->next)
+         for(subnode = node->children; subnode; NEXT(subnode))
          {
-            if(strcmp("entry",(char *) subnode->name)){ continue; }
-            attribute = xmlGetProp(subnode,(xmlChar *) "id");
-            strncpy(pdb_field,(char *)attribute,4);
-            pdb_field[4] = '\0';
-            xmlFree(attribute);
+            if(strcmp("entry", (char *)subnode->name)){ continue; }
+
+            if((attribute = xmlGetProp(subnode, (xmlChar *)"id"))!=NULL)
+            {
+               strncpy(pdb_field, (char *)attribute,4);
+               pdb_field[4] = '\0';
+               xmlFree(attribute);
+            }
          }
       }
 
       /* get title                                                      */
-      if(!strcmp("structCategory",(char *)node->name))
+      if(!strcmp("structCategory", (char *)node->name))
       {
-         for(subnode = node->children; subnode; subnode = subnode->next)
+         for(subnode = node->children; subnode; NEXT(subnode))
          {
-            for(n=subnode->children; n; n = n->next)
+            for(n=subnode->children; n; NEXT(n))
             {
-               if(strcmp("title",(char *) n->name)){ continue; }
-               content = xmlNodeGetContent(n);
-
-               /* Get titlestringlist */
-               title_lines = blTitleStringlist((char *) content);
-
-               xmlFree(content);
+               if(strcmp("title", (char *)n->name)){ continue; }
+               if((content = xmlNodeGetContent(n))!=NULL)
+               {
+                  /* Get titlestringlist                                */
+                  title_lines = TitleStringlist((char *)content);
+                  xmlFree(content);
+               }
             }
          }
       }
 
       /* get compound                                                   */
-      if(!strcmp("entityCategory",(char *)node->name))
+      if(!strcmp("entityCategory", (char *)node->name))
       {
-         /* get compnd node */
-         for(subnode = node->children; subnode; subnode = subnode->next)
+         /* get compnd node                                             */
+         for(subnode = node->children; subnode; NEXT(subnode))
          {
-            if(strcmp("entity",(char *) subnode->name)){ continue; }
+            if(strcmp("entity", (char *)subnode->name)){ continue; }
             
-            /* Clear Fields */
+            /* Clear Fields                                             */
             compnd.molid         = 0;
             compnd.molecule[0]   = '\0';
             compnd.chain[0]      = '\0';
@@ -2619,53 +2644,53 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
             compnd.engineered[0] = '\0'; /*        not in pdbml format  */
             compnd.mutation[0]   = '\0';
             compnd.other[0]      = '\0';
-
             compnd_type[0]       = '\0';
 
-            /* mol id */
-            attribute = xmlGetProp(subnode,(xmlChar *) "id");
-            sscanf((char *)attribute, "%i", &compnd.molid);
+            /* mol id                                                   */
+            if((attribute = xmlGetProp(subnode, (xmlChar *)"id"))!=NULL)
+            {
+               sscanf((char *)attribute, "%i", &compnd.molid);
+               xmlFree(attribute);
+            }
 
-            /* scan compnd child nodes */
-            for(n=subnode->children; n; n = n->next)
+            /* scan compnd child nodes                                  */
+            for(n=subnode->children; n; NEXT(n))
             {
                if(n->type != XML_ELEMENT_NODE){ continue; }
-               content = xmlNodeGetContent(n);
+               
+               if((content = xmlNodeGetContent(n))!=NULL)
+               {
+                  if(!strcmp("details", (char *)n->name))
+                  {
+                     strcpy(compnd.other, (char *)content);
+                  }
+                  else if(!strcmp("pdbx_description", (char *)n->name))
+                  {
+                     strcpy(compnd.molecule, (char *)content);
+                  }
+                  else if(!strcmp("pdbx_fragment", (char *)n->name))
+                  {
+                     strcpy(compnd.fragment, (char *)content);
+                  }
+                  else if(!strcmp("pdbx_ec", (char *)n->name))
+                  {
+                     strcpy(compnd.ec, (char *)content);
+                  }
+                  else if(!strcmp("pdbx_mutation", (char *)n->name))
+                  {
+                     strcpy(compnd.mutation, (char *)content);
+                  }
+                  else if(!strcmp("pdbx_engineered", (char *)n->name))
+                  {
+                     strcpy(compnd.engineered, (char *)content);
+                  }
+                  else if(!strcmp("type", (char *)n->name))
+                  {
+                     strcpy(compnd_type, (char *)content);
+                  }
 
-               if(!strcmp("details",(char *) n->name))
-               {
-                  strcpy(compnd.other,(char *) content);
+                  xmlFree(content);
                }
-               else if(!strcmp("pdbx_description",(char *) n->name))
-               {
-                  strcpy(compnd.molecule,(char *) content);
-               }
-               else if(!strcmp("pdbx_fragment",(char *) n->name))
-               {
-                  strcpy(compnd.fragment,(char *) content);
-               }
-               else if(!strcmp("pdbx_ec",(char *) n->name))
-               {
-                  strcpy(compnd.ec,(char *) content);
-               }
-               else if(!strcmp("pdbx_mutation",(char *) n->name))
-               {
-                  strcpy(compnd.mutation,(char *) content);
-               }
-               else if(!strcmp("pdbx_engineered",(char *) n->name))
-               {
-                  strcpy(compnd.engineered,(char *) content);
-               }
-               else if(!strcmp("type",(char *) n->name))
-               {
-                  strcpy(compnd_type,(char *) content);
-               }
-               else
-               {
-                  continue;
-               }
-
-               xmlFree(content);
             }
 
             /* restrict to compnd type to polymer                       */
@@ -2673,7 +2698,7 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
 
 
             /* get chains                                               */
-            chains = blGetEntityChainLabels(compnd.molid , pdb, &nchains);
+            chains = GetEntityChainLabels(compnd.molid , pdb, &nchains);
             if(chains != NULL)
             {
                /* make compnd.chain string                              */
@@ -2688,21 +2713,21 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
             }
 
             /* store compound as stringlist                             */
-            compnd_lines = blCompndStringlist(compnd_lines, &nlines, &compnd);
+            compnd_lines = CompndStringlist(compnd_lines, &nlines, 
+                                            &compnd);
 
-         } /*entity*/
+         } /* entity                                                    */
       }
 
-
       /* get source                                                     */
-      if(!strcmp("entity_src_genCategory",(char *)node->name) || 
-         !strcmp("entity_src_natCategory",(char *)node->name))
+      if(!strcmp("entity_src_genCategory", (char *)node->name) || 
+         !strcmp("entity_src_natCategory", (char *)node->name))
       {
-         for(subnode = node->children; subnode; subnode = subnode->next)
+         for(subnode = node->children; subnode; NEXT(subnode))
          {
             /* if not correct subnode continue                          */
-            if(strcmp("entity_src_gen",(char *) subnode->name) &&
-               strcmp("entity_src_nat",(char *) subnode->name))
+            if(strcmp("entity_src_gen", (char *)subnode->name) &&
+               strcmp("entity_src_nat", (char *)subnode->name))
                { continue; }
  
             /* clear SOURCE                                             */
@@ -2713,80 +2738,91 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
             source.taxid             =    0;
 
             /* mol id                                                   */
-            attribute = xmlGetProp(subnode,(xmlChar *) "entity_id");
-            sscanf((char *)attribute, "%i", &mol_id);
+            if((attribute = xmlGetProp(subnode, (xmlChar *)"entity_id"))!=NULL)
+            {
+               sscanf((char *)attribute, "%i", &mol_id);
+               xmlFree(attribute);
+            }
 
-
-            for(n=subnode->children; n; n = n->next)
+            for(n=subnode->children; n; NEXT(n))
             {
                if(n->type != XML_ELEMENT_NODE){ continue; }
-               content = xmlNodeGetContent(n);
+               if((content = xmlNodeGetContent(n))!=NULL)
+               {
+                  if(!strcmp("pdbx_gene_src_common_name",
+                             (char *)n->name) ||
+                     !strcmp("common_name", (char *)n->name))
+                  {
+                     strncpy(source.commonName, (char *)content, 
+                             MAXPDBANNOTATION - 1);
+                  }
+                  else if(!strcmp("pdbx_gene_src_scientific_name",
+                                  (char *)n->name) ||
+                          !strcmp("pdbx_organism_scientific",
+                                  (char *)n->name))
+                  {
+                     strncpy(source.scientificName, (char *)content, 
+                             MAXPDBANNOTATION - 1);
+                  }
+                  else if(!strcmp("pdbx_gene_src_ncbi_taxonomy_id",
+                                  (char *)n->name) ||
+                          !strcmp("pdbx_ncbi_taxonomy_id",
+                                  (char *)n->name))
+                  {
+                     sscanf((char *)content, "%lf", &content_lf);
+                     source.taxid = (REAL)content_lf;
+                  }
+                  else if(!strcmp("pdbx_gene_src_strain",
+                                  (char *)n->name) ||
+                          !strcmp("strain", (char *)n->name))
+                  {
+                     strncpy(source.strain, (char *)content,
+                             MAXPDBANNOTATION - 1);
+                  }
 
-               if(!strcmp("pdbx_gene_src_common_name",(char *) n->name) ||
-                  !strcmp("common_name",(char *) n->name))
-               {
-                  strncpy(source.commonName,(char *) content, MAXPDBANNOTATION - 1);
+                  xmlFree(content);
                }
-               else if(!strcmp("pdbx_gene_src_scientific_name",(char *) n->name) ||
-                       !strcmp("pdbx_organism_scientific",(char *) n->name))
-               {
-                  strncpy(source.scientificName,(char *) content, MAXPDBANNOTATION - 1);
-               }
-               else if(!strcmp("pdbx_gene_src_ncbi_taxonomy_id",(char *) n->name) ||
-                       !strcmp("pdbx_ncbi_taxonomy_id",(char *) n->name))
-               {
-                  sscanf((char *)content, "%lf", &content_lf);
-                  source.taxid = (REAL)content_lf;
-               }
-               else if(!strcmp("pdbx_gene_src_strain",(char *) n->name) ||
-                       !strcmp("strain",(char *) n->name))
-               {
-                  strncpy(source.strain,(char *) content, MAXPDBANNOTATION - 1);
-               }
-               else
-               {
-                  continue;
-               }
-
-
-               xmlFree(content);
             }
 
             /* store source lines                                       */
-            source_lines = blSourceStringlist(source_lines,  
+            source_lines = SourceStringlist(source_lines,  
                                               &source_lines_stored, 
                                               mol_id,
                                               &source);
-            
          }
       }
 
       /* get seqres records                                             */
-      if(!strcmp("pdbx_poly_seq_schemeCategory",(char *)node->name))
+      if(!strcmp("pdbx_poly_seq_schemeCategory", (char *)node->name))
       {
          /* get seqres nodes                                            */
-         for(subnode = node->children; subnode; subnode = subnode->next)
+         for(subnode = node->children; subnode; NEXT(subnode))
          {
-            if(strcmp("pdbx_poly_seq_scheme",(char *)subnode->name))
+            if(strcmp("pdbx_poly_seq_scheme", (char *)subnode->name))
             { continue; }
             
-            /* get residue from pdbx_poly_seq_scheme node attibutes     */
-            /* note: pdb_mon_id child node also contains the residue name
+            /* get residue from pdbx_poly_seq_scheme node attibutes
+
+               note: pdb_mon_id child node also contains the residue name
                      but the node is absent if no coodinate data for the 
-                     residue is present in the file                     */
-            attribute = xmlGetProp(subnode,(xmlChar *) "mon_id");
-            strncpy(resnam,(char *)attribute,8);
-            xmlFree(attribute);
+                     residue is present in the file                     
+            */
+            if((attribute = xmlGetProp(subnode, (xmlChar *)"mon_id"))
+               != NULL)
+            {
+               strncpy(resnam, (char *)attribute,8);
+               xmlFree(attribute);
+            }
 
             /* get chain id from pdb_strand_id child node               */
-            for(n=subnode->children; n; n = n->next)
+            for(n=subnode->children; n; NEXT(n))
             {
                if(n->type != XML_ELEMENT_NODE){ continue; }
                content = xmlNodeGetContent(n);
                
-               if(!strcmp("pdb_strand_id",(char *) n->name))
+               if(!strcmp("pdb_strand_id", (char *)n->name))
                {
-                  strncpy(curr_chain,(char *)content,8);
+                  strncpy(curr_chain, (char *)content,8);
                }
                xmlFree(content);
             }
@@ -2799,38 +2835,48 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
                if(nchains == 1)
                {
                   chains = (char **)malloc(sizeof(char *));
-                  residue_list = (STRINGLIST **)malloc(sizeof(STRINGLIST *));
+                  residue_list = 
+                     (STRINGLIST **)malloc(sizeof(STRINGLIST *));
                   if(chains == NULL || residue_list == NULL)
-                  { return NULL; }
+                  { 
+                     return NULL; 
+                  }
                }
                else
                {
-                  chains = (char **)realloc(chains, (nchains)*sizeof(char *));
+                  chains = (char **)realloc(chains, 
+                                            (nchains)*sizeof(char *));
                   residue_list = (STRINGLIST **)realloc(residue_list, (nchains)*sizeof(STRINGLIST *));
                }
 
                /* check memory allocated                                */
-               if(chains == NULL || residue_list == NULL)
-               { return NULL; }
+               if((chains == NULL) || (residue_list == NULL))
+               { 
+                  return NULL; 
+               }
 
                /* store chain                                           */
-               if((chains[nchains - 1] = (char *)malloc(8 * sizeof(char))) == NULL)
-               { return NULL; }
-               strncpy(chains[nchains - 1],curr_chain,8);
+               if((chains[nchains - 1] = 
+                   (char *)malloc(8 * sizeof(char))) == NULL)
+               { 
+                  return NULL; 
+               }
+               strncpy(chains[nchains - 1], curr_chain,8);
                
                /* set new residue list pointer to null                  */
                residue_list[nchains - 1] = NULL;
             }
 
             /* store residue                                            */
-            residue_list[nchains-1] = blStoreString(residue_list[nchains-1] ,resnam);
+            residue_list[nchains-1] = 
+               blStoreString(residue_list[nchains-1] ,resnam);
 
             /* set prev chain                                           */
             strncpy(prev_chain, curr_chain,8);
          }
          
          /* store sequence as seqres records                            */
-         seqres_lines = blSeqresStringlist(nchains, chains, residue_list);
+         seqres_lines = SeqresStringlist(nchains, chains, residue_list);
 
          /* free memory                                                 */
          if(nchains)
@@ -2846,15 +2892,15 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
       }
 
       /* get modres records                                             */
-      if(!strcmp("pdbx_struct_mod_residueCategory",(char *)node->name))
+      if(!strcmp("pdbx_struct_mod_residueCategory", (char *)node->name))
       {
          /* get modres nodes                                            */
-         for(subnode = node->children; subnode; subnode = subnode->next)
+         for(subnode = node->children; subnode; NEXT(subnode))
          {
-            if(strcmp("pdbx_struct_mod_residue",(char *)subnode->name))
+            if(strcmp("pdbx_struct_mod_residue", (char *)subnode->name))
             { continue; }
 
-            /* zero modres data */
+            /* zero modres data                                         */
             strcpy(modres_resnam,  "");
             strcpy(modres_chain,   "");
             modres_seqnum = 0;
@@ -2863,60 +2909,65 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
             strcpy(modres_comment, "");
 
             /* scan modres data nodes                                   */
-            for(n=subnode->children; n; n = n->next)
+            for(n=subnode->children; n; NEXT(n))
             {
                if(n->type != XML_ELEMENT_NODE){ continue; }
-               content = xmlNodeGetContent(n);
-
-               /* get data */
-               if(!strcmp("auth_asym_id",(char *) n->name))
+               if((content = xmlNodeGetContent(n))!=NULL)
                {
-                  strncpy(modres_chain,(char *)content,8);
-               }
-               else if(!strcmp("auth_comp_id",(char *) n->name))
-               {
-                  strncpy(modres_resnam,(char *)content,8);
-               }
-               else if(!strcmp("auth_seq_id",(char *) n->name))
-               {
-                  sscanf((char *)content, "%lf", &content_lf);
-                  modres_seqnum = (REAL)content_lf;
-               }
-               else if(!strcmp("details",(char *) n->name))
-               {
-                  strncpy(modres_comment,(char *)content,41);
-               }
-               else if(!strcmp("parent_comp_id",(char *) n->name))
-               {
-                  strncpy(modres_stdnam,(char *)content,8);
-               }
-               else if(!strcmp("label_asym_id",(char *) n->name))
-               {
-                  if(strlen(modres_chain) == 0)
-                  { strncpy(modres_chain,(char *)content,8); }
-               }
-               else if(!strcmp("label_comp_id",(char *) n->name))
-               {
-                  if(strlen(modres_resnam) == 0)
-                  { strncpy(modres_resnam,(char *)content,8); }
-               }
-               else if(!strcmp("label_seq_id",(char *) n->name))
-               {
-                  if(modres_seqnum == 0)
+                  /* get data                                           */
+                  if(!strcmp("auth_asym_id", (char *)n->name))
+                  {
+                     strncpy(modres_chain, (char *)content,8);
+                  }
+                  else if(!strcmp("auth_comp_id", (char *)n->name))
+                  {
+                     strncpy(modres_resnam, (char *)content,8);
+                  }
+                  else if(!strcmp("auth_seq_id", (char *)n->name))
                   {
                      sscanf((char *)content, "%lf", &content_lf);
                      modres_seqnum = (REAL)content_lf;
                   }
+                  else if(!strcmp("details", (char *)n->name))
+                  {
+                     strncpy(modres_comment, (char *)content,41);
+                  }
+                  else if(!strcmp("parent_comp_id", (char *)n->name))
+                  {
+                     strncpy(modres_stdnam, (char *)content,8);
+                  }
+                  else if(!strcmp("label_asym_id", (char *)n->name))
+                  {
+                     if(strlen(modres_chain) == 0)
+                     { 
+                        strncpy(modres_chain, (char *)content,8); 
+                     }
+                  }
+                  else if(!strcmp("label_comp_id", (char *)n->name))
+                  {
+                     if(strlen(modres_resnam) == 0)
+                     { 
+                        strncpy(modres_resnam, (char *)content,8); 
+                     }
+                  }
+                  else if(!strcmp("label_seq_id", (char *)n->name))
+                  {
+                     if(modres_seqnum == 0)
+                     {
+                        sscanf((char *)content, "%lf", &content_lf);
+                        modres_seqnum = (REAL)content_lf;
+                     }
+                  }
+                  else if(!strcmp("PDB_ins_code", (char *)n->name))
+                  {
+                     strncpy(modres_insert, (char *)content,8);
+                  }
+                  
+                  xmlFree(content);
                }
-               else if(!strcmp("PDB_ins_code",(char *) n->name))
-               {
-                  strncpy(modres_insert,(char *)content,8);
-               }
-
-               xmlFree(content);
             }
 
-            /* make modres record                                       */ 
+            /* make modres record                                       */
             sprintf(modres_line,"MODRES %4s %3s %1s %4d%1s %3s  %-40s", 
                     pdb_field, modres_resnam, modres_chain, 
                     modres_seqnum, modres_insert, modres_stdnam, 
@@ -2925,10 +2976,86 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
             strncat(modres_line,"\n",2);
 
             /* store modres record                                      */
-            modres_lines = blStoreString(modres_lines ,modres_line);            
+            modres_lines = blStoreString(modres_lines ,modres_line);
          }   
       }
-   }
+
+      if(!strcmp("refine_ls_shellCategory", (char *)node->name))
+      {
+         for(subnode = node->children; subnode; NEXT(subnode))
+         {
+            if(!strcmp("refine_ls_shell", (char *)subnode->name))
+            {
+               /* Get the resolution from the attribute                 */
+               if((attribute = xmlGetProp(subnode, 
+                                          (xmlChar *)"d_res_high"))!=NULL)
+               {
+                  sscanf((char *)attribute, "%lf", &resolution);
+                  xmlFree(attribute);
+                  sprintf(resol_line,"REMARK   2 RESOLUTION.   %5.2f \
+ANGSTROMS.                                       ", resolution);
+                  resol_lines = blStoreString(resol_lines, resol_line);
+               }
+               /* Get RWork and RFree from the children                 */
+               for(n=subnode->children; n!=NULL; NEXT(n))
+               {
+                  if(!strcmp("R_factor_R_free", (char *)n->name))
+                  {
+                     if((content = xmlNodeGetContent(n))!=NULL)
+                     {
+                        sscanf((char *)content, "%lf", &RFree);
+                        xmlFree(content);
+                     }
+                  }
+                  else if(!strcmp("R_factor_R_work", (char *)n->name))
+                  {
+                     if((content = xmlNodeGetContent(n))!=NULL)
+                     {
+                        sscanf((char *)content, "%lf", &RWork);
+                        xmlFree(content);
+                     }
+                  }
+               }
+               if((RWork > (REAL)(-0.99)) || (RFree > (REAL)(-0.99)))
+               {
+                  sprintf(resol_line,"REMARK   3 REFINEMENT.             \
+                                             ");
+                  resol_lines = blStoreString(resol_lines, resol_line);
+                  
+                  sprintf(resol_line,"REMARK   3  FIT TO DATA USED IN \
+REFINEMENT.                                     ");
+                  resol_lines = blStoreString(resol_lines, resol_line);
+               }
+               if(RWork > (REAL)(-0.99))
+               {
+                  sprintf(resol_line,"REMARK   3   R VALUE            \
+(WORKING SET) : %5.3f                           ", RWork);
+                  resol_lines = blStoreString(resol_lines, resol_line);
+               }
+               if(RFree > (REAL)(-0.99))
+               {
+                  sprintf(resol_line,"REMARK   3   FREE R VALUE          \
+           : %5.3f                           ", RFree);
+                  resol_lines = blStoreString(resol_lines, resol_line);
+               }
+
+               /* Experimental details                                  */
+               if((attribute = xmlGetProp(subnode,
+                                          (xmlChar *)"pdbx_refine_id"))
+                  != NULL)
+               {
+                  sprintf(resol_line,"REMARK 200 EXPERIMENTAL DETAILS    \
+                                             ");
+                  resol_lines = blStoreString(resol_lines, resol_line);
+                  sprintf(resol_line,"REMARK 200  EXPERIMENT TYPE        \
+        : %-35s", (char *)attribute);
+                  resol_lines = blStoreString(resol_lines, resol_line);
+                  xmlFree(attribute);
+               }
+            }
+         }
+      }
+   }  /* Loop the XML nodes                                             */
 
    /* Create Header Line                                                */
    if(!strlen(header_field))
@@ -2944,25 +3071,22 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
 
    /* append additional lines                                           */
    last = wpdb_header;
-   LAST(last);
-   last->next = compnd_lines;
-   LAST(last);
-   last->next = source_lines;
-   LAST(last);
-   last->next = seqres_lines;
-   LAST(last);
-   last->next = modres_lines;
+   APPEND_STRINGLIST(last, compnd_lines);
+   APPEND_STRINGLIST(last, source_lines);
+   APPEND_STRINGLIST(last, resol_lines);
+   APPEND_STRINGLIST(last, seqres_lines);
+   APPEND_STRINGLIST(last, modres_lines);
    
-   /* Return Stringlist */
+   /* Return Stringlist                                                 */
    return(wpdb_header);
 
 #endif
 }
 
 /************************************************************************/
-/*>static char **blGetEntityChainLabels(int entity, PDB *pdb,
+/*>static char **GetEntityChainLabels(int entity, PDB *pdb,
                                         int *nChains)
-   ----------------------------------------------------------
+   --------------------------------------------------------
 *//**
    \param[in]  entity      Entity ID
    \param[in]  *pdb        PDB linked list
@@ -2977,7 +3101,7 @@ static STRINGLIST *blParseHeaderPDBML(xmlDoc *document, PDB *pdb)
 -  15.06.15 Original. By: CTP
 
 */
-static char **blGetEntityChainLabels(int entity, PDB *pdb, int *nChains)
+static char **GetEntityChainLabels(int entity, PDB *pdb, int *nChains)
 {
 #ifndef XML_SUPPORT
 
@@ -2986,7 +3110,7 @@ static char **blGetEntityChainLabels(int entity, PDB *pdb, int *nChains)
 
 #else
 
-   /* PDBML format supported. */
+   /* PDBML format supported.                                           */
    
    char **chains = NULL,
         prev_chain[8] = "";
@@ -2994,16 +3118,16 @@ static char **blGetEntityChainLabels(int entity, PDB *pdb, int *nChains)
    int i = 0;
    BOOL found = FALSE;
    
-   /* zero chain count */
+   /* zero chain count                                                  */
    *nChains = 0;
 
-   /* Scan PDB list */
+   /* Scan PDB list                                                     */
    for(p = pdb; p != NULL; NEXT(p))
    {
-      /* entity found and chain is not last chain found */
+      /* entity found and chain is not last chain found                 */
       if(p->entity_id == entity && !CHAINMATCH(p->chain,prev_chain))
       {
-         /* check all found chains */
+         /* check all found chains                                      */
          found = FALSE;
          for(i=0; i < *nChains && !found; i++)
          {
@@ -3013,46 +3137,49 @@ static char **blGetEntityChainLabels(int entity, PDB *pdb, int *nChains)
             }
          }
          
-         /* add new chain to array */
+         /* add new chain to array                                      */
          if(!found)
          {
-            /* allocate memory */
+            /* allocate memory                                          */
             if(chains == NULL)
             {
-               /* first chain pointer */
+               /* first chain pointer                                   */
                if( (chains = (char **)malloc(sizeof(char *))) == NULL )
                   return(NULL);
             }
             else 
             {
-               /* add new chain pointer */
-               if((chains = (char **)realloc(chains, (*nChains + 1)*sizeof(char *))) == NULL)
+               /* add new chain pointer                                 */
+               if((chains = (char **)realloc(chains, 
+                                             (*nChains+1)*sizeof(char *)))
+                  == NULL)
                   return(NULL);
             }
 
-            /* chain */
-            if((chains[*nChains] = (char *)malloc(8 * sizeof(char))) == NULL)
+            /* chain                                                    */
+            if((chains[*nChains] = (char *)malloc(8*sizeof(char)))
+               == NULL)
                return(NULL);
 
-            /* add chain and update count */
+            /* add chain and update count                              */
             strncpy(chains[*nChains],p->chain, 8);
             (*nChains)++;
          }
 
-         /* update last chain found */
+         /* update last chain found                                     */
          strncpy(prev_chain, p->chain, 8);
       }
    }
 
-   /* return chains */
+   /* return chains                                                     */
    return chains;
 #endif
 }
 
 
 /************************************************************************/
-/*>static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date)
-   ---------------------------------------------------------------
+/*>static BOOL SetPDBDateField(char *pdb_date, char *pdbml_date)
+   -------------------------------------------------------------
 *//**
 
    \param[out]    *pdb_date      PDB date string   'dd-MTH-yy'
@@ -3064,7 +3191,7 @@ static char **blGetEntityChainLabels(int entity, PDB *pdb, int *nChains)
 -  10.09.14 Original. By: CTP
 
 */
-static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date)
+static BOOL SetPDBDateField(char *pdb_date, char *pdbml_date)
 {
    char month_letter[12][4] = {"JAN","FEB","MAR","APR","MAY","JUN",
                                "JUL","AUG","SEP","OCT","NOV","DEC"};
@@ -3097,8 +3224,8 @@ static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date)
 
 
 /************************************************************************/
-/*>static int *blParseConectPDBML(xmlDoc *document, PDB *pdb)
-   ----------------------------------------------------------
+/*>static int *ParseConectPDBML(xmlDoc *document, PDB *pdb)
+   --------------------------------------------------------
 *//**
 
    \param[in]     *fpin   File pointer
@@ -3111,7 +3238,7 @@ static BOOL blSetPDBDateField(char *pdb_date, char *pdbml_date)
 -  13.05.15 Removed dynamic variables. By: CTP
 
 */
-static int blParseConectPDBML(xmlDoc *document, PDB *pdb)
+static int ParseConectPDBML(xmlDoc *document, PDB *pdb)
 {
 #ifndef XML_SUPPORT
 
@@ -3147,7 +3274,7 @@ static int blParseConectPDBML(xmlDoc *document, PDB *pdb)
    for(n=root_node->children; n!=NULL; NEXT(n))
    {
       /* Find CONECT Sites Node                                         */
-      if(!strcmp("struct_connCategory",(char *) n->name))
+      if(!strcmp("struct_connCategory", (char *)n->name))
       {
          /* Found CONECT Sites                                          */
          sites_node = n;
@@ -3187,45 +3314,45 @@ static int blParseConectPDBML(xmlDoc *document, PDB *pdb)
          for(n=conect_node->children; n!=NULL; NEXT(n))
          {
             if(n->type != XML_ELEMENT_NODE){ continue; }
-            content = xmlNodeGetContent(n);
-
-            if(content == NULL)
+            if((content = xmlNodeGetContent(n))==NULL)
             {
-               /* Failed to assign memory                               */
-               /* Free memory and return error                          */
+               /* Failed to assign memory
+                  Free memory and return error
+               */
                FREELIST(pdb, PDB);
                return(-1);
             }
 
-            /* Check CONECT type                                        */
-            /* BiopLib only handles covalent bonding                    */
-            /* if not covalent bond then skip node                      */
+            /* Check CONECT type
+               BiopLib only handles covalent bonding
+               if not covalent bond then skip node
+            */
             if(!strcmp((char *)n->name, "conn_type_id"))
             {
                if(!strncmp((char *)content,"covale",6) ||
                   !strncmp((char *)content,"disulf",6) ||
                   !strncmp((char *)content,"modres",6))
                {
-                  /* mark as covalent bond */
+                  /* mark as covalent bond                              */
                   valid_conect = TRUE;
                }
                else
                {
-                  /* skip remaining child nodes */
+                  /* skip remaining child nodes                         */
                   valid_conect = FALSE;
                   xmlFree(content);
                   break;
                }
             }
 
-            /* Set conect pdb data */
+            /* Set conect pdb data                                      */
             if(!strcmp((char *)n->name, "ptnr1_auth_asym_id"))
             {
                strcpy(conect_one.chain, (char *)content);
             }
             else if(!strcmp((char *)n->name, "ptnr1_auth_comp_id"))
             {
-               strcpy(conect_one.resnam, (char *) content);
+               strcpy(conect_one.resnam, (char *)content);
             }
             else if(!strcmp((char *)n->name, "ptnr1_auth_seq_id"))
             {
@@ -3247,7 +3374,7 @@ static int blParseConectPDBML(xmlDoc *document, PDB *pdb)
                   PADMINTERM(conect_one.atnam, 4);
                }
             }
-            else if(!strcmp((char *) n->name, "ptnr1_label_comp_id"))
+            else if(!strcmp((char *)n->name, "ptnr1_label_comp_id"))
             {
                if(strlen(conect_one.resnam) == 0)
                {
@@ -3270,7 +3397,7 @@ static int blParseConectPDBML(xmlDoc *document, PDB *pdb)
             }
             else if(!strcmp((char *)n->name, "ptnr2_auth_comp_id"))
             {
-               strcpy(conect_two.resnam, (char *) content);
+               strcpy(conect_two.resnam, (char *)content);
             }
             else if(!strcmp((char *)n->name, "ptnr2_auth_seq_id"))
             {
@@ -3292,7 +3419,7 @@ static int blParseConectPDBML(xmlDoc *document, PDB *pdb)
                   PADMINTERM(conect_two.atnam, 4);
                }
             }
-            else if(!strcmp((char *) n->name, "ptnr2_label_comp_id"))
+            else if(!strcmp((char *)n->name, "ptnr2_label_comp_id"))
             {
                if(strlen(conect_two.resnam) == 0)
                {
@@ -3316,9 +3443,10 @@ static int blParseConectPDBML(xmlDoc *document, PDB *pdb)
          } /* end conect node                                           */
 
 
-         /* Filter CONECT records                                       */
-         /*  1. Covalent bond type                                      */
-         /*  2. Atoms found in pdb list                                 */
+         /* Filter CONECT records                                       
+            1. Covalent bond type                                      
+            2. Atoms found in pdb list                                 
+         */
 
          /* 1. Skip unless CONECT entry is for covalent bond            */
          if(!valid_conect){ continue; }         
@@ -3372,11 +3500,11 @@ static int blParseConectPDBML(xmlDoc *document, PDB *pdb)
 }
 
 /************************************************************************/
-/*>static STRINGLIST *blDoStoreStringlist(STRINGLIST *stringlist, 
-                                          char *record, int *lines_stored,
-                                          char *token, char *content, 
-                                          char *terminator)
-   -----------------------------------------------------------------------
+/*>static STRINGLIST *DoStoreStringlist(STRINGLIST *stringlist, 
+                                        char *record, int *lines_stored,
+                                        char *token, char *content, 
+                                        char *terminator)
+   ---------------------------------------------------------------------
 *//**
 
    \param[in] *stringlist     Stringlist with header information
@@ -3394,10 +3522,10 @@ static int blParseConectPDBML(xmlDoc *document, PDB *pdb)
 -  13.05.15 Original. By: CTP
 
 */
-static STRINGLIST *blDoStoreStringlist(STRINGLIST *stringlist, 
-                                       char *record, int *lines_stored, 
-                                       char *token, char *content, 
-                                       char *terminator)
+static STRINGLIST *DoStoreStringlist(STRINGLIST *stringlist, 
+                                     char *record, int *lines_stored, 
+                                     char *token, char *content, 
+                                     char *terminator)
 {
 #ifndef XML_SUPPORT
 
@@ -3408,7 +3536,7 @@ static STRINGLIST *blDoStoreStringlist(STRINGLIST *stringlist,
 
    /* Store PDBML content as PDB-formated stringlist                    */
    
-   /*STRINGLIST *content_stringlist = NULL;*/
+   /* STRINGLIST *content_stringlist = NULL;                            */
 
    char content_line[82]  =   "",
         content_field[71] =   "",
@@ -3420,16 +3548,19 @@ static STRINGLIST *blDoStoreStringlist(STRINGLIST *stringlist,
        i        = 0;
 
 
-   /* Return if no content */
+   /* Return if no content                                              */
    if(strlen(content) == 0){ return stringlist; }
    
    /* get lines stored                                                  */
    nlines = *lines_stored;
 
    /* make content string                                               */
-   if((content_string = (char *)malloc((1+strlen(token)+strlen(content)+strlen(terminator))*sizeof(char)))==NULL)
+   if((content_string = (char *)malloc((1+strlen(token) + 
+                                        strlen(content) + 
+                                        strlen(terminator))*sizeof(char)))
+      ==NULL)
    {
-      /* malloc failed */
+      /* malloc failed                                                  */
       free(stringlist);
       return NULL;
    }
@@ -3467,20 +3598,21 @@ static STRINGLIST *blDoStoreStringlist(STRINGLIST *stringlist,
          }
          else
          {
-            sprintf(content_line, "%-6s %3d%s\n",record, nlines, content_field);
+            sprintf(content_line, "%-6s %3d%s\n",
+                    record, nlines, content_field);
             blStoreString(stringlist,content_line);
             if(stringlist == NULL){ return NULL; }
          }
       }
    }
 
-   /* free content_string */
+   /* free content_string                                               */
    free(content_string);
 
-   /* update lines stored */
+   /* update lines stored                                               */
    *lines_stored = nlines;
 
-   /* return stringlist */
+   /* return stringlist                                                 */
    return stringlist;
 
 #endif
@@ -3488,8 +3620,8 @@ static STRINGLIST *blDoStoreStringlist(STRINGLIST *stringlist,
 
 
 /************************************************************************/
-/*>static STRINGLIST *blTitleStringlist(char *titlestring)
-   -------------------------------------------------------
+/*>static STRINGLIST *TitleStringlist(char *titlestring)
+   -----------------------------------------------------
 *//**
 
    \param[in] *titlestring    TITLE string
@@ -3500,7 +3632,7 @@ static STRINGLIST *blDoStoreStringlist(STRINGLIST *stringlist,
 -  13.05.15 Original. By: CTP
 
 */
-static STRINGLIST *blTitleStringlist(char *titlestring)
+static STRINGLIST *TitleStringlist(char *titlestring)
 {
 #ifndef XML_SUPPORT
 
@@ -3513,7 +3645,8 @@ static STRINGLIST *blTitleStringlist(char *titlestring)
    STRINGLIST *title_stringlist = NULL;
    int start_line = 0;
 
-   title_stringlist = blDoStoreStringlist(NULL,"TITLE",&start_line,"", titlestring, "");
+   title_stringlist = DoStoreStringlist(NULL, "TITLE", &start_line, "",
+                                        titlestring, "");
 
    return title_stringlist;
 
@@ -3522,10 +3655,10 @@ static STRINGLIST *blTitleStringlist(char *titlestring)
 
 
 /************************************************************************/
-/*>static STRINGLIST *blCompndStringlist(STRINGLIST *stringlist, 
+/*>static STRINGLIST *CompndStringlist(STRINGLIST *stringlist, 
                                          int *lines_stored, 
                                          COMPND *compnd)
-   -------------------------------------------------------------
+   -----------------------------------------------------------
 *//**
 
    \param[in] *stringlist     Stringlist with COMPND information
@@ -3539,7 +3672,7 @@ static STRINGLIST *blTitleStringlist(char *titlestring)
 -  14.06.15 Store chain. By: CTP
 
 */
-static STRINGLIST *blCompndStringlist(STRINGLIST *stringlist, 
+static STRINGLIST *CompndStringlist(STRINGLIST *stringlist, 
                                       int *lines_stored,  COMPND *compnd)
 {
 #ifndef XML_SUPPORT
@@ -3553,41 +3686,59 @@ static STRINGLIST *blCompndStringlist(STRINGLIST *stringlist,
 
    char mol_id[4] = "";
 
-   /* set MOL_ID if absent */
+   /* set MOL_ID if absent                                              */
    if(compnd->molid == 0){ compnd->molid = 1; }
 
-   /* mol_id */
+   /* mol_id                                                            */
    sprintf(mol_id,"%i",compnd->molid);
    if(*lines_stored == 0)
    {
-      /* store first compnd line */
-      stringlist = blDoStoreStringlist(stringlist,"COMPND",lines_stored,"MOL_ID: ", mol_id, ";");
+      /* store first compnd line                                        */
+      stringlist = DoStoreStringlist(stringlist,   "COMPND",
+                                     lines_stored, "MOL_ID: ",
+                                     mol_id,       ";");
    }
    else
    {
-      blDoStoreStringlist(stringlist,"COMPND",lines_stored," MOL_ID: ", mol_id, ";");
+      DoStoreStringlist(stringlist,   "COMPND",
+                        lines_stored, " MOL_ID: ",
+                        mol_id,       ";");
    }
 
-   /* molecule */ 
-   blDoStoreStringlist(stringlist, "COMPND", lines_stored, " MOLECULE: ", compnd->molecule, ";");
+   /* molecule                                                          */
+   DoStoreStringlist(stringlist,       "COMPND",
+                     lines_stored,     " MOLECULE: ", 
+                     compnd->molecule, ";");
 
-   /* chain */ 
-   blDoStoreStringlist(stringlist, "COMPND", lines_stored, " CHAIN: ", compnd->chain, ";");
+   /* chain                                                             */
+   DoStoreStringlist(stringlist,    "COMPND",
+                     lines_stored,  " CHAIN: ", 
+                     compnd->chain, ";");
 
-   /* fragment */ 
-   blDoStoreStringlist(stringlist, "COMPND", lines_stored, " FRAGMENT: ", compnd->fragment, ";");
+   /* fragment                                                          */
+   DoStoreStringlist(stringlist,       "COMPND",
+                     lines_stored,     " FRAGMENT: ", 
+                     compnd->fragment, ";");
 
-   /* ec */
-   blDoStoreStringlist(stringlist, "COMPND", lines_stored, " EC: ", compnd->ec, ";");
+   /* ec                                                                */
+   DoStoreStringlist(stringlist,   "COMPND", 
+                     lines_stored, " EC: ", 
+                     compnd->ec,   ";");
 
-   /* engineered */
-   blDoStoreStringlist(stringlist, "COMPND", lines_stored, " ENGINEERED: ", compnd->engineered, ";");
+   /* engineered                                                        */
+   DoStoreStringlist(stringlist,        "COMPND",
+                     lines_stored,       " ENGINEERED: ", 
+                     compnd->engineered, ";");
    
-   /* mutation */
-   blDoStoreStringlist(stringlist, "COMPND", lines_stored, " MUTATION: ", compnd->mutation, ";");
+   /* mutation                                                          */
+   DoStoreStringlist(stringlist,       "COMPND",
+                     lines_stored,     " MUTATION: ", 
+                     compnd->mutation, ";");
    
-   /* other */
-   blDoStoreStringlist(stringlist, "COMPND", lines_stored, " OTHER_DETAILS: ", compnd->other, ";");
+   /* other                                                             */
+   DoStoreStringlist(stringlist,    "COMPND",
+                     lines_stored,  " OTHER_DETAILS: ", 
+                     compnd->other, ";");
 
    return stringlist;
 
@@ -3596,7 +3747,7 @@ static STRINGLIST *blCompndStringlist(STRINGLIST *stringlist,
 
 
 /************************************************************************/
-/*>static STRINGLIST *blSourceStringlist(STRINGLIST *stringlist, 
+/*>static STRINGLIST *SourceStringlist(STRINGLIST *stringlist, 
                                          int *lines_stored, int mol_id, 
                                          PDBSOURCE *source)
    --------------------------------------------------------------------
@@ -3613,7 +3764,9 @@ static STRINGLIST *blCompndStringlist(STRINGLIST *stringlist,
 -  13.05.15 Original. By: CTP
 
 */
-static STRINGLIST *blSourceStringlist(STRINGLIST *stringlist, int *lines_stored, int mol_id, PDBSOURCE *source)
+static STRINGLIST *SourceStringlist(STRINGLIST *stringlist, 
+                                    int *lines_stored, int mol_id, 
+                                    PDBSOURCE *source)
 {
 #ifndef XML_SUPPORT
 
@@ -3622,45 +3775,55 @@ static STRINGLIST *blSourceStringlist(STRINGLIST *stringlist, int *lines_stored,
 
 #else
 
-   /* Store source as PDB-formatted stringlist                        */
-
+   /* Store source as PDB-formatted stringlist                          */
    char buffer[8] = "";
 
-   /* mol_id */
+   /* mol_id                                                            */
    sprintf(buffer,"%i",mol_id);
    if(*lines_stored == 0)
    {
-      /* store first compnd line */
-      stringlist = blDoStoreStringlist(stringlist,"SOURCE",lines_stored,"MOL_ID: ", buffer, ";");
+      /* store first compnd line                                        */
+      stringlist = DoStoreStringlist(stringlist, "SOURCE",
+                                     lines_stored,"MOL_ID: ",
+                                     buffer, ";");
    }
    else
    {
-      blDoStoreStringlist(stringlist,"SOURCE",lines_stored," MOL_ID: ", buffer, ";");
+      DoStoreStringlist(stringlist,   "SOURCE",
+                        lines_stored, " MOL_ID: ", 
+                        buffer,       ";");
    }
 
-   /* scientific name */ 
-   blDoStoreStringlist(stringlist, "SOURCE", lines_stored, " ORGANISM_SCIENTIFIC: ", source->scientificName, ";");
+   /* scientific name                                                   */
+   DoStoreStringlist(stringlist,             "SOURCE", 
+                     lines_stored,           " ORGANISM_SCIENTIFIC: ", 
+                     source->scientificName, ";");
 
-   /* common name */ 
-   blDoStoreStringlist(stringlist, "SOURCE", lines_stored, " ORGANISM_COMMON: ", source->commonName, ";");
+   /* common name                                                       */
+   DoStoreStringlist(stringlist,         "SOURCE", 
+                     lines_stored,       " ORGANISM_COMMON: ", 
+                     source->commonName, ";");
 
-   /* taxon id */ 
+   /* taxon id                                                          */
    sprintf(buffer,"%i",source->taxid);
-   blDoStoreStringlist(stringlist, "SOURCE", lines_stored, " ORGANISM_TAXID: ", buffer, ";");
+   DoStoreStringlist(stringlist,   "SOURCE", 
+                     lines_stored, " ORGANISM_TAXID: ", 
+                     buffer,       ";");
 
-   /* strain */
-   blDoStoreStringlist(stringlist, "SOURCE", lines_stored, " STRAIN: ", source->strain, ";");
+   /* strain                                                            */
+   DoStoreStringlist(stringlist,     "SOURCE", 
+                     lines_stored,   " STRAIN: ",
+                     source->strain, ";");
 
    return stringlist;
-
 
 #endif
 }
 
 /************************************************************************/
-/*>static STRINGLIST *blSeqresStringlist(int nchains, char **chains, 
+/*>static STRINGLIST *SeqresStringlist(int nchains, char **chains, 
                                          STRINGLIST **residues)
-   -----------------------------------------------------------------
+   ---------------------------------------------------------------
 *//**
 
    \param[in] nchains         Number of chains
@@ -3674,7 +3837,7 @@ static STRINGLIST *blSourceStringlist(STRINGLIST *stringlist, int *lines_stored,
 -  23.06.15 Original. By: CTP
 
 */
-static STRINGLIST *blSeqresStringlist(int nchains, char **chains, 
+static STRINGLIST *SeqresStringlist(int nchains, char **chains, 
                                       STRINGLIST **residues)
 {
 #ifndef XML_SUPPORT
@@ -3693,7 +3856,7 @@ static STRINGLIST *blSeqresStringlist(int nchains, char **chains,
    char sequence_field[53] = "";
    
    
-   /* process chains */
+   /* process chains                                                    */
    for(i=0; i<nchains; i++)
    {
       /* find number of residues */
@@ -3704,7 +3867,9 @@ static STRINGLIST *blSeqresStringlist(int nchains, char **chains,
       }
       
       /* store string                                                   */
-      for(residue=residues[i], j=0, nline=0; residue !=NULL; NEXT(residue))
+      for(residue=residues[i], j=0, nline=0; 
+          residue!=NULL; 
+          NEXT(residue))
       {
          j++;
          sprintf(residue_field,"%4s",residue->string);

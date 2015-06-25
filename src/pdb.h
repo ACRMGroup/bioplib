@@ -402,14 +402,14 @@ typedef struct
          T5;         /* Type 5 O-H's =N-H's                             */
 }  HADDINFO;
 
-#define CLEAR_PDB(p) strcpy(p->record_type,"      "); \
-                     p->atnum=0; \
-                     strcpy(p->atnam,"    "); \
-                     strcpy(p->atnam_raw,"    "); \
-                     strcpy(p->resnam,"    "); \
-                     p->resnum=0; \
-                     strcpy(p->insert," "); \
-                     strcpy(p->chain," "); \
+#define CLEAR_PDB(p) strcpy(p->record_type,"      ");    \
+                     p->atnum=0;                         \
+                     strcpy(p->atnam,"    ");            \
+                     strcpy(p->atnam_raw,"    ");        \
+                     strcpy(p->resnam,"    ");           \
+                     p->resnum=0;                        \
+                     strcpy(p->insert," ");              \
+                     strcpy(p->chain," ");               \
                      p->x = 0.0; p->y = 0.0; p->z = 0.0; \
                      p->altpos = ' '; \
                      p->occ = 0.0; p->bval = 0.0; \
@@ -423,7 +423,8 @@ typedef struct
                      p->conect[0] = NULL;     \
                      p->nConect = 0;          \
                      p->atomType = NULL;      \
-                     p->entity_id = 0
+                     p->entity_id = 0;
+ 
 
 #define ISWATER(z)   (!strncmp((z)->resnam,"HOH",3) || \
                       !strncmp((z)->resnam,"OH2",3) || \
