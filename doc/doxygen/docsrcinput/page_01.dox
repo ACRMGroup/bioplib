@@ -13,7 +13,9 @@ Installation on UNIX systems
          mkdir ~/include/bioplib
          mkdir ~/lib
 
-###(2) Unpack the tar file:
+###(2) Unpack the distribution file:
+
+If you have downloaded a gzipped tar file:
 
             zcat bioplib-X.Y.tar.gz | tar -xvf -
          -or-
@@ -23,6 +25,11 @@ Installation on UNIX systems
             tar -zxvf bioplib-X.Y.tar.gz
 
 (where X.Y is the major and minor version numbers - e.g. 3.0)
+
+If you have downloaded a ZIP file:
+
+         unzip bioplib-X.Y.zip
+
 
 ###(3) This will create a directory called bioplib-X.Y.  
 
