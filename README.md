@@ -49,7 +49,9 @@ On other systems, you will need to install libxml2 manually from
 http://xmlsoft.org/downloads.html
 
 
-####(2) Unpack the BiopLib tar file
+####(2) Unpack the BiopLib distribution file
+
+If you have downloaded a gzipped tar file, do:
 
         zcat bioplib-X.Y.tar.gz | tar -xvf -
 -or-
@@ -62,7 +64,7 @@ http://xmlsoft.org/downloads.html
 
 (where X.Y is the major and minor version numbers - e.g. 3.0)
 
-You may also have chosen to download a ZIP file, in which case this is unpacked using
+If you have chosen to download a ZIP file, unpack this using
 
         unzip bioplib-X.Y.zip
 
