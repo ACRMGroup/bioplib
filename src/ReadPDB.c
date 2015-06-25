@@ -275,7 +275,7 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
    well as the coordinate data. Can read gzipped files as well as
    uncompressed files.
 
-   #FUNCTION  blFreeWholePDB()
+   #KEYFUNCTION  blFreeWholePDB()
    Frees the header, trailer and atom content from a WHOLEPDB structure
 
    #FUNCTION  blReadWholePDBAtoms()
@@ -283,12 +283,10 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
    well as the coordinate data. Only reads the ATOM record for 
    coordinates
 
-
    #SUBGROUP Atom names and elements
    #FUNCTION blFixAtomName()
    Fixes an atom name by removing leading spaces, or moving a leading
    digit to the end of the string.
-
 
    #SUBGROUP Manipulating the PDB linked list
    #FUNCTION blRemoveAlternates()
