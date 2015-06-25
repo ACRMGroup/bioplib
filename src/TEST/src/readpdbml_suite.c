@@ -3,11 +3,11 @@
 
    \file       readpdbml_suite.c
    
-   \version    V1.4
-   \date       31.08.14
+   \version    V1.5
+   \date       25.06.15
    \brief      Test suite for reading pdb and pdbml data from file.
 
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -54,6 +54,7 @@
 -  V1.3  26.08.14 Check record_type. By: CTP
 -  V1.4  31.08.14 Added tests to catch bug in blCheckFileFormatPDBML().
                   By: CTP
+-  V1.5  25.06.15 Catch bug where author residue number is 0.  By: CTP
 
 *************************************************************************/
 
@@ -814,6 +815,146 @@ START_TEST(test_read_pdbml_data_08)
 }
 END_TEST
 
+START_TEST(test_read_pdbml_data_09)
+{
+   /* set filename */
+   char filename[] = "data/readpdbml_suite/test_alpha_carbon_resnum_01.xml";
+
+   /* read test file */
+   fp = fopen(filename,"r");
+   pdb = blReadPDB(fp, &natoms);
+   fclose(fp);
+
+   /* check data */
+   ck_assert(        pdb !=                 NULL);
+   ck_assert_str_eq( pdb->record_type,  "ATOM  ");
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "CA  ");
+   ck_assert_str_eq( pdb->atnam_raw,      " CA ");
+   ck_assert_str_eq( pdb->resnam,         "ALA ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==           -1);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             1.000);
+   ck_assert(        pdb->y ==             2.000);
+   ck_assert(        pdb->z ==             3.000);
+   ck_assert(        pdb->occ ==            1.00);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,           "C");
+   ck_assert(        pdb->formal_charge ==     0);
+   ck_assert(        pdb->partial_charge ==  0.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
+}
+END_TEST
+
+START_TEST(test_read_pdbml_data_10)
+{
+   /* set filename */
+   char filename[] = "data/readpdbml_suite/test_alpha_carbon_resnum_02.xml";
+
+   /* read test file */
+   fp = fopen(filename,"r");
+   pdb = blReadPDB(fp, &natoms);
+   fclose(fp);
+
+   /* check data */
+   ck_assert(        pdb !=                 NULL);
+   ck_assert_str_eq( pdb->record_type,  "ATOM  ");
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "CA  ");
+   ck_assert_str_eq( pdb->atnam_raw,      " CA ");
+   ck_assert_str_eq( pdb->resnam,         "ALA ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            0);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             1.000);
+   ck_assert(        pdb->y ==             2.000);
+   ck_assert(        pdb->z ==             3.000);
+   ck_assert(        pdb->occ ==            1.00);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,           "C");
+   ck_assert(        pdb->formal_charge ==     0);
+   ck_assert(        pdb->partial_charge ==  0.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
+}
+END_TEST
+
+START_TEST(test_read_pdbml_data_11)
+{
+   /* set filename */
+   char filename[] = "data/readpdbml_suite/test_alpha_carbon_resnum_03.xml";
+
+   /* read test file */
+   fp = fopen(filename,"r");
+   pdb = blReadPDB(fp, &natoms);
+   fclose(fp);
+
+   /* check data */
+   ck_assert(        pdb !=                 NULL);
+   ck_assert_str_eq( pdb->record_type,  "ATOM  ");
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "CA  ");
+   ck_assert_str_eq( pdb->atnam_raw,      " CA ");
+   ck_assert_str_eq( pdb->resnam,         "ALA ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             1.000);
+   ck_assert(        pdb->y ==             2.000);
+   ck_assert(        pdb->z ==             3.000);
+   ck_assert(        pdb->occ ==            1.00);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,           "C");
+   ck_assert(        pdb->formal_charge ==     0);
+   ck_assert(        pdb->partial_charge ==  0.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
+}
+END_TEST
+
+START_TEST(test_read_pdbml_data_12)
+{
+   /* set filename */
+   char filename[] = "data/readpdbml_suite/test_alpha_carbon_resnum_04.xml";
+
+   /* read test file */
+   fp = fopen(filename,"r");
+   pdb = blReadPDB(fp, &natoms);
+   fclose(fp);
+
+   /* check data */
+   ck_assert(        pdb !=                 NULL);
+   ck_assert_str_eq( pdb->record_type,  "ATOM  ");
+   ck_assert(        pdb->atnum ==             1);
+   ck_assert_str_eq( pdb->atnam,          "CA  ");
+   ck_assert_str_eq( pdb->atnam_raw,      " CA ");
+   ck_assert_str_eq( pdb->resnam,         "ALA ");
+   ck_assert_str_eq( pdb->chain,             "A");
+   ck_assert(        pdb->resnum ==            1);
+   ck_assert_str_eq( pdb->insert,            " ");
+   ck_assert(        pdb->x ==             1.000);
+   ck_assert(        pdb->y ==             2.000);
+   ck_assert(        pdb->z ==             3.000);
+   ck_assert(        pdb->occ ==            1.00);
+   ck_assert(        pdb->altpos ==          ' ');
+   ck_assert(        pdb->bval ==          20.00);
+   ck_assert_str_eq( pdb->element,           "C");
+   ck_assert(        pdb->formal_charge ==     0);
+   ck_assert(        pdb->partial_charge ==  0.0);
+   ck_assert(        pdb->access ==          0.0);
+   ck_assert(        pdb->radius ==          0.0);
+   ck_assert(        pdb->atomType ==       NULL);
+}
+END_TEST
+
 
 /* Create Suite */
 Suite *readpdbml_suite(void)
@@ -860,6 +1001,10 @@ Suite *readpdbml_suite(void)
    tcase_add_test(tc_pdbml, test_read_pdbml_data_06);
    tcase_add_test(tc_pdbml, test_read_pdbml_data_07);
    tcase_add_test(tc_pdbml, test_read_pdbml_data_08);
+   tcase_add_test(tc_pdbml, test_read_pdbml_data_09);
+   tcase_add_test(tc_pdbml, test_read_pdbml_data_10);
+   tcase_add_test(tc_pdbml, test_read_pdbml_data_11);
+   tcase_add_test(tc_pdbml, test_read_pdbml_data_12);
    suite_add_tcase(s, tc_pdbml);
 
    return s;
