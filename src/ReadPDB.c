@@ -2702,7 +2702,10 @@ static STRINGLIST *ParseHeaderPDBML(xmlDoc *document, PDB *pdb)
                /* make compnd.chain string                              */
                for(i=0; i<nchains; i++)
                {
-                  if(i){ strncat(compnd.chain,", ",3); }
+                  if(i)
+                  {
+                     strncat(compnd.chain,", ",3); 
+                  }
                   strncat(compnd.chain,chains[i],8);
                   free(chains[i]);
                }
@@ -2991,7 +2994,7 @@ static STRINGLIST *ParseHeaderPDBML(xmlDoc *document, PDB *pdb)
                   sscanf((char *)attribute, "%lf", &resolution);
                   xmlFree(attribute);
                   sprintf(resol_line,"REMARK   2 RESOLUTION.   %5.2f \
-ANGSTROMS.                                       ", resolution);
+ANGSTROMS.                                       \n", resolution);
                   resol_lines = blStoreString(resol_lines, resol_line);
                }
                /* Get RWork and RFree from the children                 */
@@ -3017,23 +3020,23 @@ ANGSTROMS.                                       ", resolution);
                if((RWork > (REAL)(-0.99)) || (RFree > (REAL)(-0.99)))
                {
                   sprintf(resol_line,"REMARK   3 REFINEMENT.             \
-                                             ");
+                                             \n");
                   resol_lines = blStoreString(resol_lines, resol_line);
                   
                   sprintf(resol_line,"REMARK   3  FIT TO DATA USED IN \
-REFINEMENT.                                     ");
+REFINEMENT.                                     \n");
                   resol_lines = blStoreString(resol_lines, resol_line);
                }
                if(RWork > (REAL)(-0.99))
                {
                   sprintf(resol_line,"REMARK   3   R VALUE            \
-(WORKING SET) : %5.3f                           ", RWork);
+(WORKING SET) : %5.3f                           \n", RWork);
                   resol_lines = blStoreString(resol_lines, resol_line);
                }
                if(RFree > (REAL)(-0.99))
                {
                   sprintf(resol_line,"REMARK   3   FREE R VALUE          \
-           : %5.3f                           ", RFree);
+           : %5.3f                           \n", RFree);
                   resol_lines = blStoreString(resol_lines, resol_line);
                }
 
@@ -3043,10 +3046,10 @@ REFINEMENT.                                     ");
                   != NULL)
                {
                   sprintf(resol_line,"REMARK 200 EXPERIMENTAL DETAILS    \
-                                             ");
+                                             \n");
                   resol_lines = blStoreString(resol_lines, resol_line);
                   sprintf(resol_line,"REMARK 200  EXPERIMENT TYPE        \
-        : %-35s", (char *)attribute);
+        : %-35s\n", (char *)attribute);
                   resol_lines = blStoreString(resol_lines, resol_line);
                   xmlFree(attribute);
                }
@@ -3083,7 +3086,7 @@ REFINEMENT.                                     ");
 
 /************************************************************************/
 /*>static char **GetEntityChainLabels(int entity, PDB *pdb,
-                                        int *nChains)
+                                      int *nChains)
    --------------------------------------------------------
 *//**
    \param[in]  entity      Entity ID
@@ -3514,10 +3517,11 @@ static int ParseConectPDBML(xmlDoc *document, PDB *pdb)
    \param[in] *terminator     Terminator for line (";" or empty string)
    \return                    STRINGLIST with header information.
 
-   Stores header information in PDB-format. Data is split over mutiple 
+   Stores header information in PDB-format. Data are split over mutiple 
    lines if required.
 
 -  13.05.15 Original. By: CTP
+-  25.06.15 Doesn't upcase CHAIN  By: ACRM
 
 */
 static STRINGLIST *DoStoreStringlist(STRINGLIST *stringlist, 
@@ -3533,9 +3537,6 @@ static STRINGLIST *DoStoreStringlist(STRINGLIST *stringlist,
 #else
 
    /* Store PDBML content as PDB-formated stringlist                    */
-   
-   /* STRINGLIST *content_stringlist = NULL;                            */
-
    char content_line[82]  =   "",
         content_field[71] =   "",
         *content_string   = NULL;
@@ -3547,7 +3548,10 @@ static STRINGLIST *DoStoreStringlist(STRINGLIST *stringlist,
 
 
    /* Return if no content                                              */
-   if(strlen(content) == 0){ return stringlist; }
+   if(strlen(content) == 0)
+   {
+      return stringlist; 
+   }
    
    /* get lines stored                                                  */
    nlines = *lines_stored;
@@ -3562,11 +3566,14 @@ static STRINGLIST *DoStoreStringlist(STRINGLIST *stringlist,
       free(stringlist);
       return NULL;
    }
-   /* add token, content and terminator then set to upper case          */
+   /* add token, content and terminator                                 */
    strcpy(content_string, token  );
    strcpy(&content_string[strlen(token)], content);
    strcpy(&content_string[strlen(token)+strlen(content)], terminator);
-   UPPER(content_string);
+
+   /* Upcase everything except the CHAIN record which is case sensitive */
+   if(strncmp(content_string, " CHAIN: ", 8)) 
+      UPPER(content_string);
 
    /* store content string as stringlist                                */
    for(i=0; i<strlen(content_string); i++)
@@ -3592,14 +3599,20 @@ static STRINGLIST *DoStoreStringlist(STRINGLIST *stringlist,
          {
             sprintf(content_line, "%-6s    %s\n", record, content_field);
             stringlist = blStoreString(NULL,content_line);
-            if(stringlist == NULL){ return NULL; }
+            if(stringlist == NULL)
+            {
+               return NULL; 
+            }
          }
          else
          {
             sprintf(content_line, "%-6s %3d%s\n",
                     record, nlines, content_field);
             blStoreString(stringlist,content_line);
-            if(stringlist == NULL){ return NULL; }
+            if(stringlist == NULL)
+            {
+               return NULL; 
+            }
          }
       }
    }
@@ -3671,7 +3684,7 @@ static STRINGLIST *TitleStringlist(char *titlestring)
 
 */
 static STRINGLIST *CompndStringlist(STRINGLIST *stringlist, 
-                                      int *lines_stored,  COMPND *compnd)
+                                    int *lines_stored,  COMPND *compnd)
 {
 #ifndef XML_SUPPORT
 
@@ -3681,11 +3694,13 @@ static STRINGLIST *CompndStringlist(STRINGLIST *stringlist,
 #else
 
    /* Store compound as PDB-formatted stringlist                        */
-
    char mol_id[4] = "";
 
    /* set MOL_ID if absent                                              */
-   if(compnd->molid == 0){ compnd->molid = 1; }
+   if(compnd->molid == 0)
+   {
+      compnd->molid = 1; 
+   }
 
    /* mol_id                                                            */
    sprintf(mol_id,"%i",compnd->molid);
