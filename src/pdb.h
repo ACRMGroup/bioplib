@@ -395,27 +395,30 @@ typedef struct
          T5;         /* Type 5 O-H's =N-H's                             */
 }  HADDINFO;
 
-#define CLEAR_PDB(p) strcpy(p->record_type,"      "); \
-                     p->atnum=0; \
-                     strcpy(p->atnam,"    "); \
-                     strcpy(p->atnam_raw,"    "); \
-                     strcpy(p->resnam,"    "); \
-                     p->resnum=0; \
-                     strcpy(p->insert," "); \
-                     strcpy(p->chain," "); \
+#define CLEAR_PDB(p) if(p != NULL) {                     \
+                     strcpy(p->record_type,"      ");    \
+                     p->atnum=0;                         \
+                     strcpy(p->atnam,"    ");            \
+                     strcpy(p->atnam_raw,"    ");        \
+                     strcpy(p->resnam,"    ");           \
+                     p->resnum=0;                        \
+                     strcpy(p->insert," ");              \
+                     strcpy(p->chain," ");               \
                      p->x = 0.0; p->y = 0.0; p->z = 0.0; \
-                     p->altpos = ' '; \
-                     p->occ = 0.0; p->bval = 0.0; \
-                     p->next = NULL; \
-                     p->access = 0.0; \
-                     p->radius = 0.0; \
-                     p->formal_charge  =   0; \
-                     p->partial_charge = 0.0; \
-                     strcpy(p->element,"  "); \
-                     strcpy(p->segid,"    "); \
-                     p->conect[0] = NULL;     \
-                     p->nConect = 0;          \
-                     p->atomType = NULL
+                     p->altpos = ' ';                    \
+                     p->occ = 0.0; p->bval = 0.0;        \
+                     p->next = NULL;                     \
+                     p->access = 0.0;                    \
+                     p->radius = 0.0;                    \
+                     p->formal_charge  =   0;            \
+                     p->partial_charge = 0.0;            \
+                     strcpy(p->element,"  ");            \
+                     strcpy(p->segid,"    ");            \
+                     p->conect[0] = NULL;                \
+                     p->nConect = 0;                     \
+                     p->atomType = NULL;                 \
+   }
+ 
 
 #define ISWATER(z)   (!strncmp((z)->resnam,"HOH",3) || \
                       !strncmp((z)->resnam,"OH2",3) || \
