@@ -3,8 +3,8 @@
 
    \file       general.h
    
-   \version    V1.20
-   \date       14.05.15
+   \version    V1.21
+   \date       26.06.15
    \brief      Header file for general purpose routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2015
@@ -69,6 +69,7 @@
 -  V1.18 26.03.15 Added blStrncat()
 -  V1.19 28.04.15 Added blCollapseSpaces()
 -  V1.20 14.05.15 Added blStrdup()
+-  V1.21 26.06.15 Added FREESTRINGLIST() macro
 
 *************************************************************************/
 #ifndef _GENERAL_H
@@ -83,6 +84,16 @@ typedef struct _stringlist
    struct _stringlist *next;
    char               *string;
 }  STRINGLIST;
+
+#define FREESTRINGLIST(l) do {                          \
+      STRINGLIST *_s = NULL;                            \
+      for(_s = (l); _s != NULL; NEXT(_s)) {             \
+         if(_s->string != NULL) free(_s->string);       \
+      }                                                 \
+      FREELIST((l), STRINGLIST);                        \
+   }                                                    \
+   while(0)
+
 
 void blStringToLower(char *string1, char *string2);
 void blStringToUpper(char *string1, char *string2);

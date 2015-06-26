@@ -61,7 +61,8 @@
 -  V1.4  11.06.15 Added blGetSeqresAsStringWholePDB(),
                   blGetModresWholePDB() and blFindOriginalResType() 
                   By: ACRM
--  V1.5  26.06.15 Added blGetBiomoleculeWholePDB()
+-  V1.5  26.06.15 Added blGetBiomoleculeWholePDB() and blFreeBiomolecule()
+
 *************************************************************************/
 /* Doxygen
    -------
@@ -102,6 +103,8 @@
    #FUNCTION blGetBiomoleculeWholePDB()
    Obtain the biomolecule data
 
+   #FUNCTION blFreeBiomolecule()
+   Free the biomolecule data
 */
 
 /************************************************************************/
@@ -1191,12 +1194,39 @@ BIOMOLECULE *blGetBiomoleculeWholePDB(WHOLEPDB *wpdb)
    return(biomolecule);
 }
 
+
 /************************************************************************/
-/* TODO
- */
-void FreeBiomolecule(void)
+/*>void blFreeBiomolecule(BIOMOLECULE *biomolecule)
+   ------------------------------------------------
+   \param[in]    *biomolecule    Pointer to BIOMOLECULE linked list
+
+   Frees the data associated with a BIOMOLECULE linked list
+
+-  26.06.15 Original   By: ACRM
+*/
+void blFreeBiomolecule(BIOMOLECULE *biomolecule)
 {
+   BIOMOLECULE *bm;
    
+   if(biomolecule == NULL)
+      return;
+
+   /* Free the REMARK 300 data stored in the first item in the list     */
+   if(biomolecule->details != NULL) 
+      FREESTRINGLIST(biomolecule->details); 
+   
+   /* Free chain and BIOMT data associated with each biomolecule        */
+   for(bm=biomolecule; bm!=NULL; NEXT(bm))
+   {
+      if(bm->chains != NULL)
+         free(bm->chains);
+
+      if(bm->biomt)
+         FREELIST((bm->biomt), BIOMT);
+   }
+
+   /* Free the biomolecule linked list                                  */
+   FREELIST(biomolecule, BIOMOLECULE);
 }
 
 
@@ -1216,7 +1246,8 @@ int main(int argc, char **argv)
    int      nChains,
             i;
    PDBSOURCE species;
-   BIOMOLECULE *bm = NULL;
+   BIOMOLECULE *biomolecule = NULL,
+               *bm = NULL;
    STRINGLIST  *s;
    
    if((in=fopen(argv[1], "r"))!=NULL)
@@ -1238,15 +1269,15 @@ int main(int argc, char **argv)
             printf("Title:    '%s'\n", title);
          }
 
-         if((bm = blGetBiomoleculeWholePDB(wpdb))!=NULL)
+         if((biomolecule = blGetBiomoleculeWholePDB(wpdb))!=NULL)
          {
-            printf("Number of Biomolecules: %d\n", bm->numBiomolecules);
-            for(s=bm->details; s!=NULL; NEXT(s))
+            printf("Number of Biomolecules: %d\n", biomolecule->numBiomolecules);
+            for(s=biomolecule->details; s!=NULL; NEXT(s))
             {
                printf("REMARK 300 Details: %s\n", s->string);
             }
 
-            for(; bm!=NULL; NEXT(bm))
+            for(bm=biomolecule; bm!=NULL; NEXT(bm))
             {
                BIOMT *bmt;
                
@@ -1270,6 +1301,8 @@ int main(int argc, char **argv)
                   }
                }
             }
+
+            blFreeBiomolecule(biomolecule);
          }
 
          chainLabels = blGetPDBChainLabels(wpdb->pdb, &nChains);
