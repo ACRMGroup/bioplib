@@ -143,9 +143,8 @@
 /************************************************************************/
 /* Prototypes
 */
-static void checkRemark300(BIOMOLECULE *biomolecule, STRINGLIST *s, 
-                           int *SkipStandardRemark);
-static void checkRemark350(BIOMOLECULE *biomolecule, STRINGLIST *s);
+static void checkRemark300(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule);
+static void checkRemark350(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule);
 
 /************************************************************************/
 /*>BOOL blGetHeaderWholePDB(WHOLEPDB *wpdb, 
@@ -937,15 +936,12 @@ void blFindOriginalResType(char *modAA, char *stdAA, MODRES *modres)
 }
 
 /************************************************************************/
-/*>static void checkRemark300(BIOMOLECULE *biomolecule, STRINGLIST *s, 
-                              int *SkipStandardRemark)
+/*>static void checkRemark300(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule)
    -------------------------------------------------------------------
 *//**
    \param[in,out] *biomolecule        Pointer to a BIOMOLECULE structure
                                       that we populate
    \param[in]     *s                  The current header line
-   \param[in,out] *SkipStandardRemark Counter of lines into the REMARK 300
-                                      standard comments
 
    Checks header lines to see if they are REMARK 300 and, if so, extracts
    the maximum number of biomolecules and any 'details' comments that
@@ -957,49 +953,54 @@ void blFindOriginalResType(char *modAA, char *stdAA, MODRES *modres)
 
 -  26.06.15  Original   By: ACRM
 */
-static void checkRemark300(BIOMOLECULE *biomolecule, STRINGLIST *s, 
-                           int *SkipStandardRemark)
+static void checkRemark300(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule)
 {
-   if(!strncmp(s->string, "REMARK 300", 10))
+   STRINGLIST *s;
+   int SkipStandardRemark = 0;
+   
+   for(s=wpdb->header; s!=NULL; NEXT(s))
    {
-      if(!strncmp(s->string, "REMARK 300 BIOMOLECULE:", 23))
+      if(!strncmp(s->string, "REMARK 300", 10))
       {
-         char buffer[80],
-              *chp;
-         
-         *SkipStandardRemark = 1;
-         
-         /* Copy the actual data and remove trailing spaces             */
-         strncpy(buffer, s->string+24, 80);
-         TERMINATE(buffer);
-         KILLTRAILSPACES(buffer);
-         
-         /* Now move to the last space                                  */
-         if((chp = strrchr(buffer, ' '))==NULL)
+         if(!strncmp(s->string, "REMARK 300 BIOMOLECULE:", 23))
          {
-            chp = buffer;
-         }
-         else
-         {
-            chp++;
-         }
-         
-         sscanf(chp, "%d", &(biomolecule->numBiomolecules));
-      }
-      
-      if(*SkipStandardRemark)
-      {
-         if((*SkipStandardRemark)++ > 5)
-         {
-            char buffer[80];
+            char buffer[80],
+               *chp;
             
-            strncpy(buffer, s->string+11, 80);
+            SkipStandardRemark = 1;
+            
+            /* Copy the actual data and remove trailing spaces             */
+            strncpy(buffer, s->string+24, 80);
             TERMINATE(buffer);
             KILLTRAILSPACES(buffer);
-            if(strlen(buffer))
+            
+            /* Now move to the last space                                  */
+            if((chp = strrchr(buffer, ' '))==NULL)
             {
-               biomolecule->details = 
+               chp = buffer;
+            }
+            else
+            {
+               chp++;
+            }
+            
+            sscanf(chp, "%d", &(biomolecule->numBiomolecules));
+         }
+         
+         if(SkipStandardRemark)
+         {
+            if(SkipStandardRemark++ > 5)
+            {
+               char buffer[80];
+               
+               strncpy(buffer, s->string+11, 80);
+               TERMINATE(buffer);
+               KILLTRAILSPACES(buffer);
+               if(strlen(buffer))
+               {
+                  biomolecule->details = 
                   blStoreString(biomolecule->details, buffer);
+               }
             }
          }
       }
@@ -1008,8 +1009,8 @@ static void checkRemark300(BIOMOLECULE *biomolecule, STRINGLIST *s,
 
 
 /************************************************************************/
-/*>static void checkRemark350(BIOMOLECULE *biomolecule, STRINGLIST *s)
-   -------------------------------------------------------------------
+/*>static void checkRemark350(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule)
+   --------------------------------------------------------------------
 *//**
    \param[in,out]  *biomolecule  Pointer to the BIOMOLECULE structure that
                                  we are populating
@@ -1027,113 +1028,117 @@ static void checkRemark300(BIOMOLECULE *biomolecule, STRINGLIST *s,
 
 -  26.06.15  Original   By: ACRM
 */
-static void checkRemark350(BIOMOLECULE *biomolecule, STRINGLIST *s)
+static void checkRemark350(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule)
 {
    BIOMOLECULE *bm         = NULL;
    BIOMT       *biomt      = NULL;
    static BOOL firstRecord = TRUE;
+   STRINGLIST  *s;
    
    bm=biomolecule;
    LAST(bm);
 
-   if(!strncmp(s->string, "REMARK 350", 10))
+   for(s=wpdb->header; s!=NULL; NEXT(s))
    {
-      if(!strncmp(s->string, "REMARK 350 BIOMOLECULE:", 23))
+      if(!strncmp(s->string, "REMARK 350", 10))
       {
-         if(!firstRecord)
+         if(!strncmp(s->string, "REMARK 350 BIOMOLECULE:", 23))
          {
-            /* Allocate space for new biomolecule                          */
-            ALLOCNEXT(bm, BIOMOLECULE);
-            if(bm == NULL)
-               return;
-            CLEAR_BIOMOL(bm);
-         }
-         sscanf(s->string+23, "%d", &(bm->biomolNumber));
-         
-         firstRecord = FALSE;
-      }
-      else if(!strncmp(s->string, "REMARK 350 AUTHOR DETERMINED", 28))
-      {
-         strncpy(bm->authorUnit, s->string+46, 40);
-         TERMINATE(bm->authorUnit);
-         KILLTRAILSPACES(bm->authorUnit);
-      }
-      else if(!strncmp(s->string, "REMARK 350 SOFTWARE DETERMINED", 30))
-      {
-         strncpy(bm->softwareUnit, s->string+53, 40);
-         TERMINATE(bm->softwareUnit);
-         KILLTRAILSPACES(bm->softwareUnit);
-      }
-      else if(!strncmp(s->string, 
-                       "REMARK 350 APPLY THE FOLLOWING TO CHAINS:", 41) ||
-              !strncmp(s->string, 
-                       "REMARK 350                    AND CHAINS:", 41))
-      {
-         char buffer[80],
-              *chp;
-         int  pos;
-         
-         for(chp=s->string+42, pos=0; 
-             ((*chp!='\n') && (*chp!='\0'));
-             chp++)
-         {
-            if(*chp != ' ')
+            if(!firstRecord)
             {
-               buffer[pos++] = *chp;
+               /* Allocate space for new biomolecule                          */
+               ALLOCNEXT(bm, BIOMOLECULE);
+               if(bm == NULL)
+                  return;
+               CLEAR_BIOMOL(bm);
             }
-         }
-         buffer[pos] = '\0';
-
-         /* Remove any chain information already stored                 */
-         if(bm->chains != NULL)
-         {
-            free(bm->chains);
-            bm->chains = NULL;
-         }
-         
-         bm->chains = blStrcatalloc(bm->chains, buffer);
-      }
-      else if(!strncmp(s->string, "REMARK 350   BIOMT", 18))
-      {
-         char buffer[80];
-         int  line,
-              entry;
-         REAL val[4];
-         
-         strncpy(buffer, s->string+18, 80);
-         TERMINATE(buffer);
-         if(sscanf(buffer, "%d %d %lf %lf %lf %lf",
-                   &line, &entry, &val[0], &val[1], &val[2], &val[3]))
-         {
-            /* Nothing defined yet so create entry and set entry number */
-            if(bm->biomt == NULL)
-            {
-               INIT(bm->biomt, BIOMT);
-               biomt = bm->biomt;
-               if(biomt!=NULL)
-                  biomt->biomtNum = entry;
-            }
-            else /* We already have something so go to end of list      */
-            {
-               biomt = bm->biomt;
-               LAST(biomt);
-            }
-
-            /* If this entry is a different entry number, allocate a 
-               new item
-            */
-            if(entry != biomt->biomtNum)
-               ALLOCNEXT(biomt, BIOMT);
+            sscanf(s->string+23, "%d", &(bm->biomolNumber));
             
-            /* Copy in the data                                         */
-            if(biomt != NULL)
+            firstRecord = FALSE;
+         }
+         else if(!strncmp(s->string, "REMARK 350 AUTHOR DETERMINED", 28))
+         {
+            strncpy(bm->authorUnit, s->string+46, 40);
+            TERMINATE(bm->authorUnit);
+            KILLTRAILSPACES(bm->authorUnit);
+         }
+         else if(!strncmp(s->string, "REMARK 350 SOFTWARE DETERMINED", 30))
+         {
+            strncpy(bm->softwareUnit, s->string+53, 40);
+            TERMINATE(bm->softwareUnit);
+            KILLTRAILSPACES(bm->softwareUnit);
+         }
+         else if(!strncmp(s->string, 
+                          "REMARK 350 APPLY THE FOLLOWING TO CHAINS:", 41) ||
+                 !strncmp(s->string, 
+                          "REMARK 350                    AND CHAINS:", 41))
+         {
+            char buffer[80],
+               *chp;
+            int  pos;
+            
+            for(chp=s->string+42, pos=0; 
+                ((*chp!='\n') && (*chp!='\0'));
+                chp++)
             {
-               int i;
+               if(*chp != ' ')
+               {
+                  buffer[pos++] = *chp;
+               }
+            }
+            buffer[pos] = '\0';
+            
+            /* Remove any chain information already stored                 */
+            if(bm->chains != NULL)
+            {
+               free(bm->chains);
+               bm->chains = NULL;
+            }
+            
+            bm->chains = blStrcatalloc(bm->chains, buffer);
+         }
+         else if(!strncmp(s->string, "REMARK 350   BIOMT", 18))
+         {
+            char buffer[80];
+            int  line,
+               entry;
+            REAL val[4];
+            
+            strncpy(buffer, s->string+18, 80);
+            TERMINATE(buffer);
+            if(sscanf(buffer, "%d %d %lf %lf %lf %lf",
+                      &line, &entry, &val[0], &val[1], &val[2], &val[3]))
+            {
+               /* Nothing defined yet so create entry and set entry number */
+               if(bm->biomt == NULL)
+               {
+                  INIT(bm->biomt, BIOMT);
+                  biomt = bm->biomt;
+                  if(biomt!=NULL)
+                     biomt->biomtNum = entry;
+               }
+               else /* We already have something so go to end of list      */
+               {
+                  biomt = bm->biomt;
+                  LAST(biomt);
+               }
                
-               biomt->biomtNum = entry;
-               for(i=0; i<3; i++)
-                  biomt->rotMatrix[line-1][i] = val[i];
-               biomt->transMatrix[line-1] = val[3];
+               /* If this entry is a different entry number, allocate a 
+                  new item
+               */
+               if(entry != biomt->biomtNum)
+                  ALLOCNEXT(biomt, BIOMT);
+               
+               /* Copy in the data                                         */
+               if(biomt != NULL)
+               {
+                  int i;
+                  
+                  biomt->biomtNum = entry;
+                  for(i=0; i<3; i++)
+                     biomt->rotMatrix[line-1][i] = val[i];
+                  biomt->transMatrix[line-1] = val[3];
+               }
             }
          }
       }
@@ -1176,20 +1181,15 @@ TODO - return NULL if no data found!
 */
 BIOMOLECULE *blGetBiomoleculeWholePDB(WHOLEPDB *wpdb)
 {
-   STRINGLIST  *s;
    BIOMOLECULE *biomolecule = NULL;
-   int         SkipStandardRemark = 0;
    
    INIT(biomolecule, BIOMOLECULE);
    if(biomolecule == NULL)
       return(NULL);
    CLEAR_BIOMOL(biomolecule);
 
-   for(s=wpdb->header; s!=NULL; NEXT(s))
-   {
-      checkRemark300(biomolecule, s, &SkipStandardRemark);
-      checkRemark350(biomolecule, s); 
-   }
+   checkRemark300(wpdb, biomolecule);
+   checkRemark350(wpdb, biomolecule); 
 
    return(biomolecule);
 }
@@ -1228,8 +1228,6 @@ void blFreeBiomolecule(BIOMOLECULE *biomolecule)
    /* Free the biomolecule linked list                                  */
    FREELIST(biomolecule, BIOMOLECULE);
 }
-
-
 
 
 /************************************************************************/
