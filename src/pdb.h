@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.86
-   \date       23.06.15
+   \version    V1.87
+   \date       26.06.15
 
    \brief      Include file for PDB routines
    
@@ -201,6 +201,8 @@
                   By: CTP
 -  V1.86 23.06.15 Added blAreResiduesBonded() and 
                   blAreResiduePointersBonded()
+-  V1.87 26.06.15 Added blGetBiomoleculeWholePDB() and associated 
+                  structures
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -370,7 +372,27 @@ typedef struct _modres
    char origres[8];
 }  MODRES;
 
-   
+typedef struct _biomt
+{
+   struct _biomt *next;
+   int           biomtNum;
+   REAL          rotMatrix[3][3],
+                 transMatrix[3];
+}  BIOMT;
+
+typedef struct _biomolecule
+{
+   struct _biomolecule *next;
+   /* From REMARK 300                                                   */
+   STRINGLIST          *details;  
+   int                 numBiomolecules;
+   /* From REMARK 350                                                   */
+   int                 biomolNumber;
+   char                authorUnit[40],
+                       softwareUnit[40],
+                       *chains;
+   BIOMT               *biomt;
+}  BIOMOLECULE;
 
 
 /* This is designed to cause an error message which prints this line
@@ -708,6 +730,7 @@ char *blGetSeqresAsStringWholePDB(WHOLEPDB *wpdb, char **chains,
                                   MODRES *modres, BOOL doNucleic);
 MODRES *blGetModresWholePDB(WHOLEPDB *wpdb);
 void blFindOriginalResType(char *orig, char *new, MODRES *modres);
+BIOMOLECULE *blGetBiomoleculeWholePDB(WHOLEPDB *wpdb);
 
 
 /************************************************************************/

@@ -59,8 +59,9 @@
 -  V1.3  09.06.15 Merged changes from CTP and ACRM. 
                   Updated blGetTitleWholePDB()  By: CTP
 -  V1.4  11.06.15 Added blGetSeqresAsStringWholePDB(),
-                  blGetModresWholePDB() and blFindOriginalResType()
-
+                  blGetModresWholePDB() and blFindOriginalResType() 
+                  By: ACRM
+-  V1.5  26.06.15 Added blGetBiomoleculeWholePDB()
 *************************************************************************/
 /* Doxygen
    -------
@@ -87,8 +88,6 @@
    
    #FUNCTION blGetSpeciesWholePDBMolID()
    Obtains the species data for a specified MOL_ID from WHOLEPDB info
-   
- 
 
    #FUNCTION blGetSeqresAsStringWholePDB()
    Obtain the sequence from the SEQRES records
@@ -99,6 +98,10 @@
    #FUNCTION blFindOriginalResType()
    Find the original residue type for a modified residue from MODRES
    data
+
+   #FUNCTION blGetBiomoleculeWholePDB()
+   Obtain the biomolecule data
+
 */
 
 /************************************************************************/
@@ -119,6 +122,17 @@
 #define MAXBUFF   160
 #define ALLOCSIZE  80
 
+#define CLEAR_BIOMOL(b)                         \
+   do{                                          \
+   (b)->details         = NULL;                 \
+   (b)->numBiomolecules = 0;                    \
+   (b)->biomolNumber    = 0;                    \
+   (b)->authorUnit[0]   = '\0';                 \
+   (b)->softwareUnit[0] = '\0';                 \
+   (b)->chains          = NULL;                 \
+   (b)->biomt           = NULL;                 \
+   }  while(0)
+   
 /************************************************************************/
 /* Globals
 */
@@ -126,6 +140,9 @@
 /************************************************************************/
 /* Prototypes
 */
+static void checkRemark300(BIOMOLECULE *biomolecule, STRINGLIST *s, 
+                           int *SkipStandardRemark);
+static void checkRemark350(BIOMOLECULE *biomolecule, STRINGLIST *s);
 
 /************************************************************************/
 /*>BOOL blGetHeaderWholePDB(WHOLEPDB *wpdb, 
@@ -570,7 +587,7 @@ BOOL blGetCompoundWholePDBMolID(WHOLEPDB *wpdb, int molid,
               *molidStop,
               *s;
 
-   /* reset compnd */
+   /* reset compnd                                                      */
    compnd->molid         = 0;
    compnd->molecule[0]   = '\0';
    compnd->chain[0]      = '\0';
@@ -581,10 +598,10 @@ BOOL blGetCompoundWholePDBMolID(WHOLEPDB *wpdb, int molid,
    compnd->mutation[0]   = '\0';
    compnd->other[0]      = '\0';
 
-   /* find start of compnd records */
+   /* find start of compnd records                                      */
    molidFirst = FindNextMolIDRecord(wpdb->header, "COMPND");
 
-   /* get compound record */
+   /* get compound record                                               */
    for(molidStart=molidFirst; molidStart!=NULL; molidStart=molidStop)
    {
       molidStop  = FindNextMolIDRecord(molidStart, "COMPND");
@@ -916,6 +933,272 @@ void blFindOriginalResType(char *modAA, char *stdAA, MODRES *modres)
    }
 }
 
+/************************************************************************/
+/*>static void checkRemark300(BIOMOLECULE *biomolecule, STRINGLIST *s, 
+                              int *SkipStandardRemark)
+   -------------------------------------------------------------------
+*//**
+   \param[in,out] *biomolecule        Pointer to a BIOMOLECULE structure
+                                      that we populate
+   \param[in]     *s                  The current header line
+   \param[in,out] *SkipStandardRemark Counter of lines into the REMARK 300
+                                      standard comments
+
+   Checks header lines to see if they are REMARK 300 and, if so, extracts
+   the maximum number of biomolecules and any 'details' comments that
+   appear after the standard REMARK 300 comments
+
+   biomolecule is a linked list that only has one item for REMARK 300.
+   The 'details' that this code finds are just placed in the initial
+   entry of the linked list.
+
+-  26.06.15  Original   By: ACRM
+*/
+static void checkRemark300(BIOMOLECULE *biomolecule, STRINGLIST *s, 
+                           int *SkipStandardRemark)
+{
+   if(!strncmp(s->string, "REMARK 300", 10))
+   {
+      if(!strncmp(s->string, "REMARK 300 BIOMOLECULE:", 23))
+      {
+         char buffer[80],
+              *chp;
+         
+         *SkipStandardRemark = 1;
+         
+         /* Copy the actual data and remove trailing spaces             */
+         strncpy(buffer, s->string+24, 80);
+         TERMINATE(buffer);
+         KILLTRAILSPACES(buffer);
+         
+         /* Now move to the last space                                  */
+         if((chp = strrchr(buffer, ' '))==NULL)
+         {
+            chp = buffer;
+         }
+         else
+         {
+            chp++;
+         }
+         
+         sscanf(chp, "%d", &(biomolecule->numBiomolecules));
+      }
+      
+      if(*SkipStandardRemark)
+      {
+         if((*SkipStandardRemark)++ > 5)
+         {
+            char buffer[80];
+            
+            strncpy(buffer, s->string+11, 80);
+            TERMINATE(buffer);
+            KILLTRAILSPACES(buffer);
+            if(strlen(buffer))
+            {
+               biomolecule->details = 
+                  blStoreString(biomolecule->details, buffer);
+            }
+         }
+      }
+   }
+}
+
+
+/************************************************************************/
+/*>static void checkRemark350(BIOMOLECULE *biomolecule, STRINGLIST *s)
+   -------------------------------------------------------------------
+*//**
+   \param[in,out]  *biomolecule  Pointer to the BIOMOLECULE structure that
+                                 we are populating
+   \param[in]      *s            The current header record
+
+   Checks a header line for REMARK 350. If more than one biomolecule is
+   found, the biomolecule linked list is extended for each new one. Only
+   the first one in the list will have the REMARK 300 details and the 
+   number of biomolecules.
+
+   This routine stores the author and software determined assembly size
+   and the list of chains associated with a given biomolecule. It also
+   contains a linked list of BIOMT structures which have the 
+   transformation matrices needed to recreate the biomolecule.
+
+-  26.06.15  Original   By: ACRM
+*/
+static void checkRemark350(BIOMOLECULE *biomolecule, STRINGLIST *s)
+{
+   BIOMOLECULE *bm         = NULL;
+   BIOMT       *biomt      = NULL;
+   static BOOL firstRecord = TRUE;
+   
+   bm=biomolecule;
+   LAST(bm);
+
+   if(!strncmp(s->string, "REMARK 350", 10))
+   {
+      if(!strncmp(s->string, "REMARK 350 BIOMOLECULE:", 23))
+      {
+         if(!firstRecord)
+         {
+            /* Allocate space for new biomolecule                          */
+            ALLOCNEXT(bm, BIOMOLECULE);
+            if(bm == NULL)
+               return;
+            CLEAR_BIOMOL(bm);
+         }
+         sscanf(s->string+23, "%d", &(bm->biomolNumber));
+         
+         firstRecord = FALSE;
+      }
+      else if(!strncmp(s->string, "REMARK 350 AUTHOR DETERMINED", 28))
+      {
+         strncpy(bm->authorUnit, s->string+46, 40);
+         TERMINATE(bm->authorUnit);
+         KILLTRAILSPACES(bm->authorUnit);
+      }
+      else if(!strncmp(s->string, "REMARK 350 SOFTWARE DETERMINED", 30))
+      {
+         strncpy(bm->softwareUnit, s->string+53, 40);
+         TERMINATE(bm->softwareUnit);
+         KILLTRAILSPACES(bm->softwareUnit);
+      }
+      else if(!strncmp(s->string, 
+                       "REMARK 350 APPLY THE FOLLOWING TO CHAINS:", 41) ||
+              !strncmp(s->string, 
+                       "REMARK 350                    AND CHAINS:", 41))
+      {
+         char buffer[80],
+              *chp;
+         int  pos;
+         
+         for(chp=s->string+42, pos=0; 
+             ((*chp!='\n') && (*chp!='\0'));
+             chp++)
+         {
+            if(*chp != ' ')
+            {
+               buffer[pos++] = *chp;
+            }
+         }
+         buffer[pos] = '\0';
+
+         /* Remove any chain information already stored                 */
+         if(bm->chains != NULL)
+         {
+            free(bm->chains);
+            bm->chains = NULL;
+         }
+         
+         bm->chains = blStrcatalloc(bm->chains, buffer);
+      }
+      else if(!strncmp(s->string, "REMARK 350   BIOMT", 18))
+      {
+         char buffer[80];
+         int  line,
+              entry;
+         REAL val[4];
+         
+         strncpy(buffer, s->string+18, 80);
+         TERMINATE(buffer);
+         if(sscanf(buffer, "%d %d %lf %lf %lf %lf",
+                   &line, &entry, &val[0], &val[1], &val[2], &val[3]))
+         {
+            /* Nothing defined yet so create entry and set entry number */
+            if(bm->biomt == NULL)
+            {
+               INIT(bm->biomt, BIOMT);
+               biomt = bm->biomt;
+               if(biomt!=NULL)
+                  biomt->biomtNum = entry;
+            }
+            else /* We already have something so go to end of list      */
+            {
+               biomt = bm->biomt;
+               LAST(biomt);
+            }
+
+            /* If this entry is a different entry number, allocate a 
+               new item
+            */
+            if(entry != biomt->biomtNum)
+               ALLOCNEXT(biomt, BIOMT);
+            
+            /* Copy in the data                                         */
+            if(biomt != NULL)
+            {
+               int i;
+               
+               biomt->biomtNum = entry;
+               for(i=0; i<3; i++)
+                  biomt->rotMatrix[line-1][i] = val[i];
+               biomt->transMatrix[line-1] = val[3];
+            }
+         }
+      }
+   }
+}
+
+
+
+/************************************************************************/
+/*>BIOMOLECULE *blGetBiomoleculeWholePDB(WHOLEPDB *wpdb)
+   -----------------------------------------------------
+*//**
+   \param[in]   *wpdb   Pointer to WHOLEPDB structure
+   \return              Pointer to malloc()'d BIOMOLECULE linked list
+
+   Reads the biomolecule assembly data from REMARK 300 and REMARK 350
+   headers.
+
+   The returned pointer is a linked list of BIOMOLECULE structures.
+   The first item in the list contains the information from REMARK 300:
+   the total number of biomolecule assemblies and any additional
+   information provided in REMARK 300 beyond the standard comments.
+   The additional information (biomolecule->details) is a STRINGLIST
+   linked list.
+
+   The list of chains will appear in biomolcule->chains as a comma
+   separated list and the transformation to be applied to them
+   will appear in the biomolecule->biomt structure. This is also 
+   a linked list so if multiple transformations are required these
+   will appear in further entries to this list.
+
+   Additional entries will be found in the BIOMOLECULE linked list
+   for each different biomolecule.
+
+   See the test code in PDBHeaderInfo.c for example usage.
+
+TODO - return NULL if no data found!
+
+-  26.06.15  Original   By: ACRM
+*/
+BIOMOLECULE *blGetBiomoleculeWholePDB(WHOLEPDB *wpdb)
+{
+   STRINGLIST  *s;
+   BIOMOLECULE *biomolecule = NULL;
+   int         SkipStandardRemark = 0;
+   
+   INIT(biomolecule, BIOMOLECULE);
+   if(biomolecule == NULL)
+      return(NULL);
+   CLEAR_BIOMOL(biomolecule);
+
+   for(s=wpdb->header; s!=NULL; NEXT(s))
+   {
+      checkRemark300(biomolecule, s, &SkipStandardRemark);
+      checkRemark350(biomolecule, s); 
+   }
+
+   return(biomolecule);
+}
+
+/************************************************************************/
+/* TODO
+ */
+void FreeBiomolecule(void)
+{
+   
+}
+
 
 
 
@@ -933,8 +1216,10 @@ int main(int argc, char **argv)
    int      nChains,
             i;
    PDBSOURCE species;
+   BIOMOLECULE *bm = NULL;
+   STRINGLIST  *s;
    
-   if((in=fopen("test.pdb", "r"))!=NULL)
+   if((in=fopen(argv[1], "r"))!=NULL)
    {
       if((wpdb = ReadWholePDB(in))!=NULL)
       {
@@ -951,6 +1236,40 @@ int main(int argc, char **argv)
          if((title = blGetTitleWholePDB(wpdb))!=NULL)
          {
             printf("Title:    '%s'\n", title);
+         }
+
+         if((bm = blGetBiomoleculeWholePDB(wpdb))!=NULL)
+         {
+            printf("Number of Biomolecules: %d\n", bm->numBiomolecules);
+            for(s=bm->details; s!=NULL; NEXT(s))
+            {
+               printf("REMARK 300 Details: %s\n", s->string);
+            }
+
+            for(; bm!=NULL; NEXT(bm))
+            {
+               BIOMT *bmt;
+               
+               printf("Biomolecule: %d\n", bm->biomolNumber);
+               printf("   Author Unit:   %s\n", bm->authorUnit);
+               printf("   Software Unit: %s\n", bm->softwareUnit);
+               printf("   Chains:        %s\n", (bm->chains?bm->chains:""));
+
+               for(bmt=bm->biomt; bmt!=NULL; NEXT(bmt))
+               {
+                  int i;
+                  
+                  printf("   Matrix %d\n", bmt->biomtNum);
+                  for(i=0; i<3; i++)
+                  {
+                     printf("      %8.6f %8.6f %8.6f   %8.6f\n",
+                            bmt->rotMatrix[i][0],
+                            bmt->rotMatrix[i][1],
+                            bmt->rotMatrix[i][2],
+                            bmt->transMatrix[i]);
+                  }
+               }
+            }
          }
 
          chainLabels = blGetPDBChainLabels(wpdb->pdb, &nChains);

@@ -3,8 +3,8 @@
 
    \file       strcatalloc.c
    
-   \version    V1.2
-   \date       07.07.14
+   \version    V1.3
+   \date       26.06.15
    
    \copyright  (c) Dr. Andrew C. R. Martin, University of Reading, 2002-14
    \author     Dr. Andrew C. R. Martin
@@ -48,6 +48,7 @@
 -  V1.0  22.05.99 Original   By: ACRM
 -  V1.1  11.07.00 Check that realloc succeeded
 -  V1.2  07.07.14 Use bl prefix for functions By: CTP
+-  V1.3  26.06.15 Corrected checks on input strings being NULL  By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -84,8 +85,8 @@
 
    \param[in]     *instr    String to append to
    \param[in]     *catstr   String to append
-   \return                      realloc'd version of instr with catstr
-                              appended
+   \return                  realloc'd version of instr with catstr
+                            appended
 
    Like strcat() but uses a realloc() on instr to make space available.
 
@@ -94,6 +95,7 @@
 -  25.08.99 Fixed bug where testing for NULL outstr instead of catstr
 -  11.07.00 Check that realloc succeeded
 -  07.07.14 Use bl prefix for functions By: CTP
+-  26.06.15 Corrected checks on instr and catstr being null  By: ACRM
 */
 char *blStrcatalloc(char *instr, char *catstr)
 {
@@ -101,12 +103,18 @@ char *blStrcatalloc(char *instr, char *catstr)
    char *outstr = NULL;
    
    totLen = ((instr==NULL)  ? 0 : strlen(instr)) + 
-      ((catstr==NULL) ? 0 : strlen(catstr));
+            ((catstr==NULL) ? 0 : strlen(catstr));
    if((outstr = realloc(instr, totLen+1))!=NULL)
    {
+      /* If the input string was NULL, outstr will have been allocated
+         using the equivalent of malloc() so must be initialized before
+         concatenating
+      */
       if(instr==NULL)
          outstr[0] = '\0';
-      strcat(outstr, catstr);
+      /* If the additional string was non-NULL then add it on           */
+      if(catstr!=NULL)
+         strcat(outstr, catstr);
    }
    
    return(outstr);
