@@ -3,7 +3,7 @@
 
    \file       ReadPDB.c
    
-   \version    V3.9
+   \version    V3.10
    \date       25.06.15
    \brief      Read coordinates from a PDB file 
    
@@ -230,6 +230,8 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                   leaks. Tidied up comments and formatting. Renamed all
                   static functions so they don't start with bl. Added
                   checks for failed XML extractions.
+-  V3.10 25.06.15 Fixed bug for pdbml parsing where residue number is set
+                  to 0.  By: CTP
 
 *************************************************************************/
 /* Doxygen
@@ -1601,6 +1603,8 @@ pointer\n");
             Added CONECT and header parsing.
             Return WHOLEPDB instead of PDB.  By: CTP
 -  14.06.15 Read entity_id  By: CTP
+-  25.06.15 Detect if residue number has been set from auth_seq_id using 
+            flag - fixes bug where auth_seq_id = 0.  By: CTP
 
 */
 WHOLEPDB *blDoReadPDBML(FILE *fpin,
@@ -1640,6 +1644,7 @@ WHOLEPDB *blDoReadPDBML(FILE *fpin,
    char    store_atnam[8] = "",
            pad_resnam[8]  = "";
 
+   BOOL    auth_seq_id_set = FALSE;
 
    /* Allocate wpdb                                                     */
    if((wpdb=(WHOLEPDB *)malloc(sizeof(WHOLEPDB)))==NULL)
@@ -1737,6 +1742,7 @@ WHOLEPDB *blDoReadPDBML(FILE *fpin,
          strcpy(curr_pdb->insert, " ");
          strcpy(curr_pdb->element, "");
          strcpy(curr_pdb->segid,   "");
+         auth_seq_id_set = FALSE;          /* author residue number set */
 
          /* Scan atom node children                                     */
          for(n=atom_node->children; n!=NULL; NEXT(n))
@@ -1790,6 +1796,7 @@ WHOLEPDB *blDoReadPDBML(FILE *fpin,
             {
                sscanf((char *)content, "%lf", &content_lf);
                curr_pdb->resnum = (REAL)content_lf;
+               auth_seq_id_set = TRUE;
             }
             else if(!strcmp((char *)n->name, "pdbx_PDB_ins_code"))
             {
@@ -1862,7 +1869,7 @@ WHOLEPDB *blDoReadPDBML(FILE *fpin,
             }
             else if(!strcmp((char *)n->name, "label_seq_id"))
             {
-               if((curr_pdb->resnum == 0) && 
+               if((auth_seq_id_set == FALSE) && 
                   (strlen((char *)content) > 0))
                {
                   content_lf = (REAL)0.0;  /* 25.02.15                  */
