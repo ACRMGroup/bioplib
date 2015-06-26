@@ -3,12 +3,12 @@
 
    \file       macros.h
    
-   \version    V2.22
-   \date       25.02.15
+   \version    V2.23
+   \date       26.06.15
    \brief      Useful macros
    
-   \copyright  SciTech Software 1991-2015
-   \author     Andrew C. R. Martin
+   \copyright  (c) Dr. Andrew C.R. Martin / UCL 1991-2015
+   \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
                University College London,
@@ -96,6 +96,7 @@
                   blPadterm() By: CTP
 -  V2.21 24.07.14 Initialize list pointers for DELETE macro. By: CTP
 -  V2.22 25.02.15 LAST() is now safe if the pointer is NULL
+-  V2.23 26.06.15 Added STRNCPYNOSPACES(out, in, mx)
 
 *************************************************************************/
 /* Doxygen
@@ -106,7 +107,8 @@
    #FUNCTION INIT(x,y)
    Macro: Initialise list of name x and type y. Set x->next to NULL
    #FUNCTION INITPREV(x,y)        
-   Macro: Initialise list of name x and type y. Set x->next and x->prev to NULL
+   Macro: Initialise list of name x and type y. 
+          Set x->next and x->prev to NULL
    #FUNCTION NEXT(x)              
    Macro: Step on in linked list
    #FUNCTION PREV(x)              
@@ -162,6 +164,8 @@
    Macro: Replace ' ' with '.' in string
    #FUNCTION DEDOTIFY(str)        
    Macro: Replace '.' with ' ' in string
+   #FUNCTION STRNCPYNOSPACES(out, in, maxlen)
+   Macro: Like strncpy() but skips spaces
 
    #SUBGROUP Maths
    #FUNCTION MAX(x,y)             
@@ -510,7 +514,17 @@ do {  char *_subschar_macro_ch = (s);                                    \
    }  }  while(0)
 
 
-
+/************************************************************************/
+#define STRNCPYNOSPACES(out, in, mx)                                     \
+do {  char *_chp;                                                      \
+      int _pos = 0;                                                    \
+      for(_chp=(in); *_chp != '\0'; _chp++)                            \
+      {  if(*_chp != ' ')                                              \
+         {   buffer[_pos++] = *_chp;                                   \
+            if(_pos >= (mx)) break;                                    \
+      }  }                                                             \
+      if(_pos < (mx)) buffer[_pos] = '\0';                             \
+   } while(0)
 
 
 /* Bit-wise operators

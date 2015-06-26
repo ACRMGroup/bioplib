@@ -3,12 +3,12 @@
 
    \file       PDBHeaderInfo.c
    
-   \version    V1.4
-   \date       11.06.15
+   \version    V1.5
+   \date       26.06.15
 
    \brief      Get misc header info from PDB header
    
-   \copyright  (c) UCL / Dr. Andrew C.R. Martin, 2015
+   \copyright  (c) Dr. Andrew C.R. Martin / UCL, 2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -143,8 +143,8 @@
 /************************************************************************/
 /* Prototypes
 */
-static void checkRemark300(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule);
-static void checkRemark350(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule);
+static BIOMOLECULE *doRemark300(WHOLEPDB *wpdb);
+static BIOMOLECULE *doRemark350(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule);
 
 /************************************************************************/
 /*>BOOL blGetHeaderWholePDB(WHOLEPDB *wpdb, 
@@ -303,7 +303,7 @@ static STRINGLIST *FindNextMolIDRecord(STRINGLIST *start, char *type)
 
    Returns FALSE if field not found.
 
-   28.04.15  Original   By: ACRM
+-  28.04.15  Original   By: ACRM
 */
 static BOOL ExtractField(STRINGLIST *molidStart, STRINGLIST *molidStop,
                          char *data, char *type, char *field)
@@ -377,10 +377,10 @@ static BOOL ExtractField(STRINGLIST *molidStart, STRINGLIST *molidStop,
    Extracts the COMPND data for a specified chain. Returns FALSE if the
    chain isn't found
 
-   28.04.15 Original   By: ACRM
-   04.06.15  Modified to use the ExtractField() routine instead of
-             duplicating code here. Fixes a bug in dealing with compounds
-             where the referenced chains span more than one line
+-  28.04.15 Original   By: ACRM
+-  04.06.15 Modified to use the ExtractField() routine instead of
+            duplicating code here. Fixes a bug in dealing with compounds
+            where the referenced chains span more than one line
 */
 BOOL blGetCompoundWholePDBChain(WHOLEPDB *wpdb, char *chain, 
                                 COMPND *compnd)
@@ -462,8 +462,8 @@ BOOL blGetCompoundWholePDBChain(WHOLEPDB *wpdb, char *chain,
 
    Finds the MOL_ID for a specified chain
 
-   28.04.15  Original   By: ACRM
-   04.06.15  Modified to use the ExtractField() routine instead of
+-  28.04.15  Original   By: ACRM
+-  04.06.15  Modified to use the ExtractField() routine instead of
              duplicating code here. Fixes a bug in dealing with compounds
              where the referenced chains span more than one line
 */
@@ -484,7 +484,7 @@ int blFindMolID(WHOLEPDB *wpdb, char *chain)
       molidStop  = FindNextMolIDRecord(molidStart, "COMPND");
       ExtractField(molidStart, molidStop, buffer, "COMPND", "CHAIN:");
       
-      /* Check the chains to see if our chain is there            */
+      /* Check the chains to see if our chain is there                  */
       chp = buffer;
       
       do {
@@ -504,6 +504,7 @@ int blFindMolID(WHOLEPDB *wpdb, char *chain)
    return(0);
 }
 
+
 /************************************************************************/
 /*>BOOL blGetSpeciesWholePDBChain(WHOLEPDB *wpdb, char *chain,
                                   PDBSOURCE *source)
@@ -515,6 +516,9 @@ int blFindMolID(WHOLEPDB *wpdb, char *chain)
    \return                Success (chain found?)
 
    Extracts the SOURCE data for a specified chain
+
+-  26.03.15  Original   By: ACRM
+-  13.05.15  Fixes...
 */
 BOOL blGetSpeciesWholePDBChain(WHOLEPDB *wpdb, char *chain,
                                PDBSOURCE *source)
@@ -543,20 +547,20 @@ BOOL blGetSpeciesWholePDBChain(WHOLEPDB *wpdb, char *chain,
          char buffer[MAXPDBANNOTATION];
          int  thisMolid = 0;
 
-         ExtractField(molidStart, molidStop,
-                      buffer,             "SOURCE", "MOL_ID:");
+         ExtractField(molidStart, molidStop, buffer,
+                      "SOURCE", "MOL_ID:");
          sscanf(buffer,"%d", &thisMolid);
 
          if(thisMolid == molid)
          {
-            ExtractField(molidStart, molidStop,
-                         source->scientificName, "SOURCE","ORGANISM_SCIENTIFIC:");
-            ExtractField(molidStart, molidStop,
-                         source->commonName,     "SOURCE", "ORGANISM_COMMON:");
-            ExtractField(molidStart, molidStop,
-                         source->strain,         "SOURCE", "STRAIN:");
-            ExtractField(molidStart, molidStop,
-                         buffer,                 "SOURCE", "ORGANISM_TAXID:");
+            ExtractField(molidStart, molidStop, source->scientificName, 
+                         "SOURCE", "ORGANISM_SCIENTIFIC:");
+            ExtractField(molidStart, molidStop, source->commonName,
+                         "SOURCE", "ORGANISM_COMMON:");
+            ExtractField(molidStart, molidStop, source->strain,
+                         "SOURCE", "STRAIN:");
+            ExtractField(molidStart, molidStop, buffer,
+                         "SOURCE", "ORGANISM_TAXID:");
             sscanf(buffer,"%d",&source->taxid);
             return(TRUE);
          }
@@ -565,6 +569,7 @@ BOOL blGetSpeciesWholePDBChain(WHOLEPDB *wpdb, char *chain,
 
    return(FALSE);
 }
+
 
 /************************************************************************/
 /*>BOOL blGetCompoundWholePDBMolID(WHOLEPDB *wpdb, int molid, 
@@ -658,27 +663,27 @@ BOOL blGetCompoundWholePDBMolID(WHOLEPDB *wpdb, int molid,
    Extracts the SOURCE data for a specified MOL_ID. Returns FALSE if not 
    found.
    
-   12.05.15 Original based on blGetSpeciesWholePDBChain().  By: CTP
+-  12.05.15 Original based on blGetSpeciesWholePDBChain().  By: CTP
 */
 BOOL blGetSpeciesWholePDBMolID(WHOLEPDB *wpdb, int molid,
-                                PDBSOURCE *source)
+                               PDBSOURCE *source)
 {
    STRINGLIST *s,
               *molidFirst = NULL,
               *molidStart = NULL,
               *molidStop  = NULL;
 
-   /* reset source */
+   /* reset source                                                      */
    source->scientificName[0] = '\0';
    source->commonName[0]     = '\0';
    source->strain[0]         = '\0';
    source->taxid             = 0;
 
-   /* find start of source records */
+   /* find start of source records                                      */
    molidFirst = FindNextMolIDRecord(wpdb->header, "SOURCE");
 
 
-   /* get source record */
+   /* get source record                                                 */
    for(molidStart=molidFirst; molidStart!=NULL; molidStart=molidStop)
    {
       molidStop  = FindNextMolIDRecord(molidStart, "SOURCE");
@@ -687,20 +692,20 @@ BOOL blGetSpeciesWholePDBMolID(WHOLEPDB *wpdb, int molid,
          char buffer[MAXPDBANNOTATION];
          int  thisMolid = 0;
 
-         ExtractField(molidStart, molidStop,
-                      buffer,             "SOURCE", "MOL_ID:");
+         ExtractField(molidStart, molidStop, buffer,
+                      "SOURCE", "MOL_ID:");
          sscanf(buffer,"%d", &thisMolid);
 
          if(thisMolid == molid)
          {
-            ExtractField(molidStart, molidStop,
-                         source->scientificName, "SOURCE","ORGANISM_SCIENTIFIC:");
-            ExtractField(molidStart, molidStop,
-                         source->commonName,     "SOURCE", "ORGANISM_COMMON:");
-            ExtractField(molidStart, molidStop,
-                         source->strain,         "SOURCE", "STRAIN:");
-            ExtractField(molidStart, molidStop,
-                         buffer,                 "SOURCE", "ORGANISM_TAXID:");
+            ExtractField(molidStart, molidStop, source->scientificName, 
+                         "SOURCE","ORGANISM_SCIENTIFIC:");
+            ExtractField(molidStart, molidStop, source->commonName,
+                         "SOURCE", "ORGANISM_COMMON:");
+            ExtractField(molidStart, molidStop, source->strain,
+                         "SOURCE", "STRAIN:");
+            ExtractField(molidStart, molidStop, buffer,
+                         "SOURCE", "ORGANISM_TAXID:");
             sscanf(buffer,"%d",&source->taxid);
             return(TRUE);
          }
@@ -936,27 +941,28 @@ void blFindOriginalResType(char *modAA, char *stdAA, MODRES *modres)
 }
 
 /************************************************************************/
-/*>static void checkRemark300(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule)
-   -------------------------------------------------------------------
+/*>static BIOMOLECULE *doRemark300(WHOLEPDB *wpdb)
+   -----------------------------------------------
 *//**
-   \param[in,out] *biomolecule        Pointer to a BIOMOLECULE structure
-                                      that we populate
-   \param[in]     *s                  The current header line
+   \param[in] *wpdb        WHOLEPDB linked list
+   \return                 Pointer to a BIOMOLECULE structure that we
+                           have populated
 
-   Checks header lines to see if they are REMARK 300 and, if so, extracts
-   the maximum number of biomolecules and any 'details' comments that
-   appear after the standard REMARK 300 comments
+   Identifies REMARK 300 header lines and extracts the maximum number
+   of biomolecules and any 'details' comments that appear after the
+   standard REMARK 300 comments
 
-   biomolecule is a linked list that only has one item for REMARK 300.
-   The 'details' that this code finds are just placed in the initial
-   entry of the linked list.
+   Returns a BIOMOLECULE linked list that only has one item for REMARK
+   300.  The 'details' that this code finds are just placed in the
+   initial entry of the linked list.
 
 -  26.06.15  Original   By: ACRM
 */
-static void checkRemark300(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule)
+static BIOMOLECULE *doRemark300(WHOLEPDB *wpdb)
 {
-   STRINGLIST *s;
-   int SkipStandardRemark = 0;
+   BIOMOLECULE *biomolecule = NULL;
+   STRINGLIST  *s;
+   int         SkipStandardRemark = 0;
    
    for(s=wpdb->header; s!=NULL; NEXT(s))
    {
@@ -965,16 +971,25 @@ static void checkRemark300(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule)
          if(!strncmp(s->string, "REMARK 300 BIOMOLECULE:", 23))
          {
             char buffer[80],
-               *chp;
+                *chp;
+
+            /* Allocate space for the BIOMOLECULE structure             */
+            if(biomolecule == NULL)
+            {
+               INIT(biomolecule, BIOMOLECULE);
+               if(biomolecule == NULL)
+                  return(NULL);
+               CLEAR_BIOMOL(biomolecule);
+            }
             
             SkipStandardRemark = 1;
             
-            /* Copy the actual data and remove trailing spaces             */
+            /* Copy the actual data and remove trailing spaces          */
             strncpy(buffer, s->string+24, 80);
             TERMINATE(buffer);
             KILLTRAILSPACES(buffer);
             
-            /* Now move to the last space                                  */
+            /* Now move to the last space                               */
             if((chp = strrchr(buffer, ' '))==NULL)
             {
                chp = buffer;
@@ -1005,96 +1020,125 @@ static void checkRemark300(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule)
          }
       }
    }
+
+   return(biomolecule);
 }
 
 
 /************************************************************************/
-/*>static void checkRemark350(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule)
-   --------------------------------------------------------------------
+/*>static BIOMOLECULE *doRemark350(WHOLEPDB *wpdb, 
+                                   BIOMOLECULE *biomolecule)
+   ---------------------------------------------------------
 *//**
-   \param[in,out]  *biomolecule  Pointer to the BIOMOLECULE structure that
-                                 we are populating
-   \param[in]      *s            The current header record
+   \param[in] *wpdb        WHOLEPDB linked list
+   \param[in] *biomolecule Pointer to a BIOMOLECULE linked list.
+                           (Can be NULL)
+   \return                 Pointer to a BIOMOLECULE structure that we
+                           have populated
 
-   Checks a header line for REMARK 350. If more than one biomolecule is
-   found, the biomolecule linked list is extended for each new one. Only
-   the first one in the list will have the REMARK 300 details and the 
-   number of biomolecules.
+   Parses the REMARK 350 header lines. If more than one biomolecule is
+   found, the biomolecule linked list is extended for each new one.
 
    This routine stores the author and software determined assembly size
    and the list of chains associated with a given biomolecule. It also
    contains a linked list of BIOMT structures which have the 
    transformation matrices needed to recreate the biomolecule.
 
+   Note that the BIOMOLECULE.details and BIOMOLECULE.numBiomolecules
+   will only be populated for the first item in the list (and by
+   doRemark300() not by this routine).
+
 -  26.06.15  Original   By: ACRM
 */
-static void checkRemark350(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule)
+static BIOMOLECULE *doRemark350(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule)
 {
-   BIOMOLECULE *bm         = NULL;
+   BIOMOLECULE *bm         = NULL;  /* The current biomolecule          */
    BIOMT       *biomt      = NULL;
-   static BOOL firstRecord = TRUE;
+   BOOL        firstRecord = TRUE;
    STRINGLIST  *s;
    
-   bm=biomolecule;
-   LAST(bm);
-
+   if(biomolecule != NULL)
+      bm=biomolecule;
+   
    for(s=wpdb->header; s!=NULL; NEXT(s))
    {
       if(!strncmp(s->string, "REMARK 350", 10))
       {
-         if(!strncmp(s->string, "REMARK 350 BIOMOLECULE:", 23))
+         /* Allocate space for the BIOMOLECULE structure. Should have been
+            allocated by REMARK 300 code, but this is in case REMARK 300
+            is missing
+         */
+         if(biomolecule == NULL)
+         {
+            INIT(biomolecule, BIOMOLECULE);
+            if(biomolecule == NULL)
+               return(NULL);
+            CLEAR_BIOMOL(biomolecule);
+            bm = biomolecule;
+         }
+
+         if(!strncmp(s->string, 
+                     "REMARK 350 BIOMOLECULE:", 23))
          {
             if(!firstRecord)
             {
-               /* Allocate space for new biomolecule                          */
+               /* Allocate space for new biomolecule                    */
                ALLOCNEXT(bm, BIOMOLECULE);
                if(bm == NULL)
-                  return;
+               {
+                  blFreeBiomolecule(biomolecule);
+                  return(NULL);
+               }
+               
                CLEAR_BIOMOL(bm);
             }
             sscanf(s->string+23, "%d", &(bm->biomolNumber));
             
             firstRecord = FALSE;
          }
-         else if(!strncmp(s->string, "REMARK 350 AUTHOR DETERMINED", 28))
+         else if(!strncmp(s->string, 
+                          "REMARK 350 AUTHOR DETERMINED", 28))
          {
             strncpy(bm->authorUnit, s->string+46, 40);
             TERMINATE(bm->authorUnit);
             KILLTRAILSPACES(bm->authorUnit);
          }
-         else if(!strncmp(s->string, "REMARK 350 SOFTWARE DETERMINED", 30))
+         else if(!strncmp(s->string, 
+                          "REMARK 350 SOFTWARE DETERMINED", 30))
          {
             strncpy(bm->softwareUnit, s->string+53, 40);
             TERMINATE(bm->softwareUnit);
             KILLTRAILSPACES(bm->softwareUnit);
          }
          else if(!strncmp(s->string, 
-                          "REMARK 350 APPLY THE FOLLOWING TO CHAINS:", 41) ||
-                 !strncmp(s->string, 
-                          "REMARK 350                    AND CHAINS:", 41))
+                          "REMARK 350 APPLY THE FOLLOWING TO CHAINS:",41))
          {
-            char buffer[80],
-               *chp;
-            int  pos;
+            char buffer[80];
             
-            for(chp=s->string+42, pos=0; 
-                ((*chp!='\n') && (*chp!='\0'));
-                chp++)
-            {
-               if(*chp != ' ')
-               {
-                  buffer[pos++] = *chp;
-               }
-            }
-            buffer[pos] = '\0';
+            /* Copy the chain information skipping any spaces           */
+            STRNCPYNOSPACES(buffer, (s->string+42), 80);
+            TERMINATE(buffer);
             
-            /* Remove any chain information already stored                 */
+            /* Remove any chain information already stored              */
             if(bm->chains != NULL)
             {
                free(bm->chains);
                bm->chains = NULL;
             }
             
+            /* Append the chain info                                    */
+            bm->chains = blStrcatalloc(bm->chains, buffer);
+         }
+         else if(!strncmp(s->string, 
+                          "REMARK 350                    AND CHAINS:",41))
+         {
+            char buffer[80];
+            
+            /* Copy the chain information skipping any spaces           */
+            STRNCPYNOSPACES(buffer, (s->string+42), 80);
+            TERMINATE(buffer);
+            
+            /* Append the chain info                                    */
             bm->chains = blStrcatalloc(bm->chains, buffer);
          }
          else if(!strncmp(s->string, "REMARK 350   BIOMT", 18))
@@ -1109,7 +1153,7 @@ static void checkRemark350(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule)
             if(sscanf(buffer, "%d %d %lf %lf %lf %lf",
                       &line, &entry, &val[0], &val[1], &val[2], &val[3]))
             {
-               /* Nothing defined yet so create entry and set entry number */
+               /* Nothing defined yet so create entry & set entry number*/
                if(bm->biomt == NULL)
                {
                   INIT(bm->biomt, BIOMT);
@@ -1117,19 +1161,14 @@ static void checkRemark350(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule)
                   if(biomt!=NULL)
                      biomt->biomtNum = entry;
                }
-               else /* We already have something so go to end of list      */
-               {
-                  biomt = bm->biomt;
-                  LAST(biomt);
-               }
-               
+
                /* If this entry is a different entry number, allocate a 
                   new item
                */
                if(entry != biomt->biomtNum)
                   ALLOCNEXT(biomt, BIOMT);
                
-               /* Copy in the data                                         */
+               /* Copy in the data                                      */
                if(biomt != NULL)
                {
                   int i;
@@ -1143,6 +1182,8 @@ static void checkRemark350(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule)
          }
       }
    }
+
+   return(biomolecule);
 }
 
 
@@ -1175,21 +1216,14 @@ static void checkRemark350(WHOLEPDB *wpdb, BIOMOLECULE *biomolecule)
 
    See the test code in PDBHeaderInfo.c for example usage.
 
-TODO - return NULL if no data found!
-
 -  26.06.15  Original   By: ACRM
 */
 BIOMOLECULE *blGetBiomoleculeWholePDB(WHOLEPDB *wpdb)
 {
    BIOMOLECULE *biomolecule = NULL;
-   
-   INIT(biomolecule, BIOMOLECULE);
-   if(biomolecule == NULL)
-      return(NULL);
-   CLEAR_BIOMOL(biomolecule);
 
-   checkRemark300(wpdb, biomolecule);
-   checkRemark350(wpdb, biomolecule); 
+   biomolecule = doRemark300(wpdb);
+   biomolecule = doRemark350(wpdb, biomolecule); 
 
    return(biomolecule);
 }
@@ -1250,7 +1284,7 @@ int main(int argc, char **argv)
    
    if((in=fopen(argv[1], "r"))!=NULL)
    {
-      if((wpdb = ReadWholePDB(in))!=NULL)
+      if((wpdb = blReadWholePDB(in))!=NULL)
       {
          if(blGetHeaderWholePDB(wpdb, 
                                 header, 80,
@@ -1269,7 +1303,8 @@ int main(int argc, char **argv)
 
          if((biomolecule = blGetBiomoleculeWholePDB(wpdb))!=NULL)
          {
-            printf("Number of Biomolecules: %d\n", biomolecule->numBiomolecules);
+            printf("Number of Biomolecules: %d\n", 
+                   biomolecule->numBiomolecules);
             for(s=biomolecule->details; s!=NULL; NEXT(s))
             {
                printf("REMARK 300 Details: %s\n", s->string);
@@ -1282,7 +1317,8 @@ int main(int argc, char **argv)
                printf("Biomolecule: %d\n", bm->biomolNumber);
                printf("   Author Unit:   %s\n", bm->authorUnit);
                printf("   Software Unit: %s\n", bm->softwareUnit);
-               printf("   Chains:        %s\n", (bm->chains?bm->chains:""));
+               printf("   Chains:        %s\n", 
+                      (bm->chains?bm->chains:""));
 
                for(bmt=bm->biomt; bmt!=NULL; NEXT(bmt))
                {

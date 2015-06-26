@@ -201,8 +201,8 @@
                   By: CTP
 -  V1.86 23.06.15 Added blAreResiduesBonded() and 
                   blAreResiduePointersBonded()
--  V1.87 26.06.15 Added blGetBiomoleculeWholePDB() and associated 
-                  structures
+-  V1.87 26.06.15 Added blGetBiomoleculeWholePDB(), blFreeBiomolecule()
+                  and associated structures
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -731,6 +731,7 @@ char *blGetSeqresAsStringWholePDB(WHOLEPDB *wpdb, char **chains,
 MODRES *blGetModresWholePDB(WHOLEPDB *wpdb);
 void blFindOriginalResType(char *orig, char *new, MODRES *modres);
 BIOMOLECULE *blGetBiomoleculeWholePDB(WHOLEPDB *wpdb);
+void blFreeBiomolecule(BIOMOLECULE *biomolecule);
 
 
 /************************************************************************/
