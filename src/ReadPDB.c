@@ -3,8 +3,8 @@
 
    \file       ReadPDB.c
    
-   \version    V3.10
-   \date       25.06.15
+   \version    V3.11
+   \date       01.07.15
    \brief      Read coordinates from a PDB file 
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2015
@@ -232,6 +232,11 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                   checks for failed XML extractions.
 -  V3.10 25.06.15 Fixed bug for pdbml parsing where residue number is set
                   to 0.  By: CTP
+-  £3.11 01.07.15 Added ParseHeaderRecordsPDBML(). 
+                  ParseHeaderPDBML() broken into smaller functions: 
+                  ParseTitlePDBML(), ParseCompndPDBML(), 
+                  ParseSourcePDBML(), ParseResolPDBML(), 
+                  ParseSeqresPDBML() and ParseModresPDBML().  By: CTP
 
 *************************************************************************/
 /* Doxygen
@@ -354,7 +359,14 @@ static void ProcessChargeField(int *charge, char *charge_field);
 static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer);
 #ifdef XML_SUPPORT
 static BOOL SetPDBDateField(char *pdb_date, char *pdbml_date);
-static STRINGLIST *ParseHeaderPDBML(xmlDoc  *document, PDB *pdb);
+static void ParseHeaderRecordsPDBML(WHOLEPDB *wpdb, xmlDoc *document);
+static STRINGLIST *ParseHeaderPDBML(xmlDoc *document);
+static STRINGLIST *ParseTitlePDBML(xmlDoc *document);
+static STRINGLIST *ParseCompndPDBML(xmlDoc *document, PDB *pdb);
+static STRINGLIST *ParseSourcePDBML(xmlDoc *document);
+static STRINGLIST *ParseResolPDBML(xmlDoc *document);
+static STRINGLIST *ParseSeqresPDBML(xmlDoc *document);
+static STRINGLIST *ParseModresPDBML(xmlDoc *document);
 static int ParseConectPDBML(xmlDoc *document, PDB *pdb);
 static STRINGLIST *TitleStringlist(char *titlestring);
 static STRINGLIST *CompndStringlist(STRINGLIST *stringlist, 
@@ -1605,7 +1617,8 @@ pointer\n");
 -  14.06.15 Read entity_id  By: CTP
 -  25.06.15 Detect if residue number has been set from auth_seq_id using 
             flag - fixes bug where auth_seq_id = 0.  By: CTP
-
+-  01.07.15 Replaced ParseHeaderPDBML() with ParseHeaderRecordsPDBML()
+            By: CTP
 */
 WHOLEPDB *blDoReadPDBML(FILE *fpin,
                         BOOL AllAtoms,
@@ -2102,7 +2115,7 @@ WHOLEPDB *blDoReadPDBML(FILE *fpin,
       ParseConectPDBML(document, wpdb->pdb);
    
       /* Parse Header Data                                              */
-      wpdb->header = ParseHeaderPDBML(document, wpdb->pdb);
+      ParseHeaderRecordsPDBML(wpdb, document);
    }
 
 
@@ -2467,14 +2480,82 @@ static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer)
 
 #ifdef XML_SUPPORT
 /************************************************************************/
-/*>static STRINGLIST *ParseHeaderPDBML(FILE *fpin)
-   -----------------------------------------------
+/*>static void ParseHeaderRecordsPDBML(WHOLEPDB *wpdb, xmlDoc *document)
+   ---------------------------------------------------------------------
+*//**
+
+   \param[in,out] *wpdb       WHOLEPDB being parsed.
+   \param[in]     *document   XML document
+
+   Parses PDBML header data and creates PDB-formatted header records.
+
+-  01.07.15 Original. By: CTP
+
+*/
+static void ParseHeaderRecordsPDBML(WHOLEPDB *wpdb, xmlDoc *document)
+{
+#ifndef XML_SUPPORT
+
+   /* PDBML format not supported.                                       */
+   return NULL;
+
+#else
+
+   /* Parse PDBML header                                                */
+   STRINGLIST *wpdb_header  = NULL,
+              *title_lines  = NULL,
+              *compnd_lines = NULL,
+              *source_lines = NULL,
+              *seqres_lines = NULL,
+              *modres_lines = NULL,
+              *resol_lines  = NULL,
+              *last         = NULL;
+
+   /* Return if wpdb or document not set                                */
+   if(wpdb == NULL || document == NULL)
+   {
+      return;
+   }
+
+   /* Get header records                                                */
+   wpdb_header  = ParseHeaderPDBML(document);
+   title_lines  = ParseTitlePDBML(document);
+   compnd_lines = ParseCompndPDBML(document, wpdb->pdb);
+   source_lines = ParseSourcePDBML(document); 
+   resol_lines  = ParseResolPDBML(document); 
+   seqres_lines = ParseSeqresPDBML(document);
+   modres_lines = ParseModresPDBML(document);
+
+   /* Append header records                                             */
+   last = wpdb_header;
+   APPEND_STRINGLIST(last, title_lines);
+   APPEND_STRINGLIST(last, compnd_lines);
+   APPEND_STRINGLIST(last, source_lines);
+   APPEND_STRINGLIST(last, resol_lines);
+   APPEND_STRINGLIST(last, seqres_lines);
+   APPEND_STRINGLIST(last, modres_lines);
+   
+   /* Set wpdb->header stringlist                                       */
+   if(wpdb->header != NULL)
+   {
+      FREELIST(wpdb->header, STRINGLIST);
+   }
+   wpdb->header = wpdb_header;
+   return;
+
+#endif
+}
+
+
+/************************************************************************/
+/*>static void ParseHeaderPDBML(xmlDoc *document, WHOLEPDB *wpdb)
+   --------------------------------------------------------------
 *//**
 
    \param[in]     *document   XML document
-   \return                    STRINGLIST with basic header information.
+   \return                    STRINGLIST with header record.
 
-   Parses PDBML header date and creates HEADER and TITLE lines.
+   Parses PDBML header data and creates PDB-formatted header record.
 
 -  22.04.14 Original. By: CTP
 -  07.07.14 Renamed to ParseHeaderPDBML() By: CTP
@@ -2494,8 +2575,12 @@ static void StoreConectRecords(WHOLEPDB *wpdb, char *buffer)
             replaced all x=x->next with NEXT(x)
             Tidied comments and variable declarations
             Added APPEND_STRINGLIST() macro
+-  29.06.15 Function broken into smaller functions: 
+            ParseHeaderPDBML(), ParseTitlePDBML(), ParseCompndPDBML(), 
+            ParseSourcePDBML(), ParseResolPDBML(), ParseSeqresPDBML() 
+            and ParseModresPDBML().  By: CTP
 */
-static STRINGLIST *ParseHeaderPDBML(xmlDoc *document, PDB *pdb)
+static STRINGLIST *ParseHeaderPDBML(xmlDoc *document)
 {
 #ifndef XML_SUPPORT
 
@@ -2510,51 +2595,11 @@ static STRINGLIST *ParseHeaderPDBML(xmlDoc *document, PDB *pdb)
               *subnode   = NULL,
               *n         = NULL;
    xmlChar    *content, *attribute;
-   double     content_lf = 0.0;
-   REAL       resolution = (-1.0),
-              RFree      = (-1.0),
-              RWork      = (-1.0);
-   STRINGLIST *wpdb_header  = NULL,
-              *title_lines  = NULL,
-              *compnd_lines = NULL,
-              *source_lines = NULL,
-              *seqres_lines = NULL,
-              *modres_lines = NULL,
-              *resol_lines  = NULL,
-              *last         = NULL;
+   STRINGLIST *header_lines = NULL;
    char       header_line[82]  = "",
               header_field[41] = "",
               pdb_field[5]     = "",
               date_field[10]   = "";
-   int        nlines              = 0,
-              source_lines_stored = 0;
-
-   /* compound and source                                               */
-   COMPND     compnd;
-   PDBSOURCE  source;
-   int        mol_id = 0,
-              nchains = 0,
-              i = 0;
-   char       **chains = NULL,
-              compnd_type[16] = "";
-
-   /* seqres                                                            */
-   STRINGLIST **residue_list = NULL;
-   char       curr_chain[8]  = "",
-              prev_chain[8]  = "",
-              resnam[8]      = "";
-              
-   /* modres                                                            */
-   char       modres_line[82]    =  "",
-              modres_resnam[8]   =  "",
-              modres_chain[8]    =  "",
-              modres_insert[2]   = " ",
-              modres_stdnam[8]   =  "",
-              modres_comment[42] =  "";
-   int        modres_seqnum      =   0;
-
-   /* Resolution and R-factor                                           */
-   char       resol_line[82]     = "";
 
    /* Parse Document Tree                                               */
    root_node = xmlDocGetRootElement(document);
@@ -2612,6 +2657,62 @@ static STRINGLIST *ParseHeaderPDBML(xmlDoc *document, PDB *pdb)
             }
          }
       }
+   }  /* Loop the XML nodes                                             */
+
+
+   /* Create Header Line                                                */
+   if(!strlen(header_field))
+   {
+      strcpy(header_field,"Converted from PDBML");
+   }
+   sprintf(header_line, "HEADER    %-40s%9s   %4s              \n",
+           header_field, date_field, pdb_field);
+
+
+   /* Make Stringlist                                                   */
+   header_lines = blStoreString(header_lines, header_line);
+
+   /* Return Stringlist                                                 */
+   return(header_lines);
+
+#endif
+}
+
+
+/************************************************************************/
+/*>static STRINGLIST *ParseTitlePDBML(xmlDoc *document)
+   ----------------------------------------------------
+*//**
+
+   \param[in]     *document   XML document
+   \return                    STRINGLIST containing title record.
+
+   Parses PDBML header data and returns TITLE record.
+
+-  01.07.15 Original.  By: CTP
+*/
+static STRINGLIST *ParseTitlePDBML(xmlDoc *document)
+{
+#ifndef XML_SUPPORT
+
+   /* PDBML format not supported.                                       */
+   return NULL;
+
+#else
+
+   /* Parse PDBML header                                                */
+   xmlNode    *root_node = NULL, 
+              *node      = NULL,
+              *subnode   = NULL,
+              *n         = NULL;
+   xmlChar    *content;
+   STRINGLIST *title_lines  = NULL;
+
+   /* Parse Document Tree                                               */
+   root_node = xmlDocGetRootElement(document);
+   for(node = root_node->children; node; NEXT(node))
+   {
+      if(node->type != XML_ELEMENT_NODE){ continue; }
 
       /* get title                                                      */
       if(!strcmp("structCategory", (char *)node->name))
@@ -2630,6 +2731,61 @@ static STRINGLIST *ParseHeaderPDBML(xmlDoc *document, PDB *pdb)
             }
          }
       }
+
+   }  /* Loop the XML nodes                                             */
+
+   
+   /* Return Stringlist                                                 */
+   return(title_lines);
+
+#endif
+}
+
+
+/************************************************************************/
+/*>static STRINGLIST *ParseCompndPDBML(xmlDoc *document)
+   -----------------------------------------------------
+*//**
+
+   \param[in]     *document   XML document
+   \param[in]     *pdb        PDB list being parsed
+   \return                    STRINGLIST containing compound record.
+
+   Parses PDBML header data and returns COMPND record.
+
+-  01.07.15 Original.  By: CTP
+*/
+static STRINGLIST *ParseCompndPDBML(xmlDoc *document, PDB *pdb)
+{
+#ifndef XML_SUPPORT
+
+   /* PDBML format not supported.                                       */
+   return NULL;
+
+#else
+
+   /* Parse PDBML header                                                */
+   xmlNode    *root_node = NULL, 
+              *node      = NULL,
+              *subnode   = NULL,
+              *n         = NULL;
+   xmlChar    *content, *attribute;
+   STRINGLIST *compnd_lines = NULL;
+    int        nlines              = 0;
+
+   /* compound                                                          */
+   COMPND     compnd;
+   int        nchains = 0,
+              i = 0;
+   char       **chains = NULL,
+              compnd_type[16] = "";
+
+   /* Parse Document Tree                                               */
+   root_node = xmlDocGetRootElement(document);
+   for(node = root_node->children; node; NEXT(node))
+   {
+      if(node->type != XML_ELEMENT_NODE){ continue; }
+
 
       /* get compound                                                   */
       if(!strcmp("entityCategory", (char *)node->name))
@@ -2727,6 +2883,58 @@ static STRINGLIST *ParseHeaderPDBML(xmlDoc *document, PDB *pdb)
          } /* entity                                                    */
       }
 
+   }  /* Loop the XML nodes                                             */
+
+
+   /* Return Stringlist                                                 */
+   return(compnd_lines);
+
+#endif
+}
+
+
+/************************************************************************/
+/*>static STRINGLIST *ParseSourcePDBML(xmlDoc *document)
+   -----------------------------------------------------
+*//**
+
+   \param[in]     *document   XML document
+   \return                    STRINGLIST containing source record.
+
+   Parses PDBML header data and returns SOURCE record.
+
+-  01.07.15 Original.  By: CTP
+*/
+static STRINGLIST *ParseSourcePDBML(xmlDoc *document)
+{
+#ifndef XML_SUPPORT
+
+   /* PDBML format not supported.                                       */
+   return NULL;
+
+#else
+
+   /* Parse PDBML header                                                */
+   xmlNode    *root_node = NULL, 
+              *node      = NULL,
+              *subnode   = NULL,
+              *n         = NULL;
+   xmlChar    *content, *attribute;
+   double     content_lf = 0.0;
+   STRINGLIST *source_lines = NULL;
+   int        source_lines_stored = 0;
+
+   /* source                                                            */
+   PDBSOURCE  source;
+   int        mol_id = 0;
+
+   /* Parse Document Tree                                               */
+   root_node = xmlDocGetRootElement(document);
+   for(node = root_node->children; node; NEXT(node))
+   {
+      if(node->type != XML_ELEMENT_NODE){ continue; }
+
+
       /* get source                                                     */
       if(!strcmp("entity_src_genCategory", (char *)node->name) || 
          !strcmp("entity_src_natCategory", (char *)node->name))
@@ -2746,7 +2954,8 @@ static STRINGLIST *ParseHeaderPDBML(xmlDoc *document, PDB *pdb)
             source.taxid             =    0;
 
             /* mol id                                                   */
-            if((attribute = xmlGetProp(subnode, (xmlChar *)"entity_id"))!=NULL)
+            if((attribute = xmlGetProp(subnode, 
+                                       (xmlChar *)"entity_id"))!=NULL)
             {
                sscanf((char *)attribute, "%i", &mol_id);
                xmlFree(attribute);
@@ -2799,6 +3008,190 @@ static STRINGLIST *ParseHeaderPDBML(xmlDoc *document, PDB *pdb)
                                               &source);
          }
       }
+   }  /* Loop the XML nodes                                             */
+
+
+   /* Return Stringlist                                                 */
+   return(source_lines);
+
+#endif
+}
+
+
+
+/************************************************************************/
+/*>static STRINGLIST *ParseResolPDBML(xmlDoc *document)
+   ----------------------------------------------------
+*//**
+
+   \param[in]     *document   XML document
+   \return                    STRINGLIST containing pdb-formatted records.
+
+   Parses PDBML header data and returns experimental data (type, 
+   resolution, R and RFree) as PDB-formatted header records.
+
+-  01.07.15 Original based on ARCM's additions to ParseHeaderPDBML().
+            By: CTP
+*/
+static STRINGLIST *ParseResolPDBML(xmlDoc *document)
+{
+#ifndef XML_SUPPORT
+
+   /* PDBML format not supported.                                       */
+   return NULL;
+
+#else
+
+   /* Parse PDBML header                                                */
+   xmlNode    *root_node = NULL, 
+              *node      = NULL,
+              *subnode   = NULL,
+              *n         = NULL;
+   xmlChar    *content, *attribute;
+   REAL       resolution = (-1.0),
+              RFree      = (-1.0),
+              RWork      = (-1.0);
+   STRINGLIST *resol_lines  = NULL;
+
+   /* Resolution and R-factor                                           */
+   char       resol_line[82]     = "";
+
+   /* Parse Document Tree                                               */
+   root_node = xmlDocGetRootElement(document);
+   for(node = root_node->children; node; NEXT(node))
+   {
+      if(node->type != XML_ELEMENT_NODE){ continue; }
+
+      /* get resolution and r-factor                                    */
+      if(!strcmp("refine_ls_shellCategory", (char *)node->name))
+      {
+         for(subnode = node->children; subnode; NEXT(subnode))
+         {
+            if(!strcmp("refine_ls_shell", (char *)subnode->name))
+            {
+               /* Get the resolution from the attribute                 */
+               if((attribute = xmlGetProp(subnode, 
+                                          (xmlChar *)"d_res_high"))!=NULL)
+               {
+                  sscanf((char *)attribute, "%lf", &resolution);
+                  xmlFree(attribute);
+                  sprintf(resol_line,"REMARK   2 RESOLUTION.   %5.2f \
+ANGSTROMS.                                       \n", resolution);
+                  resol_lines = blStoreString(resol_lines, resol_line);
+               }
+               /* Get RWork and RFree from the children                 */
+               for(n=subnode->children; n!=NULL; NEXT(n))
+               {
+                  if(!strcmp("R_factor_R_free", (char *)n->name))
+                  {
+                     if((content = xmlNodeGetContent(n))!=NULL)
+                     {
+                        sscanf((char *)content, "%lf", &RFree);
+                        xmlFree(content);
+                     }
+                  }
+                  else if(!strcmp("R_factor_R_work", (char *)n->name))
+                  {
+                     if((content = xmlNodeGetContent(n))!=NULL)
+                     {
+                        sscanf((char *)content, "%lf", &RWork);
+                        xmlFree(content);
+                     }
+                  }
+               }
+               if((RWork > (REAL)(-0.99)) || (RFree > (REAL)(-0.99)))
+               {
+                  sprintf(resol_line,"REMARK   3 REFINEMENT.             \
+                                             \n");
+                  resol_lines = blStoreString(resol_lines, resol_line);
+                  
+                  sprintf(resol_line,"REMARK   3  FIT TO DATA USED IN \
+REFINEMENT.                                     \n");
+                  resol_lines = blStoreString(resol_lines, resol_line);
+               }
+               if(RWork > (REAL)(-0.99))
+               {
+                  sprintf(resol_line,"REMARK   3   R VALUE            \
+(WORKING SET) : %5.3f                           \n", RWork);
+                  resol_lines = blStoreString(resol_lines, resol_line);
+               }
+               if(RFree > (REAL)(-0.99))
+               {
+                  sprintf(resol_line,"REMARK   3   FREE R VALUE          \
+           : %5.3f                           \n", RFree);
+                  resol_lines = blStoreString(resol_lines, resol_line);
+               }
+
+               /* Experimental details                                  */
+               if((attribute = xmlGetProp(subnode,
+                                          (xmlChar *)"pdbx_refine_id"))
+                  != NULL)
+               {
+                  sprintf(resol_line,"REMARK 200 EXPERIMENTAL DETAILS    \
+                                             \n");
+                  resol_lines = blStoreString(resol_lines, resol_line);
+                  sprintf(resol_line,"REMARK 200  EXPERIMENT TYPE        \
+        : %-35s\n", (char *)attribute);
+                  resol_lines = blStoreString(resol_lines, resol_line);
+                  xmlFree(attribute);
+               }
+            }
+         }
+      }
+   }  /* Loop the XML nodes                                             */
+
+
+   /* Return Stringlist                                                 */
+   return(resol_lines);
+
+#endif
+}
+
+
+/************************************************************************/
+/*>static STRINGLIST *ParseSeqresPDBML(xmlDoc *document)
+   ----------------------------------------------------
+*//**
+
+   \param[in]     *document   XML document
+   \return                    STRINGLIST containing SEQRES record.
+
+   Parses PDBML header data and returns SEQRES record.
+
+-  01.07.15 Original.  By: CTP
+*/
+static STRINGLIST *ParseSeqresPDBML(xmlDoc *document)
+{
+#ifndef XML_SUPPORT
+
+   /* PDBML format not supported.                                       */
+   return NULL;
+
+#else
+
+   /* Parse PDBML header                                                */
+   xmlNode    *root_node = NULL, 
+              *node      = NULL,
+              *subnode   = NULL,
+              *n         = NULL;
+   xmlChar    *content, *attribute;
+   STRINGLIST *seqres_lines = NULL;
+   int        nchains = 0,
+              i = 0;
+   char       **chains = NULL;
+
+   /* seqres                                                            */
+   STRINGLIST **residue_list = NULL;
+   char       curr_chain[8]  = "",
+              prev_chain[8]  = "",
+              resnam[8]      = "";
+              
+
+   /* Parse Document Tree                                               */
+   root_node = xmlDocGetRootElement(document);
+   for(node = root_node->children; node; NEXT(node))
+   {
+      if(node->type != XML_ELEMENT_NODE){ continue; }
 
       /* get seqres records                                             */
       if(!strcmp("pdbx_poly_seq_schemeCategory", (char *)node->name))
@@ -2854,7 +3247,9 @@ static STRINGLIST *ParseHeaderPDBML(xmlDoc *document, PDB *pdb)
                {
                   chains = (char **)realloc(chains, 
                                             (nchains)*sizeof(char *));
-                  residue_list = (STRINGLIST **)realloc(residue_list, (nchains)*sizeof(STRINGLIST *));
+                  residue_list = 
+                     (STRINGLIST **)realloc(residue_list, 
+                                            (nchains)*sizeof(STRINGLIST *));
                }
 
                /* check memory allocated                                */
@@ -2896,6 +3291,80 @@ static STRINGLIST *ParseHeaderPDBML(xmlDoc *document, PDB *pdb)
             }
             free(chains);
             free(residue_list);
+         }
+      }
+
+
+   }  /* Loop the XML nodes                                             */
+
+
+   /* Return Stringlist                                                 */
+   return(seqres_lines);
+
+#endif
+}
+
+
+/************************************************************************/
+/*>static STRINGLIST *ParseModresPDBML(xmlDoc *document)
+   -----------------------------------------------------
+*//**
+
+   \param[in]     *document   XML document
+   \return                    STRINGLIST containing MODRES record.
+
+   Parses PDBML header data and returns MODRES record.
+
+-  01.07.15 Original.  By: CTP
+*/
+static STRINGLIST *ParseModresPDBML(xmlDoc *document)
+{
+#ifndef XML_SUPPORT
+
+   /* PDBML format not supported.                                       */
+   return NULL;
+
+#else
+
+   /* Parse PDBML header                                                */
+   xmlNode    *root_node = NULL, 
+              *node      = NULL,
+              *subnode   = NULL,
+              *n         = NULL;
+   xmlChar    *content, *attribute;
+   double     content_lf = 0.0;
+   STRINGLIST *modres_lines = NULL;
+   char       pdb_field[5]     = "";
+
+   /* modres                                                            */
+   char       modres_line[82]    =  "",
+              modres_resnam[8]   =  "",
+              modres_chain[8]    =  "",
+              modres_insert[2]   = " ",
+              modres_stdnam[8]   =  "",
+              modres_comment[42] =  "";
+   int        modres_seqnum      =   0;
+
+   /* Parse Document Tree                                               */
+   root_node = xmlDocGetRootElement(document);
+   for(node = root_node->children; node; NEXT(node))
+   {
+      if(node->type != XML_ELEMENT_NODE){ continue; }
+
+      /* get pdb code                                                   */
+      /* todo: put code into ParsePdbcodePDBML()                        */
+      if(!strcmp("entryCategory", (char *)node->name))
+      {
+         for(subnode = node->children; subnode; NEXT(subnode))
+         {
+            if(strcmp("entry", (char *)subnode->name)){ continue; }
+
+            if((attribute = xmlGetProp(subnode, (xmlChar *)"id"))!=NULL)
+            {
+               strncpy(pdb_field, (char *)attribute,4);
+               pdb_field[4] = '\0';
+               xmlFree(attribute);
+            }
          }
       }
 
@@ -2988,108 +3457,15 @@ static STRINGLIST *ParseHeaderPDBML(xmlDoc *document, PDB *pdb)
          }   
       }
 
-      if(!strcmp("refine_ls_shellCategory", (char *)node->name))
-      {
-         for(subnode = node->children; subnode; NEXT(subnode))
-         {
-            if(!strcmp("refine_ls_shell", (char *)subnode->name))
-            {
-               /* Get the resolution from the attribute                 */
-               if((attribute = xmlGetProp(subnode, 
-                                          (xmlChar *)"d_res_high"))!=NULL)
-               {
-                  sscanf((char *)attribute, "%lf", &resolution);
-                  xmlFree(attribute);
-                  sprintf(resol_line,"REMARK   2 RESOLUTION.   %5.2f \
-ANGSTROMS.                                       \n", resolution);
-                  resol_lines = blStoreString(resol_lines, resol_line);
-               }
-               /* Get RWork and RFree from the children                 */
-               for(n=subnode->children; n!=NULL; NEXT(n))
-               {
-                  if(!strcmp("R_factor_R_free", (char *)n->name))
-                  {
-                     if((content = xmlNodeGetContent(n))!=NULL)
-                     {
-                        sscanf((char *)content, "%lf", &RFree);
-                        xmlFree(content);
-                     }
-                  }
-                  else if(!strcmp("R_factor_R_work", (char *)n->name))
-                  {
-                     if((content = xmlNodeGetContent(n))!=NULL)
-                     {
-                        sscanf((char *)content, "%lf", &RWork);
-                        xmlFree(content);
-                     }
-                  }
-               }
-               if((RWork > (REAL)(-0.99)) || (RFree > (REAL)(-0.99)))
-               {
-                  sprintf(resol_line,"REMARK   3 REFINEMENT.             \
-                                             \n");
-                  resol_lines = blStoreString(resol_lines, resol_line);
-                  
-                  sprintf(resol_line,"REMARK   3  FIT TO DATA USED IN \
-REFINEMENT.                                     \n");
-                  resol_lines = blStoreString(resol_lines, resol_line);
-               }
-               if(RWork > (REAL)(-0.99))
-               {
-                  sprintf(resol_line,"REMARK   3   R VALUE            \
-(WORKING SET) : %5.3f                           \n", RWork);
-                  resol_lines = blStoreString(resol_lines, resol_line);
-               }
-               if(RFree > (REAL)(-0.99))
-               {
-                  sprintf(resol_line,"REMARK   3   FREE R VALUE          \
-           : %5.3f                           \n", RFree);
-                  resol_lines = blStoreString(resol_lines, resol_line);
-               }
-
-               /* Experimental details                                  */
-               if((attribute = xmlGetProp(subnode,
-                                          (xmlChar *)"pdbx_refine_id"))
-                  != NULL)
-               {
-                  sprintf(resol_line,"REMARK 200 EXPERIMENTAL DETAILS    \
-                                             \n");
-                  resol_lines = blStoreString(resol_lines, resol_line);
-                  sprintf(resol_line,"REMARK 200  EXPERIMENT TYPE        \
-        : %-35s\n", (char *)attribute);
-                  resol_lines = blStoreString(resol_lines, resol_line);
-                  xmlFree(attribute);
-               }
-            }
-         }
-      }
    }  /* Loop the XML nodes                                             */
 
-   /* Create Header Line                                                */
-   if(!strlen(header_field))
-   {
-      strcpy(header_field,"Converted from PDBML");
-   }
-   sprintf(header_line, "HEADER    %-40s%9s   %4s              \n",
-           header_field, date_field, pdb_field);
-   
-   /* Make Stringlist                                                   */
-   wpdb_header = blStoreString(wpdb_header, header_line);
-   wpdb_header->next = title_lines;
-
-   /* append additional lines                                           */
-   last = wpdb_header;
-   APPEND_STRINGLIST(last, compnd_lines);
-   APPEND_STRINGLIST(last, source_lines);
-   APPEND_STRINGLIST(last, resol_lines);
-   APPEND_STRINGLIST(last, seqres_lines);
-   APPEND_STRINGLIST(last, modres_lines);
    
    /* Return Stringlist                                                 */
-   return(wpdb_header);
+   return(modres_lines);
 
 #endif
 }
+
 
 /************************************************************************/
 /*>static char **GetEntityChainLabels(int entity, PDB *pdb,
