@@ -3,8 +3,8 @@
 
    \file       WritePDB.c
    
-   \version    V1.27
-   \date       21.06.15
+   \version    V1.28
+   \date       09.07.15
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
@@ -106,6 +106,9 @@
 -  V1.27 21.06.15 Added blMapChainsToEntity(). blDoWritePDBAsPDBML() sets
                   entity_id based on COMPND records if entty_id not 
                   already set.  By: CTP
+-  V1.28 09.07.15 Added output of PDBML seqres records from wpdb->header.
+                  Added ReadSeqresChainLabelWholePDB() and 
+                  ReadSeqresResidueListWholePDB().  By: CTP
 
 *************************************************************************/
 /* Doxygen
@@ -184,6 +187,7 @@
 #include "pdb.h"
 #include "macros.h"
 #include "hash.h"
+#include "fsscanf.h"
 
 /************************************************************************/
 /* Prototypes
@@ -193,7 +197,9 @@ static void WriteMaster(FILE *fp, WHOLEPDB *wpdb, int numConect,
 static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole);
 static BOOL blSetPDBMLDateField(char *pdbml_date, char *pdb_date);
 static HASHTABLE *blMapChainsToEntity(WHOLEPDB *wpdb);
-
+static char **ReadSeqresChainLabelWholePDB(WHOLEPDB *wpdb, int *nchains);
+static STRINGLIST **ReadSeqresResidueListWholePDB(WHOLEPDB *wpdb, 
+                                                  int *nchains);
 /************************************************************************/
 /*>int blWritePDB(FILE *fp, PDB *pdb)
    ----------------------------------
@@ -561,6 +567,7 @@ BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
             TRUE.  By: CTP
 -  21.06.15 Write entity_id. Use COMPND record to set entity_id if not set
             in PDB. Set compound type to polymer. By:  CTP
+-  09.07.15 Added output of SEQRES records from wpdb->header.  By: CTP
 
 */
 static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
@@ -597,6 +604,10 @@ static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
    PDBSOURCE species;
    int molid = 0;
    HASHTABLE *chain_to_entity = NULL;
+   int        seqres_nchains    =    0;
+   char       **seqres_chain    = NULL;
+   STRINGLIST **seqres_residues = NULL,
+              *s = NULL;
 
    /* Create document                                                   */
    if((doc = xmlNewDoc((xmlChar *)"1.0"))==NULL)
@@ -1173,7 +1184,6 @@ static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
       { XMLDIE(doc); }
    }
 
-
    /* add source nodes                                                  */
    sites_node = NULL;
    j = 0;
@@ -1235,6 +1245,97 @@ static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
          }
       }
    }
+
+
+   /* SEQRES nodes                                                      */
+   /* get seqres chain ids from wpdb->header                            */
+   seqres_chain = ReadSeqresChainLabelWholePDB(wpdb, &seqres_nchains);
+   if(seqres_chain)
+   {
+      /* get seqres residues from wpdb->header                          */
+      seqres_residues = ReadSeqresResidueListWholePDB(wpdb,
+                                                      &seqres_nchains);
+   
+      if(seqres_residues)
+      {
+         /* add pdbx_poly_seq_schemeCategory node                       */
+         if((sites_node = xmlNewChild(root_node, NULL, 
+                           (xmlChar *)"pdbx_poly_seq_schemeCategory", 
+                           NULL))==NULL){ XMLDIE(doc); }
+
+         /* cycle through chains                                        */
+         for(i=0;i<seqres_nchains;i++)
+         {
+            int res    = 1,                 /* reset residue count      */
+                entity = 1;                 /* set entity_id to default */
+
+            /* set entity based on chain id                             */
+            if(chain_to_entity != NULL && 
+               blHashKeyDefined(chain_to_entity, seqres_chain[i]))
+            {
+               entity = blGetHashValueInt(chain_to_entity, 
+                                          seqres_chain[i]);
+            }
+
+             /* cycle through residues                                  */
+            for(s=seqres_residues[i];s!=NULL;NEXT(s),res++)
+            {
+              /* add pdbx_poly_seq_scheme node                          */
+              if((atom_node = xmlNewChild(sites_node, NULL,
+                              (xmlChar *)"pdbx_poly_seq_scheme", NULL))
+                                                                 == NULL)
+              { XMLDIE(doc); }
+              /* add attributes                                         */
+              /* asym_id                                                */
+              xmlNewProp(atom_node, (xmlChar *)"asym_id", 
+                         (xmlChar *)seqres_chain[i]);
+              /* entity_id                                              */
+              sprintf(buffer, "%d", entity);
+              xmlNewProp(atom_node, (xmlChar *)"entity_id", 
+                         (xmlChar *)buffer);
+              /* mon_id                                                 */
+              xmlNewProp(atom_node, (xmlChar *)"mon_id", 
+                         (xmlChar *)s->string);
+              /* seq_id                                                 */
+              sprintf(buffer, "%d", res);
+              xmlNewProp(atom_node, (xmlChar *)"seq_id", 
+                         (xmlChar *)buffer);
+
+              /* add subnodes                                           */
+              /* auth_mon_id                                            */
+              sprintf(buffer,"%d", res);
+              if((node = xmlNewChild(atom_node, NULL, 
+                                     (xmlChar *)"auth_mon_id",
+                                     (xmlChar *)s->string))==NULL)
+                 XMLDIE(doc);
+              /* ndb_seq_num                                            */
+              sprintf(buffer,"%d", res);
+              if((node = xmlNewChild(atom_node, NULL, 
+                                     (xmlChar *)"ndb_seq_num",
+                                     (xmlChar *)buffer))==NULL)
+                 XMLDIE(doc);
+              /* pdb_mon_id                                             */
+              sprintf(buffer,"%d", res);
+              if((node = xmlNewChild(atom_node, NULL, 
+                                     (xmlChar *)"pdb_mon_id",
+                                     (xmlChar *)s->string))==NULL)
+                 XMLDIE(doc);
+              /* pdb_strand_id                                          */
+              sprintf(buffer,"%d", res);
+              if((node = xmlNewChild(atom_node, NULL, 
+                                     (xmlChar *)"pdb_strand_id",
+                                     (xmlChar *)seqres_chain[i]))==NULL)
+                 XMLDIE(doc);
+            }
+
+            FREELIST(seqres_residues[i],STRINGLIST);   /* free residues */
+            free(seqres_chain[i]);                     /* free chain id */
+         }
+         free(seqres_residues);                  /* free residues array */
+      }
+      free(seqres_chain);                        /* free chain id array */
+   }
+
 
    /* pdb entry */
    if(strlen(pdbcode))
@@ -1870,3 +1971,221 @@ static HASHTABLE *blMapChainsToEntity(WHOLEPDB *wpdb)
    return hashtable;
 }
 
+/************************************************************************/
+/*>static char **blReadSeqresChainLabelWholePDB(WHOLEPDB *wpdb,
+                                                int *nchains)
+   ------------------------------------------------------------
+*//**
+
+   \param[in]     wpdb      WHOLEPDB structure
+   \param[out]    *nchains  Number of chains found
+   \return                  Array of chain labels
+
+   Reads the sequence from the SEQRES records from the PDB header
+   stored in a WHOLEPDB structure. Creates an array of malloc()'d
+   character arrays in which the chain label is stored.
+
+-  09.07.15 Original based on blReadSeqresResidueWholePDB()   By: CTP
+*/
+static char **ReadSeqresChainLabelWholePDB(WHOLEPDB *wpdb, int *nchains)
+{
+   STRINGLIST *seqres = NULL, 
+              *s;
+   char       currchain[2] = " ",
+              chain[2]     = " ",
+              **chainid;
+   int        chainnum = 0,
+              nres     = 0,
+              i;
+
+   *nchains = 0;
+   
+   /* First read the SEQRES records into a linked list                  */
+   for(s=wpdb->header; s!=NULL; NEXT(s))
+   {
+      if(!strncmp(s->string,"SEQRES",6))
+      {
+         if((seqres = blStoreString(seqres, s->string)) == NULL)
+         {
+            FREELIST(seqres, STRINGLIST);
+            return(NULL);
+         }
+      }
+   }
+
+   /* Return if no seqres records found                                 */
+   if(seqres == NULL)
+   {
+      return(NULL);
+   }
+
+   /* FIRST PASS: See how many chains there are                         */
+   strncpy(currchain,&(seqres->string[11]),1);
+   *nchains  = 1;
+   for(s=seqres; s!=NULL; NEXT(s))
+   {
+      strncpy(chain,&(s->string[11]),1);
+      if(!CHAINMATCH(chain,currchain))
+      {
+         strncpy(currchain,chain,1);
+         (*nchains)++;
+      }
+   }
+
+   /* Allocate an array of character pointers to store this number of
+      chain labels
+   */
+   if((chainid=(char **)malloc((*nchains) * sizeof(char *)))==NULL)
+   {
+      FREELIST(seqres, STRINGLIST);
+      return(NULL);
+   }
+
+   /* allocate memory for chain labels                                  */
+   for(i=0;i<(*nchains);i++)
+   {
+      if((chainid[i] = (char *)malloc(8*sizeof(char))) == NULL)
+      {
+         FREELIST(seqres, STRINGLIST);
+         free(chainid);
+         return(NULL);
+      }
+   }
+
+   /* SECOND PASS: Store the Chain labels                               */
+   chainnum  = 0;
+   nres      = 0;
+   strcpy(currchain,"");
+   for(s=seqres; s!=NULL; NEXT(s))
+   {
+      fsscanf(s->string,"%11x%1s",chain);
+      if(!CHAINMATCH(chain,currchain))
+      {
+         /* store new chain id */
+         strcpy(chainid[chainnum],chain);
+         strcpy(currchain,chain);
+         nres = 0;
+         chainnum++;
+      }
+   }
+
+   /* free memory and return                                            */
+   FREELIST(seqres, STRINGLIST);
+   return(chainid);
+}
+
+
+
+/************************************************************************/
+/*>static STRINGLIST **ReadSeqresResidueListWholePDB(WHOLEPDB *wpdb,
+                                                     int *nchains)
+   -----------------------------------------------------------------
+*//**
+
+   \param[in]     wpdb      WHOLEPDB structure
+   \param[out]    *nchains  Number of chains found
+   \return                  Array of sequence strings
+
+   Reads the sequence from the SEQRES records from the PDB header
+   stored in a WHOLEPDB structure. Creates an array of malloc()'d
+   STRINGLISTs in which the sequence is stored. Can therefore
+   cope with any size of sequence information from the PDB file.
+
+-  09.07.15 Original based on blReadSeqresResidueWholePDB()   By: CTP
+*/
+static STRINGLIST **ReadSeqresResidueListWholePDB(WHOLEPDB *wpdb, 
+                                                  int *nchains)
+{
+   STRINGLIST *seqres = NULL, 
+              *s,
+              **residuelist = NULL;
+   char       currchain[2] = " ",
+              chain[2]     = " ",
+              res[13][8];
+   int        chainnum = 0,
+              nres     = 0,
+              i;
+
+   *nchains = 0;
+   
+
+   /* First read the SEQRES records into a linked list                  */
+   for(s=wpdb->header; s!=NULL; NEXT(s))
+   {
+      if(!strncmp(s->string,"SEQRES",6))
+      {
+         if((seqres = blStoreString(seqres, s->string)) == NULL)
+         {
+            FREELIST(seqres, STRINGLIST);
+            return(NULL);
+         }
+      }
+   }
+
+   /* Return if no seqres records found                                 */
+   if(seqres == NULL)
+   {
+      return(NULL);
+   }
+
+   /* FIRST PASS: See how many chains there are                         */
+   strncpy(currchain,&(seqres->string[11]),1);
+   *nchains  = 1;
+   for(s=seqres; s!=NULL; NEXT(s))
+   {
+      strncpy(chain,&(s->string[11]),1);
+      if(!CHAINMATCH(chain,currchain))
+      {
+         strncpy(currchain,chain,1);
+         (*nchains)++;
+      }
+   }
+
+   /* Allocate array for residue sequences                              */
+   if((residuelist=
+       (STRINGLIST **)malloc((*nchains) * sizeof(STRINGLIST *)))==NULL)
+   {
+      FREELIST(seqres, STRINGLIST);
+      return(NULL);
+   }
+
+   /* set stringlist pointers to NULL                                   */
+   for(i=0;i<(*nchains);i++)
+   {
+      residuelist[i] = NULL;
+   }
+
+   /* SECOND PASS: Store the sequence                                   */
+   chainnum  = 0;
+   nres      = 0;
+   strncpy(currchain,&(seqres->string[11]),1);
+   for(s=seqres; s!=NULL; NEXT(s))
+   {
+      fsscanf(s->string,"%11x%1s%7x%4s%4s%4s%4s%4s%4s%4s%4s%4s%4s%4s%4s%4s",
+              chain,res[0],res[1],res[2],res[3],res[4],res[5],res[6],
+              res[7],res[8],res[9],res[10],res[11],res[12]);
+      if(!CHAINMATCH(chain,currchain))
+      {
+         /* Start of new chain                                          */
+         strcpy(currchain,chain);
+         nres = 0;
+         chainnum++;
+      }
+      
+      /* Store these sequence data                                      */
+      for(i=0; i<13; i++)
+      {
+         /* Break out if not all positions were filled in               */
+         if(!strncmp(res[i],"    ",4))
+            break;
+
+         /* add to stringlist                                           */
+         residuelist[chainnum] = blStoreString(residuelist[chainnum],
+                                               res[i]);
+      }
+   }
+
+   /* free memory and return                                            */
+   FREELIST(seqres, STRINGLIST);
+   return(residuelist);
+}

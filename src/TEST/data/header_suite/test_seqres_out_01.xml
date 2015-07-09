@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PDBx:datablock xmlns:PDBx="null" xmlns:xsi="null">
+  <PDBx:atom_siteCategory>
+    <PDBx:atom_site id="1">
+      <PDBx:B_iso_or_equiv>20.00</PDBx:B_iso_or_equiv>
+      <PDBx:Cartn_x>1.000</PDBx:Cartn_x>
+      <PDBx:Cartn_y>2.000</PDBx:Cartn_y>
+      <PDBx:Cartn_z>3.000</PDBx:Cartn_z>
+      <PDBx:auth_asym_id>A</PDBx:auth_asym_id>
+      <PDBx:auth_atom_id>CA</PDBx:auth_atom_id>
+      <PDBx:auth_comp_id>ALA</PDBx:auth_comp_id>
+      <PDBx:auth_seq_id>1</PDBx:auth_seq_id>
+      <PDBx:group_PDB>ATOM</PDBx:group_PDB>
+      <PDBx:label_alt_id xsi:nil="true"/>
+      <PDBx:label_asym_id>A</PDBx:label_asym_id>
+      <PDBx:label_atom_id>CA</PDBx:label_atom_id>
+      <PDBx:label_comp_id>ALA</PDBx:label_comp_id>
+      <PDBx:label_entity_id>1</PDBx:label_entity_id>
+      <PDBx:label_seq_id>1</PDBx:label_seq_id>
+      <PDBx:occupancy>1.00</PDBx:occupancy>
+      <PDBx:pdbx_PDB_model_num>1</PDBx:pdbx_PDB_model_num>
+      <PDBx:type_symbol>C</PDBx:type_symbol>
+    </PDBx:atom_site>
+  </PDBx:atom_siteCategory>
+  <PDBx:database_PDB_revCategory>
+    <PDBx:database_PDB_rev num="1">
+      <PDBx:date>2015-07-07</PDBx:date>
+      <PDBx:date_original>2015-07-07</PDBx:date_original>
+      <PDBx:mod_type>0</PDBx:mod_type>
+      <PDBx:replaces>TEST</PDBx:replaces>
+    </PDBx:database_PDB_rev>
+  </PDBx:database_PDB_revCategory>
+  <PDBx:pdbx_poly_seq_schemeCategory>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="ALA " seq_id="1">
+      <PDBx:auth_mon_id>ALA </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>1</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>ALA </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="ARG " seq_id="2">
+      <PDBx:auth_mon_id>ARG </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>2</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>ARG </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="ASN " seq_id="3">
+      <PDBx:auth_mon_id>ASN </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>3</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>ASN </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="ASP " seq_id="4">
+      <PDBx:auth_mon_id>ASP </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>4</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>ASP </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="CYS " seq_id="5">
+      <PDBx:auth_mon_id>CYS </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>5</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>CYS </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="GLN " seq_id="6">
+      <PDBx:auth_mon_id>GLN </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>6</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>GLN </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="GLU " seq_id="7">
+      <PDBx:auth_mon_id>GLU </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>7</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>GLU </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="GLY " seq_id="8">
+      <PDBx:auth_mon_id>GLY </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>8</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>GLY </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="HIS " seq_id="9">
+      <PDBx:auth_mon_id>HIS </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>9</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>HIS </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="ILE " seq_id="10">
+      <PDBx:auth_mon_id>ILE </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>10</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>ILE </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="LEU " seq_id="11">
+      <PDBx:auth_mon_id>LEU </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>11</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>LEU </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="LYS " seq_id="12">
+      <PDBx:auth_mon_id>LYS </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>12</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>LYS </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="MET " seq_id="13">
+      <PDBx:auth_mon_id>MET </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>13</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>MET </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="PHE " seq_id="14">
+      <PDBx:auth_mon_id>PHE </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>14</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>PHE </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="PRO " seq_id="15">
+      <PDBx:auth_mon_id>PRO </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>15</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>PRO </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="SER " seq_id="16">
+      <PDBx:auth_mon_id>SER </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>16</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>SER </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="THR " seq_id="17">
+      <PDBx:auth_mon_id>THR </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>17</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>THR </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="TRP " seq_id="18">
+      <PDBx:auth_mon_id>TRP </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>18</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>TRP </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="TYR " seq_id="19">
+      <PDBx:auth_mon_id>TYR </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>19</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>TYR </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="A" entity_id="1" mon_id="VAL " seq_id="20">
+      <PDBx:auth_mon_id>VAL </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>20</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>VAL </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>A</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="ALA " seq_id="1">
+      <PDBx:auth_mon_id>ALA </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>1</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>ALA </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="ARG " seq_id="2">
+      <PDBx:auth_mon_id>ARG </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>2</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>ARG </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="ASN " seq_id="3">
+      <PDBx:auth_mon_id>ASN </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>3</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>ASN </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="ASP " seq_id="4">
+      <PDBx:auth_mon_id>ASP </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>4</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>ASP </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="CYS " seq_id="5">
+      <PDBx:auth_mon_id>CYS </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>5</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>CYS </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="GLN " seq_id="6">
+      <PDBx:auth_mon_id>GLN </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>6</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>GLN </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="GLU " seq_id="7">
+      <PDBx:auth_mon_id>GLU </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>7</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>GLU </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="GLY " seq_id="8">
+      <PDBx:auth_mon_id>GLY </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>8</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>GLY </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="HIS " seq_id="9">
+      <PDBx:auth_mon_id>HIS </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>9</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>HIS </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="ILE " seq_id="10">
+      <PDBx:auth_mon_id>ILE </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>10</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>ILE </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="LEU " seq_id="11">
+      <PDBx:auth_mon_id>LEU </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>11</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>LEU </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="LYS " seq_id="12">
+      <PDBx:auth_mon_id>LYS </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>12</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>LYS </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="MET " seq_id="13">
+      <PDBx:auth_mon_id>MET </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>13</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>MET </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="PHE " seq_id="14">
+      <PDBx:auth_mon_id>PHE </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>14</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>PHE </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="PRO " seq_id="15">
+      <PDBx:auth_mon_id>PRO </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>15</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>PRO </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="SER " seq_id="16">
+      <PDBx:auth_mon_id>SER </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>16</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>SER </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="THR " seq_id="17">
+      <PDBx:auth_mon_id>THR </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>17</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>THR </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="TRP " seq_id="18">
+      <PDBx:auth_mon_id>TRP </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>18</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>TRP </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="TYR " seq_id="19">
+      <PDBx:auth_mon_id>TYR </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>19</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>TYR </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="B" entity_id="1" mon_id="VAL " seq_id="20">
+      <PDBx:auth_mon_id>VAL </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>20</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>VAL </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>B</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="ALA " seq_id="1">
+      <PDBx:auth_mon_id>ALA </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>1</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>ALA </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="ARG " seq_id="2">
+      <PDBx:auth_mon_id>ARG </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>2</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>ARG </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="ASN " seq_id="3">
+      <PDBx:auth_mon_id>ASN </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>3</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>ASN </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="ASP " seq_id="4">
+      <PDBx:auth_mon_id>ASP </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>4</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>ASP </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="CYS " seq_id="5">
+      <PDBx:auth_mon_id>CYS </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>5</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>CYS </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="GLN " seq_id="6">
+      <PDBx:auth_mon_id>GLN </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>6</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>GLN </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="GLU " seq_id="7">
+      <PDBx:auth_mon_id>GLU </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>7</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>GLU </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="GLY " seq_id="8">
+      <PDBx:auth_mon_id>GLY </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>8</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>GLY </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="HIS " seq_id="9">
+      <PDBx:auth_mon_id>HIS </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>9</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>HIS </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="ILE " seq_id="10">
+      <PDBx:auth_mon_id>ILE </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>10</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>ILE </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="LEU " seq_id="11">
+      <PDBx:auth_mon_id>LEU </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>11</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>LEU </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="LYS " seq_id="12">
+      <PDBx:auth_mon_id>LYS </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>12</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>LYS </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="MET " seq_id="13">
+      <PDBx:auth_mon_id>MET </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>13</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>MET </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="PHE " seq_id="14">
+      <PDBx:auth_mon_id>PHE </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>14</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>PHE </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="PRO " seq_id="15">
+      <PDBx:auth_mon_id>PRO </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>15</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>PRO </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="SER " seq_id="16">
+      <PDBx:auth_mon_id>SER </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>16</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>SER </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="THR " seq_id="17">
+      <PDBx:auth_mon_id>THR </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>17</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>THR </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="TRP " seq_id="18">
+      <PDBx:auth_mon_id>TRP </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>18</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>TRP </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="TYR " seq_id="19">
+      <PDBx:auth_mon_id>TYR </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>19</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>TYR </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+    <PDBx:pdbx_poly_seq_scheme asym_id="C" entity_id="1" mon_id="VAL " seq_id="20">
+      <PDBx:auth_mon_id>VAL </PDBx:auth_mon_id>
+      <PDBx:ndb_seq_num>20</PDBx:ndb_seq_num>
+      <PDBx:pdb_mon_id>VAL </PDBx:pdb_mon_id>
+      <PDBx:pdb_strand_id>C</PDBx:pdb_strand_id>
+    </PDBx:pdbx_poly_seq_scheme>
+  </PDBx:pdbx_poly_seq_schemeCategory>
+  <PDBx:entryCategory>
+    <PDBx:entry id="TEST"/>
+  </PDBx:entryCategory>
+  <PDBx:structCategory>
+    <PDBx:struct entry_id="TEST">
+      <PDBx:title>TEST FILE FOR SEQRES RECORDS (PDB INPUT)</PDBx:title>
+    </PDBx:struct>
+  </PDBx:structCategory>
+  <PDBx:struct_keywordsCategory>
+    <PDBx:struct_keywords entry_id="TEST">
+      <PDBx:pdbx_keywords>TEST FILE</PDBx:pdbx_keywords>
+    </PDBx:struct_keywords>
+  </PDBx:struct_keywordsCategory>
+</PDBx:datablock>
