@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.87
-   \date       26.06.15
+   \version    V1.88
+   \date       07.07.15
 
    \brief      Include file for PDB routines
    
@@ -200,9 +200,11 @@
 -  V1.85 14.06.15 Added entity_id to PDB data structure and to CLEAR_PDB()
                   By: CTP
 -  V1.86 23.06.15 Added blAreResiduesBonded() and 
-                  blAreResiduePointersBonded()
+                  blAreResiduePointersBonded()   By: ACRM
 -  V1.87 26.06.15 Added blGetBiomoleculeWholePDB(), blFreeBiomolecule()
                   and associated structures
+-  V1.88 07.07.15 Added ss item to PDB structure and to CLEAR_PDB.
+                  Added INSERTMATCH()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -290,6 +292,7 @@ typedef struct pdb_entry
    char element[8];          /* Element type                            */
    char segid[8];            /* Segment ID                              */
    char altpos;              /* Alternate position indicator            */
+   char ss;                  /* Secondary structure                     */
 }  PDB;
 
 typedef struct pdbresidue
@@ -445,6 +448,7 @@ typedef struct
                      p->conect[0] = NULL;     \
                      p->nConect = 0;          \
                      p->atomType = NULL;      \
+                     p->ss = ' ';             \
                      p->entity_id = 0;
  
 
@@ -456,7 +460,8 @@ typedef struct
                       !strncmp((z)->resnam,"ODD",3) || \
                       !strncmp((z)->resnam,"WAT",3))
 
-#define CHAINMATCH(chain1,chain2) !strcmp(chain1,chain2)
+#define CHAINMATCH(chain1,chain2) !strcmp(chain1, chain2)
+#define INSERTMATCH(ins1, ins2) !strcmp(ins1, ins2)
 
 /* Called as CREATEPDBEXTRAS(pdb, EXTRATYPE)                            */
 #define CREATEPDBEXTRAS(x, y)                                   \
