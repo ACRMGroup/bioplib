@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.88
-   \date       07.07.15
+   \version    V1.89
+   \date       14.07.15
 
    \brief      Include file for PDB routines
    
@@ -203,8 +203,9 @@
                   blAreResiduePointersBonded()   By: ACRM
 -  V1.87 26.06.15 Added blGetBiomoleculeWholePDB(), blFreeBiomolecule()
                   and associated structures
--  V1.88 07.07.15 Added ss item to PDB structure and to CLEAR_PDB.
+-  V1.88 07.07.15 Added secstr item to PDB structure and to CLEAR_PDB.
                   Added INSERTMATCH()
+-  V1.89 14.07.15 Added MAKERESID() macro
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -292,7 +293,7 @@ typedef struct pdb_entry
    char element[8];          /* Element type                            */
    char segid[8];            /* Segment ID                              */
    char altpos;              /* Alternate position indicator            */
-   char ss;                  /* Secondary structure                     */
+   char secstr;              /* Secondary structure                     */
 }  PDB;
 
 typedef struct pdbresidue
@@ -448,7 +449,7 @@ typedef struct
                      p->conect[0] = NULL;     \
                      p->nConect = 0;          \
                      p->atomType = NULL;      \
-                     p->ss = ' ';             \
+                     p->secstr = ' ';         \
                      p->entity_id = 0;
  
 
@@ -481,7 +482,11 @@ typedef struct
          }                                                      \
       }                                                         \
    }
-      
+
+/* Creates a residue identifier from the chain, resnum and insert      */      
+#define MAKERESID(x, p) \
+   sprintf((x), "%s%d%s", (p)->chain, (p)->resnum, (p)->insert)
+
 
 
 /* These are the types returned by ResolPDB()                          */

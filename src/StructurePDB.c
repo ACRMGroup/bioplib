@@ -66,8 +66,8 @@
 
    #FUNCTION  blFindNextChain()
    Takes a PDB linked list and find the start of the next chain. This is
-   similar to another Bioplib routine which terminates the first chain,
-   but this routines doesn't terminate.
+   similar to another Bioplib routine (blFindNextChainPDB()) which 
+   terminates the first chain, but this routines doesn't terminate.
 */
 /************************************************************************/
 /* Includes
@@ -242,8 +242,8 @@ void blFreePDBStructure(PDBSTRUCT *pdbstruct)
    \return                Pointer to start of next chain
 
    Takes a PDB linked list and find the start of the next chain. This is
-   similar to another Bioplib routine which terminates the first chain,
-   but this routines doesn't terminate.
+   similar to another Bioplib routine (blFindNextChainPDB()) which 
+   terminates the first chain, but this routines doesn't terminate.
 
 -  24.11.09  Original   By: ACRM
 -  04.02.14 Use CHAINMATCH By: CTP

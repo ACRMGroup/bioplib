@@ -66,7 +66,8 @@
    #SUBGROUP Searching the PDB linked list        
    #FUNCTION  blFindNextChainPDB()
    Terminates the linked list at the end of the current chain and 
-   returns a pointer to the start of the next chain.
+   returns a pointer to the start of the next chain. See blFindNextChain()
+   for a routine which does not terminate the linked list.
 */
 /************************************************************************/
 /* Includes
@@ -101,7 +102,8 @@
    \return                  Pointer to start of next chain in linked list
 
    Terminates the linked list at the end of the current chain and 
-   returns a pointer to the start of the next chain.
+   returns a pointer to the start of the next chain. See blFindNextChain()
+   for a routine which does not terminate the linked list.
 
 -  23.05.94 Original    By: ACRM
 -  04.02.14 Use CHAINMATCH By: CTP
