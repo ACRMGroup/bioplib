@@ -64,7 +64,7 @@ BMINOR = 0.3
 
 # Files for libgen.a
 OFILESG = BuffInp.o CalcExtSD.o CalcSD.o CheckExtn.o CreateRotMat.o CrossProd3.o \
-DistPtVect.o ErrStack.o FreeStringList.o GetFilestem.o GetWord.o \
+DistPtLine.o ErrStack.o FreeStringList.o GetFilestem.o GetWord.o \
 InStringList.o IndxReal.o KillLeadSpaces.o KillLine.o MatMult33_33.o \
 MatMult3_33.o NComb.o NPerm.o OpenFile.o OpenStdFiles.o QueryStrStr.o \
 SetExtn.o StoreString.o StringToLower.o StringToUpper.o TorCoor.o TrueAngle.o \

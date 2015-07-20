@@ -1,13 +1,13 @@
 /************************************************************************/
 /**
 
-   \file       DistPtVect.c
+   \file       DistPtLine.c
    
-   \version    V1.3
-   \date       07.07.14
+   \version    V1.5
+   \date       20.07.15
    \brief      General maths/stats/vector functions
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -50,15 +50,16 @@
 -  V1.1  18.06.96 Added vector routines
 -  V1.2  06.10.98 Added VecAdd3()
 -  V1.3  07.07.14 Use bl prefix for functions By: CTP
+-  V1.4  20.07.15 Renamed from blDistPtVect()
 
 *************************************************************************/
 /* Doxygen
    -------
    #GROUP    Maths
    #SUBGROUP Geometry
-   #FUNCTION  blDistPtVect()
-   Calculate the distance from a point to a vector described by two
-   end points
+   #FUNCTION  blDistPtLine()
+   Calculate the distance from a point to a line vector described by two
+   vector end points. See also blPointLineDistance()
 */
 /************************************************************************/
 /* Includes
@@ -80,7 +81,7 @@
 */
 
 /************************************************************************/
-/*>REAL blDistPtVect(VEC3F Point, VEC3F End1, VEC3F End2)
+/*>REAL blDistPtLine(VEC3F Point, VEC3F End1, VEC3F End2)
    ------------------------------------------------------
 *//**
 
@@ -89,13 +90,14 @@
    \param[in]     End2      Coordinates of other end of vector
    \return                  The distance from pt to line
 
-   Calculate the distance from a point to a vector described by two
-   end points
+   Calculate the distance from a point to a line described by two
+   vector end points
 
 -  18.06.96 Original   By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP
+-  20.07.15 Renamed from blDistPtVect()  By: ACRM
 */
-REAL blDistPtVect(VEC3F Point, VEC3F End1, VEC3F End2)
+REAL blDistPtLine(VEC3F Point, VEC3F End1, VEC3F End2)
 {
    VEC3F Vec,
          UVec,

@@ -48,7 +48,7 @@ Functions exist for:
    rotation, renumbering)
 -  Working with coordinates (e.g. building neighbour lists, fitting, 
    testing for H-bonds)
--  General and 3D maths (e.g. distance from a point to a vector, matrix
+-  General and 3D maths (e.g. distance from a point to a line, matrix
    multiplication)
 -  Protein and DNA Sequences (e.g. reading and writing PIR and FASTA
    formats, DNA translation)

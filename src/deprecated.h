@@ -414,6 +414,7 @@ void VecSub3(VEC3F *Out, VEC3F In1, VEC3F In2);
 void VecAdd3(VEC3F *Out, VEC3F In1, VEC3F In2);
 REAL VecLen3(VEC3F Vec);
 REAL DistPtVect(VEC3F Point, VEC3F End1, VEC3F End2);
+REAL blDistPtVect(VEC3F Point, VEC3F End1, VEC3F End2);
 REAL PointLineDistance(REAL Px, REAL Py, REAL Pz,
                        REAL P1x, REAL P1y, REAL P1z,
                        REAL P2x, REAL P2y, REAL P2z,
