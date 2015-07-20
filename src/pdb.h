@@ -268,6 +268,16 @@ typedef struct _blAtomType
       ((EXTRAS *)p->extras)->angle = (REAL)0.0;
    }
 */
+
+/* We recommend a dimension of 8 for all the character arrays below for
+   maxmimum portability. If memory footprint is a key consideration, some
+   of these can be reduced as noted with [MIN x] in the comments. Note 
+   that restrictions on the size of items with a * are imposed by PDB 
+   files are not imposed in PDBML or mmCIF files and consequently, 
+   reducting these may prevent reading of these files.
+   See http://www.catb.org/esr/structure-packing/ for details of
+   optimizing the memory footprint of a structure.
+*/
 typedef struct pdb_entry
 {
    REAL x, y, z,             /* Coordinates                             */
@@ -284,14 +294,16 @@ typedef struct pdb_entry
    int  formal_charge;       /* Formal charge - used in XML files       */
    int  nConect;             /* Number of conections                    */
    int  entity_id;           /* Entity ID - used in XML files           */
-   char record_type[8];      /* ATOM / HETATM                           */
-   char atnam[8];            /* Atom name, left justified               */
-   char atnam_raw[8];        /* Atom name as it appears in the PDB file */
-   char resnam[8];           /* Residue name                            */
-   char insert[8];           /* Numbering insert code                   */
-   char chain[8];            /* Chain label                             */
-   char element[8];          /* Element type                            */
-   char segid[8];            /* Segment ID                              */
+   char record_type[8];      /* ATOM / HETATM                  [MIN 7]  */
+   char atnam[8];            /* Atom name, left justified      [MIN 6]  */
+   char atnam_raw[8];        /* Atom name as it appears in the PDB file
+                                                               [MIN 6]
+                              */
+   char resnam[8];           /* Residue name                   [MIN 5]  */
+   char insert[8];           /* Numbering insert code          [MIN 3*] */
+   char chain[8];            /* Chain label                    [MIN 3*] */
+   char element[8];          /* Element type                   [MIN 3]  */
+   char segid[8];            /* Segment ID                     [MIN 3*] */
    char altpos;              /* Alternate position indicator            */
    char secstr;              /* Secondary structure                     */
 }  PDB;
