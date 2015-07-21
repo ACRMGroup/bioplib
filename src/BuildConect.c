@@ -86,11 +86,11 @@
    CONECT data points to records in the new linked list instead of the
    old one.
 
-   #FUNCTION AreResiduesBonded()
+   #FUNCTION blAreResiduesBonded()
    Tests whether residues specified by chain, number and insert are
    bonded
 
-   #FUNCTION AreResiduePointersBonded()
+   #FUNCTION blAreResiduePointersBonded()
    Tests whether residues specified by pointers to the start of the
    residues
 */
