@@ -171,7 +171,7 @@
                  "This code uses %s which is now deprecated!\n"          \
                  "   Use %s instead\n"                                   \
                  "   Set the BIOPLIB_DEPRECATED_QUIET environment \
-variable to silence this message" , (s), (t));                           \
+variable to silence this message\n" , (s), (t));                         \
    }
 #      endif
 

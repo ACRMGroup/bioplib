@@ -206,6 +206,9 @@
 -  V1.88 07.07.15 Added secstr item to PDB structure and to CLEAR_PDB.
                   Added INSERTMATCH()
 -  V1.89 14.07.15 Added MAKERESID() macro
+-  V1.90 21.07.15 Changed PDB.atomType to PDB.atomInfo
+                  Added PDB.atomtype
+                  Added ATOMTYPE_XXXXXXX defines
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -231,17 +234,17 @@
 #define blMAXCHAINLABEL 8
 
 
-/* blATOMTYPE is unused at present, but gives the flexibility of
+/* blATOMINFO is unused at present, but gives the flexibility of
    associating type information with each PDB record. 
 */
-typedef struct _blAtomType
+typedef struct _blAtomInfo
 {
    REAL mass,
         pol,
         NEff,
         vdwr;
    char atomtype[8];
-}  blATOMTYPE;
+}  blATOMINFO;
 
 
 /* This is our main PDB structure used for the PDB linked lists.
@@ -286,7 +289,7 @@ typedef struct pdb_entry
                                 Bioplib routines                        */
         partial_charge;      /* Reserved for future use                 */
    APTR extras;              /* Pointer for users to add information    */
-   blATOMTYPE *atomType;     /* Reserved for future use                 */
+   blATOMINFO *atomInfo;     /* Reserved for future use                 */
    struct pdb_entry *next;   /* Forward linked list                     */
    struct pdb_entry *conect[MAXCONECT];  /* CONECT record links         */
    int  atnum;               /* Atom number                             */
@@ -294,11 +297,11 @@ typedef struct pdb_entry
    int  formal_charge;       /* Formal charge - used in XML files       */
    int  nConect;             /* Number of conections                    */
    int  entity_id;           /* Entity ID - used in XML files           */
+   int  atomtype;            /* See ATOMTYPE_XXXX                       */
    char record_type[8];      /* ATOM / HETATM                  [MIN 7]  */
    char atnam[8];            /* Atom name, left justified      [MIN 6]  */
    char atnam_raw[8];        /* Atom name as it appears in the PDB file
-                                                               [MIN 6]
-                              */
+                                                               [MIN 6]  */
    char resnam[8];           /* Residue name                   [MIN 5]  */
    char insert[8];           /* Numbering insert code          [MIN 3*] */
    char chain[8];            /* Chain label                    [MIN 3*] */
@@ -449,19 +452,21 @@ typedef struct
                      strcpy(p->insert," ");              \
                      strcpy(p->chain," ");               \
                      p->x = 0.0; p->y = 0.0; p->z = 0.0; \
-                     p->altpos = ' '; \
-                     p->occ = 0.0; p->bval = 0.0; \
-                     p->next = NULL; \
-                     p->access = 0.0; \
-                     p->radius = 0.0; \
-                     p->formal_charge  =   0; \
-                     p->partial_charge = 0.0; \
-                     strcpy(p->element,"  "); \
-                     strcpy(p->segid,"    "); \
-                     p->conect[0] = NULL;     \
-                     p->nConect = 0;          \
-                     p->atomType = NULL;      \
-                     p->secstr = ' ';         \
+                     p->altpos = ' ';                    \
+                     p->occ = 0.0; p->bval = 0.0;        \
+                     p->next = NULL;                     \
+                     p->extras = NULL;                   \
+                     p->access = 0.0;                    \
+                     p->radius = 0.0;                    \
+                     p->formal_charge  =   0;            \
+                     p->partial_charge = 0.0;            \
+                     strcpy(p->element,"  ");            \
+                     strcpy(p->segid,"    ");            \
+                     p->conect[0] = NULL;                \
+                     p->nConect = 0;                     \
+                     p->atomInfo = NULL;                 \
+                     p->atomtype = 0;                    \
+                     p->secstr = ' ';                    \
                      p->entity_id = 0;
  
 
@@ -475,6 +480,9 @@ typedef struct
 
 #define CHAINMATCH(chain1,chain2) !strcmp(chain1, chain2)
 #define INSERTMATCH(ins1, ins2) !strcmp(ins1, ins2)
+
+#define PDBCHAINMATCH(p, q) !strcmp((p)->chain, (q)->chain)
+#define PDBINSERTMATCH(p, q) !strcmp((p)->insert, (q)->insert)
 
 /* Called as CREATEPDBEXTRAS(pdb, EXTRATYPE)                            */
 #define CREATEPDBEXTRAS(x, y)                                   \
@@ -538,6 +546,22 @@ typedef struct
 /* For forcing writing in PDB or XML format                             */
 #define FORCEPDB gPDBXMLForce = FORCEXML_PDB
 #define FORCEXML gPDBXMLForce = FORCEXML_XML
+
+/* Atom types                                                           */
+#define ATOMTYPE_NONRESIDUE 128
+#define ATOMTYPE_UNDEF        0
+#define ATOMTYPE_ATOM         1
+#define ATOMTYPE_NUC          2
+#define ATOMTYPE_MODPROT      3
+#define ATOMTYPE_MODNUC       4
+#define ATOMTYPE_NONSTDAA     5
+#define ATOMTYPE_NONSTDNUC    6
+#define ATOMTYPE_HETATM       (7  | ATOMTYPE_NONRESIDUE)
+#define ATOMTYPE_METAL        (8  | ATOMTYPE_NONRESIDUE)
+#define ATOMTYPE_WATER        (9  | ATOMTYPE_NONRESIDUE)
+#define ATOMTYPE_BOUNDHET     (10 | ATOMTYPE_NONRESIDUE)
+#define ATOMTYPE_BOUNDPOLYHET (11 | ATOMTYPE_NONRESIDUE)
+
 
 /************************************************************************/
 /* Globals

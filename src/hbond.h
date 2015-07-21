@@ -3,11 +3,11 @@
 
    \file       hbond.h
    
-   \version    V1.3
-   \date       14.08.14
+   \version    V1.4
+   \date       20.07.15
    \brief      Header file for hbond determining code
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -52,6 +52,7 @@
                   prototypes for renamed functions. By: CTP
 -  V1.3  14.08.14 Moved deprecated function prototypes to deprecated.h 
                   By: CTP
+-  V1.4  20.07.15 Added blListAllHBonds()  By: ACRM
 
 *************************************************************************/
 #ifndef _hbond_h
@@ -74,6 +75,14 @@
 
 #define HBOND_ANY (HBOND_BACK1 | HBOND_BACK2 | HBOND_SIDE1 | HBOND_SIDE2)
 
+typedef struct _hblist
+{
+   struct _hblist *next;
+   PDB            *donor,
+                  *acceptor;
+   BOOL           relaxed;
+}  HBLIST;
+
 /************************************************************************/
 /* Prototypes
 */
@@ -81,7 +90,8 @@ int  blIsHBonded(PDB *res1, PDB *res2, int type);
 BOOL blValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP);
 int blIsMCDonorHBonded(PDB *res1, PDB *res2, int type);
 int blIsMCAcceptorHBonded(PDB *res1, PDB *res2, int type);
-
+void blSetMaxProteinHBondDADistance(REAL dist);
+HBLIST *blListAllHBonds(PDB *p, PDB *q);
 
 /************************************************************************/
 /* Include deprecated functions                                         */

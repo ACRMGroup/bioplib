@@ -831,7 +831,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
       hlist->x=x5;
       hlist->y=y5;
       hlist->z=z5;
-      strcpy(hlist->element," H");                 /* 13.02.15          */
+      strcpy(hlist->element,"H");                  /* 13.02.15          */
       ALLOCNEXT(hlist,PDB);
       if(hlist == NULL)
       {
@@ -903,7 +903,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
          hlist->x=x4;
          hlist->y=y4;
          hlist->z=z4;
-         strcpy(hlist->element," H");                 /* 13.02.15       */
+         strcpy(hlist->element,"H");                  /* 13.02.15       */
          ALLOCNEXT(hlist,PDB);
          if(hlist == NULL)
          {
@@ -925,7 +925,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
          hlist->x=x5;
          hlist->y=y5;
          hlist->z=z5;
-         strcpy(hlist->element," H");                 /* 13.02.15       */
+         strcpy(hlist->element,"H");                  /* 13.02.15       */
          ALLOCNEXT(hlist,PDB);
          if(hlist == NULL)
          {
@@ -1007,7 +1007,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
             hlist->x=x4;
             hlist->y=y4;
             hlist->z=z4;
-            strcpy(hlist->element," H");                 /* 13.02.15    */
+            strcpy(hlist->element,"H");                  /* 13.02.15    */
             ALLOCNEXT(hlist,PDB);
             if(hlist == NULL)
             {
@@ -1029,7 +1029,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
             hlist->x=x5;
             hlist->y=y5;
             hlist->z=z5;
-            strcpy(hlist->element," H");                 /* 13.02.15    */
+            strcpy(hlist->element,"H");                  /* 13.02.15    */
             ALLOCNEXT(hlist,PDB);
             if(hlist == NULL)
             {
@@ -1051,7 +1051,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
             hlist->x=x6;
             hlist->y=y6;
             hlist->z=z6;
-            strcpy(hlist->element," H");                 /* 13.02.15    */
+            strcpy(hlist->element,"H");                  /* 13.02.15    */
             ALLOCNEXT(hlist,PDB);
             if(hlist == NULL)
             {
@@ -1093,7 +1093,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
             hlist->x=x4;
             hlist->y=y4;
             hlist->z=z4;
-            strcpy(hlist->element," H");                 /* 13.02.15    */
+            strcpy(hlist->element,"H");                  /* 13.02.15    */
             ALLOCNEXT(hlist,PDB);
             if(hlist == NULL)
             {
@@ -1151,7 +1151,7 @@ required by PGP parameter for %3s %5d%c\n",sGRName,sNo,sIns);
          hlist->x=x4;
          hlist->y=y4;
          hlist->z=z4;
-         strcpy(hlist->element," H");                 /* 13.02.15       */
+         strcpy(hlist->element,"H");                  /* 13.02.15       */
          ALLOCNEXT(hlist,PDB);
          if(hlist == NULL)
          {

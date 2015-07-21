@@ -4,12 +4,12 @@
 
    \file       hbond.c
    
-   \version    V1.7
-   \date       07.07.14
+   \version    V1.8
+   \date       20.07.15
    \brief      Report whether two residues are H-bonded using
                Baker & Hubbard criteria
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -46,7 +46,7 @@
    NOTE, explicit hydrogens must be added to the PDB linked list before
    calling this routine.
 
-   The only external entry points are IsHBonded() and ValidHBond()
+   The only external entry points are blIsHBonded() and blValidHBond()
 
 **************************************************************************
 
@@ -62,6 +62,10 @@
 -  V1.5  17.01.06 Added IsMCDonorHBonded() and IsMCAcceptorHBonded()
 -  V1.6  20.03.14 Updated message in Demo code. By: CTP
 -  V1.7  07.07.14 Use bl prefix for functions By: CTP
+-  V1.8  20.08.14 Added blSetMaxProteinHBondDADistance() 
+                  Added blFindHBond()
+                  By: ACRM
+
 
 *************************************************************************/
 /* Doxygen
@@ -81,6 +85,14 @@
    #FUNCTION  blIsMCAcceptorHBonded()
    Determines whether 2 residues are H-bonded with the first 
    residue being a mainchain acceptor
+
+   #FUNCTION  blSetMaxProteinHBondDADistance()
+   Overrides the default maximum distance between donor and acceptor.
+   NOTE THIS IS NOT THREAD-SAFE
+
+   #FUNCTION blListAllHBonds()
+   Finds all HBonds between two specified residues
+
 */
 /************************************************************************/
 /* Includes
@@ -106,7 +118,7 @@
 /************************************************************************/
 /* Globals
 */
-
+static REAL sDADistSq = DADISTSQ;
 
 /************************************************************************/
 /* Prototypes
@@ -286,6 +298,7 @@ int blIsHBonded(PDB *res1, PDB *res2, int type)
             HBonds with missing antecedents. Previously AtomP==NULL
             was handled as an invalid HBond.
 -  07.07.14 Use bl prefix for functions By: CTP
+-  20.07.15 Changed DADISTSQ to sDADistSq  By: ACRM
 */
 BOOL blValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP)
 {
@@ -301,7 +314,7 @@ BOOL blValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP)
       /* If antecedent not defined then just check the distance         */
       if(AtomP==NULL)
       {
-         if(DISTSQ(AtomD, AtomA) < DADISTSQ)
+         if(DISTSQ(AtomD, AtomA) < sDADistSq)
             return(TRUE);
          else
             return(FALSE);
@@ -311,8 +324,8 @@ BOOL blValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP)
                      AtomA->x, AtomA->y, AtomA->z,
                      AtomD->x, AtomD->y, AtomD->z);
 
-      if((DISTSQ(AtomD, AtomA) < DADISTSQ) &&
-         ang1 >= PI/2.0                    &&
+      if((DISTSQ(AtomD, AtomA) < sDADistSq) &&
+         ang1 >= PI/2.0                     &&
          ang1 <= PI)
          return(TRUE);
    }
@@ -735,8 +748,203 @@ int blIsMCAcceptorHBonded(PDB *res1, PDB *res2, int type)
 }
 
 
+/************************************************************************/
+/*>void blSetMaxProteinHBondDADistance(REAL dist)
+   ----------------------------------------------
+*//**
+   \param[in]   dist    Distance
+
+   Wrapper to set the static variable for maximum D-A distance
+
+   16.06.99 Original   By: ACRM
+*/
+void blSetMaxProteinHBondDADistance(REAL dist)
+{
+   dist     *= dist;
+   sDADistSq = dist;
+}
 
 
+/************************************************************************/
+/*>HBLIST *blListAllHBonds(PDB *res1, PDB *res2)
+   ----------------------------------------------
+*//**
+   \param[in]   *res1    Pointer to first residue
+   \param[in]   *res2    Pointer to second residue
+   \return               Linked list of hydrogen bonds
+
+   Finds all HBonds between two specified residues
+
+-  20.07.15  Original   By: ACRM
+-  21.07.15  Corrected to blValidHBond()
+*/
+HBLIST *blListAllHBonds(PDB *res1, PDB *res2)
+{
+   PDB *AtomH,              /* The hydrogen                             */
+       *AtomD,              /* The hydrogen donor                       */
+       *AtomA,              /* The acceptor                             */
+       *AtomP;              /* The acceptor's antecedent                */
+   HBLIST *hb = NULL;
+
+   int type = HBOND_ANY;
+
+   /* Find H-bonds involving the backbone of res1                       */
+   if(ISSET(type, HBOND_BACK1))
+   {
+      if(FindBackboneDonor(res1, &AtomH, &AtomD))
+      {
+         if(ISSET(type, HBOND_BACK2))
+         {
+            if(FindBackboneAcceptor(res2, &AtomA, &AtomP))
+            {
+               if(blValidHBond(AtomH, AtomD, AtomA, AtomP))
+               {
+                  if((hb = malloc(sizeof(HBLIST)))==NULL)
+                     return(NULL);
+                  hb->next = NULL;
+                  hb->donor = AtomD;
+                  hb->acceptor = AtomA;
+                  return(hb);
+               }
+               
+            }
+         }
+         if(ISSET(type, HBOND_SIDE2))
+         {
+            /* Clear internal flags                                     */
+            FindSidechainAcceptor(NULL, NULL, NULL);
+            while(FindSidechainAcceptor(res2, &AtomA, &AtomP))
+            {
+               if(blValidHBond(AtomH, AtomD, AtomA, AtomP))
+               {
+                  if((hb = malloc(sizeof(HBLIST)))==NULL)
+                     return(NULL);
+                  hb->next = NULL;
+                  hb->donor = AtomD;
+                  hb->acceptor = AtomA;
+                  return(hb);
+               }
+            }
+         }
+      }
+      if(FindBackboneAcceptor(res1, &AtomA, &AtomP))
+      {
+         if(ISSET(type, HBOND_BACK2))
+         {
+            if(FindBackboneDonor(res2, &AtomH, &AtomD))
+            {
+               if(blValidHBond(AtomH, AtomD, AtomA, AtomP))
+               {
+                  if((hb = malloc(sizeof(HBLIST)))==NULL)
+                     return(NULL);
+                  hb->next = NULL;
+                  hb->donor = AtomD;
+                  hb->acceptor = AtomA;
+                  return(hb);
+               }
+            }
+         }
+         if(ISSET(type, HBOND_SIDE2))
+         {
+            /* Clear internal flags                                     */
+            FindSidechainDonor(NULL, NULL, NULL);
+            while(FindSidechainDonor(res2, &AtomH, &AtomD))
+            {
+               if(blValidHBond(AtomH, AtomD, AtomA, AtomP))
+               {
+                  if((hb = malloc(sizeof(HBLIST)))==NULL)
+                     return(NULL);
+                  hb->next = NULL;
+                  hb->donor = AtomD;
+                  hb->acceptor = AtomA;
+                  return(hb);
+               }
+            }
+         }
+      }
+   }
+   
+   /* Find H-bonds involving sidechain of res1                          */
+   if(ISSET(type, HBOND_SIDE1))
+   {
+      /* Clear internal flags                                           */
+      FindSidechainDonor(NULL, NULL, NULL);
+      while(FindSidechainDonor(res1, &AtomH, &AtomD))
+      {
+         if(ISSET(type, HBOND_BACK2))
+         {
+            if(FindBackboneAcceptor(res2, &AtomA, &AtomP))
+            {
+               if(blValidHBond(AtomH, AtomD, AtomA, AtomP))
+               {
+                  if((hb = malloc(sizeof(HBLIST)))==NULL)
+                     return(NULL);
+                  hb->next = NULL;
+                  hb->donor = AtomD;
+                  hb->acceptor = AtomA;
+                  return(hb);
+               }
+            }
+         }
+         if(ISSET(type, HBOND_SIDE2))
+         {
+            /* Clear internal flags                                     */
+            FindSidechainAcceptor(NULL, NULL, NULL);
+            while(FindSidechainAcceptor(res2, &AtomA, &AtomP))
+            {
+               if(blValidHBond(AtomH, AtomD, AtomA, AtomP))
+               {
+                  if((hb = malloc(sizeof(HBLIST)))==NULL)
+                     return(NULL);
+                  hb->next = NULL;
+                  hb->donor = AtomD;
+                  hb->acceptor = AtomA;
+                  return(hb);
+               }
+            }
+         }
+      }
+      /* Clear internal flags                                           */
+      FindSidechainAcceptor(NULL, NULL, NULL);
+      while(FindSidechainAcceptor(res1, &AtomA, &AtomP))
+      {
+         if(ISSET(type, HBOND_BACK2))
+         {
+            if(FindBackboneDonor(res2, &AtomH, &AtomD))
+            {
+               if(blValidHBond(AtomH, AtomD, AtomA, AtomP))
+               {
+                  if((hb = malloc(sizeof(HBLIST)))==NULL)
+                     return(NULL);
+                  hb->next = NULL;
+                  hb->donor = AtomD;
+                  hb->acceptor = AtomA;
+                  return(hb);
+               }
+            }
+         }
+         if(ISSET(type, HBOND_SIDE2))
+         {
+            /* Clear internal flags                                     */
+            FindSidechainDonor(NULL, NULL, NULL);
+            while(FindSidechainDonor(res2, &AtomH, &AtomD))
+            {
+               if(blValidHBond(AtomH, AtomD, AtomA, AtomP))
+               {
+                  if((hb = malloc(sizeof(HBLIST)))==NULL)
+                     return(NULL);
+                  hb->next = NULL;
+                  hb->donor = AtomD;
+                  hb->acceptor = AtomA;
+                  return(hb);
+               }
+            }
+         }
+      }
+   }
+
+   return(NULL);
+}
 
       
    

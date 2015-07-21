@@ -93,6 +93,9 @@
    #FUNCTION blAreResiduePointersBonded()
    Tests whether residues specified by pointers to the start of the
    residues
+
+   #FUNCTION blIsBonded()
+   Test whether two atoms are bonded
 */
 /************************************************************************/
 /* Includes
