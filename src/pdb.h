@@ -520,7 +520,7 @@ typedef struct
 
 /* Creates a residue identifier from the chain, resnum and insert       */
 #define MAKERESID(x, p) \
-   sprintf((x), "%s%d%s", (p)->chain, (p)->resnum, (p)->insert)
+   sprintf((x), "%s.%d%s", (p)->chain, (p)->resnum, (p)->insert)
 
 /* Determines whether two residue identifiers are the same              */
 #define RESIDMATCH(p, q) (((p)->resnum == (q)->resnum) &&                \
