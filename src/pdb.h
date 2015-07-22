@@ -213,6 +213,7 @@
                   Added blSetAtomTypes()
                   Added PDBEXTRASPTR()
                   Added RESIDMATCH()
+                  Improved MAKERESID()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -220,6 +221,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "MathType.h"
 #include "SysDefs.h"
@@ -519,8 +521,19 @@ typedef struct
 #define PDBEXTRASPTR(p, type) ((type *)((p)->extras))
 
 /* Creates a residue identifier from the chain, resnum and insert       */
-#define MAKERESID(x, p) \
-   sprintf((x), "%s.%d%s", (p)->chain, (p)->resnum, (p)->insert)
+#define MAKERESID(x, p)                                                  \
+   do {                                                                  \
+      char _makeresid_dot[2];                                            \
+      int _makeresid_len = strlen((p)->chain);                           \
+      _makeresid_dot[0] = '\0';                                          \
+      if(_makeresid_len > 0) {                                           \
+         if(isdigit((p)->chain[_makeresid_len - 1])) {                   \
+            strcpy(_makeresid_dot, ".");                                 \
+         }                                                               \
+      }                                                                  \
+      sprintf((x), "%s%s%d%s", (p)->chain, _makeresid_dot, (p)->resnum,  \
+              (p)->insert);                                              \
+   } while(0)
 
 /* Determines whether two residue identifiers are the same              */
 #define RESIDMATCH(p, q) (((p)->resnum == (q)->resnum) &&                \
