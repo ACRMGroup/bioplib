@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.89
-   \date       14.07.15
+   \version    V1.90
+   \date       22.07.15
 
    \brief      Include file for PDB routines
    
@@ -209,6 +209,8 @@
 -  V1.90 21.07.15 Changed PDB.atomType to PDB.atomInfo
                   Added PDB.atomtype
                   Added ATOMTYPE_XXXXXXX defines
+                  Added blIsConected()
+                  Added blSetAtomTypes()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -624,6 +626,7 @@ BOOL blDeleteConect(PDB *p, PDB *q);
 BOOL blDeleteAConectByNum(PDB *pdb, int cNum);
 void blDeleteAtomConects(PDB *pdb);
 BOOL blCopyConects(PDB *out, PDB *in);
+BOOL blIsConected(PDB *p, PDB *q);
 BOOL blIsBonded(PDB *p, PDB *q, REAL tol);
 PDB *blDeleteAtomPDB(PDB *pdb, PDB *atom);
 PDB *blDeleteAtomRangePDB(PDB *pdb, PDB *start, PDB *stop);
@@ -778,7 +781,7 @@ MODRES *blGetModresWholePDB(WHOLEPDB *wpdb);
 void blFindOriginalResType(char *orig, char *new, MODRES *modres);
 BIOMOLECULE *blGetBiomoleculeWholePDB(WHOLEPDB *wpdb);
 void blFreeBiomolecule(BIOMOLECULE *biomolecule);
-
+STRINGLIST *blSetPDBAtomTypes(PDB *pdb);
 
 /************************************************************************/
 /* Include deprecated functions                                         */

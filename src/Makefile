@@ -98,7 +98,7 @@ GlyCB.o BuildAtomNeighbourPDBList.o \
 FindAtomWildcardInRes.o DupeResiduePDB.o StripWatersPDB.o aalist.o \
 StructurePDB.o FindHetatmResidue.o FindHetatmResidueSpec.o access.o \
 deprecatedBiop.o BuildConect.o GetPDBChainAsCopy.o PDBHeaderInfo.o \
-WritePIR.o
+WritePIR.o atomtype.o
 
 
 # Static libraries - the default
