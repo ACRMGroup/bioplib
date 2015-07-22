@@ -211,6 +211,8 @@
                   Added ATOMTYPE_XXXXXXX defines
                   Added blIsConected()
                   Added blSetAtomTypes()
+                  Added PDBEXTRASPTR()
+                  Added RESIDMATCH()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -505,13 +507,27 @@ typedef struct
       }                                                         \
    }
 
-/* Creates a residue identifier from the chain, resnum and insert      */      
+/* Eases access to items in the pdb->extras structure
+   For a PDB item 'p' and a p->extras of type 'EXTRAS', you
+   access a field, 'field' with
+      x = PDBEXTRASPTR(p, EXTRAS)->field;
+   -or-
+      PDBEXTRASPTR(p, EXTRAS)->field = x;
+   -or-
+      if(PDBEXTRASPTR(p, EXTRAS)->field == x)
+*/
+#define PDBEXTRASPTR(p, type) ((type *)((p)->extras))
+
+/* Creates a residue identifier from the chain, resnum and insert       */
 #define MAKERESID(x, p) \
    sprintf((x), "%s%d%s", (p)->chain, (p)->resnum, (p)->insert)
 
-
-
-/* These are the types returned by ResolPDB()                          */
+/* Determines whether two residue identifiers are the same              */
+#define RESIDMATCH(p, q) (((p)->resnum == (q)->resnum) &&                \
+                          (!strcmp((p)->chain,  (q)->chain)) &&          \
+                          (!strcmp((p)->insert, (q)->insert)))
+   
+/* These are the types returned by ResolPDB()                           */
 #define STRUCTURE_TYPE_UNKNOWN   0
 #define STRUCTURE_TYPE_XTAL      1
 #define STRUCTURE_TYPE_NMR       2
