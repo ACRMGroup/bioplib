@@ -699,6 +699,7 @@ PDB *blReadPDBAtomsOccRank(FILE *fp, int *natom, int OccRank)
 -  02.04.15 V3.4  Rewind file after reading pdbxml header data.  By: CTP
 -  28.04.15 V3.5  Removed rewind. Call to blDoReadPDBML() returns WHOLEPDB
                   instead of PDB.  By: CTP
+-  21.07.15       Changed atomType to atomInfo   By: ACRM
 
    We need to deal with freeing wpdb if we are returning null.
    Also need to deal with some sort of error code
@@ -1016,7 +1017,6 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
                p->partial_charge = (REAL)charge;
                p->access = 0.0;
                p->radius = 0.0;
-               p->atomType = NULL;
                p->next   = NULL;
                strcpy(p->record_type, record_type);
                strcpy(p->atnam,       atnam);
@@ -1078,7 +1078,7 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
                   multi[NPartial].partial_charge = (REAL)charge;
                   multi[NPartial].access = 0.0;
                   multi[NPartial].radius = 0.0;
-                  multi[NPartial].atomType = NULL;
+                  multi[NPartial].atomInfo = NULL;
                   multi[NPartial].next   = NULL;
                   strcpy(multi[NPartial].record_type, record_type);
                   strcpy(multi[NPartial].atnam,       atnam);
@@ -1154,6 +1154,7 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
 -  16.08.14 Read formal charge and set partial charge. By: CTP
 -  17.02.15 Added segid support   By: ACRM
 -  23.06.15 Clears the new PDB items 
+-  21.07.15 Changed .atomType to .atomInfo
 */
 static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL], 
                                int NPartial, PDB **ppdb, PDB **pp, 
@@ -1233,7 +1234,7 @@ static BOOL StoreOccRankAtom(int OccRank, PDB multi[MAXPARTIAL],
    (*pp)->partial_charge = multi[IMaxOcc].partial_charge;
    (*pp)->access = multi[IMaxOcc].access;
    (*pp)->radius = multi[IMaxOcc].radius;
-   (*pp)->atomType = NULL;
+   (*pp)->atomInfo = NULL;
    (*pp)->next   = NULL;
    /* 03.06.05 Added this line                                          */
    (*pp)->altpos = multi[IMaxOcc].altpos;

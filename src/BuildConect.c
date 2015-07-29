@@ -3,8 +3,8 @@
 
    \file       BuildConect.c
    
-   \version    V1.3
-   \date       23.05.15
+   \version    V1.4
+   \date       22.07.15
    \brief      Build connectivity information in PDB linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2002-2015
@@ -52,6 +52,7 @@
                   a HETATM
 -  V1.3  23.06.15 Added blAreResiduesBonded() and 
                   blAreResiduePointersBonded()
+-  V1.4  22.07.15 Added blIsConnected()
 
 *************************************************************************/
 /* Doxygen
@@ -86,13 +87,19 @@
    CONECT data points to records in the new linked list instead of the
    old one.
 
-   #FUNCTION AreResiduesBonded()
+   #FUNCTION blAreResiduesBonded()
    Tests whether residues specified by chain, number and insert are
    bonded
 
-   #FUNCTION AreResiduePointersBonded()
+   #FUNCTION blAreResiduePointersBonded()
    Tests whether residues specified by pointers to the start of the
    residues
+
+   #FUNCTION blIsBonded()
+   Test whether two atoms are bonded
+
+   #FUNCTION blIsConected()
+   Tests whether two atoms are listed as connected in the CONECT records
 */
 /************************************************************************/
 /* Includes
@@ -603,6 +610,37 @@ BOOL blCopyConects(PDB *out, PDB *in)
    free(idxOut);
    return(TRUE);
 }
+
+/************************************************************************/
+/*>BOOL blIsConected(PDB *p, PDB *q)
+   ---------------------------------
+*//**
+   \param[in]       *p           First atom
+   \param[in]       *q           Second atom
+   \return                       Connected?
+
+   Tests whether there is a link between the specified atoms in the
+   CONECT list
+
+-  07.06.99 Original   By: ACRM
+*/
+BOOL blIsConected(PDB *p, PDB *q)
+{  int i;
+   for(i=0; i<p->nConect; i++)
+   {
+      if(p->conect[i] == q)
+         return(TRUE);
+   }
+
+   for(i=0; i<q->nConect; i++)
+   {
+      if(q->conect[i] == p)
+         return(TRUE);
+   }
+   
+   return(FALSE);
+}
+
 
 /************************************************************************/
 #ifdef TEST

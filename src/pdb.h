@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.87
-   \date       26.06.15
+   \version    V1.90
+   \date       22.07.15
 
    \brief      Include file for PDB routines
    
@@ -200,9 +200,20 @@
 -  V1.85 14.06.15 Added entity_id to PDB data structure and to CLEAR_PDB()
                   By: CTP
 -  V1.86 23.06.15 Added blAreResiduesBonded() and 
-                  blAreResiduePointersBonded()
+                  blAreResiduePointersBonded()   By: ACRM
 -  V1.87 26.06.15 Added blGetBiomoleculeWholePDB(), blFreeBiomolecule()
                   and associated structures
+-  V1.88 07.07.15 Added secstr item to PDB structure and to CLEAR_PDB.
+                  Added INSERTMATCH()
+-  V1.89 14.07.15 Added MAKERESID() macro
+-  V1.90 21.07.15 Changed PDB.atomType to PDB.atomInfo
+                  Added PDB.atomtype
+                  Added ATOMTYPE_XXXXXXX defines
+                  Added blIsConected()
+                  Added blSetAtomTypes()
+                  Added PDBEXTRASPTR()
+                  Added RESIDMATCH()
+                  Improved MAKERESID()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -210,6 +221,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "MathType.h"
 #include "SysDefs.h"
@@ -228,17 +240,17 @@
 #define blMAXCHAINLABEL 8
 
 
-/* blATOMTYPE is unused at present, but gives the flexibility of
+/* blATOMINFO is unused at present, but gives the flexibility of
    associating type information with each PDB record. 
 */
-typedef struct _blAtomType
+typedef struct _blAtomInfo
 {
    REAL mass,
         pol,
         NEff,
         vdwr;
    char atomtype[8];
-}  blATOMTYPE;
+}  blATOMINFO;
 
 
 /* This is our main PDB structure used for the PDB linked lists.
@@ -265,6 +277,16 @@ typedef struct _blAtomType
       ((EXTRAS *)p->extras)->angle = (REAL)0.0;
    }
 */
+
+/* We recommend a dimension of 8 for all the character arrays below for
+   maxmimum portability. If memory footprint is a key consideration, some
+   of these can be reduced as noted with [MIN x] in the comments. Note 
+   that restrictions on the size of items with a * are imposed by PDB 
+   files are not imposed in PDBML or mmCIF files and consequently, 
+   reducting these may prevent reading of these files.
+   See http://www.catb.org/esr/structure-packing/ for details of
+   optimizing the memory footprint of a structure.
+*/
 typedef struct pdb_entry
 {
    REAL x, y, z,             /* Coordinates                             */
@@ -273,7 +295,7 @@ typedef struct pdb_entry
                                 Bioplib routines                        */
         partial_charge;      /* Reserved for future use                 */
    APTR extras;              /* Pointer for users to add information    */
-   blATOMTYPE *atomType;     /* Reserved for future use                 */
+   blATOMINFO *atomInfo;     /* Reserved for future use                 */
    struct pdb_entry *next;   /* Forward linked list                     */
    struct pdb_entry *conect[MAXCONECT];  /* CONECT record links         */
    int  atnum;               /* Atom number                             */
@@ -281,15 +303,18 @@ typedef struct pdb_entry
    int  formal_charge;       /* Formal charge - used in XML files       */
    int  nConect;             /* Number of conections                    */
    int  entity_id;           /* Entity ID - used in XML files           */
-   char record_type[8];      /* ATOM / HETATM                           */
-   char atnam[8];            /* Atom name, left justified               */
-   char atnam_raw[8];        /* Atom name as it appears in the PDB file */
-   char resnam[8];           /* Residue name                            */
-   char insert[8];           /* Numbering insert code                   */
-   char chain[8];            /* Chain label                             */
-   char element[8];          /* Element type                            */
-   char segid[8];            /* Segment ID                              */
+   int  atomtype;            /* See ATOMTYPE_XXXX                       */
+   char record_type[8];      /* ATOM / HETATM                  [MIN 7]  */
+   char atnam[8];            /* Atom name, left justified      [MIN 6]  */
+   char atnam_raw[8];        /* Atom name as it appears in the PDB file
+                                                               [MIN 6]  */
+   char resnam[8];           /* Residue name                   [MIN 5]  */
+   char insert[8];           /* Numbering insert code          [MIN 3*] */
+   char chain[8];            /* Chain label                    [MIN 3*] */
+   char element[8];          /* Element type                   [MIN 3]  */
+   char segid[8];            /* Segment ID                     [MIN 3*] */
    char altpos;              /* Alternate position indicator            */
+   char secstr;              /* Secondary structure                     */
 }  PDB;
 
 typedef struct pdbresidue
@@ -433,18 +458,21 @@ typedef struct
                      strcpy(p->insert," ");              \
                      strcpy(p->chain," ");               \
                      p->x = 0.0; p->y = 0.0; p->z = 0.0; \
-                     p->altpos = ' '; \
-                     p->occ = 0.0; p->bval = 0.0; \
-                     p->next = NULL; \
-                     p->access = 0.0; \
-                     p->radius = 0.0; \
-                     p->formal_charge  =   0; \
-                     p->partial_charge = 0.0; \
-                     strcpy(p->element,"  "); \
-                     strcpy(p->segid,"    "); \
-                     p->conect[0] = NULL;     \
-                     p->nConect = 0;          \
-                     p->atomType = NULL;      \
+                     p->altpos = ' ';                    \
+                     p->occ = 0.0; p->bval = 0.0;        \
+                     p->next = NULL;                     \
+                     p->extras = NULL;                   \
+                     p->access = 0.0;                    \
+                     p->radius = 0.0;                    \
+                     p->formal_charge  =   0;            \
+                     p->partial_charge = 0.0;            \
+                     strcpy(p->element,"  ");            \
+                     strcpy(p->segid,"    ");            \
+                     p->conect[0] = NULL;                \
+                     p->nConect = 0;                     \
+                     p->atomInfo = NULL;                 \
+                     p->atomtype = 0;                    \
+                     p->secstr = ' ';                    \
                      p->entity_id = 0;
  
 
@@ -456,7 +484,11 @@ typedef struct
                       !strncmp((z)->resnam,"ODD",3) || \
                       !strncmp((z)->resnam,"WAT",3))
 
-#define CHAINMATCH(chain1,chain2) !strcmp(chain1,chain2)
+#define CHAINMATCH(chain1,chain2) !strcmp(chain1, chain2)
+#define INSERTMATCH(ins1, ins2) !strcmp(ins1, ins2)
+
+#define PDBCHAINMATCH(p, q) !strcmp((p)->chain, (q)->chain)
+#define PDBINSERTMATCH(p, q) !strcmp((p)->insert, (q)->insert)
 
 /* Called as CREATEPDBEXTRAS(pdb, EXTRATYPE)                            */
 #define CREATEPDBEXTRAS(x, y)                                   \
@@ -476,10 +508,39 @@ typedef struct
          }                                                      \
       }                                                         \
    }
-      
 
+/* Eases access to items in the pdb->extras structure
+   For a PDB item 'p' and a p->extras of type 'EXTRAS', you
+   access a field, 'field' with
+      x = PDBEXTRASPTR(p, EXTRAS)->field;
+   -or-
+      PDBEXTRASPTR(p, EXTRAS)->field = x;
+   -or-
+      if(PDBEXTRASPTR(p, EXTRAS)->field == x)
+*/
+#define PDBEXTRASPTR(p, type) ((type *)((p)->extras))
 
-/* These are the types returned by ResolPDB()                          */
+/* Creates a residue identifier from the chain, resnum and insert       */
+#define MAKERESID(x, p)                                                  \
+   do {                                                                  \
+      char _makeresid_dot[2];                                            \
+      int _makeresid_len = strlen((p)->chain);                           \
+      _makeresid_dot[0] = '\0';                                          \
+      if(_makeresid_len > 0) {                                           \
+         if(isdigit((p)->chain[_makeresid_len - 1])) {                   \
+            strcpy(_makeresid_dot, ".");                                 \
+         }                                                               \
+      }                                                                  \
+      sprintf((x), "%s%s%d%s", (p)->chain, _makeresid_dot, (p)->resnum,  \
+              (p)->insert);                                              \
+   } while(0)
+
+/* Determines whether two residue identifiers are the same              */
+#define RESIDMATCH(p, q) (((p)->resnum == (q)->resnum) &&                \
+                          (!strcmp((p)->chain,  (q)->chain)) &&          \
+                          (!strcmp((p)->insert, (q)->insert)))
+   
+/* These are the types returned by ResolPDB()                           */
 #define STRUCTURE_TYPE_UNKNOWN   0
 #define STRUCTURE_TYPE_XTAL      1
 #define STRUCTURE_TYPE_NMR       2
@@ -516,6 +577,22 @@ typedef struct
 /* For forcing writing in PDB or XML format                             */
 #define FORCEPDB gPDBXMLForce = FORCEXML_PDB
 #define FORCEXML gPDBXMLForce = FORCEXML_XML
+
+/* Atom types                                                           */
+#define ATOMTYPE_NONRESIDUE 128
+#define ATOMTYPE_UNDEF        0
+#define ATOMTYPE_ATOM         1
+#define ATOMTYPE_NUC          2
+#define ATOMTYPE_MODPROT      3
+#define ATOMTYPE_MODNUC       4
+#define ATOMTYPE_NONSTDAA     5
+#define ATOMTYPE_NONSTDNUC    6
+#define ATOMTYPE_HETATM       (7  | ATOMTYPE_NONRESIDUE)
+#define ATOMTYPE_METAL        (8  | ATOMTYPE_NONRESIDUE)
+#define ATOMTYPE_WATER        (9  | ATOMTYPE_NONRESIDUE)
+#define ATOMTYPE_BOUNDHET     (10 | ATOMTYPE_NONRESIDUE)
+#define ATOMTYPE_BOUNDPOLYHET (11 | ATOMTYPE_NONRESIDUE)
+
 
 /************************************************************************/
 /* Globals
@@ -578,6 +655,7 @@ BOOL blDeleteConect(PDB *p, PDB *q);
 BOOL blDeleteAConectByNum(PDB *pdb, int cNum);
 void blDeleteAtomConects(PDB *pdb);
 BOOL blCopyConects(PDB *out, PDB *in);
+BOOL blIsConected(PDB *p, PDB *q);
 BOOL blIsBonded(PDB *p, PDB *q, REAL tol);
 PDB *blDeleteAtomPDB(PDB *pdb, PDB *atom);
 PDB *blDeleteAtomRangePDB(PDB *pdb, PDB *start, PDB *stop);
@@ -732,7 +810,7 @@ MODRES *blGetModresWholePDB(WHOLEPDB *wpdb);
 void blFindOriginalResType(char *orig, char *new, MODRES *modres);
 BIOMOLECULE *blGetBiomoleculeWholePDB(WHOLEPDB *wpdb);
 void blFreeBiomolecule(BIOMOLECULE *biomolecule);
-
+STRINGLIST *blSetPDBAtomTypes(PDB *pdb);
 
 /************************************************************************/
 /* Include deprecated functions                                         */

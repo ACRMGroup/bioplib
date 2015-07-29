@@ -3,8 +3,8 @@
 
    \file       WritePDB.c
    
-   \version    V1.28
-   \date       09.07.15
+   \version    V1.29
+   \date       29.07.15
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
@@ -106,7 +106,10 @@
 -  V1.27 21.06.15 Added blMapChainsToEntity(). blDoWritePDBAsPDBML() sets
                   entity_id based on COMPND records if entty_id not 
                   already set.  By: CTP
--  V1.28 09.07.15 Added output of PDBML seqres records from wpdb->header.
+-  V1.28 10.07.15 Added return value for blWritePDBAsPDBML() and 
+                  blDoWritePDBAsPDBML() when XML_SUPPORT not defined 
+                  By: ACRM
+-  V1.29 29.07.15 Added output of PDBML seqres records from wpdb->header.
                   Added ReadSeqresChainLabelWholePDB() and 
                   ReadSeqresResidueListWholePDB().  By: CTP
 
@@ -516,6 +519,7 @@ void blWritePDBRecordAtnam(FILE *fp,
 -  25.02.15 Changed to type BOOL and checks all memory allocations
 -  29.04.15 Updated to write CONECT records.  By: CTP
 -  11.05.15 Made function into wrapper for blDoWritePDBAsPDBML(). By: CTP
+-  10.07.15 Added return value for no XML_SUPPORT  By: ACRM
 
 */
 BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
@@ -523,7 +527,7 @@ BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
 #ifndef XML_SUPPORT
 
    /* PDBML format not supported.                                       */
-   return;
+   return(FALSE);                         /* 10.07.15                   */
 
 #else 
 
@@ -567,15 +571,15 @@ BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
             TRUE.  By: CTP
 -  21.06.15 Write entity_id. Use COMPND record to set entity_id if not set
             in PDB. Set compound type to polymer. By:  CTP
--  09.07.15 Added output of SEQRES records from wpdb->header.  By: CTP
-
+-  10.07.15 Added return value for no XML_SUPPORT  By: ACRM
+-  29.07.15 Added output of SEQRES records from wpdb->header.  By: CTP
 */
 static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
 {
 #ifndef XML_SUPPORT
 
    /* PDBML format not supported.                                       */
-   return;
+   return(FALSE);                         /* 10.07.15                   */
 
 #else 
 

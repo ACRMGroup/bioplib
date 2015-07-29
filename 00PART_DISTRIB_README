@@ -1,0 +1,11 @@
+
+Files in this directory are part of BiopLib, a C library for use in
+(mostly) structural bioinformatics.
+
+BiopLib is available from http://www.bioinf.org.uk/software/bioplib/
+
+BiopLib is copyright UCL and Dr Andrew C.R. Martin. It is distributed
+under the Gnu Public Licence V3.0 and consequently may not be used in
+closed-source applications. If you wish to do so, you may obtain a
+commercial licence for the library.
+

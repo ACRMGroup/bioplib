@@ -3,8 +3,8 @@
 
    \file       MathUtil.h
    
-   \version    V1.7
-   \date       15.05.15
+   \version    V1.8
+   \date       20.07.15
    \brief      Prototypes, etc. for maths utility routines
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2015
@@ -56,6 +56,7 @@
 -  V1.6  14.08.14 Moved deprecated function prototypes to deprecated.h 
                   By: CTP
 -  V1.7  15.05.15 Added blIsPrime() and blFindNextPrime()  By: ACRM
+-  V1.8  20.07.15 Renamed blDistPtVect() to blDistPtLine()
 
 *************************************************************************/
 #ifndef _MATHUTIL_H
@@ -65,7 +66,7 @@
 #include "MathType.h"
 #include "SysDefs.h"
 
-/* Prototypes */
+/* Prototypes                                                           */
 void blCalcSD(REAL val, int action, REAL *mean, REAL *SD);
 void blCalcExtSD(REAL val, int action, REAL *Sx, REAL *SxSq, 
                  int *NValues, REAL *mean, REAL *SD);
@@ -76,12 +77,12 @@ void blCrossProd3(VEC3F *Out, VEC3F In1, VEC3F In2);
 void blVecSub3(VEC3F *Out, VEC3F In1, VEC3F In2);
 void blVecAdd3(VEC3F *Out, VEC3F In1, VEC3F In2);
 REAL blVecLen3(VEC3F Vec);
-REAL blDistPtVect(VEC3F Point, VEC3F End1, VEC3F End2);
+REAL blDistPtLine(VEC3F Point, VEC3F End1, VEC3F End2);
 REAL blPointLineDistance(REAL Px, REAL Py, REAL Pz,
-                       REAL P1x, REAL P1y, REAL P1z,
-                       REAL P2x, REAL P2y, REAL P2z,
-                       REAL *Rx, REAL *Ry, REAL *Rz,
-                       REAL *frac);
+                         REAL P1x, REAL P1y, REAL P1z,
+                         REAL P2x, REAL P2y, REAL P2z,
+                         REAL *Rx, REAL *Ry, REAL *Rz,
+                         REAL *frac);
 ULONG blFactorial(int n);
 ULONG blFactdiv(int n1, int n2);
 ULONG blNPerm(int n, int r);

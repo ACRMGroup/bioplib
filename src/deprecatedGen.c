@@ -3,11 +3,11 @@
 
    \file       deprecatedGen.c
    
-   \version    V1.3
-   \date       24.10.14
+   \version    V1.4
+   \date       20.07.15
    \brief      Source code for all deprecated functions.
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -70,6 +70,8 @@
 -  V1.2  14.08.14 Removed unnecessary includes. 
                   Corrected safemem.h function names   By: CTP
 -  V1.3  24.10.14 Added regression and eigen           By: ACRM
+-  V1.4  20.07.15 Deprecated blDistPtVect()
+
 
 *************************************************************************/
 /* Includes
@@ -410,7 +412,7 @@ REAL VecLen3(VEC3F Vec)
 REAL DistPtVect(VEC3F Point, VEC3F End1, VEC3F End2)
 {
    DEPRECATED("DistPtVect()","blDistPtVect()");
-   return(blDistPtVect(Point, End1, End2));
+   return(blDistPtLine(Point, End1, End2));
 }
 
 
@@ -451,6 +453,11 @@ ULONG NComb(int n, int r)
    return(blNComb(n, r));
 }
 
+REAL blDistPtVect(VEC3F Point, VEC3F End1, VEC3F End2)
+{
+   DEPRECATED("blDistPtVect()","blDistPtLine()");
+   return(blDistPtLine(Point, End1, End2));
+}
 
 
 /************************************************************************/
