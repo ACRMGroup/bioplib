@@ -3,8 +3,8 @@
 
    \file       readpdbml_suite.c
    
-   \version    V1.5
-   \date       25.06.15
+   \version    V1.6
+   \date       29.07.15
    \brief      Test suite for reading pdb and pdbml data from file.
 
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
@@ -55,6 +55,7 @@
 -  V1.4  31.08.14 Added tests to catch bug in blCheckFileFormatPDBML().
                   By: CTP
 -  V1.5  25.06.15 Catch bug where author residue number is 0.  By: CTP
+-  V1.6  29.07.15 Changed pdb->atomType to pdb->atomInfo  By: CTP 
 
 *************************************************************************/
 
@@ -201,7 +202,7 @@ START_TEST(test_read_pdb_data_01)
    ck_assert(        pdb->partial_charge ==  0.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
 }
 END_TEST
 
@@ -236,7 +237,7 @@ START_TEST(test_read_pdb_data_02)
    ck_assert(        pdb->partial_charge ==  0.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
 }
 END_TEST
 
@@ -271,7 +272,7 @@ START_TEST(test_read_pdb_data_03)
    ck_assert(        pdb->partial_charge ==  0.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
 }
 END_TEST
 
@@ -306,7 +307,7 @@ START_TEST(test_read_pdb_data_04)
    ck_assert(        pdb->partial_charge ==  0.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
    ck_assert(        natoms ==                 1);
 }
 END_TEST
@@ -342,7 +343,7 @@ START_TEST(test_read_pdb_data_05)
    ck_assert(        pdb->partial_charge ==  0.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
    ck_assert(        natoms ==                 1);
 }
 END_TEST
@@ -378,7 +379,7 @@ START_TEST(test_read_pdb_data_06)
    ck_assert(        pdb->partial_charge ==  0.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
    ck_assert(        natoms ==                 1);
 }
 END_TEST
@@ -414,7 +415,7 @@ START_TEST(test_read_pdb_data_07)
    ck_assert(        pdb->partial_charge ==  3.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
    ck_assert(        natoms ==                 1);
 }
 END_TEST
@@ -450,7 +451,7 @@ START_TEST(test_read_pdb_data_08)
    ck_assert(        pdb->partial_charge == -1.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
    ck_assert(        natoms ==                 1);
 }
 END_TEST
@@ -486,7 +487,7 @@ START_TEST(test_read_pdb_data_09)
    ck_assert(        pdb->partial_charge ==  0.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
    ck_assert(        natoms ==                 1);
 }
 END_TEST
@@ -522,7 +523,7 @@ START_TEST(test_read_pdb_data_10)
    ck_assert(        pdb->partial_charge ==  0.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
    ck_assert(        natoms ==                 1);
 }
 END_TEST
@@ -561,7 +562,7 @@ START_TEST(test_read_pdbml_data_01)
    ck_assert(        pdb->partial_charge ==  0.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
 }
 END_TEST
 
@@ -596,7 +597,7 @@ START_TEST(test_read_pdbml_data_02)
    ck_assert(        pdb->partial_charge ==  0.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
 }
 END_TEST
 
@@ -631,7 +632,7 @@ START_TEST(test_read_pdbml_data_03)
    ck_assert(        pdb->partial_charge ==  0.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
 }
 END_TEST
 
@@ -666,7 +667,7 @@ START_TEST(test_read_pdbml_data_04)
    ck_assert(        pdb->partial_charge ==  0.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
    ck_assert(        natoms ==                 1);
 }
 END_TEST
@@ -702,7 +703,7 @@ START_TEST(test_read_pdbml_data_05)
    ck_assert(        pdb->partial_charge ==  0.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
    ck_assert(        natoms ==                 1);
 }
 END_TEST
@@ -738,7 +739,7 @@ START_TEST(test_read_pdbml_data_06)
    ck_assert(        pdb->partial_charge ==  0.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
    ck_assert(        natoms ==                 1);
 }
 END_TEST
@@ -774,7 +775,7 @@ START_TEST(test_read_pdbml_data_07)
    ck_assert(        pdb->partial_charge ==  3.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
    ck_assert(        natoms ==                 1);
 }
 END_TEST
@@ -810,7 +811,7 @@ START_TEST(test_read_pdbml_data_08)
    ck_assert(        pdb->partial_charge == -1.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
    ck_assert(        natoms ==                 1);
 }
 END_TEST
@@ -846,7 +847,7 @@ START_TEST(test_read_pdbml_data_09)
    ck_assert(        pdb->partial_charge ==  0.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
 }
 END_TEST
 
@@ -881,7 +882,7 @@ START_TEST(test_read_pdbml_data_10)
    ck_assert(        pdb->partial_charge ==  0.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
 }
 END_TEST
 
@@ -916,7 +917,7 @@ START_TEST(test_read_pdbml_data_11)
    ck_assert(        pdb->partial_charge ==  0.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
 }
 END_TEST
 
@@ -951,7 +952,7 @@ START_TEST(test_read_pdbml_data_12)
    ck_assert(        pdb->partial_charge ==  0.0);
    ck_assert(        pdb->access ==          0.0);
    ck_assert(        pdb->radius ==          0.0);
-   ck_assert(        pdb->atomType ==       NULL);
+   ck_assert(        pdb->atomInfo ==       NULL);
 }
 END_TEST
 
