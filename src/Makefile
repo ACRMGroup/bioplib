@@ -57,10 +57,10 @@ RANLIB = ranlib
 # are the minor and release numbers
 # libgen
 GMAJOR = 3
-GMINOR = 0.3
+GMINOR = 0.4
 # libbiop
 BMAJOR = 3
-BMINOR = 0.3
+BMINOR = 0.4
 
 # Files for libgen.a
 OFILESG = BuffInp.o CalcExtSD.o CalcSD.o CheckExtn.o CreateRotMat.o CrossProd3.o \
