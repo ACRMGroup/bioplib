@@ -3,8 +3,8 @@
 
    \file       WritePDB.c
    
-   \version    V1.29
-   \date       29.07.15
+   \version    V1.30
+   \date       05.08.15
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
@@ -112,6 +112,8 @@
 -  V1.29 29.07.15 Added output of PDBML seqres records from wpdb->header.
                   Added ReadSeqresChainLabelWholePDB() and 
                   ReadSeqresResidueListWholePDB().  By: CTP
+-  V1.30 05.08.15 Added output of PDBML-formatted MODRES records from 
+                  wpdb->header. By: CTP
 
 *************************************************************************/
 /* Doxygen
@@ -573,6 +575,7 @@ BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
             in PDB. Set compound type to polymer. By:  CTP
 -  10.07.15 Added return value for no XML_SUPPORT  By: ACRM
 -  29.07.15 Added output of SEQRES records from wpdb->header.  By: CTP
+-  05.08.15 Added output of MODRES records from wpdb->header.  By: CTP
 */
 static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
 {
@@ -612,6 +615,9 @@ static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
    char       **seqres_chain    = NULL;
    STRINGLIST **seqres_residues = NULL,
               *s = NULL;
+
+   STRINGLIST *modres_start = NULL;
+   int modres_entry = 0;
 
    /* Create document                                                   */
    if((doc = xmlNewDoc((xmlChar *)"1.0"))==NULL)
@@ -1340,6 +1346,96 @@ static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
       free(seqres_chain);                        /* free chain id array */
    }
 
+   /* MODRES nodes                                                      */
+   /* Find modres records from wpdb->header                             */
+   for(s=wpdb->header; s != NULL; NEXT(s))
+   {
+      if(!strncmp(s->string, "MODRES ", 6))
+      {
+         modres_start = s;
+         break;
+      }
+   }
+
+   /* Add modres nodes                                                  */
+   if(modres_start != NULL)
+   {
+      /* add pdbx_struct_mod_residueCategory node                       */
+      if((sites_node = xmlNewChild(root_node, NULL, 
+                        (xmlChar *)"pdbx_struct_mod_residueCategory", 
+                        NULL))==NULL){ XMLDIE(doc); }
+   }
+   for(s=modres_start; s != NULL && !strncmp(s->string, "MODRES ", 6); 
+       NEXT(s))
+   {
+      char modres_res[8]     = "",
+           modres_chain[8]   = "",
+           modres_insert[8]  = "",
+           modres_orig[8]    = "",
+           modres_compnd[41] = "";        
+      int  modres_resnum     =  0;
+
+      /* parse modres record */
+      fsscanf(s->string, "%11x%4s%2s%5d%1s%4s%2x%40s", modres_res,
+              modres_chain, &modres_resnum, modres_insert, modres_orig,
+              modres_compnd);
+
+      /* Add pdbx_struct_mod_residue node                               */
+      if((atom_node = xmlNewChild(sites_node, NULL, 
+                        (xmlChar *)"pdbx_struct_mod_residue", 
+                        NULL))==NULL){ XMLDIE(doc); }
+      modres_entry++;                             /* increment entry id */
+      sprintf(buffer, "%d", modres_entry);
+      xmlNewProp(atom_node, (xmlChar *)"id", (xmlChar *)buffer);
+
+      /* Add modres data nodes                                          */
+      KILLLEADSPACES(buffer_ptr,modres_chain);
+      if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"auth_asym_id",
+                             (xmlChar *)buffer_ptr))==NULL)
+      { XMLDIE(doc); }
+
+      KILLLEADSPACES(buffer_ptr,modres_res);
+      if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"auth_comp_id",
+                             (xmlChar *)buffer_ptr))==NULL)
+      { XMLDIE(doc); }
+
+      sprintf(buffer,"%d", modres_resnum);
+      if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"auth_seq_id",
+                             (xmlChar *)buffer))==NULL)
+      { XMLDIE(doc); }
+
+      if(strncmp(" ",modres_insert,1))
+      {
+         if((node = xmlNewChild(atom_node, NULL,(xmlChar *)"PDB_ins_code",
+                                (xmlChar *)modres_insert))==NULL)
+         { XMLDIE(doc); }
+      }
+
+      KILLTRAILSPACES(modres_compnd);
+      if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"details",
+                             (xmlChar *)modres_compnd))==NULL)
+      { XMLDIE(doc); }
+
+      KILLLEADSPACES(buffer_ptr,modres_chain);
+      if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"label_asym_id",
+                             (xmlChar *)buffer_ptr))==NULL)
+      { XMLDIE(doc); }
+
+      KILLLEADSPACES(buffer_ptr,modres_res);
+      if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"label_comp_id",
+                             (xmlChar *)buffer_ptr))==NULL)
+      { XMLDIE(doc); }
+
+      sprintf(buffer,"%d", modres_resnum);
+      if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"label_seq_id",
+                             (xmlChar *)buffer))==NULL)
+      { XMLDIE(doc); }
+
+      KILLLEADSPACES(buffer_ptr,modres_orig);
+      if((node = xmlNewChild(atom_node, NULL, (xmlChar *)"parent_comp_id",
+                             (xmlChar *)buffer_ptr))==NULL)
+      { XMLDIE(doc); }
+   }
 
    /* pdb entry */
    if(strlen(pdbcode))
