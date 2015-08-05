@@ -626,6 +626,47 @@ START_TEST(test_modres_01)
 }
 END_TEST
 
+/* TEST MODRES PARSE (PDBML) */
+START_TEST(test_modres_02)
+{
+   /* get pdbml data */
+   char filename_in[]      = "test_modres_in_01.pdb",
+        filename_example[] = "test_modres_out_01.xml",
+        test_message[]     = "Output PDBML does not match example file.";
+        
+   /* force write PDBML */
+   FORCEXML;
+   
+   /* read input file */
+   strcat(test_input_filename,filename_in);
+   fp = fopen(test_input_filename,"r");
+   wpdb = blReadWholePDB(fp);
+   fclose(fp);
+   ck_assert_msg(wpdb != NULL, "Failed to read PDB file.");
+
+#ifndef MS_WINDOWS   
+   /* Set temp file name */
+   mkstemp(test_output_filename);
+#endif
+
+   /* write output file */
+   fp = fopen(test_output_filename,"w");
+   blWriteWholePDB(fp, wpdb);
+   fclose(fp);
+
+   /* compare output file to example file */
+   strcat(test_example_filename, filename_example);
+   files_identical = wholepdb_compare_files(test_example_filename, 
+                                            test_output_filename);
+
+   /* remove output file */
+   remove(test_output_filename);
+  
+   /* return test result */
+   ck_assert_msg(files_identical, test_message);
+}
+END_TEST
+
 
 /* Create Suite */
 Suite *header_suite(void)
@@ -682,6 +723,7 @@ Suite *header_suite(void)
                              wholepdb_teardown);
    /* modres tests */
    tcase_add_test(tc_modres, test_modres_01);
+   tcase_add_test(tc_modres, test_modres_02);
    suite_add_tcase(s, tc_modres);
 
    return s;
