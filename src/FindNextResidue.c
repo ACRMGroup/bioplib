@@ -3,8 +3,8 @@
 
    \file       FindNextResidue.c
    
-   \version    V1.13
-   \date       05.03.15
+   \version    V1.14
+   \date       21.08.15
    \brief      PDB linked list manipulation
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2015
@@ -62,6 +62,7 @@
 -  V1.13 05.03.15 Removed blFindEndPDB() since blFindNextResidue()
                   replaces it and FindEndPDB() deprecates to
                   blFindNextResidue()
+-  V1.14 21.08.15 Use INSERTMATCH By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -111,6 +112,7 @@
 -  08.08.95 Original    By: ACRM
 -  04.02.14 Use CHAINMATCH By: CTP
 -  07.07.14 Use bl prefix for functions By: CTP
+-  21.08.15 Use INSERTMATCH By: ACRM
 */
 PDB *blFindNextResidue(PDB *pdb)
 {
@@ -119,7 +121,7 @@ PDB *blFindNextResidue(PDB *pdb)
    for(p=pdb; p!=NULL; NEXT(p))
    {
       if((p->resnum    != pdb->resnum) ||
-         (p->insert[0] != pdb->insert[0]) ||
+         !INSERTMATCH(p->insert, pdb->insert) ||
          !CHAINMATCH(p->chain,pdb->chain))
          return(p);
    }
