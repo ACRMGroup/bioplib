@@ -3,8 +3,8 @@
 
    \file       hash.c
    
-   \version    V1.1
-   \date       03.06.15
+   \version    V1.2
+   \date       23.08.15
    \brief      Flexible hash functions
    
    \copyright  (c) Dr. Andrew C. R. Martin, UCL, 2015
@@ -51,6 +51,7 @@
    =================
 -  V1.0   14.05.15  Original   By: ACRM
 -  V1.1   03.06.15  Added wrappers to blSetHashValue()
+-  V1.2   23.08.15  Cast NAN for int return
 
 *************************************************************************/
 /* Doxygen
@@ -545,6 +546,7 @@ BOOL blSetHashValueChar(HASHTABLE *hashtable, char *key, char value)
    Simple wrapper to blGetHashValue() for extracting integers
 
 -  12.05.15  Original   By: ACRM
+-  23.08.15  Added cast of NAN
 */
 int blGetHashValueInt(HASHTABLE *hashtable, char *key)
 {
@@ -552,7 +554,7 @@ int blGetHashValueInt(HASHTABLE *hashtable, char *key)
    if((value = blGetHashValue(hashtable, key, NULL))!=NULL)
       return(*(int *)value);
 #ifdef NAN   
-   return(NAN);
+   return((int)NAN);
 #endif
    return(0);
 }

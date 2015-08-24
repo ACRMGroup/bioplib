@@ -3,8 +3,8 @@
 
    \file       macros.h
    
-   \version    V2.23
-   \date       26.06.15
+   \version    V2.24
+   \date       28.08.15
    \brief      Useful macros
    
    \copyright  (c) Dr. Andrew C.R. Martin / UCL 1991-2015
@@ -97,6 +97,7 @@
 -  V2.21 24.07.14 Initialize list pointers for DELETE macro. By: CTP
 -  V2.22 25.02.15 LAST() is now safe if the pointer is NULL
 -  V2.23 26.06.15 Added STRNCPYNOSPACES(out, in, mx)
+-  V2.24 28.08.15 Added FREE()
 
 *************************************************************************/
 /* Doxygen
@@ -121,6 +122,8 @@
    Macro: Move to end of list
    #FUNCTION FREELIST(y,z)        
    Macro: Free list y of type z
+   #FUNCTION FREE(x)
+   Macro: Free memory if non-NULL and set the variable to NULL
    #FUNCTION DELETE(lst,itm,type) 
    Macro: Deletes (itm) from linked list (lst) of type (type)
    #FUNCTION FINDPREV(p, start, q) 
@@ -254,6 +257,7 @@
                            free((char *)(y)); \
                            (y) = _freelist_macro_q; \
                         }
+#define FREE(x) if((x)!=NULL) free(x); (x) = NULL
 
 /*>DELETE(start, item, type)
    -------------------------
