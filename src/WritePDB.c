@@ -1999,7 +1999,6 @@ static char **ReadSeqresChainLabelWholePDB(WHOLEPDB *wpdb, int *nchains)
               chain[2]     = " ",
               **chainid;
    int        chainnum = 0,
-              nres     = 0,
               i;
 
    *nchains = 0;
@@ -2058,7 +2057,6 @@ static char **ReadSeqresChainLabelWholePDB(WHOLEPDB *wpdb, int *nchains)
 
    /* SECOND PASS: Store the Chain labels                               */
    chainnum  = 0;
-   nres      = 0;
    strcpy(currchain,"");
    for(s=seqres; s!=NULL; NEXT(s))
    {
@@ -2068,7 +2066,6 @@ static char **ReadSeqresChainLabelWholePDB(WHOLEPDB *wpdb, int *nchains)
          /* store new chain id */
          strcpy(chainid[chainnum],chain);
          strcpy(currchain,chain);
-         nres = 0;
          chainnum++;
       }
    }
@@ -2107,7 +2104,6 @@ static STRINGLIST **ReadSeqresResidueListWholePDB(WHOLEPDB *wpdb,
               chain[2]     = " ",
               res[13][8];
    int        chainnum = 0,
-              nres     = 0,
               i;
 
    *nchains = 0;
@@ -2161,7 +2157,6 @@ static STRINGLIST **ReadSeqresResidueListWholePDB(WHOLEPDB *wpdb,
 
    /* SECOND PASS: Store the sequence                                   */
    chainnum  = 0;
-   nres      = 0;
    strncpy(currchain,&(seqres->string[11]),1);
    for(s=seqres; s!=NULL; NEXT(s))
    {
@@ -2172,7 +2167,6 @@ static STRINGLIST **ReadSeqresResidueListWholePDB(WHOLEPDB *wpdb,
       {
          /* Start of new chain                                          */
          strcpy(currchain,chain);
-         nres = 0;
          chainnum++;
       }
       
