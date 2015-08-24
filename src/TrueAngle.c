@@ -42,7 +42,7 @@
    Usage:
    ======
 
-   REAL TrueAngle(REAL opp, REAL adj)
+   REAL blTrueAngle(REAL opp, REAL adj)
 
    \param[in]     opp         Length of opposite side
    \param[in]     adj         Length of adjacent side

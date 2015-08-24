@@ -3,8 +3,8 @@
 
    \file       deprecatedBiop.c
    
-   \version    V1.10
-   \date       28.04.15
+   \version    V1.11
+   \date       24.08.15
    \brief      Source code for Biop deprecated functions.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014-2015
@@ -85,6 +85,7 @@
                   and replaced by FindNextResidure()/blFindNextResidue()
 -  V1.10 28.04.15 Updated doReadPDBML() for latest version of 
                   blDoReadPDBML().  By: CTP
+-  V1.11 24.08.15 IsHBonded() wasn't deprecated properly
 
 *************************************************************************/
 /* Includes
@@ -1249,7 +1250,12 @@ BOOL matfit(COOR *x1, COOR *x2, REAL rm[3][3], int n, REAL *wt1, BOOL column)
 /************************************************************************/
 /* Renamed functions: hbond.h                                        */
 
-int  IsHBonded(PDB *res1, PDB *res2, int type);
+int  IsHBonded(PDB *res1, PDB *res2, int type)
+{
+   DEPRECATED("IsHBonded()","blIsHBonded()");
+   return(blIsHBonded(res1, res2, type));
+}
+
 BOOL ValidHBond(PDB *AtomH, PDB *AtomD, PDB *AtomA, PDB *AtomP)
 {
    DEPRECATED("ValidHBond()","blValidHBond()");
