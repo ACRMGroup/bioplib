@@ -60,10 +60,10 @@
    #SUBGROUP String handling
 
    #FUNCTION  blGetWord()
-   Reads a whitespace/comma delimted word out of buffer into word.
+   Reads a whitespace/comma delimited word out of buffer into word.
 
    #FUNCTION  blGetWordNC()
-   Reads a whitespace delimted word out of buffer into word. Commas
+   Reads a whitespace delimited word out of buffer into word. Commas
    are treated just like normal characters.
 
    #FUNCTION  blSplitStringOnCommas()
@@ -112,7 +112,7 @@ static char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma);
 
    This code is designed to be called from GetWord() or GetWordNC()
 
-   Reads a whitespace delimted word out of buffer into word. If comma is
+   Reads a whitespace delimited word out of buffer into word. If comma is
    TRUE, then commas are treated just like white space, otherwise they
    are treated like normal characters.
 
@@ -252,7 +252,7 @@ static char *doGetWord(char *buffer, char *word, int maxlen, BOOL comma)
 
    This code is a wrapper to doGetWord()
 
-   Reads a whitespace/comma delimted word out of buffer into word.
+   Reads a whitespace/comma delimited word out of buffer into word.
 
    Words containing white space may be wrapped in double inverted commas.
    A \ is used as an escape character and maybe used to escape *any*
@@ -283,7 +283,7 @@ char *blGetWord(char *buffer, char *word, int maxlen)
 
    This code is a wrapper to doGetWord()
 
-   Reads a whitespace delimted word out of buffer into word. Commas
+   Reads a whitespace delimited word out of buffer into word. Commas
    are treated just like normal characters.
 
    Words containing white space may be wrapped in double inverted commas.
