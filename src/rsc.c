@@ -91,6 +91,10 @@
    #FUNCTION  blRepOneSChain()
    Replace a single sidechain. 
 
+   #FUNCTION  blRepOneSChainForce()
+   Replace a single sidechain - even if the sidechain was correct 
+   already. 
+
    #FUNCTION  blEndRepSChain()
    Cleans up open files and memory used by the sidechain replacement
    routines.
@@ -145,6 +149,8 @@ static void ReadChiTable(FILE *fp, int **chitab);
 static int FindChiIndex(char *resnam);
 static PDB *FixTorsions(PDB *pdb, PDB *ResStart, PDB *NextRes, 
                         int **chitab);
+static BOOL doRepOneSChain(PDB *pdb, char *ResSpec, char aa, 
+                           char *ChiTable, char *RefCoords, BOOL force);
 
 /************************************************************************/
 /*>BOOL blRepSChain(PDB *pdb, char *sequence, char *ChiTable,
@@ -276,11 +282,10 @@ BOOL blRepSChain(PDB  *pdb,         /* PDB linked list                  */
    return(TRUE);
 }
 
-
 /************************************************************************/
-/*>BOOL blRepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
-                     char *RefCoords)
-   ---------------------------------------------------------------------
+/*>BOOL blRepOneSChain(PDB *pdb, char *ResSpec, char aa, 
+                       char *ChiTable, char *RefCoords)
+   -----------------------------------------------------------------------
 *//**
 
    \param[in,out] *pdb        PDB linked list to modify
@@ -289,7 +294,7 @@ BOOL blRepSChain(PDB  *pdb,         /* PDB linked list                  */
    \param[in]     aa          The 1-letter code for the new sidechain
    \param[in]     *ChiTable   The equivalent Chi table
    \param[in]     *RefCoords  The reference coordinates file
-   \return                      Success?
+   \return                    Success?
 
    Replace a single sidechain. Takes a PDB linked list, a residues
    specfication (in the form [c]nnn[i] where [c] is an optional chain
@@ -302,9 +307,78 @@ BOOL blRepSChain(PDB  *pdb,         /* PDB linked list                  */
 -  15.08.96 Removed unused variables
 -  07.07.14 Use bl prefix for functions By: CTP
 -  23.02.15 Modified for new blRenumAtomsPDB() which takes an offset
+-  29.09.15 Now just a wrapper to doRepOneSChain()
 */
 BOOL blRepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
-                  char *RefCoords)
+                    char *RefCoords)
+{
+   return(doRepOneSChain(pdb, ResSpec, aa, ChiTable, RefCoords, FALSE));
+}
+
+/************************************************************************/
+/*>BOOL blRepOneSChainForce(PDB *pdb, char *ResSpec, char aa, 
+                            char *ChiTable, char *RefCoords)
+   -----------------------------------------------------------------------
+*//**
+
+   \param[in,out] *pdb        PDB linked list to modify
+   \param[in]     *ResSpec    Residue spec for residue to replace in the
+                              format [c]nnn[i]
+   \param[in]     aa          The 1-letter code for the new sidechain
+   \param[in]     *ChiTable   The equivalent Chi table
+   \param[in]     *RefCoords  The reference coordinates file
+   \return                    Success?
+
+   Replace a single sidechain. Takes a PDB linked list, a residues
+   specfication (in the form [c]nnn[i] where [c] is an optional chain
+   name, nnn is a residue number and [i] is an optional insert code)
+   and a 1-letter code of the required sidechain and does a simple
+   maximum overlap replacement of the sidechain. Also requires filenames 
+   of the two datafiles.
+
+   Replaces even if the sidechain was coorect already
+   
+-  29.09.15 Original - wrapper to doRepOneSChain()
+*/
+BOOL blRepOneSChainForce(PDB *pdb, char *ResSpec, char aa, 
+                         char *ChiTable, char *RefCoords)
+{
+   return(doRepOneSChain(pdb, ResSpec, aa, ChiTable, RefCoords, TRUE));
+}
+
+
+
+/************************************************************************/
+/*>static BOOL doRepOneSChain(PDB *pdb, char *ResSpec, char aa, 
+                              char *ChiTable, char *RefCoords, BOOL force)
+   -----------------------------------------------------------------------
+*//**
+
+   \param[in,out] *pdb        PDB linked list to modify
+   \param[in]     *ResSpec    Residue spec for residue to replace in the
+                              format [c]nnn[i]
+   \param[in]     aa          The 1-letter code for the new sidechain
+   \param[in]     *ChiTable   The equivalent Chi table
+   \param[in]     *RefCoords  The reference coordinates file
+   \param[in]     force       Replace even if it's the right AA already
+   \return                    Success?
+
+   Replace a single sidechain. Takes a PDB linked list, a residues
+   specfication (in the form [c]nnn[i] where [c] is an optional chain
+   name, nnn is a residue number and [i] is an optional insert code)
+   and a 1-letter code of the required sidechain and does a simple
+   maximum overlap replacement of the sidechain. Also requires filenames 
+   of the two datafiles.
+   
+-  12.08.96 Original based on RepSChain()
+-  15.08.96 Removed unused variables
+-  07.07.14 Use bl prefix for functions By: CTP
+-  23.02.15 Modified for new blRenumAtomsPDB() which takes an offset
+-  29.09.15 Renamed as doRepOneSChain() and wrappers written as
+            blRepOneSChain() and blRepOneSChainForce()
+*/
+static BOOL doRepOneSChain(PDB *pdb, char *ResSpec, char aa, 
+                           char *ChiTable, char *RefCoords, BOOL force)
 {
    PDB   *ResStart,                 /* Start of residue                 */
          *NextRes;                  /* Start of next residue            */
@@ -366,8 +440,10 @@ BOOL blRepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
    }
    NextRes = blFindNextResidue(ResStart);
    
-   /* If there is a sequence mismatch, replace the residue              */
-   if(aa != blThrone(ResStart->resnam))
+   /* If there is a sequence mismatch, or force is set, 
+      replace the residue              
+   */
+   if((aa != blThrone(ResStart->resnam)) || force)
    {
       if(DoReplace(ResStart, NextRes, aa, sChiTab, sFp_RefCoords) == 
          NULL) 
@@ -416,7 +492,7 @@ void blEndRepSChain(void)
 
 /************************************************************************/
 /*>static PDB *DoReplace(PDB  *ResStart, PDB  *NextRes, char seq, 
-                  int  **chitab, FILE *fp_RefCoords)
+                         int  **chitab, FILE *fp_RefCoords)
    --------------------------------------------------------------
 *//**
 
@@ -432,6 +508,7 @@ void blEndRepSChain(void)
 
 -  12.05.92 Original
 -  21.06.93 Changed to use Array2D allocated chitab 
+-  29.09.15 Removed check that we need to do the replacement
 */
 static PDB *DoReplace(PDB  *ResStart,  /* Pointer to start of residue   */
                       PDB  *NextRes,   /* Pointer to start of next res  */
@@ -443,7 +520,7 @@ static PDB *DoReplace(PDB  *ResStart,  /* Pointer to start of residue   */
    PDB   *p;
    
    /* Check we need to do a replacement                                 */
-   if(seq == blThrone(ResStart->resnam)) return(NULL);
+/*   if(seq == blThrone(ResStart->resnam)) return(NULL); */
    
    if(!strncmp(ResStart->resnam,"GLY",3)) /* Replace Gly with X         */
       retval = ReplaceGly(ResStart,NextRes,seq,fp_RefCoords);

@@ -768,6 +768,8 @@ BOOL blAtomNameRawMatch(char *atnam, char *spec, BOOL *ErrorWarn);
 BOOL blLegalAtomSpec(char *spec);
 BOOL blRepOneSChain(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
                     char *RefCoords);
+BOOL blRepOneSChainForce(PDB *pdb, char *ResSpec, char aa, char *ChiTable,
+                         char *RefCoords);
 void blEndRepSChain(void);
 char **blReadSeqresPDB(FILE *fp, int *nchains);
 char **blReadSeqresWholePDB(WHOLEPDB *wpdb, int *nchains);
