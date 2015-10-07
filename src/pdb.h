@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.90
-   \date       22.07.15
+   \version    V1.91
+   \date       07.10.15
 
    \brief      Include file for PDB routines
    
@@ -214,6 +214,8 @@
                   Added PDBEXTRASPTR()
                   Added RESIDMATCH()
                   Improved MAKERESID()
+   V1.91 07.10.15 Added blExtractNotZonePDBAsCopy() and
+                  blExtractNotZoneSpecPDBAsCopy()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -757,6 +759,10 @@ PDB *blExtractZonePDBAsCopy(PDB *inpdb, char *chain1, int resnum1,
                             char *insert1, char *chain2, int resnum2, 
                             char *insert2);
 PDB *blExtractZoneSpecPDBAsCopy(PDB *pdb, char *firstRes, char *lastRes);
+PDB *blExtractNotZonePDBAsCopy(PDB *inpdb, char *chain1, int resnum1, 
+                               char *insert1, char *chain2, int resnum2, 
+                               char *insert2);
+PDB *blExtractNotZoneSpecPDBAsCopy(PDB *pdb, char *firstRes, char *lastRes);
 PDB *blFindResidue(PDB *pdb, char *chain, int resnum, char *insert);
 PDB *blFindHetatmResidue(PDB *pdb, char *chain, int resnum, char *insert);
 PDB *blFindAtomInRes(PDB *pdb, char *atnam);

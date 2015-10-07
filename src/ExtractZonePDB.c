@@ -3,11 +3,11 @@
 
    \file       ExtractZonePDB.c
    
-   \version    V1.16
-   \date       19.08.14
+   \version    V1.17
+   \date       07.10.15
    \brief      PDB linked list manipulation
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -63,6 +63,8 @@
 -  V1.14 04.02.14 Use CHAINMATCH By: CTP
 -  V1.15 07.07.14 Use bl prefix for functions By: CTP
 -  V1.16 19.08.14 Renamed function to blExtractZonePDBAsCopy() By: CTP
+-  V1.17 07.10.15 Added function blExtractNotZonePDBAsCopy() and
+                  blExtractNotZonePDBAsCopy() By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -76,6 +78,16 @@
 
    #FUNCTION  blExtractZoneSpecPDBAsCopy()
    Reduces a PDB linked list to those residues within a specified zone
+   forming a new linked list. Uses residue specifications ([c]nnn[i])
+   rather than separate chain, residue number and insert.
+
+   #FUNCTION  blExtractNotZonePDBAsCopy()
+   Reduces a PDB linked list to those residues outside a specified zone
+   forming a new linked list. Uses separate chain, residue number and 
+   insert rather than residue specifications.
+
+   #FUNCTION  blExtractNotZoneSpecPDBAsCopy()
+   Reduces a PDB linked list to those residues outside a specified zone
    forming a new linked list. Uses residue specifications ([c]nnn[i])
    rather than separate chain, residue number and insert.
 */
@@ -253,6 +265,122 @@ PDB *blExtractZoneSpecPDBAsCopy(PDB *pdb, char *firstRes, char *lastRes)
       zone = blExtractZonePDBAsCopy(pdb, 
                                     chain1, resnum1, insert1,
                                     chain2, resnum2, insert2);
+   }
+   return(zone);
+}
+
+/************************************************************************/
+/*>PDB *blExtractNotZonePDBAsCopy(PDB *inpdb, char *chain1, int resnum1, 
+                                  char *insert1, char *chain2, int resnum2, 
+                                  char *insert2)
+   -----------------------------------------------------------------------
+*//**
+
+   \param[in]     *inpdb   Input PDB linked list
+   \param[in]     *chain1  Start residue chain name
+   \param[in]     resnum1  Start residue number
+   \param[in]     *insert1 Start residue insert code
+   \param[in]     *chain2  End residue chain name
+   \param[in]     resnum2  End residue number
+   \param[in]     *insert2 End residue insert code
+   \return                 PDB linked list of the region of interest.
+
+   Reduces a PDB linked list to those residues outside a specified zone.
+   Note that the PDB linked list is duplicated before extraction so
+   pointers do not match those in the input PDB linked list. Excess
+   records in the new PDB linked list are freed.
+
+-  07.10.15 Original   By: ACRM
+*/
+PDB *blExtractNotZonePDBAsCopy(PDB *inpdb, 
+                               char *chain1, int resnum1, char *insert1, 
+                               char *chain2, int resnum2, char *insert2)
+{
+   PDB  *pdb   = NULL,
+        *start = NULL, 
+        *stop  = NULL,
+        *p, *q;
+
+   /* FInd the start and stop of the zone in the old linked list        */
+   if((start = blFindResidue(inpdb, chain1, resnum1, insert1)) == NULL)
+      return(FALSE);
+   if((stop  = blFindResidue(inpdb, chain2, resnum2, insert2)) == NULL)
+      return(FALSE);
+   stop  = blFindNextResidue(stop);
+   
+   for(p=inpdb; p!=start; NEXT(p))
+   {
+      if(pdb == NULL)
+      {
+         INIT(pdb, PDB);
+         q = pdb;
+      }
+      else
+      {
+         ALLOCNEXT(q, PDB);
+      }
+      if(q==NULL)
+      {
+         FREELIST(pdb, PDB);
+         return(NULL);
+      }
+      
+      blCopyPDB(q, p);
+   }
+   for(p=stop; p!=NULL; NEXT(p))
+   {
+      if(pdb == NULL)
+      {
+         INIT(pdb, PDB);
+         q = pdb;
+      }
+      else
+      {
+         ALLOCNEXT(q, PDB);
+      }
+      if(q==NULL)
+      {
+         FREELIST(pdb, PDB);
+         return(NULL);
+      }
+      
+      blCopyPDB(q, p);
+   }
+
+   blCopyConects(pdb, inpdb);
+
+   return(pdb);
+}
+
+
+/************************************************************************/
+/*>PDB *blExtractNotZoneSpecPDBAsCopy(PDB *pdb, char *firstRes, 
+                                      char *lastRes)
+   ------------------------------------------------------------
+*//**
+   \param[in]   pdb       PDB linked list
+   \param[in]   firstRes  Residue spec ([chain]resnum[insert])
+   \param[in]   lastRes   Residue spec ([chain]resnum[insert])
+
+   Extracts atoms outside a zone from a PDB linked list, making a copy 
+   of the original list.
+
+-  07.10.15  Original   By: ACRM
+*/
+PDB *blExtractNotZoneSpecPDBAsCopy(PDB *pdb, char *firstRes, 
+                                   char *lastRes)
+{
+   char chain1[8],  chain2[8],
+        insert1[8], insert2[8];
+   int  resnum1,    resnum2;
+   PDB  *zone = NULL;
+
+   if(blParseResSpec(firstRes, chain1, &resnum1, insert1) &&
+      blParseResSpec(lastRes,  chain2, &resnum2, insert2))
+   {
+      zone = blExtractNotZonePDBAsCopy(pdb, 
+                                       chain1, resnum1, insert1,
+                                       chain2, resnum2, insert2);
    }
    return(zone);
 }
