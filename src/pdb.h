@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.91
-   \date       07.10.15
+   \version    V1.92
+   \date       02.11.15
 
    \brief      Include file for PDB routines
    
@@ -214,8 +214,9 @@
                   Added PDBEXTRASPTR()
                   Added RESIDMATCH()
                   Improved MAKERESID()
-   V1.91 07.10.15 Added blExtractNotZonePDBAsCopy() and
+-  V1.91 07.10.15 Added blExtractNotZonePDBAsCopy() and
                   blExtractNotZoneSpecPDBAsCopy()
+-  V1.92 02.11.15 Further improved MAKERESID()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -533,8 +534,12 @@ typedef struct
             strcpy(_makeresid_dot, ".");                                 \
          }                                                               \
       }                                                                  \
-      sprintf((x), "%s%s%d%s", (p)->chain, _makeresid_dot, (p)->resnum,  \
-              (p)->insert);                                              \
+      if((p)->insert[0]!=' ')                                            \
+         sprintf((x), "%s%s%d%s", (p)->chain, _makeresid_dot,            \
+                 (p)->resnum, (p)->insert);                              \
+      else                                                               \
+         sprintf((x), "%s%s%d", (p)->chain, _makeresid_dot,              \
+                 (p)->resnum);                                           \
    } while(0)
 
 /* Determines whether two residue identifiers are the same              */
