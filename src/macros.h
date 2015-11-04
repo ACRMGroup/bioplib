@@ -538,7 +538,19 @@ do {  char *_chp;                                                      \
 #define UNSET(x, y) (x) &= (~(y))
 #define ISSET(x, y) ((BOOL)((x)&(y)))
 
-
+/* A version of fclose() that checks the file pointer is non-NULL and
+   not standard in/out/err. After closing the file, it sets the file
+   pointer to NULL
+   04.11.15 Original   By: ACRM
+*/
+#define FCLOSE(x)                                                        \
+   do {                                                                  \
+      if(((x) != NULL) && ((x) != stdin) &&                              \
+         ((x) != stdout) && ((x) != stderr)) {                           \
+         fclose((x));                                                    \
+         (x) = NULL;                                                     \
+      }                                                                  \
+   } while (0)
 
 #ifdef DEBUG
 #define D(BUG) fprintf(stderr,"%s",BUG); fflush(stderr)
