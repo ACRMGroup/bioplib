@@ -3,8 +3,8 @@
 
    \file       macros.h
    
-   \version    V2.24
-   \date       28.08.15
+   \version    V2.25
+   \date       04.11.15
    \brief      Useful macros
    
    \copyright  (c) Dr. Andrew C.R. Martin / UCL 1991-2015
@@ -98,6 +98,7 @@
 -  V2.22 25.02.15 LAST() is now safe if the pointer is NULL
 -  V2.23 26.06.15 Added STRNCPYNOSPACES(out, in, mx)
 -  V2.24 28.08.15 Added FREE()
+-  V2.25 04.11.15 Added FCLOSE()
 
 *************************************************************************/
 /* Doxygen
@@ -192,6 +193,12 @@
    #SUBGROUP User interaction
    #FUNCTION PROMPT(fp,x)         
    Macro: Issue a prompt to stdout if fp is a terminal
+
+   #SUBGROUP File handling
+   #FUNCTION FCLOSE(fp)
+   Macro: close a file pointer if it is non-NULL and not stdin/out/err.
+   Set the file pointer to NULL afterwards
+
 */
 /************************************************************************/
 #ifndef _MACROS_H
