@@ -3,8 +3,8 @@
 
    \file       PDBHeaderInfo.c
    
-   \version    V1.5
-   \date       26.06.15
+   \version    V1.6
+   \date       25.11.15
 
    \brief      Get misc header info from PDB header
    
@@ -62,6 +62,7 @@
                   blGetModresWholePDB() and blFindOriginalResType() 
                   By: ACRM
 -  V1.5  26.06.15 Added blGetBiomoleculeWholePDB() and blFreeBiomolecule()
+-  V1.6  25.11.15 Added blGetSeqresByChainWholePDB()
 
 *************************************************************************/
 /* Doxygen
@@ -91,7 +92,12 @@
    Obtains the species data for a specified MOL_ID from WHOLEPDB info
 
    #FUNCTION blGetSeqresAsStringWholePDB()
-   Obtain the sequence from the SEQRES records
+   Obtain the sequence from the SEQRES records storing it as a single
+   string with *s to separate chains
+
+   #FUNCTION blGetSeqresByChainWholePDB()
+   Obtain the sequence from the SEQRES records storing it in a hash
+   indexed by chain label
 
    #FUNCTION blGetModresWholePDB()
    Obtain the MODRES data
@@ -117,6 +123,7 @@
 #include "macros.h"
 #include "fsscanf.h"
 #include "general.h"
+#include "hash.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -1264,6 +1271,145 @@ void blFreeBiomolecule(BIOMOLECULE *biomolecule)
 }
 
 
+
+
+
+
+/************************************************************************/
+/*>char *blGetSeqresByChainWholePDB(WHOLEPDB *wpdb, MODRES *modres, 
+                                    BOOL doNucleic)
+   ----------------------------------------------------------------
+*//**
+   \param[in]  *wpdb      Pointer to whole PDB structure
+   \param[in]  *modres    Linked list of MODRES information. May be 
+                          NULL if you don't want to translate 
+                          non-standard amino acids.
+   \param[in]  doNucleic  Read sequence for nucleic acid chains
+   \return                A hash of 1-letter code sequences indexed by
+                          chain label
+
+   Reads sequence from SEQRES records in 1-letter code, storing the
+   results in a hash indexed by chain label.
+
+-  25.11.15 Original   by: ACRM
+*/
+HASHTABLE *blGetSeqresByChainWholePDB(WHOLEPDB *wpdb, MODRES *modres,
+                                      BOOL doNucleic)
+{
+   static char *sequence = NULL;
+   char        buffer[MAXBUFF],
+               chain[blMAXCHAINLABEL],
+               lastchain[blMAXCHAINLABEL],
+               seq3[13][4];
+   int         i,
+               nres        = 0,
+               ArraySize   = ALLOCSIZE;
+   BOOL        gotSequence = FALSE;
+   STRINGLIST  *s;
+   
+   HASHTABLE   *hash;
+
+   /* Initialize hash with 11 bins                                      */
+   if((hash = blInitializeHash(11))==NULL)
+      return(NULL);
+   /* Initialize string to store the sequence                           */
+   if((sequence=(char *)malloc(ArraySize * sizeof(char)))==NULL)
+      return(NULL);
+
+   lastchain[0] = '\0';
+   sequence[0]  = '\0';
+   
+   for(s=wpdb->header; s!=NULL; NEXT(s))
+   {
+      strncpy(buffer, s->string, MAXBUFF);
+      TERMINATE(buffer);
+      if(!strncmp(buffer,"SEQRES",6))
+      {
+         fsscanf(buffer, 
+                 "%11x%1s%7x%3s%1x%3s%1x%3s%1x%3s%1x%3s%1x%3s%1x%3s%1x\
+%3s%1x%3s%1x%3s%1x%3s%1x%3s%1x%3s",
+                 chain,
+                 seq3[0],  seq3[1],  seq3[2],  seq3[3],  seq3[4], 
+                 seq3[5],  seq3[6],  seq3[7],  seq3[8],  seq3[9],
+                 seq3[10], seq3[11], seq3[12]);
+
+         if(lastchain[0] == '\0')
+         {
+            /* This is the first line so we set the lastchain           */
+            strcpy(lastchain, chain);
+         }
+         
+         if(nres+15 >= ArraySize)
+         {
+            /* Allocate more space if needed                            */
+            ArraySize += ALLOCSIZE;
+            if((sequence=(char *)realloc((void *)sequence, 
+                                         ArraySize*sizeof(char)))
+               == NULL)
+            {
+               return(NULL);
+            }
+         }
+
+         /* Test if chain has changed                                   */
+         if(!CHAINMATCH(chain, lastchain))
+         {
+            if(!blSetHashValueString(hash, lastchain, sequence))
+            {
+               blFreeHash(hash);
+               free(sequence);
+               return(NULL);
+            }
+
+            sequence[0] = '\0';
+            strcpy(lastchain, chain);
+            nres = 0;
+         }
+
+         for(i=0; i<13; i++)
+         {
+            if(!strncmp(seq3[i],"   ",3))
+               break;
+            sequence[nres] = blThronex(seq3[i]);
+
+            /* 07.03.07 Added code to check for modified amino acids    */
+            if(sequence[nres] == 'X')
+            {
+               char tmpthree[8];
+               if(modres != NULL)   /* 11.06.15                         */
+               {
+                  blFindOriginalResType(seq3[i], tmpthree, modres);
+                  sequence[nres] = blThronex(tmpthree);
+               }
+            }
+               
+            if(!gBioplibSeqNucleicAcid || doNucleic)
+            {
+               gotSequence=TRUE;
+               nres++;
+            }
+         }
+      }
+   }
+
+   /* If no SEQRES records found, then free the memory and return NULL  */
+   if(!gotSequence)
+   {
+      free(hash);
+      hash = NULL;
+   }
+   else
+   {
+      sequence[nres++] = '\0';
+      blSetHashValueString(hash, lastchain, sequence);
+   }
+   free(sequence);
+
+   return(hash);
+}
+
+
+
 /************************************************************************/
 #ifdef TEST
 int main(int argc, char **argv)
@@ -1281,6 +1427,7 @@ int main(int argc, char **argv)
    BIOMOLECULE *biomolecule = NULL,
                *bm = NULL;
    STRINGLIST  *s;
+   HASHTABLE   *seqres = NULL;
    
    if((in=fopen(argv[1], "r"))!=NULL)
    {
@@ -1369,6 +1516,27 @@ int main(int argc, char **argv)
             free(chainLabels[i]);
          }
          free(chainLabels);
+
+         if((seqres = blGetSeqresByChainWholePDB(wpdb, NULL, FALSE))!=NULL)
+         {
+            char **chains = NULL;
+            if((chains = blGetHashKeyList(seqres))!=NULL)
+            {
+               int i;
+
+               printf("\n\nSEQRES Sequence data:\n");
+               
+               for(i=0; chains[i]!=NULL; i++)
+               {
+                  printf("Chain: %2s Seq: %s\n", chains[i],
+                         blGetHashValueString(seqres, chains[i]));
+               }
+               
+               blFreeHashKeyList(chains);
+            }
+            
+            blFreeHash(seqres);
+         }
       }
    }
    

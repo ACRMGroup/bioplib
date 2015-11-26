@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.92
-   \date       02.11.15
+   \version    V1.93
+   \date       26.11.15
 
    \brief      Include file for PDB routines
    
@@ -217,6 +217,7 @@
 -  V1.91 07.10.15 Added blExtractNotZonePDBAsCopy() and
                   blExtractNotZoneSpecPDBAsCopy()
 -  V1.92 02.11.15 Further improved MAKERESID()
+-  V1.93 26.11.15 Added blGetSeqresByChainWholePDB()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -229,6 +230,7 @@
 #include "MathType.h"
 #include "SysDefs.h"
 #include "general.h"
+#include "hash.h"
 
 #define MAXSTDAA    21  /* Number of standard amino acids (w/ PCA)      */
 #define MAXATINAA   14  /* Max number of (heavy) atoms in a standard aa */
@@ -819,6 +821,8 @@ BOOL blGetSpeciesWholePDBMolID(WHOLEPDB *wpdb, int molid,
                                PDBSOURCE *source);
 char *blGetSeqresAsStringWholePDB(WHOLEPDB *wpdb, char **chains, 
                                   MODRES *modres, BOOL doNucleic);
+HASHTABLE *blGetSeqresByChainWholePDB(WHOLEPDB *wpdb, MODRES *modres,
+                                      BOOL doNucleic);
 MODRES *blGetModresWholePDB(WHOLEPDB *wpdb);
 void blFindOriginalResType(char *orig, char *new, MODRES *modres);
 BIOMOLECULE *blGetBiomoleculeWholePDB(WHOLEPDB *wpdb);

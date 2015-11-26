@@ -3,11 +3,11 @@
 
    \file       hash.h
    
-   \version    V1.1
-   \date       03.06.15
+   \version    V1.2
+   \date       26.11.15
    \brief      Defines for using hash functions
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -47,8 +47,12 @@
    =================
 -  V1.0  14.05.15 Original    By: ACRM
 -  V1.1  03.06.15 Added wrappers to blSetHashValue()
+-  V1.2  26.11.15 Added check on __HASH_H__
 
 *************************************************************************/
+#ifndef __HASH_H__
+#define __HASH_H__
+
 /* Includes
 */
 #include <stdarg.h>
@@ -109,3 +113,4 @@ BPTR      blGetHashValuePointer(HASHTABLE *hashtable, char *key);
 BOOL      blHashKeyDefined(HASHTABLE *hashtable, char *key);
 void      blDeleteHashKey(HASHTABLE *hashtable, char *key);
 
+#endif
