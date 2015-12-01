@@ -3,8 +3,8 @@
 
    \file       seq.h
    
-   \version    V2.15
-   \date       11.06.15
+   \version    V2.16
+   \date       30.11.15
    \brief      Header file for sequence handling
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2015
@@ -67,6 +67,8 @@
                   By: CTP
 -  V2.14 26.08.14 Added blSetMDMScoreWeight()
 -  V2.15 11.06.15 Added blWriteOneStringPIR()
+-  V2.16 30.11.15 Added wrapper macros for blDoPDB2SeqByChain() and 
+                  prototype
 
 *************************************************************************/
 #ifndef _SEQ_H
@@ -75,6 +77,7 @@
 #include "MathType.h"
 #include "SysDefs.h"
 #include "pdb.h"
+#include "hash.h"
 
 /************************************************************************/
 /* Defines and macros
@@ -111,10 +114,21 @@ extern BOOL gBioplibSeqNucleicAcid;
 #define blPDBProt2SeqNoX(x)  blDoPDB2Seq((x), FALSE, TRUE, TRUE)
 #define blPDBProt2SeqXNoX(x) blDoPDB2Seq((x), TRUE,  TRUE, TRUE)
 
+#define blPDB2SeqByChain(x)         blDoPDB2SeqByChain((x), FALSE, FALSE, FALSE)
+#define blPDB2SeqXByChain(x)        blDoPDB2SeqByChain((x), TRUE,  FALSE, FALSE)
+#define blPDB2SeqNoXByChain(x)      blDoPDB2SeqByChain((x), FALSE, FALSE, TRUE)
+#define blPDB2SeqXNoXByChain(x)     blDoPDB2SeqByChain((x), TRUE,  FALSE, TRUE)
+
+#define blPDBProt2SeqByChain(x)     blDoPDB2SeqByChain((x), FALSE, TRUE, FALSE)
+#define blPDBProt2SeqXByChain(x)    blDoPDB2SeqByChain((x), TRUE,  TRUE, FALSE)
+#define blPDBProt2SeqNoXByChain(x)  blDoPDB2SeqByChain((x), FALSE, TRUE, TRUE)
+#define blPDBProt2SeqXNoXByChain(x) blDoPDB2SeqByChain((x), TRUE,  TRUE, TRUE)
+
 char blThrone(char *three);
 char blThronex(char *three);
 char *blOnethr(char one);
 char *blDoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX);
+HASHTABLE *blDoPDB2SeqByChain(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX);
 int blSplitSeq(char *LinearSeq, char **seqs);
 int blReadSimplePIR(FILE *fp, int  maxres, char **seqs);
 int blReadPIR(FILE *fp, BOOL DoInsert, char **seqs, int maxchain, 

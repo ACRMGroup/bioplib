@@ -3,8 +3,8 @@
 
    \file       pdb.h
    
-   \version    V1.93
-   \date       26.11.15
+   \version    V1.94
+   \date       30.11.15
 
    \brief      Include file for PDB routines
    
@@ -218,6 +218,7 @@
                   blExtractNotZoneSpecPDBAsCopy()
 -  V1.92 02.11.15 Further improved MAKERESID()
 -  V1.93 26.11.15 Added blGetSeqresByChainWholePDB()
+-  V1.94 30.11.15 Make use of blMAXCHAINLABEL
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -315,7 +316,7 @@ typedef struct pdb_entry
                                                                [MIN 6]  */
    char resnam[8];           /* Residue name                   [MIN 5]  */
    char insert[8];           /* Numbering insert code          [MIN 3*] */
-   char chain[8];            /* Chain label                    [MIN 3*] */
+   char chain[blMAXCHAINLABEL]; /* Chain label                 [MIN 3*] */
    char element[8];          /* Element type                   [MIN 3]  */
    char segid[8];            /* Segment ID                     [MIN 3*] */
    char altpos;              /* Alternate position indicator            */
@@ -328,7 +329,7 @@ typedef struct pdbresidue
    PDB               *start, *stop;
    APTR              *extras;
    int               resnum;
-   char              chain[8];
+   char              chain[blMAXCHAINLABEL];
    char              insert[8];
    char              resnam[8];
    char              resid[8];
@@ -340,7 +341,7 @@ typedef struct pdbchain
    PDB             *start, *stop;
    PDBRESIDUE      *residues;
    APTR            *extras;
-   char            chain[8];
+   char            chain[blMAXCHAINLABEL];
 } PDBCHAIN;
 
 typedef struct

@@ -77,6 +77,10 @@
    #FUNCTION  blDoPDB2Seq()
    malloc()'s an array containing the 1-letter sequence corresponding to
    an input PDB linked list.
+
+   #FUNCTION  blDoPDB2SeqByChain()
+   Creates a hash indexed by chain label containing the 1-letter code
+   sequence from an input PDB linked list.
 */
 /************************************************************************/
 /* Includes
@@ -261,7 +265,135 @@ char *blDoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
    return(sequence);
 }
 
-#ifdef TEST_MAIN
+
+/************************************************************************/
+/*>HASHTABLE *blDoPDB2SeqByChain(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, 
+                                 BOOL NoX)
+   ---------------------------------------------------------------------
+*//**
+
+   \param[in]     *pdb     PDB linked list
+   \param[in]     DoAsxGlx Handle Asx and Glx as B and Z rather than X
+   \param[in]     ProtOnly Don't do DNA/RNA; these simply don't get
+                           done rather than being handled as X
+   \param[in]     NoX      Skip amino acids which would be assigned as X
+   \return                 A hash of 1-letter code sequences indexed by
+                           chain label
+
+   Reads sequence from ATOM records in 1-letter code, storing the
+   results in a hash indexed by chain label.
+
+   This routine is normally called via the macro interfaces:
+   PDB2SeqByCHain(pdb), PDB2SeqXByCHain(pdb), PDBProt2SeqByChain(pdb),
+   PDBProt2SeqXByChain(pdb)
+   Those with Prot in their names handle protein only; those with
+   X handle Asx/Glx as B/Z rather than as X
+   
+-  30.11.15 Original based on blDoPDB2Seq()    By: ACRM
+*/
+HASHTABLE *blDoPDB2SeqByChain(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, 
+                              BOOL NoX)
+{
+   int   lastresnum,
+         nres       = 0,
+         ArraySize  = ALLOCSIZE;
+   char  lastinsert[blMAXCHAINLABEL],
+         lastchain[blMAXCHAINLABEL],
+         *sequence  = NULL;
+   PDB   *p         = NULL;
+   HASHTABLE *hash  = NULL;
+
+   /* Ensure fist residue will be recognized as different               */
+   lastresnum = (-1000);
+   strcpy(lastinsert, "z");
+   
+   /* Sanity check                                                      */
+   if(pdb==NULL) return(NULL);
+
+   /* Initialize hash with 11 bins                                      */
+   if((hash = blInitializeHash(11))==NULL)
+      return(NULL);
+
+   /* Initialize string to store the sequence                           */
+   if((sequence=(char *)malloc(ArraySize * sizeof(char)))==NULL)
+      return(NULL);
+   sequence[0]  = '\0';
+
+   /* Initialize chain label                                            */
+   strncpy(lastchain, pdb->chain, blMAXCHAINLABEL);
+
+   /* Step through the PDB linked list                                  */
+   for(p=pdb; p!=NULL; NEXT(p))
+   {
+      /* Only interested in ATOM records                                */
+      if(!strncmp(p->record_type, "ATOM  ", 6))
+      {
+         /* If chain has changed                                        */
+         if(!CHAINMATCH(p->chain, lastchain))
+         {
+            if(blHashKeyDefined(hash, lastchain))
+            {
+               /*** TODO ***/
+            }
+            else
+            {
+               blSetHashValueString(hash, lastchain, sequence);
+            }
+            nres = 0;
+         }
+
+         /* If residue has changed                                      */
+         if((p->resnum != lastresnum) ||
+            !INSERTMATCH(p->insert, lastinsert) ||
+            !CHAINMATCH(p->chain, lastchain))
+         {
+            if(strncmp(p->resnam,"NTER",4) && 
+               strncmp(p->resnam,"CTER",4))
+            {
+               sequence[nres]=((DoAsxGlx) ? blThronex((p)->resnam) :
+                               blThrone((p)->resnam));
+
+               /* Increments count if it's not protein only or it's not 
+                  a nucleic acid AND we aren't skipping Xs or it's not 
+                  an X
+               */
+               if(((!ProtOnly) || (!gBioplibSeqNucleicAcid)) &&        
+                  (!NoX || (sequence[nres] != 'X'))) 
+                  nres++;
+
+               /* Increase the array size if needed                     */
+               if(nres >= ArraySize) 
+               {
+                  ArraySize += ALLOCSIZE;
+                  if((sequence=(char *)realloc(sequence, ArraySize))==NULL) 
+                  {
+                     blFreeHash(hash);
+                     return(NULL);
+                  }
+               }
+               
+               /* Terminate the string                                  */
+               sequence[nres] = '\0';
+            }
+            
+            /* Updated information on last residue                      */
+            lastresnum      = p->resnum;
+            strcpy(lastinsert, p->insert);
+            strcpy(lastchain,  p->chain);
+         }
+      }
+   }
+   
+   if(nres)
+      blSetHashValueString(hash, lastchain, sequence);
+
+   if(sequence != NULL)
+      free(sequence);
+   
+   return(hash);
+}
+
+#ifdef TEST
 #include <stdio.h>
 int main(int argc, char **argv)
 {
@@ -269,10 +401,40 @@ int main(int argc, char **argv)
    int natoms;
    char *seq;
    FILE *fp;
-   fp = fopen("/acrm/data/pdb/pdb1crn.ent", "r");
-   pdb=blReadPDB(fp, &natoms);
+   HASHTABLE *seq2;
    
-   seq = blDoPDB2Seq(pdb, FALSE, FALSE, FALSE);
+   if((fp = fopen(argv[1], "r"))!=NULL)
+   {
+      pdb=blReadPDB(fp, &natoms);
+      fclose(fp);
+
+      if((seq = blDoPDB2Seq(pdb, FALSE, FALSE, FALSE))!=NULL)
+         printf("blDoPDB2Seq(): %s\n", seq);
+
+      if((seq2 = blDoPDB2SeqByChain(pdb, FALSE, FALSE, FALSE))!=NULL)
+      {
+         char **chains = NULL;
+         
+         printf("blDoPDB2SeqByChain()\n");
+         if((chains = blGetHashKeyList(seq2))!=NULL)
+         {
+            int i;
+            
+            for(i=0; chains[i]!=NULL; i++)
+            {
+               printf("%s : %s\n", chains[i], blGetHashValueString(seq2, chains[i]));
+            }
+            
+            blFreeHashKeyList(chains);
+         }
+         
+         
+      }
+      
+
+
+      
+   }
    return(0);
 }
 #endif
