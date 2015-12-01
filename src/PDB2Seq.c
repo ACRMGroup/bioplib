@@ -3,12 +3,12 @@
 
    \file       PDB2Seq.c
    
-   \version    V1.14
-   \date       07.07.14
+   \version    V1.15
+   \date       01.12.15
    \brief      Conversion from PDB to sequence and other sequence
                related routines
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -67,7 +67,7 @@
 -  V1.12 10.06.05 Fixed bug - was undercounting by 1 for CA-only chains
 -  V1.13 04.02.14 Use CHAINMATCH By: CTP
 -  V1.14 07.07.14 Use bl prefix for functions By: CTP
-
+-  V1.15 01.12.15 Added blDoPDB2SeqByChain()  By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -113,9 +113,9 @@
    \param[in]     *pdb     PDB linked list
    \param[in]     DoAsxGlx Handle Asx and Glx as B and Z rather than X
    \param[in]     ProtOnly Don't do DNA/RNA; these simply don't get
-                          done rather than being handled as X
+                           done rather than being handled as X
    \param[in]     NoX      Skip amino acids which would be assigned as X
-   \return                  Allocated character array containing sequence
+   \return                 Allocated character array containing sequence
 
    malloc()'s an array containing the 1-letter sequence corresponding to
    an input PDB linked list. Returns NULL if given a NULL parameter or
