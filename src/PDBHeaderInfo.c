@@ -3,8 +3,8 @@
 
    \file       PDBHeaderInfo.c
    
-   \version    V1.6
-   \date       25.11.15
+   \version    V1.7
+   \date       02.12.15
 
    \brief      Get misc header info from PDB header
    
@@ -63,6 +63,8 @@
                   By: ACRM
 -  V1.5  26.06.15 Added blGetBiomoleculeWholePDB() and blFreeBiomolecule()
 -  V1.6  25.11.15 Added blGetSeqresByChainWholePDB()
+-  V1.7  02.12.15 Sequences were not being terminated properly in
+                  blGetSeqresByChainWholePDB()
 
 *************************************************************************/
 /* Doxygen
@@ -1354,6 +1356,7 @@ HASHTABLE *blGetSeqresByChainWholePDB(WHOLEPDB *wpdb, MODRES *modres,
          /* Test if chain has changed                                   */
          if(!CHAINMATCH(chain, lastchain))
          {
+            sequence[nres++] = '\0';
             if(!blSetHashValueString(hash, lastchain, sequence))
             {
                blFreeHash(hash);
