@@ -3,8 +3,8 @@
 
    \file       ExtractZonePDB.c
    
-   \version    V1.17
-   \date       07.10.15
+   \version    V1.18
+   \date       08.12.15
    \brief      PDB linked list manipulation
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2015
@@ -65,6 +65,8 @@
 -  V1.16 19.08.14 Renamed function to blExtractZonePDBAsCopy() By: CTP
 -  V1.17 07.10.15 Added function blExtractNotZonePDBAsCopy() and
                   blExtractNotZonePDBAsCopy() By: ACRM
+-  V1.18 08.12.15 Modified blExtractZoneAsCopy() to check for exact 
+                  match first
 
 *************************************************************************/
 /* Doxygen
@@ -146,6 +148,10 @@
 -  04.02.14 Use CHAINMATCH By: CTP
 -  07.07.14 Use bl prefix for functions By: CTP
 -  19.08.14 Renamed function to blExtractZonePDBAsCopy() By: CTP
+-  08.12.15 Now checks for an exact match first to deal with 6INS that
+            uses the insert code for something different! By: ACRM
+
+***    TODO - This doesn't deal with CONECT information properly!      ***
 */
 PDB *blExtractZonePDBAsCopy(PDB *inpdb, 
                             char *chain1, int resnum1, char *insert1, 
@@ -160,56 +166,85 @@ PDB *blExtractZonePDBAsCopy(PDB *inpdb,
    if((pdb = blDupePDB(inpdb))==NULL)
       return(NULL);
 
-   /* Find the first residue in the PDB linked list                     
-      prev will point to the last atom before the first atom in the zone
-      start will point to the first atom in the zone
-    */
-   for(p=pdb; p!=NULL; NEXT(p))
+   /* Try to find the exact residue specification, setting start to the
+      start of that residue and prev to the last atom of the previous
+      residue
+   */
+   if((start=blFindResidue(pdb, chain1, resnum1, insert1))!=NULL)
    {
-      if(CHAINMATCH(p->chain,chain1) &&
-         ((p->resnum > resnum1) ||
-          ((p->resnum == resnum1) &&
-           (p->insert[0] >= insert1[0]))))
+      /* Find the previous atom                                         */
+      for(prev=pdb; prev->next!=start; NEXT(prev)) ;
+   }
+   else
+   {
+      /* We didn't find an exact match so find the residue that would
+         follow that residue specification.
+         Again prev will point to the last atom before the first atom in
+         the zone and start will point to the first atom in the zone
+      */
+      for(p=pdb; p!=NULL; NEXT(p))
       {
-         start = p;
-         break;
+         if(CHAINMATCH(p->chain,chain1) &&
+            ((p->resnum > resnum1) ||
+             ((p->resnum == resnum1) &&
+              (p->insert[0] >= insert1[0]))))
+         {
+            start = p;
+            break;
+         }
+         prev = p;
       }
-      prev = p;
    }
 
+   /* If we didn't find anything then exit                              */
    if(start==NULL)
    {
       FREELIST(pdb, PDB);
       return(NULL);
    }
 
-   /* Find the last residue in the PDB linked list                      
-      last will point to the last atom in the zone
 
-      29.10.10 Also breaks out if chain1 and chain2 are the same but
-      we've now come to a different chain. This fixes a bug where
-      the code wouldn't break out if resnum2 was the last residue in
-      a chain By: ACRM
-    */
-   for(p=start; p!=NULL; NEXT(p))
+   /* See if we have an exact match to the residue requested
+      last will be the last atom in that residue
+   */
+   if((last=blFindResidue(pdb, chain2, resnum2, insert2))!=NULL)
    {
-      if(CHAINMATCH(p->chain,chain2) && /* If chain is the same and...  */
-         ((p->resnum > resnum2) ||     /* Residue number exceeded or.. */
-          ((p->resnum == resnum2) &&   /* Resnum same, insert exceeded */
-           (p->insert[0] > insert2[0]))))
-      {
-         break;
-      }
-      /* Both zone ends are in the same chain so, if we got here we have 
-         found the right chain. If the current chain is now different 
-         from chain2, then we've gone off the end of the chain
+      PDB *nextres = blFindNextResidue(last);
+
+      /* Step to the end of this residue                                */
+      for(; last->next!=nextres; NEXT(last)) ;
+   }
+   else
+   {
+      /* There was no exact match so find the one after that residue
+         specification. 
+         Again, last will point to the last atom in the zone
+
+         29.10.10 Also breaks out if chain1 and chain2 are the same but
+         we've now come to a different chain. This fixes a bug where
+         the code wouldn't break out if resnum2 was the last residue in
+         a chain By: ACRM
       */
-      if( CHAINMATCH(chain1,chain2) &&
-         !CHAINMATCH(p->chain,chain2))
+      for(p=start; p!=NULL; NEXT(p))
       {
-         break;
+         if(CHAINMATCH(p->chain,chain2) && /* If same chain and...      */
+            ((p->resnum > resnum2) ||      /* Residue number exceeded or*/
+             ((p->resnum == resnum2) &&    /* Resnum same and...        */
+              (p->insert[0] > insert2[0]))))  /* insert exceeded        */
+         {
+            break;
+         }
+         /* Both zone ends are in the same chain so, if we got here we have 
+            found the right chain. If the current chain is now different 
+            from chain2, then we've gone off the end of the chain
+         */
+         if( CHAINMATCH(chain1,chain2) &&
+             !CHAINMATCH(p->chain,chain2))
+         {
+            break;
+         }
+         last = p;
       }
-      last = p;
    }
 
    if(last==NULL)
@@ -291,6 +326,7 @@ PDB *blExtractZoneSpecPDBAsCopy(PDB *pdb, char *firstRes, char *lastRes)
    records in the new PDB linked list are freed.
 
 -  07.10.15 Original   By: ACRM
+-  08.10.15 Fixed return(FALSE) to return(NULL)
 */
 PDB *blExtractNotZonePDBAsCopy(PDB *inpdb, 
                                char *chain1, int resnum1, char *insert1, 
@@ -301,11 +337,11 @@ PDB *blExtractNotZonePDBAsCopy(PDB *inpdb,
         *stop  = NULL,
         *p, *q;
 
-   /* FInd the start and stop of the zone in the old linked list        */
+   /* Find the start and stop of the zone in the old linked list        */
    if((start = blFindResidue(inpdb, chain1, resnum1, insert1)) == NULL)
-      return(FALSE);
+      return(NULL);
    if((stop  = blFindResidue(inpdb, chain2, resnum2, insert2)) == NULL)
-      return(FALSE);
+      return(NULL);
    stop  = blFindNextResidue(stop);
    
    for(p=inpdb; p!=start; NEXT(p))
@@ -327,6 +363,7 @@ PDB *blExtractNotZonePDBAsCopy(PDB *inpdb,
       
       blCopyPDB(q, p);
    }
+
    for(p=stop; p!=NULL; NEXT(p))
    {
       if(pdb == NULL)
