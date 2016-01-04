@@ -3,11 +3,11 @@
 
    \file       align.c
    
-   \version    V3.5
-   \date       26.08.14
+   \version    V3.6
+   \date       04.01.16
    \brief      Perform Needleman & Wunsch sequence alignment
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2016
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -80,6 +80,9 @@
                   style matrix files as well as our own
 -  V3.4  07.07.14 Use bl prefix for functions By: CTP
 -  V3.5  26.08.14 Added blSetMDMScoreWeight() By: ACRM
+-  V3.6  04.01.16 Added special calls to blCalcMDMScore() and
+                  blCalcMDMScoreUC() to silence warnings. Warnings now
+                  go to stderr
 
 *************************************************************************/
 /* Doxygen
@@ -1198,9 +1201,11 @@ static int TraceBack(int  **matrix,
 
    \param[in]     resa      First residue
    \param[in]     resb      Second residue
-   \return                      score
+   \return                  score
 
    Calculate score from static globally stored mutation data matrix
+
+   If both residues are set as '\0' it will simply silence all warnings
 
 -  07.10.92 Adapted from NIMR-written original
 -  24.11.94 Only gives 10 warnings
@@ -1209,6 +1214,8 @@ static int TraceBack(int  **matrix,
             reference causing a potential core dump
 -  11.07.96 Name changed from calcscore() and now non-static
 -  07.07.14 Use bl prefix for functions By: CTP
+-  04.01.16 Added special call with both residues set to '\0' to silence
+            warnings. Also warnings now go to stderr
 */
 int blCalcMDMScore(char resa, char resb)
 {
@@ -1216,28 +1223,39 @@ int blCalcMDMScore(char resa, char resb)
    static int NWarn = 0;
    BOOL       Warned = FALSE;
 
-   for(i=0;i<sMDMSize;i++)
+   if((resa == '\0') && (resb == '\0'))
+   {
+      NWarn = 100;
+      return(0);
+   }
+
+   for(i=0; i<sMDMSize; i++)
    {
       if(resa==sMDM_AAList[i]) break;
    }
+
    if(i==sMDMSize) 
    {
       if(NWarn < 10)
-         printf("Residue %c not found in matrix\n",resa);
+         fprintf(stderr, "Residue %c not found in matrix\n", resa);
       else if(NWarn == 10)
-         printf("More residues not found in matrix...\n");
+         fprintf(stderr, "More residues not found in matrix...\n");
+
       Warned = TRUE;
    }
-   for(j=0;j<sMDMSize;j++)
+
+   for(j=0; j<sMDMSize; j++)
    {
       if(resb==sMDM_AAList[j]) break;
    }
+
    if(j==sMDMSize) 
    {
       if(NWarn < 10)
-         printf("Residue %c not found in matrix\n",resb);
+         fprintf(stderr, "Residue %c not found in matrix\n", resb);
       else if(NWarn == 10)
-         printf("More residues not found in matrix...\n");
+         fprintf(stderr, "More residues not found in matrix...\n");
+
       Warned = TRUE;
    }
    
@@ -1269,6 +1287,8 @@ int blCalcMDMScore(char resa, char resb)
 -  11.07.96 Name changed from calcscore() and now non-static
 -  27.02.07 As CalcMDMScore() but upcases characters before comparison
 -  07.07.14 Use bl prefix for functions By: CTP
+-  04.01.16 Added special call with both residues set to '\0' to silence
+            warnings. Also warnings now go to stderr
 */
 int blCalcMDMScoreUC(char resa, char resb)
 {
@@ -1276,31 +1296,42 @@ int blCalcMDMScoreUC(char resa, char resb)
    static int NWarn = 0;
    BOOL       Warned = FALSE;
 
+   if((resa == '\0') && (resb == '\0'))
+   {
+      NWarn = 10;
+      return(0);
+   }
+
    resa = (islower(resa)?toupper(resa):resa);
    resb = (islower(resb)?toupper(resb):resb);
 
-   for(i=0;i<sMDMSize;i++)
+   for(i=0; i<sMDMSize; i++)
    {
       if(resa==sMDM_AAList[i]) break;
    }
+
    if(i==sMDMSize) 
    {
       if(NWarn < 10)
-         printf("Residue %c not found in matrix\n",resa);
+         fprintf(stderr, "Residue %c not found in matrix\n", resa);
       else if(NWarn == 10)
-         printf("More residues not found in matrix...\n");
+         fprintf(stderr, "More residues not found in matrix...\n");
+
       Warned = TRUE;
    }
-   for(j=0;j<sMDMSize;j++)
+
+   for(j=0; j<sMDMSize; j++)
    {
       if(resb==sMDM_AAList[j]) break;
    }
+
    if(j==sMDMSize) 
    {
       if(NWarn < 10)
-         printf("Residue %c not found in matrix\n",resb);
+         fprintf(stderr, "Residue %c not found in matrix\n", resb);
       else if(NWarn == 10)
-         printf("More residues not found in matrix...\n");
+         fprintf(stderr, "More residues not found in matrix...\n");
+
       Warned = TRUE;
    }
    
