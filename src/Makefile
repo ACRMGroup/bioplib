@@ -147,7 +147,7 @@ install :
 
 installdata :
 	mkdir -p $(DATADEST)
-	(cd ../data; cp -Rcp * $(DATADEST))
+	(cd ../data; cp -Rp * $(DATADEST))
 
 installshared : 
 	mkdir -p $(SHAREDLIBDEST)
