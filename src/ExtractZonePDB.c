@@ -3,11 +3,11 @@
 
    \file       ExtractZonePDB.c
    
-   \version    V1.18
-   \date       08.12.15
+   \version    V1.19
+   \date       17.02.16
    \brief      PDB linked list manipulation
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2015
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2016
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -150,6 +150,8 @@
 -  19.08.14 Renamed function to blExtractZonePDBAsCopy() By: CTP
 -  08.12.15 Now checks for an exact match first to deal with 6INS that
             uses the insert code for something different! By: ACRM
+-  17.02.16 Added fix on check for exact match - prev wasn't being set
+            correctly if the match was to the first residue in the file
 
 ***    TODO - This doesn't deal with CONECT information properly!      ***
 */
@@ -173,7 +175,15 @@ PDB *blExtractZonePDBAsCopy(PDB *inpdb,
    if((start=blFindResidue(pdb, chain1, resnum1, insert1))!=NULL)
    {
       /* Find the previous atom                                         */
-      for(prev=pdb; prev->next!=start; NEXT(prev)) ;
+      if(start==pdb)
+      {
+         prev=NULL;
+      }
+      else
+      {
+         for(prev=pdb; prev->next!=start; NEXT(prev)) ;
+      }
+      
    }
    else
    {
