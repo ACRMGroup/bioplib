@@ -51,8 +51,8 @@
 /* Includes
 */
 #include <math.h>
-#include "bioplib/SysDefs.h"
-#include "bioplib/pdb.h"
+#include "SysDefs.h"
+#include "pdb.h"
 
 /************************************************************************/
 /* Defines and macros

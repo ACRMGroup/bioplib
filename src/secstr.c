@@ -73,13 +73,12 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "bioplib/pdb.h"
-#include "bioplib/array.h"
-#include "bioplib/MathType.h"
-#include "bioplib/SysDefs.h"
-#include "bioplib/macros.h"
-#include "bioplib/angle.h"
-
+#include "pdb.h"
+#include "array.h"
+#include "MathType.h"
+#include "SysDefs.h"
+#include "macros.h"
+#include "angle.h"
 #include "secstr.h"
 
 /************************************************************************/
