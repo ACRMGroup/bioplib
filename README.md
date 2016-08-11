@@ -1,8 +1,7 @@
-
 BiopLib
 =======
 
-                    (c) 1990-2015 SciTech Software
+                    (c) 1990-2016 SciTech Software
                        Dr. Andrew C.R. Martin,
                   UCL and The University of Reading
 
@@ -15,7 +14,7 @@ structure and sequence using the C programming language. In addition,
 the term `Bioplib' refers to routines for more general C programming
 purposes.
 
-This library is copyright (c) 1990-2015 and was mostly originally
+This library is copyright (c) 1990-2016 and was mostly originally
 written by Dr. Andrew C.R. Martin while self-employed. Many
 enhancements and some additional routines have been written while at
 The University of Reading (2000-2003) and at UCL (1993-1999 and 2004

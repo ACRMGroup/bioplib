@@ -57,10 +57,10 @@ RANLIB = ranlib
 # are the minor and release numbers
 # libgen
 GMAJOR = 3
-GMINOR = 4.0
+GMINOR = 5.0
 # libbiop
 BMAJOR = 3
-BMINOR = 4.0
+BMINOR = 5.0
 
 # Files for libgen.a
 OFILESG = BuffInp.o CalcExtSD.o CalcSD.o CheckExtn.o CreateRotMat.o CrossProd3.o \
@@ -98,7 +98,7 @@ GlyCB.o BuildAtomNeighbourPDBList.o \
 FindAtomWildcardInRes.o DupeResiduePDB.o StripWatersPDB.o aalist.o \
 StructurePDB.o FindHetatmResidue.o FindHetatmResidueSpec.o access.o \
 deprecatedBiop.o BuildConect.o GetPDBChainAsCopy.o PDBHeaderInfo.o \
-WritePIR.o atomtype.o
+WritePIR.o atomtype.o secstr.o
 
 
 # Static libraries - the default
