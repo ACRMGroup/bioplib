@@ -3,12 +3,12 @@
 
    \file       pdb.h
    
-   \version    V1.94
-   \date       30.11.15
+   \version    V1.95
+   \date       11.08.16
 
    \brief      Include file for PDB routines
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2015
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2016
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -219,6 +219,7 @@
 -  V1.92 02.11.15 Further improved MAKERESID()
 -  V1.93 26.11.15 Added blGetSeqresByChainWholePDB()
 -  V1.94 30.11.15 Make use of blMAXCHAINLABEL
+-  V1.95 11.08.16 Added blBuildResSpec()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -735,6 +736,7 @@ DISULPHIDE *blReadDisulphidesPDB(FILE *fp, BOOL *error);
 DISULPHIDE *blReadDisulphidesWholePDB(WHOLEPDB *wpdb, BOOL *error);
 BOOL blParseResSpec(char *spec, char *chain, int *resnum, char *insert);
 void blPrintResSpecHelp(FILE *fp);
+void blBuildResSpec(PDB *p, char *resspec);
 BOOL blDoParseResSpec(char *spec, char *chain, int *resnum, char *insert, 
                       BOOL uppercaseresspec);
 BOOL blRepSChain(PDB *pdb, char *sequence, char *ChiTable, char *RefCoords);

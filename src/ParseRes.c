@@ -3,11 +3,11 @@
 
    \file       ParseRes.c
    
-   \version    V1.14
-   \date       10.03.15
+   \version    V1.15
+   \date       11.08.16
    \brief      Parse a residue specification
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2016
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -74,6 +74,7 @@
 -  V1.14 10.03.15 Added blPrintResSpecHelp()  By: ACRM
                   Removed blParseResSpecNoUpper() since blParseResSpec() 
                   now does this
+-  V1.15 11.08.16 Added blBuildResSpec()
 
 *************************************************************************/
 /* Doxygen
@@ -91,9 +92,11 @@
    into chain, resnum and insert. Gives control over up-casing
 
    #FUNCTION  blPrintResSpecHelp()
-   Prints a help message on the resdidue specfication format to make
+   Prints a help message on the residue specfication format to make
    help messages more consistent
 
+   #FUNCTION blBuildResSpec()
+   Creates a residue specification string
 */
 /************************************************************************/
 /* Includes
@@ -333,5 +336,34 @@ a '.' (required\n");
    fprintf(fp,"if the chain label is numeric), nnn is a residue number \
 and i is an \n");
    fprintf(fp,"optional insert code.\n");
+}
+
+
+/************************************************************************/
+/*>void blBuildResSpec(PDB *p, char *resspec)
+   ------------------------------------------
+   \param[in]   *p   PDB record pointer
+
+   Builds a residue specification string for a PDB record
+
+   11.08.16  Original   By: ACRM
+*/
+void blBuildResSpec(PDB *p, char *resspec)
+{
+   int  chainLabelLen = strlen(p->chain);
+   char format[16];
+
+   
+   if((chainLabelLen > 1) || isdigit(p->chain[chainLabelLen-1]))
+   {
+      strcpy(format, "%s.%d%s");
+   }
+   else
+   {
+      strcpy(format, "%s%d%s");
+   }
+
+   sprintf(resspec, format, p->chain, p->resnum,
+           ((strlen(p->insert) && strcmp(p->insert, " "))?p->insert:""));
 }
 
