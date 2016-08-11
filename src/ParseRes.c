@@ -347,7 +347,7 @@ and i is an \n");
 
    Builds a residue specification string for a PDB record
 
-   11.08.16  Original   By: ACRM
+-   11.08.16  Original   By: ACRM
 */
 void blBuildResSpec(PDB *p, char *resspec)
 {
