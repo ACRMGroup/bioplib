@@ -3,11 +3,11 @@
 
    \file       BuildConect.c
    
-   \version    V1.4
-   \date       22.07.15
+   \version    V1.5
+   \date       03.10.16
    \brief      Build connectivity information in PDB linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 2002-2015
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 2002-2016
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -53,6 +53,7 @@
 -  V1.3  23.06.15 Added blAreResiduesBonded() and 
                   blAreResiduePointersBonded()
 -  V1.4  22.07.15 Added blIsConnected()
+-  V1.5  03.10.16 Added <stdlib.h>
 
 *************************************************************************/
 /* Doxygen
@@ -105,6 +106,7 @@
 /* Includes
 */
 #include <math.h>
+#include <stdlib.h>
 #include "macros.h"
 #include "pdb.h"
 

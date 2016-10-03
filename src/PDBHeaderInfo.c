@@ -3,12 +3,12 @@
 
    \file       PDBHeaderInfo.c
    
-   \version    V1.7
-   \date       02.12.15
+   \version    V1.8
+   \date       03.10.16
 
    \brief      Get misc header info from PDB header
    
-   \copyright  (c) Dr. Andrew C.R. Martin / UCL, 2015
+   \copyright  (c) Dr. Andrew C.R. Martin / UCL, 2015-2016
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -65,6 +65,7 @@
 -  V1.6  25.11.15 Added blGetSeqresByChainWholePDB()
 -  V1.7  02.12.15 Sequences were not being terminated properly in
                   blGetSeqresByChainWholePDB()
+-  V1.8  03.10.16 Added <stdlib.h>
 
 *************************************************************************/
 /* Doxygen
@@ -119,6 +120,7 @@
 /* Includes
 */
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "pdb.h"
 #include "seq.h"
