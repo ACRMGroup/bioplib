@@ -342,11 +342,12 @@ and i is an \n");
 /************************************************************************/
 /*>void blBuildResSpec(PDB *p, char *resspec)
    ------------------------------------------
+*//**
    \param[in]   *p   PDB record pointer
 
    Builds a residue specification string for a PDB record
 
-   11.08.16  Original   By: ACRM
+-   11.08.16  Original   By: ACRM
 */
 void blBuildResSpec(PDB *p, char *resspec)
 {
