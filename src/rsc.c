@@ -3,11 +3,11 @@
 
    \file       rsc.c
    
-   \version    V1.15
-   \date       25.02.15
+   \version    V1.16
+   \date       14.12.16
    \brief      Modify sequence of a PDB linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2015
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2016
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -74,6 +74,7 @@
 -  V1.14 23.02.15 Modified for new blRenumAtomsPDB() which takes an 
                   offset   By: ACRM
 -  V1.15 25.02.15 Sets the element type for new atoms
+-  V1.16 14.12.16 FixTorsions() checks return from blCalcChi()
 
 *************************************************************************/
 /* Defines required for includes
@@ -1321,6 +1322,7 @@ static int FindChiIndex(char *resnam)
 -  13.05.92 Original
 -  21.06.93 Changed to use Array2D allocated chitab 
 -  09.02.05 Chain name was getting set to last one in pdb
+-  14.12.16 Added check on return from blCalcChi()
 */
 static PDB *FixTorsions(PDB *pdb,      /* Linked list to fix torsions   */
                         PDB *ResStart, /* Beginning of reference frag   */
@@ -1357,8 +1359,10 @@ static PDB *FixTorsions(PDB *pdb,      /* Linked list to fix torsions   */
    /* For each of the chis                                              */
    for(j=0;j<nchi;j++)
    {
-      ParentChi = blCalcChi(ResStart, j);
-      blSetChi(pdb, NULL, ParentChi, j);
+      if((ParentChi = blCalcChi(ResStart, j)) < 9998.0)
+      {
+         blSetChi(pdb, NULL, ParentChi, j);
+      }
    }
    
    return(ResStart);

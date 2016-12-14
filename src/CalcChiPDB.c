@@ -3,11 +3,11 @@
 
    \file       CalcChiPDB.c
    
-   \version    V1.2
-   \date       07.07.14
+   \version    V1.3
+   \date       14.12.16
    \brief      Perform calculations on PDB linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-8
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2016
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -49,6 +49,7 @@
 -  V1.0  22.02.94 Original
 -  V1.1  27.02.98 Removed unreachable break from switch()
 -  V1.2  07.07.14 Use bl prefix for functions By: CTP
+-  V1.3  14.12.16 blCalcChi() now checks that all atoms found  By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -56,7 +57,8 @@
    #GROUP    Handling PDB Data
    #SUBGROUP Calculations
    #FUNCTION  blCalcChi()
-   Calculates a sidechain torsion angle from a pdb linked list.
+   Calculates a sidechain torsion angle from a pdb linked list. Returns
+   9999.0 if any atoms not found
 */
 /************************************************************************/
 /* Includes
@@ -103,9 +105,10 @@
 -  13.05.92 Original
 -  27.02.98 Removed unreachable break from switch()
 -  07.07.14 Use bl prefix for functions By: CTP
+-  14.12.16 Added check that all atoms are found 
+            Returns 9999.0 if any atom not found By: ACRM
 */
-REAL blCalcChi(PDB *pdb,
-               int type)
+REAL blCalcChi(PDB *pdb, int type)
 {
    REAL  chi = 0.0;
    PDB   *one,
@@ -142,6 +145,9 @@ REAL blCalcChi(PDB *pdb,
    default:
       return(chi);
    }
+
+   if((one == NULL) || (two == NULL) || (three == NULL) || (four == NULL))
+      return(9999.0);
    
    /* Calculate the torsion angle                                       */
    chi = blPhi(one->x,   one->y,   one->z,
