@@ -3,11 +3,11 @@
 
    \file       macros.h
    
-   \version    V2.25
-   \date       04.11.15
+   \version    V2.26
+   \date       14.12.16
    \brief      Useful macros
    
-   \copyright  (c) Dr. Andrew C.R. Martin / UCL 1991-2015
+   \copyright  (c) Dr. Andrew C.R. Martin / UCL 1991-2016
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -99,6 +99,7 @@
 -  V2.23 26.06.15 Added STRNCPYNOSPACES(out, in, mx)
 -  V2.24 28.08.15 Added FREE()
 -  V2.25 04.11.15 Added FCLOSE()
+-  V2.26 14.12.16 Added TERMINATECR()
 
 *************************************************************************/
 /* Doxygen
@@ -151,6 +152,8 @@
    #SUBGROUP String handling
    #FUNCTION TERMINATE(x)         
    Macro: Terminate a string at the first \n
+   #FUNCTION TERMINATECR(x)         
+   Macro: Terminate a string at the first \r
    #FUNCTION UPPER(x)             
    Macro: Converts a string to upper case
    #FUNCTION KILLLEADSPACES(x,y)  
@@ -368,6 +371,14 @@ do {                                                                     \
                            {  (x)[_terminate_macro_j] = '\0';         \
                               break;                                  \
                      }  }  }  while(0)
+#define TERMINATECR(x) do {  int _terminate_macro_j;                  \
+                          for(_terminate_macro_j=0;                   \
+                              (x)[_terminate_macro_j];                \
+                              _terminate_macro_j++)                   \
+                          {  if((x)[_terminate_macro_j] == '\r')      \
+                             {  (x)[_terminate_macro_j] = '\0';       \
+                                break;                                \
+                       }  }  }  while(0)
 #define TERMAT(x, y) do {  int _termat_macro_j;                       \
                         for(_termat_macro_j=0;                        \
                             (x)[_termat_macro_j];                     \
