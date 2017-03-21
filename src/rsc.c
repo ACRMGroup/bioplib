@@ -121,9 +121,11 @@
 /************************************************************************/
 /* Defines and macros
 */
-#define NUMAAKNOWN 20
-#define MAXBUFF    80     /* Used by ReadRefCoords()                    */
-
+#define NUMAAKNOWN  20
+#define MAXBUFF     80    /* Used by ReadRefCoords()                    */
+#define ERROR_OK    0
+#define ERROR_NOMEM 1
+#define ERROR_ATOMS 2
 
 /************************************************************************/
 /* Globals
@@ -532,7 +534,23 @@ static PDB *DoReplace(PDB  *ResStart,  /* Pointer to start of residue   */
    else                                   /* Replace X with Y           */
       retval = Replace(ResStart,NextRes,seq,chitab,fp_RefCoords);
    
-   if(retval) return(NULL);               /* Problem                    */
+   if(retval)                             /* Problem                    */
+   {
+      switch(retval)
+      {
+      case ERROR_NOMEM:
+         strcpy(gRSCError, "Memory allocation failed");
+         break;
+      case ERROR_ATOMS:
+         strcpy(gRSCError, "Could not build sidechain as backbone atoms \
+were missing");
+         break;
+      default:
+         strcpy(gRSCError, "Undefined error");
+      }
+      return(NULL);
+   }
+   
    
    /* Step through from ResStart to find the last replaced atom         */
    for(p=ResStart; p && p->next != NextRes; NEXT(p));
@@ -548,7 +566,7 @@ static PDB *DoReplace(PDB  *ResStart,  /* Pointer to start of residue   */
 
    \param[in,out] *ResStart   Start of residue to be modified
    \param[in]     *NextRes    Pointer to start of next residue
-   \return                      0: OK, 1: error
+   \return                    0: OK, 1: error
 
    Replace residue X with Gly. This is simply a case of trimming the 
    sidechain and changing the residue name.
@@ -569,7 +587,7 @@ static int ReplaceWithGly(PDB *ResStart,  /* Start of res               */
    if(retval) blSetResnam(ResStart,NextRes,"GLY ",ResStart->resnum,
                           ResStart->insert,ResStart->chain);
    
-   return(retval?0:1);
+   return(retval?ERROR_OK:ERROR_NOMEM);
 }
 
 
@@ -601,7 +619,7 @@ static int ReplaceWithAla(PDB *ResStart,  /* Start of residue           */
    if(retval) blSetResnam(ResStart,NextRes,"ALA ",ResStart->resnum,
                           ResStart->insert,ResStart->chain);
    
-   return(retval?0:1);
+   return(retval?ERROR_OK:ERROR_NOMEM);
 }
 
 
@@ -615,7 +633,9 @@ static int ReplaceWithAla(PDB *ResStart,  /* Start of residue           */
    \param[in]     *NextRes      Pointer to start of next residue
    \param[in]     seq           1-letter code for replacement residue
    \param[in]     *fp_RefCoords Reference coordinate file pointer
-   \return                        0: OK, 1: error
+   \return                      0: OK
+                                1: memory allocation error
+                                2: missing atoms error
 
    Replace a Gly with another residue type.
    
@@ -623,6 +643,7 @@ static int ReplaceWithAla(PDB *ResStart,  /* Start of residue           */
 -  21.06.93 Changed for new version of onethr(). Removed unused param.
 -  09.07.93 Simplified allocation checking
 -  07.07.14 Use bl prefix for functions By: CTP
+-  21.03.17 Added different error returns
 */
 static int ReplaceGly(PDB  *ResStart,
                       PDB  *NextRes,
@@ -646,7 +667,7 @@ static int ReplaceGly(PDB  *ResStart,
    reference = ReadRefCoords(fp_RefCoords, seq);
    if(reference == NULL)
    {
-      retval = 1;
+      retval = ERROR_NOMEM;
       goto Cleanup;
    }
    
@@ -673,7 +694,7 @@ static int ReplaceGly(PDB  *ResStart,
          /* Check allocation                                            */
          if(q == NULL)
          {
-            retval = 1;
+            retval = ERROR_NOMEM;
             goto Cleanup;
          }
 
@@ -683,7 +704,7 @@ static int ReplaceGly(PDB  *ResStart,
    }
    if(natoms != 3)                         /* Atoms missing             */
    {
-      retval = 1;
+      retval = ERROR_ATOMS;
       goto Cleanup;
    }
    
@@ -711,7 +732,7 @@ static int ReplaceGly(PDB  *ResStart,
          /* Check allocation                                            */
          if(q == NULL)
          {
-            retval = 1;
+            retval = ERROR_NOMEM;
             goto Cleanup;
          }
          
@@ -720,14 +741,14 @@ static int ReplaceGly(PDB  *ResStart,
    }
    if(natoms != 3)                         /* Atoms missing             */
    {
-      retval = 1;
+      retval = ERROR_ATOMS;
       goto Cleanup;
    }
    
    /* Move the reference aa by fitting on the atoms stored in _mc       */
    if(FitByFragment(parent_mc, ref_mc, reference))
    {
-      retval = 1;
+      retval = ERROR_NOMEM;
       goto Cleanup;
    }
    
@@ -735,10 +756,11 @@ static int ReplaceGly(PDB  *ResStart,
       flag to insert the CB
    */
    if(InsertSC(reference, ResStart, NextRes, TRUE))
-      retval = 1;
+      retval = ERROR_NOMEM;
    
-   if(retval == 0) blSetResnam(ResStart,NextRes,three,ResStart->resnum,
-                               ResStart->insert,ResStart->chain);
+   if(retval == ERROR_OK)
+      blSetResnam(ResStart,NextRes,three,ResStart->resnum,
+                  ResStart->insert,ResStart->chain);
 
 Cleanup:
    if(reference != NULL)   FREELIST(reference, PDB);
@@ -903,7 +925,7 @@ static int InsertSC(PDB  *insert,
    \param[in]     seq           1-letter code for replacement residue
    \param[in]     **chitab      Equivalent chi table
    \param[in]     *fp_RefCoords Reference coordinate file pointer
-   \return                        0: OK, 1: error
+   \return                      0: OK, 1: error
 
    Replace a non-Gly with another residue type.
    
@@ -920,7 +942,7 @@ static int Replace(PDB  *ResStart,
                    int  **chitab,
                    FILE *fp_RefCoords)
 {
-   int   retval = 0,                /* Assume everything OK             */
+   int   retval = ERROR_OK,         /* Assume everything OK             */
          natoms;
    PDB   *p,                        /* General PDB pointer              */
          *q,                        /* General PDB pointer              */
@@ -937,7 +959,7 @@ static int Replace(PDB  *ResStart,
    reference = ReadRefCoords(fp_RefCoords, seq);
    if(reference == NULL)
    {
-      retval = 1;
+      retval = ERROR_NOMEM;
       goto Cleanup;
    }
    
@@ -965,7 +987,7 @@ static int Replace(PDB  *ResStart,
          /* Check allocation                                            */
          if(q == NULL)
          {
-            retval = 1;
+            retval = ERROR_NOMEM;
             goto Cleanup;
          }
          
@@ -974,7 +996,7 @@ static int Replace(PDB  *ResStart,
    }
    if(natoms != 4)                           /* Atoms missing           */
    {
-      retval = 1;
+      retval = ERROR_ATOMS;
       goto Cleanup;
    }
 
@@ -1007,7 +1029,7 @@ static int Replace(PDB  *ResStart,
          /* Check allocation                                            */
          if(q == NULL)
          {
-            retval = 1;
+            retval = ERROR_NOMEM;
             goto Cleanup;
          }
          
@@ -1016,7 +1038,7 @@ static int Replace(PDB  *ResStart,
    }
    if(natoms != 4)                           /* Atoms missing           */
    {
-      retval = 1;
+      retval = ERROR_ATOMS;
       goto Cleanup;
    }
 
@@ -1028,7 +1050,7 @@ static int Replace(PDB  *ResStart,
    /* Move the reference aa by fitting on the atoms stored in _mc       */
    if(FitByFragment(parent_mc, ref_mc, reference))
    {
-      retval = 1;
+      retval = ERROR_NOMEM;
       goto Cleanup;
    }
 
@@ -1048,16 +1070,18 @@ static int Replace(PDB  *ResStart,
 #endif   
    
    /* Kill sidechain. Third parameter is a flag kill CB                 */
-   retval = ((blKillSidechain(ResStart,NextRes,TRUE)) ? 0 : 1);
+   retval = ((blKillSidechain(ResStart,NextRes,TRUE)) 
+             ? ERROR_OK : ERROR_NOMEM);
 
    /* Now insert the s/c into the main linked list, last parameter is a
       flag to insert the CB
    */
    if(InsertSC(reference, ResStart, NextRes, TRUE))
-      retval = 1;
+      retval = ERROR_NOMEM;
    
-   if(retval == 0) blSetResnam(ResStart,NextRes,three,ResStart->resnum,
-                               ResStart->insert,ResStart->chain);
+   if(retval == ERROR_OK)
+      blSetResnam(ResStart,NextRes,three,ResStart->resnum,
+                  ResStart->insert,ResStart->chain);
    
 Cleanup:
    if(reference != NULL)   FREELIST(reference, PDB);
