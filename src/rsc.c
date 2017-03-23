@@ -121,11 +121,12 @@
 /************************************************************************/
 /* Defines and macros
 */
-#define NUMAAKNOWN  20
-#define MAXBUFF     80    /* Used by ReadRefCoords()                    */
-#define ERROR_OK    0
-#define ERROR_NOMEM 1
-#define ERROR_ATOMS 2
+#define NUMAAKNOWN     20
+#define MAXBUFF        80   /* Used by ReadRefCoords()                  */
+#define ERROR_OK        0
+#define ERROR_NOMEM     1
+#define ERROR_ATOMS     2
+#define ERROR_UNKNOWNAA 3
 
 /************************************************************************/
 /* Globals
@@ -545,6 +546,9 @@ static PDB *DoReplace(PDB  *ResStart,  /* Pointer to start of residue   */
          strcpy(gRSCError, "Could not build sidechain as backbone atoms \
 were missing");
          break;
+      case ERROR_UNKNOWNAA:
+         strcpy(gRSCError, "Unknown replacement amino acid");
+         break;
       default:
          strcpy(gRSCError, "Undefined error");
       }
@@ -959,7 +963,7 @@ static int Replace(PDB  *ResStart,
    reference = ReadRefCoords(fp_RefCoords, seq);
    if(reference == NULL)
    {
-      retval = ERROR_NOMEM;
+      retval = ERROR_UNKNOWNAA;
       goto Cleanup;
    }
    
