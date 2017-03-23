@@ -3,11 +3,11 @@
 
    \file       rsc.c
    
-   \version    V1.16
-   \date       14.12.16
+   \version    V1.17
+   \date       23.03.17
    \brief      Modify sequence of a PDB linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2016
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2017
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -75,6 +75,7 @@
                   offset   By: ACRM
 -  V1.15 25.02.15 Sets the element type for new atoms
 -  V1.16 14.12.16 FixTorsions() checks return from blCalcChi()
+-  V1.17 23.03.17 Better handling of missing atoms in the PDB file
 
 *************************************************************************/
 /* Defines required for includes
@@ -155,6 +156,8 @@ static PDB *FixTorsions(PDB *pdb, PDB *ResStart, PDB *NextRes,
                         int **chitab);
 static BOOL doRepOneSChain(PDB *pdb, char *ResSpec, char aa, 
                            char *ChiTable, char *RefCoords, BOOL force);
+static BOOL gotCBeta(PDB *ResStart, PDB *NextRes);
+
 
 /************************************************************************/
 /*>BOOL blRepSChain(PDB *pdb, char *sequence, char *ChiTable,
@@ -527,13 +530,30 @@ static PDB *DoReplace(PDB  *ResStart,  /* Pointer to start of residue   */
 /*   if(seq == blThrone(ResStart->resnam)) return(NULL); */
    
    if(!strncmp(ResStart->resnam,"GLY",3)) /* Replace Gly with X         */
+   {
       retval = ReplaceGly(ResStart,NextRes,seq,fp_RefCoords);
-   else if(seq == 'G')                    /* Replace X with Gly         */
-      retval = ReplaceWithGly(ResStart, NextRes);
-   else if(seq == 'A')                    /* Replace X with Ala         */
-      retval = ReplaceWithAla(ResStart, NextRes);
-   else                                   /* Replace X with Y           */
-      retval = Replace(ResStart,NextRes,seq,chitab,fp_RefCoords);
+   }
+   else
+   {
+      /* The original is not gly, so we need to check that the CBeta is
+         there
+      */
+      if(gotCBeta(ResStart, NextRes))
+      {
+         if(seq == 'G')                    /* Replace X with Gly        */
+            retval = ReplaceWithGly(ResStart, NextRes);
+         else if(seq == 'A')                    /* Replace X with Ala   */
+            retval = ReplaceWithAla(ResStart, NextRes);
+         else                                   /* Replace X with Y     */
+            retval = Replace(ResStart,NextRes,seq,chitab,fp_RefCoords);
+      }
+      else  /* No CBeta, so treat it as if it were a glycine            */
+      {
+         retval = ReplaceGly(ResStart,NextRes,seq,fp_RefCoords);
+      }
+      
+   }
+   
    
    if(retval)                             /* Problem                    */
    {
@@ -560,6 +580,31 @@ were missing");
    for(p=ResStart; p && p->next != NextRes; NEXT(p));
    
    return(p);
+}
+
+
+/************************************************************************/
+/*>static BOOL gotCBeta(PDB *ResStart, PDB *NextRes)
+   -------------------------------------------------
+*//**
+   \param[in,out] *ResStart   Start of residue to be modified
+   \param[in]     *NextRes    Pointer to start of next residue
+   \return                    TRUE: CB present; FALST; not present
+
+   Checks if the residue has a CBeta atom
+
+-  23.03.17 Original   By: ACRM
+*/
+static BOOL gotCBeta(PDB *ResStart, PDB *NextRes)
+{
+   PDB *p;
+   
+   for(p=ResStart; p!=NextRes; NEXT(p))
+   {
+      if(!strncmp(p->atnam, "CB  ", 4))
+         return(TRUE);
+   }
+   return(FALSE);
 }
 
 
