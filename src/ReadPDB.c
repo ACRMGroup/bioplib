@@ -737,7 +737,7 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
    double   x,y,z,
             occ,
             bval;
-   PDB      *p,
+   PDB      *p = NULL,
             multi[MAXPARTIAL];   /* Temporary storage for partial occ   */
    WHOLEPDB *wpdb = NULL;
    BOOL     pdbml_format;
