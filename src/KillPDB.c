@@ -3,11 +3,11 @@
 
    \file       KillPDB.c
    
-   \version    V1.11
-   \date       07.07.14
+   \version    V1.12
+   \date       30.09.17
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2017
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -58,6 +58,7 @@
 -  V1.9  14.03.96 Added FindAtomInRes()
 -  V1.10 08.10.99 Initialised some variables
 -  V1.11 07.07.14 Use bl prefix for functions By: CTP
+-  V1.12 30.09.17 Added vlDeleteResiduePDB() By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -77,6 +78,10 @@
    returning the new start of the list (in case the first atom has been 
    deleted)
 
+   #FUNCTION blDeleteResiduePDB()
+   Deletes a residue from the linked list re-linking the list. Returns
+   a pointer to the next residue and updates the start of the list if
+   it's the first residue that's been deleted
 */
 /************************************************************************/
 /* Includes
@@ -220,5 +225,62 @@ PDB *blKillPDB(PDB *pdb,              /* Pointer to record to kill      */
    free(pdb);                       /* Free the item                    */
 
    return(next);
+}
+
+/************************************************************************/
+/*>PDB *blDeleteResiduePDB(PDB **pPDB, PDB *res)
+   ---------------------------------------------
+*//**
+
+   \param[in,out] *pPDB   Pointer to pointer to start of PDB linked list
+   \param[in]     *res    Pointer to residue to be removed
+   \return                Next residue in PDB linked list
+
+   Remove a residue from the PDB linked list and re-link correctly.
+   Returns the next item in the list, so will be NULL when the last 
+   residue has been deleted.
+
+-  30.09.17 Original
+*/
+PDB *blDeleteResiduePDB(PDB **pPDB, PDB *res)
+{
+   PDB *prevAtom,
+       *nextRes, 
+       *p;
+   
+   if(*pPDB == NULL)  return(NULL);
+
+   /* Find the previous atom                                            */
+   if(res == *pPDB)
+   {
+      prevAtom = NULL;
+   }
+   else
+   {
+      for(prevAtom=*pPDB; 
+          ((prevAtom != NULL) && (prevAtom->next != res));
+          NEXT(prevAtom));
+   }
+
+   /* Find the next residue                                             */
+   nextRes = blFindNextResidue(res);
+   
+   /* Link the previous atom to the next residue                        */
+   if(prevAtom == NULL)    /* Start of linked list                      */
+   {
+      *pPDB = nextRes;
+   }
+   else                    /* Elsewhere in the linked list              */
+   {
+      prevAtom->next = nextRes;
+   }
+   
+   for(p=res; p!=nextRes; NEXT(p))
+   {
+      blDeleteAtomConects(p);
+      free(p);
+   }
+   
+   return(nextRes);
 }
 

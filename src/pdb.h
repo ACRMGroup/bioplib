@@ -3,12 +3,12 @@
 
    \file       pdb.h
    
-   \version    V1.95
-   \date       11.08.16
+   \version    V1.96
+   \date       30.09.17
 
    \brief      Include file for PDB routines
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2016
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2017
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -220,6 +220,7 @@
 -  V1.93 26.11.15 Added blGetSeqresByChainWholePDB()
 -  V1.94 30.11.15 Make use of blMAXCHAINLABEL
 -  V1.95 11.08.16 Added blBuildResSpec()
+-  V1.96 30.09.17 Added blDeleteResiduePDB()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -716,6 +717,7 @@ REAL blCalcChi(PDB *pdb, int type);
 PDB *blGetPDBByN(PDB *pdb, int n);
 void blSetChi(PDB *pdb, PDB *next, REAL chi, int type);
 BOOL blKillSidechain(PDB *ResStart, PDB *NextRes, BOOL doCB);
+PDB *blDeleteResiduePDB(PDB **pPDB, PDB *res);
 void blSetResnam(PDB *ResStart, PDB *NextRes, char *resnam, int resnum,   
                  char *insert, char *chain);
 void blApplyMatrixPDB(PDB *pdb, REAL matrix[3][3]);
