@@ -110,6 +110,7 @@
 -  12.12.01 Original based on FitCaPDB()   By: ACRM
 -  07.07.14 Use bl prefix for functions By: CTP
 -  19.08.14 Added AsCopy suffix to calls to blSelectAtomsPDB() By: CTP
+-  03.11.17 Initialize RetVal! By: ACRM
 */
 BOOL blFitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
 {
@@ -122,7 +123,7 @@ BOOL blFitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
    int   NCoor       = 0,
          i, j,
          natoms;
-   BOOL  RetVal;
+   BOOL  RetVal = TRUE;
    PDB   *ref_bb_pdb = NULL,
          *fit_bb_pdb = NULL;
    char  *sel[4];
