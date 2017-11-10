@@ -1,7 +1,6 @@
 /************************************************************************/
 /**
 
-   Program:    sixft
    \file       sexft.c
    
    \version    V1.0
@@ -46,8 +45,45 @@
 
    Revision History:
    =================
+-  V1.0  10.11.17 Original  By: ACRM
 
 *************************************************************************/
+/* Doxygen
+   -------
+   #GROUP    Handling Sequence Data
+   #SUBGROUP Sequence Utilities
+
+   #FUNCTION blSixFTBest()
+   Performs a 6FT and find the longest translation starting from the
+   beginning of the DNA or a Met. Returns malloc'd memory for the 
+   protein sequence. Optionally outputs the ORF that was translated.
+
+   #FUNCTION blReverseComplement()
+   Malloc's a reverse complement sequence
+
+   #FUNCTION blTranslateFrame()
+   Translates a given frame of DNA filling in the protein sequence for
+   the complete DNA - stop codons are indicated with *
+
+   #FUNCTION blFindLongestTranslation()
+   Finds the longest protein sequence within the long sequence where
+   each section is separated with a *
+
+   #FUNCTION blWriteFASTA()
+   Writes a sequence in FASTA format
+
+   #FUNCTION blReadFASTA()
+   Each call reads another sequence from a FASTA file allocating
+   memory for the sequence. Note that this is not re-entrant - it 
+   uses a static buffer to look ahead to the next line.
+
+   #FUNCTION blReadFASTAExtBuffer()
+   Each call reads another sequence from a FASTA file allocating
+   memory for the sequence.
+
+*/
+
+/************************************************************************/
 /* Includes
 */
 #include <stdio.h>
@@ -151,6 +187,8 @@ char *blSixFTBest(char *inDna, char *orf)
 *//**
    \param[in]    dna   DNA sequence
    \return             Malloc'd reverse complement DNA sequence
+
+   Malloc's a reverse complement sequence
 
 -  10.11.17 Original   By: ACRM
 */
