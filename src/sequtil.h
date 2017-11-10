@@ -70,5 +70,4 @@ void blWriteFASTA(FILE *out, char *header, char *sequence,
 char *blReadFASTA(FILE *in, char *header, int size);
 char *blReadFASTAExtBuffer(FILE *in, char *header, int headerSize, 
                          char *buffer, int bufferSize);
-char *blRemoveSpaces(char *inText);
 void blTranslateFrame(char *dna, int frame, char *protein);

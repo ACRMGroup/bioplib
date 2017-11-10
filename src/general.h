@@ -3,11 +3,11 @@
 
    \file       general.h
    
-   \version    V1.21
-   \date       26.06.15
+   \version    V1.22
+   \date       10.11.17
    \brief      Header file for general purpose routines
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2015
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1994-2017
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -70,6 +70,7 @@
 -  V1.19 28.04.15 Added blCollapseSpaces()
 -  V1.20 14.05.15 Added blStrdup()
 -  V1.21 26.06.15 Added FREESTRINGLIST() macro
+-  V1.22 10.11.17 Added blRemoveSpaces()
 
 *************************************************************************/
 #ifndef _GENERAL_H
@@ -139,6 +140,7 @@ char *blGetWordNC(char *buffer, char *word, int maxlen);
 void blGetfield(char *buffer, int start, int width, char *str);
 BOOL blCheckProgName(char *name, char *expected);
 char *blCollapseSpaces(char *inText);
+char *blRemoveSpaces(char *inText);
 
 /************************************************************************/
 /* Include deprecated functions                                         */

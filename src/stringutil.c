@@ -3,11 +3,11 @@
 
    \file       stringutil.c
    
-   \version    V1.0
-   \date       28.04.15
+   \version    V1.1
+   \date       10.11.17
    \brief      String utilities
    
-   \copyright  (c) UCL / Dr. Andrew C.R. Martin, 2015
+   \copyright  (c) UCL / Dr. Andrew C.R. Martin, 2015-2017
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -49,6 +49,7 @@
    Revision History:
    =================
 -  V1.0  28.04.15 Original
+-  V1.1  10.11.17 Added blRemoveSpaces()
 
 *************************************************************************/
 /* Doxygen
@@ -65,6 +66,8 @@
    An implementation of SVr4, 4.3BSD, POSIX.1-2001 strdup() which is 
    not standard ANSI C
 
+   #FUNCTION blRemoveSpaces()
+   Strips all whitespace out of a string. Allocates a new string.
 */
 
 /************************************************************************/
@@ -74,7 +77,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "pdb.h"
 #include "macros.h"
 
 /************************************************************************/
@@ -163,6 +165,63 @@ char *blStrdup(char *instr)
       strcpy(outstr, instr);
    
    return(outstr);
+}
+
+
+/************************************************************************/
+/*>char *blRemoveSpaces(char *inText)
+   --------------------------------
+*//**
+   \param[in]    inText  Input string
+   \return               Malloc'd string without spaces
+
+   Allocates a string and copies the input to it skipping whitespace.
+
+-  10.11.17 Original   By: ACRM
+*/
+char *blRemoveSpaces(char *inText)
+{
+   int  nchar = 0;
+   char *chIn, 
+        *chOut,
+        *outText = NULL;
+
+   if(inText==NULL)
+      return(NULL);
+
+   /* Count the non-space characters                                    */
+   for(chIn=inText; *chIn!='\0'; chIn++)
+   {
+      if((*chIn != '\t') && 
+         (*chIn != '\n')  &&
+         (*chIn != '\r')  &&
+         (*chIn != ' '))
+      {
+         nchar++;
+      }
+   }
+   nchar++;
+   
+   /* Allocate new space                                                */
+   if((outText=(char *)malloc(nchar * sizeof(char)))==NULL)
+      return(NULL);
+
+   /* Copy characters skipping repeated spaces                          */
+   chOut = outText;
+   for(chIn=inText; *chIn!='\0'; chIn++)
+   {
+      if((*chIn != '\t') && 
+         (*chIn != '\n') &&
+         (*chIn != '\r') &&
+         (*chIn != ' '))
+      {
+         *chOut = *chIn;
+         chOut++;
+      }
+   }
+   *chOut = '\0';
+
+   return(outText);
 }
 
 
