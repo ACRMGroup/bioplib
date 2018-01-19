@@ -111,6 +111,7 @@
 -  07.07.14 Use bl prefix for functions By: CTP
 -  19.08.14 Renamed function to blStripHPDBAsCopy() By: CTP
 -  19.04.15 Added call to blCopyConect()   By: ACRM
+-  19.01.18 Strips deuterium as well as hydrogen
 */
 PDB *blStripHPDBAsCopy(PDB *pdbin, int *natom)
 {
@@ -123,7 +124,7 @@ PDB *blStripHPDBAsCopy(PDB *pdbin, int *natom)
    /* Step through the input PDB linked list                            */
    for(p=pdbin; p!=NULL; NEXT(p))
    {
-      if(p->atnam[0] != 'H')
+      if((p->atnam[0] != 'H') && (p->atnam[0] != 'D'))
       {
          /* Allocate a new entry                                        */
          if(pdbout==NULL)
