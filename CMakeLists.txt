@@ -324,8 +324,8 @@ add_library(gen-shared SHARED $<TARGET_OBJECTS:gen>)
 add_library(biop-shared SHARED $<TARGET_OBJECTS:biop>)
 target_link_libraries(biop-shared ${LIBXML2_LIBRARIES})
 
-set_target_properties(gen-static PROPERTIES OUTPUT_NAME "libgen")
-set_target_properties(biop-static PROPERTIES OUTPUT_NAME "libbiop")
+set_target_properties(gen-static PROPERTIES OUTPUT_NAME "gen")
+set_target_properties(biop-static PROPERTIES OUTPUT_NAME "biop")
 
 set_target_properties(gen-shared
         PROPERTIES
@@ -346,8 +346,8 @@ install(TARGETS biop-static LIBRARY ARCHIVE DESTINATION ${LIBDEST})
 
 # shared rules
 add_custom_target(shared
-        COMMAND cp ${PROJECT_BINARY_DIR}/libgen.so.${GMAJOR}.${GMINOR} ${LIBDEST}
-        COMMAND cp ${PROJECT_BINARY_DIR}/libbiop.so.${BMAJOR}.${BMINOR} ${LIBDEST})
+        COMMAND cp ${PROJECT_BINARY_DIR}/libgens.so.${GMAJOR}.${GMINOR} ${LIBDEST}
+        COMMAND cp ${PROJECT_BINARY_DIR}/libbiops.so.${BMAJOR}.${BMINOR} ${LIBDEST})
 
 
 # installdata rules
