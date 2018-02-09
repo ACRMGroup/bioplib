@@ -1,13 +1,13 @@
 /************************************************************************/
 /**
 
-   \file       header_suite.h
+   \file       writepdbml_suite.h
    
-   \version    V1.0
-   \date       05.05.15
-   \brief      Include file for CONECT test suite.
+   \version    V1.1
+   \date       12.09.14
+   \brief      Include file for WritePDBML test suite.
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -36,7 +36,7 @@
    Description:
    ============
 
-   Test suite for reading and writing Header data for pdbml files.
+   Test suite for writing pdb and pdbml data to file.
 
 **************************************************************************
 
@@ -47,31 +47,33 @@
 
    Revision History:
    =================
--  V1.0  05.05.15 Original By: CTP
+-  V1.0  05.08.14 Original By: CTP
+-  V1.1  12.09.14 Updated tests for MS Windows By: CTP
 
 *************************************************************************/
 
-#ifndef _HEADER_H
-#define _HEADER_H
+#ifndef _WRITEPDBML_H
+#define _WRITEPDBML_H
 
 /* Includes for tests */
 #include <stdlib.h>
 #include <check.h>
 #include <unistd.h>
+#include "port.h"
 
 /* Includes from source file */
-#include "../../port.h"
 #include <stdio.h>
+#include <string.h>
+#include <math.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include "../../macros.h"
-#include "../../general.h"
-#include "../../pdb.h"
-#include <libxml/parser.h>
 #include <libxml/tree.h>
-#include <time.h>
+#include <ctype.h>
+
+#include "MathType.h"
+#include "pdb.h"
+#include "macros.h"
 
 /* Prototypes */
-Suite *header_suite(void);
+Suite *writepdbml_suite(void);
 
 #endif

@@ -54,7 +54,7 @@
 #include "conect_suite.h"
 
 /* Globals */
-static char test_output_filename[]     = "tmp/test-XXXXX",
+static char test_output_filename[]     = "data/test-XXXXX",
             test_example_basename[]    = "data/conect_suite/",
             test_input_filename[160]   = "",
             test_example_filename[160] = "";

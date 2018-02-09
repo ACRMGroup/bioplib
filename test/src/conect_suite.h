@@ -1,13 +1,13 @@
 /************************************************************************/
 /**
 
-   \file       readpdbml_suite.h
+   \file       conect_suite.h
    
    \version    V1.0
-   \date       05.08.14
-   \brief      Include file for ReadPDBML test suite.
+   \date       28.04.15
+   \brief      Include file for CONECT test suite.
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -36,7 +36,7 @@
    Description:
    ============
 
-   Test suite for reading pdb and pdbml data from file.
+   Test suite for reading and writing CONECT data for pdb and pdbml files.
 
 **************************************************************************
 
@@ -47,37 +47,31 @@
 
    Revision History:
    =================
--  V1.0  05.08.14 Original By: CTP
+-  V1.0  28.04.15 Original By: CTP
 
 *************************************************************************/
 
-#ifndef _READPDBML_H
-#define _READPDBML_H
+#ifndef _CONECT_H
+#define _CONECT_H
 
 /* Includes for tests */
 #include <stdlib.h>
 #include <check.h>
+#include <unistd.h>
 
 /* Includes from source file */
-#include "../../port.h"    /* Required before stdio.h                   */
-
+#include "port.h"
 #include <stdio.h>
-#include <string.h>
-#include <math.h>
 #include <stdlib.h>
-#include <ctype.h>
 #include <unistd.h>
+#include "macros.h"
+#include "general.h"
+#include "pdb.h"
 #include <libxml/parser.h>
 #include <libxml/tree.h>
-
-#include "../../SysDefs.h"
-#include "../../MathType.h"
-#include "../../pdb.h"
-#include "../../macros.h"
-#include "../../fsscanf.h"
-#include "../../general.h"
+#include <time.h>
 
 /* Prototypes */
-Suite *readpdbml_suite(void);
+Suite *conect_suite(void);
 
 #endif

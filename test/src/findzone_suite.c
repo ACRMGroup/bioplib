@@ -78,6 +78,7 @@ void findzone_setup(void)
    int natom = 0;
    
    fp = fopen(TEST_PDB_FILE,"r");
+
    if(fp == NULL)
    {
       fprintf(stderr, "Failed to open test pdb file!\n");
