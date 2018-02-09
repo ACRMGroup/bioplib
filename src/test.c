@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "bioplib/pdb.h"
+#include "pdb.h"
 
 int main(int argc, char **argv)
 {

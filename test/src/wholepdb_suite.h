@@ -1,11 +1,11 @@
 /************************************************************************/
 /**
 
-   \file       parseresspec.h
+   \file       wholepdb_suite.h
    
    \version    V1.0
    \date       05.08.14
-   \brief      Include file for ParseResSpec test suite.
+   \brief      Include file for WholePDB test suite.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
@@ -36,7 +36,7 @@
    Description:
    ============
 
-   Test suite for blParseResSpec().
+   Test suite for reading and writing whole pdb and pdbml data to file.
 
 **************************************************************************
 
@@ -50,23 +50,28 @@
 -  V1.0  05.08.14 Original By: CTP
 
 *************************************************************************/
-#ifndef _PARSERESSPEC_H
-#define _PARSERESSPEC_H
+
+#ifndef _WHOLEPDB_H
+#define _WHOLEPDB_H
 
 /* Includes for tests */
 #include <stdlib.h>
 #include <check.h>
+#include <unistd.h>
 
 /* Includes from source file */
-#include <ctype.h>
+#include "port.h"
 #include <stdio.h>
-#include <string.h>
-
-#include "../../macros.h"
-#include "../../SysDefs.h"
-#include "../../pdb.h"
+#include <stdlib.h>
+#include <unistd.h>
+#include "macros.h"
+#include "general.h"
+#include "pdb.h"
+#include <libxml/parser.h>
+#include <libxml/tree.h>
+#include <time.h>
 
 /* Prototypes */
-Suite *parseresspec_suite(void);
+Suite *wholepdb_suite(void);
 
 #endif

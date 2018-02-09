@@ -60,7 +60,7 @@
 #include "writepdbml_suite.h"
 
 /* Globals */
-static char test_output_filename[]     = "tmp/test-XXXXX",
+static char test_output_filename[]     = "data/test-XXXXX",
             test_example_basename[]    = "data/writepdbml_suite/",
             test_example_filename[160] = "";
 
@@ -187,10 +187,10 @@ START_TEST(test_write_pdb)
    FORCEPDB;
    
    /* write test file */
-   fp = fopen(test_output_filename,"w");
+   fp = fopen(test_output_filename, "w");
    blWritePDB(fp, pdb_out);
    fclose(fp);
-   
+
    /* open test file */
    fp = fopen(test_output_filename,"r");
    ck_assert_msg(fp != NULL,                "Failed to open file.");

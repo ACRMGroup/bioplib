@@ -1,11 +1,11 @@
 /************************************************************************/
 /**
 
-   \file       findzone_suite.h
+   \file       readpdbml_suite.h
    
    \version    V1.0
    \date       05.08.14
-   \brief      Include file for FindZonePDB test suite.
+   \brief      Include file for ReadPDBML test suite.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
@@ -36,7 +36,7 @@
    Description:
    ============
 
-   Test suite for blFindZonePDB().
+   Test suite for reading pdb and pdbml data from file.
 
 **************************************************************************
 
@@ -51,21 +51,33 @@
 
 *************************************************************************/
 
-#ifndef _FINDZONE_H
-#define _FINDZONE_H
+#ifndef _READPDBML_H
+#define _READPDBML_H
 
 /* Includes for tests */
 #include <stdlib.h>
 #include <check.h>
 
 /* Includes from source file */
-#include "../../SysDefs.h"
-#include "../../MathType.h"
-#include "../../pdb.h"
-#include "../../macros.h"
+#include "port.h"    /* Required before stdio.h                   */
 
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <unistd.h>
+#include <libxml/parser.h>
+#include <libxml/tree.h>
+
+#include "SysDefs.h"
+#include "MathType.h"
+#include "pdb.h"
+#include "macros.h"
+#include "fsscanf.h"
+#include "general.h"
 
 /* Prototypes */
-Suite *findzone_suite(void);
+Suite *readpdbml_suite(void);
 
 #endif

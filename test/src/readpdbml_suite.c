@@ -61,6 +61,8 @@
 
 #include "readpdbml_suite.h"
 
+#define TEST_PDB_FILE "data/readpdbml_suite/test_alpha_carbon.pdb"
+
 /* Globals */
 PDB  *pdb;
 FILE  *fp;
@@ -84,7 +86,7 @@ START_TEST(test_read_pdb)
 {
    /* set filename */
    char filename[] = "data/readpdbml_suite/test_alpha_carbon.pdb";
-   
+
    /* read test file */
    fp = fopen(filename,"r");
    pdb = blReadPDB(fp, &natoms);

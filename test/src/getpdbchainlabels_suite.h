@@ -1,11 +1,11 @@
 /************************************************************************/
 /**
 
-   \file       inpdbzone_suite.h
+   \file       getpdbchainlabels_suite.h
    
    \version    V1.0
    \date       05.08.14
-   \brief      Include file for InPDBZone test suite.
+   \brief      Include file for GetPDBChainLabels test suite.
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
    \author     Dr. Andrew C. R. Martin
@@ -36,7 +36,7 @@
    Description:
    ============
 
-   Test suite for blInPDBZone() and blInPDBZoneSpec().
+   Test suite for blGetPDBChainLabels().
 
 **************************************************************************
 
@@ -51,19 +51,18 @@
 
 *************************************************************************/
 
-#ifndef _INPDBZONE_H
-#define _INPDBZONE_H
+#ifndef _GETPDBCHAINLABELS_H
+#define _GETPDBCHAINLABELS_H
 
 /* Includes for tests */
 #include <stdlib.h>
 #include <check.h>
 
 /* Includes from source file */
-#include "../../SysDefs.h"
-#include "../../pdb.h"
-
+#include "pdb.h"
+#include "macros.h"
 
 /* Prototypes */
-Suite *inpdbzone_suite(void);
+Suite *getpdbchainlabels_suite(void);
 
 #endif
