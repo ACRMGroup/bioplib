@@ -3,11 +3,11 @@
 
    \file       WritePDB.c
    
-   \version    V1.29
-   \date       29.07.15
+   \version    V1.30
+   \date       09.02.18
    \brief      Write a PDB file from a linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2018
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -112,6 +112,7 @@
 -  V1.29 29.07.15 Added output of PDBML seqres records from wpdb->header.
                   Added ReadSeqresChainLabelWholePDB() and 
                   ReadSeqresResidueListWholePDB().  By: CTP
+-  V1.30 09.02.18 Corrected calls to ABS() in formal charges By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -411,6 +412,7 @@ void blWriteTerCard(FILE *fp, PDB *p)
 -  07.07.14 Renamed to blWritePDBRecord() By: CTP
 -  16.08.14 Write element and formal charge.  By: CTP
 -  17.02.15 Added segid support   By: ACRM
+-  09.02.18 Corrected ABS() call
 */
 void blWritePDBRecord(FILE *fp,
                       PDB  *pdb)
@@ -418,10 +420,10 @@ void blWritePDBRecord(FILE *fp,
    char charge = ' ',
         sign   = ' ';
 
-   if(pdb->formal_charge && ABS(pdb->formal_charge <= 8))
+   if(pdb->formal_charge && ABS(pdb->formal_charge) <= 8)
    {
       charge = (char)('0' + ABS(pdb->formal_charge));
-      sign   = pdb->formal_charge > 0 ? '+':'-';
+      sign   = (char)(pdb->formal_charge > 0 ? '+':'-');
    }
 
    fprintf(fp,"%-6s%5d %-4s%c%-4s%1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f      %4s%2s%c%c\n",
@@ -467,6 +469,7 @@ void blWritePDBRecord(FILE *fp,
             than atnam_raw
 -  07.07.14 Renamed to blWritePDBRecordAtnam() By: CTP
 -  17.02.15 Added element, formalcharge and segid support   By: ACRM
+-  09.02.17 Corrected ABS() call
 */
 void blWritePDBRecordAtnam(FILE *fp,
                            PDB  *pdb)
@@ -474,10 +477,10 @@ void blWritePDBRecordAtnam(FILE *fp,
    char charge = ' ',
         sign   = ' ';
 
-   if(pdb->formal_charge && ABS(pdb->formal_charge <= 8))
+   if(pdb->formal_charge && ABS(pdb->formal_charge) <= 8)
    {
       charge = (char)('0' + ABS(pdb->formal_charge));
-      sign   = pdb->formal_charge > 0 ? '+':'-';
+      sign   = (char)(pdb->formal_charge > 0 ? '+':'-');
    }
 
    fprintf(fp,"%-6s%5d  %-4s%-4s%1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f      %4s%2s%c%c\n",
