@@ -246,12 +246,12 @@ int blWritePDB(FILE *fp,
       {
          return(0);
       }
-
-      /* Write whole PDB File                                           */
+       /* Write whole PDB File                                           */
       numTer = blWritePDBAsPDBorGromos(fp, pdb, FALSE);
+
    }
-   
-   return(numTer);
+
+    return(numTer);
 }
 
 
@@ -312,7 +312,7 @@ int blWritePDBAsPDBorGromos(FILE *fp, PDB  *pdb, BOOL doGromos)
    int   numTer = 0;
    BOOL  doneTer = FALSE;
 
-   for(p=pdb; p!=NULL; NEXT(p))
+    for(p=pdb; p!=NULL; NEXT(p))
    {
       /* If previous was non-null and was an ATOM                       */
       if((prev!=NULL) && !strncmp(prev->record_type, "ATOM  ", 6))
@@ -418,10 +418,11 @@ void blWritePDBRecord(FILE *fp,
    char charge = ' ',
         sign   = ' ';
 
-   if(pdb->formal_charge && ABS(pdb->formal_charge <= 8))
+
+   if(pdb->formal_charge && ABS(pdb->formal_charge) <= 8)
    {
       charge = (char)('0' + ABS(pdb->formal_charge));
-      sign   = pdb->formal_charge > 0 ? '+':'-';
+      sign   = (char)(pdb->formal_charge > 0 ? '+' : '-');
    }
 
    fprintf(fp,"%-6s%5d %-4s%c%-4s%1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f      %4s%2s%c%c\n",
@@ -474,10 +475,10 @@ void blWritePDBRecordAtnam(FILE *fp,
    char charge = ' ',
         sign   = ' ';
 
-   if(pdb->formal_charge && ABS(pdb->formal_charge <= 8))
+   if(pdb->formal_charge && ABS(pdb->formal_charge) <= 8)
    {
       charge = (char)('0' + ABS(pdb->formal_charge));
-      sign   = pdb->formal_charge > 0 ? '+':'-';
+      sign   = (char) (pdb->formal_charge > 0 ? '+' : '-');
    }
 
    fprintf(fp,"%-6s%5d  %-4s%-4s%1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f      %4s%2s%c%c\n",
