@@ -108,7 +108,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -ansi -Wall -pedantic -g -DGUNZIP_SUPP
 if (${LIBXML2_FOUND})
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D XML_SUPPORT")
 else()
-    message("-- found xml2: false")
+    message("-- building without xml2, some tests will fail")
 endif ()
 
 ###############################################################################
@@ -342,12 +342,22 @@ set_target_properties(biop-shared
 
 # install rules
 install(TARGETS gen-static LIBRARY ARCHIVE DESTINATION ${LIBDEST})
-install(TARGETS biop-static LIBRARY ARCHIVE DESTINATION ${LIBDEST})
+install(TARGETS gen-static EXPORT gen-static DESTINATION ${LIBDEST})
 
-# shared rules
-add_custom_target(shared
-        COMMAND cp ${PROJECT_BINARY_DIR}/libgens.so.${GMAJOR}.${GMINOR} ${LIBDEST}
-        COMMAND cp ${PROJECT_BINARY_DIR}/libbiops.so.${BMAJOR}.${BMINOR} ${LIBDEST})
+install(TARGETS biop-static LIBRARY ARCHIVE DESTINATION ${LIBDEST})
+install(TARGETS biop-static EXPORT biop-static DESTINATION ${LIBDEST})
+
+#install(EXPORT gen-static DESTINATION "${LIBDEST}")
+#install(EXPORT biop-static DESTINATION "${LIBDEST}")
+
+install(TARGETS biop-shared LIBRARY DESTINATION ${LIBDEST})
+install(TARGETS gen-shared LIBRARY DESTINATION ${LIBDEST})
+
+
+# shared rules -> I suggest removing this, and by default install both static and dynamic at the same time
+#add_custom_target(shared
+#        COMMAND cp ${PROJECT_BINARY_DIR}/libgens.so.${GMAJOR}.${GMINOR} ${LIBDEST}
+#        COMMAND cp ${PROJECT_BINARY_DIR}/libbiops.so.${BMAJOR}.${BMINOR} ${LIBDEST})
 
 
 # installdata rules
