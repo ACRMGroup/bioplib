@@ -3,11 +3,11 @@
 
    \file       align.c
    
-   \version    V3.6
-   \date       04.01.16
+   \version    V3.7
+   \date       02.05.18
    \brief      Perform Needleman & Wunsch sequence alignment
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2016
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2018
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -83,6 +83,7 @@
 -  V3.6  04.01.16 Added special calls to blCalcMDMScore() and
                   blCalcMDMScoreUC() to silence warnings. Warnings now
                   go to stderr
+-  V3.7  02.05.18 Added blFreeMDM()
 
 *************************************************************************/
 /* Doxygen
@@ -105,6 +106,10 @@
    #FUNCTION blReadMDM()
    Read mutation data matrix into static global arrays for use by 
    alignment code
+
+   #FUNCTION blFreeMDM()
+   Free the memory containing the mutation data matrix allocated by
+   blReadMDM()
 
    #FUNCTION blCalcMDMScore()
    Calculates a score for comparing two amino acids using a mutation
@@ -160,9 +165,9 @@ typedef struct
 /************************************************************************/
 /* Globals
 */
-static int  **sMDMScore;
-static char *sMDM_AAList;
-static int  sMDMSize = 0;
+static int  **sMDMScore  = NULL;
+static char *sMDM_AAList = NULL;
+static int  sMDMSize     = 0;
 
 /************************************************************************/
 /* Prototypes
@@ -993,6 +998,22 @@ BOOL blReadMDM(char *mdmfile)
    blFreeArray2D((char **)tmpStore, tmpStoreSize, MAXWORD);
    
    return(TRUE);
+}
+
+
+/************************************************************************/
+/*>void blFreeMDM(void)
+   --------------------
+*//**
+   Frees the memory allocated by blReadMDM()
+
+-  02.05.18 Original   By: ACRM
+*/
+void blFreeMDM(void)
+{
+   FREE(sMDM_AAList);
+   blFreeArray2D((char **)sMDMScore, sMDMSize, sMDMSize);
+   sMDMSize = 0;
 }
 
 

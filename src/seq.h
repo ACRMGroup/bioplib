@@ -3,11 +3,11 @@
 
    \file       seq.h
    
-   \version    V2.16
-   \date       30.11.15
+   \version    V2.17
+   \date       02.05.18
    \brief      Header file for sequence handling
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2015
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2018
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -69,6 +69,7 @@
 -  V2.15 11.06.15 Added blWriteOneStringPIR()
 -  V2.16 30.11.15 Added wrapper macros for blDoPDB2SeqByChain() and 
                   prototype
+-  V2.17 02.05.18 Added blFreeMDM()
 
 *************************************************************************/
 #ifndef _SEQ_H
@@ -147,6 +148,7 @@ int blAffinealignuc(char *seq1, int  length1, char *seq2, int  length2,
                     char *align1, char *align2, int  *align_len);
 int blCalcMDMScoreUC(char resa, char resb);
 BOOL blReadMDM(char *mdmfile);
+void blFreeMDM(void);
 int blZeroMDM(void);
 char blDNAtoAA(char *dna);
 int blTrueSeqLen(char *sequence);
