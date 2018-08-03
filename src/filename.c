@@ -78,37 +78,39 @@
 */
 
 /************************************************************************/
-/*>char *blCheckProgName()
-   --------------------------------
+/*>BOOL *blCheckProgName(char *progname, char *expected)
+   -----------------------------------------------------
 *//**
 
    \param[in]     *filename    A PDB filename containing a PDB code
-   \return                     The PDB code (lower case)
-                               NULL if memory allocation fails
-                               XXXX if filename blank or NULL or if
-                               unable to find PDB code
+   \return                     Does the program name match?
                                
-   This routine attempts to convert a filename stem to a PDB code.
+   This routine strips the path and checks a program name.
 
 -  12.03.15 Original    By: ACRM
 */
 BOOL blCheckProgName(char *progname, char *expected)
 {
    char *chp;
-   char buffer[240];
    
-   sprintf(buffer, "/%s", expected);
-   
-   /* Is the last thing after a path spec the expected program name     */
-   if((chp = strstr(progname, buffer))!=NULL)
-   {
-      if(*(chp+9) == '\0')
-         return(TRUE);
-   }
    /* Is the whole thing the expected program name                      */
    if(!strcmp(progname, expected))
       return(TRUE);
+
+   /* Othewise, find the last / in the progname and return FALSE if it's
+      not found
+   */
+   if((chp = strrchr(progname, '/'))==NULL)
+      return(FALSE);
+
+   /* Bump the pointer so it is the first character after the / and 
+      compare with the expected name
+   */
+   chp++;
+   if(!strcmp(chp, expected))
+      return(TRUE);
    
+   /* No match so the names differ                                      */
    return(FALSE);
 }
 
