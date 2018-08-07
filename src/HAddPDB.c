@@ -3,11 +3,11 @@
 
    \file       HAddPDB.c
    
-   \version    V2.22
-   \date       23.06.15
+   \version    V2.23
+   \date       07.08.18
    \brief      Add hydrogens to a PDB linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2015
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2018
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -134,6 +134,8 @@
 -  V2.21 23.02.15 Uses new blRenumAtomsPDB()
 -  V2.22 23.06.15 Various calls to CLEAR_PDB() to fix problems with
                   uninitialized CONECT data
+-  V2.23 07.08.18 initialized and foce-terminated variables to silence
+                  gcc 7.3.1 with -O2
 
 *************************************************************************/
 /* Doxygen
@@ -616,14 +618,19 @@ preceeding the last residue\n");
 -  26.08.14 Used n and nt variables consistently instead of literal
             strings. Moved all use of 'ok' variable into SCREEN_INFO
 -  13.02.15 Added setting of element type
+-  07.08.18 initialized variables to silence gcc 7.3.1 with -O2
 */
 static PDB *makeh(int HType, REAL BondLen, REAL alpha, REAL beta, 
                   BOOL firstres)
 { 
    static char    *nt = "NT  ",
                   *n  = "N   ";
-   REAL           x1,y1,z1,x2,y2,z2,x3,y3,z3,
-                  x4,y4,z4,x5,y5,z5,x6,y6,z6,
+   REAL           x1 = 0.0, y1 = 0.0, z1 = 0.0,
+                  x2 = 0.0, y2 = 0.0, z2 = 0.0,
+                  x3 = 0.0, y3 = 0.0, z3 = 0.0,
+                  x4 = 0.0, y4 = 0.0, z4 = 0.0,
+                  x5 = 0.0, y5 = 0.0, z5 = 0.0,
+                  x6 = 0.0, y6 = 0.0, z6 = 0.0,
                   x21,y21,z21,r21,
                   x21p,y21p,z21p,r21p,
                   x23,y23,z23,r23,
@@ -1417,12 +1424,14 @@ been set.\n",DATAENV);
 -  05.12.02 Original   By: ACRM
 -  17.02.15 Terminates the out string when it is 4 or more characters
 -  18.03.15 Changed to use MAXLABEL
+-  07.08.18 Force terminated instr to silence gcc 7.3.1 with -O2
 */
 static void SetRawAtnam(char *out, char *in)
 {
    char instr[MAXLABEL];
    
    strncpy(instr, in, MAXLABEL-1);
+   instr[MAXLABEL-1] = '\0';
    TERMAT(instr, ' ');
    
    if(strlen(instr) > 3)

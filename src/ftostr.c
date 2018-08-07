@@ -3,11 +3,11 @@
 
    \file       ftostr.c
    
-   \version    V1.4
-   \date       07.07.14
+   \version    V1.5
+   \date       07.08.18
    \brief      Convert a REAL to a string
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2018
    EMail:      andrew@bioinf.org.uk
 
 **************************************************************************
@@ -64,6 +64,7 @@
 -  V1.2  14.11.97 Another fix to same
 -  V1.3  03.06.05 Tidied up to stop warnings under GCC 3.2.2
 -  V1.4  07.07.14 Use bl prefix for functions By: CTP
+-  V1.5  07.08.18 fmt[] changed from 8 to 16 to silence gcc 7.3.1 with -O2
 
 *************************************************************************/
 /* Doxygen
@@ -129,13 +130,14 @@
 -  14.11.97 Oops, had forgotten to fix this in the check for e-form
 -  03.06.05 Tidied up some loops to stop warnings under GCC 3.2.2
 -  07.07.14 Use bl prefix for functions By: CTP
+-  07.08.18 fmt[] changed from 8 to 16 to silence gcc 7.3.1 with -O2
 */
 char *blFtostr(char  *str,
                int   maxlen,
                REAL  x,
                int   precision)
 {
-   char   fmt[8],
+   char   fmt[16],
           *ptr;
    int    i;
    REAL   val;

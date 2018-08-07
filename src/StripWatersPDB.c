@@ -3,11 +3,11 @@
 
    \file       StripWatersPDB.c
    
-   \version    V1.3
-   \date       19.04.15
+   \version    V1.4
+   \date       07.08.18
    \brief      
    
-   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 2008-2014
+   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 2008-2018
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -51,6 +51,7 @@
 -  V1.2  19.08.14 Renamed function blStripWatersPDB() to 
                   blStripWatersPDBAsCopy() By: CTP
 -  V1.3  19.04.15 Added call to blCopyConect()   By: ACRM
+-  V1.4  07.08.18 Initialized variable to silence gcc 7.3.1 with -O2
 
 *************************************************************************/
 /* Doxygen
@@ -95,12 +96,13 @@
 -  30.04.08 Original based on StripHPDB()   By: ACRM
 -  19.08.14 Renamed function to blStripWatersPDBAsCopy() By: CTP
 -  12.04.15 Added rebuild of CONECT data
+-  07.08.18 Initialized q to silence gcc 7.3.1 with -O2
 */
 PDB *blStripWatersPDBAsCopy(PDB *pdbin, int *natom)
 {
    PDB   *pdbout  = NULL,
          *p,
-         *q;
+         *q = NULL;
     
    *natom = 0;
    

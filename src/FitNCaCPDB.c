@@ -3,12 +3,12 @@
 
    \file       FitNCaCPDB.c
    
-   \version    V1.5
-   \date       19.08.14
+   \version    V1.6
+   \date       07.08.18
    \brief      Fit two PDB linked lists. Also a weighted fit and support
                routines
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-6
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2018
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -58,6 +58,7 @@
 -  V1.4  07.07.14 Use bl prefix for functions By: CTP
 -  V1.5  19.08.14 Added AsCopy suffix to calls to blSelectAtomsPDB() 
                   By: CTP
+-  V1.6  07.08.18 Removed erroneous check on sel[3]
 
 *************************************************************************/
 /* Doxygen
@@ -111,6 +112,8 @@
 -  07.07.14 Use bl prefix for functions By: CTP
 -  19.08.14 Added AsCopy suffix to calls to blSelectAtomsPDB() By: CTP
 -  03.11.17 Initialize RetVal! By: ACRM
+-  07.08.18 Removed erroneous check on sel[3]
+
 */
 BOOL blFitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
 {
@@ -132,7 +135,7 @@ BOOL blFitNCaCPDB(PDB *ref_pdb, PDB *fit_pdb, REAL rm[3][3])
    SELECT(sel[0], "N   ");
    SELECT(sel[1], "CA  ");
    SELECT(sel[2], "C   ");
-   if((sel[0]==NULL)||(sel[1]==NULL)||(sel[2]==NULL)||(sel[3]==NULL))
+   if((sel[0]==NULL)||(sel[1]==NULL)||(sel[2]==NULL))
       return(FALSE);
    if( (ref_bb_pdb = blSelectAtomsPDBAsCopy(ref_pdb, 3, sel, &natoms))
        == NULL )
