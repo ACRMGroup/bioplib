@@ -4,12 +4,12 @@
 
    \file       hbond.c
    
-   \version    V1.8
-   \date       20.07.15
+   \version    V1.9
+   \date       14.08.18
    \brief      Report whether two residues are H-bonded using
                Baker & Hubbard criteria
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2015
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1996-2018
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -65,7 +65,9 @@
 -  V1.8  20.08.14 Added blSetMaxProteinHBondDADistance() 
                   Added blFindHBond()
                   By: ACRM
-
+-  V1.9  14.08.18 Fixed blListAllHBonds() such that it correctly returns
+                  a list of HBonds rather than just the first one it
+                  finds.
 
 *************************************************************************/
 /* Doxygen
@@ -113,6 +115,19 @@
 #define DADISTSQ (DADIST*DADIST)
 #define HADIST 2.5
 #define HADISTSQ (HADIST*HADIST)
+#define ALLOCHBLISTITEM do {            \
+           if(hblist == NULL) {         \
+              INIT(hblist, HBLIST);     \
+              hb = hblist;              \
+           } else {                     \
+              ALLOCNEXT(hb, HBLIST);    \
+           }                            \
+           if(hb == NULL) {             \
+              FREELIST(hblist, HBLIST); \
+              return(NULL);             \
+           }                            \
+           hb->next = NULL;             \
+        } while(0)
 
 
 /************************************************************************/
@@ -137,7 +152,7 @@ static BOOL FindSidechainDonor(PDB *res, PDB **AtomH, PDB **AtomD);
    \param[in]     *res1     First residue
    \param[in]     *res2     Second residue
    \param[in]     type      HBond type to search for
-   \return                    HBond type found or 0 if none
+   \return                  HBond type found or 0 if none
 
    Determines whether 2 residues are H-bonded using the crude criteria
    of Baker & Hubbard, 1984 (Prog. Biophys. & Mol. Biol, 44, 97-179)
@@ -151,14 +166,14 @@ static BOOL FindSidechainDonor(PDB *res, PDB **AtomH, PDB **AtomD);
    variable.
 
 
-      The flags are:
+   The flags are:
       HBOND_BACK1 (res1 b/b)
       HBOND_BACK2 (res2 b/b)
       HBOND_SIDE1 (res1 s/c)
       HBOND_SIDE2 (res2 s/c)
 
 
-      The most common flag combinations are already provided:
+   The most common flag combinations are already provided:
       HBOND_BB         (b/b -- b/b)
       HBOND_BS         (b/b -- s/c)
       HBOND_SS         (s/c -- s/c)
@@ -547,7 +562,7 @@ static BOOL FindSidechainAcceptor(PDB *res, PDB **AtomA, PDB **AtomP)
    \param[in]     *res       Pointer to residue of interest
    \param[out]    **AtomH    The hydrogen
    \param[out]    **AtomD    The 'donor' atom
-   \return                    Success?
+   \return                   Success?
 
    Finds pointers to sidechain donor atoms. Each call will return
    a new set of atoms till all are found.
@@ -633,6 +648,7 @@ static BOOL FindSidechainDonor(PDB *res, PDB **AtomH, PDB **AtomD)
    return(FALSE);
 }
 
+
 /************************************************************************/
 /*>int blIsMCDonorHBonded(PDB *res1, PDB *res2, int type)
    ------------------------------------------------------
@@ -641,7 +657,7 @@ static BOOL FindSidechainDonor(PDB *res, PDB **AtomH, PDB **AtomD)
    \param[in]     *res1     First residue
    \param[in]     *res2     Second residue
    \param[in]     type      HBond type to search for
-   \return                    HBond type found or 0 if none
+   \return                  HBond type found or 0 if none
 
    Determines whether 2 residues are H-bonded using the crude criteria
    of Baker & Hubbard, 1984 (Prog. Biophys. & Mol. Biol, 44, 97-179)
@@ -690,6 +706,7 @@ int blIsMCDonorHBonded(PDB *res1, PDB *res2, int type)
    return(0);
 }
 
+
 /************************************************************************/
 /*>int blIsMCAcceptorHBonded(PDB *res1, PDB *res2, int type)
    ---------------------------------------------------------
@@ -698,7 +715,7 @@ int blIsMCDonorHBonded(PDB *res1, PDB *res2, int type)
    \param[in]     *res1     First residue
    \param[in]     *res2     Second residue
    \param[in]     type      HBond type to search for
-   \return                    HBond type found or 0 if none
+   \return                  HBond type found or 0 if none
 
    Determines whether 2 residues are H-bonded using the crude criteria
    of Baker & Hubbard, 1984 (Prog. Biophys. & Mol. Biol, 44, 97-179)
@@ -777,6 +794,8 @@ void blSetMaxProteinHBondDADistance(REAL dist)
 
 -  20.07.15  Original   By: ACRM
 -  21.07.15  Corrected to blValidHBond()
+-  14.08.18  This was just returning one HBond rather than creating a 
+             list! Fixed...
 */
 HBLIST *blListAllHBonds(PDB *res1, PDB *res2)
 {
@@ -784,7 +803,8 @@ HBLIST *blListAllHBonds(PDB *res1, PDB *res2)
        *AtomD,              /* The hydrogen donor                       */
        *AtomA,              /* The acceptor                             */
        *AtomP;              /* The acceptor's antecedent                */
-   HBLIST *hb = NULL;
+   HBLIST *hblist = NULL,
+          *hb     = NULL;
 
    int type = HBOND_ANY;
 
@@ -799,16 +819,14 @@ HBLIST *blListAllHBonds(PDB *res1, PDB *res2)
             {
                if(blValidHBond(AtomH, AtomD, AtomA, AtomP))
                {
-                  if((hb = malloc(sizeof(HBLIST)))==NULL)
-                     return(NULL);
-                  hb->next = NULL;
-                  hb->donor = AtomD;
+                  ALLOCHBLISTITEM;
+                  hb->donor    = AtomD;
                   hb->acceptor = AtomA;
-                  return(hb);
                }
                
             }
          }
+
          if(ISSET(type, HBOND_SIDE2))
          {
             /* Clear internal flags                                     */
@@ -817,12 +835,9 @@ HBLIST *blListAllHBonds(PDB *res1, PDB *res2)
             {
                if(blValidHBond(AtomH, AtomD, AtomA, AtomP))
                {
-                  if((hb = malloc(sizeof(HBLIST)))==NULL)
-                     return(NULL);
-                  hb->next = NULL;
-                  hb->donor = AtomD;
+                  ALLOCHBLISTITEM;
+                  hb->donor    = AtomD;
                   hb->acceptor = AtomA;
-                  return(hb);
                }
             }
          }
@@ -835,15 +850,13 @@ HBLIST *blListAllHBonds(PDB *res1, PDB *res2)
             {
                if(blValidHBond(AtomH, AtomD, AtomA, AtomP))
                {
-                  if((hb = malloc(sizeof(HBLIST)))==NULL)
-                     return(NULL);
-                  hb->next = NULL;
-                  hb->donor = AtomD;
+                  ALLOCHBLISTITEM;
+                  hb->donor    = AtomD;
                   hb->acceptor = AtomA;
-                  return(hb);
                }
             }
          }
+
          if(ISSET(type, HBOND_SIDE2))
          {
             /* Clear internal flags                                     */
@@ -852,12 +865,9 @@ HBLIST *blListAllHBonds(PDB *res1, PDB *res2)
             {
                if(blValidHBond(AtomH, AtomD, AtomA, AtomP))
                {
-                  if((hb = malloc(sizeof(HBLIST)))==NULL)
-                     return(NULL);
-                  hb->next = NULL;
-                  hb->donor = AtomD;
+                  ALLOCHBLISTITEM;
+                  hb->donor    = AtomD;
                   hb->acceptor = AtomA;
-                  return(hb);
                }
             }
          }
@@ -877,15 +887,13 @@ HBLIST *blListAllHBonds(PDB *res1, PDB *res2)
             {
                if(blValidHBond(AtomH, AtomD, AtomA, AtomP))
                {
-                  if((hb = malloc(sizeof(HBLIST)))==NULL)
-                     return(NULL);
-                  hb->next = NULL;
-                  hb->donor = AtomD;
+                  ALLOCHBLISTITEM;
+                  hb->donor    = AtomD;
                   hb->acceptor = AtomA;
-                  return(hb);
                }
             }
          }
+
          if(ISSET(type, HBOND_SIDE2))
          {
             /* Clear internal flags                                     */
@@ -894,16 +902,14 @@ HBLIST *blListAllHBonds(PDB *res1, PDB *res2)
             {
                if(blValidHBond(AtomH, AtomD, AtomA, AtomP))
                {
-                  if((hb = malloc(sizeof(HBLIST)))==NULL)
-                     return(NULL);
-                  hb->next = NULL;
-                  hb->donor = AtomD;
+                  ALLOCHBLISTITEM;
+                  hb->donor    = AtomD;
                   hb->acceptor = AtomA;
-                  return(hb);
                }
             }
          }
       }
+
       /* Clear internal flags                                           */
       FindSidechainAcceptor(NULL, NULL, NULL);
       while(FindSidechainAcceptor(res1, &AtomA, &AtomP))
@@ -914,15 +920,13 @@ HBLIST *blListAllHBonds(PDB *res1, PDB *res2)
             {
                if(blValidHBond(AtomH, AtomD, AtomA, AtomP))
                {
-                  if((hb = malloc(sizeof(HBLIST)))==NULL)
-                     return(NULL);
-                  hb->next = NULL;
-                  hb->donor = AtomD;
+                  ALLOCHBLISTITEM;
+                  hb->donor    = AtomD;
                   hb->acceptor = AtomA;
-                  return(hb);
                }
             }
          }
+
          if(ISSET(type, HBOND_SIDE2))
          {
             /* Clear internal flags                                     */
@@ -931,19 +935,16 @@ HBLIST *blListAllHBonds(PDB *res1, PDB *res2)
             {
                if(blValidHBond(AtomH, AtomD, AtomA, AtomP))
                {
-                  if((hb = malloc(sizeof(HBLIST)))==NULL)
-                     return(NULL);
-                  hb->next = NULL;
-                  hb->donor = AtomD;
+                  ALLOCHBLISTITEM;
+                  hb->donor    = AtomD;
                   hb->acceptor = AtomA;
-                  return(hb);
                }
             }
          }
       }
    }
 
-   return(NULL);
+   return(hb);
 }
 
       
