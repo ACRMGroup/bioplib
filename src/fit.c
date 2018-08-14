@@ -3,11 +3,11 @@
 
    \file       fit.c
    
-   \version    V1.7
-   \date       17.07.14
+   \version    V1.8
+   \date       07.08.18
    \brief      Perform least squares fitting of coordinate sets
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2018
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -58,6 +58,7 @@
 -  V1.5  03.04.09 Initialize clep in qikfit() By: CTP
 -  V1.6  07.07.14 Use bl prefix for functions By: CTP
 -  V1.7  17.07.14 Removed unused varables  By: ACRM
+-  V1.8  07.08.18 Initialized step[] to silence gcc 7.3.1 with -O2
 
 *************************************************************************/
 /* Doxygen
@@ -220,6 +221,7 @@ BOOL blMatfit(COOR    *x1,        /* First coord array    */
 -  11.03.94 column changed to BOOL
 -  03.04.09 Initialize clep for fussy compliers. By: CTP
 -  17.07.14 Removed unused variables  By: ACRM
+-  07.08.18 Initialized step[] to silence gcc 7.3.1 with -O2
 */
 static void qikfit(REAL  umat[3][3],
                    REAL  rm[3][3],
@@ -246,6 +248,9 @@ static void qikfit(REAL  umat[3][3],
          nsteep,
          nrem;
 
+   for(i=0; i<3; i++)
+      step[i] = 0.0;
+   
    /* Rotate repeatedly to reduce couple about initial direction to zero.
       Clear the rotation matrix
    */

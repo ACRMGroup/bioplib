@@ -379,7 +379,7 @@ do {                                                                     \
                              {  (x)[_terminate_macro_j] = '\0';       \
                                 break;                                \
                        }  }  }  while(0)
-#define TERMAT(x, y) do {  int _termat_macro_j;                       \
+#define TERMAT(x, y) do {  int _termat_macro_j=0;                     \
                         for(_termat_macro_j=0;                        \
                             (x)[_termat_macro_j];                     \
                             _termat_macro_j++)                        \

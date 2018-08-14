@@ -3,8 +3,8 @@
 
    \file       WritePDB.c
    
-   \version    V1.30
-   \date       09.02.18
+   \version    V1.31
+   \date       07.08.18
    \brief      Write a PDB file from a linked list
    
    \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2018
@@ -113,6 +113,8 @@
                   Added ReadSeqresChainLabelWholePDB() and 
                   ReadSeqresResidueListWholePDB().  By: CTP
 -  V1.30 09.02.18 Corrected calls to ABS() in formal charges By: ACRM
+-  V1.31 07.08.18 Increased text buffer sizes to silence gcc 7.3.1 
+                  with -O2
 
 *************************************************************************/
 /* Doxygen
@@ -576,6 +578,7 @@ BOOL blWritePDBAsPDBML(FILE *fp, PDB  *pdb)
             in PDB. Set compound type to polymer. By:  CTP
 -  10.07.15 Added return value for no XML_SUPPORT  By: ACRM
 -  29.07.15 Added output of SEQRES records from wpdb->header.  By: CTP
+-  07.08.18 Increased text buffer sizes to silence gcc 7.3.1 with -O2
 */
 static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
 {
@@ -596,7 +599,7 @@ static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
                node        = NULL;
    xmlNsPtr    pdbx        = NULL,
                xsi         = NULL;
-   char        buffer[16], 
+   char        buffer[80], 
                *buffer_ptr;
    int         conect_id   = 0,
                i, j;
@@ -607,14 +610,14 @@ static BOOL blDoWritePDBAsPDBML(FILE *fp, WHOLEPDB  *wpdb, BOOL doWhole)
         pdbml_date[11] =   "",
         *title         = NULL;
 
-   COMPND    compound;
-   PDBSOURCE species;
-   int molid = 0;
-   HASHTABLE *chain_to_entity = NULL;
+   COMPND     compound;
+   PDBSOURCE  species;
+   int        molid             = 0;
+   HASHTABLE  *chain_to_entity  = NULL;
    int        seqres_nchains    =    0;
    char       **seqres_chain    = NULL;
    STRINGLIST **seqres_residues = NULL,
-              *s = NULL;
+              *s                = NULL;
 
    /* Create document                                                   */
    if((doc = xmlNewDoc((xmlChar *)"1.0"))==NULL)
@@ -1642,6 +1645,7 @@ void blWriteWholePDBHeader(FILE *fp, WHOLEPDB *wpdb)
 -  23.02.15  Added numTer parameter
 -  02.03.15  Padded END and CONECT
 -  06.08.15  Updated XML check. By: CTP
+-  07.08.18 Increased text buffer sizes to silence gcc 7.3.1 with -O2
 */
 void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb, int numTer)
 {
@@ -1660,7 +1664,7 @@ void blWriteWholePDBTrailer(FILE *fp, WHOLEPDB *wpdb, int numTer)
             int  i, 
                  nPrinted,
                  width=0;
-            char format[8];
+            char format[16];
 
             for(i=0, nPrinted=0; i<p->nConect; i++)
             {

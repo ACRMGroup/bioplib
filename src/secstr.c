@@ -4,11 +4,11 @@
 
    \File       secstruc.c
    
-   \version    V1.1
-   \date       10.07.15
+   \version    V1.2
+   \date       07.08.18
    \brief      Secondary structure calculation
    
-   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 1988-2015
+   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 1988-2018
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -48,13 +48,15 @@
    Revision History:
    =================
 
-   V1.0   19.05.99 Original, written while at Inpharmatica   By: ACRM
-   V1.1   10.07.15 Modified for BiopLib
-          17.02.16 xyz for coordinates now count from zero
+-  V1.0   19.05.99 Original, written while at Inpharmatica   By: ACRM
+-  V1.1   10.07.15 Modified for BiopLib
+-         17.02.16 xyz for coordinates now count from zero
                    CalcDihedral() also now uses arrays that count from
                    zero
-          18.02.16 NUM_MC_ATOM_TYPES now counts from zero
+-         18.02.16 NUM_MC_ATOM_TYPES now counts from zero
                    MAX_NUM_ANGLES now counts from zero
+-  V1.2   07.08.18 CalcDihedral() - Corrected size of dihatm[] to 4 
+                   rather than NUM_DIHED_DATA
 
 *************************************************************************/
 /* Doxygen
@@ -996,6 +998,7 @@ generated for residue %d\n",
 -  13.07.15 Modified for BiopLib
 -  17.02.16 x,y,z for coordinates now count from 0 instead of 1
             dotproduct[][] and dihatm[] now count from 0
+-  07.08.18 Corrected size of dihatm[] to 4 rather than NUM_DIHED_DATA
 */
 static REAL CalcDihedral(int  angnum, 
                          REAL *atoma,
@@ -1003,7 +1006,7 @@ static REAL CalcDihedral(int  angnum,
                          REAL *atomc,
                          REAL *atomd)
 {
-   REAL *dihatm[NUM_DIHED_DATA], 
+   REAL *dihatm[4], 
         codist[COORD_DIM][NUM_DIHED_DATA],
         atomDistance[NUM_DIHED_DATA], 
         dotProduct[NUM_DIHED_DATA][NUM_DIHED_DATA],

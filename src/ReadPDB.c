@@ -3,11 +3,11 @@
 
    \file       ReadPDB.c
    
-   \version    V3.11
-   \date       01.07.15
+   \version    V3.12
+   \date       07.08.18
    \brief      Read coordinates from a PDB file 
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2015
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2018
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -232,11 +232,13 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                   checks for failed XML extractions.
 -  V3.10 25.06.15 Fixed bug for pdbml parsing where residue number is set
                   to 0.  By: CTP
--  £3.11 01.07.15 Added ParseHeaderRecordsPDBML(). 
+-  V3.11 01.07.15 Added ParseHeaderRecordsPDBML(). 
                   ParseHeaderPDBML() broken into smaller functions: 
                   ParseTitlePDBML(), ParseCompndPDBML(), 
                   ParseSourcePDBML(), ParseResolPDBML(), 
                   ParseSeqresPDBML() and ParseModresPDBML().  By: CTP
+-  V3.12 07.08.18 Increased text buffer sizes to silence gcc 7.3.1 
+                  with -O2
 
 *************************************************************************/
 /* Doxygen
@@ -3317,6 +3319,7 @@ static STRINGLIST *ParseSeqresPDBML(xmlDoc *document)
    Parses PDBML header data and returns MODRES record.
 
 -  01.07.15 Original.  By: CTP
+-  07.08.18 Increased text buffer sizes to silence gcc 7.3.1 with -O2
 */
 static STRINGLIST *ParseModresPDBML(xmlDoc *document)
 {
@@ -3332,20 +3335,30 @@ static STRINGLIST *ParseModresPDBML(xmlDoc *document)
               *node      = NULL,
               *subnode   = NULL,
               *n         = NULL;
-   xmlChar    *content, *attribute;
-   double     content_lf = 0.0;
+   xmlChar    *content,
+              *attribute;
+   double     content_lf    = 0.0;
    STRINGLIST *modres_lines = NULL;
-   char       pdb_field[5]     = "";
+   char       pdb_field[8];
 
    /* modres                                                            */
-   char       modres_line[82]    =  "",
-              modres_resnam[8]   =  "",
-              modres_chain[8]    =  "",
-              modres_insert[2]   = " ",
-              modres_stdnam[8]   =  "",
-              modres_comment[42] =  "";
+   char       modres_line[160],
+              modres_resnam[8],
+              modres_chain[8], 
+              modres_insert[8],
+              modres_stdnam[8],
+              modres_comment[80];
    int        modres_seqnum      =   0;
 
+   modres_line[0]    = '\0';
+   modres_resnam[0]  = '\0';
+   modres_chain[0]   = '\0';
+   modres_insert[0]  = ' ';
+   modres_insert[1]  = '\0';
+   modres_stdnam[0]  = '\0';
+   modres_comment[0] = '\0';
+   
+   
    /* Parse Document Tree                                               */
    root_node = xmlDocGetRootElement(document);
    for(node = root_node->children; node; NEXT(node))
@@ -4232,7 +4245,7 @@ static STRINGLIST *SourceStringlist(STRINGLIST *stringlist,
    Creates SEQRES records in PDB-format.
 
 -  23.06.15 Original. By: CTP
-
+-  07.08.18 Increase size of buffers to silence gcc 7.3.1 with -O2
 */
 static STRINGLIST *SeqresStringlist(int nchains, char **chains, 
                                       STRINGLIST **residues)
@@ -4245,12 +4258,14 @@ static STRINGLIST *SeqresStringlist(int nchains, char **chains,
 #else
 
    STRINGLIST *stringlist = NULL,
-              *residue = NULL;
-   int i = 0, j = 0, nres = 0;
-   int nline = 0;
-   char seqres_line[82]  = "";
-   char residue_field[5] = "";
-   char sequence_field[53] = "";
+              *residue    = NULL;
+   int        i           = 0,
+              j           = 0,
+              nres        = 0,
+              nline = 0;
+   char       seqres_line[160],
+              residue_field[8],
+              sequence_field[80];
    
    
    /* process chains                                                    */

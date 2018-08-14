@@ -3,11 +3,11 @@
 
    \file       GetCofGPDBSCRange.c
    
-   \version    V1.2
-   \date       07.07.14
+   \version    V1.3
+   \date       07.08.18
    \brief      Find CofG of a PDB linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-4
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1992-2018
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -50,6 +50,7 @@
 -  V1.1  03.10.94 Added GetCofGPDBRange(), FindCofGPDBSCRange() and 
                   fixed NULL coord search in GetCofGPDB()
 -  V1.2  07.07.14 Use bl prefix for functions By: CTP
+-  V1.3  07.08.18 Initialized variable to silence gcc 7.3.1 with -O2
 
 *************************************************************************/
 /* Doxygen
@@ -97,11 +98,13 @@
    For Glycine, returns the CA coordinates.
 
 -  03.10.94 Original    By: ACRM
+-  07.08.18 Initialized ca to silence gcc 7.3.1 with -O2
 */
 void blGetCofGPDBSCRange(PDB *start, PDB *stop, VEC3F *cg)
 {
    int natom;
-   PDB *p, *ca;
+   PDB *p,
+       *ca = NULL;
 
    cg->x = 0.0;   
    cg->y = 0.0;   
