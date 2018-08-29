@@ -3,11 +3,11 @@
 
    \file       BuildConect.c
    
-   \version    V1.5
-   \date       03.10.16
+   \version    V1.6
+   \date       29.08.18
    \brief      Build connectivity information in PDB linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 2002-2016
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 2002-2018
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -54,6 +54,7 @@
                   blAreResiduePointersBonded()
 -  V1.4  22.07.15 Added blIsConnected()
 -  V1.5  03.10.16 Added <stdlib.h>
+-  V1.6  29.08.18 Added check on MAXCONECT in blDeleteAConectByNum()
 
 *************************************************************************/
 /* Doxygen
@@ -496,6 +497,7 @@ BOOL blDeleteAConect(PDB *p, PDB *q)
    down.
 
 -  16.03.15  Original   By: ACRM
+-  29.08.18  Added check on MAXCONECT
 */
 BOOL blDeleteAConectByNum(PDB *pdb, int cNum)
 {
@@ -509,7 +511,8 @@ BOOL blDeleteAConectByNum(PDB *pdb, int cNum)
    for(i=cNum; i<pdb->nConect; i++)
    {
       PDB *next = NULL;
-      if((i+1) < pdb->nConect)
+      if(((i+1) < pdb->nConect) &&
+         ((i+1) < MAXCONECT))
          next = pdb->conect[i+1];
 
       pdb->conect[i] = next;
