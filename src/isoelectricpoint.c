@@ -1,4 +1,7 @@
 /*
+Copyright Yair Benita Y.Benita@pharm.uu.nl 
+Biopython (http://biopython.org) license applies 
+
 Calculate isoelectric points of polypeptides using methods of Bjellqvist. 
    
   pK values and the methos are taken from:: 
@@ -26,7 +29,7 @@ Calculate isoelectric points of polypeptides using methods of Bjellqvist.
   charged_aas = ('K', 'R', 'H', 'D', 'E', 'C', 'Y') 
    
    
- -class IsoelectricPoint(object): 
+class IsoelectricPoint(object): 
       """A class with one public method to calculate the pI of a protein. 
    
       Access this class through ProtParam.ProteinAnalysis class. 
@@ -34,14 +37,14 @@ Calculate isoelectric points of polypeptides using methods of Bjellqvist.
       method. 
       """ 
    
- -    def __init__(self, ProteinSequence, AminoAcidsContent): 
+    def __init__(self, ProteinSequence, AminoAcidsContent): 
           """Initialize the class.""" 
           self.sequence = ProteinSequence 
           self.charged_aas_content = self._select_charged(AminoAcidsContent) 
    
       # This function creates a dictionary with the contents of each charged aa, 
       # plus Cterm and Nterm. 
- -    def _select_charged(self, AminoAcidsContent): 
+    def _select_charged(self, AminoAcidsContent): 
           charged = {} 
           for aa in charged_aas: 
               charged[aa] = float(AminoAcidsContent[aa]) 
@@ -50,7 +53,7 @@ Calculate isoelectric points of polypeptides using methods of Bjellqvist.
           return charged 
    
       # This function calculates the total charge of the protein at a given pH. 
- -    def _chargeR(self, pH, pos_pKs, neg_pKs): 
+    def _chargeR(self, pH, pos_pKs, neg_pKs): 
           PositiveCharge = 0.0 
           for aa, pK in pos_pKs.items(): 
               CR = 10 ** (pK - pH) 
@@ -67,7 +70,7 @@ Calculate isoelectric points of polypeptides using methods of Bjellqvist.
    
       # This is the action function, it tries different pH until the charge of 
       # the protein is 0 (or close). 
- -    def pi(self): 
+    def pi(self): 
           """Calculate and return the isoelectric point as float.""" 
           pos_pKs = dict(positive_pKs) 
           neg_pKs = dict(negative_pKs) 
