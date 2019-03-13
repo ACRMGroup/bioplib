@@ -3,11 +3,11 @@
 
    \file       HAddPDB.c
    
-   \version    V2.23
-   \date       07.08.18
+   \version    V2.24
+   \date       13.03.19
    \brief      Add hydrogens to a PDB linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2018
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1990-2019
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -136,6 +136,7 @@
                   uninitialized CONECT data
 -  V2.23 07.08.18 initialized and foce-terminated variables to silence
                   gcc 7.3.1 with -O2
+-  V2.24 13.03.19 Fixed buffer sizes for sprintf()
 
 *************************************************************************/
 /* Doxygen
@@ -1350,11 +1351,12 @@ static BOOL AddH(PDB *hlist, PDB **position, int HType)
 -  28.07.05 Added conditionals for msdos and Mac OS/X
 -  07.07.14 Use bl prefix for functions By: CTP
 -  18.03.15 Changed to use MAXBUFF  By: ACRM
+-  13.03.19 Doubled size of buffer[]
 */
 FILE *blOpenPGPFile(char *pgpfile, BOOL AllHyd)
 {
    char *datadir,
-        buffer[MAXBUFF],
+        buffer[MAXBUFF*2],
         basename[MAXBUFF];
    FILE *fp;
    

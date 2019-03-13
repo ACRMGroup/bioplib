@@ -3,11 +3,11 @@
 
    \file       hpgl.c
    
-   \version    V2.2
-   \date       07.07.14
+   \version    V2.3
+   \date       13.03.19
    \brief      HPGL plotting functions
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2019
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -51,6 +51,7 @@
 -  V2.0  25.06.92 Modified for AMPlot2; floats->doubles
 -  V2.1  27.07.93 Changed some missed float->double
 -  V2.2  07.07.14 Use bl prefix for functions By: CTP
+-  V2.3  13.03.19 Fixed output buffer sizes By: ACRM
 
 *************************************************************************/
 /* Doxygen
@@ -670,6 +671,7 @@ void blHPGLEnd(void)
 -  27.07.93 Changed precision of floating i/o to double
 -  11.03.94 Changed orientation to BOOL
 -  07.07.14 Use bl prefix for functions By: CTP
+-  13.03.19 Doubled the size of OutBuff  By: ACRM
 */
 void blHPGLShowText(char *text, 
                     BOOL orientation,
@@ -677,7 +679,7 @@ void blHPGLShowText(char *text,
                     int  YBase)
 {
    char     buffer[MAXBUFF],
-            OutBuff[MAXBUFF];
+            OutBuff[MAXBUFF*2];
    int      i, j,
             chcount,
             first = TRUE;
