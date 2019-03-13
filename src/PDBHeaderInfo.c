@@ -3,12 +3,12 @@
 
    \file       PDBHeaderInfo.c
    
-   \version    V1.8
-   \date       03.10.16
+   \version    V1.9
+   \date       13.03.19
 
    \brief      Get misc header info from PDB header
    
-   \copyright  (c) Dr. Andrew C.R. Martin / UCL, 2015-2016
+   \copyright  (c) Dr. Andrew C.R. Martin / UCL, 2015-2019
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -66,6 +66,7 @@
 -  V1.7  02.12.15 Sequences were not being terminated properly in
                   blGetSeqresByChainWholePDB()
 -  V1.8  03.10.16 Added <stdlib.h>
+-  V1.9  13.03.19 Some fixes to terminate strings made with strncpy()
 
 *************************************************************************/
 /* Doxygen
@@ -878,6 +879,7 @@ char *blGetSeqresAsStringWholePDB(WHOLEPDB *wpdb, char **chains,
 
 -  07.03.07  Original   By: ACRM
 -  11.06.15  Moved to Bioplib
+-  13.03.19  Terminate string
 */
 MODRES *blGetModresWholePDB(WHOLEPDB *wpdb)
 {
@@ -905,17 +907,18 @@ MODRES *blGetModresWholePDB(WHOLEPDB *wpdb)
             fprintf(stderr,"pdb2pir: Error! No memory for modres\n");
             exit(1);
          }
-         
          ch = s->string+12;
          strncpy(m->modres, ch, 3);
+         m->modres[3] =  '\0';
          PADCHARMINTERM(m->modres, ' ', 4);
          
          ch = s->string+24;
          strncpy(m->origres, ch, 3);
+         m->origres[3] =  '\0';
          PADCHARMINTERM(m->origres, ' ', 4);
          if(m->origres[0] == ' ')
          {
-            strncpy(m->origres, "XXX ", 4);
+            strncpy(m->origres, "XXX ", 5);
          }
       }
    }
@@ -936,6 +939,7 @@ MODRES *blGetModresWholePDB(WHOLEPDB *wpdb)
 
 -  07.03.07  Original   By: ACRM
 -  11.06.15  Moved to bioplib, renamed routine and parameters
+-  13.03.19  Terminate string
 */
 void blFindOriginalResType(char *modAA, char *stdAA, MODRES *modres)
 {
@@ -945,6 +949,7 @@ void blFindOriginalResType(char *modAA, char *stdAA, MODRES *modres)
       if(!strncmp(modAA, m->modres, 3))
       {
          strncpy(stdAA, m->origres, 3);
+         stdAA[3] = '\0';
          PADCHARMINTERM(stdAA, ' ', 4);
          return;
       }
