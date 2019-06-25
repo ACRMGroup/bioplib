@@ -240,7 +240,7 @@
 #define MAXATINRES  23  /* Max number of (heavy) atoms in a standard aa
                            or nucleotide
                         */
-#define MAXCONECT    8  /* Max number of CONECT connections             */
+#define MAXCONECT    16 /* Max number of CONECT connections             */
 #define DEFCONECTTOL 0.1   /* Default CONECT tolerence                  */
 #define MAXPDBANNOTATION 640 /* Max size for storing a PDB header 
                                 annotation
