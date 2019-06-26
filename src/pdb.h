@@ -3,13 +3,13 @@
 
    \file       pdb.h
    
-   \version    V1.96
-   \date       30.09.17
+   \version    V1.97
+   \date       26.06.19
 
    \brief      Include file for PDB routines
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin, UCL, Reading 1993-2017
-   \author     Dr. Andrew C. R. Martin
+   \copyright  (c) UCL / Prof. Andrew C. R. Martin, UCL, Reading 1993-2019
+   \author     Prof. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
                University College London,
@@ -221,6 +221,8 @@
 -  V1.94 30.11.15 Make use of blMAXCHAINLABEL
 -  V1.95 11.08.16 Added blBuildResSpec()
 -  V1.96 30.09.17 Added blDeleteResiduePDB()
+-  V1.97 26.06.19 Added *blForceExtractNotZonePDBAsCopy() and
+                  blForceExtractNotZoneSpecPDBAsCopy()
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -775,6 +777,13 @@ PDB *blExtractNotZonePDBAsCopy(PDB *inpdb, char *chain1, int resnum1,
                                char *insert1, char *chain2, int resnum2, 
                                char *insert2);
 PDB *blExtractNotZoneSpecPDBAsCopy(PDB *pdb, char *firstRes, char *lastRes);
+PDB *blForceExtractNotZonePDBAsCopy(PDB *inpdb, 
+                                    char *chain1, int resnum1,
+                                    char *insert1, 
+                                    char *chain2, int resnum2,
+                                    char *insert2);
+PDB *blForceExtractNotZoneSpecPDBAsCopy(PDB *pdb, char *firstRes, 
+                                        char *lastRes);
 PDB *blFindResidue(PDB *pdb, char *chain, int resnum, char *insert);
 PDB *blFindHetatmResidue(PDB *pdb, char *chain, int resnum, char *insert);
 PDB *blFindAtomInRes(PDB *pdb, char *atnam);
