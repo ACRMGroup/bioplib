@@ -4,10 +4,10 @@
    \file       deprecated.h
    
    \version    v1.5
-   \date       24.10.14
+   \date       02.08.19
    \brief      Redirect calls to deprecated functions.
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 2014-2019
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -115,6 +115,7 @@
 -  V1.5  24.10.14 Added regression and eigen           By: ACRM
                   Added NODEPRECATION check
                   Added ExtractZoneSpecPDB
+-  V1.6  02.08.19 The PDB2Seq() macros now call the blDoPDB2Seq() function
 
 *************************************************************************/
 #ifndef NODEPRECATION
@@ -678,15 +679,15 @@ void safeleaks(void);
 #   ifdef _SEQ_H_DEPRECATED
 #      undef _SEQ_H_DEPRECATED
 
-#define PDB2Seq(x)          DoPDB2Seq((x), FALSE, FALSE, FALSE)
-#define PDB2SeqX(x)         DoPDB2Seq((x), TRUE,  FALSE, FALSE)
-#define PDB2SeqNoX(x)       DoPDB2Seq((x), FALSE, FALSE, TRUE)
-#define PDB2SeqXNoX(x)      DoPDB2Seq((x), TRUE,  FALSE, TRUE)
+#define PDB2Seq(x)          blDoPDB2Seq((x), FALSE, FALSE, FALSE)
+#define PDB2SeqX(x)         blDoPDB2Seq((x), TRUE,  FALSE, FALSE)
+#define PDB2SeqNoX(x)       blDoPDB2Seq((x), FALSE, FALSE, TRUE)
+#define PDB2SeqXNoX(x)      blDoPDB2Seq((x), TRUE,  FALSE, TRUE)
 
-#define PDBProt2Seq(x)      DoPDB2Seq((x), FALSE, TRUE, FALSE)
-#define PDBProt2SeqX(x)     DoPDB2Seq((x), TRUE,  TRUE, FALSE)
-#define PDBProt2SeqNoX(x)   DoPDB2Seq((x), FALSE, TRUE, TRUE)
-#define PDBProt2SeqXNoX(x)  DoPDB2Seq((x), TRUE,  TRUE, TRUE)
+#define PDBProt2Seq(x)      blDoPDB2Seq((x), FALSE, TRUE, FALSE)
+#define PDBProt2SeqX(x)     blDoPDB2Seq((x), TRUE,  TRUE, FALSE)
+#define PDBProt2SeqNoX(x)   blDoPDB2Seq((x), FALSE, TRUE, TRUE)
+#define PDBProt2SeqXNoX(x)  blDoPDB2Seq((x), TRUE,  TRUE, TRUE)
 
 /************************************************************************/
 /* Deprecated functions: seq.h                                          */
