@@ -3,11 +3,11 @@
 
    \file       hash.c
    
-   \version    V1.2
-   \date       23.08.15
+   \version    V1.3
+   \date       19.08.19
    \brief      Flexible hash functions
    
-   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 2015
+   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 2015-2019
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -52,6 +52,7 @@
 -  V1.0   14.05.15  Original   By: ACRM
 -  V1.1   03.06.15  Added wrappers to blSetHashValue()
 -  V1.2   23.08.15  Cast NAN for int return
+-  V1.3   19.08.19  Fixed warning about type uninitialized
 
 *************************************************************************/
 /* Doxygen
@@ -716,6 +717,7 @@ BPTR blGetHashValue(HASHTABLE *hashtable, char *key, int *type)
    Dumps the contents of the hash to the specified file pointer
 
 -  12.05.15  Original   By: ACRM
+-  19.08.19  Fixed warning about type uninitialized
 */
 BOOL blDumpHash(FILE *out, HASHTABLE *hashtable)
 {
@@ -727,7 +729,7 @@ BOOL blDumpHash(FILE *out, HASHTABLE *hashtable)
       for(i=0; keyList[i]!=NULL; i++)
       {
          BPTR value;
-         int  type;
+         int  type = 0;
          
          fprintf(out, "%s => ", keyList[i]);
          value = blGetHashValue(hashtable, keyList[i], &type);

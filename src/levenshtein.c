@@ -2,7 +2,7 @@
 /**
 
    Program:    
-   \file       levenstein.c
+   \file       levenshtein.c
    
    \version    V1.0
    \date       15.06.20
