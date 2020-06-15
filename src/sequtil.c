@@ -1,14 +1,14 @@
 /************************************************************************/
 /**
 
-   \file       sexft.c
+   \file       sequtil.c
    
-   \version    V1.0
+   \version    V1.1
    \date       10.11.17   
-   \brief      Six-frame translation
+   \brief      Six-frame translation and FASTA handling
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 2017
-   \author     Dr. Andrew C. R. Martin
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 2017-2019
+   \author     Prof. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
                University College,
@@ -46,6 +46,7 @@
    Revision History:
    =================
 -  V1.0  10.11.17 Original  By: ACRM
+-  V1.1  01.11.19 Moved MAXBUFF into here from sequtil.h
 
 *************************************************************************/
 /* Doxygen
@@ -89,7 +90,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "sequtil.h"
-#include "SysDefs.h"
 #include "macros.h"
 #include "general.h"
 
