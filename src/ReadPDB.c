@@ -3,11 +3,11 @@
 
    \file       ReadPDB.c
    
-   \version    V3.12
-   \date       07.08.18
+   \version    V3.13
+   \date       11.12.20
    \brief      Read coordinates from a PDB file 
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2018
+   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1988-2020
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -238,7 +238,8 @@ BUGS:  25.01.05 Note the multiple occupancy code won't work properly for
                   ParseSourcePDBML(), ParseResolPDBML(), 
                   ParseSeqresPDBML() and ParseModresPDBML().  By: CTP
 -  V3.12 07.08.18 Increased text buffer sizes to silence gcc 7.3.1 
-                  with -O2
+                  with -O2 By: ACRM
+-  V3.13 11.12.20 More checks before popen() prototype
 
 *************************************************************************/
 /* Doxygen
@@ -384,11 +385,11 @@ static STRINGLIST *SeqresStringlist(int nchains, char **chains,
 
 
 
-#if !defined(__APPLE__) && !defined(MS_WINDOWS)
-FILE *popen(char *, char *);
+#if !defined(__APPLE__) && !defined(MS_WINDOWS) && !defined(__USE_POSIX2)
+extern FILE *popen(const char *, const char *);
 #endif
-#ifndef __APPLE__
-int  pclose(FILE *);
+#if !defined(__APPLE__) && !defined(__USE_POSIX2)
+extern int pclose(FILE *);
 #endif
 
 /************************************************************************/
@@ -1039,7 +1040,7 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
                {
                   CurIns = insert[0];
                   CurRes = resnum;
-                  strncpy(CurAtom,atnam,8);
+                  strncpy(CurAtom,atnam,7);
                }
                
                if(strncmp(CurAtom,atnam,strlen(CurAtom)-1) || 
@@ -1060,7 +1061,7 @@ WHOLEPDB *blDoReadPDB(FILE *fpin,
                   
                   /* Reset the partial atom counter                     */
                   NPartial = 0;
-                  strncpy(CurAtom,atnam,8);
+                  strncpy(CurAtom,atnam,7);
                   CurRes = resnum;
                   CurIns = insert[0];
                }
