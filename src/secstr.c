@@ -4,11 +4,11 @@
 
    \File       secstruc.c
    
-   \version    V1.2
-   \date       07.08.18
+   \version    V1.3
+   \date       04.02.21
    \brief      Secondary structure calculation
    
-   \copyright  (c) Dr. Andrew C. R. Martin, UCL, 1988-2018
+   \copyright  (c) Prof. Andrew C. R. Martin, UCL, 1988-2021
    \author     Dr. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -57,6 +57,7 @@
                    MAX_NUM_ANGLES now counts from zero
 -  V1.2   07.08.18 CalcDihedral() - Corrected size of dihatm[] to 4 
                    rather than NUM_DIHED_DATA
+-  V1.3   04.02.21 MakeTurnsAndBridges() - Corrected fabs() to abs()
 
 *************************************************************************/
 /* Doxygen
@@ -1981,6 +1982,8 @@ static void MakeSummary(char **ssTable,
 -  16.06.99 Initialise lastStrand to 0
 -  13.07.15 Modified for BiopLib
 -  09.08.16 Zero-basing
+-  04.02.21 Various fabs() calls replaced with abs() since argument was
+            an integer
 */
 static BOOL MakeTurnsAndBridges(int **hbond, char **ssTable,
                                 REAL **mcAngles, int **bridgePoints,
@@ -2398,7 +2401,7 @@ static BOOL MakeTurnsAndBridges(int **hbond, char **ssTable,
       
       while(bestValue != 0)
       {
-         lastStrand = fabs(strandCode[newBridgeIndex][strandCount]);
+         lastStrand = abs(strandCode[newBridgeIndex][strandCount]);
          charCode   = lastStrand%NUM_STRAND_CHARS;
 
          if(charCode == 0) 
@@ -2445,7 +2448,7 @@ static BOOL MakeTurnsAndBridges(int **hbond, char **ssTable,
          ssTable[strandCharOffset][strandCount] = strandChar;
 
          bridgePoints[strandCharOffset-SECSTR_IDX_BRIDG1][strandCount] =
-            fabs(bridge[newBridgeIndex][strandCount]);
+            abs(bridge[newBridgeIndex][strandCount]);
 
          thisStrandOffset = strandCount+1;
          
@@ -2478,7 +2481,7 @@ static BOOL MakeTurnsAndBridges(int **hbond, char **ssTable,
 
             bridgePoints[strandCharOffset-SECSTR_IDX_BRIDG1]
                         [nextStrandOffset-1] = 
-               fabs(bridge[strandOffset][nextStrandOffset-1]);
+               abs(bridge[strandOffset][nextStrandOffset-1]);
 
             thisStrandOffset = nextStrandOffset;
          }
@@ -2520,10 +2523,10 @@ have restarted\n",
       {
          if((bridge[newBridgeIndex][resCount]      != 0) && 
             (strandCode[newBridgeIndex][resCount]  == 0) && 
-            (fabs(bridge[newBridgeIndex][resCount]) >= resCount))
+            (abs(bridge[newBridgeIndex][resCount]) >= resCount))
          {
             bridgeCount++;
-            theBridgePoint = fabs(bridge[newBridgeIndex][resCount]);
+            theBridgePoint = abs(bridge[newBridgeIndex][resCount]);
             charCode       = bridgeCount%NUM_STRAND_CHARS;
 
             if(charCode == 0) 
