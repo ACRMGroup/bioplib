@@ -438,7 +438,7 @@ char *blReportStructureType(int StrucType)
       return("Neutron Scattering");
       break;
    case STRUCTURE_TYPE_EM:
-      return("Electron Misroscopy");
+      return("Electron Microscopy");
       break;
    case STRUCTURE_TYPE_SOLSCAT:
       return("Solution Scattering");
