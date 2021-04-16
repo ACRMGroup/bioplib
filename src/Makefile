@@ -17,8 +17,8 @@ ADDDOXYCONF = $(DOCDIR)/adddoxy/adddoxy.conf
 CC = gcc
  
 # Define any options for the C compiler here
-COPT = -fPIC -ansi -Wall -pedantic -g -DGUNZIP_SUPPORT -finline-functions
-#COPT = -fPIC -ansi -Wall -pedantic -O3 -DGUNZIP_SUPPORT -finline-functions
+#COPT = -fPIC -ansi -Wall -pedantic -g -DGUNZIP_SUPPORT -finline-functions
+COPT = -fPIC -ansi -Wall -pedantic -O3 -DGUNZIP_SUPPORT -finline-functions
 
 # Generate error messages for deprecated functions.
 # Default is to display deprecated error message unless environment 

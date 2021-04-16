@@ -3,12 +3,12 @@
 
    \file       ResolPDB.c
    
-   \version    V1.8
-   \date       07.07.14
+   \version    V1.10
+   \date       16.04.21
    \brief      Get resolution and R-factor information out of a PDB file
    
-   \copyright  (c) UCL / Dr. Andrew C.R. Martin, 1994-2014
-   \author     Dr. Andrew C. R. Martin
+   \copyright  (c) UCL / Prof. Andrew C.R. Martin, 1994-2021
+   \author     Prof. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
                University College London,
@@ -70,6 +70,7 @@
 -  V1.9  02.03.15 Renamed blGetExptl() to blGetExptlPDB()
                   Moved ReadData() out from blGetExptlPDB()
                   Added blGetExptlWholePDB()
+-  V1.10 16.04.21 Corrected spelling of Microscopy
 
 *************************************************************************/
 /* Doxygen
@@ -398,7 +399,7 @@ BOOL blGetExptlWholePDB(WHOLEPDB *wpdb, REAL *resolution, REAL *RFactor,
       STRUCTURE_TYPE_FIBER       Fiber Diffraction
       STRUCTURE_TYPE_SSNMR       Solid State NMR
       STRUCTURE_TYPE_NEUTRON     Neutron Scattering
-      STRUCTURE_TYPE_EM          Electron Miscroscopy
+      STRUCTURE_TYPE_EM          Electron Microscopy
       STRUCTURE_TYPE_SOLSCAT     Solution Scattering
       STRUCTURE_TYPE_IR          Infra-red Spectroscopy
       STRUCTURE_TYPE_POWDER      Powder Diffraction
@@ -406,6 +407,7 @@ BOOL blGetExptlWholePDB(WHOLEPDB *wpdb, REAL *resolution, REAL *RFactor,
 
 
 -  07.07.14 Use bl prefix for functions By: CTP
+-  16.04.21 Corrected spelling of Microscopy!
 */
 char *blReportStructureType(int StrucType)
 {
@@ -436,7 +438,7 @@ char *blReportStructureType(int StrucType)
       return("Neutron Scattering");
       break;
    case STRUCTURE_TYPE_EM:
-      return("Electron Miscroscopy");
+      return("Electron Misroscopy");
       break;
    case STRUCTURE_TYPE_SOLSCAT:
       return("Solution Scattering");
