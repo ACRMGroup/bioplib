@@ -3,13 +3,13 @@
 
    \file       PDB2Seq.c
    
-   \version    V1.15
+   \version    V1.16
    \date       01.12.15
    \brief      Conversion from PDB to sequence and other sequence
                related routines
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
-   \author     Dr. Andrew C. R. Martin
+   \copyright  (c) UCL / Prof. Andrew C. R. Martin 1993-2021
+   \author     Prof. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
                University College London,
@@ -68,6 +68,7 @@
 -  V1.13 04.02.14 Use CHAINMATCH By: CTP
 -  V1.14 07.07.14 Use bl prefix for functions By: CTP
 -  V1.15 01.12.15 Added blDoPDB2SeqByChain()  By: ACRM
+-  V1.16 03.11.21 HETATM PCA now handled as Q
 
 *************************************************************************/
 /* Doxygen
@@ -142,6 +143,7 @@
             bug with CA-only chains where it was undercounting by 1
 -  04.02.14 Use CHAINMATCH By: CTP
 -  07.07.14 Use bl prefix for functions By: CTP
+-  03.11.21 HETATM/PCA -> Q  By: ACRM
 */
 char *blDoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
 {
@@ -170,10 +172,14 @@ char *blDoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
       if(p->resnum != resnum || p->insert[0] != insert)
       {
          if(strncmp(p->resnam,"NTER",4) && 
-            strncmp(p->resnam,"CTER",4) &&
-            !strncmp(p->record_type,"ATOM  ",6))   /* V1.7              */
-            rescount++;
-            
+            strncmp(p->resnam,"CTER",4))
+         {
+            if(!strncmp(p->record_type,"ATOM  ",6) ||
+               (!strncmp(p->record_type,"HETATM",6) &&
+                !strncmp(p->resnam,"PCA",3)))
+               rescount++;
+         }
+         
          resnum = p->resnum;
          insert = p->insert[0];
          
@@ -197,10 +203,27 @@ char *blDoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
 
    /* Skip an NTER residue                                              */
    /* 24.01.96 Added NULL check; occurs when no ATOM records present    */
+/*
    while(p!=NULL && 
          (!strncmp(p->resnam,"NTER",4) || 
           strncmp(p->record_type,"ATOM  ",6))) 
       NEXT(p);
+*/
+
+   /* Skip non-residues at the start                                    */
+   while(p!=NULL)
+   {
+      /* Jump out if this is an ATOM, but not NTER                      */
+      if(!strncmp(p->record_type,"ATOM  ",6) &&
+         strncmp(p->resnam,"NTER", 4))
+         break;
+      /* Jump out if this is a HETATM/PCA                               */
+      if(!strncmp(p->record_type,"HETATM",6) &&
+         !strncmp(p->resnam,"PCA",3))
+         break;
+      NEXT(p);
+   }
+   
    if(p==NULL)
    {
       sequence[0] = '\0';
@@ -225,7 +248,9 @@ char *blDoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
 
    for(p=p->next; p!=NULL; NEXT(p))
    {
-      if(!strncmp(p->record_type,"ATOM  ",6))    /* V1.7                */
+      if(!strncmp(p->record_type,"ATOM  ",6) ||
+         (!strncmp(p->record_type,"HETATM",6) &&
+          !strncmp(p->resnam,"PCA ",3)))
       {
          if(p->resnum != resnum || p->insert[0] != insert)
          {
@@ -290,6 +315,7 @@ char *blDoPDB2Seq(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, BOOL NoX)
    X handle Asx/Glx as B/Z rather than as X
    
 -  30.11.15 Original based on blDoPDB2Seq()    By: ACRM
+-  03.11.21 HETATM/PCA -> Q
 */
 HASHTABLE *blDoPDB2SeqByChain(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly, 
                               BOOL NoX)
@@ -325,8 +351,10 @@ HASHTABLE *blDoPDB2SeqByChain(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly,
    /* Step through the PDB linked list                                  */
    for(p=pdb; p!=NULL; NEXT(p))
    {
-      /* Only interested in ATOM records                                */
-      if(!strncmp(p->record_type, "ATOM  ", 6))
+      /* Only interested in ATOM records and HETATM/PCA                 */
+      if(!strncmp(p->record_type, "ATOM  ", 6) ||
+         (!strncmp(p->record_type, "HETATM", 6) &&
+          !strncmp(p->resnam, "PCA ", 4)))
       {
          /* If chain has changed                                        */
          if(!CHAINMATCH(p->chain, lastchain))
@@ -365,7 +393,8 @@ HASHTABLE *blDoPDB2SeqByChain(PDB *pdb, BOOL DoAsxGlx, BOOL ProtOnly,
                if(nres >= ArraySize) 
                {
                   ArraySize += ALLOCSIZE;
-                  if((sequence=(char *)realloc(sequence, ArraySize))==NULL) 
+                  if((sequence=(char *)realloc(sequence, ArraySize))
+                     == NULL) 
                   {
                      blFreeHash(hash);
                      return(NULL);
@@ -422,18 +451,13 @@ int main(int argc, char **argv)
             
             for(i=0; chains[i]!=NULL; i++)
             {
-               printf("%s : %s\n", chains[i], blGetHashValueString(seq2, chains[i]));
+               printf("%s : %s\n", chains[i],
+                      blGetHashValueString(seq2, chains[i]));
             }
             
             blFreeHashKeyList(chains);
          }
-         
-         
       }
-      
-
-
-      
    }
    return(0);
 }
