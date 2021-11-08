@@ -3,12 +3,12 @@
 
    \file       BuildConect.c
    
-   \version    V1.6
-   \date       29.08.18
+   \version    V1.7
+   \date       05.11.21
    \brief      Build connectivity information in PDB linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 2002-2018
-   \author     Dr. Andrew C. R. Martin
+   \copyright  (c) UCL / Prof. Andrew C. R. Martin 2002-2021
+   \author     Prof. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
                University College London,
@@ -55,6 +55,7 @@
 -  V1.4  22.07.15 Added blIsConnected()
 -  V1.5  03.10.16 Added <stdlib.h>
 -  V1.6  29.08.18 Added check on MAXCONECT in blDeleteAConectByNum()
+-  V1.7  05.11.21 blIsBonded() checks for dummy coordinates
 
 *************************************************************************/
 /* Doxygen
@@ -323,10 +324,20 @@ BOOL blBuildConectData(PDB *pdb, REAL tol)
 
 -  19.02.15  Original   By: ACRM
 -  26.02.15  Added tol parameter. Changed to used squared distances
+-  05.11.21  Added check on dummy coordinates
 */
 BOOL blIsBonded(PDB *p, PDB *q, REAL tol)
 {
    REAL r1, r2, bondDist;
+
+   if(((p->x > 9999.0) &&
+       (p->y > 9999.0) &&
+       (p->z > 9999.0)) ||
+      ((q->x > 9999.0) &&
+       (q->y > 9999.0) &&
+       (q->z > 9999.0)))
+      return(FALSE);
+      
    r1 = findCovalentRadius(p->element);
    r2 = findCovalentRadius(q->element);
    bondDist = (r1+r2+tol);
