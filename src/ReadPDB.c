@@ -392,46 +392,31 @@ extern FILE *popen(const char *, const char *);
 extern int pclose(FILE *);
 #endif
 
+
+/************************************************************************/
+/* These two functions get around what appears to be an optimizer bug
+   in some versions of GCC when used with -O3
+   Taking out -O3 works fine with all compilers
+   gcc version 8.3.1 20190223 (Red Hat 8.3.1-2) works fine
+
+   gcc version 4.8.5 20150623 (Red Hat 4.8.5-44) doesn't
+   gcc version 11.2.0 (compiled from scratch) doesn't
+   gcc version 4.4.7 20120313 (Red Hat 4.4.7-23) doesn't
+*/
+#ifdef __GCC__
+static inline
+#endif
 int mystrcmp(char *one, char *two)
 {
-#ifdef OPTIMIZER_PROBLEM
-   char *chp1 = one,
-        *chp2 = two;
-   while((*chp1 != '\0') && (*chp2 != '\0'))
-   {
-      if(*chp1 != *chp2)
-         return(1);
-      
-      chp1++;
-      chp2++;
-   }
-   if(((chp1=='\0') && (chp2!='\0')) ||
-      ((chp2=='\0') && (chp1!='\0')))
-   {
-      return(1);
-   }
-   
-   return(0);
-#else
    return(strcmp(one, two));
-#endif
 }
 
+#ifdef __GCC__
+static inline
+#endif
 int mystrncmp(char *one, char *two, int count)
 {
-#ifdef OPTIMIZER_PROBLEM
-   int  pos   = 0;
-   
-   for(pos=0; pos<count; pos++)
-   {
-      if(one[pos] != two[pos])
-         return(1);
-   }
-   
-   return(0);
-#else
    return(strncmp(one, two, count));
-#endif   
 }
 
 
