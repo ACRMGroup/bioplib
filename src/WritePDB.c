@@ -3,12 +3,12 @@
 
    \file       WritePDB.c
    
-   \version    V1.31
-   \date       07.08.18
+   \version    V1.32
+   \date       17.11.21
    \brief      Write a PDB file from a linked list
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2018
-   \author     Dr. Andrew C. R. Martin
+   \copyright  (c) UCL / Prof. Andrew C. R. Martin 1993-2021
+   \author     Prof. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
                University College London,
@@ -115,6 +115,7 @@
 -  V1.30 09.02.18 Corrected calls to ABS() in formal charges By: ACRM
 -  V1.31 07.08.18 Increased text buffer sizes to silence gcc 7.3.1 
                   with -O2
+-  V1.32 17.11.21 Added blCreateSEQRES()
 
 *************************************************************************/
 /* Doxygen
@@ -169,11 +170,20 @@
 
    #FUNCTION  blWriteTerCard()
    Prints a complete new PDB format TER card
+
+   #FUNCTION  blCreateSEQRES()
+   Creates a sting list of SEQRES records in PDB format from the ATOM
+   records.
+
+   #FUNCTION  blReplacePDBHeader()
+   Looks for a given record type in the PDB header of a WPDB structure and
+   replaces it with the provided STRINGLIST.
 */
 /************************************************************************/
-/* Defines required for includes
+/* Defines and macros
 */
-#define WRITEPDB_MAIN
+#define WRITEPDB_MAIN  /* Required for includes */
+#define MAXBUFF  160
 
 /************************************************************************/
 #include <stdio.h>
@@ -194,6 +204,7 @@
 #include "macros.h"
 #include "hash.h"
 #include "fsscanf.h"
+#include "seq.h"
 
 /************************************************************************/
 /* Prototypes
@@ -2194,3 +2205,181 @@ static STRINGLIST **ReadSeqresResidueListWholePDB(WHOLEPDB *wpdb,
    FREELIST(seqres, STRINGLIST);
    return(residuelist);
 }
+
+
+/************************************************************************/
+/*>STRINGLIST *blCreateSEQRES(PDB *pdb)
+   ------------------------------------
+*//**
+   \param[in]   *pdb   Start of PDB linked list
+   \return             STRINGLIST linked list of SEQRES data
+
+   Creates a linked list of strings representing the SEQRES data
+
+   17.11.21  Original   By: ACRM
+*/
+STRINGLIST *blCreateSEQRES(PDB *pdb)
+{
+   HASHTABLE  *seqByChain = NULL;
+   STRINGLIST *seqres     = NULL;
+   int        nChains     = 0;
+   char       **chains    = NULL,
+              buffer[MAXBUFF],
+              aa[8];
+   
+   if((seqByChain = blPDB2SeqXByChain(pdb))!=NULL)
+   {
+      if((chains = blGetPDBChainLabels(pdb, &nChains))==NULL)
+      {
+         return(NULL);
+      }
+      else
+      {
+         int i;
+         
+         for(i=0; i<nChains; i++)
+         {
+            int  chainLen,
+                 lineNum   = 1,
+                 resNum    = 0;
+            char *sequence = NULL;
+            BOOL Stored    = TRUE;
+
+            sequence = blGetHashValueString(seqByChain, chains[i]);
+            if(sequence != NULL)
+            {
+               chainLen = strlen(sequence);
+               for(resNum=0; resNum<chainLen; resNum++)
+               {
+                  if(!(resNum%13))
+                  {
+                     if(!Stored)
+                     {
+                        strcat(buffer, "\n");
+                        seqres = blStoreString(seqres, buffer);
+                        Stored = TRUE;
+                     }
+                     
+                     sprintf(buffer, "SEQRES%4d %c%5d  ",
+                             lineNum++,
+                             chains[i][0],
+                             chainLen);
+                  }
+                  sprintf(aa, "%-4s", blOnethr(sequence[resNum]));
+                  strcat(buffer, aa);
+                  Stored = FALSE;
+               }
+               if(!Stored)
+               {
+                  strcat(buffer, "\n");
+                  seqres = blStoreString(seqres, buffer);
+                  Stored = TRUE;
+               }
+            }
+         }
+      }
+   }
+   
+   if(seqByChain != NULL)
+      blFreeHash(seqByChain);
+   
+   return(seqres);
+}
+
+
+/************************************************************************/
+/*>void blReplacePDBHeader(WHOLEPDB *wpdb, char *recordType,
+                           STRINGLIST *replacement)
+   ---------------------------------------------------------
+*//**
+   \param[in,out]   *wpdb        Pointer to WHOLEPDB structure
+   \param[in]       *recordType  Record type we wish to replace
+   \param[in]       *replacement Pointer to STRINGLIST containig 
+                                 replacement headers.
+
+   Takes the header information from a WHOLEPDB structure and searches 
+   for a given record type. This is then replaced with the provided
+   STRINGLIST.
+
+   Can be used after blCreateSEQRES() to replace the SEQRES records
+
+   17.11.21   Original   By: ACRM
+*/
+void blReplacePDBHeader(WHOLEPDB *wpdb, char *recordType,
+                        STRINGLIST *replacement)
+{
+   STRINGLIST *s,
+              *previousRecord = NULL,
+              *firstRecord    = NULL,
+              *prev           = NULL,
+              *next           = NULL,
+              *nextRecord     = NULL;
+   BOOL       gotHeader       = FALSE;
+
+   /* Find the records before and after the type we are looking for     */
+   for(s=wpdb->header; s!=NULL; NEXT(s))
+   {
+      if(!strncmp(s->string, recordType, 6))
+      {
+         if(!gotHeader)
+         {
+            /* This is the first record of the header type we are
+               looking for
+            */
+            firstRecord    = s;
+            previousRecord = prev;
+            gotHeader      = TRUE;
+         }
+      }
+      else if(gotHeader)
+      {
+         /* This is the first record after the geader type we are
+            looking for
+         */
+         nextRecord = s;
+         break;
+      }
+      prev = s;
+   }
+
+   /* Return if we didn't find the relevant header                      */
+   if(!gotHeader)
+      return;
+
+   /* Free the ones we don't need                                       */
+   for(s=firstRecord; s!=nextRecord; s=next)
+   {
+      next = s->next;
+      FREE(s->string);
+      FREE(s);
+   }
+
+   /* Patch in the replacement                                          */
+   if(replacement != NULL)
+   {
+      if(previousRecord == NULL)
+      {
+         wpdb->header = replacement;
+      }
+      else
+      {
+         previousRecord->next = replacement;
+      }
+      
+      s=replacement;
+      LAST(s);
+      s->next = nextRecord;
+   }
+   else  /* No replacement: just link the record before to the one after*/
+   {
+      if(previousRecord == NULL)
+      {
+         wpdb->header = nextRecord;
+      }
+      else
+      {
+         previousRecord->next = nextRecord;
+      }
+   }
+}
+

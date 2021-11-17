@@ -3,12 +3,12 @@
 
    \file       RenumAtomsPDB.c
    
-   \version    V1.5
-   \date       29.04.15
+   \version    V1.6
+   \date       17.11.21
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2015
-   \author     Dr. Andrew C. R. Martin
+   \copyright  (c) UCL / Prof. Andrew C. R. Martin 1993-2021
+   \author     Prof. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
                University College London,
@@ -54,13 +54,20 @@
                   numbering
 -  V1.5  29.04.15 Increment atom number at start of HETATM records.
                   By: CTP
+-  V1.6  17.11.21 Added blRenumResiduesPDB()   By: ACRM
+
 *************************************************************************/
 /* Doxygen
    -------
    #GROUP    Handling PDB Data
    #SUBGROUP Manipulating the PDB linked list
+
    #FUNCTION  blRenumAtomsPDB()
    Renumber the atoms throughout a PDB linked list
+
+   #FUNCTION  blRenumResiduesPDB()
+   Renumber the residues in each chain of a PDB linked list
+
 */
 /************************************************************************/
 /* Includes
@@ -125,4 +132,50 @@ void blRenumAtomsPDB(PDB *pdb, int offset)
       prev=p;
    }
 }
+
+
+/************************************************************************/
+/*>void blRenumResiduesPDB(PDB *pdb, int offset)
+   ---------------------------------------------
+*/ /**
+   \param[in,out]  *pdb     Pointer to start of PDB linked list
+   \param[in]      offset   Start number for each chain
+
+   Renumber residues in a PDB file starting at 'offset' for each chain.
+   Renumbering is based on change in current number, insert code or chain.
+
+   17.11.21 Original   By: ACRM
+**/
+void blRenumResiduesPDB(PDB *pdb, int offset)
+{
+   PDB *p,
+       *prev      = pdb;
+   int resnum     = offset,
+       prevResnum = pdb->resnum;
+   
+   for(p=pdb; p!=NULL; NEXT(p))
+   {
+      if(!CHAINMATCH(p->chain, prev->chain))
+      {
+         resnum = offset;
+      }
+      else if((p->resnum != prevResnum) ||
+              !INSERTMATCH(p->insert, prev->insert)
+             )
+      {
+         resnum++;
+      }
+
+      prevResnum = p->resnum;
+      prev       = p;
+      p->resnum  = resnum;
+   }
+
+   for(p=pdb; p!=NULL; NEXT(p))
+   {
+      p->insert[0] = ' ';
+      p->insert[1] = '\0';
+   }
+}
+
 

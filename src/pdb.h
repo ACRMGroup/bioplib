@@ -3,12 +3,12 @@
 
    \file       pdb.h
    
-   \version    V1.97
-   \date       26.06.19
+   \version    V1.98
+   \date       17.11.21
 
    \brief      Include file for PDB routines
    
-   \copyright  (c) UCL / Prof. Andrew C. R. Martin, UCL, Reading 1993-2019
+   \copyright  (c) UCL / Prof. Andrew C. R. Martin, UCL, Reading 1993-2021
    \author     Prof. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -223,6 +223,9 @@
 -  V1.96 30.09.17 Added blDeleteResiduePDB()
 -  V1.97 26.06.19 Added *blForceExtractNotZonePDBAsCopy() and
                   blForceExtractNotZoneSpecPDBAsCopy()
+-  V1.98 17.11.21 Added blFixSequence(), blRenumResiduesPDB(), 
+                  blCreateSEQRES(), blReplacePDBHeader()
+
 
 *************************************************************************/
 #ifndef _PDB_H
@@ -842,6 +845,14 @@ void blFindOriginalResType(char *orig, char *new, MODRES *modres);
 BIOMOLECULE *blGetBiomoleculeWholePDB(WHOLEPDB *wpdb);
 void blFreeBiomolecule(BIOMOLECULE *biomolecule);
 STRINGLIST *blSetPDBAtomTypes(PDB *pdb);
+char *blFixSequence(char *seqresSequence, char *atomSequence,
+                    char **seqresChains, char **atomChains,
+                    char **outchains, BOOL IgnoreSEQRES, int nAtomChains,
+                    BOOL upper, BOOL quiet, char *label);
+void blRenumResiduesPDB(PDB *pdb, int offset);
+STRINGLIST *blCreateSEQRES(PDB *pdb);
+void blReplacePDBHeader(WHOLEPDB *wpdb, char *recordType,
+                        STRINGLIST *replacement);
 
 /************************************************************************/
 /* Include deprecated functions                                         */
