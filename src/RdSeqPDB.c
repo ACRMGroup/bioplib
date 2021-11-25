@@ -83,7 +83,7 @@
 #define safetolower(x) ((isupper(x))?tolower(x):(x))
 #define MAXBUFF   160
 #define MAXCHAINS 240
-#define GAPPEN    2
+#define GAPPEN    1
 
 /************************************************************************/
 /* Globals
@@ -399,9 +399,11 @@ static STRINGLIST *RdSeqResHeader(WHOLEPDB *wpdb)
 
 
 /************************************************************************/
-/*>char *blFixSequence(char *seqresSequence, char *atomSequence, 
+/*>char *blFixSequence(char *seqresSequence, char *atomSequence,
                        char **seqresChains, char **atomChains,
-                       char **outchains, BOOL IgnoreSEQRES, int nAtomChains)
+                       char **outChains, BOOL IgnoreSEQRES, 
+                       int nAtomChains, BOOL upper, BOOL quiet, 
+                       char *label)
    -----------------------------------------------------------------------
 *//**
    \param[in]  *seqresSequence   Sequence extracted from SEQRES records 
@@ -410,10 +412,13 @@ static STRINGLIST *RdSeqResHeader(WHOLEPDB *wpdb)
                                  with a * separating each chain
    \param[in]  **seqresChains    Chain labels for SEQRES
    \param[in]  **atomChains      Chain labels for ATOMS
-   \param[out] **outchains       Output chain labels
+   \param[out] **outChains       Output chain labels
    \param[in]  IgnoreSEQRES      Ignore SEQRES records for completely
                                  missing chains
    \param[in]  nAatomChains      Number of ATOM chains
+   \param[in]  upper             Make output sequence all uppercase
+   \param[in]  quiet             No warnings about missing residues
+   \param[in]  label             Label to use in warnings (or NULL)
    \return                       Corrected sequence combining ATOM and
                                  SEQRES records (malloc'd)
 
@@ -433,7 +438,7 @@ static STRINGLIST *RdSeqResHeader(WHOLEPDB *wpdb)
 */
 char *blFixSequence(char *seqresSequence, char *atomSequence,
                     char **seqresChains, char **atomChains,
-                    char **outchains, BOOL IgnoreSEQRES, int nAtomChains,
+                    char **outChains, BOOL IgnoreSEQRES, int nAtomChains,
                     BOOL upper, BOOL quiet, char *label)
 {
    int  i, j, len, len1, len2,
@@ -457,7 +462,7 @@ char *blFixSequence(char *seqresSequence, char *atomSequence,
    {
       for(i=0; i<nAtomChains; i++)
       {
-         strcpy(outchains[i], atomChains[i]);
+         strcpy(outChains[i], atomChains[i]);
       }
       return(strdup(atomSequence));
    }
@@ -478,7 +483,7 @@ char *blFixSequence(char *seqresSequence, char *atomSequence,
    {
       for(i=0; i<nAtomChains; i++)
       {
-         strcpy(outchains[i], seqresChains[i]);
+         strcpy(outChains[i], seqresChains[i]);
       }
       return(strdup(atomSequence));
    }
@@ -537,7 +542,7 @@ char *blFixSequence(char *seqresSequence, char *atomSequence,
          {
             DoneSEQRES[i] = TRUE;
             DoneATOM[j]   = TRUE;
-            strcpy(outchains[NOutChain++], seqresChains[i]);
+            strcpy(outChains[NOutChain++], seqresChains[i]);
             
             if(!strcmp(seqs[0][i], seqs[1][j]))
             {
@@ -639,7 +644,7 @@ char *blFixSequence(char *seqresSequence, char *atomSequence,
          
          strcat(outseq,seqs[1][i]);
          strcat(outseq,"*");
-         strcpy(outchains[NOutChain++], atomChains[i]);
+         strcpy(outChains[NOutChain++], atomChains[i]);
       }
    }
 
@@ -681,7 +686,7 @@ char *blFixSequence(char *seqresSequence, char *atomSequence,
             
             strcat(outseq,seqs[0][i]);
             strcat(outseq,"*");
-            strcpy(outchains[NOutChain++], seqresChains[i]);
+            strcpy(outChains[NOutChain++], seqresChains[i]);
             
             if(!quiet)
             {
