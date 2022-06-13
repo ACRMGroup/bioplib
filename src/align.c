@@ -3,12 +3,12 @@
 
    \file       align.c
    
-   \version    V3.7
-   \date       02.05.18
+   \version    V3.8
+   \date       13.06.22
    \brief      Perform Needleman & Wunsch sequence alignment
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1993-2018
-   \author     Dr. Andrew C. R. Martin
+   \copyright  (c) UCL / Prof. Andrew C. R. Martin 1993-2022
+   \author     Prof. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
                University College London,
@@ -84,6 +84,7 @@
                   blCalcMDMScoreUC() to silence warnings. Warnings now
                   go to stderr
 -  V3.7  02.05.18 Added blFreeMDM()
+-  V3.8  13.06.22 Added blAffinealignWindow() and blAffinealignucWindow()
 
 *************************************************************************/
 /* Doxygen
@@ -99,9 +100,18 @@
    Perform simple N&W alignment of seq1 and seq2 with separate gap
    opening and extension penalties
 
+   #FUNCTION blAffinealignWindow()
+   Perform simple N&W alignment of seq1 and seq2 with separate gap
+   opening and extension penalties and a window size
+
    #FUNCTION blAffinealignuc()
    Perform simple N&W alignment of seq1 and seq2 with separate gap
    opening and extension penalties. Optimized for DNA sequences
+
+   #FUNCTION blAffinealignucWindow()
+   Perform simple N&W alignment of seq1 and seq2 with separate gap
+   opening and extension penalties and a window size. Optimized for 
+   DNA sequences
 
    #FUNCTION blReadMDM()
    Read mutation data matrix into static global arrays for use by 
@@ -260,22 +270,7 @@ int blAlign(char *seq1,
    The easy way to do this is to ensure that align1 and align2 are
    of length (length1+length2).
 
--  07.10.92 Adapted from original written while at NIMR
--  08.10.92 Split into separate routines
--  09.10.92 Changed best structure to simple integers, moved 
-            SearchForBest() into TraceBack()
--  21.08.95 Was only filling in the bottom right cell at initialisation
-            rather than all the right hand column and bottom row
--  11.07.96 Changed calls to calcscore() to CalcMDMScore()
--  06.03.00 Changed name to affinealign() (the routine align() is
-            provided as a backwards compatible wrapper). Added penext 
-            parameter. Now supports affine gap penalties with separate
-            opening and extension penalties. The code now maintains
-            the path as it goes.
--  07.07.14 Use bl prefix for functions By: CTP
-**************************************************************************
-******   NOTE AND CHANGES SHOULD BE PROPAGATED TO affinealignuc()   ******
-**************************************************************************
+-  13.06.22 Now a wrapper to blAffinealignWindow()  By: ACRM
 */
 int blAffinealign(char *seq1, 
                   int  length1, 
@@ -289,6 +284,78 @@ int blAffinealign(char *seq1,
                   char *align2,
                   int  *align_len)
 {
+   return blAffinealignWindow(seq1, length1, 
+                              seq2, length2, 
+                              verbose, identity, 
+                              penalty, penext, 0, /* window */
+                              align1, 
+                              align2,
+                              align_len);
+}
+
+
+/************************************************************************/
+/*>int blAffinealignWindow(char *seq1, int length1, 
+                           char *seq2, int length2, 
+                           BOOL verbose, BOOL identity, 
+                           int penalty, int penext, int window,
+                           char *align1, char *align2, int *align_len)
+   -----------------------------------------------------------------------
+*//**
+
+   \param[in]     *seq1         First sequence
+   \param[in]     length1       First sequence length
+   \param[in]     *seq2         Second sequence
+   \param[in]     length2       Second sequence length
+   \param[in]     verbose       Display N&W matrix
+   \param[in]     identity      Use identity matrix
+   \param[in]     penalty       Gap insertion penalty value
+   \param[in]     penext        Extension penalty
+   \param[in]     window        Window size (0: no window)
+   \param[out]    *align1       Sequence 1 aligned
+   \param[out]    *align2       Sequence 2 aligned
+   \param[out]    *align_len    Alignment length
+   \return                      Alignment score (0 on error)
+            
+   Perform simple N&W alignment of seq1 and seq2.
+
+   Note that you must allocate sufficient memory for the aligned 
+   sequences.
+   The easy way to do this is to ensure that align1 and align2 are
+   of length (length1+length2).
+
+-  07.10.92 Adapted from original written while at NIMR
+-  08.10.92 Split into separate routines
+-  09.10.92 Changed best structure to simple integers, moved 
+            SearchForBest() into TraceBack()
+-  21.08.95 Was only filling in the bottom right cell at initialisation
+            rather than all the right hand column and bottom row
+-  11.07.96 Changed calls to calcscore() to CalcMDMScore()
+-  06.03.00 Changed name to affinealign() (the routine align() is
+            provided as a backwards compatible wrapper). Added penext 
+            parameter. Now supports affine gap penalties with separate
+            opening and extension penalties. The code now maintains
+            the path as it goes.
+-  07.07.14 Use bl prefix for functions By: CTP
+-  13.06.22 Renamed and added window parameter  By: ACRM
+
+**************************************************************************
+******   NOTE AND CHANGES SHOULD BE PROPAGATED TO affinealignuc()   ******
+**************************************************************************
+*/
+int blAffinealignWindow(char *seq1, 
+                        int  length1, 
+                        char *seq2, 
+                        int  length2, 
+                        BOOL verbose, 
+                        BOOL identity, 
+                        int  penalty, 
+                        int  penext,
+                        int  window,
+                        char *align1, 
+                        char *align2,
+                        int  *align_len)
+{
    XY    **dirn   = NULL;
    int   **matrix = NULL,
          maxdim,
@@ -301,16 +368,23 @@ int blAffinealign(char *seq1,
          gapext,
          score;
 
-   int window=1000000;
    
+   /* Find maximum dimension                                            */
    maxdim = MAX(length1, length2);
    
+   /* If window size is zero then set it to no window                   */
+   if(window<=0)
+   {
+      window = maxdim;
+   }
+
    /* Initialise the score matrix                                       */
    if((matrix = (int **)blArray2D(sizeof(int), maxdim, maxdim))==NULL)
       return(0);
    if((dirn   = (XY **)blArray2D(sizeof(XY), maxdim, maxdim))==NULL)
       return(0);
       
+
    for(i=0;i<maxdim;i++)
    {
       for(j=0;j<maxdim;j++)
@@ -320,7 +394,7 @@ int blAffinealign(char *seq1,
          dirn[i][j].y = -1;
       }
    }
-    
+
    /* Fill in scores up the right hand side of the matrix               */
    for(j=0; j<length2; j++)
    {
@@ -575,6 +649,57 @@ int blAffinealign(char *seq1,
    The easy way to do this is to ensure that align1 and align2 are
    of length (length1+length2).
 
+-  13.06.22 Now a wrapper to blAffinealignnucWindow()  By: ACRM
+*/
+int blAffinealignuc(char *seq1, 
+                    int  length1, 
+                    char *seq2, 
+                    int  length2, 
+                    BOOL verbose, 
+                    BOOL identity, 
+                    int  penalty, 
+                    int  penext,
+                    char *align1, 
+                    char *align2,
+                    int  *align_len)
+{
+   return(blAffinealignucWindow(seq1, length1, seq2, length2, 
+                                verbose, identity, 
+                                penalty, penext, 0, /* window */
+                                align1, align2, align_len));
+}
+
+
+/************************************************************************/
+/*>int blAffinealignucWindow(char *seq1, int length1, 
+                             char *seq2, int length2, 
+                             BOOL verbose, BOOL identity, 
+                             int penalty, int penext, int window,
+                             char *align1, char *align2, int *align_len)
+   ---------------------------------------------------------------------
+*//**
+
+   \param[in]     *seq1         First sequence
+   \param[in]     length1       First sequence length
+   \param[in]     *seq2         Second sequence
+   \param[in]     length2       Second sequence length
+   \param[in]     verbose       Display N&W matrix
+   \param[in]     identity      Use identity matrix
+   \param[in]     penalty       Gap insertion penalty value
+   \param[in]     penext        Extension penalty
+   \param[in]     window        Window size (0: now window)
+   \param[out]    *align1       Sequence 1 aligned
+   \param[out]    *align2       Sequence 2 aligned
+   \param[out]    *align_len    Alignment length
+   \return                      Alignment score (0 on error)
+            
+   Perform simple N&W alignment of seq1 and seq2. 
+
+   Note that you must allocate sufficient memory for the aligned 
+   sequences.
+   The easy way to do this is to ensure that align1 and align2 are
+   of length (length1+length2).
+
 -  07.10.92 Adapted from original written while at NIMR
 -  08.10.92 Split into separate routines
 -  09.10.92 Changed best structure to simple integers, moved 
@@ -590,22 +715,24 @@ int blAffinealign(char *seq1,
 -  27.02.07 Exactly as affinealign() but upcases characters before
             comparison
 -  07.07.14 Use bl prefix for functions By: CTP
+-  13.06.22 Added window parameter and renamed to blAffinealignnucWindow()
 
 **************************************************************************
 ******    NOTE AND CHANGES SHOULD BE PROPAGATED TO affinealign()    ******
 **************************************************************************
 */
-int blAffinealignuc(char *seq1, 
-                    int  length1, 
-                    char *seq2, 
-                    int  length2, 
-                    BOOL verbose, 
-                    BOOL identity, 
-                    int  penalty, 
-                    int  penext,
-                    char *align1, 
-                    char *align2,
-                    int  *align_len)
+int blAffinealignucWindow(char *seq1, 
+                          int  length1, 
+                          char *seq2, 
+                          int  length2, 
+                          BOOL verbose, 
+                          BOOL identity, 
+                          int  penalty, 
+                          int  penext,
+                          int  window,
+                          char *align1, 
+                          char *align2,
+                          int  *align_len)
 {
    XY    **dirn   = NULL;
    int   **matrix = NULL,
@@ -618,11 +745,16 @@ int blAffinealignuc(char *seq1,
          thisscore,
          gapext,
          score;
-   int   window = 300;
-
    
+   /* Find maximum dimension                                            */
    maxdim = MAX(length1, length2);
    
+   /* If window size is zero then set it to no window                   */
+   if(window<=0)
+   {
+      window = maxdim;
+   }
+
    /* Initialise the score matrix                                       */
    if((matrix = (int **)blArray2D(sizeof(int), maxdim, maxdim))==NULL)
       return(0);

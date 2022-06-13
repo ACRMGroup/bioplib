@@ -3,12 +3,12 @@
 
    \file       seq.h
    
-   \version    V2.17
-   \date       02.05.18
+   \version    V2.18
+   \date       13.06.22
    \brief      Header file for sequence handling
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 1991-2018
-   \author     Dr. Andrew C. R. Martin
+   \copyright  (c) UCL / Prof. Andrew C. R. Martin 1991-2022
+   \author     Prof. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
                University College London,
@@ -70,6 +70,7 @@
 -  V2.16 30.11.15 Added wrapper macros for blDoPDB2SeqByChain() and 
                   prototype
 -  V2.17 02.05.18 Added blFreeMDM()
+-  V2.18 13.06.22 Added blAffinealignWindow() and blAffinealignucWindow()
 
 *************************************************************************/
 #ifndef _SEQ_H
@@ -142,10 +143,18 @@ int blAlign(char *seq1, int  length1, char *seq2, int  length2,
 int blAffinealign(char *seq1, int  length1, char *seq2, int  length2, 
                   BOOL verbose, BOOL identity, int  penalty, int penext,
                   char *align1, char *align2, int  *align_len);
+int blAffinealignWindow(char *seq1, int  length1, char *seq2, int  length2, 
+                        BOOL verbose, BOOL identity,
+                        int  penalty, int penext, int window,
+                        char *align1, char *align2, int  *align_len);
 int blCalcMDMScore(char resa, char resb);
 int blAffinealignuc(char *seq1, int  length1, char *seq2, int  length2, 
                     BOOL verbose, BOOL identity, int  penalty, int penext,
                     char *align1, char *align2, int  *align_len);
+int blAffinealignucWindow(char *seq1, int  length1, char *seq2, int  length2, 
+                          BOOL verbose, BOOL identity,
+                          int  penalty, int penext, int window,
+                          char *align1, char *align2, int  *align_len);
 int blCalcMDMScoreUC(char resa, char resb);
 BOOL blReadMDM(char *mdmfile);
 void blFreeMDM(void);
