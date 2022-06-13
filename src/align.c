@@ -300,6 +300,8 @@ int blAffinealign(char *seq1,
          thisscore,
          gapext,
          score;
+
+   int window=1000000;
    
    maxdim = MAX(length1, length2);
    
@@ -365,7 +367,9 @@ int blAffinealign(char *seq1,
          else                 right = matrix[i1+2][j+1] - penalty;
          
          gapext = 1;
-         for(k = i1+3; k<length1; k++, gapext++)
+         for(k = i1+3;
+             ((k<length1) && (k < i1+3+window));
+              k++, gapext++)
          {
             thisscore = matrix[k][j+1] - (penalty + gapext*penext);
             
@@ -382,7 +386,9 @@ int blAffinealign(char *seq1,
          else                down   = matrix[i1+1][j+2] - penalty;
          
          gapext = 1;
-         for(l = j+3; l<length2; l++, gapext++)
+         for(l = j+3;
+             ((l<length2) && (l < j+3+window));
+             l++, gapext++)
          {
             thisscore = matrix[i1+1][l] - (penalty + gapext*penext);
 
@@ -439,7 +445,9 @@ int blAffinealign(char *seq1,
          else                 right = matrix[i+2][j1+1] - penalty;
 
          gapext = 1;
-         for(k = i+3; k<length1; k++, gapext++)
+         for(k = i+3;
+             ((k<length1) && (k < i+3+window));
+             k++, gapext++)
          {
             thisscore = matrix[k][j1+1] - (penalty + gapext*penext);
             
@@ -456,7 +464,9 @@ int blAffinealign(char *seq1,
          else                 down = matrix[i+1][j1+2] - penalty;
 
          gapext = 1;
-         for(l = j1+3; l<length2; l++, gapext++)
+         for(l = j1+3;
+             ((l<length2) && (l < j1+3+window));
+             l++, gapext++)
          {
             thisscore = matrix[i+1][l] - (penalty + gapext*penext);
             
@@ -608,6 +618,8 @@ int blAffinealignuc(char *seq1,
          thisscore,
          gapext,
          score;
+   int   window = 300;
+
    
    maxdim = MAX(length1, length2);
    
@@ -673,7 +685,9 @@ int blAffinealignuc(char *seq1,
          else                 right = matrix[i1+2][j+1] - penalty;
          
          gapext = 1;
-         for(k = i1+3; k<length1; k++, gapext++)
+         for(k = i1+3;
+             ((k<length1) && (k < i1+3+window));
+             k++, gapext++)
          {
             thisscore = matrix[k][j+1] - (penalty + gapext*penext);
             
@@ -690,7 +704,9 @@ int blAffinealignuc(char *seq1,
          else                down   = matrix[i1+1][j+2] - penalty;
          
          gapext = 1;
-         for(l = j+3; l<length2; l++, gapext++)
+         for(l = j+3;
+             ((l<length2) && (l < j+3+window));
+             l++, gapext++)
          {
             thisscore = matrix[i1+1][l] - (penalty + gapext*penext);
 
@@ -747,7 +763,9 @@ int blAffinealignuc(char *seq1,
          else                 right = matrix[i+2][j1+1] - penalty;
 
          gapext = 1;
-         for(k = i+3; k<length1; k++, gapext++)
+         for(k = i+3;
+             ((k<length1) && (k < i+3+window));
+             k++, gapext++)
          {
             thisscore = matrix[k][j1+1] - (penalty + gapext*penext);
             
@@ -764,7 +782,9 @@ int blAffinealignuc(char *seq1,
          else                 down = matrix[i+1][j1+2] - penalty;
 
          gapext = 1;
-         for(l = j1+3; l<length2; l++, gapext++)
+         for(l = j1+3;
+             ((l<length2) && (l < j1+3+window));
+             l++, gapext++)
          {
             thisscore = matrix[i+1][l] - (penalty + gapext*penext);
             
