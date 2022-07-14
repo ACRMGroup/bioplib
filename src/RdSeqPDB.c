@@ -3,11 +3,11 @@
 
    \file       RdSeqPDB.c
    
-   \version    V1.4
-   \date       17.11.21
+   \version    V1.5
+   \date       14.07.22
    \brief      Read sequence from SEQRES records in a PDB file
    
-   \copyright  (c) UCL / Prof. Andrew C. R. Martin 1996-2021
+   \copyright  (c) UCL / Prof. Andrew C. R. Martin 1996-2022
    \author     Prof. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
@@ -46,11 +46,12 @@
 
    Revision History:
    =================
--  V1.0  14.10.96 Original   By: ACRM
--  V1.1  25.03.14 Added CHAINMATCH. By: CTP
--  V1.2  07.07.14 Use bl prefix for functions By: CTP
--  V1.3  26.02.15 Added blReadSeqresWholePDB()  By: ACRM
--  V1.4  17.11.21 Added blFixSequence()
+-  V1.0   14.10.96 Original   By: ACRM
+-  V1.1   25.03.14 Added CHAINMATCH. By: CTP
+-  V1.2   07.07.14 Use bl prefix for functions By: CTP
+-  V1.3   26.02.15 Added blReadSeqresWholePDB()  By: ACRM
+-  V1.4   17.11.21 Added blFixSequence()
+-  V1.5   14.07.22 GAPPEN in blFixSequence() now zero
 
 *************************************************************************/
 /* Doxygen
@@ -83,7 +84,7 @@
 #define safetolower(x) ((isupper(x))?tolower(x):(x))
 #define MAXBUFF   160
 #define MAXCHAINS 240
-#define GAPPEN    1
+#define GAPPEN    0
 
 /************************************************************************/
 /* Globals
