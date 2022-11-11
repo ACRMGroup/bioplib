@@ -449,6 +449,7 @@ char *blReadFASTAExtBuffer(FILE *in, char *header, int headerSize,
 
    /* Copy the existing buffer - which should be the next header        */
    strncpy(header, buffer, headerSize);
+   header[headerSize-1] = '\0';
 
    while(fgets(buffer, bufferSize, in))
    {
@@ -456,7 +457,7 @@ char *blReadFASTAExtBuffer(FILE *in, char *header, int headerSize,
       
       if(buffer[0] == '>')  /* A header                                 */
       {
-         if(seqBuffer == NULL) /* Only on first sequence                */
+         if(seqBuffer == NULL)
          {
             strncpy(header, buffer, headerSize);
          }
@@ -479,3 +480,29 @@ char *blReadFASTAExtBuffer(FILE *in, char *header, int headerSize,
 }
 
 
+#ifdef DEBUG
+#define MAXHEADER 1000
+int main(int argc, char **argv)
+{
+   FILE *fp;
+   
+   if((fp=fopen("t/pdb1yqv_0P.faa", "r"))!=NULL)
+   {
+      char *seq;
+      char header[MAXHEADER];
+      
+      while((seq = blReadFASTA(fp, header, MAXHEADER))!=NULL)
+      {
+         printf("%s\n", header);
+         printf("%s\n", seq);
+         free(seq);
+      }
+      
+      fclose(fp);
+   }
+   
+   return(0);
+   
+}
+
+#endif
