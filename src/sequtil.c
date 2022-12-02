@@ -4,10 +4,10 @@
    \file       sequtil.c
    
    \version    V1.1
-   \date       10.11.17   
+   \date       01.11.19
    \brief      Six-frame translation and FASTA handling
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin 2017-2019
+   \copyright  (c) UCL / Prof. Andrew C. R. Martin 2017-2019
    \author     Prof. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
