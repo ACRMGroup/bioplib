@@ -3,13 +3,13 @@
 
    \file       SetResnam.c
    
-   \version    V1.3
-   \date       07.07.14
+   \version    V1.4
+   \date       21.02.23
    \brief      
    
-   \copyright  (c) UCL / Dr. Andrew C. R. Martin, University of Reading, 
-               2002-2014
-   \author     Dr. Andrew C. R. Martin
+   \copyright  (c) UCL / Prof. Andrew C. R. Martin, University of Reading, 
+               2002-2023
+   \author     Prof. Andrew C. R. Martin
    \par
                Institute of Structural & Molecular Biology,
                University College London,
@@ -50,6 +50,7 @@
 -  V1.1  01.03.94
 -  V1.2  27.02.98 Removed unreachable break from switch()
 -  V1.3  07.07.14 Use bl prefix for functions By: CTP
+-  V1.4  21.02.23 Fixed source/dest overlap
 
 *************************************************************************/
 /* Doxygen
@@ -106,12 +107,22 @@ void blSetResnam(PDB  *ResStart,
                  char *chain)
 {
    PDB *p;
+   char theResnam[8],
+        theInsert[8],
+        theChain[blMAXCHAINLABEL];
+   strncpy(theResnam, resnam, 7);
+   PADMINTERM(theResnam, 4);
+
+   strncpy(theInsert, insert, 7);
+   strncpy(theChain,  chain,  blMAXCHAINLABEL-1);
    
    for(p=ResStart; p && p!=NextRes; NEXT(p))
    {
-      strcpy(p->resnam, resnam);
-      strcpy(p->insert, insert);
-      strcpy(p->chain,  chain);
+      strcpy(p->resnam, theResnam);
+      p->resnam[4] = '\0';
+
+      strcpy(p->insert, theInsert);
+      strcpy(p->chain,  theChain);
       p->resnum = resnum;
    }
 }
